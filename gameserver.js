@@ -200,10 +200,10 @@ var ServerGameManager = new Class({
     };
   },
 
-  connectPlayer: function(playerID) {
+  connectPlayer: function(playerID, socket) {
     var player = this.players[playerID];
     if (player && !this.connected[playerID]) {
-      this.connected[playerID] = true;
+      this.connected[playerID] = socket;
       this.connectedCount++;
       return player;
     } else {
@@ -211,9 +211,9 @@ var ServerGameManager = new Class({
     }
   },
 
-  disconnectPlayer: function(playerID) {
-    if (this.connected[playerID]) {
-      this.connected[playerID] = false;
+  disconnectPlayer: function(playerID, socket) {
+    if (this.connected[playerID]==socket) {
+      this.connected[playerID] = null;
       this.connectedCount--;
     }
   },
@@ -388,7 +388,7 @@ io.sockets.on('connection', function(socket) {
   socket.on('game.resume', function(data) {
     getServerGameManager(data[0], data[1], function(mgr) {
       if (!mgr) {
-        socket.emit('game.gone', ['Game not found.']);
+        socket.emit('game.error', ['Game not found.']);
         return null;
       }
 
@@ -398,7 +398,7 @@ io.sockets.on('connection', function(socket) {
 
       socket.on('disconnect', function() {
         if (thisPlayerID !== null) {
-          mgr.disconnectPlayer(thisPlayerID);
+          mgr.disconnectPlayer(thisPlayerID, socket);
         }
         clearServerGameManagerCache();
       });
@@ -460,7 +460,11 @@ io.sockets.on('connection', function(socket) {
       });
 
 
-      thisPlayer = mgr.connectPlayer(data[1]);
+      if (mgr.connected[data[1]]) {
+        mgr.connected[data[1]].emit('game.error', ['Game opened in another window.']);
+        mgr.disconnectPlayer(data[1], mgr.connected[data[1]]);
+      }
+      thisPlayer = mgr.connectPlayer(data[1], socket);
 
       if (!thisPlayer) {
         return;

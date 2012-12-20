@@ -201,7 +201,7 @@ window.addEvent('domready', function() {
                          .grab(new Element('div', { id: 'tile-board' })
                                       .grab(new Element('div', { id: 'scores-layer' }))
                               ))
-            .grab(new Element('div', { id: 'game-state-message' }));
+            .grab(new Element('div', { id: 'game-state-message', style: 'display: none' }));
       document.body.appendChild(this.gameDiv);
     },
 
@@ -389,9 +389,11 @@ window.addEvent('domready', function() {
     },
 
     showState: function(msg) {
-      $('game-state-message').empty();
+      var gsm = $('game-state-message');
+      gsm.empty();
       if (msg) {
-        $('game-state-message').appendChild(document.createTextNode(msg));
+        gsm.appendChild(document.createTextNode(msg));
+        gsm.style.display = 'block';
       }
     }
   });
@@ -445,7 +447,9 @@ window.addEvent('domready', function() {
         this.boardUI.showScore([{name:this.player.name, points:this.totalScore, color:this.player.color, turn:true}]);
 
         var tile = this.tileStack.pop();
-        this.boardUI.addToStack(tile);
+        if (tile) {
+          this.boardUI.addToStack(tile);
+        }
 
         this.boardUI.startTurn();
 
@@ -484,6 +488,8 @@ window.addEvent('domready', function() {
       this.players = [];
       this.playersByID = {};
       this.turn = null;
+
+      this.boardUI.showState('Preparing...');
     },
 
     onConnect: function() {

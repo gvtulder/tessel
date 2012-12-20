@@ -2,18 +2,101 @@
 require('mootools');
 
 var express = require('express')
+  , cons = require('consolidate')
   , app = express()
   , server = require('http').createServer(app)
   , io = require('socket.io').listen(server)
-  , game = require('./game.js');
+  , game = require('./game.js')
+  , gameDB = require('./gamedb.js');
 
 server.listen(9000);
 
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function(req, res) {
-  res.sendfile(__dirname + '/public/index.html');
+app.use(express.urlencoded());
+app.use(express.cookieParser());
+app.use(express.cookieSession({
+  cookie: { path: '/', httpOnly: true, maxAge: 30*24*3600},
+  'secret': 'o7oVi46pyXZje4vWZcTa2n44yuM8DIxuKl18IAOh2upZjqXZWDeksONfidkz'
+}));
+
+app.engine('html', cons.swig);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+
+
+
+app.get('/play-solo', function(req, res) {
+  res.render('play', { solo: true });
 });
+
+app.get('/play-network/:id', function(req, res) {
+  if (!checkUsername(req, res)) return;
+
+  res.render('play', { network: true });
+});
+
+app.get('/', function(req, res) {
+  if (req.session.username) {
+    gameDB.createUser(req.session.username, function() {
+      gameDB.listGames(req.session.username, function(games) {
+        res.render('index', {
+          username: req.session.username,
+          last_friend: req.session.last_friend,
+          games: games
+        });
+      });
+    });
+  } else {
+    res.render('index');
+  }
+});
+
+app.post('/new-game', function(req, res) {
+  if (!checkUsername(req, res)) return;
+
+  var cleanName = req.body['name'].replace(/[^a-zA-Z0-9 ]/g, '').trim();
+  if (cleanName == '' || cleanName.toLowerCase()==req.session.username.toLowerCase()) {
+    res.redirect('/?not_found=true');
+  } else {
+    req.session.last_friend = cleanName;
+    gameDB.existingUser(cleanName, function(result) {
+      if (result) {
+        gameDB.createGame([ req.session.username, cleanName ], function(game) {
+          res.redirect('/play-network/' + game.id);
+        });
+      } else {
+        res.redirect('/?not_found=true');
+      }
+    });
+  }
+});
+
+app.post('/login', function(req, res) {
+  var cleanName = req.body['name'].replace(/[^a-zA-Z0-9 ]/g, '').trim();
+  if (cleanName != '') {
+    req.session.username = cleanName;
+  }
+  res.redirect('/');
+});
+
+app.post('/logout', function(req, res) {
+  req.session = null;
+  res.redirect('/');
+});
+
+
+function checkUsername(req, res) {
+  if (req.session && req.session.username) {
+    return true;
+  }
+
+  res.redirect('/');
+  return false;
+}
+
+
+
 
 var ServerGameManager = new Class({
   Implements: Events,

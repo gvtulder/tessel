@@ -10,6 +10,14 @@ var express = require('express')
   , gameDB = require('./gamedb.js');
 
 
+//assuming io is the Socket.IO server object
+io.configure(function () { 
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
+
+
+
 var port = process.env.PORT || 9000;
 gameDB.on('ready', function() {
   server.listen(port);

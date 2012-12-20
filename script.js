@@ -46,7 +46,7 @@ window.addEvent('domready', function() {
       } else {
         this.drawPolyDepth(this.currentDepth);
         this.currentDepth++;
-        window.setTimeout(this.iterDraw.bind(this), 100);
+        this.timeout = window.setTimeout(this.iterDraw.bind(this), 100);
       }
     },
 
@@ -120,6 +120,9 @@ window.addEvent('domready', function() {
     },
 
     destroy: function() {
+      if (this.timeout) {
+        window.clearTimeout(this.timeout);
+      }
       this.scoreOffsetLayer.destroy();
       this.scoreOffsetLayer = null;
     }
@@ -185,6 +188,30 @@ window.addEvent('domready', function() {
       this.maxY = 0;
 
       this.boardPolyDrawings = [];
+    },
+
+    construct: function() {
+      this.gameDiv = new Element('div');
+      this.gameDiv
+            .grab(new Element('div', { id: 'tile-stack-container' })
+                         .grab(new Element('div', { id: 'tile-stack' }))
+                         .grab(new Element('div', { id: 'scoreboard' }))
+                              )
+            .grab(new Element('div', { id: 'tile-board-container' })
+                         .grab(new Element('div', { id: 'tile-board' })
+                                      .grab(new Element('div', { id: 'scores-layer' }))
+                              ))
+            .grab(new Element('div', { id: 'game-state-message' }));
+      document.body.appendChild(this.gameDiv);
+    },
+
+    destroy: function() {
+      for (var i=0; i<this.boardPolyDrawings.length; i++) {
+        this.boardPolyDrawings[i].destroy();
+      }
+      this.boardPolyDrawings = null;
+      this.gameDiv.destroy();
+      this.gameDiv = null;
     },
 
     drawFrontier: function(frontierTiles) {
@@ -382,6 +409,8 @@ window.addEvent('domready', function() {
     },
 
     start: function() {
+      this.boardUI.construct();
+
       this.board.place(exports.INITIAL_TILE, 0, 0);
       this.boardUI.place(exports.INITIAL_TILE, 0, 0);
       this.boardUI.drawFrontier(this.board.frontier());
@@ -431,13 +460,24 @@ window.addEvent('domready', function() {
     initialize: function() {
       var socket = io.connect();
       socket.on('connect', this.onConnect.bind(this));
+      socket.on('game.new', this.onGameNew.bind(this));
       socket.on('game.player', this.onGamePlayer.bind(this));
+      socket.on('game.resume', this.onGameResume.bind(this));
       socket.on('game.event', this.onGameEvent.bind(this));
       socket.on('disconnect', this.onDisconnect.bind(this));
       this.socket = socket;
 
+      this.reset();
+    },
+
+    reset: function() {
+      if (this.boardUI) {
+        this.boardUI.destroy();
+      }
+
       this.board = new exports.Board();
       this.boardUI = new BoardUI(this);
+      this.boardUI.construct();
 
       this.playerID = null;
       this.scores = [];
@@ -448,16 +488,49 @@ window.addEvent('domready', function() {
 
     onConnect: function() {
       console.log('connected!');
+      if (document.location.hash.replace(/^#/,"") != "") {
+        this.socket.emit('game.resume', [document.location.hash.replace(/^#/,"")]);
+      } else {
+        this.socket.emit('game.join', []);
+      }
     },
 
     onDisconnect: function() {
       console.log('disconnected!');
     },
 
+    onGameNew: function() {
+      this.reset();
+    },
+
     onGamePlayer: function(data) {
       console.log('received player:', data);
       this.playerID = data.id;
+      document.location.hash = '#'+this.playerID;
       this.socket.emit('game.player', {name:'Player '+data.id});
+    },
+
+    onGameResume: function(data) {
+      console.log('resume data:', data);
+      for (var i=0; i<data.boardTiles.length; i++) {
+        var tile = data.boardTiles[i];
+        this.board.place(tile[2], tile[0], tile[1]);
+        this.boardUI.place(tile[2], tile[0], tile[1]);
+      }
+      this.boardUI.drawFrontier(this.board.frontier());
+      for (var i=0; i<data.playerTiles.length; i++) {
+        var tile = data.playerTiles[i];
+        this.boardUI.addToStack(tile);
+      }
+      for (var i=0; i<this.players.length; i++) {
+        var lastMove = data.lastMoves[this.players[i].id];
+        if (lastMove) {
+          this.boardUI.showScoresOnTile(lastMove.x, lastMove.y, lastMove.scoreData,
+                                        this.playersByID[lastMove.playerID].color,
+                                        (lastMove.playerID != this.playerID));
+        }
+      }
+      this.boardUI.update();
     },
 
     onGameEvent: function(data) {
@@ -494,6 +567,8 @@ window.addEvent('domready', function() {
                                         this.playersByID[data[1].playerID].color,
                                         (data[1].playerID != this.playerID));
         }
+      } else if (data[0] == 'finished') {
+        this.boardUI.showState('Finished. '+this.winnerMessage());
       }
       this.boardUI.update();
     },
@@ -524,6 +599,26 @@ window.addEvent('domready', function() {
                         turn:(this.players[i].id == this.turn)});
       }
       this.boardUI.showScore(scoreData);
+    },
+
+    winnerMessage: function() {
+      var maxScore = -1, maxScoreWinner = [];
+      for (var i=0; i<this.players.length; i++) {
+        var score = this.scores[this.players[i].id],
+            name = this.players[i].name;
+        if (this.players[i].id == this.playerID) {
+          name = 'You';
+        }
+        if (score) {
+          if (score == maxScore) {
+            maxScoreWinner.push(name);
+          } else if (score > maxScore) {
+            maxScoreWinner = [ name ];
+            maxScore = score;
+          }
+        }
+      }
+      return maxScoreWinner.join(' and ')+' won!';
     }
   });
 

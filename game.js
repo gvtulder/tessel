@@ -20,22 +20,22 @@
 
   exports.INITIAL_TILE = ['r','p','b','w'];
   exports.TILES = [['r','r','r','r'],['r','r','r','b'],
-     ['r','r','r','p'],['r','r','r','w'],['r','r','b','b'],['r','r','b','p'],
-     ['r','r','b','w'],['r','r','p','b'],['r','r','p','p'],['r','r','p','w'],
-     ['r','r','w','b'],['r','r','w','p'],['r','r','w','w'],['r','b','r','b'],
-     ['r','b','r','p'],['r','b','r','w'],['r','b','b','b'],['r','b','b','p'],
-     ['r','b','b','w'],['r','b','p','b'],['r','b','p','p'],['r','b','p','w'],
-     ['r','b','w','b'],['r','b','w','p'],['r','b','w','w'],['r','p','r','p'],
-     ['r','p','r','w'],['r','p','b','b'],['r','p','b','p'],// ['r','p','b','w'],
-     ['r','p','p','b'],['r','p','p','p'],['r','p','p','w'],['r','p','w','b'],
-     ['r','p','w','p'],['r','p','w','w'],['r','w','r','w'],['r','w','b','b'],
-     ['r','w','b','p'],['r','w','b','w'],['r','w','p','b'],['r','w','p','p'],
-     ['r','w','p','w'],['r','w','w','b'],['r','w','w','p'],['r','w','w','w'],
-     ['b','b','b','b'],['b','b','b','p'],['b','b','b','w'],['b','b','p','p'],
-     ['b','b','p','w'],['b','b','w','p'],['b','b','w','w'],['b','p','b','p'],
-     ['b','p','b','w'],['b','p','p','p'],['b','p','p','w'],['b','p','w','p'],
-     ['b','p','w','w'],['b','w','b','w'],['b','w','p','p'],['b','w','p','w'],
-     ['b','w','w','p'],['b','w','w','w'],['p','p','p','p'],['p','p','p','w'],
+//   ['r','r','r','p'],['r','r','r','w'],['r','r','b','b'],['r','r','b','p'],
+//   ['r','r','b','w'],['r','r','p','b'],['r','r','p','p'],['r','r','p','w'],
+//   ['r','r','w','b'],['r','r','w','p'],['r','r','w','w'],['r','b','r','b'],
+//   ['r','b','r','p'],['r','b','r','w'],['r','b','b','b'],['r','b','b','p'],
+//   ['r','b','b','w'],['r','b','p','b'],['r','b','p','p'],['r','b','p','w'],
+//   ['r','b','w','b'],['r','b','w','p'],['r','b','w','w'],['r','p','r','p'],
+//   ['r','p','r','w'],['r','p','b','b'],['r','p','b','p'],// ['r','p','b','w'],
+//   ['r','p','p','b'],['r','p','p','p'],['r','p','p','w'],['r','p','w','b'],
+//   ['r','p','w','p'],['r','p','w','w'],['r','w','r','w'],['r','w','b','b'],
+//   ['r','w','b','p'],['r','w','b','w'],['r','w','p','b'],['r','w','p','p'],
+//   ['r','w','p','w'],['r','w','w','b'],['r','w','w','p'],['r','w','w','w'],
+//   ['b','b','b','b'],['b','b','b','p'],['b','b','b','w'],['b','b','p','p'],
+//   ['b','b','p','w'],['b','b','w','p'],['b','b','w','w'],['b','p','b','p'],
+//   ['b','p','b','w'],['b','p','p','p'],['b','p','p','w'],['b','p','w','p'],
+//   ['b','p','w','w'],['b','w','b','w'],['b','w','p','p'],['b','w','p','w'],
+//   ['b','w','w','p'],['b','w','w','w'],['p','p','p','p'],['p','p','p','w'],
      ['p','p','w','w'],['p','w','p','w'],['p','w','w','w'],['w','w','w','w']];
 
   exports.TileStack = new Class({
@@ -51,6 +51,12 @@
         return null;
       }
       return this.tiles.shift();
+    },
+    serialize: function() {
+      return { tiles: this.tiles };
+    },
+    unserialize: function(d) {
+      this.tiles = d.tiles;
     }
   });
 
@@ -62,6 +68,20 @@
       this.minY = 0;
       this.maxX = 0;
       this.maxY = 0;
+    },
+
+    serialize: function() {
+      return { grid: this.grid, tiles: this.tiles,
+               minX: this.minX, minY: this.minY,
+               maxX: this.maxX, maxY: this.maxY };
+    },
+    unserialize: function(d) {
+      this.grid = d.grid;
+      this.tiles = d.tiles;
+      this.minX = d.minX;
+      this.minY = d.minY;
+      this.maxX = d.maxX;
+      this.maxY = d.maxY;
     },
 
     checkFit: function(colors, x, y) {

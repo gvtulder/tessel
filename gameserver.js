@@ -25,7 +25,39 @@ var ServerGameManager = new Class({
     this.board = new game.Board();
     this.players = [];
     this.playerTurn = null;
+    this.lastMoves = {}
     this.totalScores = {};
+    this.playerTiles = [];
+    this.gameStarted = false;
+    this.connected = {};
+  },
+
+  serialize: function(d) {
+    return { tileStack: this.tileStack.serialize(), board: this.board.serialize(),
+             players: this.players, playerTurn: this.playerTurn,
+             lastMoves: this.lastMoves, totalScores: this.totalScores, playerTiles: this.playerTiles };
+  },
+
+  getPlayerState: function(playerID) {
+    return {
+      boardTiles: this.board.tiles,
+      lastMoves: this.lastMoves,
+      playerTiles: this.playerTiles[playerID]
+    };
+  },
+
+  connectPlayer: function(playerID) {
+    var player = this.players[playerID];
+    if (player && !this.connected[playerID]) {
+      this.connected[playerID] = true;
+      return player;
+    } else {
+      return null;
+    }
+  },
+
+  disconnectPlayer: function(playerID) {
+    this.connected[playerID] = false;
   },
 
   newPlayer: function() {
@@ -33,7 +65,9 @@ var ServerGameManager = new Class({
     var player = { id: playerID, name: 'Player '+playerID, color: this.PLAYER_COLORS[playerID] };
     this.players.push(player);
     this.totalScores[playerID] = 0;
+    this.playerTiles[playerID] = [];
     this.fireEvent('updatePlayers');
+    this.connected[playerID] = true;
     return player;
   },
 
@@ -43,6 +77,8 @@ var ServerGameManager = new Class({
   },
 
   start: function() {
+    this.gameStarted = true;
+
     this.board.place(game.INITIAL_TILE, 0, 0);
     this.fireEvent('place', {colors:game.INITIAL_TILE, x:0, y:0});
 
@@ -50,6 +86,7 @@ var ServerGameManager = new Class({
       for (var i=0; i<3; i++) {
         var tile = this.tileStack.pop();
         if (tile) {
+          this.playerTiles[this.players[p].id].push(tile);
           this.fireEvent('addToStack', {colors:tile, playerID:this.players[p].id});
         }
       }
@@ -60,10 +97,15 @@ var ServerGameManager = new Class({
   },
 
   placeFromStack: function(playerID, colors, x, y) {
-    if (playerID==this.playerTurn && this.board.place(colors, x, y)) {
+    var tileIdx = this.indexOfTile(this.playerTiles[playerID], colors);
+
+    if (tileIdx!=-1 && playerID==this.playerTurn && this.board.place(colors, x, y)) {
+      this.playerTiles[playerID].splice(tileIdx, 1);
+
       this.fireEvent('place', {colors:colors, x:x, y:y, playerID:playerID});
 
       var scoreData = this.board.calculateScore(x, y);
+      this.lastMoves[playerID] = {x:x, y:y, scoreData:scoreData, playerID:playerID};
       console.log(scoreData);
       for (var i=0; i<scoreData.scores.length; i++) {
         this.totalScores[playerID] += scoreData.scores[i];
@@ -72,6 +114,7 @@ var ServerGameManager = new Class({
 
       var tile = this.tileStack.pop();
       if (tile) {
+        this.playerTiles[playerID].push(tile);
         this.fireEvent('addToStack', {colors:tile, playerID:playerID});
       }
 
@@ -82,6 +125,37 @@ var ServerGameManager = new Class({
     } else {
       return false;
     }
+  },
+
+  finished: function() {
+    if (this.playerTurn===null) return false;
+    for (var p=0; p<this.players.length; p++) {
+      var pt = this.playerTiles[this.players[p].id];
+      if (pt && pt.length > 0) return false;
+    }
+    return true;
+  },
+
+  indexOfTile: function(tiles, tile) {
+    for (var i=0; i<tiles.length; i++) {
+      if (this.compareTiles(tiles[i], tile)) {
+        return i;
+      }
+    }
+    return -1;
+  },
+
+  compareTiles: function(tileA, tileB) {
+    for (var o=0; o<4; o++) {
+      var same = true;
+      for (var i=0; i<4; i++) {
+        if (tileA[(i+o)%4]!=tileB[i]) {
+          same = false;
+        }
+      }
+      if (same) return true;
+    }
+    return false;
   }
 });
 
@@ -89,10 +163,50 @@ var mgr = new ServerGameManager();
 
 io.sockets.on('connection', function(socket) {
 
-  if (mgr.players.length >= 2) return;
+  var thisPlayer, thisPlayerID = null;
 
-  var thisPlayer = mgr.newPlayer();
-  var thisPlayerID = thisPlayer.id;
+  socket.on('disconnect', function() {
+    if (thisPlayerID !== null) {
+      mgr.disconnectPlayer(thisPlayerID);
+    }
+  });
+
+  socket.on('game.resume', function(data) {
+    thisPlayer = mgr.connectPlayer(data[0]);
+
+    if (!thisPlayer) {
+      return joinGame();
+    }
+
+    thisPlayerID = thisPlayer.id;
+
+    socket.emit('game.player', thisPlayer);
+    sendUpdatePlayers();
+    sendUpdateScores();
+
+    if (!mgr.gameStarted) return;
+
+    socket.emit('game.resume', mgr.getPlayerState(thisPlayerID));
+
+    sendUpdateTurn();
+  });
+
+  socket.on('game.join', function(data) {
+    joinGame();
+  });
+
+  function joinGame() {
+    if (mgr.gameStarted) return;
+
+    thisPlayer = mgr.newPlayer();
+    thisPlayerID = thisPlayer.id;
+    socket.emit('game.new', true);
+    socket.emit('game.player', thisPlayer);
+
+    if (mgr.players.length == 2) {
+      setTimeout(function() { mgr.start(); }, 1000);
+    }
+  }
 
   socket.on('game.player', function(data) {
     console.log(data);
@@ -107,10 +221,20 @@ io.sockets.on('connection', function(socket) {
   });
 
   mgr.addEvent('updateScores', function(scores) {
-    socket.emit('game.event', ['updateScores', scores]);
+    sendUpdateScores();
   });
 
   mgr.addEvent('updatePlayers', function(data) {
+    sendUpdatePlayers();
+  });
+
+  function sendUpdateScores() {
+    socket.emit('game.event', ['updateScores', mgr.totalScores]);
+  }
+
+  function sendUpdatePlayers() {
+    if (thisPlayerID === null) return;
+
     var ps = [];
     ps.push(mgr.players[thisPlayerID]);
     for (var i=0; i<mgr.players.length; i++) {
@@ -119,10 +243,20 @@ io.sockets.on('connection', function(socket) {
       }
     }
     socket.emit('game.event', ['updatePlayers', ps]);
-  });
+  }
+
+  function sendUpdateTurn() {
+    if (mgr.finished()) {
+      socket.emit('game.event', ['finished', []]);
+    } else {
+      var d = {playerID:mgr.playerTurn, isThisPlayer:(mgr.playerTurn==thisPlayerID)};
+      socket.emit('game.event', ['startTurn', d]);
+    }
+  }
 
   mgr.addEvent('place', function(data) {
     socket.emit('game.event', ['place', data]);
+    console.log(JSON.stringify(mgr.serialize()));
   });
 
   mgr.addEvent('addToStack', function(data) {
@@ -132,14 +266,8 @@ io.sockets.on('connection', function(socket) {
   });
 
   mgr.addEvent('startTurn', function(data) {
-    var d = {playerID:data.playerID, isThisPlayer:(data.playerID==thisPlayerID)};
-    socket.emit('game.event', ['startTurn', d]);
+    console.log(JSON.stringify(mgr.serialize()));
+    sendUpdateTurn();
   });
-
-  socket.emit('game.player', thisPlayer);
-
-  if (mgr.players.length == 2) {
-    setTimeout(function() { mgr.start(); }, 1000);
-  }
 });
 

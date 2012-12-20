@@ -461,9 +461,13 @@ window.addEvent('domready', function() {
   });
 
   var NetworkGameManager = new Class({
-    initialize: function() {
+    initialize: function(gameID, playerID) {
+      this.gameID = gameID;
+      this.playerID = playerID;
+
       var socket = io.connect();
       socket.on('connect', this.onConnect.bind(this));
+      socket.on('game.error', this.onGameError.bind(this));
       socket.on('game.new', this.onGameNew.bind(this));
       socket.on('game.player', this.onGamePlayer.bind(this));
       socket.on('game.resume', this.onGameResume.bind(this));
@@ -483,7 +487,6 @@ window.addEvent('domready', function() {
       this.boardUI = new BoardUI(this);
       this.boardUI.construct();
 
-      this.playerID = null;
       this.scores = [];
       this.players = [];
       this.playersByID = {};
@@ -494,8 +497,9 @@ window.addEvent('domready', function() {
 
     onConnect: function() {
       console.log('connected!');
-      if (document.location.hash.replace(/^#/,"") != "") {
-        this.socket.emit('game.resume', [document.location.hash.replace(/^#/,"")]);
+      this.reset();
+      if (this.gameID && this.playerID) {
+        this.socket.emit('game.resume', [this.gameID, this.playerID]);
       } else {
         this.socket.emit('game.join', []);
       }
@@ -509,11 +513,16 @@ window.addEvent('domready', function() {
       this.reset();
     },
 
+    onGameError: function(data) {
+      console.log('game error:', data);
+      this.reset();
+      this.boardUI.showState('Error: '+data[0]);
+    },
+
     onGamePlayer: function(data) {
       console.log('received player:', data);
       this.playerID = data.id;
-      document.location.hash = '#'+this.playerID;
-      this.socket.emit('game.player', {name:'Player '+data.id});
+      // this.socket.emit('game.player', {name:'Player '+data.id});
     },
 
     onGameResume: function(data) {
@@ -615,7 +624,7 @@ window.addEvent('domready', function() {
         if (this.players[i].id == this.playerID) {
           name = 'You';
         }
-        if (score) {
+        if (score !== undefined && score !== null) {
           if (score == maxScore) {
             maxScoreWinner.push(name);
           } else if (score > maxScore) {
@@ -629,7 +638,7 @@ window.addEvent('domready', function() {
   });
 
   if (window.socketIO) {
-    new NetworkGameManager();
+    new NetworkGameManager(window.gameID, window.playerID);
   } else {
     new GameManager().start();
   }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/mootools/1.4.5/mootools-yui-compressed.js"></script>
+    <script src="/mootools-more-1.4.0.1.js"></script>
+    <title>Game</title>
+  </head>
+  <body>
+    {% if username %}
+      <p>Hello, {{ username }}.</p>
+
+      <div id="games-list">
+        {% if games %}
+          <h2>Your games:</h2>
+          <ul>
+            {% for game in games %}
+              <li><form method="post" action="/remove-game"><a href="/play-network/{{ game.id }}">{{ game.opponents[0].username }}</a> {% if game.finished %} (finished) {% else if game.your_turn %} (your turn){% endif %} <input type="hidden" name="id" value="{{ game.id }}" /><input type="submit" value="Remove" /></form></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <ul>
+        <li><form method="post" action="/new-game">Start a game with <input type="text" name="name" placeholder="name" size="10" value="{{ last_friend }}" /> <input type="submit" value="OK" /></form></li>
+        <li><a href="/play-solo">Practice alone</a></li>
+        <li><form method="post" action="/logout"><input type="submit" value="Log out"> if you&#8217;re not {{ username }}</form></li>
+      </ul>
+
+      <script src="/socket.io/socket.io.js"></script>
+      <script type="text/javascript">
+        window.playerID = '{{ playerID }}';
+        (function() {
+          var socket = io.connect();
+          socket.on('connect', function() {
+            socket.on('index.update', function(data) {
+              new Request.HTML({
+                url: '/games-list',
+                update: 'games-list'
+              }).get();
+            });
+
+            socket.emit('index.monitor', [ window.playerID ]);
+          });
+        })();
+      </script>
+    {% else %}
+      <form method="post" action="/login">
+        <p>Hi. You can <a href="/play-solo">play alone</a>, or enter <input type="text" name="name" placeholder="your name" size="10" /> and <input type="submit" value="Play with a friend">.</p>
+      </form>
+    {% endif %}
+  </body>
+</html>
+

@@ -9,8 +9,10 @@ var express = require('express')
   , game = require('./game.js')
   , gameDB = require('./gamedb.js');
 
+
+var port = process.env.PORT || 9000;
 gameDB.on('ready', function() {
-  server.listen(9000);
+  server.listen(port);
 });
 
 app.use(express.static(__dirname + '/public'));

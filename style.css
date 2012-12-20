@@ -6,6 +6,17 @@ body {
   font-family: sans-serif;
 }
 
+#game-state-message {
+  position: fixed;
+  left: 75px;
+  top: 8px;
+  padding: 2px 5px 4px 5px;
+  background: khaki;
+  font-size: 12px;
+  z-index: 1500;
+  border-radius: 5px;
+}
+
 #tile-stack-container {
   position: fixed;
   left: 0;
@@ -44,9 +55,16 @@ body {
   display: block;
   font-size: 25px;
 }
+#tile-board-container {
+  padding-top: 27px;
+}
 #tile-board {
   position: relative;
   margin: 8px 8px 8px 75px;
+}
+.offset-layer {
+  display: block;
+  position: absolute;
 }
 .tile-with-scores {
   display: block;
@@ -62,7 +80,8 @@ body {
 .tile-with-scores .score-top,
 .tile-with-scores .score-right,
 .tile-with-scores .score-bottom,
-.tile-with-scores .score-left {
+.tile-with-scores .score-left,
+.tile-with-scores .score-center {
   position: absolute;
   width: 20px;
   height: 18px;
@@ -89,6 +108,13 @@ body {
 .tile-with-scores .score-left {
   top: 14px;
   left: -10px;
+}
+.tile-with-scores .score-center {
+  top: 19px;
+  left: 19px;
+  width: 10px;
+  height: 10px;
+  padding: 0;
 }
 .tile {
   display: block;
@@ -145,19 +171,19 @@ span.frontier {
   border-color: transparent;
 }
 span.top-r   { border-top-color: red; }
-span.top-p   { border-top-color: darkviolet; }
+span.top-p   { border-top-color: black; }
 span.top-b   { border-top-color: blue; }
 span.top-w   { border-top-color: white; }
 span.right-r { border-right-color: red; }
-span.right-p { border-right-color: darkviolet; }
+span.right-p { border-right-color: black; }
 span.right-b { border-right-color: blue; }
 span.right-w { border-right-color: white; }
 span.bottom-r{ border-bottom-color: red; }
-span.bottom-p{ border-bottom-color: darkviolet; }
+span.bottom-p{ border-bottom-color: black; }
 span.bottom-b{ border-bottom-color: blue; }
 span.bottom-w{ border-bottom-color: white; }
 span.left-r  { border-left-color: red; }
-span.left-p  { border-left-color: darkviolet; }
+span.left-p  { border-left-color: black; }
 span.left-b  { border-left-color: blue; }
 span.left-w  { border-left-color: white; }
 

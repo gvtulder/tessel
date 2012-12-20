@@ -1,4 +1,17 @@
 (function(exports) {
+  // shuffle
+  function fisherYates(myArray) {
+    var i = myArray.length;
+    if ( i == 0 ) return false;
+    while ( --i ) {
+      var j = Math.floor( Math.random() * ( i + 1 ) );
+      var tempi = myArray[i];
+      var tempj = myArray[j];
+      myArray[i] = tempj;
+      myArray[j] = tempi;
+    }
+  }
+
   exports.DIRECTION_NAMES = [ 'top', 'right', 'bottom', 'left' ];
   exports.DIRECTION_OFFSETS = {
     top: [0,-1], right: [1,0], bottom: [0,1], left: [-1,0]
@@ -31,17 +44,17 @@
       for (var i=0; i<exports.TILES.length; i++) {
         this.tiles.push(exports.TILES[i]);
       }
+      fisherYates(this.tiles);
     },
-    popRandom: function() {
+    pop: function() {
       if (this.tiles.length == 0) {
         return null;
       }
-      var i = Math.floor(Math.random() * this.tiles.length);
-      return this.tiles.splice(i, 1)[0];
+      return this.tiles.shift();
     }
   });
 
-  var Board = new Class({
+  exports.Board = new Class({
     initialize: function() {
       this.grid = [];
       this.tiles = [];

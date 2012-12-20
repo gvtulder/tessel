@@ -5,12 +5,20 @@ window.addEvent('domready', function() {
       this.boardUI = boardUI;
     },
 
-    start: function(x, y, scoreData, color) {
+    start: function(x, y, scoreData, color, drawNil) {
+      this.scoreOffsetLayer = document.createElement('div');
+      this.scoreOffsetLayer.className = 'offset-layer';
+      $('scores-layer').appendChild(this.scoreOffsetLayer);
+
+      this.baseX = this.boardUI.minX;
+      this.baseY = this.boardUI.minY;
+
       this.x = x;
       this.y = y;
       this.scoreData = scoreData;
       this.currentDepth = 0;
       this.color = color;
+      this.drawNil = drawNil;
 
       var maxDepth = 0;
       for (var i=0; i<scoreData.polyEdges.length; i++) {
@@ -21,7 +29,7 @@ window.addEvent('domready', function() {
       var cv = document.createElement('canvas');
       cv.width = (this.boardUI.maxX - this.boardUI.minX) * this.boardUI.WIDTH + 50;
       cv.height = (this.boardUI.maxY - this.boardUI.minY) * this.boardUI.HEIGHT + 50;
-      $('scores-layer').appendChild(cv);
+      this.scoreOffsetLayer.appendChild(cv);
 
       var c = cv.getContext('2d');
       c.lineWidth = 4;
@@ -47,19 +55,28 @@ window.addEvent('domready', function() {
           x = this.x, y = this.y;
       var div = document.createElement('div'),
           span;
+      var anyScore = false;
       div.className = 'tile-with-scores';
-      for (var i=0; i<DIRECTION_NAMES.length; i++) {
+      for (var i=0; i<exports.DIRECTION_NAMES.length; i++) {
         if (scores[i]) {
           span = document.createElement('span');
           span.innerHTML = scores[i];
-          span.className = 'score-' + DIRECTION_NAMES[i];
+          span.className = 'score-' + exports.DIRECTION_NAMES[i];
           span.style.backgroundColor = this.color;
           div.appendChild(span);
+          anyScore = true;
         }
+      }
+      if (!anyScore && this.drawNil) {
+        span = document.createElement('span');
+        span.innerHTML = ' ';
+        span.className = 'score-center';
+        span.style.backgroundColor = this.color;
+        div.appendChild(span);
       }
       div.style.top  = ((y - this.boardUI.minY) * this.boardUI.HEIGHT) + 'px';
       div.style.left = ((x - this.boardUI.minX) * this.boardUI.WIDTH) + 'px';
-      $('scores-layer').appendChild(div);
+      this.scoreOffsetLayer.appendChild(div);
     },
 
     drawPolyDepth: function(depth) {
@@ -95,6 +112,16 @@ window.addEvent('domready', function() {
           }
         }
       }
+    },
+
+    updateOffset: function() {
+      this.scoreOffsetLayer.style.left = ((this.baseX - this.boardUI.minX) * this.boardUI.WIDTH) + 'px';
+      this.scoreOffsetLayer.style.top = ((this.baseY - this.boardUI.minY) * this.boardUI.HEIGHT) + 'px';
+    },
+
+    destroy: function() {
+      this.scoreOffsetLayer.destroy();
+      this.scoreOffsetLayer = null;
     }
   });
 
@@ -114,7 +141,11 @@ window.addEvent('domready', function() {
     },
 
     onTileDragStart: function(el) {
-      $('scores-layer').empty();
+      for (var i=0; i<this.boardPolyDrawings.length; i++) {
+        this.boardPolyDrawings[i].destroy();
+      }
+      this.boardPolyDrawings = [];
+//      $('scores-layer').empty();
     },
 
     onTileDragCancel: function(el) {
@@ -152,6 +183,8 @@ window.addEvent('domready', function() {
       this.minY = 0;
       this.maxX = 0;
       this.maxY = 0;
+
+      this.boardPolyDrawings = [];
     },
 
     drawFrontier: function(frontierTiles) {
@@ -219,6 +252,9 @@ window.addEvent('domready', function() {
         tile[3].style.top  = ((tile[1] - this.minY) * this.HEIGHT) + 'px';
         tile[3].style.left = ((tile[0] - this.minX) * this.WIDTH) + 'px';
       }
+      for (var i=0; i<this.boardPolyDrawings.length; i++) {
+        this.boardPolyDrawings[i].updateOffset();
+      }
     },
 
     updateTilesOnStack: function() {
@@ -243,7 +279,7 @@ window.addEvent('domready', function() {
         div.appendChild(span);
         span = document.createElement('span');
         span.className = 'points';
-        span.appendChild(document.createTextNode(scores[i].points));
+        span.appendChild(document.createTextNode(scores[i] ? scores[i].points : 0));
         div.appendChild(span);
         fragment.appendChild(div);
 
@@ -256,8 +292,10 @@ window.addEvent('domready', function() {
       scoreboard.appendChild(fragment);
     },
 
-    showScoresOnTile: function(x, y, scoreData, color) {
-      new BoardPolyDrawing(this).start(x, y, scoreData, color);
+    showScoresOnTile: function(x, y, scoreData, color, drawNil) {
+      var bpd = new BoardPolyDrawing(this);
+      this.boardPolyDrawings.push(bpd);
+      bpd.start(x, y, scoreData, color, drawNil);
     },
 
     startTurn: function() {
@@ -290,8 +328,8 @@ window.addEvent('domready', function() {
     colorClasses: function(colors) {
       if (colors) {
         var colorClasses = '';
-        for (var i=0; i<DIRECTION_NAMES.length; i++) {
-          colorClasses += DIRECTION_NAMES[i]+'-'+colors[i]+' ';
+        for (var i=0; i<exports.DIRECTION_NAMES.length; i++) {
+          colorClasses += exports.DIRECTION_NAMES[i]+'-'+colors[i]+' ';
         }
         return colorClasses;
       } else {
@@ -321,13 +359,20 @@ window.addEvent('domready', function() {
         tileOnStack[1].removeClass('rot360');
         tileOnStack[1].addClass('rot90');
       }
+    },
+
+    showState: function(msg) {
+      $('game-state-message').empty();
+      if (msg) {
+        $('game-state-message').appendChild(document.createTextNode(msg));
+      }
     }
   });
 
   var GameManager = new Class({
     initialize: function() {
-      this.tileStack = new TileStack();
-      this.board = new Board();
+      this.tileStack = new exports.TileStack();
+      this.board = new exports.Board();
       this.boardUI = new BoardUI(this);
       this.totalScore = 0;
 //    this.player = {name:'You', color:'#73c5b7'};
@@ -337,11 +382,11 @@ window.addEvent('domready', function() {
     },
 
     start: function() {
-      this.board.place(INITIAL_TILE, 0, 0);
-      this.boardUI.place(INITIAL_TILE, 0, 0);
+      this.board.place(exports.INITIAL_TILE, 0, 0);
+      this.boardUI.place(exports.INITIAL_TILE, 0, 0);
       this.boardUI.drawFrontier(this.board.frontier());
       for (var i=0; i<3; i++) {
-        var tile = this.tileStack.popRandom();
+        var tile = this.tileStack.pop();
         if (tile) {
           this.boardUI.addToStack(tile);
         }
@@ -370,7 +415,7 @@ window.addEvent('domready', function() {
 
         this.boardUI.showScore([{name:this.player.name, points:this.totalScore, color:this.player.color, turn:true}]);
 
-        var tile = this.tileStack.popRandom();
+        var tile = this.tileStack.pop();
         this.boardUI.addToStack(tile);
 
         this.boardUI.startTurn();
@@ -386,10 +431,19 @@ window.addEvent('domready', function() {
     initialize: function() {
       var socket = io.connect();
       socket.on('connect', this.onConnect.bind(this));
-      socket.on('game.init', this.onGameInit.bind(this));
+      socket.on('game.player', this.onGamePlayer.bind(this));
       socket.on('game.event', this.onGameEvent.bind(this));
       socket.on('disconnect', this.onDisconnect.bind(this));
       this.socket = socket;
+
+      this.board = new exports.Board();
+      this.boardUI = new BoardUI(this);
+
+      this.playerID = null;
+      this.scores = [];
+      this.players = [];
+      this.playersByID = {};
+      this.turn = null;
     },
 
     onConnect: function() {
@@ -400,12 +454,76 @@ window.addEvent('domready', function() {
       console.log('disconnected!');
     },
 
-    onGameInit: function(data) {
-      console.log('received game.init', data);
+    onGamePlayer: function(data) {
+      console.log('received player:', data);
+      this.playerID = data.id;
+      this.socket.emit('game.player', {name:'Player '+data.id});
     },
 
     onGameEvent: function(data) {
       console.log('received game.event:', data);
+      if (data[0] == 'updatePlayers') {
+        this.players = data[1];
+        this.playersByID = {};
+        for (var i=0; i<this.players.length; i++) {
+          this.playersByID[this.players[i].id] = this.players[i];
+        }
+        this.showScores();
+      } else if (data[0] == 'updateScores') {
+        this.scores = data[1];
+        this.showScores();
+      } else if (data[0] == 'startTurn') {
+        this.turn = data[1].playerID;
+        if (this.turn == this.playerID) {
+          this.boardUI.showState('Your turn...');
+          this.boardUI.startTurn();
+        } else {
+          this.boardUI.showState('Waiting for '+this.playersByID[data[1].playerID].name+'...');
+        }
+        this.showScores();
+      } else if (data[0] == 'addToStack') {
+        this.boardUI.addToStack(data[1].colors);
+      } else if (data[0] == 'place') {
+        this.board.place(data[1].colors, data[1].x, data[1].y);
+        this.boardUI.place(data[1].colors, data[1].x, data[1].y);
+        this.boardUI.drawFrontier(this.board.frontier());
+        if (data[1].playerID !== undefined) {
+          var scoreData = this.board.calculateScore(data[1].x, data[1].y);
+          console.log(scoreData);
+          this.boardUI.showScoresOnTile(data[1].x, data[1].y, scoreData,
+                                        this.playersByID[data[1].playerID].color,
+                                        (data[1].playerID != this.playerID));
+        }
+      }
+      this.boardUI.update();
+    },
+
+    placeFromStack: function(colors, x, y) {
+      if (this.board.checkFit(colors, x, y)) {
+        this.boardUI.endTurn();
+        this.boardUI.showState('Processing...');
+
+        this.board.place(colors, x, y);
+        this.boardUI.place(colors, x, y);
+        this.boardUI.drawFrontier(this.board.frontier());
+        this.boardUI.update();
+
+        this.socket.emit('game.input', ['placeFromStack', colors, x, y]);
+
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    showScores: function() {
+      var scoreData = [];
+      for (var i=0; i<this.players.length; i++) {
+        scoreData.push({name:this.players[i].name, color:this.players[i].color,
+                        points:(this.scores[this.players[i].id] ? this.scores[this.players[i].id] : 0),
+                        turn:(this.players[i].id == this.turn)});
+      }
+      this.boardUI.showScore(scoreData);
     }
   });
 

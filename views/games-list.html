@@ -1,0 +1,10 @@
+
+{% if games %}
+  <h2>Your games:</h2>
+  <ul>
+    {% for game in games %}
+      <li><form method="post" action="/remove-game"><a href="/play-network/{{ game.id }}">{{ game.opponents[0].username }}</a> {% if game.finished %} (finished) {% else if game.your_turn %} (your turn){% endif %} <input type="hidden" name="id" value="{{ game.id }}" /><input type="submit" value="Remove" /></form></li>
+    {% endfor %}
+  </ul>
+{% endif %}
+

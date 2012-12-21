@@ -148,6 +148,10 @@ window.addEvent('domready', function() {
         this.boardPolyDrawings[i].destroy();
       }
       this.boardPolyDrawings = [];
+      var instr = $('instructions');
+      if (instr) {
+        instr.destroy();
+      }
 //      $('scores-layer').empty();
     },
 
@@ -196,6 +200,7 @@ window.addEvent('domready', function() {
             .grab(new Element('div', { id: 'tile-stack-container' })
                          .grab(new Element('div', { id: 'tile-stack' }))
                          .grab(new Element('div', { id: 'scoreboard' }))
+                         .grab(new Element('div', { id: 'instructions', html: 'Drag tiles to form shapes.<br/><br/>Click tiles to rotate.' }))
                               )
             .grab(new Element('div', { id: 'tile-board-container' })
                          .grab(new Element('div', { id: 'tile-board' })

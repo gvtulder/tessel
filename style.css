@@ -112,6 +112,11 @@ input[type="submit"] {
   display: block;
   font-size: 25px;
 }
+#instructions {
+  font-size: 12px;
+  padding: 8px;
+  color: #333;
+}
 .network #tile-board-container {
   padding-top: 27px;
 }

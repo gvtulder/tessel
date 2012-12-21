@@ -28,7 +28,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded());
 app.use(express.cookieParser());
 app.use(express.cookieSession({
-  cookie: { path: '/', httpOnly: true, maxAge: 30*24*3600},
+  cookie: { path: '/', httpOnly: true, maxAge: 30*24*3600*1000},
   'secret': 'o7oVi46pyXZje4vWZcTa2n44yuM8DIxuKl18IAOh2upZjqXZWDeksONfidkz'
 }));
 

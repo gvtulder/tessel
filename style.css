@@ -157,19 +157,19 @@ input[type="submit"] {
 }
 .tile-with-scores .score-top {
   left: 14px;
-  top: -10px;
+  top: -12px;
 }
 .tile-with-scores .score-right {
   top: 14px;
-  right: -10px;
+  right: -12px;
 }
 .tile-with-scores .score-bottom {
-  bottom: -10px;
+  bottom: -12px;
   left: 14px;
 }
 .tile-with-scores .score-left {
   top: 14px;
-  left: -10px;
+  left: -12px;
 }
 .tile-with-scores .score-center {
   top: 19px;

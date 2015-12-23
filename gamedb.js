@@ -8,7 +8,7 @@ module.exports = new EventEmitter();
 exports = module.exports;
 
 // Connect to the db
-MongoClient.connect('mongodb://tiles-game:Tiles@ds045757.mongolab.com:45757/tiles', function(err, db) {
+MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
   if(err) {
     console.log(err);
   } else {

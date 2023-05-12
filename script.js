@@ -355,6 +355,57 @@ class BoardPolyDrawing {
 }
 
 
+
+class ControlsUI {
+  constructor(gameManager) {
+    this.gameManager = gameManager;
+    this.build();
+  }
+
+  build() {
+    this.element = document.createElement('div');
+
+    let instructions = document.createElement('div');
+    instructions.setAttribute('id', 'instructions');
+    instructions.innerHTML = 'Drag tiles to form shapes.<br/><br/>Click tiles to rotate.';
+    this.element.appendChild(instructions);
+
+    let autorotate = document.createElement('input');
+    autorotate.type = 'checkbox';
+    let label = document.createElement('label');
+    label.appendChild(autorotate);
+    instructions.appendChild(document.createElement('br'));
+    instructions.appendChild(document.createElement('br'));
+    label.appendChild(document.createTextNode('Autorotate'));
+    instructions.appendChild(label);
+    label.addEventListener('change', function() {
+      this.gameManager.settings.autorotate = autorotate.checked;
+    }.bind(this));
+
+    let hints = document.createElement('input');
+    hints.type = 'checkbox';
+    label = document.createElement('label');
+    label.appendChild(hints);
+    instructions.appendChild(document.createElement('br'));
+    label.appendChild(document.createTextNode('Show hints'));
+    instructions.appendChild(label);
+    label.addEventListener('change', function() {
+      this.gameManager.settings.hints = hints.checked;
+    }.bind(this));
+
+    let restart = document.createElement('input');
+    restart.type = 'button';
+    restart.value = 'Restart';
+    instructions.appendChild(document.createElement('br'));
+    instructions.appendChild(restart);
+    restart.addEventListener('click', function() {
+      window.location.reload();
+    });
+  }
+}
+
+
+
 class BoardUI {
   constructor(gameManager) {
     this.gameManager = gameManager;
@@ -389,42 +440,9 @@ class BoardUI {
     tileStackContainer.appendChild(scoreboard.element);
     this.scoreboard = scoreboard;
 
-    let instructions = document.createElement('div');
-    instructions.setAttribute('id', 'instructions');
-    instructions.innerHTML = 'Drag tiles to form shapes.<br/><br/>Click tiles to rotate.';
-    tileStackContainer.appendChild(instructions);
-
-    let autorotate = document.createElement('input');
-    autorotate.type = 'checkbox';
-    let label = document.createElement('label');
-    label.appendChild(autorotate);
-    instructions.appendChild(document.createElement('br'));
-    instructions.appendChild(document.createElement('br'));
-    label.appendChild(document.createTextNode('Autorotate'));
-    instructions.appendChild(label);
-    label.addEventListener('change', function() {
-      this.gameManager.settings.autorotate = autorotate.checked;
-    }.bind(this));
-
-    let hints = document.createElement('input');
-    hints.type = 'checkbox';
-    label = document.createElement('label');
-    label.appendChild(hints);
-    instructions.appendChild(document.createElement('br'));
-    label.appendChild(document.createTextNode('Show hints'));
-    instructions.appendChild(label);
-    label.addEventListener('change', function() {
-      this.gameManager.settings.hints = hints.checked;
-    }.bind(this));
-
-    let restart = document.createElement('input');
-    restart.type = 'button';
-    restart.value = 'Restart';
-    instructions.appendChild(document.createElement('br'));
-    instructions.appendChild(restart);
-    restart.addEventListener('click', function() {
-      window.location.reload();
-    });
+    let controls = new ControlsUI(this);
+    tileStackContainer.appendChild(controls.element);
+    this.controls = controls;
 
     let tileBoardContainer = document.createElement('div');
     tileBoardContainer.setAttribute('id', 'tile-board-container');

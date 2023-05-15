@@ -185,7 +185,7 @@ class ScoreboardUI {
         div, span;
     for (let i=0; i<scores.length; i++) {
       div = document.createElement('div');
-      div.style.backgroundColor = scores[i].color;
+      div.style.backgroundColor = scores[i].color.main;
       span = document.createElement('span');
       span.className = 'name';
       span.appendChild(document.createTextNode(scores[i].name));
@@ -280,18 +280,11 @@ class BoardPolyDrawing {
         let el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         el.setAttribute('cx', thisX);
         el.setAttribute('cy', thisY);
-        el.setAttribute('r', 23);
-        el.setAttribute('fill', 'white');
-        this.svg.appendChild(el);
-
-        el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        el.setAttribute('cx', thisX);
-        el.setAttribute('cy', thisY);
-        el.setAttribute('r', 23);
-        el.setAttribute('fill', this.color);
-        el.setAttribute('fill-opacity', 0.3);
-        el.setAttribute('stroke', this.color);
-        el.setAttribute('stroke-width', 6);
+        el.setAttribute('r', 20);
+        el.setAttribute('fill', this.color.light);
+        el.setAttribute('stroke', this.color.dark);
+        el.setAttribute('stroke-width', 8);
+        el.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
         this.svg.appendChild(el);
 
         el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -300,7 +293,7 @@ class BoardPolyDrawing {
         el.setAttribute('alignment-baseline', 'middle');
         el.setAttribute('dominant-baseline', 'middle');
         el.setAttribute('text-anchor', 'middle');
-        el.setAttribute('font-size', '22');
+        el.setAttribute('font-size', 21);
         el.setAttribute('color', 'white');
         el.appendChild(document.createTextNode(scores[i]));
         this.svg.appendChild(el);
@@ -325,22 +318,28 @@ class BoardPolyDrawing {
           el.setAttribute('y1', 100 * (Y_OFFSET[from[2]] + from[1] - this.minY));
           el.setAttribute('x2', 100 * (X_OFFSET[to[2]] + to[0] - this.minX));
           el.setAttribute('y2', 100 * (Y_OFFSET[to[2]] + to[1] - this.minY));
-          el.setAttribute('stroke', this.color);
-          el.setAttribute('stroke-width', '10');
+          el.setAttribute('stroke', this.color.main);
+          el.setAttribute('stroke-width', 8);
           this.svg.appendChild(el);
 
           el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
           el.setAttribute('cx', 100 * (X_OFFSET[from[2]] + from[0] - this.minX));
           el.setAttribute('cy', 100 * (Y_OFFSET[from[2]] + from[1] - this.minY));
-          el.setAttribute('r', 15);
-          el.setAttribute('fill', this.color);
+          el.setAttribute('r', 11);
+          el.setAttribute('fill', this.color.light);
+          el.setAttribute('stroke', this.color.dark);
+          el.setAttribute('stroke-width', 8);
+          el.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
           this.svg.appendChild(el);
 
           el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
           el.setAttribute('cx', 100 * (X_OFFSET[to[2]] + to[0] - this.minX));
           el.setAttribute('cy', 100 * (Y_OFFSET[to[2]] + to[1] - this.minY));
-          el.setAttribute('r', 15);
-          el.setAttribute('fill', this.color);
+          el.setAttribute('r', 11);
+          el.setAttribute('fill', this.color.light);
+          el.setAttribute('stroke', this.color.dark);
+          el.setAttribute('stroke-width', 8);
+          el.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
           this.svg.appendChild(el);
         }
       }
@@ -622,7 +621,14 @@ class GameManager {
     this.board = new Board();
     this.boardUI = new BoardUI(this);
     this.totalScore = 0;
-    this.player = {name:'Points', color:'#9acd32'};
+    this.player = {
+      name: 'Points',
+      color: {
+        main: '#9acd32',
+        light: '#e1f0c1',
+        dark: '#63851d'
+      }
+    };
 
     this.settings = {autorotate: false, hints: false};
   }

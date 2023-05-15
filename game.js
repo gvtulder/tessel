@@ -42,17 +42,22 @@ Game.TILES = [['r','r','r','r'],['r','r','r','b'],
 
 class TileStack {
   constructor() {
-    this.tiles = [];
-    for (let i=0; i<Game.TILES.length; i++) {
-      this.tiles.push(Game.TILES[i]);
-    }
+    this.tiles = [...Game.TILES];
     shuffle(this.tiles);
+  }
+  peek(n) {
+    return this.tiles.slice(0, n);
   }
   pop() {
     if (this.tiles.length == 0) {
       return null;
     }
     return this.tiles.shift();
+  }
+  remove(idx) {
+    if (idx < this.tiles.length) {
+      this.tiles.splice(idx, 1);
+    }
   }
   serialize() {
     return { tiles: this.tiles };

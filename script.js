@@ -651,6 +651,10 @@ class GameManager {
     this.boardUI.update();
 
     this.boardUI.startTurn();
+
+    window.addEventListener('resize', function() {
+      this.boardUI.rescaleGrid();
+    }.bind(this));
   }
 
   placeFromStack(source, target) {

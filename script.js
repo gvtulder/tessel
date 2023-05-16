@@ -354,6 +354,43 @@ class BoardPolyDrawing {
 }
 
 
+class TileStackUI {
+  constructor(gameManager) {
+    this.gameManager = gameManager;
+    this.stack = [];
+    this.build();
+  }
+
+  build() {
+    this.element = document.createElement('div');
+    this.element.setAttribute('id', 'tile-stack');
+  }
+
+  addToStack(colors) {
+    let tile = new Tile(this.gameManager);
+    tile.setColors(colors);
+    this.element.appendChild(tile.div);
+    let idx = 0;
+    while (idx < this.stack.length && this.stack[idx]) {
+      idx++;
+    }
+    tile.setPosition(0, idx);
+    this.stack[idx] = tile;
+
+    tile.makeDraggable(function() {
+      this.gameManager.boardUI.clearScoresOnTile();
+    }.bind(this));
+  }
+
+  isEmpty() {
+    let tilesLeft = 0;
+    for (let i=0; i<this.stack.length; i++) {
+      if (this.stack[i]) tilesLeft++;
+    }
+    return tilesLeft == 0;
+  }
+}
+
 
 class ControlsUI {
   constructor(gameManager) {
@@ -411,7 +448,6 @@ class BoardUI {
 
     this.grid = [];
     this.tiles = [];
-    this.stack = [];
 
     this.minX = 0;
     this.minY = 0;
@@ -430,10 +466,8 @@ class BoardUI {
     tileStackContainer.setAttribute('id', 'tile-stack-container');
     this.gameDiv.appendChild(tileStackContainer);
 
-    let tileStack = document.createElement('div');
-    tileStack.setAttribute('id', 'tile-stack');
-    tileStackContainer.appendChild(tileStack);
-    this.tileStack = tileStack;
+    this.tileStackUI = new TileStackUI(this.gameManager);
+    tileStackContainer.appendChild(this.tileStackUI.element);
 
     let scoreboard = new ScoreboardUI();
     tileStackContainer.appendChild(scoreboard.element);
@@ -484,13 +518,13 @@ class BoardUI {
         let target = evt.target.tile;
         console.log('dropped', dragged, target);
 
-        if (this.stack[dragged.row] != dragged) {
+        if (this.tileStackUI.stack[dragged.row] != dragged) {
           console.log('duplicate drop');
           return;
         }
 
         // remove from stack
-        this.stack[dragged.row] = null;
+        this.tileStackUI.stack[dragged.row] = null;
 
         if (this.gameManager.placeFromStack(dragged, target)) {
           dragged.div.parentNode.removeChild(dragged.div);
@@ -498,7 +532,7 @@ class BoardUI {
         } else {
           // replace on stack
           dragged.resetAutoRotate();
-          this.stack[dragged.row] = dragged;
+          this.tileStackUI.stack[dragged.row] = dragged;
         }
         this.update();
       }.bind(this));
@@ -509,22 +543,6 @@ class BoardUI {
     for (let i=0; i<frontierTiles.length; i++) {
       this.place(null, frontierTiles[i][0], frontierTiles[i][1]);
     }
-  }
-
-  addToStack(colors) {
-    let tile = new Tile(this.gameManager);
-    tile.setColors(colors);
-    this.tileStack.appendChild(tile.div);
-    let idx = 0;
-    while (idx < this.stack.length && this.stack[idx]) {
-      idx++;
-    }
-    tile.setPosition(0, idx);
-    this.stack[idx] = tile;
-
-    tile.makeDraggable(function() {
-      this.clearScoresOnTile();
-    }.bind(this));
   }
 
   showScore(scores) {
@@ -599,11 +617,8 @@ class BoardUI {
   }
 
   isGameFinished() {
-    let tilesLeft = 0;
-    for (let i=0; i<this.stack.length; i++) {
-      if (this.stack[i]) tilesLeft++;
-    }
-    return (tilesLeft == 0 && this.gameManager.tileStack.isEmpty());
+    return (this.tileStackUI.isEmpty() &&
+            this.gameManager.tileStack.isEmpty());
   }
 }
 
@@ -642,7 +657,7 @@ class GameManager {
     for (let i=0; i<3; i++) {
       let tile = this.tileStack.pop();
       if (tile) {
-        this.boardUI.addToStack(tile);
+        this.boardUI.tileStackUI.addToStack(tile);
       }
     }
     this.boardUI.showScore([
@@ -676,7 +691,7 @@ class GameManager {
 
       let tile = this.tileStack.pop();
       if (tile) {
-        this.boardUI.addToStack(tile);
+        this.boardUI.tileStackUI.addToStack(tile);
       }
 
       this.boardUI.startTurn();

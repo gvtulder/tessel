@@ -1,5 +1,5 @@
 
-class Tile {
+class TileUI {
   constructor(gameManager) {
     this.gameManager = gameManager;
 
@@ -272,10 +272,11 @@ class BoardPolyDrawing {
     x = x - this.minX + 0.5;
     y = y - this.minY + 0.5;
 
-    for (let i=0; i<Game.DIRECTION_NAMES.length; i++) {
+    for (let i=0; i<Directions.length; i++) {
+      let dir = Directions[i];
       if (scores[i]) {
-        let thisX = 100 * (x + 0.5 * Game.DIRECTION_OFFSETS[Game.DIRECTION_NAMES[i]][0]);
-        let thisY = 100 * (y + 0.5 * Game.DIRECTION_OFFSETS[Game.DIRECTION_NAMES[i]][1]);
+        let thisX = 100 * (x + 0.5 * DirectionOffsets[dir][0]);
+        let thisY = 100 * (y + 0.5 * DirectionOffsets[dir][1]);
 
         let el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         el.setAttribute('cx', thisX);
@@ -367,7 +368,7 @@ class TileStackUI {
   }
 
   addToStack(colors) {
-    let tile = new Tile(this.gameManager);
+    let tile = new TileUI(this.gameManager);
     tile.setColors(colors);
     this.element.appendChild(tile.div);
     let idx = 0;
@@ -497,7 +498,7 @@ class BoardUI {
 
     let tile = this.grid[x][y];
     if (!tile) {
-      tile = new Tile(this.gameManager);
+      tile = new TileUI(this.gameManager);
       this.tileBoard.appendChild(tile.div);
       tile.setPosition(x, y);
       this.tiles.push(tile);
@@ -541,7 +542,7 @@ class BoardUI {
 
   drawFrontier(frontierTiles) {
     for (let i=0; i<frontierTiles.length; i++) {
-      this.place(null, frontierTiles[i][0], frontierTiles[i][1]);
+      this.place(null, frontierTiles[i].x, frontierTiles[i].y);
     }
   }
 
@@ -651,8 +652,8 @@ class GameManager {
   start() {
     this.boardUI.construct();
 
-    this.board.place(Game.INITIAL_TILE, 0, 0);
-    this.boardUI.place(Game.INITIAL_TILE, 0, 0);
+    this.board.place(InitialTile, 0, 0);
+    this.boardUI.place(InitialTile, 0, 0);
     this.boardUI.drawFrontier(this.board.frontier());
     for (let i=0; i<3; i++) {
       let tile = this.tileStack.pop();

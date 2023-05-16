@@ -1,6 +1,5 @@
-let Game = {};
 
-function shuffle(myArray) {
+function shuffle(myArray : any[]) {
   // Fisher-Yates shuffle
   let i = myArray.length;
   if (i == 0 ) return false;
@@ -13,14 +12,35 @@ function shuffle(myArray) {
   }
 }
 
-Game.DIRECTION_NAMES = [ 'top', 'right', 'bottom', 'left' ];
-Game.DIRECTION_OFFSETS = {
+const enum Direction {
+  Top = 'top',
+  Right = 'right',
+  Bottom = 'bottom',
+  Left = 'left',
+}
+const Directions = [Direction.Top, Direction.Right, Direction.Bottom, Direction.Left];
+
+const DirectionOffsets = {
   top: [0,-1], right: [1,0], bottom: [0,1], left: [-1,0]
 };
-Game.DIRECTION_MIRROR = [ 2, 3, 0, 1 ];
 
-Game.INITIAL_TILE = ['r','p','b','w'];
-Game.TILES = [['r','r','r','r'],['r','r','r','b'],
+const DirectionMirror = [2, 3, 0, 1];
+
+type Color = string;
+type Colors = [Color, Color, Color, Color];
+
+type Tile = {
+  colors : Colors,
+  x : number,
+  y : number,
+}
+type Coord = {
+  x : number,
+  y : number,
+}
+
+const InitialTile : Colors = ['r','p','b','w'];
+const Tiles : Colors[] = [['r','r','r','r'],['r','r','r','b'],
    ['r','r','r','p'],['r','r','r','w'],['r','r','b','b'],['r','r','b','p'],
    ['r','r','b','w'],['r','r','p','b'],['r','r','p','p'],['r','r','p','w'],
    ['r','r','w','b'],['r','r','w','p'],['r','r','w','w'],['r','b','r','b'],
@@ -41,20 +61,22 @@ Game.TILES = [['r','r','r','r'],['r','r','r','b'],
 // Game.TILES = [['r','r','r','r'],['r','r','r','b']];
 
 class TileStack {
+  tiles : Colors[];
+
   constructor() {
-    this.tiles = [...Game.TILES];
+    this.tiles = [...Tiles];
     shuffle(this.tiles);
   }
-  peek(n) {
+  peek(n : number) : Colors[] {
     return this.tiles.slice(0, n);
   }
-  pop() {
+  pop() : Colors | undefined {
     if (this.tiles.length == 0) {
-      return null;
+      return undefined;
     }
     return this.tiles.shift();
   }
-  remove(idx) {
+  remove(idx : number) : void {
     if (idx < this.tiles.length) {
       this.tiles.splice(idx, 1);
     }
@@ -71,6 +93,13 @@ class TileStack {
 }
 
 class Board {
+  grid : Tile[][];
+  tiles : Tile[];
+  minX : number;
+  minY : number;
+  maxX : number;
+  maxY : number;
+
   constructor() {
     this.grid = [];
     this.tiles = [];
@@ -94,26 +123,25 @@ class Board {
     this.maxY = d.maxY;
   }
 
-  checkFit(colors, x, y) {
+  checkFit(colors : Colors, x : number, y : number) : boolean {
     if (this.get(x, y)) {
       return false;
     }
-    for (let i=0; i<4; i++) {
-      let direction = Game.DIRECTION_NAMES[i],
-          offset = Game.DIRECTION_OFFSETS[direction],
-          otherColors = this.get(x + offset[0], y + offset[1]);
-      if (otherColors && otherColors[Game.DIRECTION_MIRROR[i]] != colors[i]) {
+    for (let i=0; i<Directions.length; i++) {
+      let offset = DirectionOffsets[Directions[i]];
+      let otherTile = this.get(x + offset[0], y + offset[1]);
+      if (otherTile && otherTile.colors[DirectionMirror[i]] != colors[i]) {
         return false;
       }
     }
     return true;
   }
 
-  checkFitWithRotations(colors, x, y) {
+  checkFitWithRotations(colors : Colors, x : number, y : number) : number | null {
     colors = [...colors];
     let rotations = 0;
     while (rotations < 4 && !this.checkFit(colors, x, y)) {
-      colors.unshift(colors.pop());
+      colors.unshift(colors.pop()!);
       rotations++;
     }
     if (rotations == 4) {
@@ -123,16 +151,16 @@ class Board {
     }
   }
 
-  place(colors, x, y) {
+  place(colors : Colors, x : number, y : number) : boolean {
     if (!this.checkFit(colors, x, y)) {
       return false;
     }
-    if (!this.grid[x]) {
+    if (this.grid[x] === undefined) {
       this.grid[x] = [];
     }
     let tile = this.grid[x][y];
     if (!tile) {
-      tile = [x,y, colors];
+      tile = {colors: colors, x: x, y: y};
       this.grid[x][y] = tile;
       this.tiles.push(tile);
       this.minX = Math.min(x, this.minX);
@@ -140,41 +168,41 @@ class Board {
       this.maxX = Math.max(x, this.maxX);
       this.maxY = Math.max(y, this.maxY);
     }
-    tile[2] = colors;
+    tile.colors = colors;
     return true;
   }
 
-  get(x, y) {
+  get(x : number, y : number) : Tile | null {
     if (this.grid[x] && this.grid[x][y]) {
-      return this.grid[x][y][2];
+      return this.grid[x][y];
     } else {
       return null;
     }
   }
 
-  frontier() {
-    let frontierTiles = [];
+  frontier() : Coord[] {
+    let frontierTiles : {x : number, y: number}[] = [];
     for (let x=this.minX-1; x<=this.maxX+1; x++) {
       for (let y=this.minY-1; y<=this.maxY+1; y++) {
         if (!this.get(x, y) && (this.get(x-1,y) || this.get(x+1,y) || this.get(x,y-1) || this.get(x,y+1))) {
-          frontierTiles.push([ x, y ]);
+          frontierTiles.push({x: x, y: y});
         }
       }
     }
     return frontierTiles;
   }
 
-  getTriangleColor(x, y, t) {
+  getTriangleColor(x : number, y : number, t : number) : Color | null {
     let tile = (this.grid[x] ? this.grid[x][y] : null);
-    return tile ? tile[2][t] : null;
+    return tile ? tile.colors[t] : null;
   }
 
-  calculateScore(srcX, srcY) {
-    let scores = [0,0,0,0],
+  calculateScore(srcX : number, srcY : number) : {scores: [number, number, number, number], polyEdges: any[]} {
+    let scores : [number, number, number, number] = [0,0,0,0],
         polyEdgesPerStart = [[],[],[],[]];
     let crumbs = [];
     let c = this.getTriangleColor.bind(this),
-        m = function(x,y,t,set) {
+        m = function(x : number, y : number, t : number, set : number | null) {
           if (!crumbs[x]) crumbs[x] = [];
           if (!crumbs[x][y]) crumbs[x][y] = [];
           if (!set) return crumbs[x][y][t];
@@ -190,10 +218,10 @@ class Board {
           polyTileCount = 0,
           polyEdges = [];
 
-      if (!m(srcX,srcY,start)) {
-        m(srcX,srcY,start,polyIdx);
+      if (!m(srcX, srcY, start, null)) {
+        m(srcX, srcY, start, polyIdx);
 
-        let queue = [ [srcX,srcY,start,0,null] ];
+        let queue = [ [srcX, srcY, start, 0, null] ];
         while (queue.length > 0) {
           let cur = queue.shift();
           let x = cur[0],
@@ -239,7 +267,7 @@ class Board {
 
             if (!triColor) {
               polyOpen = true;
-            } else if (!m(tri[0], tri[1], tri[2]) && triColor==polyColor) {
+            } else if (!m(tri[0], tri[1], tri[2], null) && triColor==polyColor) {
               m(tri[0], tri[1], tri[2], polyIdx);
 
               if (tri[0]==x && tri[1]==y) {

@@ -5,7 +5,7 @@ export default {
   input: 'src/script.ts',
   output: {
     name: 'tilegame',
-    dir: 'output',
+    dir: 'dist',
     format: 'iife',
     sourcemap: true,
     globals: {

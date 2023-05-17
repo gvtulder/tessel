@@ -150,6 +150,7 @@ class TileUI {
 
   makeDropzone(ondrop) {
     this.dropzone = interact(this.div).dropzone({
+      overlap: 'center',
       ondrop: ondrop
     }).on('dropactivate', function (evt) {
       evt.target.classList.add('drop-activated');

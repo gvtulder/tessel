@@ -106,7 +106,14 @@ export class TileStack {
 }
 
 
-type PolyEdgeType = [number[], number[]];
+type TriangleType = {
+  x : number,
+  y : number,
+  t : number,
+  depth? : number,
+  previous? : TriangleType
+};
+type PolyEdgeType = [TriangleType, TriangleType];
 type PolyEdgesType = PolyEdgeType[][];
 export type ScoreType = {
   scores : [number, number, number, number],
@@ -222,8 +229,7 @@ export class Board {
     const scores : [number, number, number, number] = [0,0,0,0];
     const polyEdgesPerStart : [PolyEdgesType, PolyEdgesType, PolyEdgesType, PolyEdgesType] = [[],[],[],[]];
     const crumbs = [];
-    const c = this.getTriangleColor.bind(this),
-          m = function(x : number, y : number, t : number, set : number | null) {
+    const m = function(x : number, y : number, t : number, set : number | null) {
             if (!crumbs[x]) crumbs[x] = [];
             if (!crumbs[x][y]) crumbs[x][y] = [];
             if (!set) return crumbs[x][y][t];
@@ -233,75 +239,71 @@ export class Board {
 
     for (let start=0; start<4; start++) {
        const polyIdx = start + 1,
-             polyColor = c(srcX,srcY,start),
-             polyTiles = [],
-             polyEdges = [];
+             polyColor = this.getTriangleColor(srcX, srcY, start),
+             polyTiles : boolean[][] = [],
+             polyEdges : PolyEdgesType = [];
        let polyOpen = false,
            polyTileCount = 0;
 
       if (!m(srcX, srcY, start, null)) {
         m(srcX, srcY, start, polyIdx);
 
-        const queue = [ [srcX, srcY, start, 0, null] ];
+        const queue : TriangleType[] = [ { x: srcX, y: srcY, t: start, depth: 0 } ];
         while (queue.length > 0) {
           const cur = queue.shift();
-          const x = cur[0],
-                y = cur[1],
-                t = cur[2],
-                depth = cur[3];
 
-          if (!polyTiles[x]) {
-            polyTiles[x] = [];
+          if (!polyTiles[cur.x]) {
+            polyTiles[cur.x] = [];
           }
-          if (!polyTiles[x][y]) {
-            polyTiles[x][y] = true;
+          if (!polyTiles[cur.x][cur.y]) {
+            polyTiles[cur.x][cur.y] = true;
             polyTileCount++;
           }
 
-          const nextTriangles = [];
-          switch (t) {
+          const nextTriangles : TriangleType[] = [];
+          switch (cur.t) {
             case 0: // TOP
-              nextTriangles.push([x,y,1]); // RIGHT
-              nextTriangles.push([x,y,3]); // LEFT
-              nextTriangles.push([x,y-1,2]); // BOTTOM
+              nextTriangles.push({ x: cur.x, y: cur.y, t: 1}); // RIGHT
+              nextTriangles.push({ x: cur.x, y: cur.y, t: 3}); // LEFT
+              nextTriangles.push({ x: cur.x, y: cur.y-1, t: 2}); // BOTTOM
               break;
             case 1: // RIGHT
-              nextTriangles.push([x,y,0]); // TOP
-              nextTriangles.push([x,y,2]); // BOTTOM
-              nextTriangles.push([x+1,y,3]); // LEFT
+              nextTriangles.push({ x: cur.x, y: cur.y, t: 0}); // TOP
+              nextTriangles.push({ x: cur.x, y: cur.y, t: 2}); // BOTTOM
+              nextTriangles.push({ x: cur.x+1, y: cur.y, t: 3}); // LEFT
               break;
             case 2: // BOTTOM
-              nextTriangles.push([x,y,1]); // RIGHT
-              nextTriangles.push([x,y,3]); // LEFT
-              nextTriangles.push([x,y+1,0]); // TOP
+              nextTriangles.push({ x: cur.x, y: cur.y, t: 1}); // RIGHT
+              nextTriangles.push({ x: cur.x, y: cur.y, t: 3}); // LEFT
+              nextTriangles.push({ x: cur.x, y: cur.y+1, t: 0}); // TOP
               break;
             case 3: // LEFT
-              nextTriangles.push([x,y,0]); // TOP
-              nextTriangles.push([x,y,2]); // BOTTOM
-              nextTriangles.push([x-1,y,1]); // RIGHT
+              nextTriangles.push({ x: cur.x, y: cur.y, t: 0}); // TOP
+              nextTriangles.push({ x: cur.x, y: cur.y, t: 2}); // BOTTOM
+              nextTriangles.push({ x: cur.x-1, y: cur.y, t: 1}); // RIGHT
               break;
           }
           for (let i=0; i<nextTriangles.length; i++) {
-            const tri = nextTriangles[i],
-                  triColor = c(tri[0], tri[1], tri[2]);
+            const tri = nextTriangles[i];
+            const triColor = this.getTriangleColor(tri.x, tri.y, tri.t);
 
             if (!triColor) {
               polyOpen = true;
-            } else if (!m(tri[0], tri[1], tri[2], null) && triColor==polyColor) {
-              m(tri[0], tri[1], tri[2], polyIdx);
+            } else if (!m(tri.x, tri.y, tri.t, null) && triColor==polyColor) {
+              m(tri.x, tri.y, tri.t, polyIdx);
 
-              if (tri[0]==x && tri[1]==y) {
+              if (tri.x == cur.x && tri.y == cur.y) {
                 // same tile, draw line
-                tri.push(depth+1);
-                if (!polyEdges[Math.floor(depth)]) {
-                  polyEdges[Math.floor(depth)] = [];
+                tri.depth = cur.depth + 1;
+                if (!polyEdges[Math.floor(cur.depth)]) {
+                  polyEdges[Math.floor(cur.depth)] = [];
                 }
-                polyEdges[Math.floor(depth)].push([ cur, tri ]);
+                polyEdges[Math.floor(cur.depth)].push([ cur, tri ]);
               } else {
                 // two tiles, no line
-                tri.push(depth);
+                tri.depth = cur.depth;
               }
-              tri.push(cur);
+              tri.previous = cur;
 
               queue.push(tri);
             }

@@ -336,7 +336,7 @@ class BoardPolyDrawing {
     }
   }
 
-  drawPolyDepth(depth) {
+  drawPolyDepth(depth : number) {
     const d = depth;
     const allPolyEdges = this.scoreData.polyEdges;
     for (let i=0; i<allPolyEdges.length; i++) {
@@ -349,17 +349,17 @@ class BoardPolyDrawing {
                 Y_OFFSET = [ 0, 0.5, 1, 0.5 ];
 
           const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          line.setAttribute('x1', `${100 * (X_OFFSET[from[2]] + from[0] - this.minX)}`);
-          line.setAttribute('y1', `${100 * (Y_OFFSET[from[2]] + from[1] - this.minY)}`);
-          line.setAttribute('x2', `${100 * (X_OFFSET[to[2]] + to[0] - this.minX)}`);
-          line.setAttribute('y2', `${100 * (Y_OFFSET[to[2]] + to[1] - this.minY)}`);
+          line.setAttribute('x1', `${100 * (X_OFFSET[from.t] + from.x - this.minX)}`);
+          line.setAttribute('y1', `${100 * (Y_OFFSET[from.t] + from.y - this.minY)}`);
+          line.setAttribute('x2', `${100 * (X_OFFSET[to.t] + to.x - this.minX)}`);
+          line.setAttribute('y2', `${100 * (Y_OFFSET[to.t] + to.y - this.minY)}`);
           line.setAttribute('stroke', this.color.main);
           line.setAttribute('stroke-width', '8');
           this.svg.appendChild(line);
 
           const circleA = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          circleA.setAttribute('cx', `${100 * (X_OFFSET[from[2]] + from[0] - this.minX)}`);
-          circleA.setAttribute('cy', `${100 * (Y_OFFSET[from[2]] + from[1] - this.minY)}`);
+          circleA.setAttribute('cx', `${100 * (X_OFFSET[from.t] + from.x - this.minX)}`);
+          circleA.setAttribute('cy', `${100 * (Y_OFFSET[from.t] + from.y - this.minY)}`);
           circleA.setAttribute('r', '11');
           circleA.setAttribute('fill', this.color.light);
           circleA.setAttribute('stroke', this.color.dark);
@@ -368,8 +368,8 @@ class BoardPolyDrawing {
           this.svg.appendChild(circleA);
 
           const circleB = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          circleB.setAttribute('cx', `${100 * (X_OFFSET[to[2]] + to[0] - this.minX)}`);
-          circleB.setAttribute('cy', `${100 * (Y_OFFSET[to[2]] + to[1] - this.minY)}`);
+          circleB.setAttribute('cx', `${100 * (X_OFFSET[to.t] + to.x - this.minX)}`);
+          circleB.setAttribute('cy', `${100 * (Y_OFFSET[to.t] + to.y - this.minY)}`);
           circleB.setAttribute('r', '11');
           circleB.setAttribute('fill', this.color.light);
           circleB.setAttribute('stroke', this.color.dark);

@@ -241,7 +241,6 @@ class BoardPolyDrawing {
   currentDepth : number;
   maxDepth : number;
   color : {main: string, light: string, dark: string};
-  drawNil : boolean;
   div : HTMLDivElement;
   svg : SVGSVGElement;
   timeout? : number;
@@ -250,8 +249,8 @@ class BoardPolyDrawing {
     this.boardUI = boardUI;
   }
 
-  start(x : number, y : number, scoreData, color, drawNil) {
-    console.log('boardPolyDrawing', x, y, scoreData, color, drawNil);
+  start(x : number, y : number, scoreData, color) {
+    console.log('boardPolyDrawing', x, y, scoreData, color);
 
     this.minX = this.boardUI.minX;
     this.maxX = this.boardUI.maxX;
@@ -263,7 +262,6 @@ class BoardPolyDrawing {
     this.scoreData = scoreData;
     this.currentDepth = 0;
     this.color = color;
-    this.drawNil = drawNil;
 
     let maxDepth = 0;
     for (let i=0; i<scoreData.polyEdges.length; i++) {
@@ -653,10 +651,10 @@ class BoardUI {
     this.tileBoard.classList.add('animated');
   }
 
-  showScoresOnTile(x, y, scoreData, color, drawNil?) {
+  showScoresOnTile(x : number, y : number, scoreData : ScoreType, color : PlayerType['color']) {
     const bpd = new BoardPolyDrawing(this);
     this.boardPolyDrawings.push(bpd);
-    bpd.start(x, y, scoreData, color, drawNil);
+    bpd.start(x, y, scoreData, color);
   }
 
   clearScoresOnTile() {

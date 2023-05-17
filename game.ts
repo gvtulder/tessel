@@ -15,9 +15,9 @@ function shuffle(myArray : any[]) {
 type DirectionKey = 'top' | 'right' | 'bottom' | 'left';
 
 class Direction {
-  index : number;
-  key : DirectionKey;
-  offset : Coord;
+  readonly index : number;
+  readonly key : DirectionKey;
+  readonly offset : Coord;
   mirror : Direction;
 
   constructor(index : number, key : DirectionKey, offset : Coord) {
@@ -37,10 +37,10 @@ Right.mirror = Left;
 Bottom.mirror = Top;
 Left.mirror = Right;
 
-const Directions = [Top, Right, Bottom, Left];
+export const Directions = [Top, Right, Bottom, Left];
 
 type Color = 'r' | 'p' | 'b' | 'w';
-type Colors = [Color, Color, Color, Color];
+export type Colors = [Color, Color, Color, Color];
 
 type Tile = {
   colors : Colors,
@@ -52,7 +52,7 @@ type Coord = {
   y : number,
 }
 
-const InitialTile : Colors = ['r','p','b','w'];
+export const InitialTile : Colors = ['r','p','b','w'];
 const Tiles : Colors[] = [['r','r','r','r'],['r','r','r','b'],
    ['r','r','r','p'],['r','r','r','w'],['r','r','b','b'],['r','r','b','p'],
    ['r','r','b','w'],['r','r','p','b'],['r','r','p','p'],['r','r','p','w'],
@@ -73,7 +73,7 @@ const Tiles : Colors[] = [['r','r','r','r'],['r','r','r','b'],
    ['p','p','w','w'],['p','w','p','w'],['p','w','w','w'],['w','w','w','w']];
 // Game.TILES = [['r','r','r','r'],['r','r','r','b']];
 
-class TileStack {
+export class TileStack {
   tiles : Colors[];
 
   constructor() {
@@ -105,7 +105,7 @@ class TileStack {
   }
 }
 
-class Board {
+export class Board {
   grid : Tile[][];
   tiles : Tile[];
   minX : number;

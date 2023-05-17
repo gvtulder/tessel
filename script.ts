@@ -1,6 +1,18 @@
+import interact from 'interactjs/interact';
+
+import { Board, Colors, Directions, InitialTile, TileStack } from './game.js';
 
 class TileUI {
-  constructor(gameManager) {
+  gameManager : GameManager;
+  svg : any;  // SVGSVGElement;
+  div : any;  // HTMLDivElement;
+  col : number;
+  row : number;
+  colors : Colors;
+  beforeAutoRotate : any;
+  dropzone : any;
+
+  constructor(gameManager : GameManager) {
     this.gameManager = gameManager;
 
     let svg = this.generateSvg();
@@ -19,14 +31,14 @@ class TileUI {
     this.div.tile = this;
   }
 
-  setPosition(col, row) {
+  setPosition(col : number, row : number) {
     this.col = col;
     this.row = row;
     this.div.style.top = 100 * (row - 0.5) + 'px';
     this.div.style.left = 100 * (col - 0.5) + 'px';
   }
 
-  setColors(colors) {
+  setColors(colors : Colors | null) {
     if (colors === null) {
       this.div.className = 'tile placeholder';
     } else {
@@ -41,8 +53,8 @@ class TileUI {
 
   generateSvg() {
     let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', 100);
-    svg.setAttribute('height', 100);
+    svg.setAttribute('width', '100');
+    svg.setAttribute('height', '100');
 
     let group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     group.setAttribute('class', 'tile-segments');
@@ -112,7 +124,7 @@ class TileUI {
   makeDraggable(onDragStart) {
     const position = { x: 0, y: 0 };
     const boardUI = this.gameManager.boardUI;
-    interact(this.div).on('tap', function(evt) {
+    let i = interact(this.div).on('tap', function(evt) {
       this.rotateTile();
     }.bind(this)).draggable({
       listeners: {
@@ -174,6 +186,8 @@ class TileUI {
 
 
 class ScoreboardUI {
+  element : HTMLDivElement;
+
   constructor(gamemanager) {
     let div = document.createElement('div');
     div.setAttribute('id', 'scoreboard');
@@ -208,6 +222,22 @@ class ScoreboardUI {
 
 
 class BoardPolyDrawing {
+  boardUI : BoardUI;
+  minX : number;
+  maxX : number;
+  minY : number;
+  maxY : number;
+  x : number;
+  y : number;
+  scoreData : any;
+  currentDepth : number;
+  maxDepth : number;
+  color : {main: string, light: string, dark: string};
+  drawNil : boolean;
+  div : HTMLDivElement;
+  svg : SVGSVGElement;
+  timeout? : number;
+
   constructor(boardUI) {
     this.boardUI = boardUI;
   }
@@ -248,8 +278,8 @@ class BoardPolyDrawing {
   initSvg() {
     let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('className', 'score-graph');
-    svg.setAttribute('width', 100 * (this.maxX - this.minX + 1));
-    svg.setAttribute('height', 100 * (this.maxY - this.minY + 1));
+    svg.setAttribute('width', `${100 * (this.maxX - this.minX + 1)}`);
+    svg.setAttribute('height', `${100 * (this.maxY - this.minY + 1)}`);
     return svg;
   }
 
@@ -278,32 +308,32 @@ class BoardPolyDrawing {
         let thisX = 100 * (x + 0.5 * dir.offset.x);
         let thisY = 100 * (y + 0.5 * dir.offset.y);
 
-        let el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        el.setAttribute('cx', thisX);
-        el.setAttribute('cy', thisY);
-        el.setAttribute('r', 20);
-        el.setAttribute('fill', this.color.light);
-        el.setAttribute('stroke', this.color.dark);
-        el.setAttribute('stroke-width', 8);
-        el.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
-        this.svg.appendChild(el);
+        let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', `${thisX}`);
+        circle.setAttribute('cy', `${thisY}`);
+        circle.setAttribute('r', '20');
+        circle.setAttribute('fill', this.color.light);
+        circle.setAttribute('stroke', this.color.dark);
+        circle.setAttribute('stroke-width', '8');
+        circle.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
+        this.svg.appendChild(circle);
 
-        el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        el.setAttribute('x', thisX);
-        el.setAttribute('y', thisY + 1);
-        el.setAttribute('alignment-baseline', 'middle');
-        el.setAttribute('dominant-baseline', 'middle');
-        el.setAttribute('text-anchor', 'middle');
-        el.setAttribute('font-size', 21);
-        el.setAttribute('color', 'white');
-        el.appendChild(document.createTextNode(scores[i]));
-        this.svg.appendChild(el);
+        let text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', `${thisX}`);
+        text.setAttribute('y', `${thisY + 1}`);
+        text.setAttribute('alignment-baseline', 'middle');
+        text.setAttribute('dominant-baseline', 'middle');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '21');
+        text.setAttribute('color', 'white');
+        text.appendChild(document.createTextNode(scores[i]));
+        this.svg.appendChild(text);
       }
     }
   }
 
   drawPolyDepth(depth) {
-    let d = depth, c = this.ctx;
+    let d = depth;
     let allPolyEdges = this.scoreData.polyEdges;
     for (let i=0; i<allPolyEdges.length; i++) {
       let polyEdges = allPolyEdges[i];
@@ -314,34 +344,34 @@ class BoardPolyDrawing {
           let X_OFFSET = [ 0.5, 1, 0.5, 0 ],
               Y_OFFSET = [ 0, 0.5, 1, 0.5 ];
 
-          let el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          el.setAttribute('x1', 100 * (X_OFFSET[from[2]] + from[0] - this.minX));
-          el.setAttribute('y1', 100 * (Y_OFFSET[from[2]] + from[1] - this.minY));
-          el.setAttribute('x2', 100 * (X_OFFSET[to[2]] + to[0] - this.minX));
-          el.setAttribute('y2', 100 * (Y_OFFSET[to[2]] + to[1] - this.minY));
-          el.setAttribute('stroke', this.color.main);
-          el.setAttribute('stroke-width', 8);
-          this.svg.appendChild(el);
+          let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', `${100 * (X_OFFSET[from[2]] + from[0] - this.minX)}`);
+          line.setAttribute('y1', `${100 * (Y_OFFSET[from[2]] + from[1] - this.minY)}`);
+          line.setAttribute('x2', `${100 * (X_OFFSET[to[2]] + to[0] - this.minX)}`);
+          line.setAttribute('y2', `${100 * (Y_OFFSET[to[2]] + to[1] - this.minY)}`);
+          line.setAttribute('stroke', this.color.main);
+          line.setAttribute('stroke-width', '8');
+          this.svg.appendChild(line);
 
-          el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          el.setAttribute('cx', 100 * (X_OFFSET[from[2]] + from[0] - this.minX));
-          el.setAttribute('cy', 100 * (Y_OFFSET[from[2]] + from[1] - this.minY));
-          el.setAttribute('r', 11);
-          el.setAttribute('fill', this.color.light);
-          el.setAttribute('stroke', this.color.dark);
-          el.setAttribute('stroke-width', 8);
-          el.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
-          this.svg.appendChild(el);
+          let circleA = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circleA.setAttribute('cx', `${100 * (X_OFFSET[from[2]] + from[0] - this.minX)}`);
+          circleA.setAttribute('cy', `${100 * (Y_OFFSET[from[2]] + from[1] - this.minY)}`);
+          circleA.setAttribute('r', '11');
+          circleA.setAttribute('fill', this.color.light);
+          circleA.setAttribute('stroke', this.color.dark);
+          circleA.setAttribute('stroke-width', '8');
+          circleA.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
+          this.svg.appendChild(circleA);
 
-          el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          el.setAttribute('cx', 100 * (X_OFFSET[to[2]] + to[0] - this.minX));
-          el.setAttribute('cy', 100 * (Y_OFFSET[to[2]] + to[1] - this.minY));
-          el.setAttribute('r', 11);
-          el.setAttribute('fill', this.color.light);
-          el.setAttribute('stroke', this.color.dark);
-          el.setAttribute('stroke-width', 8);
-          el.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
-          this.svg.appendChild(el);
+          let circleB = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circleB.setAttribute('cx', `${100 * (X_OFFSET[to[2]] + to[0] - this.minX)}`);
+          circleB.setAttribute('cy', `${100 * (Y_OFFSET[to[2]] + to[1] - this.minY)}`);
+          circleB.setAttribute('r', '11');
+          circleB.setAttribute('fill', this.color.light);
+          circleB.setAttribute('stroke', this.color.dark);
+          circleB.setAttribute('stroke-width', '8');
+          circleB.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
+          this.svg.appendChild(circleB);
         }
       }
     }
@@ -356,6 +386,10 @@ class BoardPolyDrawing {
 
 
 class TileStackUI {
+  gameManager : GameManager;
+  stack : any;
+  element : HTMLDivElement;
+
   constructor(gameManager) {
     this.gameManager = gameManager;
     this.stack = [];
@@ -394,6 +428,9 @@ class TileStackUI {
 
 
 class ControlsUI {
+  gameManager : GameManager;
+  element : HTMLDivElement;
+
   constructor(gameManager) {
     this.gameManager = gameManager;
     this.build();
@@ -444,6 +481,25 @@ class ControlsUI {
 
 
 class BoardUI {
+  gameManager : GameManager;
+  grid : any;
+  tiles : any;
+  scale : number;
+  boardPolyDrawings : BoardPolyDrawing[];
+  boardUI : BoardUI;
+  tileStackUI : TileStackUI;
+  scoreboard : ScoreboardUI;
+  controls : ControlsUI;
+
+  minX : number;
+  maxX : number;
+  minY : number;
+  maxY : number;
+
+  gameDiv : HTMLDivElement;
+  tileBoardContainer : HTMLDivElement;
+  tileBoard : HTMLDivElement;
+
   constructor(gameManager) {
     this.gameManager = gameManager;
 
@@ -470,7 +526,7 @@ class BoardUI {
     this.tileStackUI = new TileStackUI(this.gameManager);
     tileStackContainer.appendChild(this.tileStackUI.element);
 
-    let scoreboard = new ScoreboardUI();
+    let scoreboard = new ScoreboardUI(this);
     tileStackContainer.appendChild(scoreboard.element);
     this.scoreboard = scoreboard;
 
@@ -593,7 +649,7 @@ class BoardUI {
     this.tileBoard.classList.add('animated');
   }
 
-  showScoresOnTile(x, y, scoreData, color, drawNil) {
+  showScoresOnTile(x, y, scoreData, color, drawNil?) {
     let bpd = new BoardPolyDrawing(this);
     this.boardPolyDrawings.push(bpd);
     bpd.start(x, y, scoreData, color, drawNil);
@@ -631,7 +687,17 @@ class BoardUI {
 
 
 
-class GameManager {
+export class GameManager {
+  tileStack : TileStack;
+  board : Board;
+  boardUI : BoardUI;
+  totalScore : number;
+  player : any;
+  settings : {
+    autorotate: false,
+    hints: false,
+  }
+
   constructor() {
     this.tileStack = new TileStack();
     this.board = new Board();

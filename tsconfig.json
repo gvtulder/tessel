@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
-    "sourceMap": true
+    "module": "ES6",
+    "sourceMap": true,
+    "skipLibCheck": true, // for interactjs
+    "baseUrl": ".",
+    "paths": {
+      "interactjs/interact": ["node_modules/interactjs/dist/interact.min.js"]
+    },
+    "moduleResolution": "nodenext"
   }
 }

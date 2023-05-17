@@ -1,2 +1,3 @@
-game.js.map
-game.js
+.*.swp
+output/
+node_modules/

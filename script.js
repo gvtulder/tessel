@@ -474,7 +474,7 @@ class BoardUI {
     tileStackContainer.appendChild(scoreboard.element);
     this.scoreboard = scoreboard;
 
-    let controls = new ControlsUI(this);
+    let controls = new ControlsUI(this.gameManager);
     tileStackContainer.appendChild(controls.element);
     this.controls = controls;
 

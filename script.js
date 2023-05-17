@@ -275,8 +275,8 @@ class BoardPolyDrawing {
     for (let i=0; i<Directions.length; i++) {
       let dir = Directions[i];
       if (scores[i]) {
-        let thisX = 100 * (x + 0.5 * DirectionOffsets[dir][0]);
-        let thisY = 100 * (y + 0.5 * DirectionOffsets[dir][1]);
+        let thisX = 100 * (x + 0.5 * dir.offset.x);
+        let thisY = 100 * (y + 0.5 * dir.offset.y);
 
         let el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         el.setAttribute('cx', thisX);

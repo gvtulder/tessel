@@ -12,21 +12,34 @@ function shuffle(myArray : any[]) {
   }
 }
 
-const enum Direction {
-  Top = 'top',
-  Right = 'right',
-  Bottom = 'bottom',
-  Left = 'left',
+type DirectionKey = 'top' | 'right' | 'bottom' | 'left';
+
+class Direction {
+  index : number;
+  key : DirectionKey;
+  offset : Coord;
+  mirror : Direction;
+
+  constructor(index : number, key : DirectionKey, offset : Coord) {
+    this.index = index;
+    this.key = key;
+    this.offset = offset;
+  }
 }
-const Directions = [Direction.Top, Direction.Right, Direction.Bottom, Direction.Left];
 
-const DirectionOffsets = {
-  top: [0,-1], right: [1,0], bottom: [0,1], left: [-1,0]
-};
+const Top = new Direction(0, 'top', {x: 0, y: -1});
+const Right = new Direction(1, 'right', {x: 1, y: 0});
+const Bottom = new Direction(2, 'bottom', {x: 0, y: 1});
+const Left = new Direction(3, 'left', {x: -1, y: 0});
 
-const DirectionMirror = [2, 3, 0, 1];
+Top.mirror = Bottom;
+Right.mirror = Left;
+Bottom.mirror = Top;
+Left.mirror = Right;
 
-type Color = string;
+const Directions = [Top, Right, Bottom, Left];
+
+type Color = 'r' | 'p' | 'b' | 'w';
 type Colors = [Color, Color, Color, Color];
 
 type Tile = {
@@ -127,10 +140,9 @@ class Board {
     if (this.get(x, y)) {
       return false;
     }
-    for (let i=0; i<Directions.length; i++) {
-      let offset = DirectionOffsets[Directions[i]];
-      let otherTile = this.get(x + offset[0], y + offset[1]);
-      if (otherTile && otherTile.colors[DirectionMirror[i]] != colors[i]) {
+    for (let direction of Directions) {
+      let otherTile = this.get(x + direction.offset.x, y + direction.offset.y);
+      if (otherTile && otherTile.colors[direction.mirror.index] != colors[direction.index]) {
         return false;
       }
     }

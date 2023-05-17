@@ -1,12 +1,12 @@
 
-function shuffle(myArray : any[]) {
+function shuffle<T>(myArray : T[]) {
   // Fisher-Yates shuffle
   let i = myArray.length;
   if (i == 0 ) return false;
   while (--i) {
-    let j = Math.floor(Math.random() * (i + 1));
-    let tempi = myArray[i];
-    let tempj = myArray[j];
+    const j = Math.floor(Math.random() * (i + 1));
+    const tempi = myArray[i];
+    const tempj = myArray[j];
     myArray[i] = tempj;
     myArray[j] = tempi;
   }
@@ -140,8 +140,8 @@ export class Board {
     if (this.get(x, y)) {
       return false;
     }
-    for (let direction of Directions) {
-      let otherTile = this.get(x + direction.offset.x, y + direction.offset.y);
+    for (const direction of Directions) {
+      const otherTile = this.get(x + direction.offset.x, y + direction.offset.y);
       if (otherTile && otherTile.colors[direction.mirror.index] != colors[direction.index]) {
         return false;
       }
@@ -153,7 +153,7 @@ export class Board {
     colors = [...colors];
     let rotations = 0;
     while (rotations < 4 && !this.checkFit(colors, x, y)) {
-      colors.unshift(colors.pop()!);
+      colors.unshift(colors.pop());
       rotations++;
     }
     if (rotations == 4) {
@@ -193,7 +193,7 @@ export class Board {
   }
 
   frontier() : Coord[] {
-    let frontierTiles : {x : number, y: number}[] = [];
+    const frontierTiles : {x : number, y: number}[] = [];
     for (let x=this.minX-1; x<=this.maxX+1; x++) {
       for (let y=this.minY-1; y<=this.maxY+1; y++) {
         if (!this.get(x, y) && (this.get(x-1,y) || this.get(x+1,y) || this.get(x,y-1) || this.get(x,y+1))) {
@@ -205,42 +205,41 @@ export class Board {
   }
 
   getTriangleColor(x : number, y : number, t : number) : Color | null {
-    let tile = (this.grid[x] ? this.grid[x][y] : null);
+    const tile = (this.grid[x] ? this.grid[x][y] : null);
     return tile ? tile.colors[t] : null;
   }
 
   calculateScore(srcX : number, srcY : number) : {scores: [number, number, number, number], polyEdges: any[]} {
-    let scores : [number, number, number, number] = [0,0,0,0],
-        polyEdgesPerStart = [[],[],[],[]];
-    let crumbs = [];
-    let c = this.getTriangleColor.bind(this),
-        m = function(x : number, y : number, t : number, set : number | null) {
-          if (!crumbs[x]) crumbs[x] = [];
-          if (!crumbs[x][y]) crumbs[x][y] = [];
-          if (!set) return crumbs[x][y][t];
-          crumbs[x][y][t] = set;
-          return false;
-        };
+    const scores : [number, number, number, number] = [0,0,0,0],
+          polyEdgesPerStart = [[],[],[],[]];
+    const crumbs = [];
+    const c = this.getTriangleColor.bind(this),
+          m = function(x : number, y : number, t : number, set : number | null) {
+            if (!crumbs[x]) crumbs[x] = [];
+            if (!crumbs[x][y]) crumbs[x][y] = [];
+            if (!set) return crumbs[x][y][t];
+            crumbs[x][y][t] = set;
+            return false;
+          };
 
     for (let start=0; start<4; start++) {
-      let polyIdx = start + 1,
-          polyColor = c(srcX,srcY,start),
-          polyOpen = false,
-          polyTiles = [],
-          polyTileCount = 0,
-          polyEdges = [];
+       const polyIdx = start + 1,
+             polyColor = c(srcX,srcY,start),
+             polyTiles = [],
+             polyEdges = [];
+       let polyOpen = false,
+           polyTileCount = 0;
 
       if (!m(srcX, srcY, start, null)) {
         m(srcX, srcY, start, polyIdx);
 
-        let queue = [ [srcX, srcY, start, 0, null] ];
+        const queue = [ [srcX, srcY, start, 0, null] ];
         while (queue.length > 0) {
-          let cur = queue.shift();
-          let x = cur[0],
-              y = cur[1],
-              t = cur[2],
-              depth = cur[3],
-              previous = cur[4];
+          const cur = queue.shift();
+          const x = cur[0],
+                y = cur[1],
+                t = cur[2],
+                depth = cur[3];
 
           if (!polyTiles[x]) {
             polyTiles[x] = [];
@@ -250,7 +249,7 @@ export class Board {
             polyTileCount++;
           }
 
-          let nextTriangles = [];
+          const nextTriangles = [];
           switch (t) {
             case 0: // TOP
               nextTriangles.push([x,y,1]); // RIGHT
@@ -274,8 +273,8 @@ export class Board {
               break;
           }
           for (let i=0; i<nextTriangles.length; i++) {
-            let tri = nextTriangles[i],
-                triColor = c(tri[0], tri[1], tri[2]);
+            const tri = nextTriangles[i],
+                  triColor = c(tri[0], tri[1], tri[2]);
 
             if (!triColor) {
               polyOpen = true;

@@ -5,6 +5,9 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-typescript": "^11.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^5.59.6",
+    "eslint": "^8.40.0",
     "tslib": "^2.5.0"
   },
   "type": "module"

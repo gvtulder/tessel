@@ -1,24 +1,30 @@
-import interact from 'interactjs/interact';
+import type { Interactable } from '@interactjs/types';
+import interact from '@interactjs/interact/index';
 
-import { Board, Colors, Directions, InitialTile, TileStack } from './game.js';
+import { Board, Colors, Directions, InitialTile, ScoreType, TileStack } from './game.js';
+
+
+interface TileUIHTMLDivElement extends HTMLDivElement {
+  tile? : TileUI;
+}
 
 class TileUI {
   gameManager : GameManager;
-  svg : any;  // SVGSVGElement;
-  div : any;  // HTMLDivElement;
+  svg : SVGSVGElement;
+  div : TileUIHTMLDivElement;
   col : number;
   row : number;
   colors : Colors;
-  beforeAutoRotate : any;
-  dropzone : any;
+  beforeAutoRotate : { className : string, colors : Colors };
+  dropzone : Interactable;
 
   constructor(gameManager : GameManager) {
     this.gameManager = gameManager;
 
-    let svg = this.generateSvg();
+    const svg = this.generateSvg();
     this.svg = svg;
 
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.className = 'tile';
     div.appendChild(this.svg);
     this.div = div;
@@ -52,21 +58,21 @@ class TileUI {
   }
 
   generateSvg() {
-    let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', '100');
     svg.setAttribute('height', '100');
 
-    let group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     group.setAttribute('class', 'tile-segments');
     svg.appendChild(group);
 
-    for (let poly of [
+    for (const poly of [
       ['top',    '-2, -2  102, -2  102, 2  52, 50  48, 50  -2, 2'],
       ['right',  '102, -2  102, 102  98, 102  50, 52  50, 50'],
       ['bottom', '102, 102  -2, 102  -2, 98  48, 50  50, 50'],
       ['left',   '0, 0  50, 50  0, 100']
     ]) {
-      let el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
       el.setAttribute('class', 'tile-segment ' + poly[0]);
       el.setAttribute('points', poly[1]);
       el.setAttribute('fill', 'transparent');
@@ -78,7 +84,7 @@ class TileUI {
 
   rotateTile() {
     this.colors.unshift(this.colors.pop());
-    let cls = this.svg.classList;
+    const cls = this.svg.classList;
     if (cls.contains('rot90')) {
       cls.replace('rot90', 'rot180');
     } else if (cls.contains('rot180')) {
@@ -97,14 +103,14 @@ class TileUI {
     }
     this.resetAutoRotate();
     // how many rotations?
-    let rotations = this.gameManager.board.checkFitWithRotations(this.colors, targetTile.col, targetTile.row);
+    const rotations = this.gameManager.board.checkFitWithRotations(this.colors, targetTile.col, targetTile.row);
     if (rotations == null) {
       console.log('does not fit even with rotation');
       return;
     }
     console.log(`requires ${rotations} rotations to fit`);
     if (!this.beforeAutoRotate) {
-      this.beforeAutoRotate = { className: [...this.svg.classList], colors: [...this.colors] };
+      this.beforeAutoRotate = { className: this.svg.getAttribute('class'), colors: [...this.colors] };
     }
     for (let i=0; i<rotations; i++) {
       this.rotateTile();
@@ -115,7 +121,7 @@ class TileUI {
   resetAutoRotate() {
     if (this.beforeAutoRotate) {
       console.log('resetAutoRotate', this.beforeAutoRotate);
-      this.svg.classList = this.beforeAutoRotate.className;
+      this.svg.setAttribute('class', this.beforeAutoRotate.className);
       this.colors = this.beforeAutoRotate.colors;
       this.beforeAutoRotate = null;
     }
@@ -124,7 +130,7 @@ class TileUI {
   makeDraggable(onDragStart) {
     const position = { x: 0, y: 0 };
     const boardUI = this.gameManager.boardUI;
-    let i = interact(this.div).on('tap', function(evt) {
+    interact(this.div).on('tap', function() {
       this.rotateTile();
     }.bind(this)).draggable({
       listeners: {
@@ -189,27 +195,28 @@ class TileUI {
 class ScoreboardUI {
   element : HTMLDivElement;
 
-  constructor(gamemanager) {
-    let div = document.createElement('div');
+  constructor() {
+    const div = document.createElement('div');
     div.setAttribute('id', 'scoreboard');
     this.element = div;
   }
 
   update(scores) {
-    let fragment = document.createDocumentFragment(),
-        div, span;
+    const fragment = document.createDocumentFragment();
     for (let i=0; i<scores.length; i++) {
-      div = document.createElement('div');
+      const div = document.createElement('div');
       div.style.backgroundColor = scores[i].color.main;
-      span = document.createElement('span');
-      span.className = 'name';
-      span.appendChild(document.createTextNode(scores[i].name));
-      div.appendChild(span);
-      span = document.createElement('span');
-      span.className = 'points';
-      span.appendChild(document.createTextNode(scores[i] ? scores[i].points : 0));
-      div.appendChild(span);
       fragment.appendChild(div);
+
+      const name = document.createElement('span');
+      name.className = 'name';
+      name.appendChild(document.createTextNode(scores[i].name));
+      div.appendChild(name);
+
+      const points = document.createElement('span');
+      points.className = 'points';
+      points.appendChild(document.createTextNode(scores[i] ? scores[i].points : 0));
+      div.appendChild(points);
 
       if (scores[i].turn) {
         div.className = 'turn';
@@ -230,7 +237,7 @@ class BoardPolyDrawing {
   maxY : number;
   x : number;
   y : number;
-  scoreData : any;
+  scoreData : ScoreType;
   currentDepth : number;
   maxDepth : number;
   color : {main: string, light: string, dark: string};
@@ -243,7 +250,7 @@ class BoardPolyDrawing {
     this.boardUI = boardUI;
   }
 
-  start(x, y, scoreData, color, drawNil) {
+  start(x : number, y : number, scoreData, color, drawNil) {
     console.log('boardPolyDrawing', x, y, scoreData, color, drawNil);
 
     this.minX = this.boardUI.minX;
@@ -277,7 +284,7 @@ class BoardPolyDrawing {
   }
 
   initSvg() {
-    let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('className', 'score-graph');
     svg.setAttribute('width', `${100 * (this.maxX - this.minX + 1)}`);
     svg.setAttribute('height', `${100 * (this.maxY - this.minY + 1)}`);
@@ -295,21 +302,17 @@ class BoardPolyDrawing {
   }
 
   drawScoreTile() {
-    let scores = this.scoreData.scores,
-        x = this.x, y = this.y;
-
-    console.log('drawScoreTile', this.scoreData);
-    console.log('drawScoreTile', x, y, scores);
-    x = x - this.minX + 0.5;
-    y = y - this.minY + 0.5;
+    const scores = this.scoreData.scores;
+    const x = this.x - this.minX + 0.5;
+    const y = this.y - this.minY + 0.5;
 
     for (let i=0; i<Directions.length; i++) {
-      let dir = Directions[i];
+      const dir = Directions[i];
       if (scores[i]) {
-        let thisX = 100 * (x + 0.5 * dir.offset.x);
-        let thisY = 100 * (y + 0.5 * dir.offset.y);
+        const thisX = 100 * (x + 0.5 * dir.offset.x);
+        const thisY = 100 * (y + 0.5 * dir.offset.y);
 
-        let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', `${thisX}`);
         circle.setAttribute('cy', `${thisY}`);
         circle.setAttribute('r', '20');
@@ -319,7 +322,7 @@ class BoardPolyDrawing {
         circle.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
         this.svg.appendChild(circle);
 
-        let text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', `${thisX}`);
         text.setAttribute('y', `${thisY + 1}`);
         text.setAttribute('alignment-baseline', 'middle');
@@ -327,25 +330,25 @@ class BoardPolyDrawing {
         text.setAttribute('text-anchor', 'middle');
         text.setAttribute('font-size', '21');
         text.setAttribute('color', 'white');
-        text.appendChild(document.createTextNode(scores[i]));
+        text.appendChild(document.createTextNode(`${scores[i]}`));
         this.svg.appendChild(text);
       }
     }
   }
 
   drawPolyDepth(depth) {
-    let d = depth;
-    let allPolyEdges = this.scoreData.polyEdges;
+    const d = depth;
+    const allPolyEdges = this.scoreData.polyEdges;
     for (let i=0; i<allPolyEdges.length; i++) {
-      let polyEdges = allPolyEdges[i];
+      const polyEdges = allPolyEdges[i];
       if (polyEdges.length > depth) {
         for (let j=0; j<polyEdges[d].length; j++) {
-          let from = polyEdges[d][j][0],
-              to = polyEdges[d][j][1];
-          let X_OFFSET = [ 0.5, 1, 0.5, 0 ],
-              Y_OFFSET = [ 0, 0.5, 1, 0.5 ];
+          const from = polyEdges[d][j][0],
+                to = polyEdges[d][j][1];
+          const X_OFFSET = [ 0.5, 1, 0.5, 0 ],
+                Y_OFFSET = [ 0, 0.5, 1, 0.5 ];
 
-          let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
           line.setAttribute('x1', `${100 * (X_OFFSET[from[2]] + from[0] - this.minX)}`);
           line.setAttribute('y1', `${100 * (Y_OFFSET[from[2]] + from[1] - this.minY)}`);
           line.setAttribute('x2', `${100 * (X_OFFSET[to[2]] + to[0] - this.minX)}`);
@@ -354,7 +357,7 @@ class BoardPolyDrawing {
           line.setAttribute('stroke-width', '8');
           this.svg.appendChild(line);
 
-          let circleA = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          const circleA = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
           circleA.setAttribute('cx', `${100 * (X_OFFSET[from[2]] + from[0] - this.minX)}`);
           circleA.setAttribute('cy', `${100 * (Y_OFFSET[from[2]] + from[1] - this.minY)}`);
           circleA.setAttribute('r', '11');
@@ -364,7 +367,7 @@ class BoardPolyDrawing {
           circleA.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
           this.svg.appendChild(circleA);
 
-          let circleB = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          const circleB = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
           circleB.setAttribute('cx', `${100 * (X_OFFSET[to[2]] + to[0] - this.minX)}`);
           circleB.setAttribute('cy', `${100 * (Y_OFFSET[to[2]] + to[1] - this.minY)}`);
           circleB.setAttribute('r', '11');
@@ -388,7 +391,7 @@ class BoardPolyDrawing {
 
 class TileStackUI {
   gameManager : GameManager;
-  stack : any;
+  stack : TileUI[];
   element : HTMLDivElement;
 
   constructor(gameManager) {
@@ -403,7 +406,7 @@ class TileStackUI {
   }
 
   addToStack(colors) {
-    let tile = new TileUI(this.gameManager);
+    const tile = new TileUI(this.gameManager);
     tile.setColors(colors);
     this.element.appendChild(tile.div);
     let idx = 0;
@@ -440,12 +443,12 @@ class ControlsUI {
   build() {
     this.element = document.createElement('div');
 
-    let instructions = document.createElement('div');
+    const instructions = document.createElement('div');
     instructions.setAttribute('id', 'instructions');
     instructions.innerHTML = 'Drag tiles to form shapes.<br/><br/>Click tiles to rotate.';
     this.element.appendChild(instructions);
 
-    let autorotate = document.createElement('input');
+    const autorotate = document.createElement('input');
     autorotate.type = 'checkbox';
     let label = document.createElement('label');
     label.appendChild(autorotate);
@@ -457,7 +460,7 @@ class ControlsUI {
       this.gameManager.settings.autorotate = autorotate.checked;
     }.bind(this));
 
-    let hints = document.createElement('input');
+    const hints = document.createElement('input');
     hints.type = 'checkbox';
     label = document.createElement('label');
     label.appendChild(hints);
@@ -468,7 +471,7 @@ class ControlsUI {
       this.gameManager.settings.hints = hints.checked;
     }.bind(this));
 
-    let restart = document.createElement('input');
+    const restart = document.createElement('input');
     restart.type = 'button';
     restart.value = 'Restart';
     instructions.appendChild(document.createElement('br'));
@@ -483,8 +486,8 @@ class ControlsUI {
 
 class BoardUI {
   gameManager : GameManager;
-  grid : any;
-  tiles : any;
+  grid : TileUI[][];
+  tiles : TileUI[];
   scale : number;
   boardPolyDrawings : BoardPolyDrawing[];
   boardUI : BoardUI;
@@ -520,27 +523,27 @@ class BoardUI {
   construct() {
     this.gameDiv = document.createElement('div');
 
-    let tileStackContainer = document.createElement('div');
+    const tileStackContainer = document.createElement('div');
     tileStackContainer.setAttribute('id', 'tile-stack-container');
     this.gameDiv.appendChild(tileStackContainer);
 
     this.tileStackUI = new TileStackUI(this.gameManager);
     tileStackContainer.appendChild(this.tileStackUI.element);
 
-    let scoreboard = new ScoreboardUI(this);
+    const scoreboard = new ScoreboardUI();
     tileStackContainer.appendChild(scoreboard.element);
     this.scoreboard = scoreboard;
 
-    let controls = new ControlsUI(this.gameManager);
+    const controls = new ControlsUI(this.gameManager);
     tileStackContainer.appendChild(controls.element);
     this.controls = controls;
 
-    let tileBoardContainer = document.createElement('div');
+    const tileBoardContainer = document.createElement('div');
     tileBoardContainer.setAttribute('id', 'tile-board-container');
     this.gameDiv.appendChild(tileBoardContainer);
     this.tileBoardContainer = tileBoardContainer;
 
-    let tileBoard = document.createElement('div');
+    const tileBoard = document.createElement('div');
     tileBoard.setAttribute('id', 'tile-board');
     tileBoardContainer.appendChild(tileBoard);
     this.tileBoard = tileBoard;
@@ -571,9 +574,9 @@ class BoardUI {
     if (colors) {
       tile.removeDropzone();
     } else {
-      tile.makeDropzone(function (evt) {
-        let dragged = evt.relatedTarget.tile;
-        let target = evt.target.tile;
+      tile.makeDropzone(function (evt : Interact.DropEvent) {
+        const dragged = (evt.relatedTarget as TileUIHTMLDivElement).tile;
+        const target = (evt.target as TileUIHTMLDivElement).tile;
         console.log('dropped', dragged, target);
 
         if (this.tileStackUI.stack[dragged.row] != dragged) {
@@ -612,10 +615,10 @@ class BoardUI {
   }
 
   rescaleGrid() {
-    let margins = { top: 30, right: 150, bottom: 30, left: 30 };
+    const margins = { top: 30, right: 150, bottom: 30, left: 30 };
 
-    let availWidth = document.documentElement.clientWidth - margins.left - margins.right;
-    let availHeight = document.documentElement.clientHeight - margins.top - margins.bottom;
+    const availWidth = document.documentElement.clientWidth - margins.left - margins.right;
+    const availHeight = document.documentElement.clientHeight - margins.top - margins.bottom;
     let totalWidth = 100 * (this.maxX - this.minX + 1);
     let totalHeight = 100 * (this.maxY - this.minY + 1);
     let skipPlaceholders = 0;
@@ -625,7 +628,7 @@ class BoardUI {
       skipPlaceholders = 1;
     }
 
-    let scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
+    const scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
     console.log(scale);
     totalWidth *= scale;
     totalHeight *= scale;
@@ -651,7 +654,7 @@ class BoardUI {
   }
 
   showScoresOnTile(x, y, scoreData, color, drawNil?) {
-    let bpd = new BoardPolyDrawing(this);
+    const bpd = new BoardPolyDrawing(this);
     this.boardPolyDrawings.push(bpd);
     bpd.start(x, y, scoreData, color, drawNil);
   }
@@ -686,6 +689,15 @@ class BoardUI {
 
 
 
+type PlayerType = {
+  name : string,
+  color : {
+    main : string,
+    light : string,
+    dark : string
+  }
+}
+
 
 
 export class GameManager {
@@ -693,7 +705,7 @@ export class GameManager {
   board : Board;
   boardUI : BoardUI;
   totalScore : number;
-  player : any;
+  player : PlayerType;
   settings : {
     autorotate: false,
     hints: false,
@@ -723,7 +735,7 @@ export class GameManager {
     this.boardUI.place(InitialTile, 0, 0);
     this.boardUI.drawFrontier(this.board.frontier());
     for (let i=0; i<3; i++) {
-      let tile = this.tileStack.pop();
+      const tile = this.tileStack.pop();
       if (tile) {
         this.boardUI.tileStackUI.addToStack(tile);
       }
@@ -748,7 +760,7 @@ export class GameManager {
       this.boardUI.place(source.colors, target.col, target.row);
       this.boardUI.drawFrontier(this.board.frontier());
 
-      let scoreData = this.board.calculateScore(target.col, target.row);
+      const scoreData = this.board.calculateScore(target.col, target.row);
       console.log(scoreData);
       this.boardUI.showScoresOnTile(target.col, target.row, scoreData, this.player.color);
       for (let i=0; i<scoreData.scores.length; i++) {
@@ -757,7 +769,7 @@ export class GameManager {
 
       this.boardUI.showScore([{name:this.player.name, points:this.totalScore, color:this.player.color, turn:true}]);
 
-      let tile = this.tileStack.pop();
+      const tile = this.tileStack.pop();
       if (tile) {
         this.boardUI.tileStackUI.addToStack(tile);
       }

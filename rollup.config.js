@@ -9,9 +9,9 @@ export default {
     format: 'iife',
     sourcemap: true,
     globals: {
-      'interactjs/interact': 'interact'
+      '@interactjs/interact/index': 'interact'
     }
   },
   plugins: [typescript(), nodeResolve()],
-  external: ['interactjs/interact']
+  external: ['@interactjs/interact/index']
 };

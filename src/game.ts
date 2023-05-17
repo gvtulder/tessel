@@ -105,6 +105,15 @@ export class TileStack {
   }
 }
 
+
+type PolyEdgeType = [number[], number[]];
+type PolyEdgesType = PolyEdgeType[][];
+export type ScoreType = {
+  scores : [number, number, number, number],
+  polyEdges : [PolyEdgesType, PolyEdgesType, PolyEdgesType, PolyEdgesType]
+};
+
+
 export class Board {
   grid : Tile[][];
   tiles : Tile[];
@@ -209,9 +218,9 @@ export class Board {
     return tile ? tile.colors[t] : null;
   }
 
-  calculateScore(srcX : number, srcY : number) : {scores: [number, number, number, number], polyEdges: any[]} {
-    const scores : [number, number, number, number] = [0,0,0,0],
-          polyEdgesPerStart = [[],[],[],[]];
+  calculateScore(srcX : number, srcY : number) : ScoreType {
+    const scores : [number, number, number, number] = [0,0,0,0];
+    const polyEdgesPerStart : [PolyEdgesType, PolyEdgesType, PolyEdgesType, PolyEdgesType] = [[],[],[],[]];
     const crumbs = [];
     const c = this.getTriangleColor.bind(this),
           m = function(x : number, y : number, t : number, set : number | null) {

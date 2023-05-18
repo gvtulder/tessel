@@ -1,13 +1,22 @@
 
+import { makeConvexHull } from './lib/convex-hull.js';
+import { roundPathCorners } from './lib/svg-rounded-corners.js';
+
+const DEBUG = {
+    SELECT_GRID: 0,
+    OVERLAP: false,
+    NUMBER_TILES: false,
+    RANDOM_TRIANGLES: true,
+    WHITE_TRIANGLES: true,
+    RANDOM_TILES: true,
+    CONNECT_TILES: false,
+}
 
 const OFFSET = 0;
 const SCALE = 100;
-const DEBUG_OVERLAP = false;
-const DEBUG_NUMBER_TILES = true;
-const O = (DEBUG_OVERLAP ? 0.1 : 0.01);
-const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
-const SELECT_GRID = 0;
+const O = (DEBUG.OVERLAP ? 0.1 : 0.01);
+const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
 
 type TriangleColor = string;
@@ -203,11 +212,13 @@ class EquilateralGridTriangle extends Triangle {
 }
 
 
-abstract class Tile<TriangleType extends Triangle> {
+abstract class Tile {
     grid : NewGrid;
     x : number;
     y : number;
-    triangles : TriangleType[];
+    left : number;
+    top : number;
+    triangles : Triangle[];
 
     constructor(grid : NewGrid, x : number, y : number) {
         this.grid = grid;
@@ -215,9 +226,12 @@ abstract class Tile<TriangleType extends Triangle> {
         this.y = y;
 
         this.triangles = this.findTriangles();
+
+        this.left = Math.min(...this.triangles.map((t) => t.left));
+        this.top = Math.min(...this.triangles.map((t) => t.top));
     }
 
-    abstract findTriangles() : TriangleType[];
+    abstract findTriangles() : Triangle[];
 
     get colors() : TileColors {
         return this.triangles.map((t) => t.color);
@@ -228,28 +242,39 @@ abstract class Tile<TriangleType extends Triangle> {
             this.triangles[i].color = colors[i];
         }
     }
+
+    computeOutline() {
+        const points : Coord[] = [];
+        for (const triangle of this.triangles) {
+            for (const point of triangle.points) {
+                points.push([point[0] + triangle.left - this.left,
+                             point[1] + triangle.top - this.top]);
+            }
+        }
+        return makeConvexHull(points);
+    }
 }
 
 
-class SquareTile extends Tile<SquareGridTriangle> {
+class SquareTile extends Tile {
     findTriangles() : SquareGridTriangle[] {
         const triangles : SquareGridTriangle[] = [];
 
         // top
-        triangles.push(this.grid.getOrAdd(this.x, this.y * 4));
+        triangles.push(this.grid.getOrAddTriangle(this.x, this.y * 4));
         // left
-        triangles.push(this.grid.getOrAdd(this.x, this.y * 4 + 1));
+        triangles.push(this.grid.getOrAddTriangle(this.x, this.y * 4 + 1));
         // right
-        triangles.push(this.grid.getOrAdd(this.x, this.y * 4 + 2));
+        triangles.push(this.grid.getOrAddTriangle(this.x, this.y * 4 + 2));
         // bottom
-        triangles.push(this.grid.getOrAdd(this.x, this.y * 4 + 3));
+        triangles.push(this.grid.getOrAddTriangle(this.x, this.y * 4 + 3));
 
         return triangles;
     }
 }
 
 
-class HexTile extends Tile<HexGridTriangle> {
+class HexTile extends Tile {
     findTriangles() : HexGridTriangle[] {
         const triangles : HexGridTriangle[] = [];
 
@@ -257,20 +282,20 @@ class HexTile extends Tile<HexGridTriangle> {
         const y = this.y;
 
         // top
-        triangles.push(this.grid.getOrAdd(x, y));
+        triangles.push(this.grid.getOrAddTriangle(x, y));
         // clockwise
-        triangles.push(this.grid.getOrAdd(x + 1, y));
-        triangles.push(this.grid.getOrAdd(x + 1, y + 1));
-        triangles.push(this.grid.getOrAdd(x, y + 1));
-        triangles.push(this.grid.getOrAdd(x - 1, y + 1));
-        triangles.push(this.grid.getOrAdd(x - 1, y));
+        triangles.push(this.grid.getOrAddTriangle(x + 1, y));
+        triangles.push(this.grid.getOrAddTriangle(x + 1, y + 1));
+        triangles.push(this.grid.getOrAddTriangle(x, y + 1));
+        triangles.push(this.grid.getOrAddTriangle(x - 1, y + 1));
+        triangles.push(this.grid.getOrAddTriangle(x - 1, y));
 
         return triangles;
     }
 }
 
 
-class TriangleTile extends Tile<EquilateralGridTriangle> {
+class TriangleTile extends Tile {
     findTriangles() : EquilateralGridTriangle[] {
         const triangles : EquilateralGridTriangle[] = [];
 
@@ -278,10 +303,10 @@ class TriangleTile extends Tile<EquilateralGridTriangle> {
         const y = this.y * 3;
 
         // top
-        triangles.push(this.grid.getOrAdd(x, y));
+        triangles.push(this.grid.getOrAddTriangle(x, y));
         // counter-clockwise
-        triangles.push(this.grid.getOrAdd(x, y + 1));
-        triangles.push(this.grid.getOrAdd(x, y + 2));
+        triangles.push(this.grid.getOrAddTriangle(x, y + 1));
+        triangles.push(this.grid.getOrAddTriangle(x, y + 2));
 
         return triangles;
     }
@@ -381,7 +406,7 @@ class TriangleDisplay {
 
         const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         el.setAttribute('points', polyString.join(' '));
-        if (DEBUG_OVERLAP) {
+        if (DEBUG.OVERLAP) {
             el.setAttribute('opacity', '0.6');
         }
         // el.setAttribute('fill', 'transparent');
@@ -391,7 +416,7 @@ class TriangleDisplay {
         this.triangleElement = el;
         this.updateColor();
 
-        if (DEBUG_OVERLAP) {
+        if (DEBUG.OVERLAP) {
             const outline = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
             outline.setAttribute('points', pointsString.join(' '));
             outline.setAttribute('fill', 'transparent');
@@ -400,7 +425,7 @@ class TriangleDisplay {
             group.append(outline);
         }
 
-        if (DEBUG_NUMBER_TILES) {
+        if (DEBUG.NUMBER_TILES) {
             const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             center.setAttribute('cx', `${this.triangle.center[0] * SCALE}`);
             center.setAttribute('cy', `${this.triangle.center[1] * SCALE}`);
@@ -431,11 +456,74 @@ class TriangleDisplay {
 }
 
 
+class TileDisplay {
+    tile : Tile;
+    left : number;
+    top : number;
+
+    element : HTMLDivElement;
+    svgGroup : SVGElement;
+
+    constructor(tile : Tile) {
+        this.tile = tile;
+        this.build();
+    }
+
+    build() {
+        const div =  document.createElement('div');
+        div.style.position = 'absolute';
+        div.style.width = '1000';
+        div.style.height = '1000';
+        div.style.left = `${this.tile.left * SCALE + OFFSET}px`;
+        div.style.top = `${this.tile.top * SCALE + OFFSET}px`;
+        this.element = div;
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', `${100 * SCALE}`);
+        svg.setAttribute('height', `${100 * SCALE}`);
+        this.element.appendChild(svg);
+
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        svg.appendChild(group);
+        this.svgGroup = group;
+
+        this.drawOutline();
+    }
+
+    drawOutline() {
+        const outline = this.tile.computeOutline();
+
+        let path = outline.map((p) => `${p[0] * SCALE} ${p[1] * SCALE}`).join(' L ');
+        path = `M ${path} Z`;
+        const roundPath = roundPathCorners(path, 8, false);
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        line.setAttribute('d', path);
+        line.setAttribute('stroke', 'white');
+        line.setAttribute('stroke-width', '6px');
+        line.setAttribute('stroke-linejoin', 'round');
+        line.setAttribute('fill', 'none');
+        this.svgGroup.appendChild(line);
+
+        const roundLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        roundLine.setAttribute('d', roundPath);
+        roundLine.setAttribute('stroke', 'white');
+        roundLine.setAttribute('stroke-width', '6px');
+        roundLine.setAttribute('stroke-linejoin', 'round');
+        roundLine.setAttribute('fill', 'none');
+        this.svgGroup.appendChild(roundLine);
+    }
+}
+
+
 export class GridDisplay {
     grid : NewGrid;
     element : HTMLDivElement;
     gridElement : HTMLDivElement;
+    tileElement : HTMLDivElement;
+
     triangleDisplays : TriangleDisplay[][];
+    tileDisplays : TileDisplay[][];
 
     minX : number;
     minY : number;
@@ -450,10 +538,15 @@ export class GridDisplay {
         this.grid.addEventListener('addtriangle', (evt : GridEvent) => {
             this.addTriangle(evt.triangle);
         });
+
+        this.grid.addEventListener('addtile', (evt : GridEvent) => {
+            this.addTile(evt.tile);
+        });
     }
 
     build() {
         this.triangleDisplays = [];
+        this.tileDisplays = [];
 
         const div = document.createElement('div');
         div.style.position = 'fixed';
@@ -472,6 +565,14 @@ export class GridDisplay {
         gridElement.style.zIndex = '100';
         this.gridElement = gridElement;
         this.element.appendChild(gridElement);
+
+        const tileElement = document.createElement('div');
+        tileElement.style.position = 'absolute';
+        tileElement.style.top = '10px';
+        tileElement.style.left = '10px';
+        tileElement.style.zIndex = '200';
+        this.tileElement = tileElement;
+        this.element.appendChild(tileElement);
     }
 
     drawTriangles() {
@@ -491,6 +592,18 @@ export class GridDisplay {
         }
     }
 
+    addTile(tile : Tile) {
+        if (!this.tileDisplays[tile.x]) {
+            this.tileDisplays[tile.x] = [];
+        }
+        if (!this.tileDisplays[tile.x][tile.y]) {
+            const tileDisplay = new TileDisplay(tile);
+            this.tileDisplays[tile.x][tile.y] = tileDisplay;
+            this.tileElement.appendChild(tileDisplay.element);
+        }
+    }
+
+    conn : Connector;
     debugConnectAllTriangles() {
         const conn = new Connector();
         this.element.appendChild(conn.element);
@@ -502,66 +615,88 @@ export class GridDisplay {
         for (const triangle of this.grid.triangles) {
             conn.connect(triangle, this.grid.getNeighbors(triangle));
         }
+
+        this.conn = conn;
     }
 }
 
 
 class GridEvent extends Event {
     grid : NewGrid;
-    triangle : Triangle;
+    triangle? : Triangle;
+    tile? : Tile;
 
-    constructor(type : string, grid : NewGrid, triangle : Triangle) {
+    constructor(type : string, grid : NewGrid, triangle : Triangle, tile : Tile) {
         super(type);
         this.grid = grid;
         this.triangle = triangle;
+        this.tile = tile;
     }
 }
 
 
 export class NewGrid extends EventTarget {
-    triangleType = [HexGridTriangle, SquareGridTriangle, EquilateralGridTriangle][SELECT_GRID];
+    triangleType = [HexGridTriangle, SquareGridTriangle, EquilateralGridTriangle][DEBUG.SELECT_GRID];
 
     grid : Triangle[][];
     triangles : Triangle[];
+    tiles : Tile[];
+
     div : HTMLDivElement;
+    gridDisplay : GridDisplay;
 
     constructor() {
         super();
 
         this.grid = [];
         this.triangles = [];
+        this.tiles = [];
 
         const display = new GridDisplay(this);
         display.drawTriangles();
         document.body.appendChild(display.element);
+        this.gridDisplay = display;
 
-        this.createRandomTriangles();
-        // this.fillTrianglesWithWhite();
-        // this.createRandomTiles();
-        display.debugConnectAllTriangles();
+        if (DEBUG.RANDOM_TRIANGLES) {
+            this.createRandomTriangles();
+        }
+        if (DEBUG.WHITE_TRIANGLES) {
+            this.fillTrianglesWithWhite();
+        }
+        if (DEBUG.RANDOM_TILES) {
+            this.createRandomTiles();
+        }
+        if (DEBUG.CONNECT_TILES) {
+            display.debugConnectAllTriangles();
+        }
     }
 
-    get(x : number, y : number) : Triangle | null {
+    getTriangle(x : number, y : number) : Triangle | null {
         if (!this.grid[x]) return null;
         if (!this.grid[x][y]) return null;
         return this.grid[x][y];
     }
 
-    getOrAdd(x : number, y : number) : Triangle {
+    getOrAddTriangle(x : number, y : number) : Triangle {
         if (!this.grid[x]) this.grid[x] = [];
         if (!this.grid[x][y]) {
             const triangle = new this.triangleType(x, y);
             this.grid[x][y] = triangle;
             this.triangles.push(triangle);
-            this.dispatchEvent(new GridEvent('addtriangle', this, triangle));
+            this.dispatchEvent(new GridEvent('addtriangle', this, triangle, null));
         }
         return this.grid[x][y];
+    }
+
+    addTile(tile : Tile) {
+        this.tiles.push(tile);
+        this.dispatchEvent(new GridEvent('addtile', this, null, tile));
     }
 
     getNeighbors(triangle : Triangle) : Triangle[] {
         const neighbors : Triangle[] = [];
         for (const n of triangle.neighborOffsets) {
-            const neighbor = this.get(triangle.x + n[0], triangle.y + n[1]);
+            const neighbor = this.getTriangle(triangle.x + n[0], triangle.y + n[1]);
             if (neighbor) {
                 neighbors.push(neighbor);
             }
@@ -576,7 +711,7 @@ export class NewGrid extends EventTarget {
         let i = 0;
         for (let row=0; row<24; row++) {
             for (let col=0; col<12; col++) {
-                const triangle = this.getOrAdd(col, row);
+                const triangle = this.getOrAddTriangle(col, row);
                 triangle.color = COLORS[i % COLORS.length];
                 i++;
             }
@@ -586,8 +721,8 @@ export class NewGrid extends EventTarget {
     private fillTrianglesWithWhite() {
         let i = 0;
         for (const triangle of this.triangles) {
-            triangle.color = ['#aaa', '#888', '#ccc'][i % 3];
             triangle.color = 'white';
+            triangle.color = ['#aaa', '#888', '#ccc'][i % 3];
             i++;
         }
     }
@@ -600,6 +735,7 @@ export class NewGrid extends EventTarget {
                     const tile = new SquareTile(this, x, y);
                     const color = COLORS[i % COLORS.length];
                     tile.colors = [color, color, color, color];
+                    this.addTile(tile);
                     i++;
                 }
             }
@@ -612,6 +748,7 @@ export class NewGrid extends EventTarget {
                     const tile = new HexTile(this, x, y);
                     const color = COLORS[i % COLORS.length];
                     tile.colors = [color, color, color, color, color, color];
+                    this.addTile(tile);
                     i++;
                 }
             }
@@ -624,6 +761,7 @@ export class NewGrid extends EventTarget {
                     const tile = new TriangleTile(this, x, y);
                     const color = COLORS[i % COLORS.length];
                     tile.colors = [color, color, color];
+                    this.addTile(tile);
                     i++;
                 }
             }

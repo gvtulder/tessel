@@ -3,7 +3,8 @@
 const OFFSET = 0;
 const SCALE = 100;
 const DEBUG_OVERLAP = false;
-const O = (DEBUG_OVERLAP ? 0.1 : 0.1);
+const DEBUG_NUMBER_TILES = true;
+const O = (DEBUG_OVERLAP ? 0.1 : 0.01);
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
 const SELECT_GRID = 0;
@@ -362,7 +363,6 @@ class TriangleDisplay {
         div.style.left = `${this.triangle.left * SCALE + OFFSET}px`;
         div.style.top = `${this.triangle.top * SCALE + OFFSET}px`;
         div.style.zIndex = `${this.triangle.x * 1000 + this.triangle.y}`;
-        console.log(div.style.zIndex);
 
         const svg = this.generateSvg();
         div.appendChild(svg);
@@ -400,24 +400,26 @@ class TriangleDisplay {
             group.append(outline);
         }
 
-        const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        center.setAttribute('cx', `${this.triangle.center[0] * SCALE}`);
-        center.setAttribute('cy', `${this.triangle.center[1] * SCALE}`);
-        center.setAttribute('r', `${0.02 * SCALE}`);
-        center.setAttribute('opacity', '0.5');
-        center.setAttribute('fill', 'black');
-        group.append(center);
+        if (DEBUG_NUMBER_TILES) {
+            const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            center.setAttribute('cx', `${this.triangle.center[0] * SCALE}`);
+            center.setAttribute('cy', `${this.triangle.center[1] * SCALE}`);
+            center.setAttribute('r', `${0.02 * SCALE}`);
+            center.setAttribute('opacity', '0.5');
+            center.setAttribute('fill', 'black');
+            group.append(center);
 
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', `${this.triangle.center[0] * SCALE}`);
-        text.setAttribute('y', `${this.triangle.center[1] * SCALE}`);
-        text.setAttribute('alignment-baseline', 'middle');
-        text.setAttribute('dominant-baseline', 'middle');
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('font-size', '11');
-        text.setAttribute('fill', 'white');
-        text.appendChild(document.createTextNode(`(${this.triangle.x},${this.triangle.y})`));
-        group.append(text);
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', `${this.triangle.center[0] * SCALE}`);
+            text.setAttribute('y', `${this.triangle.center[1] * SCALE}`);
+            text.setAttribute('alignment-baseline', 'middle');
+            text.setAttribute('dominant-baseline', 'middle');
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '11');
+            text.setAttribute('fill', 'white');
+            text.appendChild(document.createTextNode(`(${this.triangle.x},${this.triangle.y})`));
+            group.append(text);
+        }
 
         return svg;
     }
@@ -476,17 +478,6 @@ export class GridDisplay {
         for (const triangle of this.grid.triangles) {
             this.addTriangle(triangle);
         }
-
-        const conn = new Connector();
-        this.element.appendChild(conn.element);
-        conn.element.style.position = 'absolute';
-        conn.element.style.top = '10px';
-        conn.element.style.left = '10px';
-        conn.element.style.zIndex = '200';
-
-        for (const triangle of this.grid.triangles) {
-            conn.connect(triangle, this.grid.getNeighbors(triangle));
-        }
     }
 
     addTriangle(triangle : Triangle) {
@@ -497,6 +488,19 @@ export class GridDisplay {
             const triangleDisplay = new TriangleDisplay(this, this.grid, triangle);
             this.triangleDisplays[triangle.x][triangle.y] = triangleDisplay;
             this.gridElement.appendChild(triangleDisplay.element);
+        }
+    }
+
+    debugConnectAllTriangles() {
+        const conn = new Connector();
+        this.element.appendChild(conn.element);
+        conn.element.style.position = 'absolute';
+        conn.element.style.top = '10px';
+        conn.element.style.left = '10px';
+        conn.element.style.zIndex = '200';
+
+        for (const triangle of this.grid.triangles) {
+            conn.connect(triangle, this.grid.getNeighbors(triangle));
         }
     }
 }
@@ -527,66 +531,14 @@ export class NewGrid extends EventTarget {
         this.grid = [];
         this.triangles = [];
 
-        this.createTriangles();
-
         const display = new GridDisplay(this);
         display.drawTriangles();
         document.body.appendChild(display.element);
 
-        let i = 0;
-        for (const triangle of this.triangles) {
-            triangle.color = ['#aaa','#888','#ccc'][i % 3];
-            triangle.color = 'white';
-            i++;
-        }
-
-        if (this.triangleType === SquareGridTriangle) {
-            let i = 0;
-            for (let x=0; x<5; x++) {
-                for (let y=0; y<5; y++) {
-                    const tile = new SquareTile(this, x, y);
-                    const color = COLORS[i % COLORS.length];
-                    tile.colors = [color, color, color, color];
-                    i++;
-                }
-            }
-        }
-
-        if (this.triangleType === HexGridTriangle) {
-            let i = 0;
-            for (let x=0; x<2; x++) {
-                for (let y=0; y<4; y++) {
-                    const tile = new HexTile(this, x, y);
-                    const color = COLORS[i % COLORS.length];
-                    tile.colors = [color, color, color, color, color, color];
-                    i++;
-                }
-            }
-        }
-
-        if (this.triangleType === EquilateralGridTriangle) {
-            let i = 0;
-            for (let x=0; x<5; x++) {
-                for (let y=0; y<5; y++) {
-                    const tile = new TriangleTile(this, x, y);
-                    const color = COLORS[i % COLORS.length];
-                    tile.colors = [color, color, color];
-                    i++;
-                }
-            }
-        }
-    }
-
-    createTriangles() {
-        return;
-        let i = 0;
-        for (let row=0; row<24; row++) {
-            for (let col=0; col<12; col++) {
-                const triangle = this.getOrAdd(col, row);
-                triangle.color = COLORS[i % COLORS.length];
-                i++;
-            }
-        }
+        this.createRandomTriangles();
+        // this.fillTrianglesWithWhite();
+        // this.createRandomTiles();
+        display.debugConnectAllTriangles();
     }
 
     get(x : number, y : number) : Triangle | null {
@@ -615,5 +567,66 @@ export class NewGrid extends EventTarget {
             }
         }
         return neighbors;
+    }
+
+
+    // debugging code
+
+    private createRandomTriangles() {
+        let i = 0;
+        for (let row=0; row<24; row++) {
+            for (let col=0; col<12; col++) {
+                const triangle = this.getOrAdd(col, row);
+                triangle.color = COLORS[i % COLORS.length];
+                i++;
+            }
+        }
+    }
+
+    private fillTrianglesWithWhite() {
+        let i = 0;
+        for (const triangle of this.triangles) {
+            triangle.color = ['#aaa', '#888', '#ccc'][i % 3];
+            triangle.color = 'white';
+            i++;
+        }
+    }
+
+    private createRandomTiles() {
+        if (this.triangleType === SquareGridTriangle) {
+            let i = 0;
+            for (let x = 0; x < 5; x++) {
+                for (let y = 0; y < 5; y++) {
+                    const tile = new SquareTile(this, x, y);
+                    const color = COLORS[i % COLORS.length];
+                    tile.colors = [color, color, color, color];
+                    i++;
+                }
+            }
+        }
+
+        if (this.triangleType === HexGridTriangle) {
+            let i = 0;
+            for (let x = 0; x < 2; x++) {
+                for (let y = 0; y < 4; y++) {
+                    const tile = new HexTile(this, x, y);
+                    const color = COLORS[i % COLORS.length];
+                    tile.colors = [color, color, color, color, color, color];
+                    i++;
+                }
+            }
+        }
+
+        if (this.triangleType === EquilateralGridTriangle) {
+            let i = 0;
+            for (let x = 0; x < 5; x++) {
+                for (let y = 0; y < 5; y++) {
+                    const tile = new TriangleTile(this, x, y);
+                    const color = COLORS[i % COLORS.length];
+                    tile.colors = [color, color, color];
+                    i++;
+                }
+            }
+        }
     }
 }

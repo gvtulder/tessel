@@ -198,16 +198,8 @@ class Connector {
     element : HTMLDivElement;
     svgGroup : SVGElement;
 
-    constructor(grid : NewGrid, x : number, y : number) {
+    constructor() {
         this.build();
-
-        const triangle = grid.get(x, y);
-        for (const n of triangle.neighborOffsets) {
-            const neighbor = grid.get(x + n[0], y + n[1]);
-            if (neighbor) {
-                this.connect(triangle, neighbor);
-            }
-        }
     }
 
     build() {
@@ -234,7 +226,13 @@ class Connector {
         return svg;
     }
 
-    connect(a : Triangle, b : Triangle) {
+    connect(grid : NewGrid, triangle : Triangle) {
+        for (const neighbor of grid.getNeighbors(triangle)) {
+            this.drawLine(triangle, neighbor);
+        }
+    }
+
+    drawLine(a : Triangle, b : Triangle) {
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', `${(a.left + a.center[0]) * SCALE}`);
         line.setAttribute('y1', `${(a.top + a.center[1]) * SCALE}`);
@@ -286,9 +284,11 @@ export class NewGrid {
             }
         }
 
+        const conn = new Connector();
+        this.div.appendChild(conn.element);
+
         for (const triangle of triangles) {
-            const conn = new Connector(this, triangle.x, triangle.y);
-            this.div.appendChild(conn.element);
+            conn.connect(this, triangle);
         }
     }
 
@@ -296,5 +296,16 @@ export class NewGrid {
         if (x < 0 || !this.grid[x]) return null;
         if (y < 0 || !this.grid[x][y]) return null;
         return this.grid[x][y];
+    }
+
+    getNeighbors(triangle : Triangle) : Triangle[] {
+        const neighbors : Triangle[] = [];
+        for (const n of triangle.neighborOffsets) {
+            const neighbor = this.get(triangle.x + n[0], triangle.y + n[1]);
+            if (neighbor) {
+                neighbors.push(neighbor);
+            }
+        }
+        return neighbors;
     }
 }

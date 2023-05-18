@@ -3,7 +3,7 @@
 const OFFSET = 0;
 const SCALE = 100;
 const DEBUG_OVERLAP = false;
-const O = (DEBUG_OVERLAP ? 0.1 : 0.01);
+const O = (DEBUG_OVERLAP ? 0.1 : 0.1);
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
 const SELECT_TRIANGLE = 2;
@@ -105,7 +105,7 @@ class SquareGridTriangle extends Triangle {
         if (this.y % 4 == 0) {
             // top triangle pointing down
             this.points = [[0, 0], [1, 0], [0.5, 0.5]];
-            this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, 0.5 + O], [0, 0]];
+            this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, 0.5 + O], [0.5 - O, 0.5 + O], [0, O], [0, 0]];
             this.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
         } else if (this.y % 4 == 1) {
             // left triangle pointing right
@@ -116,7 +116,7 @@ class SquareGridTriangle extends Triangle {
             // right triangle pointing left
             this.left += 0.5;
             this.points = [[0, 0.5], [0.5, 0], [0.5, 1]];
-            this.polyPoints = [[0, 0.5], [0.5, 0], [0.5 + O, 0], [0.5 + O, 1 + O], [0.5, 1], [0, 0.5]];
+            this.polyPoints = [[0, 0.5], [0.5, 0], [0.5 + O, 0], [0.5 + O, 1 + O], [0.5, 1 + O], [0, 0.5 + O], [0, 0.5]];
             this.neighborOffsets = [[1, -1], [0, -2], [0, 1]];
         } else if (this.y % 4 == 3) {
             // bottom triangle pointing up

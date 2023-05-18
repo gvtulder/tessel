@@ -6,7 +6,7 @@ const DEBUG_OVERLAP = false;
 const O = (DEBUG_OVERLAP ? 0.1 : 0.1);
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
-const SELECT_TRIANGLE = 2;
+const SELECT_GRID = 0;
 
 
 type TriangleColor = string;
@@ -14,6 +14,15 @@ type TileColors = TriangleColor[];
 
 
 type Coord = [x : number, y : number];
+
+
+function wrapModulo(n : number, d : number) : number {
+    // support for negative numbers
+    if (n < 0) {
+        n = n + Math.ceil(Math.abs(n) / d) * d;
+    }
+    return n % d;
+}
 
 
 abstract class Triangle extends EventTarget {
@@ -81,7 +90,7 @@ class HexGridTriangle extends Triangle {
     calc() {
         const height = Math.sqrt(3) / 2;
         // equilateral triangle in a hexagonal grid
-        if (this.x % 2 == this.y % 2) {
+        if (wrapModulo(this.x, 2) == wrapModulo(this.y, 2)) {
             // triangle pointing down
             this.points = [[0, 0], [1, 0], [0.5, height]];
             this.polyPoints = [[0, 0], [1 + O, 0], [0.5, height + O], [0.5, height], [0, 0]];
@@ -103,28 +112,35 @@ class SquareGridTriangle extends Triangle {
         // triangle in a square grid
         this.left = this.x;
         this.top = Math.floor(this.y / 4);
-        if (this.y % 4 == 0) {
-            // top triangle pointing down
-            this.points = [[0, 0], [1, 0], [0.5, 0.5]];
-            this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, 0.5 + O], [0.5 - O, 0.5 + O], [0, O], [0, 0]];
-            this.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
-        } else if (this.y % 4 == 1) {
-            // left triangle pointing right
-            this.points = [[0, 0], [0.5, 0.5], [0, 1]];
-            this.polyPoints = [[0, 0], [0.5 + O, 0.5 + O], [0, 1 + O], [0, 0]];
-            this.neighborOffsets = [[-1, 1], [0, -1], [0, 2]];
-        } else if (this.y % 4 == 2) {
-            // right triangle pointing left
-            this.left += 0.5;
-            this.points = [[0, 0.5], [0.5, 0], [0.5, 1]];
-            this.polyPoints = [[0, 0.5], [0.5, 0], [0.5 + O, 0], [0.5 + O, 1 + O], [0.5, 1 + O], [0, 0.5 + O], [0, 0.5]];
-            this.neighborOffsets = [[1, -1], [0, -2], [0, 1]];
-        } else if (this.y % 4 == 3) {
-            // bottom triangle pointing up
-            this.top += 0.5;
-            this.points = [[0, 0.5], [0.5, 0], [1, 0.5]];
-            this.polyPoints = [[0, 0.5], [0.5, 0], [1, 0.5], [1 + O, 0.5 + O], [0, 0.5 + O], [0, 0.5]];
-            this.neighborOffsets = [[0, 1], [0, -1], [0, -2]];
+        switch (wrapModulo(this.y, 4)) {
+            case 0:
+                // top triangle pointing down
+                this.points = [[0, 0], [1, 0], [0.5, 0.5]];
+                this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, 0.5 + O], [0.5 - O, 0.5 + O], [0, O], [0, 0]];
+                this.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
+                break;
+            case 1:
+                // left triangle pointing right
+                this.points = [[0, 0], [0.5, 0.5], [0, 1]];
+                this.polyPoints = [[0, 0], [0.5 + O, 0.5 + O], [0, 1 + O], [0, 0]];
+                this.neighborOffsets = [[-1, 1], [0, -1], [0, 2]];
+                break;
+            case 2:
+                // right triangle pointing left
+                this.left += 0.5;
+                this.points = [[0, 0.5], [0.5, 0], [0.5, 1]];
+                this.polyPoints = [[0, 0.5], [0.5, 0], [0.5 + O, 0], [0.5 + O, 1 + O], [0.5, 1 + O], [0, 0.5 + O], [0, 0.5]];
+                this.neighborOffsets = [[1, -1], [0, -2], [0, 1]];
+                break;
+            case 3:
+                // bottom triangle pointing up
+                this.top += 0.5;
+                this.points = [[0, 0.5], [0.5, 0], [1, 0.5]];
+                this.polyPoints = [[0, 0.5], [0.5, 0], [1, 0.5], [1 + O, 0.5 + O], [0, 0.5 + O], [0, 0.5]];
+                this.neighborOffsets = [[0, 1], [0, -1], [0, -2]];
+                break;
+            default:
+                console.log('invalid side!');
         }
     }
 }
@@ -134,44 +150,53 @@ class EquilateralGridTriangle extends Triangle {
         // triangle in a grid of equilateral triangles
         const height = Math.sqrt(3) / 2;
         const h = height / 3;
-        const odd = this.y % 12 < 6;
+        const odd = wrapModulo(this.y, 12) < 6;
         this.left = this.x + (odd ? 0 : 0.5);
         this.top = height * Math.floor(this.y / 6);
-        if (this.y % 6 == 0) {
-            // top triangle pointing down
-            this.points = [[0, 0], [1, 0], [0.5, h]];
-            this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, h + O], [0.5 - O, h + O], [0, 0]];
-            this.neighborOffsets = [[0, 1], [0, 2], [(odd ? -1 : 0), -1]];
-        } else if (this.y % 6 == 1) {
-            // left triangle pointing up-right
-            this.points = [[0, 0], [0.5, h], [0.5, height]];
-            this.polyPoints = [[0, 0], [0.5, h], [0.5 + O, h], [0.5 + O, height + O], [0.5, height], [0, 0]];
-            this.neighborOffsets = [[0, -1], [-1, 3], [0, 1]];
-        } else if (this.y % 6 == 2) {
-            // right triangle pointing up-left
-            this.left += 0.5;
-            this.points = [[0, h], [0.5, 0], [0, height]];
-            this.polyPoints = [[0, h], [0.5, 0], [0.5 + O, 0], [0, height], [0, h]];
-            this.neighborOffsets = [[0, -2], [0, -1], [0, 1]];
-        } else if (this.y % 6 == 3) {
-            // left triangle pointing bottom-right
-            this.left += 0.5;
-            this.points = [[0, height], [0.5, 0], [0.5, 2 * h]];
-            this.polyPoints = [[0, height], [0.5, 0], [0.5 + O, 0], [0.5 + O, 2 * h + O], [0, height], [0, height]];
-            this.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
-        } else if (this.y % 6 == 4) {
-            // right triangle pointing bottom-left
-            this.left += 1;
-            this.points = [[0, 0], [0.5, height], [0, 2 * h]];
-            this.polyPoints = [[0, 0], [O, 0], [0.5 + O, height + O], [0, 2 * h + O], [0, 0]];
-            this.neighborOffsets = [[0, -1], [0, 1], [1, -3]];
-        } else if (this.y % 6 == 5) {
-            // bottom triangle pointing up
-            this.left += 0.5;
-            this.top += 2 * h;
-            this.points = [[0, h], [0.5, 0], [1, h]];
-            this.polyPoints = [[0, h], [0.5, 0], [1, h], [1 + O, h + O], [O, h + O], [0, h]];
-            this.neighborOffsets = [[0, -2], [0, -1], [(odd ? 0 : 1), 1]];
+        switch (wrapModulo(y, 6)) {
+            case 0:
+                // top triangle pointing down
+                this.points = [[0, 0], [1, 0], [0.5, h]];
+                this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, h + O], [0.5 - O, h + O], [0, 0]];
+                this.neighborOffsets = [[0, 1], [0, 2], [(odd ? -1 : 0), -1]];
+                break;
+            case 1:
+                // left triangle pointing up-right
+                this.points = [[0, 0], [0.5, h], [0.5, height]];
+                this.polyPoints = [[0, 0], [0.5, h], [0.5 + O, h], [0.5 + O, height + O], [0.5, height], [0, 0]];
+                this.neighborOffsets = [[0, -1], [-1, 3], [0, 1]];
+                break;
+            case 2:
+                // right triangle pointing up-left
+                this.left += 0.5;
+                this.points = [[0, h], [0.5, 0], [0, height]];
+                this.polyPoints = [[0, h], [0.5, 0], [0.5 + O, 0], [0, height], [0, h]];
+                this.neighborOffsets = [[0, -2], [0, -1], [0, 1]];
+                break;
+            case 3:
+                // left triangle pointing bottom-right
+                this.left += 0.5;
+                this.points = [[0, height], [0.5, 0], [0.5, 2 * h]];
+                this.polyPoints = [[0, height], [0.5, 0], [0.5 + O, 0], [0.5 + O, 2 * h + O], [0, height], [0, height]];
+                this.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
+                break;
+            case 4:
+                // right triangle pointing bottom-left
+                this.left += 1;
+                this.points = [[0, 0], [0.5, height], [0, 2 * h]];
+                this.polyPoints = [[0, 0], [O, 0], [0.5 + O, height + O], [0, 2 * h + O], [0, 0]];
+                this.neighborOffsets = [[0, -1], [0, 1], [1, -3]];
+                break;
+            case 5:
+                // bottom triangle pointing up
+                this.left += 0.5;
+                this.top += 2 * h;
+                this.points = [[0, h], [0.5, 0], [1, h]];
+                this.polyPoints = [[0, h], [0.5, 0], [1, h], [1 + O, h + O], [O, h + O], [0, h]];
+                this.neighborOffsets = [[0, -2], [0, -1], [(odd ? 0 : 1), 1]];
+                break;
+            default:
+                console.log('invalid side!');
         }
     }
 }
@@ -227,7 +252,7 @@ class HexTile extends Tile<HexGridTriangle> {
     findTriangles() : HexGridTriangle[] {
         const triangles : HexGridTriangle[] = [];
 
-        const x = this.x * 6 + (this.y % 2 == 0 ? 0 : 3);
+        const x = this.x * 6 + (wrapModulo(this.y, 2) == 0 ? 0 : 3);
         const y = this.y;
 
         // top
@@ -409,10 +434,19 @@ export class GridDisplay {
     gridElement : HTMLDivElement;
     triangleDisplays : TriangleDisplay[][];
 
+    minX : number;
+    minY : number;
+
     constructor(grid : NewGrid) {
         this.grid = grid;
+        this.minX = Math.min(...grid.triangles.map((t) => t.x));
+        this.minY = Math.min(...grid.triangles.map((t) => t.y));
 
         this.build();
+
+        this.grid.addEventListener('addtriangle', (evt : GridEvent) => {
+            this.addTriangle(evt.triangle);
+        });
     }
 
     build() {
@@ -439,14 +473,7 @@ export class GridDisplay {
 
     drawTriangles() {
         for (const triangle of this.grid.triangles) {
-            if (!this.triangleDisplays[triangle.x]) {
-                this.triangleDisplays[triangle.x] = [];
-            }
-            if (!this.triangleDisplays[triangle.x][triangle.y]) {
-                const triangleDisplay = new TriangleDisplay(this, this.grid, triangle);
-                this.triangleDisplays[triangle.x][triangle.y] = triangleDisplay;
-                this.gridElement.appendChild(triangleDisplay.element);
-            }
+            this.addTriangle(triangle);
         }
 
         const conn = new Connector();
@@ -460,10 +487,33 @@ export class GridDisplay {
             conn.connect(triangle, this.grid.getNeighbors(triangle));
         }
     }
+
+    addTriangle(triangle : Triangle) {
+        if (!this.triangleDisplays[triangle.x]) {
+            this.triangleDisplays[triangle.x] = [];
+        }
+        if (!this.triangleDisplays[triangle.x][triangle.y]) {
+            const triangleDisplay = new TriangleDisplay(this, this.grid, triangle);
+            this.triangleDisplays[triangle.x][triangle.y] = triangleDisplay;
+            this.gridElement.appendChild(triangleDisplay.element);
+        }
+    }
 }
 
 
-export class NewGrid {
+class GridEvent extends Event {
+    grid : NewGrid;
+    triangle : Triangle;
+
+    constructor(type : string, grid : NewGrid, triangle : Triangle) {
+        super(type);
+        this.grid = grid;
+        this.triangle = triangle;
+    }
+}
+
+
+export class NewGrid extends EventTarget {
     triangleType = [HexGridTriangle, SquareGridTriangle, EquilateralGridTriangle][SELECT_GRID];
 
     grid : Triangle[][];
@@ -471,6 +521,8 @@ export class NewGrid {
     div : HTMLDivElement;
 
     constructor() {
+        super();
+
         this.grid = [];
         this.triangles = [];
 
@@ -501,8 +553,8 @@ export class NewGrid {
 
         if (this.triangleType === HexGridTriangle) {
             let i = 0;
-            for (let x=0; x<5; x++) {
-                for (let y=0; y<5; y++) {
+            for (let x=0; x<2; x++) {
+                for (let y=0; y<4; y++) {
                     const tile = new HexTile(this, x, y);
                     const color = COLORS[i % COLORS.length];
                     tile.colors = [color, color, color, color, color, color];
@@ -525,6 +577,7 @@ export class NewGrid {
     }
 
     createTriangles() {
+        return;
         let i = 0;
         for (let row=0; row<24; row++) {
             for (let col=0; col<12; col++) {
@@ -547,6 +600,7 @@ export class NewGrid {
             const triangle = new this.triangleType(x, y);
             this.grid[x][y] = triangle;
             this.triangles.push(triangle);
+            this.dispatchEvent(new GridEvent('addtriangle', this, triangle));
         }
         return this.grid[x][y];
     }

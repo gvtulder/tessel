@@ -168,11 +168,11 @@ export class Board {
   checkFitWithRotations(colors : Colors, x : number, y : number) : number | null {
     colors = [...colors];
     let rotations = 0;
-    while (rotations < 4 && !this.checkFit(colors, x, y)) {
+    while (rotations < Directions.length && !this.checkFit(colors, x, y)) {
       colors.unshift(colors.pop());
       rotations++;
     }
-    if (rotations == 4) {
+    if (rotations == Directions.length) {
       return null;
     } else {
       return rotations;
@@ -237,7 +237,7 @@ export class Board {
             return false;
           };
 
-    for (let start=0; start<4; start++) {
+    for (let start=0; start<Directions.length; start++) {
        const polyIdx = start + 1,
              polyColor = this.getTriangleColor(srcX, srcY, start),
              polyTiles : boolean[][] = [],

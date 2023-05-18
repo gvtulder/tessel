@@ -1,12 +1,12 @@
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { TileDisplay } from './TileDisplay.js';
-import { NewGrid, GridEvent } from '../newgrid.js';
+import { Grid, GridEvent } from '../grid/Grid.js';
 import { Tile } from "../grid/Tile.js";
 import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 
 export class GridDisplay {
-    grid: NewGrid;
+    grid: Grid;
     element: HTMLDivElement;
     gridElement: HTMLDivElement;
     tileElement: HTMLDivElement;
@@ -17,7 +17,7 @@ export class GridDisplay {
     minX: number;
     minY: number;
 
-    constructor(grid: NewGrid) {
+    constructor(grid: Grid) {
         this.grid = grid;
         this.minX = Math.min(...grid.triangles.map((t) => t.x));
         this.minY = Math.min(...grid.triangles.map((t) => t.y));

@@ -3,7 +3,7 @@ import interact from '@interactjs/interact/index';
 
 import { Board, Colors, Coord, Directions, InitialTile, ScoreType, TileStack } from './game.js';
 
-export { NewGrid } from './newgrid.js';
+export { Grid as NewGrid } from './grid/Grid.js';
 
 
 interface TileUIHTMLDivElement extends HTMLDivElement {

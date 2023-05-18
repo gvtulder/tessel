@@ -1,4 +1,4 @@
-import { TriangleColor, Coord } from '../newgrid.js';
+import { TriangleColor, Coord } from './Grid.js';
 
 
 

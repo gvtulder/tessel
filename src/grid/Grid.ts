@@ -1,14 +1,14 @@
 
-import { EquilateralGridTriangle } from './grid/EquilateralGridTriangle.js';
-import { HexGridTriangle } from './grid/HexGridTriangle.js';
-import { HexTile } from './grid/HexTile.js';
-import { SquareGridTriangle } from './grid/SquareGridTriangle.js';
-import { SquareTile } from './grid/SquareTile.js';
-import { Tile } from './grid/Tile.js';
-import { TriangleTile } from './grid/TriangleTile.js';
-import { Triangle } from './grid/Triangle.js';
-import { GridDisplay } from './ui/GridDisplay.js';
-import { DEBUG } from './settings.js';
+import { EquilateralGridTriangle } from './EquilateralGridTriangle.js';
+import { HexGridTriangle } from './HexGridTriangle.js';
+import { HexTile } from './HexTile.js';
+import { SquareGridTriangle } from './SquareGridTriangle.js';
+import { SquareTile } from './SquareTile.js';
+import { Tile } from './Tile.js';
+import { TriangleTile } from './TriangleTile.js';
+import { Triangle } from './Triangle.js';
+import { GridDisplay } from '../ui/GridDisplay.js';
+import { DEBUG } from '../settings.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
@@ -22,11 +22,11 @@ export type Coord = [x : number, y : number];
 
 
 export class GridEvent extends Event {
-    grid : NewGrid;
+    grid : Grid;
     triangle? : Triangle;
     tile? : Tile;
 
-    constructor(type : string, grid : NewGrid, triangle : Triangle, tile : Tile) {
+    constructor(type : string, grid : Grid, triangle : Triangle, tile : Tile) {
         super(type);
         this.grid = grid;
         this.triangle = triangle;
@@ -35,7 +35,7 @@ export class GridEvent extends Event {
 }
 
 
-export class NewGrid extends EventTarget {
+export class Grid extends EventTarget {
     triangleType = [HexGridTriangle, SquareGridTriangle, EquilateralGridTriangle][DEBUG.SELECT_GRID];
 
     grid : Triangle[][];

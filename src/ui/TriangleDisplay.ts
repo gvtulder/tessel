@@ -1,17 +1,17 @@
 import { SCALE, OFFSET, DEBUG } from '../settings.js';
-import { NewGrid } from '../newgrid.js';
+import { Grid } from '../grid/Grid.js';
 import { Triangle } from "../grid/Triangle.js";
 import { GridDisplay } from './GridDisplay.js';
 
 export class TriangleDisplay {
     gridDisplay: GridDisplay;
-    grid: NewGrid;
+    grid: Grid;
     triangle: Triangle;
 
     element: HTMLDivElement;
     triangleElement: SVGElement;
 
-    constructor(gridDisplay: GridDisplay, grid: NewGrid, triangle: Triangle) {
+    constructor(gridDisplay: GridDisplay, grid: Grid, triangle: Triangle) {
         this.gridDisplay = gridDisplay;
         this.grid = grid;
         this.triangle = triangle;

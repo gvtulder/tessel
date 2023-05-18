@@ -1,11 +1,11 @@
 import { Triangle } from './Triangle.js';
 import { makeConvexHull } from '../lib/convex-hull.js';
-import { NewGrid, TileColors, Coord } from '../newgrid.js';
+import { Grid, TileColors, Coord } from './Grid.js';
 
 
 
 export abstract class Tile {
-    grid: NewGrid;
+    grid: Grid;
     x: number;
     y: number;
     left: number;
@@ -14,7 +14,7 @@ export abstract class Tile {
     height: number;
     triangles: Triangle[];
 
-    constructor(grid: NewGrid, x: number, y: number) {
+    constructor(grid: Grid, x: number, y: number) {
         this.grid = grid;
         this.x = x;
         this.y = y;

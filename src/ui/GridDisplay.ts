@@ -1,9 +1,9 @@
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { TileDisplay } from './TileDisplay.js';
 import { NewGrid, GridEvent } from '../newgrid.js';
-import { Tile } from "src/Tile.js";
-import { Triangle } from "src/Triangle.js";
-import { ConnectorDisplay } from "src/ConnectorDisplay.js";
+import { Tile } from "../grid/Tile.js";
+import { Triangle } from "../grid/Triangle.js";
+import { ConnectorDisplay } from "./ConnectorDisplay.js";
 
 export class GridDisplay {
     grid: NewGrid;

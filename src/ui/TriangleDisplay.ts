@@ -1,5 +1,7 @@
-import { GridDisplay, NewGrid, SCALE, OFFSET, DEBUG } from '../newgrid.js';
-import { Triangle } from "src/Triangle.js";
+import { SCALE, OFFSET, DEBUG } from '../settings.js';
+import { NewGrid } from '../newgrid.js';
+import { Triangle } from "../grid/Triangle.js";
+import { GridDisplay } from './GridDisplay.js';
 
 export class TriangleDisplay {
     gridDisplay: GridDisplay;

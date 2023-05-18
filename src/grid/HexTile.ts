@@ -1,6 +1,6 @@
 import { HexGridTriangle } from './HexGridTriangle.js';
 import { Tile } from './Tile.js';
-import { wrapModulo } from './newgrid.js';
+import { wrapModulo } from '../utils.js';
 
 export class HexTile extends Tile {
     findTriangles(): HexGridTriangle[] {

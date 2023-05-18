@@ -8,6 +8,7 @@
     "paths": {
       "interactjs/interact": ["node_modules/interactjs/dist/interact.min.js"]
     },
-    "moduleResolution": "nodenext"
+    "moduleResolution": "nodenext",
+    "outDir": "dist/"
   }
 }

@@ -1,5 +1,5 @@
-import { SCALE } from '../newgrid.js';
-import { Triangle } from "src/Triangle.js";
+import { SCALE } from '../settings.js';
+import { Triangle } from "../grid/Triangle.js";
 
 
 

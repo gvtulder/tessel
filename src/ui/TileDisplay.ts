@@ -1,6 +1,6 @@
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
-import { SCALE, OFFSET } from '../newgrid.js';
-import { Tile } from "src/Tile.js";
+import { SCALE, OFFSET } from '../settings.js';
+import { Tile } from "../grid/Tile.js";
 
 export class TileDisplay {
     tile: Tile;

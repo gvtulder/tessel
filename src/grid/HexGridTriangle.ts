@@ -1,5 +1,6 @@
 import { Triangle } from './Triangle.js';
-import { wrapModulo, O } from '../newgrid.js';
+import { O } from '../settings.js';
+import { wrapModulo } from '../utils.js';
 
 export class HexGridTriangle extends Triangle {
     calc() {

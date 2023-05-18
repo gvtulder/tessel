@@ -8,23 +8,8 @@ import { Tile } from './grid/Tile.js';
 import { TriangleTile } from './grid/TriangleTile.js';
 import { Triangle } from './grid/Triangle.js';
 import { GridDisplay } from './ui/GridDisplay.js';
+import { DEBUG } from './settings.js';
 
-export const DEBUG = {
-    SELECT_GRID: 0,
-    OVERLAP: false,
-    OPACITY: 0.6,
-    TRIANGLE_OUTLINE: false,
-    NUMBER_TRIANGLES: false,
-    RANDOM_TRIANGLES: false,
-    WHITE_TRIANGLES: false,
-    RANDOM_TILES: true,
-    CONNECT_TILES: false,
-}
-
-export const OFFSET = 0;
-export const SCALE = 100;
-
-export const O = (DEBUG.OVERLAP ? 0.1 : 0.01);
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
 
@@ -34,14 +19,6 @@ export type TileColors = TriangleColor[];
 
 export type Coord = [x : number, y : number];
 
-
-export function wrapModulo(n : number, d : number) : number {
-    // support for negative numbers
-    if (n < 0) {
-        n = n + Math.ceil(Math.abs(n) / d) * d;
-    }
-    return n % d;
-}
 
 
 export class GridEvent extends Event {

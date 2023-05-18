@@ -34,7 +34,6 @@ export class GridEvent extends Event {
     }
 }
 
-
 export class Grid extends EventTarget {
     triangleType = [HexGridTriangle, SquareGridTriangle, EquilateralGridTriangle][DEBUG.SELECT_GRID];
 
@@ -52,11 +51,6 @@ export class Grid extends EventTarget {
         this.triangles = [];
         this.tiles = [];
 
-        const display = new GridDisplay(this);
-        display.drawTriangles();
-        document.body.appendChild(display.element);
-        this.gridDisplay = display;
-
         if (DEBUG.RANDOM_TRIANGLES) {
             this.createRandomTriangles();
         }
@@ -65,9 +59,6 @@ export class Grid extends EventTarget {
         }
         if (DEBUG.RANDOM_TILES) {
             this.createRandomTiles();
-        }
-        if (DEBUG.CONNECT_TILES) {
-            display.debugConnectAllTriangles();
         }
     }
 

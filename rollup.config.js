@@ -2,7 +2,7 @@ import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default {
-  input: 'src/script.ts',
+  input: 'src/main.ts',
   output: {
     name: 'tilegame',
     dir: 'dist',

@@ -5,9 +5,10 @@ import { roundPathCorners } from './lib/svg-rounded-corners.js';
 const DEBUG = {
     SELECT_GRID: 0,
     OVERLAP: false,
-    NUMBER_TILES: false,
-    RANDOM_TRIANGLES: true,
-    WHITE_TRIANGLES: true,
+    OPACITY: 0.6,
+    NUMBER_TRIANGLES: false,
+    RANDOM_TRIANGLES: false,
+    WHITE_TRIANGLES: false,
     RANDOM_TILES: true,
     CONNECT_TILES: false,
 }
@@ -108,7 +109,7 @@ class HexGridTriangle extends Triangle {
         } else {
             // triangle pointing up
             this.points = [[0.5, 0], [1, height], [0, height]];
-            this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height + O], [0, height + O], [0.5, 0]];
+            this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height + O], [0, height + O], [0, height], [0.5, 0]];
             this.neighborOffsets = [[-1, 0], [1, 0], [0, 1]];
         }
 
@@ -407,7 +408,7 @@ class TriangleDisplay {
         const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         el.setAttribute('points', polyString.join(' '));
         if (DEBUG.OVERLAP) {
-            el.setAttribute('opacity', '0.6');
+            el.setAttribute('opacity', `${DEBUG.OPACITY}`);
         }
         // el.setAttribute('fill', 'transparent');
         // el.setAttribute('stroke', 'white');
@@ -425,7 +426,7 @@ class TriangleDisplay {
             group.append(outline);
         }
 
-        if (DEBUG.NUMBER_TILES) {
+        if (DEBUG.NUMBER_TRIANGLES) {
             const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             center.setAttribute('cx', `${this.triangle.center[0] * SCALE}`);
             center.setAttribute('cy', `${this.triangle.center[1] * SCALE}`);

@@ -6,6 +6,7 @@ const DEBUG = {
     SELECT_GRID: 0,
     OVERLAP: false,
     OPACITY: 0.6,
+    TRIANGLE_OUTLINE: false,
     NUMBER_TRIANGLES: false,
     RANDOM_TRIANGLES: false,
     WHITE_TRIANGLES: false,
@@ -109,7 +110,7 @@ class HexGridTriangle extends Triangle {
         } else {
             // triangle pointing up
             this.points = [[0.5, 0], [1, height], [0, height]];
-            this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height + O], [0, height + O], [0, height], [0.5, 0]];
+            this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height], [1 + O, height + O], [0.1, height + O], [0, height], [0.5, 0]];
             this.neighborOffsets = [[-1, 0], [1, 0], [0, 1]];
         }
 
@@ -219,6 +220,8 @@ abstract class Tile {
     y : number;
     left : number;
     top : number;
+    width : number;
+    height : number;
     triangles : Triangle[];
 
     constructor(grid : NewGrid, x : number, y : number) {
@@ -230,6 +233,8 @@ abstract class Tile {
 
         this.left = Math.min(...this.triangles.map((t) => t.left));
         this.top = Math.min(...this.triangles.map((t) => t.top));
+        this.width = Math.max(...this.triangles.map((t) => t.left + t.width)) - this.left;
+        this.height = Math.max(...this.triangles.map((t) => t.top + t.height)) - this.top;
     }
 
     abstract findTriangles() : Triangle[];
@@ -417,7 +422,7 @@ class TriangleDisplay {
         this.triangleElement = el;
         this.updateColor();
 
-        if (DEBUG.OVERLAP) {
+        if (DEBUG.TRIANGLE_OUTLINE) {
             const outline = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
             outline.setAttribute('points', pointsString.join(' '));
             outline.setAttribute('fill', 'transparent');
@@ -459,8 +464,6 @@ class TriangleDisplay {
 
 class TileDisplay {
     tile : Tile;
-    left : number;
-    top : number;
 
     element : HTMLDivElement;
     svgGroup : SVGElement;
@@ -473,15 +476,13 @@ class TileDisplay {
     build() {
         const div =  document.createElement('div');
         div.style.position = 'absolute';
-        div.style.width = '1000';
-        div.style.height = '1000';
         div.style.left = `${this.tile.left * SCALE + OFFSET}px`;
         div.style.top = `${this.tile.top * SCALE + OFFSET}px`;
         this.element = div;
 
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', `${100 * SCALE}`);
-        svg.setAttribute('height', `${100 * SCALE}`);
+        svg.setAttribute('width', `${this.tile.width * SCALE + 10}`);
+        svg.setAttribute('height', `${this.tile.height * SCALE + 10}`);
         this.element.appendChild(svg);
 
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -748,7 +749,7 @@ export class NewGrid extends EventTarget {
                 for (let y = 0; y < 4; y++) {
                     const tile = new HexTile(this, x, y);
                     const color = COLORS[i % COLORS.length];
-                    tile.colors = [color, color, color, color, color, color];
+                    tile.colors = [color, 'white', color, color, color, color];
                     this.addTile(tile);
                     i++;
                 }

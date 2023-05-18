@@ -9,13 +9,16 @@ const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'pur
 const SELECT_TRIANGLE = 2;
 
 
+type TriangleColor = string;
+
+
 type Coord = [x : number, y : number];
 
 
-abstract class Triangle {
+abstract class Triangle extends EventTarget {
     x : number;
     y : number;
-    color : string;
+    private _color : TriangleColor;
 
     points : [Coord, Coord, Coord];
     polyPoints : Coord[];
@@ -24,85 +27,19 @@ abstract class Triangle {
 
     neighborOffsets : Coord[];
 
-    element : HTMLDivElement;
+    private _changecolor : Event = new Event('changecolor');
 
-    constructor(x : number, y : number, color : string) {
+    constructor(x : number, y : number, color : TriangleColor) {
+        super();
+
         this.x = x;
         this.y = y;
         this.color = color;
 
         this.calc();
-        this.build();
     }
 
     abstract calc();
-
-    build() {
-        const div = document.createElement('div');
-        div.title = `(${this.x},${this.y})`;
-        this.element = div;
-
-        div.style.position = 'absolute';
-        div.style.left = `${this.left * SCALE + OFFSET}px`;
-        div.style.top = `${this.top * SCALE + OFFSET}px`;
-        div.style.zIndex = `${this.x * 1000 + this.y}`;
-
-        const svg = this.generateSvg();
-        div.appendChild(svg);
-    }
-
-    generateSvg() {
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', `${SCALE + 10}`);
-        svg.setAttribute('height', `${SCALE + 10}`);
-
-        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        svg.appendChild(group);
-
-        const pointsString = [...this.points, this.points[0]].map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
-        if (!this.polyPoints) this.polyPoints = [...this.points, this.points[0]];
-        const polyString = this.polyPoints.map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
-
-        const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        el.setAttribute('points', polyString.join(' '));
-        if (DEBUG_OVERLAP) {
-            el.setAttribute('opacity', '0.6');
-        }
-        el.setAttribute('fill', this.color);
-        // el.setAttribute('stroke', 'white');
-        // el.setAttribute('stroke-width', '2px');
-        group.append(el);
-
-        if (DEBUG_OVERLAP) {
-            const outline = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-            outline.setAttribute('points', pointsString.join(' '));
-            outline.setAttribute('fill', 'transparent');
-            outline.setAttribute('stroke', 'yellow');
-            outline.setAttribute('stroke-width', '1px');
-            group.append(outline);
-        }
-
-        const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        center.setAttribute('cx', `${this.center[0] * SCALE}`);
-        center.setAttribute('cy', `${this.center[1] * SCALE}`);
-        center.setAttribute('r', `${0.02 * SCALE}`);
-        center.setAttribute('opacity', '0.5');
-        center.setAttribute('fill', 'black');
-        group.append(center);
-
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', `${this.center[0] * SCALE}`);
-        text.setAttribute('y', `${this.center[1] * SCALE}`);
-        text.setAttribute('alignment-baseline', 'middle');
-        text.setAttribute('dominant-baseline', 'middle');
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('font-size', '11');
-        text.setAttribute('fill', 'white');
-        text.appendChild(document.createTextNode(`(${this.x},${this.y})`));
-        group.append(text);
-
-        return svg;
-    }
 
     get center() : Coord {
         // incenter coordinates
@@ -123,6 +60,18 @@ abstract class Triangle {
 
     get height() : number {
         return Math.max(...this.points.map((p) => p[1]));
+    }
+
+    set color(color : TriangleColor) {
+        const changed = this._color != color;
+        this._color = color;
+        if (changed) {
+            this.dispatchEvent(this._changecolor);
+        }
+    }
+
+    get color() : TriangleColor {
+        return this._color;
     }
 }
 
@@ -284,10 +233,102 @@ class Connector {
 }
 
 
+class TriangleDisplay {
+    gridDisplay : GridDisplay;
+    grid : NewGrid;
+    triangle : Triangle;
+
+    element : HTMLDivElement;
+    triangleElement : SVGElement;
+
+    constructor(gridDisplay : GridDisplay, grid : NewGrid, triangle : Triangle) {
+        this.gridDisplay = gridDisplay;
+        this.grid = grid;
+        this.triangle = triangle;
+
+        this.build();
+
+        this.triangle.addEventListener('changecolor', () => { this.updateColor(); });
+    }
+
+    build() {
+        const div = document.createElement('div');
+        div.title = `(${this.triangle.x},${this.triangle.y})`;
+        this.element = div;
+
+        div.style.position = 'absolute';
+        div.style.left = `${this.triangle.left * SCALE + OFFSET}px`;
+        div.style.top = `${this.triangle.top * SCALE + OFFSET}px`;
+        div.style.zIndex = `${this.triangle.x * 1000 + this.triangle.y}`;
+
+        const svg = this.generateSvg();
+        div.appendChild(svg);
+    }
+
+    generateSvg() {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', `${SCALE + 10}`);
+        svg.setAttribute('height', `${SCALE + 10}`);
+
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        svg.appendChild(group);
+
+        const pointsString = [...this.triangle.points, this.triangle.points[0]].map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
+        const polyString = this.triangle.polyPoints.map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
+
+        const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        el.setAttribute('points', polyString.join(' '));
+        if (DEBUG_OVERLAP) {
+            el.setAttribute('opacity', '0.6');
+        }
+        el.setAttribute('fill', this.triangle.color);
+        // el.setAttribute('stroke', 'white');
+        // el.setAttribute('stroke-width', '2px');
+        group.append(el);
+        this.triangleElement = el;
+
+        if (DEBUG_OVERLAP) {
+            const outline = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            outline.setAttribute('points', pointsString.join(' '));
+            outline.setAttribute('fill', 'transparent');
+            outline.setAttribute('stroke', 'yellow');
+            outline.setAttribute('stroke-width', '1px');
+            group.append(outline);
+        }
+
+        const center = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        center.setAttribute('cx', `${this.triangle.center[0] * SCALE}`);
+        center.setAttribute('cy', `${this.triangle.center[1] * SCALE}`);
+        center.setAttribute('r', `${0.02 * SCALE}`);
+        center.setAttribute('opacity', '0.5');
+        center.setAttribute('fill', 'black');
+        group.append(center);
+
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', `${this.triangle.center[0] * SCALE}`);
+        text.setAttribute('y', `${this.triangle.center[1] * SCALE}`);
+        text.setAttribute('alignment-baseline', 'middle');
+        text.setAttribute('dominant-baseline', 'middle');
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '11');
+        text.setAttribute('fill', 'white');
+        text.appendChild(document.createTextNode(`(${this.triangle.x},${this.triangle.y})`));
+        group.append(text);
+
+        return svg;
+    }
+
+    updateColor() {
+        this.triangleElement.setAttribute('fill', this.triangle.color);
+    }
+}
+
+
 export class GridDisplay {
     grid : NewGrid;
     element : HTMLDivElement;
     gridElement : HTMLDivElement;
+    triangleDisplays : TriangleDisplay[][];
 
     constructor(grid : NewGrid) {
         this.grid = grid;
@@ -296,6 +337,8 @@ export class GridDisplay {
     }
 
     build() {
+        this.triangleDisplays = [];
+
         const div = document.createElement('div');
         div.style.position = 'fixed';
         div.style.top = '0px';
@@ -317,7 +360,14 @@ export class GridDisplay {
 
     drawTriangles() {
         for (const triangle of this.grid.triangles) {
-            this.gridElement.appendChild(triangle.element);
+            if (!this.triangleDisplays[triangle.x]) {
+                this.triangleDisplays[triangle.x] = [];
+            }
+            if (!this.triangleDisplays[triangle.x][triangle.y]) {
+                const triangleDisplay = new TriangleDisplay(this, this.grid, triangle);
+                this.triangleDisplays[triangle.x][triangle.y] = triangleDisplay;
+                this.gridElement.appendChild(triangleDisplay.element);
+            }
         }
 
         const conn = new Connector();

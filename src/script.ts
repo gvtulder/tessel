@@ -3,6 +3,8 @@ import interact from '@interactjs/interact/index';
 
 import { Board, Colors, Coord, Directions, InitialTile, ScoreType, TileStack } from './game.js';
 
+export { NewGrid } from './newgrid.js';
+
 
 interface TileUIHTMLDivElement extends HTMLDivElement {
   tile? : TileUI;
@@ -335,7 +337,6 @@ class BoardPolyDrawing {
         text.setAttribute('dominant-baseline', 'middle');
         text.setAttribute('text-anchor', 'middle');
         text.setAttribute('font-size', '21');
-        text.setAttribute('color', 'white');
         text.appendChild(document.createTextNode(`${scores[i]}`));
         this.svg.appendChild(text);
       }

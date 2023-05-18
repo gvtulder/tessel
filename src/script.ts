@@ -1,7 +1,7 @@
-import type { Interactable } from '@interactjs/types';
+import type { Interactable, DragEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
 
-import { Board, Colors, Directions, InitialTile, ScoreType, TileStack } from './game.js';
+import { Board, Colors, Coord, Directions, InitialTile, ScoreType, TileStack } from './game.js';
 
 
 interface TileUIHTMLDivElement extends HTMLDivElement {
@@ -40,8 +40,8 @@ class TileUI {
   setPosition(col : number, row : number) {
     this.col = col;
     this.row = row;
-    this.div.style.top = 100 * (row - 0.5) + 'px';
-    this.div.style.left = 100 * (col - 0.5) + 'px';
+    this.div.style.top = `${100 * (row - 0.5)}px`;
+    this.div.style.left = `${100 * (col - 0.5)}px`;
   }
 
   setColors(colors : Colors | null) {
@@ -97,7 +97,7 @@ class TileUI {
     }
   }
 
-  autoRotate(targetTile) {
+  autoRotate(targetTile : TileUI) {
     if (!this.gameManager.settings.autorotate) {
       return;
     }
@@ -127,24 +127,24 @@ class TileUI {
     }
   }
 
-  makeDraggable(onDragStart) {
+  makeDraggable(onDragStart : (DragEvent) => void) {
     const position = { x: 0, y: 0 };
     const boardUI = this.gameManager.boardUI;
-    interact(this.div).on('tap', function() {
+    interact(this.div).on('tap', () => {
       this.rotateTile();
-    }.bind(this)).draggable({
+    }).draggable({
       listeners: {
-        start (evt) {
+        start (evt : DragEvent) {
           console.log(evt.type, evt.target);
           evt.target.classList.add('dragging');
           onDragStart(evt);
         },
-        move (evt) {
+        move (evt : DragEvent) {
           position.x += evt.dx;
           position.y += evt.dy;
           evt.target.style.transform = `translate(${position.x}px, ${position.y}px) scale(${boardUI.scale})`;
         },
-        end (evt) {
+        end (evt : DragEvent) {
           evt.target.classList.remove('dragging');
           position.x = 0;
           position.y = 0;
@@ -154,31 +154,32 @@ class TileUI {
     });
   }
 
-  makeDropzone(ondrop) {
+  makeDropzone(ondrop : (DragEvent) => void) {
     this.dropzone = interact(this.div).dropzone({
       overlap: 'center',
       ondrop: ondrop
-    }).on('dropactivate', function (evt) {
+    }).on('dropactivate', (evt : DragEvent) => {
       evt.target.classList.add('drop-activated');
       if (this.gameManager.settings.hints) {
-        console.log('dropactivate', evt.relatedTarget.tile.colors);
-        if (this.gameManager.board.checkFitWithRotations(evt.relatedTarget.tile.colors,
-                                                         evt.target.tile.col, evt.target.tile.row) == null) {
+        console.log('dropactivate', (evt.relatedTarget as TileUIHTMLDivElement).tile.colors);
+        if (this.gameManager.board.checkFitWithRotations((evt.relatedTarget as TileUIHTMLDivElement).tile.colors,
+                                                         (evt.target as TileUIHTMLDivElement).tile.col,
+                                                         (evt.target as TileUIHTMLDivElement).tile.row) == null) {
           evt.target.classList.add('drop-hint-would-not-fit');
         } else {
           evt.target.classList.add('drop-hint-would-fit');
         }
       }
-    }.bind(this)).on('dropdeactivate', function (evt) {
+    }).on('dropdeactivate', (evt : DragEvent) => {
       evt.target.classList.remove('drop-activated');
       evt.target.classList.remove('drop-hint-would-fit');
       evt.target.classList.remove('drop-hint-would-not-fit');
-    }).on('dragenter', function (evt) {
-      console.log('dragenter', evt.target);
-      evt.relatedTarget.tile.autoRotate(evt.target.tile);
-    }.bind(this)).on('dragleave', function (evt) {
+    }).on('dragenter', (evt : DragEvent) => {
+      console.log('dragenter', (evt.target as TileUIHTMLDivElement));
+      (evt.relatedTarget as TileUIHTMLDivElement).tile.autoRotate((evt.target as TileUIHTMLDivElement).tile);
+    }).on('dragleave', (evt : DragEvent) => {
       console.log('dragleave', evt.target);
-      evt.relatedTarget.tile.resetAutoRotate();
+      (evt.relatedTarget as TileUIHTMLDivElement).tile.resetAutoRotate();
     });
   }
 
@@ -192,6 +193,13 @@ class TileUI {
 
 
 
+type PlayerScoreType = {
+  name: string;
+  points: number;
+  color: PlayerType['color'];
+  turn: boolean;
+};
+
 class ScoreboardUI {
   element : HTMLDivElement;
 
@@ -201,7 +209,7 @@ class ScoreboardUI {
     this.element = div;
   }
 
-  update(scores) {
+  update(scores : PlayerScoreType[]) {
     const fragment = document.createDocumentFragment();
     for (let i=0; i<scores.length; i++) {
       const div = document.createElement('div');
@@ -215,7 +223,7 @@ class ScoreboardUI {
 
       const points = document.createElement('span');
       points.className = 'points';
-      points.appendChild(document.createTextNode(scores[i] ? scores[i].points : 0));
+      points.appendChild(document.createTextNode(`${scores[i] ? scores[i].points : 0}`));
       div.appendChild(points);
 
       if (scores[i].turn) {
@@ -240,16 +248,16 @@ class BoardPolyDrawing {
   scoreData : ScoreType;
   currentDepth : number;
   maxDepth : number;
-  color : {main: string, light: string, dark: string};
+  color : PlayerType['color'];
   div : HTMLDivElement;
   svg : SVGSVGElement;
   timeout? : number;
 
-  constructor(boardUI) {
+  constructor(boardUI : BoardUI) {
     this.boardUI = boardUI;
   }
 
-  start(x : number, y : number, scoreData, color) {
+  start(x : number, y : number, scoreData : ScoreType, color : PlayerType['color']) {
     console.log('boardPolyDrawing', x, y, scoreData, color);
 
     this.minX = this.boardUI.minX;
@@ -275,8 +283,8 @@ class BoardPolyDrawing {
     this.div.appendChild(this.svg);
     this.boardUI.tileBoard.appendChild(this.div);
 
-    this.div.style.left = 100 * (this.minX - 0.5) + 'px';
-    this.div.style.top = 100 * (this.minY - 0.5) + 'px';
+    this.div.style.left = `${100 * (this.minX - 0.5)}px`;
+    this.div.style.top = `${100 * (this.minY - 0.5)}px`;
 
     this.iterDraw();
   }
@@ -295,7 +303,7 @@ class BoardPolyDrawing {
     } else {
       this.drawPolyDepth(this.currentDepth);
       this.currentDepth++;
-      this.timeout = window.setTimeout(this.iterDraw.bind(this), 100);
+      this.timeout = window.setTimeout(() => { this.iterDraw(); }, 100);
     }
   }
 
@@ -392,7 +400,7 @@ class TileStackUI {
   stack : TileUI[];
   element : HTMLDivElement;
 
-  constructor(gameManager) {
+  constructor(gameManager : GameManager) {
     this.gameManager = gameManager;
     this.stack = [];
     this.build();
@@ -403,7 +411,7 @@ class TileStackUI {
     this.element.setAttribute('id', 'tile-stack');
   }
 
-  addToStack(colors) {
+  addToStack(colors : Colors) {
     const tile = new TileUI(this.gameManager);
     tile.setColors(colors);
     this.element.appendChild(tile.div);
@@ -414,9 +422,9 @@ class TileStackUI {
     tile.setPosition(0, idx);
     this.stack[idx] = tile;
 
-    tile.makeDraggable(function() {
+    tile.makeDraggable(() => {
       this.gameManager.boardUI.clearScoresOnTile();
-    }.bind(this));
+    });
   }
 
   isEmpty() {
@@ -433,7 +441,7 @@ class ControlsUI {
   gameManager : GameManager;
   element : HTMLDivElement;
 
-  constructor(gameManager) {
+  constructor(gameManager : GameManager) {
     this.gameManager = gameManager;
     this.build();
   }
@@ -454,9 +462,9 @@ class ControlsUI {
     instructions.appendChild(document.createElement('br'));
     label.appendChild(document.createTextNode('Autorotate'));
     instructions.appendChild(label);
-    label.addEventListener('change', function() {
+    label.addEventListener('change', () => {
       this.gameManager.settings.autorotate = autorotate.checked;
-    }.bind(this));
+    });
 
     const hints = document.createElement('input');
     hints.type = 'checkbox';
@@ -465,9 +473,9 @@ class ControlsUI {
     instructions.appendChild(document.createElement('br'));
     label.appendChild(document.createTextNode('Show hints'));
     instructions.appendChild(label);
-    label.addEventListener('change', function() {
+    label.addEventListener('change', () => {
       this.gameManager.settings.hints = hints.checked;
-    }.bind(this));
+    });
 
     const restart = document.createElement('input');
     restart.type = 'button';
@@ -502,7 +510,7 @@ class BoardUI {
   tileBoardContainer : HTMLDivElement;
   tileBoard : HTMLDivElement;
 
-  constructor(gameManager) {
+  constructor(gameManager : GameManager) {
     this.gameManager = gameManager;
 
     this.grid = [];
@@ -549,7 +557,7 @@ class BoardUI {
     document.body.appendChild(this.gameDiv);
   }
 
-  place(colors, x, y) {
+  place(colors : Colors, x : number, y : number) {
     if (!this.grid[x]) {
       this.grid[x] = [];
     }
@@ -572,7 +580,7 @@ class BoardUI {
     if (colors) {
       tile.removeDropzone();
     } else {
-      tile.makeDropzone(function (evt : Interact.DropEvent) {
+      tile.makeDropzone((evt : Interact.DropEvent) => {
         const dragged = (evt.relatedTarget as TileUIHTMLDivElement).tile;
         const target = (evt.target as TileUIHTMLDivElement).tile;
         console.log('dropped', dragged, target);
@@ -594,17 +602,17 @@ class BoardUI {
           this.tileStackUI.stack[dragged.row] = dragged;
         }
         this.update();
-      }.bind(this));
+      });
     }
   }
 
-  drawFrontier(frontierTiles) {
+  drawFrontier(frontierTiles : Coord[]) {
     for (let i=0; i<frontierTiles.length; i++) {
       this.place(null, frontierTiles[i].x, frontierTiles[i].y);
     }
   }
 
-  showScore(scores) {
+  showScore(scores : PlayerScoreType[]) {
     this.scoreboard.update(scores);
   }
 
@@ -632,10 +640,10 @@ class BoardUI {
     totalHeight *= scale;
 
     this.tileBoard.style.transform = `scale(${scale}`;
-    this.tileBoard.style.left = margins.left + (availWidth - totalWidth) / 2 +
-                                -(this.minX - 0.5 + skipPlaceholders) * scale * 100 + 'px';
-    this.tileBoard.style.top = margins.top + (availHeight - totalHeight) / 2 +
-                                -(this.minY - 0.5 + skipPlaceholders) * scale * 100 + 'px';
+    this.tileBoard.style.left = `${margins.left + (availWidth - totalWidth) / 2 +
+                                   -(this.minX - 0.5 + skipPlaceholders) * scale * 100 }px`;
+    this.tileBoard.style.top = `${margins.top + (availHeight - totalHeight) / 2 +
+                                  -(this.minY - 0.5 + skipPlaceholders) * scale * 100 }px`;
 
 //  this.tileBoard.style.top = -100 * ((this.maxY - this.minY + 1) / 2 + this.minY - 0.5) + 'px';
 //  this.tileBoard.style.left = -100 * ((this.maxX - this.minX + 1) / 2 + this.minX - 0.5) + 'px';
@@ -671,7 +679,7 @@ class BoardUI {
     if (this.isGameFinished()) {
       this.gameDiv.classList.add('game-finished');
       this.rescaleGrid();
-      window.setTimeout(this.clearScoresOnTile.bind(this), 2000);
+      window.setTimeout(() => { this.clearScoresOnTile(); }, 2000);
     }
   }
 
@@ -705,8 +713,8 @@ export class GameManager {
   totalScore : number;
   player : PlayerType;
   settings : {
-    autorotate: false,
-    hints: false,
+    autorotate : boolean,
+    hints : boolean,
   }
 
   constructor() {
@@ -745,12 +753,12 @@ export class GameManager {
 
     this.boardUI.startTurn();
 
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', () => {
       this.boardUI.rescaleGrid();
-    }.bind(this));
+    });
   }
 
-  placeFromStack(source, target) {
+  placeFromStack(source : TileUI, target : TileUI) {
     if (this.board.place(source.colors, target.col, target.row)) {
       console.log(source.colors, target.col, target.row);
       this.boardUI.endTurn();

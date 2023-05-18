@@ -47,7 +47,7 @@ type Tile = {
   x : number,
   y : number,
 }
-type Coord = {
+export type Coord = {
   x : number,
   y : number,
 }
@@ -97,7 +97,7 @@ export class TileStack {
   serialize() {
     return { tiles: this.tiles };
   }
-  unserialize(d) {
+  unserialize(d : { tiles : Colors[] }) {
     this.tiles = d.tiles;
   }
   isEmpty() {
@@ -143,7 +143,7 @@ export class Board {
              minX: this.minX, minY: this.minY,
              maxX: this.maxX, maxY: this.maxY };
   }
-  unserialize(d) {
+  unserialize(d : { grid : Tile[][], tiles : Tile[], minX : number, minY : number, maxX : number, maxY : number }) {
     this.grid = d.grid;
     this.tiles = d.tiles;
     this.minX = d.minX;
@@ -228,7 +228,7 @@ export class Board {
   calculateScore(srcX : number, srcY : number) : ScoreType {
     const scores : [number, number, number, number] = [0,0,0,0];
     const polyEdgesPerStart : [PolyEdgesType, PolyEdgesType, PolyEdgesType, PolyEdgesType] = [[],[],[],[]];
-    const crumbs = [];
+    const crumbs : number[][][] = [];
     const m = function(x : number, y : number, t : number, set : number | null) {
             if (!crumbs[x]) crumbs[x] = [];
             if (!crumbs[x][y]) crumbs[x][y] = [];
@@ -310,7 +310,7 @@ export class Board {
           }
         }
 
-        console.log('starting '+start+' color '+polyColor+' '+(polyOpen?'open':'closed')+' tileCount '+polyTileCount);
+        console.log(`starting ${start} color ${polyColor} ${polyOpen?'open':'closed'} tileCount ${polyTileCount}`);
 
         if (!polyOpen) {
           if (polyTileCount >= 4) {

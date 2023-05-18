@@ -88,7 +88,7 @@ class HexGridTriangle extends Triangle {
         } else {
             // triangle pointing up
             this.points = [[0.5, 0], [1, height], [0, height]];
-            this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height + O], [0, height + O], [0, height], [0.5, 0]];
+            this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height + O], [0, height], [0.5, 0]];
             this.neighborOffsets = [[-1, 0], [1, 0], [0, 1]];
         }
 
@@ -139,7 +139,7 @@ class EquilateralGridTriangle extends Triangle {
         if (this.y % 6 == 0) {
             // top triangle pointing down
             this.points = [[0, 0], [1, 0], [0.5, h]];
-            this.polyPoints = [[0, 0], [1 + O, 0], [0.5, h + O], [0.5, h], [0, 0]];
+            this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, h + O], [0.5 - O, h + O], [0, 0]];
             this.neighborOffsets = [[0, 1], [0, 2], [(odd ? -1 : 0), -1]];
         } else if (this.y % 6 == 1) {
             // left triangle pointing up-right
@@ -150,13 +150,13 @@ class EquilateralGridTriangle extends Triangle {
             // right triangle pointing up-left
             this.left += 0.5;
             this.points = [[0, h], [0.5, 0], [0, height]];
-            this.polyPoints = [[0, h], [0.5, 0], [0.5 + O, 0], [0, height + O], [0, height], [0, h]];
+            this.polyPoints = [[0, h], [0.5, 0], [0.5 + O, 0], [0, height], [0, h]];
             this.neighborOffsets = [[0, -2], [0, -1], [0, 1]];
         } else if (this.y % 6 == 3) {
             // left triangle pointing bottom-right
             this.left += 0.5;
             this.points = [[0, height], [0.5, 0], [0.5, 2 * h]];
-            this.polyPoints = [[0, height], [0.5, 0], [0.5 + O, 0], [0.5 + O, 2 * h + O], [0, height + O], [0, height]];
+            this.polyPoints = [[0, height], [0.5, 0], [0.5 + O, 0], [0.5 + O, 2 * h + O], [0, height], [0, height]];
             this.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
         } else if (this.y % 6 == 4) {
             // right triangle pointing bottom-left

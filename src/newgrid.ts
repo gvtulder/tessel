@@ -153,7 +153,7 @@ class EquilateralGridTriangle extends Triangle {
         const odd = wrapModulo(this.y, 12) < 6;
         this.left = this.x + (odd ? 0 : 0.5);
         this.top = height * Math.floor(this.y / 6);
-        switch (wrapModulo(y, 6)) {
+        switch (wrapModulo(this.y, 6)) {
             case 0:
                 // top triangle pointing down
                 this.points = [[0, 0], [1, 0], [0.5, h]];
@@ -362,6 +362,7 @@ class TriangleDisplay {
         div.style.left = `${this.triangle.left * SCALE + OFFSET}px`;
         div.style.top = `${this.triangle.top * SCALE + OFFSET}px`;
         div.style.zIndex = `${this.triangle.x * 1000 + this.triangle.y}`;
+        console.log(div.style.zIndex);
 
         const svg = this.generateSvg();
         div.appendChild(svg);

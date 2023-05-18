@@ -10,6 +10,7 @@ const SELECT_TRIANGLE = 2;
 
 
 type TriangleColor = string;
+type TileColors = TriangleColor[];
 
 
 type Coord = [x : number, y : number];
@@ -29,12 +30,12 @@ abstract class Triangle extends EventTarget {
 
     private _changecolor : Event = new Event('changecolor');
 
-    constructor(x : number, y : number, color : TriangleColor) {
+    constructor(x : number, y : number) {
         super();
 
         this.x = x;
         this.y = y;
-        this.color = color;
+        this.color = null;
 
         this.calc();
     }
@@ -169,18 +170,94 @@ class EquilateralGridTriangle extends Triangle {
             this.left += 0.5;
             this.top += 2 * h;
             this.points = [[0, h], [0.5, 0], [1, h]];
-            this.polyPoints = [[0, h], [0.5, 0], [1, h], [1 + O, h + O], [0, h + O], [0, h]];
+            this.polyPoints = [[0, h], [0.5, 0], [1, h], [1 + O, h + O], [O, h + O], [0, h]];
             this.neighborOffsets = [[0, -2], [0, -1], [(odd ? 0 : 1), 1]];
         }
     }
 }
 
 
-class Tile {
-    triangles : Triangle[];
+abstract class Tile<TriangleType extends Triangle> {
+    grid : NewGrid;
+    x : number;
+    y : number;
+    triangles : TriangleType[];
 
-    constructor(triangles : Triangle[]) {
-        this.triangles = triangles;
+    constructor(grid : NewGrid, x : number, y : number) {
+        this.grid = grid;
+        this.x = x;
+        this.y = y;
+
+        this.triangles = this.findTriangles();
+    }
+
+    abstract findTriangles() : TriangleType[];
+
+    get colors() : TileColors {
+        return this.triangles.map((t) => t.color);
+    }
+
+    set colors(colors : TileColors) {
+        for (let i=0; i<this.triangles.length; i++) {
+            this.triangles[i].color = colors[i];
+        }
+    }
+}
+
+
+class SquareTile extends Tile<SquareGridTriangle> {
+    findTriangles() : SquareGridTriangle[] {
+        const triangles : SquareGridTriangle[] = [];
+
+        // top
+        triangles.push(this.grid.getOrAdd(this.x, this.y * 4));
+        // left
+        triangles.push(this.grid.getOrAdd(this.x, this.y * 4 + 1));
+        // right
+        triangles.push(this.grid.getOrAdd(this.x, this.y * 4 + 2));
+        // bottom
+        triangles.push(this.grid.getOrAdd(this.x, this.y * 4 + 3));
+
+        return triangles;
+    }
+}
+
+
+class HexTile extends Tile<HexGridTriangle> {
+    findTriangles() : HexGridTriangle[] {
+        const triangles : HexGridTriangle[] = [];
+
+        const x = this.x * 6 + (this.y % 2 == 0 ? 0 : 3);
+        const y = this.y;
+
+        // top
+        triangles.push(this.grid.getOrAdd(x, y));
+        // clockwise
+        triangles.push(this.grid.getOrAdd(x + 1, y));
+        triangles.push(this.grid.getOrAdd(x + 1, y + 1));
+        triangles.push(this.grid.getOrAdd(x, y + 1));
+        triangles.push(this.grid.getOrAdd(x - 1, y + 1));
+        triangles.push(this.grid.getOrAdd(x - 1, y));
+
+        return triangles;
+    }
+}
+
+
+class TriangleTile extends Tile<EquilateralGridTriangle> {
+    findTriangles() : EquilateralGridTriangle[] {
+        const triangles : EquilateralGridTriangle[] = [];
+
+        const x = this.x;
+        const y = this.y * 3;
+
+        // top
+        triangles.push(this.grid.getOrAdd(x, y));
+        // counter-clockwise
+        triangles.push(this.grid.getOrAdd(x, y + 1));
+        triangles.push(this.grid.getOrAdd(x, y + 2));
+
+        return triangles;
     }
 }
 
@@ -281,11 +358,12 @@ class TriangleDisplay {
         if (DEBUG_OVERLAP) {
             el.setAttribute('opacity', '0.6');
         }
-        el.setAttribute('fill', this.triangle.color);
+        // el.setAttribute('fill', 'transparent');
         // el.setAttribute('stroke', 'white');
         // el.setAttribute('stroke-width', '2px');
         group.append(el);
         this.triangleElement = el;
+        this.updateColor();
 
         if (DEBUG_OVERLAP) {
             const outline = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
@@ -319,7 +397,8 @@ class TriangleDisplay {
     }
 
     updateColor() {
-        this.triangleElement.setAttribute('fill', this.triangle.color);
+        const color = this.triangle.color || 'transparent';
+        this.triangleElement.setAttribute('fill', color);
     }
 }
 
@@ -385,7 +464,7 @@ export class GridDisplay {
 
 
 export class NewGrid {
-    triangleType = [HexGridTriangle, SquareGridTriangle, EquilateralGridTriangle][SELECT_TRIANGLE];
+    triangleType = [HexGridTriangle, SquareGridTriangle, EquilateralGridTriangle][SELECT_GRID];
 
     grid : Triangle[][];
     triangles : Triangle[];
@@ -400,25 +479,75 @@ export class NewGrid {
         const display = new GridDisplay(this);
         display.drawTriangles();
         document.body.appendChild(display.element);
+
+        let i = 0;
+        for (const triangle of this.triangles) {
+            triangle.color = ['#aaa','#888','#ccc'][i % 3];
+            triangle.color = 'white';
+            i++;
+        }
+
+        if (this.triangleType === SquareGridTriangle) {
+            let i = 0;
+            for (let x=0; x<5; x++) {
+                for (let y=0; y<5; y++) {
+                    const tile = new SquareTile(this, x, y);
+                    const color = COLORS[i % COLORS.length];
+                    tile.colors = [color, color, color, color];
+                    i++;
+                }
+            }
+        }
+
+        if (this.triangleType === HexGridTriangle) {
+            let i = 0;
+            for (let x=0; x<5; x++) {
+                for (let y=0; y<5; y++) {
+                    const tile = new HexTile(this, x, y);
+                    const color = COLORS[i % COLORS.length];
+                    tile.colors = [color, color, color, color, color, color];
+                    i++;
+                }
+            }
+        }
+
+        if (this.triangleType === EquilateralGridTriangle) {
+            let i = 0;
+            for (let x=0; x<5; x++) {
+                for (let y=0; y<5; y++) {
+                    const tile = new TriangleTile(this, x, y);
+                    const color = COLORS[i % COLORS.length];
+                    tile.colors = [color, color, color];
+                    i++;
+                }
+            }
+        }
     }
 
     createTriangles() {
         let i = 0;
         for (let row=0; row<24; row++) {
             for (let col=0; col<12; col++) {
-                const triangle = new this.triangleType(col, row, COLORS[i % COLORS.length]);
+                const triangle = this.getOrAdd(col, row);
+                triangle.color = COLORS[i % COLORS.length];
                 i++;
-
-                if (!this.grid[col]) this.grid[col] = [];
-                this.grid[col][row] = triangle;
-                this.triangles.push(triangle);
             }
         }
     }
 
     get(x : number, y : number) : Triangle | null {
-        if (x < 0 || !this.grid[x]) return null;
-        if (y < 0 || !this.grid[x][y]) return null;
+        if (!this.grid[x]) return null;
+        if (!this.grid[x][y]) return null;
+        return this.grid[x][y];
+    }
+
+    getOrAdd(x : number, y : number) : Triangle {
+        if (!this.grid[x]) this.grid[x] = [];
+        if (!this.grid[x][y]) {
+            const triangle = new this.triangleType(x, y);
+            this.grid[x][y] = triangle;
+            this.triangles.push(triangle);
+        }
         return this.grid[x][y];
     }
 

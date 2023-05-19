@@ -17,10 +17,19 @@ export class TriangleTile extends Tile {
         triangles.push(this.grid.getOrAddTriangle(x, y + 1));
         triangles.push(this.grid.getOrAddTriangle(x, y + 2));
 
-        if (wrapModulo(this.y, 2) == 0) {
-            this.neighborOffsets = [[-1, 1], [0, 1], [-1, -1]];
-        } else {
-            this.neighborOffsets = [[1, 1], [0, -1], [1, -1]];
+        switch (wrapModulo(this.y, 4)) {
+            case 0:
+                this.neighborOffsets = [[-1, 1], [0, 1], [-1, -1]];
+                break;
+            case 1:
+                this.neighborOffsets = [[0, 1], [0, -1], [1, -1]];
+                break;
+            case 2:
+                this.neighborOffsets = [[-1, 1], [0, 1], [0, -1]];
+                break;
+            case 3:
+                this.neighborOffsets = [[1, 1], [0, -1], [1, -1]];
+                break;
         }
 
         return triangles;

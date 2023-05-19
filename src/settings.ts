@@ -1,6 +1,6 @@
 
 export const DEBUG = {
-    SELECT_GRID: 2,
+    SELECT_GRID: 0,
     OVERLAP: false,
     OPACITY: 0.6,
     TRIANGLE_OUTLINE: false,

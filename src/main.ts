@@ -56,6 +56,17 @@ export function start() {
     nb.colors = ['blue', 'blue', 'blue', 'blue', 'blue', 'blue'];
     for (const neighbor of grid.getOrAddTileNeighbors(nb)) {
         neighbor.colors = ['orange', 'orange', 'orange', 'orange', 'orange', 'orange'];
+        nb = neighbor;
+    }
+    nb.colors = ['white', 'blue', 'blue', 'blue', 'blue', 'blue'];
+    for (const neighbor of grid.getOrAddTileNeighbors(nb)) {
+        neighbor.colors = ['white', 'blue', 'orange', 'orange', 'orange', 'orange'];
+        nb = neighbor;
+    }
+    nb.colors = ['red', 'red', 'blue', 'blue', 'blue', 'blue'];
+    for (const neighbor of grid.getOrAddTileNeighbors(nb)) {
+        neighbor.colors = ['red', 'red', 'orange', 'orange', 'orange', 'orange'];
+        nb = neighbor;
     }
 
 

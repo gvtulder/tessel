@@ -4,7 +4,7 @@ import { Grid } from './grid/Grid.js';
 import { TileStackDisplay } from './ui/TileStackDisplay.js';
 import { FixedOrderTileStack, TileStack } from './game/TileStack.js';
 import { GridType, GridTypes } from './grid/GridType.js';
-import { Tile } from './grid/Tile.js';
+import { OrientedColors, Tile } from './grid/Tile.js';
 import { Game } from './game/Game.js';
 import { GameDisplay } from './ui/GameDisplay.js';
 
@@ -76,10 +76,10 @@ function startDebug() {
 
 
     tileStackDisplay.makeDraggable(gridDisplay);
-    gridDisplay.makeDroppable((target : Tile, index : number) => {
-        const colors = fixedOrderTileStack.slots[index];
+    gridDisplay.makeDroppable((target : Tile, orientedColors : OrientedColors, indexOnStack : number) => {
+        const colors = fixedOrderTileStack.slots[indexOnStack];
         target.colors = colors;
-        fixedOrderTileStack.take(index);
+        fixedOrderTileStack.take(indexOnStack);
         grid.updateFrontier();
         return true;
     });

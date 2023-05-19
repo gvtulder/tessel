@@ -1,7 +1,7 @@
 import { Grid, TileColors } from "src/grid/Grid.js";
 import { FixedOrderTileStack, TileStack } from "./TileStack.js";
 import { GridType } from "src/grid/GridType.js";
-import { Tile } from "src/grid/Tile.js";
+import { OrientedColors, Tile } from "src/grid/Tile.js";
 
 
 export type GameSettings = {
@@ -36,9 +36,8 @@ export class Game {
         this.grid.updateFrontier();
     }
 
-    placeFromStack(target : Tile, index : number) {
-        const colors = this.tileStack.slots[index];
-        target.colors = colors;
+    placeFromStack(target : Tile, orientedColors : OrientedColors, index : number) {
+        target.setOrientedColors(orientedColors);
         this.tileStack.take(index);
         this.grid.updateFrontier();
         return true;

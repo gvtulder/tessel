@@ -3,7 +3,7 @@ import interact from '@interactjs/interact/index';
 
 import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
-import { Tile } from "../grid/Tile.js";
+import { OrientedColors, Tile } from "../grid/Tile.js";
 import { GridDisplay, MainGridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
 import { GridType } from "src/grid/GridType.js";
@@ -67,6 +67,7 @@ export class TileStackDisplay {
 export interface DraggableTileHTMLDivElement extends HTMLDivElement {
   tileDisplay? : SingleTileOnStackDisplay;
   indexOnStack? : number;
+  orientedColors? : OrientedColors;
 }
 
 class SingleTileOnStackDisplay {
@@ -76,9 +77,13 @@ class SingleTileOnStackDisplay {
     tile : Tile;
     tileDisplay : TileDisplay;
     element : HTMLDivElement;
+    rotatable : HTMLDivElement;
     draggable : Interactable;
+    rotation : number;
 
     constructor(indexOnStack : number, gridType : GridType) {
+        this.rotation = 0;
+
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(gridType);
         this.gridDisplay = new TileStackGridDisplay(this.grid);
@@ -87,27 +92,46 @@ class SingleTileOnStackDisplay {
 
         this.element = document.createElement('div');
         this.element.className = 'tileOnStack';
-        this.element.appendChild(this.gridDisplay.element);
-
         this.element.style.position = 'relative';
         this.element.style.display = 'inline-block';
         this.element.style.width = '100px';
         this.element.style.height = '100px';
 
+        this.rotatable = document.createElement('div');
+        this.rotatable.className = 'tileOnStack-rotatable';
+        this.rotatable.style.position = 'relative';
+        this.rotatable.style.display = 'inline-block';
+        this.rotatable.style.width = '100px';
+        this.rotatable.style.height = '100px';
+        this.element.appendChild(this.rotatable);
+
+        this.rotatable.appendChild(this.gridDisplay.element);
+
         this.gridDisplay.rescaleGrid();
     }
 
+    rotateTile() {
+        const angles = this.tile.rotationAngles;
+        this.rotation = (this.rotation + 1) % angles.length;
+        this.rotatable.style.transform = `rotate(${angles[this.rotation]}deg)`;
+    }
+
+    getOrientedColors() : OrientedColors {
+        return this.tile.getOrientedColors(this.rotation);
+    }
+
     makeDraggable(mainGridDisplay : MainGridDisplay) {
-        const el = (this.element as DraggableTileHTMLDivElement);
-        el.tileDisplay = this;
-        el.indexOnStack = this.indexOnStack;
+        const context = (this.element as DraggableTileHTMLDivElement);
+        context.tileDisplay = this;
 
         const position = { x: 0, y: 0 };
         this.draggable = interact(this.element).on('tap', () => {
-            this.tile.rotateTile();
+            this.rotateTile();
         }).draggable({
             listeners: {
                 start: (evt : DragEvent) => {
+                    context.indexOnStack = this.indexOnStack;
+                    context.orientedColors = this.getOrientedColors();
                     console.log(evt.type, evt, evt.target);
                     evt.target.classList.add('dragging');
                     // TODO

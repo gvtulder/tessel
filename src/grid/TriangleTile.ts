@@ -3,7 +3,10 @@ import { EquilateralGridTriangle } from './EquilateralGridTriangle.js';
 import { Tile } from './Tile.js';
 
 export class TriangleTile extends Tile {
-    static triangleType = EquilateralGridTriangle;
+    get rotationAngles() {
+        // TODO
+        return [0, 60, 120, 180, 240, 300];
+    }
 
     findTriangles(): EquilateralGridTriangle[] {
         const triangles: EquilateralGridTriangle[] = [];

@@ -1,7 +1,7 @@
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { TileDisplay } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
-import { Tile } from "../grid/Tile.js";
+import { OrientedColors, Tile } from "../grid/Tile.js";
 import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from 'src/settings.js';
@@ -223,11 +223,11 @@ export class MainGridDisplay extends GridDisplay {
         this.element.classList.add('animated');
     }
 
-    makeDroppable(ondrop : (target : Tile, index : number) => boolean) {
+    makeDroppable(ondrop : (target : Tile, orientedColors : OrientedColors, indexOnStack : number) => boolean) {
         for (const tileDisplay of this.tileDisplays) {
             if (tileDisplay.tile.isPlaceholder()) {
-                tileDisplay.makeDropzone((target : Tile, index : number) => {
-                    if (ondrop(target, index)) {
+                tileDisplay.makeDropzone((target : Tile, orientedColors : OrientedColors, indexOnStack : number) => {
+                    if (ondrop(target, orientedColors, indexOnStack)) {
                         this.makeDroppable(ondrop);
                     }
                 });

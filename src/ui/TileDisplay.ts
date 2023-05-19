@@ -3,7 +3,7 @@ import interact from '@interactjs/interact/index';
 
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { SCALE } from '../settings.js';
-import { Tile } from "../grid/Tile.js";
+import { OrientedColors, Tile } from "../grid/Tile.js";
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
 import { shrinkOutline } from 'src/utils.js';
@@ -73,7 +73,7 @@ export class TileDisplay {
         this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
     }
 
-    makeDropzone(ondrop: (target : Tile, indexOnStack : number) => void) {
+    makeDropzone(ondrop: (target : Tile, orientedColors : OrientedColors, indexOnStack : number) => void) {
         if (this.dropzone || !this.tile.isPlaceholder()) return;
 
         this.dropzone = interact(this.element).dropzone({
@@ -82,7 +82,8 @@ export class TileDisplay {
             console.log('drop', evt, evt.target, evt.relatedTarget);
             console.log('dropped tile', (evt.relatedTarget as DraggableTileHTMLDivElement).tileDisplay);
 
-            ondrop(this.tile, (evt.relatedTarget as DraggableTileHTMLDivElement).indexOnStack);
+            const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
+            ondrop(this.tile, rel.orientedColors, rel.indexOnStack);
         }).on('dropactivate', (evt: DragEvent) => {
             evt.target.classList.add('drop-activated');
             /*

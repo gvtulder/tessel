@@ -3,7 +3,9 @@ import { Tile } from './Tile.js';
 import { wrapModulo } from '../utils.js';
 
 export class HexTile extends Tile {
-    triangleTile = HexGridTriangle;
+    get rotationAngles() {
+        return [0, 60, 120, 180, 240, 300];
+    }
 
     findTriangles(): HexGridTriangle[] {
         const triangles: HexGridTriangle[] = [];

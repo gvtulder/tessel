@@ -5,6 +5,12 @@ import { Grid, TileColors, Coord } from './Grid.js';
 
 export type TileType = new (grid : Grid, x : number, y : number) => Tile;
 
+export type OrientedColors = {
+    shape : string;
+    rotation : number;
+    colors : TileColors;
+}
+
 export abstract class Tile {
     grid: Grid;
     x: number;
@@ -30,11 +36,11 @@ export abstract class Tile {
         this.height = Math.max(...this.triangles.map((t) => t.top + t.height)) - this.top;
     }
 
+    abstract get rotationAngles() : number[];
     abstract findTriangles() : Triangle[];
 
-    rotateTile() {
-        const oldColors = this.colors;
-        this.colors = [oldColors[oldColors.length - 1], ...oldColors.slice(0, -1)];
+    get orientation() : string {
+        return 'default';
     }
 
     get colors(): TileColors {
@@ -45,6 +51,25 @@ export abstract class Tile {
         for (let i = 0; i < this.triangles.length; i++) {
             this.triangles[i].color = colors ? colors[i] : null;
         }
+    }
+
+    setOrientedColors(orientedColors : OrientedColors) {
+        // simple rotations
+        // TODO remove for loop?
+        let colors = orientedColors.colors;
+        for (let i=0; i<orientedColors.rotation; i++) {
+            colors = [colors[colors.length - 1], ...colors.slice(0, -1)];
+        }
+        this.colors = colors;
+    }
+
+    getOrientedColors(rotation : number) : OrientedColors {
+        // simple rotations
+        return {
+            shape: 'default',
+            rotation: rotation,
+            colors: this.colors,
+        };
     }
 
     isPlaceholder() {

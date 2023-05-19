@@ -1,7 +1,7 @@
 import { Game } from "src/game/Game.js";
 import { GridDisplay, MainGridDisplay } from "./GridDisplay.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
-import { Tile } from "src/grid/Tile.js";
+import { OrientedColors, Tile } from "src/grid/Tile.js";
 
 export class GameDisplay {
     game : Game;
@@ -28,8 +28,8 @@ export class GameDisplay {
         div.appendChild(this.tileStackDisplay.element);
 
         this.tileStackDisplay.makeDraggable(this.gridDisplay);
-        this.gridDisplay.makeDroppable((target : Tile, index : number) => {
-            return this.game.placeFromStack(target, index);
+        this.gridDisplay.makeDroppable((target : Tile, orientedColors : OrientedColors, indexOnStack : number) => {
+            return this.game.placeFromStack(target, orientedColors, indexOnStack);
         });
     }
 }

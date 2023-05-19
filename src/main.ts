@@ -105,7 +105,7 @@ export function start() {
         [1,-6,["red","red","red","black","black","red"]],
     //  [1,-5,["red","red","red","black","black","red"]]
     ];
-    saved = [];
+    // saved = [];
     for (const colors of saved) {
         game.placeFromList(saved);
     }

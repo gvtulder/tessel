@@ -60,87 +60,126 @@ export class ScoreOverlayDisplay {
                 edgesPerTriangle.get(edge.from).push(edge);
             }
 
+            const pathStrings : string[] = [];
+            const circles : [number, number][] = [];
+
             for (const triangle of edgesPerTriangle.keys()) {
                 const edges = edgesPerTriangle.get(triangle);
-                if (edges.length == 2) {
-                    // 2 edges
-                    const tO = edges[0].from;
+
+                const f = 0.5;
+                const fc = 0.0;
+
+                const tO = edges[0].from;
+                const cO : [number, number] = [(tO.left + tO.center[0]) * SCALE, (tO.top + tO.center[1]) * SCALE];
+
+                if (edges.length == 1) {
                     const tA = edges[0].to;
-                    const tB = edges[1].to;
-
                     const cA = [(tA.left + tA.center[0]) * SCALE, (tA.top + tA.center[1]) * SCALE];
-                    const cB = [(tB.left + tB.center[0]) * SCALE, (tB.top + tB.center[1]) * SCALE];
-                    const cO = [(tO.left + tO.center[0]) * SCALE, (tO.top + tO.center[1]) * SCALE];
 
-                    const f = 0.5;
-
-                    const midAO = [(f * cA[0] + (1 - f) * cO[0]), (f * cA[1] + (1 - f) * cO[1])];
-                    const midBO = [(f * cB[0] + (1 - f) * cO[0]), (f * cB[1] + (1 - f) * cO[1])];
-
-                    // straight
-                    let pathString = `M ${midAO[0]},${midAO[1]} ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`;
-
-                    // quadratic curve
-                    pathString = `M ${midAO[0]},${midAO[1]} Q ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`;
+                    const midAO : [number, number] = [(f * cA[0] + (1 - f) * cO[0]), (f * cA[1] + (1 - f) * cO[1])];
 
                     // non-quadratic curves
-                    pathString = `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`;
+                    pathStrings.push(
+                    //    `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${cO[0]},${cO[1]}`
+                    );
 
-                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                    path.setAttribute('d', pathString);
-                    path.setAttribute('fill', 'transparent');
-                    path.setAttribute('stroke', Color.main);
-                    path.setAttribute('stroke-width', '8');
-                    path.setAttribute('stroke-linecap', 'round');
-                    group.appendChild(path);
-                } else if (edges.length == 3) {
-                    // 3 edges
-                    const tO = edges[0].from;
-                    const tA = edges[0].to;
-                    const tB = edges[1].to;
-                    const tC = edges[2].to;
+                    // circles.push(cO)
+                    circles.push(midAO)
 
-                    const cA = [(tA.left + tA.center[0]) * SCALE, (tA.top + tA.center[1]) * SCALE];
-                    const cB = [(tB.left + tB.center[0]) * SCALE, (tB.top + tB.center[1]) * SCALE];
-                    const cC = [(tC.left + tC.center[0]) * SCALE, (tC.top + tC.center[1]) * SCALE];
-                    const cO = [(tO.left + tO.center[0]) * SCALE, (tO.top + tO.center[1]) * SCALE];
+                } else {
+                    for (const edgeA of edges) {
+                        for (const edgeB of edges) {
+                            // if (edgeA.to !== edgeB.to) {
+                            // deduplicate: only draw each edge once
+                            // if (edgeA.to.x < edgeB.to.x || (edgeB.to.x == edgeB.to.x && edgeB.to.y < edgeB.to.y)) {
+                            if (edgeA.to !== edgeB.to) {
+                                const tA = edgeA.to;
+                                const tB = edgeB.to;
 
-                    const f = 0.5;
+                                const cA = [(tA.left + tA.center[0]) * SCALE, (tA.top + tA.center[1]) * SCALE];
+                                const cB = [(tB.left + tB.center[0]) * SCALE, (tB.top + tB.center[1]) * SCALE];
 
-                    const midAO = [(f * cA[0] + (1 - f) * cO[0]), (f * cA[1] + (1 - f) * cO[1])];
-                    const midBO = [(f * cB[0] + (1 - f) * cO[0]), (f * cB[1] + (1 - f) * cO[1])];
-                    const midCO = [(f * cC[0] + (1 - f) * cO[0]), (f * cC[1] + (1 - f) * cO[1])];
+                                const midAO = [(f * cA[0] + (1 - f) * cO[0]), (f * cA[1] + (1 - f) * cO[1])];
+                                const midBO = [(f * cB[0] + (1 - f) * cO[0]), (f * cB[1] + (1 - f) * cO[1])];
 
-                    // straight
-                    let pathString = `M ${midAO[0]},${midAO[1]} ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`;
+                                const cpAO = [(fc * midAO[0] + (1 - fc) * cO[0]), (fc * midAO[1] + (1 - fc) * cO[1])];
+                                const cpBO = [(fc * midBO[0] + (1 - fc) * cO[0]), (fc * midBO[1] + (1 - fc) * cO[1])];
 
-                    // quadratic curves
-                    let pathStrings = [
-                        `M ${midAO[0]},${midAO[1]} Q ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`,
-                        `M ${midAO[0]},${midAO[1]} Q ${cO[0]},${cO[1]} ${midCO[0]},${midCO[1]}`,
-                        `M ${midBO[0]},${midBO[1]} Q ${cO[0]},${cO[1]} ${midCO[0]},${midCO[1]}`,
-                    ];
+                                // non-quadratic curves
+                                pathStrings.push(
+                                //  `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`
+                                    `M ${midAO[0]},${midAO[1]} C ${cpAO[0]},${cpAO[1]} ${cpBO[0]},${cpBO[1]} ${midBO[0]},${midBO[1]}`
+                                );
 
-                    // non-quadratic curves
-                    pathStrings = [
-                        `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`,
-                        `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${midCO[0]},${midCO[1]}`,
-                        `M ${midBO[0]},${midBO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${midCO[0]},${midCO[1]}`,
-                    ];
-
-                    // quadratic curves
-                    for (const pathString of pathStrings) {
-                        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                        path.setAttribute('d', pathString);
-                        path.setAttribute('fill', 'transparent');
-                        path.setAttribute('stroke', Color.main);
-                        path.setAttribute('stroke-width', '8');
-                        path.setAttribute('stroke-linecap', 'round');
-                        group.appendChild(path);
+                                if (edgeA.to.tile !== edgeA.from.tile) {
+                                    circles.push(midAO as [number, number]);
+                                }
+                                if (edgeB.to.tile !== edgeB.from.tile) {
+                                    circles.push(midBO as [number, number]);
+                                }
+                                // circles.push(cO);
+                            }
+                        }
                     }
                 }
+
                 console.log(edgesPerTriangle.get(triangle));
             }
+
+            for (const pathString of pathStrings) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', pathString);
+                path.setAttribute('fill', 'transparent');
+                path.setAttribute('stroke', Color.main);
+                path.setAttribute('stroke-width', '8');
+                path.setAttribute('stroke-linecap', 'round');
+                group.appendChild(path);
+            }
+
+            for (const circle of circles) {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                path.setAttribute('cx', `${circle[0]}`);
+                path.setAttribute('cy', `${circle[1]}`);
+                path.setAttribute('r', '11');
+                path.setAttribute('r', '10');
+                path.setAttribute('r', '7');
+                path.setAttribute('r', '11');
+                path.setAttribute('fill', Color.light);
+                path.setAttribute('stroke', Color.dark);
+                path.setAttribute('stroke-width', '8');
+                path.setAttribute('stroke-width', '5');
+                path.setAttribute('stroke-width', '8');
+                path.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
+                group.appendChild(path);
+            }
+
+            const scorePos = circles[0];
+
+            /*
+            const dist = (a : number[], b : number[]) => {
+                return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+            };
+            */
+
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', `${scorePos[0]}`);
+            circle.setAttribute('cy', `${scorePos[1]}`);
+            circle.setAttribute('r', '20');
+            circle.setAttribute('fill', Color.light);
+            circle.setAttribute('stroke', Color.dark);
+            circle.setAttribute('stroke-width', '8');
+            circle.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
+            group.appendChild(circle);
+
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', `${scorePos[0]}`);
+            text.setAttribute('y', `${scorePos[1] + 1}`);
+            text.setAttribute('alignment-baseline', 'middle');
+            text.setAttribute('dominant-baseline', 'middle');
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '21');
+            text.appendChild(document.createTextNode(`${shape.points}`));
+            group.appendChild(text);
         }
 
         if (this.group) {

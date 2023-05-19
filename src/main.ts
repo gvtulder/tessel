@@ -94,7 +94,7 @@ export function start() {
         tilesShownOnStack: 3,
     });
 
-    const saved = [
+    let saved = [
         [0,0,["red","green","blue","orange","white","purple"]],
         [0,-2,["black","red","red","red","red","black"]],
         [0,-3,["red","black","black","red","red","red"]],
@@ -105,6 +105,7 @@ export function start() {
         [1,-6,["red","red","red","black","black","red"]],
     //  [1,-5,["red","red","red","black","black","red"]]
     ];
+    saved = [];
     for (const colors of saved) {
         game.placeFromList(saved);
     }

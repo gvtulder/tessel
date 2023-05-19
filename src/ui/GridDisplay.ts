@@ -21,6 +21,7 @@ export class GridDisplay {
     height : number;
 
     scale : number;
+    // margins = { top: 0, right: 0, bottom: 0, left: 0 };
     margins = { top: 30, right: 150, bottom: 30, left: 30 };
 
     constructor(grid: Grid) {
@@ -106,6 +107,8 @@ export class GridDisplay {
         this.top = Math.min(...this.grid.tiles.map((t) => t.top));
         this.width = Math.max(...this.grid.tiles.map((t) => t.left + t.width));
         this.height = Math.max(...this.grid.tiles.map((t) => t.top + t.height));
+
+        this.update();
     }
 
     conn: ConnectorDisplay;
@@ -134,8 +137,8 @@ export class GridDisplay {
         let totalWidth = SCALE * (this.width - this.left);
         let totalHeight = SCALE * (this.height - this.top);
 
-        const skipPlaceholders = 0;
         /* TODO
+        const skipPlaceholders = 0;
         if (this.isGameFinished()) {
             totalWidth -= 200;
             totalHeight -= 200;
@@ -148,8 +151,8 @@ export class GridDisplay {
         totalHeight *= scale;
 
         this.element.style.transform = `scale(${scale}`;
-        this.element.style.left = `${this.margins.left + (availWidth - totalWidth) / 2}px`;
-        this.element.style.top = `${this.margins.top + (availHeight - totalHeight) / 2}px`;
+        this.element.style.left = `${this.margins.left + (availWidth - totalWidth) / 2 - (this.left * SCALE * scale)}px`;
+        this.element.style.top = `${this.margins.top + (availHeight - totalHeight) / 2 - (this.top * SCALE * scale)}px`;
 
         this.scale = scale;
 

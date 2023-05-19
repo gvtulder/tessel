@@ -223,11 +223,11 @@ export class MainGridDisplay extends GridDisplay {
         this.element.classList.add('animated');
     }
 
-    makeDroppable(ondrop : (target : Tile, source : Tile) => boolean) {
+    makeDroppable(ondrop : (target : Tile, index : number) => boolean) {
         for (const tileDisplay of this.tileDisplays) {
             if (tileDisplay.tile.isPlaceholder()) {
-                tileDisplay.makeDropzone((target : Tile, source : Tile) => {
-                    if (ondrop(target, source)) {
+                tileDisplay.makeDropzone((target : Tile, index : number) => {
+                    if (ondrop(target, index)) {
                         this.makeDroppable(ondrop);
                     }
                 });

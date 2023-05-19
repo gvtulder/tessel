@@ -1,13 +1,12 @@
 import { DEBUG } from './settings.js';
-import { GridDisplay, MainGridDisplay } from './ui/GridDisplay.js';
+import { MainGridDisplay } from './ui/GridDisplay.js';
 import { Grid } from './grid/Grid.js';
 import { TileStackDisplay } from './ui/TileStackDisplay.js';
-import { TileStack } from './game/TileStack.js';
+import { FixedOrderTileStack, TileStack } from './game/TileStack.js';
 import { GridType, GridTypes } from './grid/GridType.js';
-
-import type { DragEvent } from '@interactjs/types';
-import interact from '@interactjs/interact/index';
 import { Tile } from './grid/Tile.js';
+import { Game } from './game/Game.js';
+import { GameDisplay } from './ui/GameDisplay.js';
 
 
 export { GameManager } from './script.js';
@@ -28,16 +27,17 @@ export function runDebug() {
     window.display = display;
 }
 
-export function start() {
+function startDebug() {
     const gridType = (GridTypes[['hex', 'square', 'triangle'][DEBUG.SELECT_GRID]] as GridType);
 
     const grid = new Grid(gridType);
     const tileStack = new TileStack();
+    const fixedOrderTileStack = new FixedOrderTileStack(tileStack, 3);
 
     const gridDisplay = new MainGridDisplay(grid);
     document.body.appendChild(gridDisplay.element);
 
-    const tileStackDisplay = new TileStackDisplay(gridType, tileStack);
+    const tileStackDisplay = new TileStackDisplay(gridType, fixedOrderTileStack);
     document.body.appendChild(tileStackDisplay.element);
 
     const tile = new gridType.createTile(grid, 0, 0);
@@ -76,10 +76,24 @@ export function start() {
 
 
     tileStackDisplay.makeDraggable(gridDisplay);
-    gridDisplay.makeDroppable((target : Tile, source : Tile) => {
-        target.colors = source.colors;
+    gridDisplay.makeDroppable((target : Tile, index : number) => {
+        const colors = fixedOrderTileStack.slots[index];
+        target.colors = colors;
+        fixedOrderTileStack.take(index);
         grid.updateFrontier();
-        tileStackDisplay.remove(source);
         return true;
     });
+}
+
+export function start() {
+    const gridType = (GridTypes[['hex', 'square', 'triangle'][DEBUG.SELECT_GRID]] as GridType);
+
+    const game = new Game({
+        gridType: gridType,
+        initialTile: ['red', 'green', 'blue', 'orange', 'white', 'purple'],
+        tilesShownOnStack: 3,
+    });
+
+    const gameDisplay = new GameDisplay(game);
+    document.body.appendChild(gameDisplay.element);
 }

@@ -2,7 +2,7 @@ import type { Interactable, DragEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
 
 import { Grid } from "../grid/Grid.js";
-import { FixedOrderTileStack, TileStack } from "../game/TileStack.js";
+import { FixedOrderTileStack } from "../game/TileStack.js";
 import { Tile } from "../grid/Tile.js";
 import { GridDisplay, MainGridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
@@ -10,37 +10,36 @@ import { GridType } from "src/grid/GridType.js";
 
 export class TileStackDisplay {
     gridType : GridType;
-    tileStack : TileStack;
-    fixedOrderTileStack : FixedOrderTileStack;
+    tileStack : FixedOrderTileStack;
     tileDisplays : SingleTileOnStackDisplay[];
     element : HTMLDivElement;
 
-    numberOfTiles = 3;
-
-    constructor(gridType : GridType, tileStack : TileStack) {
+    constructor(gridType : GridType, tileStack : FixedOrderTileStack) {
         this.gridType = gridType;
         this.tileStack = tileStack;
-        this.fixedOrderTileStack = new FixedOrderTileStack(tileStack, this.numberOfTiles);
         this.tileDisplays = [];
         this.build();
 
         this.updateTiles();
+        this.tileStack.addEventListener('updateSlots', () => {
+            this.updateTiles();
+        });
     }
 
     updateTiles() {
-        for (let i=0; i<this.numberOfTiles; i++) {
-            const color = this.fixedOrderTileStack.slots[i];
+        for (let i=0; i<this.tileStack.numberShown; i++) {
+            const color = this.tileStack.slots[i];
             this.tileDisplays[i].tile.colors = color ? color : null;
         }
     }
 
-    remove(tile : Tile) {
+    take(tile : Tile) {
         let index = 0;
-        while (index < this.numberOfTiles && !(this.tileDisplays[index].tile === tile)) {
+        while (index < this.tileStack.numberShown && !(this.tileDisplays[index].tile === tile)) {
             index++;
         }
-        if (index < this.numberOfTiles) {
-            this.fixedOrderTileStack.take(index);
+        if (index < this.tileStack.numberShown) {
+            this.tileStack.take(index);
             this.updateTiles();
         }
     }
@@ -50,8 +49,8 @@ export class TileStackDisplay {
         div.className = 'tileStackDisplay';
         this.element = div;
 
-        for (let i=0; i<this.numberOfTiles; i++) {
-            const tileDisplay = new SingleTileOnStackDisplay(this.gridType);
+        for (let i=0; i<this.tileStack.numberShown; i++) {
+            const tileDisplay = new SingleTileOnStackDisplay(i, this.gridType);
             this.element.appendChild(tileDisplay.element);
             this.tileDisplays.push(tileDisplay);
         }
@@ -67,9 +66,11 @@ export class TileStackDisplay {
 
 export interface DraggableTileHTMLDivElement extends HTMLDivElement {
   tileDisplay? : SingleTileOnStackDisplay;
+  indexOnStack? : number;
 }
 
 class SingleTileOnStackDisplay {
+    indexOnStack : number;
     grid : Grid;
     gridDisplay : GridDisplay;
     tile : Tile;
@@ -77,7 +78,8 @@ class SingleTileOnStackDisplay {
     element : HTMLDivElement;
     draggable : Interactable;
 
-    constructor(gridType : GridType) {
+    constructor(indexOnStack : number, gridType : GridType) {
+        this.indexOnStack = indexOnStack;
         this.grid = new Grid(gridType);
         this.gridDisplay = new TileStackGridDisplay(this.grid);
         this.tile = new gridType.createTile(this.grid, 0, 0);
@@ -96,7 +98,9 @@ class SingleTileOnStackDisplay {
     }
 
     makeDraggable(mainGridDisplay : MainGridDisplay) {
-        (this.element as DraggableTileHTMLDivElement).tileDisplay = this;
+        const el = (this.element as DraggableTileHTMLDivElement);
+        el.tileDisplay = this;
+        el.indexOnStack = this.indexOnStack;
 
         const position = { x: 0, y: 0 };
         this.draggable = interact(this.element).on('tap', () => {

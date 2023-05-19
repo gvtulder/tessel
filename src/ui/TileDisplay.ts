@@ -7,7 +7,7 @@ import { Tile } from "../grid/Tile.js";
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
 import { shrinkOutline } from 'src/utils.js';
-import { DraggableTileHTMLDivElement, TileStackDisplay } from './TileStackDisplay.js';
+import { DraggableTileHTMLDivElement } from './TileStackDisplay.js';
 
 
 export class TileDisplay {
@@ -73,7 +73,7 @@ export class TileDisplay {
         this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
     }
 
-    makeDropzone(ondrop: (target : Tile, source : Tile) => void) {
+    makeDropzone(ondrop: (target : Tile, indexOnStack : number) => void) {
         if (this.dropzone || !this.tile.isPlaceholder()) return;
 
         this.dropzone = interact(this.element).dropzone({
@@ -82,7 +82,7 @@ export class TileDisplay {
             console.log('drop', evt, evt.target, evt.relatedTarget);
             console.log('dropped tile', (evt.relatedTarget as DraggableTileHTMLDivElement).tileDisplay);
 
-            ondrop(this.tile, (evt.relatedTarget as DraggableTileHTMLDivElement).tileDisplay.tile);
+            ondrop(this.tile, (evt.relatedTarget as DraggableTileHTMLDivElement).indexOnStack);
         }).on('dropactivate', (evt: DragEvent) => {
             evt.target.classList.add('drop-activated');
             /*

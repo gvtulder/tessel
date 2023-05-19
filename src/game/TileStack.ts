@@ -36,28 +36,37 @@ export class TileStack {
     }
 }
 
-export class FixedOrderTileStack {
+export class FixedOrderTileStack extends EventTarget {
     numberShown : number;
     slots : TileColors[];
     tileStack : TileStack;
 
     constructor(tileStack : TileStack, numberShown : number) {
+        super();
         this.tileStack = tileStack;
         this.numberShown = numberShown;
         this.slots = [];
         this.updateSlots();
     }
+
     updateSlots() {
+        let updated = false;
         for (let i=0; i<this.numberShown; i++) {
             if (!this.slots[i]) {
                 this.slots[i] = this.tileStack.pop();
+                updated = true;
             }
         }
+        if (updated) {
+            this.dispatchEvent(new Event('updateSlots'));
+        }
     }
-    take(idx : number) {
-        this.slots[idx] = null;
+
+    take(index : number) {
+        this.slots[index] = null;
         this.updateSlots();
     }
+
     isEmpty() {
         for (const slot of this.slots) {
             if (slot) return false;

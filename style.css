@@ -151,3 +151,32 @@ svg .tile-segments {
 .left-b   .tile-segment.left   { fill: blue; }
 .left-w   .tile-segment.left   { fill: white; }
 
+
+
+
+
+
+.gridDisplay .tile-outline {
+  stroke: #ddd;
+}
+
+.tileStackDisplay {
+  position: fixed;
+  right: 0;
+  width: 120px;
+  background: #aaa;
+  height: 100%;
+  text-align: center;
+  z-index: 1000;
+}
+.tileStackDisplay .tile-outline {
+  stroke: #ddd;
+}
+.tileStackDisplay .tileOnStack {
+  z-index: 0;
+  transition: none;
+}
+.tileStackDisplay .tileOnStack.dragging {
+  z-index: 100;
+  transition: none;
+}

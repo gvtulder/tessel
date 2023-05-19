@@ -3,6 +3,7 @@ import { makeConvexHull } from '../lib/convex-hull.js';
 import { Grid, TileColors, Coord } from './Grid.js';
 
 
+export type TileType = new (grid : Grid, x : number, y : number) => Tile;
 
 export abstract class Tile {
     grid: Grid;
@@ -13,6 +14,8 @@ export abstract class Tile {
     width: number;
     height: number;
     triangles: Triangle[];
+
+    neighborOffsets: Coord[];
 
     constructor(grid: Grid, x: number, y: number) {
         this.grid = grid;
@@ -27,7 +30,7 @@ export abstract class Tile {
         this.height = Math.max(...this.triangles.map((t) => t.top + t.height)) - this.top;
     }
 
-    abstract findTriangles(): Triangle[];
+    abstract findTriangles() : Triangle[];
 
     get colors(): TileColors {
         return this.triangles.map((t) => t.color);
@@ -35,7 +38,7 @@ export abstract class Tile {
 
     set colors(colors: TileColors) {
         for (let i = 0; i < this.triangles.length; i++) {
-            this.triangles[i].color = colors[i];
+            this.triangles[i].color = colors ? colors[i] : null;
         }
     }
 

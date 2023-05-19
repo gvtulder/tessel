@@ -1,13 +1,13 @@
 
 export const DEBUG = {
-    SELECT_GRID: 0,
+    SELECT_GRID: 2,
     OVERLAP: false,
     OPACITY: 0.6,
     TRIANGLE_OUTLINE: false,
     NUMBER_TRIANGLES: false,
     RANDOM_TRIANGLES: false,
     WHITE_TRIANGLES: false,
-    RANDOM_TILES: true,
+    RANDOM_TILES: false,
     CONNECT_TILES: false,
 }
 

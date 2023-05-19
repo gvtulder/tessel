@@ -46,18 +46,20 @@ export class TileDisplay {
 
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         line.setAttribute('d', path);
-        line.setAttribute('stroke', BGCOLOR);
+        // line.setAttribute('stroke', BGCOLOR);
         line.setAttribute('stroke-width', '6px');
         line.setAttribute('stroke-linejoin', 'round');
         line.setAttribute('fill', 'none');
+        line.setAttribute('class', 'tile-outline');
         this.svgGroup.appendChild(line);
 
         const roundLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         roundLine.setAttribute('d', roundPath);
-        roundLine.setAttribute('stroke', BGCOLOR);
+        // roundLine.setAttribute('stroke', BGCOLOR);
         roundLine.setAttribute('stroke-width', '6px');
         roundLine.setAttribute('stroke-linejoin', 'round');
         roundLine.setAttribute('fill', 'none');
+        roundLine.setAttribute('class', 'tile-outline');
         this.svgGroup.appendChild(roundLine);
     }
 }

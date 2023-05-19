@@ -1,14 +1,9 @@
 
-import { EquilateralGridTriangle } from './EquilateralGridTriangle.js';
-import { HexGridTriangle } from './HexGridTriangle.js';
-import { HexTile } from './HexTile.js';
-import { SquareGridTriangle } from './SquareGridTriangle.js';
-import { SquareTile } from './SquareTile.js';
 import { Tile } from './Tile.js';
-import { TriangleTile } from './TriangleTile.js';
 import { Triangle } from './Triangle.js';
 import { GridDisplay } from '../ui/GridDisplay.js';
 import { DEBUG } from '../settings.js';
+import { GridType } from './GridType.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
@@ -35,21 +30,24 @@ export class GridEvent extends Event {
 }
 
 export class Grid extends EventTarget {
-    triangleType = [HexGridTriangle, SquareGridTriangle, EquilateralGridTriangle][DEBUG.SELECT_GRID];
+    gridType : GridType;
 
     grid : Triangle[][];
     triangles : Triangle[];
     tiles : Tile[];
+    tileGrid : Tile[][];
 
     div : HTMLDivElement;
     gridDisplay : GridDisplay;
 
-    constructor() {
+    constructor(gridType : GridType) {
         super();
 
+        this.gridType = gridType;
         this.grid = [];
         this.triangles = [];
         this.tiles = [];
+        this.tileGrid = [];
 
         if (DEBUG.RANDOM_TRIANGLES) {
             this.createRandomTriangles();
@@ -71,7 +69,7 @@ export class Grid extends EventTarget {
     getOrAddTriangle(x : number, y : number) : Triangle {
         if (!this.grid[x]) this.grid[x] = [];
         if (!this.grid[x][y]) {
-            const triangle = new this.triangleType(x, y);
+            const triangle = new this.gridType.createTriangle(x, y);
             this.grid[x][y] = triangle;
             this.triangles.push(triangle);
             this.dispatchEvent(new GridEvent('addtriangle', this, triangle, null));
@@ -80,14 +78,52 @@ export class Grid extends EventTarget {
     }
 
     addTile(tile : Tile) {
+        if (!this.tileGrid[tile.x]) this.tileGrid[tile.x] = [];
+        this.tileGrid[tile.x][tile.y] = tile;
         this.tiles.push(tile);
         this.dispatchEvent(new GridEvent('addtile', this, null, tile));
     }
 
-    getNeighbors(triangle : Triangle) : Triangle[] {
+    getTile(x : number, y : number) : Tile | null {
+        if (!this.tileGrid[x]) return null;
+        if (!this.tileGrid[x][y]) return null;
+        return this.tileGrid[x][y];
+    }
+
+    getOrAddTile(x : number, y : number) : Tile | null {
+        if (!this.tileGrid[x]) this.tileGrid[x] = [];
+        if (this.tileGrid[x][y]) return this.tileGrid[x][y];
+        const tile = new this.gridType.createTile(this, x, y);
+        this.addTile(tile);
+        return tile;
+    }
+
+    getTriangleNeighbors(triangle : Triangle) : Triangle[] {
         const neighbors : Triangle[] = [];
         for (const n of triangle.neighborOffsets) {
             const neighbor = this.getTriangle(triangle.x + n[0], triangle.y + n[1]);
+            if (neighbor) {
+                neighbors.push(neighbor);
+            }
+        }
+        return neighbors;
+    }
+
+    getTileNeighbors(tile : Tile) : Tile[] {
+        const neighbors : Tile[] = [];
+        for (const n of tile.neighborOffsets) {
+            const neighbor = this.getTile(tile.x + n[0], tile.y + n[1]);
+            if (neighbor) {
+                neighbors.push(neighbor);
+            }
+        }
+        return neighbors;
+    }
+
+    getOrAddTileNeighbors(tile : Tile) : Tile[] {
+        const neighbors : Tile[] = [];
+        for (const n of tile.neighborOffsets) {
+            const neighbor = this.getOrAddTile(tile.x + n[0], tile.y + n[1]);
             if (neighbor) {
                 neighbors.push(neighbor);
             }
@@ -119,42 +155,14 @@ export class Grid extends EventTarget {
     }
 
     private createRandomTiles() {
-        if (this.triangleType === SquareGridTriangle) {
-            let i = 0;
-            for (let x = 0; x < 5; x++) {
-                for (let y = 0; y < 5; y++) {
-                    const tile = new SquareTile(this, x, y);
-                    const color = COLORS[i % COLORS.length];
-                    tile.colors = [color, color, color, color];
-                    this.addTile(tile);
-                    i++;
-                }
-            }
-        }
-
-        if (this.triangleType === HexGridTriangle) {
-            let i = 0;
-            for (let x = 0; x < 2; x++) {
-                for (let y = 0; y < 4; y++) {
-                    const tile = new HexTile(this, x, y);
-                    const color = COLORS[i % COLORS.length];
-                    tile.colors = [color, 'white', color, color, color, color];
-                    this.addTile(tile);
-                    i++;
-                }
-            }
-        }
-
-        if (this.triangleType === EquilateralGridTriangle) {
-            let i = 0;
-            for (let x = 0; x < 5; x++) {
-                for (let y = 0; y < 5; y++) {
-                    const tile = new TriangleTile(this, x, y);
-                    const color = COLORS[i % COLORS.length];
-                    tile.colors = [color, color, color];
-                    this.addTile(tile);
-                    i++;
-                }
+        let i = 0;
+        for (let x = 0; x < 5; x++) {
+            for (let y = 0; y < 5; y++) {
+                const tile = new this.gridType.createTile(this, x, y);
+                const color = COLORS[i % COLORS.length];
+                tile.colors = [color, color, color, color, color, color];
+                this.addTile(tile);
+                i++;
             }
         }
     }

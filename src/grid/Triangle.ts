@@ -1,6 +1,6 @@
 import { TriangleColor, Coord } from './Grid.js';
 
-
+export type TriangleType = (new (x : number, y : number) => Triangle);
 
 export abstract class Triangle extends EventTarget {
     x: number;

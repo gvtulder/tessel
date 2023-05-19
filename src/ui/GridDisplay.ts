@@ -23,6 +23,7 @@ export class GridDisplay {
     scale : number;
     // margins = { top: 0, right: 0, bottom: 0, left: 0 };
     margins = { top: 30, right: 150, bottom: 30, left: 30 };
+    autorescale = false;
 
     constructor(grid: Grid) {
         this.grid = grid;
@@ -45,10 +46,8 @@ export class GridDisplay {
             this.addTile(tile);
         }
 
-        window.addEventListener('resize', () => {
-            this.rescaleGrid();
-        });
-        this.rescaleGrid();
+        this.styleMainElement();
+        this.enableAutoRescale();
     }
 
     build() {
@@ -56,11 +55,6 @@ export class GridDisplay {
         this.tileDisplays = [];
 
         const div = document.createElement('div');
-        div.style.position = 'fixed';
-        div.style.top = '0px';
-        div.style.left = '0px';
-        div.style.background = '#fff';
-        div.style.zIndex = '1000';
         this.element = div;
 
         const gridElement = document.createElement('div');
@@ -73,7 +67,7 @@ export class GridDisplay {
         this.element.appendChild(gridElement);
 
         const tileElement = document.createElement('div');
-        gridElement.className = 'tiles';
+        tileElement.className = 'tiles';
         tileElement.style.position = 'absolute';
         tileElement.style.top = '0px';
         tileElement.style.left = '0px';
@@ -121,13 +115,45 @@ export class GridDisplay {
         conn.element.style.zIndex = '200';
 
         for (const triangle of this.grid.triangles) {
-            conn.connect(triangle, this.grid.getNeighbors(triangle));
+            conn.connect(triangle, this.grid.getTriangleNeighbors(triangle));
         }
 
         this.conn = conn;
     }
 
     update() {
+        this.rescaleGrid();
+    }
+
+    enableAutoRescale() {
+        return;
+    }
+
+    styleMainElement() {
+        return;
+    } 
+
+    rescaleGrid() {
+        return;
+    }
+}
+
+
+export class MainGridDisplay extends GridDisplay {
+    styleMainElement() {
+        const div = this.element;
+        div.className = 'gridDisplay';
+        div.style.position = 'fixed';
+        div.style.top = '0px';
+        div.style.left = '0px';
+        div.style.zIndex = '1000';
+    }
+
+    enableAutoRescale() {
+        this.autorescale = true;
+        window.addEventListener('resize', () => {
+            this.rescaleGrid();
+        });
         this.rescaleGrid();
     }
 
@@ -157,5 +183,38 @@ export class GridDisplay {
         this.scale = scale;
 
         this.element.classList.add('animated');
+    }
+}
+
+
+export class TileStackGridDisplay extends GridDisplay {
+    styleMainElement() {
+        const div = this.element;
+        div.className = 'tileStack-gridDisplay';
+        div.style.position = 'absolute';
+        div.style.top = '0px';
+        div.style.left = '0px';
+        div.style.zIndex = '1000';
+    }
+
+    enableAutoRescale() {
+        return;
+    }
+
+    rescaleGrid() {
+        const availWidth = 100;
+        const availHeight = 100;
+        let totalWidth = SCALE * (this.width - this.left);
+        let totalHeight = SCALE * (this.height - this.top);
+
+        const scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
+        totalWidth *= scale;
+        totalHeight *= scale;
+
+        this.element.style.transform = `scale(${scale}`;
+        this.element.style.left = `${(availWidth - totalWidth) / 2 - (this.left * SCALE * scale)}px`;
+        this.element.style.top = `${(availHeight - totalHeight) / 2 - (this.top * SCALE * scale)}px`;
+
+        this.scale = scale;
     }
 }

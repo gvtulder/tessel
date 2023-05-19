@@ -14,7 +14,7 @@ export class HexGridTriangle extends Triangle {
         } else {
             // triangle pointing up
             this.points = [[0.5, 0], [1, height], [0, height]];
-            this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height], [1 + O, height + O], [0.1, height + O], [0, height], [0.5, 0]];
+            this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height], [1 + O, height + O], [0, height + O], [0, height], [0.5, 0]];
             this.neighborOffsets = [[-1, 0], [1, 0], [0, 1]];
         }
 

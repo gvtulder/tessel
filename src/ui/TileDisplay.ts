@@ -52,7 +52,11 @@ export class TileDisplay {
         group.setAttribute('class', 'svg-tile');
         this.svgTriangles = group;
 
-        for (const triangle of this.tile.triangles) {
+        // add in correct order to make the overlapping work
+        const sortedTriangles = [...this.tile.triangles].sort((a, b) => {
+            return (a.y != b.y) ? (a.y - b.y) : (a.x - b.x);
+        });
+        for (const triangle of sortedTriangles) {
             const left = (triangle.left - this.tile.left) * SCALE ;
             const top = (triangle.top - this.tile.top) * SCALE
             const triangleDisplay = new TriangleDisplay(triangle);

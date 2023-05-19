@@ -1,5 +1,6 @@
-import { Game } from "src/game/Game.js";
-import { GridDisplay, MainGridDisplay } from "./GridDisplay.js";
+import { Game, GameEvent } from "src/game/Game.js";
+import { GridDisplay } from "./GridDisplay.js";
+import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
 import { OrientedColors, Tile } from "src/grid/Tile.js";
 
@@ -30,6 +31,10 @@ export class GameDisplay {
         this.tileStackDisplay.makeDraggable(this.gridDisplay);
         this.gridDisplay.makeDroppable((target : Tile, orientedColors : OrientedColors, indexOnStack : number) => {
             return this.game.placeFromStack(target, orientedColors, indexOnStack);
+        });
+
+        this.game.addEventListener('score', (evt : GameEvent) => {
+            this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes);
         });
     }
 }

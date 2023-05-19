@@ -1,7 +1,7 @@
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { TileDisplay } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
-import { OrientedColors, Tile } from "../grid/Tile.js";
+import { Tile } from "../grid/Tile.js";
 import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from 'src/settings.js';
@@ -13,6 +13,7 @@ export class GridDisplay {
     tileElement: HTMLDivElement;
 
     svg : SVGElement;
+    svgGrid : SVGElement;
     svgTriangles : SVGElement;
 
     triangleDisplays: TriangleDisplay[];
@@ -92,9 +93,13 @@ export class GridDisplay {
         this.gridElement.appendChild(svg);
         this.svg = svg;
 
+        this.svgGrid = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        this.svgGrid.setAttribute('class', 'svg-grid');
+        this.svg.appendChild(this.svgGrid)
+
         this.svgTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this.svgTriangles.setAttribute('class', 'svg-tiles');
-        this.svg.appendChild(this.svgTriangles)
+        this.svgGrid.appendChild(this.svgTriangles)
     }
 
     addTriangle(triangle: Triangle) {
@@ -156,7 +161,7 @@ export class GridDisplay {
         // TODO width is not really width?
         this.svg.setAttribute('width', `${(this.width - this.left) * SCALE}`);
         this.svg.setAttribute('height', `${(this.height - this.top) * SCALE}`);
-        this.svgTriangles.setAttribute('transform', `translate(${-this.left * SCALE} ${-this.top * SCALE})`);
+        this.svgGrid.setAttribute('transform', `translate(${-this.left * SCALE} ${-this.top * SCALE})`);
         this.svg.style.left = `${this.left * SCALE}px`;
         this.svg.style.top = `${this.top * SCALE}px`;
 
@@ -173,68 +178,6 @@ export class GridDisplay {
 
     rescaleGrid() {
         return;
-    }
-}
-
-
-export class MainGridDisplay extends GridDisplay {
-    styleMainElement() {
-        const div = this.element;
-        div.className = 'gridDisplay';
-        div.style.position = 'fixed';
-        div.style.top = '0px';
-        div.style.left = '0px';
-        div.style.zIndex = '1000';
-    }
-
-    enableAutoRescale() {
-        this.autorescale = true;
-        window.addEventListener('resize', () => {
-            this.rescaleGrid();
-        });
-        this.rescaleGrid();
-    }
-
-    rescaleGrid() {
-        const availWidth = document.documentElement.clientWidth - this.margins.left - this.margins.right;
-        const availHeight = document.documentElement.clientHeight - this.margins.top - this.margins.bottom;
-        let totalWidth = SCALE * (this.width - this.left);
-        let totalHeight = SCALE * (this.height - this.top);
-
-        /* TODO
-        const skipPlaceholders = 0;
-        if (this.isGameFinished()) {
-            totalWidth -= 200;
-            totalHeight -= 200;
-            skipPlaceholders = 1;
-        }
-        */
-
-        const scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
-        totalWidth *= scale;
-        totalHeight *= scale;
-
-        this.element.style.transform = `scale(${scale}`;
-        this.element.style.left = `${this.margins.left + (availWidth - totalWidth) / 2 - (this.left * SCALE * scale)}px`;
-        this.element.style.top = `${this.margins.top + (availHeight - totalHeight) / 2 - (this.top * SCALE * scale)}px`;
-
-        this.scale = scale;
-
-        this.element.classList.add('animated');
-    }
-
-    makeDroppable(ondrop : (target : Tile, orientedColors : OrientedColors, indexOnStack : number) => boolean) {
-        for (const tileDisplay of this.tileDisplays) {
-            if (tileDisplay.tile.isPlaceholder()) {
-                tileDisplay.makeDropzone((target : Tile, orientedColors : OrientedColors, indexOnStack : number) => {
-                    if (ondrop(target, orientedColors, indexOnStack)) {
-                        this.makeDroppable(ondrop);
-                    }
-                });
-            } else {
-                tileDisplay.removeDropzone();
-            }
-        }
     }
 }
 

@@ -4,7 +4,8 @@ import interact from '@interactjs/interact/index';
 import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
 import { OrientedColors, Tile } from "../grid/Tile.js";
-import { GridDisplay, MainGridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
+import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
+import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
 import { GridType } from "src/grid/GridType.js";
 

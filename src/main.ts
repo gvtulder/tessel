@@ -1,5 +1,5 @@
 import { DEBUG } from './settings.js';
-import { MainGridDisplay } from './ui/GridDisplay.js';
+import { MainGridDisplay } from "./ui/MainGridDisplay.js";
 import { Grid } from './grid/Grid.js';
 import { TileStackDisplay } from './ui/TileStackDisplay.js';
 import { FixedOrderTileStack, TileStack } from './game/TileStack.js';

@@ -2,7 +2,7 @@ import { Grid, TileColors } from "src/grid/Grid.js";
 import { FixedOrderTileStack, TileStack } from "./TileStack.js";
 import { GridType } from "src/grid/GridType.js";
 import { OrientedColors, Tile } from "src/grid/Tile.js";
-import { Scorer } from "src/grid/Scorer.js";
+import { Scorer, Shape } from "src/grid/Scorer.js";
 
 
 export type GameSettings = {
@@ -11,7 +11,18 @@ export type GameSettings = {
     initialTile : TileColors;
 }
 
-export class Game {
+export class GameEvent extends Event {
+    game : Game;
+    scoreShapes? : Shape[];
+
+    constructor(type : string, game : Game, scoreShapes? : Shape[]) {
+        super(type);
+        this.game = game;
+        this.scoreShapes = scoreShapes;
+    }
+}
+
+export class Game extends EventTarget {
     settings : GameSettings;
     gridType : GridType;
 
@@ -19,6 +30,8 @@ export class Game {
     tileStack : FixedOrderTileStack;
 
     constructor(settings : GameSettings) {
+        super();
+
         this.settings = settings;
         this.gridType = settings.gridType;
 
@@ -50,6 +63,8 @@ export class Game {
                 console.log('Scorer shapes', shapes);
                 const points = shapes.map((s) => s.points).reduce((a, b) => (a + b));
                 console.log('Points', points);
+
+                this.dispatchEvent(new GameEvent('score', this, shapes));
             }
 
             return true;

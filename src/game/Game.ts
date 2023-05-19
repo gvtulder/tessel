@@ -36,10 +36,17 @@ export class Game {
         this.grid.updateFrontier();
     }
 
-    placeFromStack(target : Tile, orientedColors : OrientedColors, index : number) {
+    placeFromStack(target : Tile, orientedColors : OrientedColors, index : number) : boolean {
+        if (!this.checkFit(target, orientedColors)) {
+            return false;
+        }
         target.setOrientedColors(orientedColors);
         this.tileStack.take(index);
         this.grid.updateFrontier();
         return true;
+    }
+
+    checkFit(target : Tile, orientedColors : OrientedColors) : boolean {
+        return target.checkFitOrientedColors(orientedColors);
     }
 }

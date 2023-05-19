@@ -54,13 +54,7 @@ export abstract class Tile {
     }
 
     setOrientedColors(orientedColors : OrientedColors) {
-        // simple rotations
-        // TODO remove for loop?
-        let colors = orientedColors.colors;
-        for (let i=0; i<orientedColors.rotation; i++) {
-            colors = [colors[colors.length - 1], ...colors.slice(0, -1)];
-        }
-        this.colors = colors;
+        this.colors = this.computeFromOrientedColors(orientedColors);
     }
 
     getOrientedColors(rotation : number) : OrientedColors {
@@ -70,6 +64,30 @@ export abstract class Tile {
             rotation: rotation,
             colors: this.colors,
         };
+    }
+
+    checkFitOrientedColors(orientedColors : OrientedColors) : boolean {
+        const colors = this.computeFromOrientedColors(orientedColors);
+        for (let i=0; i<this.triangles.length; i++) {
+            const triangle = this.triangles[i];
+            const neighbors = this.grid.getTriangleNeighbors(triangle);
+            for (const neighbor of neighbors) {
+                if (neighbor.color != null && neighbor.color != colors[i]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    computeFromOrientedColors(orientedColors : OrientedColors) : TileColors {
+        // simple rotations
+        // TODO remove for loop?
+        let colors = orientedColors.colors;
+        for (let i=0; i<orientedColors.rotation; i++) {
+            colors = [colors[colors.length - 1], ...colors.slice(0, -1)];
+        }
+        return colors;
     }
 
     isPlaceholder() {

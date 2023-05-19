@@ -2,6 +2,7 @@ import { Grid, TileColors } from "src/grid/Grid.js";
 import { FixedOrderTileStack, TileStack } from "./TileStack.js";
 import { GridType } from "src/grid/GridType.js";
 import { OrientedColors, Tile } from "src/grid/Tile.js";
+import { Scorer } from "src/grid/Scorer.js";
 
 
 export type GameSettings = {
@@ -37,13 +38,25 @@ export class Game {
     }
 
     placeFromStack(target : Tile, orientedColors : OrientedColors, index : number) : boolean {
-        if (!this.checkFit(target, orientedColors)) {
+        if (this.checkFit(target, orientedColors)) {
+            // place tile
+            target.setOrientedColors(orientedColors);
+            this.tileStack.take(index);
+            this.grid.updateFrontier();
+
+            // compute scores
+            const shapes = Scorer.computeScores(this.grid, target);
+            if (shapes.length > 0) {
+                console.log('Scorer shapes', shapes);
+                const points = shapes.map((s) => s.points).reduce((a, b) => (a + b));
+                console.log('Points', points);
+            }
+
+            return true;
+        } else {
+            // does not fit
             return false;
         }
-        target.setOrientedColors(orientedColors);
-        this.tileStack.take(index);
-        this.grid.updateFrontier();
-        return true;
     }
 
     checkFit(target : Tile, orientedColors : OrientedColors) : boolean {

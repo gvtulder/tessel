@@ -29,6 +29,9 @@ export abstract class Tile {
         this.y = y;
 
         this.triangles = this.findTriangles();
+        for (const triangle of this.triangles) {
+            triangle.tile = this;
+        }
 
         this.left = Math.min(...this.triangles.map((t) => t.left));
         this.top = Math.min(...this.triangles.map((t) => t.top));

@@ -98,11 +98,11 @@ export class Grid extends EventTarget {
         return tile;
     }
 
-    getTriangleNeighbors(triangle : Triangle) : Triangle[] {
+    getTriangleNeighbors(triangle : Triangle, includeNull? : boolean) : Triangle[] {
         const neighbors : Triangle[] = [];
         for (const n of triangle.neighborOffsets) {
             const neighbor = this.getTriangle(triangle.x + n[0], triangle.y + n[1]);
-            if (neighbor) {
+            if (neighbor || includeNull) {
                 neighbors.push(neighbor);
             }
         }
@@ -134,7 +134,6 @@ export class Grid extends EventTarget {
     updateFrontier() {
         for (const t of this.tiles) {
             if (!t.isPlaceholder()) {
-                console.log(t);
                 this.getOrAddTileNeighbors(t);
             }
         }

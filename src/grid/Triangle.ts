@@ -1,4 +1,5 @@
 import { TriangleColor, Coord } from './Grid.js';
+import { Tile } from './Tile.js';
 
 export type TriangleType = (new (x : number, y : number) => Triangle);
 
@@ -6,6 +7,7 @@ export abstract class Triangle extends EventTarget {
     x: number;
     y: number;
     private _color: TriangleColor;
+    tile? : Tile;
 
     points: [Coord, Coord, Coord];
     polyPoints: Coord[];

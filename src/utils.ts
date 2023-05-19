@@ -19,3 +19,18 @@ export function shuffle<T>(myArray : T[]) {
     myArray[j] = tempi;
   }
 }
+
+type Coord = [x: number, y: number];
+
+function mean(numbers : number[]) : number {
+  return numbers.reduce((prev, x) => prev + x) / numbers.length;
+}
+
+export function shrinkOutline(points : Coord[], factor : number) : Coord[] {
+  const originX = mean(points.map((p) => p[0]));
+  const originY = mean(points.map((p) => p[1]));
+  return points.map((p) => [
+    (p[0] - originX) * factor + originX,
+    (p[1] - originY) * factor + originY,
+  ]);
+}

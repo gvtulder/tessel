@@ -1,19 +1,13 @@
-import { SCALE, OFFSET, DEBUG } from '../settings.js';
-import { Grid } from '../grid/Grid.js';
+import { SCALE, DEBUG } from '../settings.js';
 import { Triangle } from "../grid/Triangle.js";
-import { GridDisplay } from './GridDisplay.js';
 
 export class TriangleDisplay {
-    gridDisplay: GridDisplay;
-    grid: Grid;
     triangle: Triangle;
 
-    element: HTMLDivElement;
-    triangleElement: SVGElement;
+    element: SVGElement;
+    triangleElement : SVGElement;
 
-    constructor(gridDisplay: GridDisplay, grid: Grid, triangle: Triangle) {
-        this.gridDisplay = gridDisplay;
-        this.grid = grid;
+    constructor(triangle: Triangle) {
         this.triangle = triangle;
 
         this.build();
@@ -22,26 +16,17 @@ export class TriangleDisplay {
     }
 
     build() {
-        const div = document.createElement('div');
-        div.title = `(${this.triangle.x},${this.triangle.y})`;
-        this.element = div;
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('class', 'svg-triangle');
+        this.element = group;
 
+        /* TODO */
+        /*
         div.style.position = 'absolute';
         div.style.left = `${this.triangle.left * SCALE + OFFSET}px`;
         div.style.top = `${this.triangle.top * SCALE + OFFSET}px`;
         div.style.zIndex = `${this.triangle.x * 1000 + this.triangle.y}`;
-
-        const svg = this.generateSvg();
-        div.appendChild(svg);
-    }
-
-    generateSvg() {
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', `${SCALE + 10}`);
-        svg.setAttribute('height', `${SCALE + 10}`);
-
-        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        svg.appendChild(group);
+        */
 
         const pointsString = [...this.triangle.points, this.triangle.points[0]].map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
         const polyString = this.triangle.polyPoints.map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
@@ -87,8 +72,6 @@ export class TriangleDisplay {
             text.appendChild(document.createTextNode(`(${this.triangle.x},${this.triangle.y})`));
             group.append(text);
         }
-
-        return svg;
     }
 
     updateColor() {

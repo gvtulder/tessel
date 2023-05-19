@@ -1,17 +1,23 @@
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
-import { SCALE, OFFSET, BGCOLOR } from '../settings.js';
+import { SCALE } from '../settings.js';
 import { Tile } from "../grid/Tile.js";
+import { TriangleDisplay } from './TriangleDisplay.js';
+import { GridDisplay } from './GridDisplay.js';
+import { shrinkOutline } from 'src/utils.js';
 
-// make the outine a little bit bigger to give room for the border
-const OUTLINE_MARGIN = 5;
 
 export class TileDisplay {
-    tile: Tile;
+    tile : Tile;
 
-    element: HTMLDivElement;
-    svgGroup: SVGElement;
+    gridDisplay : GridDisplay;
+    triangleDisplays : TriangleDisplay[];
 
-    constructor(tile: Tile) {
+    element : HTMLDivElement;
+    svgGroup : SVGElement;
+    svgTriangles : SVGElement;
+
+    constructor(gridDisplay: GridDisplay, tile: Tile) {
+        this.gridDisplay = gridDisplay;
         this.tile = tile;
         this.build();
     }
@@ -19,47 +25,45 @@ export class TileDisplay {
     build() {
         const div = document.createElement('div');
         div.style.position = 'absolute';
-        div.style.left = `${this.tile.left * SCALE + OFFSET - OUTLINE_MARGIN}px`;
-        div.style.top = `${this.tile.top * SCALE + OFFSET - OUTLINE_MARGIN}px`;
+        div.style.left = `${this.tile.left * SCALE }px`;
+        div.style.top = `${this.tile.top * SCALE}px`;
+        div.style.width = `${this.tile.width * SCALE}px`;
+        div.style.height = `${this.tile.height * SCALE}px`;
         this.element = div;
 
-        const width = this.tile.width * SCALE + 2 * OUTLINE_MARGIN;
-        const height = this.tile.height * SCALE + 2 * OUTLINE_MARGIN;
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', `${width}`);
-        svg.setAttribute('height', `${height}`);
-        this.element.appendChild(svg);
+        this.drawTriangles();
+        this.drawOutline();
+
+        const left = this.tile.left * SCALE;
+        const top = this.tile.top * SCALE;
+        this.svgTriangles.setAttribute('transform', `translate(${left} ${top})`);
+    }
+
+    drawTriangles() {
+        this.triangleDisplays = [];
 
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        svg.appendChild(group);
-        this.svgGroup = group;
+        group.setAttribute('class', 'svg-tile');
+        this.svgTriangles = group;
 
-        this.drawOutline();
+        for (const triangle of this.tile.triangles) {
+            const left = (triangle.left - this.tile.left) * SCALE ;
+            const top = (triangle.top - this.tile.top) * SCALE
+            const triangleDisplay = new TriangleDisplay(triangle);
+            triangleDisplay.element.setAttribute('transform', `translate(${left} ${top})`);
+            this.triangleDisplays.push(triangleDisplay);
+            group.appendChild(triangleDisplay.element);
+        }
     }
 
     drawOutline() {
-        const outline = this.tile.computeOutline();
+        let outline = this.tile.computeOutline();
+        outline = shrinkOutline(outline, 0.95);
 
-        let path = outline.map((p) => `${p[0] * SCALE + OUTLINE_MARGIN} ${p[1] * SCALE + OUTLINE_MARGIN}`).join(' L ');
+        let path = outline.map((p) => `${p[0] * SCALE} ${p[1] * SCALE}`).join(' L ');
         path = `M ${path} Z`;
         const roundPath = roundPathCorners(path, 8, false);
 
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        line.setAttribute('d', path);
-        // line.setAttribute('stroke', BGCOLOR);
-        line.setAttribute('stroke-width', '6px');
-        line.setAttribute('stroke-linejoin', 'round');
-        line.setAttribute('fill', 'none');
-        line.setAttribute('class', 'tile-outline');
-        this.svgGroup.appendChild(line);
-
-        const roundLine = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        roundLine.setAttribute('d', roundPath);
-        // roundLine.setAttribute('stroke', BGCOLOR);
-        roundLine.setAttribute('stroke-width', '6px');
-        roundLine.setAttribute('stroke-linejoin', 'round');
-        roundLine.setAttribute('fill', 'none');
-        roundLine.setAttribute('class', 'tile-outline');
-        this.svgGroup.appendChild(roundLine);
+        this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
     }
 }

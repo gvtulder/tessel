@@ -4,13 +4,16 @@ import { Grid, GridEvent } from '../grid/Grid.js';
 import { Tile } from "../grid/Tile.js";
 import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
-import { SCALE } from 'src/settings.js';
+import { DEBUG, SCALE } from 'src/settings.js';
 
 export class GridDisplay {
     grid: Grid;
     element: HTMLDivElement;
     gridElement: HTMLDivElement;
     tileElement: HTMLDivElement;
+
+    svg : SVGElement;
+    svgTriangles : SVGElement;
 
     triangleDisplays: TriangleDisplay[][];
     tileDisplays: TileDisplay[][];
@@ -74,16 +77,37 @@ export class GridDisplay {
         tileElement.style.zIndex = '200';
         this.tileElement = tileElement;
         this.element.appendChild(tileElement);
+
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        // TODO
+        // svg.setAttribute('width', `${width}`);
+        // svg.setAttribute('height', `${height}`);
+        svg.setAttribute('width', '1000');
+        svg.setAttribute('height', '1000');
+        svg.style.position = 'absolute';
+        this.gridElement.appendChild(svg);
+        this.svg = svg;
+
+        this.svgTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        this.svgTriangles.setAttribute('class', 'svg-tiles');
+        this.svg.appendChild(this.svgTriangles)
     }
 
     addTriangle(triangle: Triangle) {
-        if (!this.triangleDisplays[triangle.x]) {
-            this.triangleDisplays[triangle.x] = [];
-        }
-        if (!this.triangleDisplays[triangle.x][triangle.y]) {
-            const triangleDisplay = new TriangleDisplay(this, this.grid, triangle);
-            this.triangleDisplays[triangle.x][triangle.y] = triangleDisplay;
-            this.gridElement.appendChild(triangleDisplay.element);
+        if (DEBUG.PLOT_SINGLE_TRIANGLES) {
+            if (!this.triangleDisplays[triangle.x]) {
+                this.triangleDisplays[triangle.x] = [];
+            }
+            if (!this.triangleDisplays[triangle.x][triangle.y]) {
+                const triangleDisplay = new TriangleDisplay(triangle);
+                this.triangleDisplays[triangle.x][triangle.y] = triangleDisplay;
+                // TODO
+                const group = triangleDisplay.element;
+                this.svgTriangles.appendChild(group);
+                const left = triangle.left * SCALE;
+                const top = triangle.top * SCALE;
+                group.setAttribute('transform', `translate(${left} ${top})`);
+            }
         }
     }
 
@@ -92,9 +116,10 @@ export class GridDisplay {
             this.tileDisplays[tile.x] = [];
         }
         if (!this.tileDisplays[tile.x][tile.y]) {
-            const tileDisplay = new TileDisplay(tile);
+            const tileDisplay = new TileDisplay(this, tile);
             this.tileDisplays[tile.x][tile.y] = tileDisplay;
             this.tileElement.appendChild(tileDisplay.element);
+            this.svgTriangles.appendChild(tileDisplay.svgTriangles);
         }
 
         this.left = Math.min(...this.grid.tiles.map((t) => t.left));
@@ -122,6 +147,13 @@ export class GridDisplay {
     }
 
     update() {
+        // TODO width is not really width?
+        this.svg.setAttribute('width', `${(this.width - this.left) * SCALE}`);
+        this.svg.setAttribute('height', `${(this.height - this.top) * SCALE}`);
+        this.svgTriangles.setAttribute('transform', `translate(${-this.left * SCALE} ${-this.top * SCALE})`);
+        this.svg.style.left = `${this.left * SCALE}px`;
+        this.svg.style.top = `${this.top * SCALE}px`;
+
         this.rescaleGrid();
     }
 

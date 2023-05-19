@@ -15,8 +15,10 @@ export class GridDisplay {
     svg : SVGElement;
     svgTriangles : SVGElement;
 
-    triangleDisplays: TriangleDisplay[][];
-    tileDisplays: TileDisplay[][];
+    triangleDisplays: TriangleDisplay[];
+    tileDisplays: TileDisplay[];
+    triangleDisplayGrid: TriangleDisplay[][];
+    tileDisplayGrid: TileDisplay[][];
 
     left : number;
     top : number;
@@ -54,7 +56,9 @@ export class GridDisplay {
     }
 
     build() {
+        this.triangleDisplayGrid = [];
         this.triangleDisplays = [];
+        this.tileDisplayGrid = [];
         this.tileDisplays = [];
 
         const div = document.createElement('div');
@@ -95,12 +99,13 @@ export class GridDisplay {
 
     addTriangle(triangle: Triangle) {
         if (DEBUG.PLOT_SINGLE_TRIANGLES) {
-            if (!this.triangleDisplays[triangle.x]) {
-                this.triangleDisplays[triangle.x] = [];
+            if (!this.triangleDisplayGrid[triangle.x]) {
+                this.triangleDisplayGrid[triangle.x] = [];
             }
-            if (!this.triangleDisplays[triangle.x][triangle.y]) {
+            if (!this.triangleDisplayGrid[triangle.x][triangle.y]) {
                 const triangleDisplay = new TriangleDisplay(triangle);
-                this.triangleDisplays[triangle.x][triangle.y] = triangleDisplay;
+                this.triangleDisplayGrid[triangle.x][triangle.y] = triangleDisplay;
+                this.triangleDisplays.push(triangleDisplay);
                 // TODO
                 const group = triangleDisplay.element;
                 this.svgTriangles.appendChild(group);
@@ -112,12 +117,13 @@ export class GridDisplay {
     }
 
     addTile(tile: Tile) {
-        if (!this.tileDisplays[tile.x]) {
-            this.tileDisplays[tile.x] = [];
+        if (!this.tileDisplayGrid[tile.x]) {
+            this.tileDisplayGrid[tile.x] = [];
         }
-        if (!this.tileDisplays[tile.x][tile.y]) {
+        if (!this.tileDisplayGrid[tile.x][tile.y]) {
             const tileDisplay = new TileDisplay(this, tile);
-            this.tileDisplays[tile.x][tile.y] = tileDisplay;
+            this.tileDisplayGrid[tile.x][tile.y] = tileDisplay;
+            this.tileDisplays.push(tileDisplay);
             this.tileElement.appendChild(tileDisplay.element);
             this.svgTriangles.appendChild(tileDisplay.svgTriangles);
         }

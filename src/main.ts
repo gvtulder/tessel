@@ -70,26 +70,8 @@ export function start() {
     }
 
 
-    for (let i=0; i<tileStackDisplay.tileDisplays.length; i++) {
-        const position = { x: 0, y: 0 };
-        interact(tileStackDisplay.tileDisplays[i].element).draggable({
-            listeners: {
-                start (evt : DragEvent) {
-                    console.log(evt.type, evt.target);
-                    evt.target.classList.add('dragging');
-                },
-                move (evt : DragEvent) {
-                    position.x += evt.dx;
-                    position.y += evt.dy;
-                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px) scale(${gridDisplay.scale})`;
-                },
-                end (evt : DragEvent) {
-                    position.x = 0;
-                    position.y = 0;
-                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
-                    evt.target.classList.remove('dragging');
-                },
-            }
-        });
+    for (const tileDisplay of gridDisplay.tileDisplays) {
+        tileDisplay.makeDropzone();
     }
+    tileStackDisplay.makeDraggable(gridDisplay);
 }

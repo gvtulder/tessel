@@ -1,9 +1,13 @@
+import type { Interactable, DragEvent } from '@interactjs/types';
+import interact from '@interactjs/interact/index';
+
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { SCALE } from '../settings.js';
 import { Tile } from "../grid/Tile.js";
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
 import { shrinkOutline } from 'src/utils.js';
+import { DraggableTileHTMLDivElement } from './TileStackDisplay.js';
 
 
 export class TileDisplay {
@@ -15,6 +19,8 @@ export class TileDisplay {
     element : HTMLDivElement;
     svgGroup : SVGElement;
     svgTriangles : SVGElement;
+
+    dropzone : Interactable;
 
     constructor(gridDisplay: GridDisplay, tile: Tile) {
         this.gridDisplay = gridDisplay;
@@ -65,5 +71,52 @@ export class TileDisplay {
         const roundPath = roundPathCorners(path, 8, false);
 
         this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
+    }
+
+    makeDropzone() {
+        this.dropzone = interact(this.element).dropzone({
+            overlap: 0.6, // center',
+        }).on('drop', (evt: DragEvent) => {
+            console.log('drop', evt, evt.target, evt.relatedTarget);
+            console.log('dropped tile', (evt.relatedTarget as DraggableTileHTMLDivElement).tileDisplay);
+
+            const tile = (evt.relatedTarget as DraggableTileHTMLDivElement).tileDisplay.tile;
+            this.tile.colors = tile.colors;
+        }).on('dropactivate', (evt: DragEvent) => {
+            evt.target.classList.add('drop-activated');
+            /*
+            if (this.gameManager.settings.hints) {
+                console.log('dropactivate', (evt.relatedTarget as TileUIHTMLDivElement).tile.colors);
+                if (this.gameManager.board.checkFitWithRotations((evt.relatedTarget as TileUIHTMLDivElement).tile.colors,
+                    (evt.target as TileUIHTMLDivElement).tile.col,
+                    (evt.target as TileUIHTMLDivElement).tile.row) == null) {
+                    evt.target.classList.add('drop-hint-would-not-fit');
+                } else {
+                    evt.target.classList.add('drop-hint-would-fit');
+                }
+            }
+            */
+        }).on('dropdeactivate', (evt: DragEvent) => {
+            evt.target.classList.remove('drop-activated');
+            evt.target.classList.remove('drop-hint-would-fit');
+            evt.target.classList.remove('drop-hint-would-not-fit');
+        }).on('dragenter', (evt: DragEvent) => {
+            console.log('dragenter', evt.target);
+            /*
+            (evt.relatedTarget as TileUIHTMLDivElement).tile.autoRotate((evt.target as TileUIHTMLDivElement).tile);
+            */
+        }).on('dragleave', (evt: DragEvent) => {
+            console.log('dragleave', evt.target);
+            /*
+            (evt.relatedTarget as TileUIHTMLDivElement).tile.resetAutoRotate();
+            */
+        });
+    }
+
+    removeDropzone() {
+        if (this.dropzone) {
+            this.dropzone.unset();
+            this.dropzone = null;
+        }
     }
 }

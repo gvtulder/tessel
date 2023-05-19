@@ -1,7 +1,10 @@
+import type { DragEvent } from '@interactjs/types';
+import interact from '@interactjs/interact/index';
+
 import { Grid } from "../grid/Grid.js";
 import { TileStack } from "../game/TileStack.js";
 import { Tile } from "../grid/Tile.js";
-import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
+import { GridDisplay, MainGridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
 import { GridType } from "src/grid/GridType.js";
 
@@ -40,6 +43,17 @@ export class TileStackDisplay {
             this.tileDisplays.push(tileDisplay);
         }
     }
+
+    makeDraggable(mainGridDisplay : MainGridDisplay) {
+        for (const tileDisplay of this.tileDisplays) {
+            tileDisplay.makeDraggable(mainGridDisplay);
+        }
+    }
+}
+
+
+export interface DraggableTileHTMLDivElement extends HTMLDivElement {
+  tileDisplay? : SingleTileOnStackDisplay;
 }
 
 class SingleTileOnStackDisplay {
@@ -65,5 +79,36 @@ class SingleTileOnStackDisplay {
         this.element.style.height = '100px';
 
         this.gridDisplay.rescaleGrid();
+    }
+
+    makeDraggable(mainGridDisplay : MainGridDisplay) {
+        (this.element as DraggableTileHTMLDivElement).tileDisplay = this;
+
+        const position = { x: 0, y: 0 };
+        interact(this.element).on('tap', () => {
+            // TODO
+            // this.rotateTile();
+            return;
+        }).draggable({
+            listeners: {
+                start: (evt : DragEvent) => {
+                    console.log(evt.type, evt, evt.target);
+                    evt.target.classList.add('dragging');
+                    // TODO
+                    // onDragStart(evt);
+                },
+                move: (evt : DragEvent) => {
+                    position.x += evt.dx;
+                    position.y += evt.dy;
+                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px) scale(${mainGridDisplay.scale / this.gridDisplay.scale})`;
+                },
+                end: (evt : DragEvent) => {
+                    evt.target.classList.remove('dragging');
+                    position.x = 0;
+                    position.y = 0;
+                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+                },
+            }
+        });
     }
 }

@@ -20,14 +20,6 @@ export class TriangleDisplay {
         group.setAttribute('class', 'svg-triangle');
         this.element = group;
 
-        /* TODO */
-        /*
-        div.style.position = 'absolute';
-        div.style.left = `${this.triangle.left * SCALE + OFFSET}px`;
-        div.style.top = `${this.triangle.top * SCALE + OFFSET}px`;
-        div.style.zIndex = `${this.triangle.x * 1000 + this.triangle.y}`;
-        */
-
         const pointsString = [...this.triangle.points, this.triangle.points[0]].map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
         const polyString = this.triangle.polyPoints.map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
 
@@ -36,9 +28,6 @@ export class TriangleDisplay {
         if (DEBUG.OVERLAP) {
             el.setAttribute('opacity', `${DEBUG.OPACITY}`);
         }
-        // el.setAttribute('fill', 'transparent');
-        // el.setAttribute('stroke', 'white');
-        // el.setAttribute('stroke-width', '2px');
         group.append(el);
         this.triangleElement = el;
         this.updateColor();

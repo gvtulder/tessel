@@ -4,11 +4,11 @@ export const DEBUG = {
     OVERLAP: false,
     OPACITY: 0.6,
     TRIANGLE_OUTLINE: false,
-    NUMBER_TRIANGLES: true,
+    NUMBER_TRIANGLES: false,
     RANDOM_TRIANGLES: false,
     WHITE_TRIANGLES: false,
     RANDOM_TILES: false,
-    CONNECT_TILES: true,
+    CONNECT_TILES: false,
     PLOT_SINGLE_TRIANGLES: false,
 }
 

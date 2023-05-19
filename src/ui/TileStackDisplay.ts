@@ -1,8 +1,8 @@
-import type { DragEvent } from '@interactjs/types';
+import type { Interactable, DragEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
 
 import { Grid } from "../grid/Grid.js";
-import { TileStack } from "../game/TileStack.js";
+import { FixedOrderTileStack, TileStack } from "../game/TileStack.js";
 import { Tile } from "../grid/Tile.js";
 import { GridDisplay, MainGridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
@@ -11,6 +11,7 @@ import { GridType } from "src/grid/GridType.js";
 export class TileStackDisplay {
     gridType : GridType;
     tileStack : TileStack;
+    fixedOrderTileStack : FixedOrderTileStack;
     tileDisplays : SingleTileOnStackDisplay[];
     element : HTMLDivElement;
 
@@ -19,6 +20,7 @@ export class TileStackDisplay {
     constructor(gridType : GridType, tileStack : TileStack) {
         this.gridType = gridType;
         this.tileStack = tileStack;
+        this.fixedOrderTileStack = new FixedOrderTileStack(tileStack, this.numberOfTiles);
         this.tileDisplays = [];
         this.build();
 
@@ -26,9 +28,20 @@ export class TileStackDisplay {
     }
 
     updateTiles() {
-        const colors = this.tileStack.peek(3);
         for (let i=0; i<this.numberOfTiles; i++) {
-            this.tileDisplays[i].tile.colors = colors[i] ? colors[i] : null;
+            const color = this.fixedOrderTileStack.slots[i];
+            this.tileDisplays[i].tile.colors = color ? color : null;
+        }
+    }
+
+    remove(tile : Tile) {
+        let index = 0;
+        while (index < this.numberOfTiles && !(this.tileDisplays[index].tile === tile)) {
+            index++;
+        }
+        if (index < this.numberOfTiles) {
+            this.fixedOrderTileStack.take(index);
+            this.updateTiles();
         }
     }
 
@@ -62,6 +75,7 @@ class SingleTileOnStackDisplay {
     tile : Tile;
     tileDisplay : TileDisplay;
     element : HTMLDivElement;
+    draggable : Interactable;
 
     constructor(gridType : GridType) {
         this.grid = new Grid(gridType);
@@ -85,10 +99,8 @@ class SingleTileOnStackDisplay {
         (this.element as DraggableTileHTMLDivElement).tileDisplay = this;
 
         const position = { x: 0, y: 0 };
-        interact(this.element).on('tap', () => {
-            // TODO
-            // this.rotateTile();
-            return;
+        this.draggable = interact(this.element).on('tap', () => {
+            this.tile.rotateTile();
         }).draggable({
             listeners: {
                 start: (evt : DragEvent) => {
@@ -110,5 +122,12 @@ class SingleTileOnStackDisplay {
                 },
             }
         });
+    }
+
+    removeDraggable() {
+        if (this.draggable) {
+            this.draggable.unset();
+            this.draggable = null;
+        }
     }
 }

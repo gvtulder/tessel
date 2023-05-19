@@ -17,3 +17,4 @@ export const SCALE = 100;
 export const O = (DEBUG.OVERLAP ? 0.1 : 0.01);
 
 export const BGCOLOR = '#dddddd';
+export const PLACEHOLDER = '#cccccc';

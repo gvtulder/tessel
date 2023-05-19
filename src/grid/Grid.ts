@@ -131,6 +131,15 @@ export class Grid extends EventTarget {
         return neighbors;
     }
 
+    updateFrontier() {
+        for (const t of this.tiles) {
+            if (!t.isPlaceholder()) {
+                console.log(t);
+                this.getOrAddTileNeighbors(t);
+            }
+        }
+    }
+
 
     // debugging code
 

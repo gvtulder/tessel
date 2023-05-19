@@ -6,6 +6,8 @@ const DummyTiles : TileColors[] = [
     ['red', 'blue', 'green', 'purple', 'orange', 'black'],
     ['red', 'red', 'green', 'white', 'blue', 'black'],
     ['blue', 'blue', 'green', 'red', 'black', 'black'],
+    ['blue', 'red', 'blue', 'blue', 'red', 'blue'],
+    ['white', 'orange', 'green', 'red', 'black', 'black'],
 ];
 
 export class TileStack {
@@ -20,16 +22,46 @@ export class TileStack {
     }
     pop() : TileColors | undefined {
         if (this.tiles.length == 0) {
-        return undefined;
+            return undefined;
         }
         return this.tiles.shift();
     }
     remove(idx : number) : void {
         if (idx < this.tiles.length) {
-        this.tiles.splice(idx, 1);
+            this.tiles.splice(idx, 1);
         }
     }
     isEmpty() {
         return this.tiles.length == 0;
+    }
+}
+
+export class FixedOrderTileStack {
+    numberShown : number;
+    slots : TileColors[];
+    tileStack : TileStack;
+
+    constructor(tileStack : TileStack, numberShown : number) {
+        this.tileStack = tileStack;
+        this.numberShown = numberShown;
+        this.slots = [];
+        this.updateSlots();
+    }
+    updateSlots() {
+        for (let i=0; i<this.numberShown; i++) {
+            if (!this.slots[i]) {
+                this.slots[i] = this.tileStack.pop();
+            }
+        }
+    }
+    take(idx : number) {
+        this.slots[idx] = null;
+        this.updateSlots();
+    }
+    isEmpty() {
+        for (const slot of this.slots) {
+            if (slot) return false;
+        }
+        return this.tileStack.isEmpty();
     }
 }

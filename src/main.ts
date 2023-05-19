@@ -1,5 +1,5 @@
 import { DEBUG } from './settings.js';
-import { MainGridDisplay } from './ui/GridDisplay.js';
+import { GridDisplay, MainGridDisplay } from './ui/GridDisplay.js';
 import { Grid } from './grid/Grid.js';
 import { TileStackDisplay } from './ui/TileStackDisplay.js';
 import { TileStack } from './game/TileStack.js';
@@ -7,6 +7,7 @@ import { GridType, GridTypes } from './grid/GridType.js';
 
 import type { DragEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
+import { Tile } from './grid/Tile.js';
 
 
 export { GameManager } from './script.js';
@@ -43,6 +44,9 @@ export function start() {
     tile.colors = ['red', 'green', 'blue', 'orange', 'white', 'purple'];
     grid.addTile(tile);
 
+    grid.updateFrontier();
+
+    /*
     let nb : Tile;
     for (const neighbor of grid.getOrAddTileNeighbors(tile)) {
         neighbor.colors = ['grey', 'grey', 'grey', 'grey', 'grey', 'grey'];
@@ -68,10 +72,14 @@ export function start() {
         neighbor.colors = ['red', 'red', 'orange', 'orange', 'orange', 'orange'];
         nb = neighbor;
     }
+    */
 
 
-    for (const tileDisplay of gridDisplay.tileDisplays) {
-        tileDisplay.makeDropzone();
-    }
     tileStackDisplay.makeDraggable(gridDisplay);
+    gridDisplay.makeDroppable((target : Tile, source : Tile) => {
+        target.colors = source.colors;
+        grid.updateFrontier();
+        tileStackDisplay.remove(source);
+        return true;
+    });
 }

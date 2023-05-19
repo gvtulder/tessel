@@ -32,6 +32,11 @@ export abstract class Tile {
 
     abstract findTriangles() : Triangle[];
 
+    rotateTile() {
+        const oldColors = this.colors;
+        this.colors = [oldColors[oldColors.length - 1], ...oldColors.slice(0, -1)];
+    }
+
     get colors(): TileColors {
         return this.triangles.map((t) => t.color);
     }
@@ -40,6 +45,10 @@ export abstract class Tile {
         for (let i = 0; i < this.triangles.length; i++) {
             this.triangles[i].color = colors ? colors[i] : null;
         }
+    }
+
+    isPlaceholder() {
+        return this.triangles[0].color == null;
     }
 
     computeOutline() {

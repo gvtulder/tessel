@@ -1,4 +1,4 @@
-import { SCALE, DEBUG } from '../settings.js';
+import { SCALE, DEBUG, PLACEHOLDER } from '../settings.js';
 import { Triangle } from "../grid/Triangle.js";
 
 export class TriangleDisplay {
@@ -64,7 +64,7 @@ export class TriangleDisplay {
     }
 
     updateColor() {
-        const color = this.triangle.color || 'transparent';
+        const color = this.triangle.color || PLACEHOLDER;
         this.triangleElement.setAttribute('fill', color);
     }
 }

@@ -58,14 +58,7 @@ export class Game extends EventTarget {
             this.grid.updateFrontier();
 
             // compute scores
-            const shapes = Scorer.computeScores(this.grid, target);
-            if (shapes.length > 0) {
-                console.log('Scorer shapes', shapes);
-                const points = shapes.map((s) => s.points).reduce((a, b) => (a + b));
-                console.log('Points', points);
-
-                this.dispatchEvent(new GameEvent('score', this, shapes));
-            }
+            this.computeScores(target);
 
             return true;
         } else {
@@ -74,7 +67,27 @@ export class Game extends EventTarget {
         }
     }
 
+    placeFromList(tiles : []) {
+        for (const tileDef of tiles) {
+            const tile = new this.gridType.createTile(this.grid, tileDef[0], tileDef[1]);
+            tile.colors = tileDef[2];
+            this.grid.addTile(tile);
+        }
+        this.grid.updateFrontier();
+    }
+
     checkFit(target : Tile, orientedColors : OrientedColors) : boolean {
         return target.checkFitOrientedColors(orientedColors);
+    }
+
+    computeScores(target : Tile) {
+        const shapes = Scorer.computeScores(this.grid, target);
+        if (shapes.length > 0) {
+            console.log('Scorer shapes', shapes);
+            const points = shapes.map((s) => s.points).reduce((a, b) => (a + b));
+            console.log('Points', points);
+
+            this.dispatchEvent(new GameEvent('score', this, shapes));
+        }
     }
 }

@@ -50,9 +50,11 @@ export class Scorer {
                     for (const neighbor of grid.getTriangleNeighbors(triangle, true)) {
                         if (!neighbor || !neighbor.color) {
                             shape.finished = false;
-                        } else if (!visited.has(neighbor) && neighbor.color === color) {
-                            queue.push(neighbor);
-                            visited.add(neighbor);
+                        } else if (neighbor.color === color) {
+                            if (!visited.has(neighbor)) {
+                                queue.push(neighbor);
+                                visited.add(neighbor);
+                            }
                             edgesInShape.push({ from: triangle, to: neighbor });
                         }
                     }

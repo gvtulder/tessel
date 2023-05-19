@@ -2,12 +2,27 @@ import { TileColors } from "../grid/Grid.js";
 import { shuffle } from "../utils.js";
 
 
-const DummyTiles : TileColors[] = [
+const DummyTiles2 : TileColors[] = [
     ['red', 'blue', 'green', 'purple', 'orange', 'black'],
     ['red', 'red', 'green', 'white', 'blue', 'black'],
     ['blue', 'blue', 'green', 'red', 'black', 'black'],
     ['blue', 'red', 'blue', 'blue', 'red', 'blue'],
     ['white', 'orange', 'green', 'red', 'black', 'black'],
+    ['black', 'black', 'black', 'black', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+];
+const DummyTiles : TileColors[] = [
+    ['black', 'black', 'black', 'black', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
+    ['red', 'red', 'red', 'red', 'black', 'black'],
 ];
 
 export class TileStack {

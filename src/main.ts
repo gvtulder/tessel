@@ -94,6 +94,21 @@ export function start() {
         tilesShownOnStack: 3,
     });
 
+    const saved = [
+        [0,0,["red","green","blue","orange","white","purple"]],
+        [0,-2,["black","red","red","red","red","black"]],
+        [0,-3,["red","black","black","red","red","red"]],
+        [1,-4,["black","black","black","black","black","black"]],
+        [0,-5,["red","black","black","red","red","red"]],
+        [1,-2,["black","red","red","red","red","black"]],
+        [1,-3,["black","red","red","red","red","black"]],
+        [1,-6,["red","red","red","black","black","red"]],
+    //  [1,-5,["red","red","red","black","black","red"]]
+    ];
+    for (const colors of saved) {
+        game.placeFromList(saved);
+    }
+
     const gameDisplay = new GameDisplay(game);
     document.body.appendChild(gameDisplay.element);
 }

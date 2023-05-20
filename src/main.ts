@@ -88,7 +88,9 @@ function startDebug() {
 
 export function start() {
     // const game = new Game(SaveGames.HexDebug_BlackRed);
-    const game = new Game(SaveGames.SquareDefault);
+    // const game = new Game(SaveGames.SquareDefault);
+    // const game = new Game(SaveGames.HexDefault);
+    const game = new Game(SaveGames.CubeDefault);
 
     const gameDisplay = new GameDisplay(game);
     document.body.appendChild(gameDisplay.element);

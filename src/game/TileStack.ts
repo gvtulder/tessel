@@ -30,6 +30,22 @@ export class TileStack {
         return () => new TileStack(tiles);
     }
 
+    static factoryRepeat(repeats : number, innerFactory : TileStackFactory) : TileStackFactory {
+        return () => {
+            const tileStack = innerFactory();
+            tileStack.tiles = tileStack.tiles.map((tile) => {
+                const repeatedTile : TileColors = []
+                for (const color of tile) {
+                    for (let i=0; i<repeats; i++) {
+                        repeatedTile.push(color);
+                    }
+                }
+                return repeatedTile;
+            });
+            return tileStack;
+        }
+    }
+
     static factoryPermute(colors : TileColors, numTriangles : number) : TileStackFactory {
         return () => {
             const numColors = colors.length;
@@ -57,6 +73,8 @@ export class TileStack {
             for (let c=0; c<maxColor; c++) {
                 uniqueCs.add(computeEqualColors(c)[0]);
             }
+
+            console.log(`Generated ${uniqueCs.size} tiles`);
 
             return new TileStack([...uniqueCs.values()].map((c) => {
                 return cToComponents(c).map((s) => colors[parseInt(s, numColors)]);

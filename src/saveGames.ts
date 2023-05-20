@@ -51,3 +51,19 @@ export const SquareDefault : GameSettings = {
     tilesShownOnStack: 3,
     newTileStack : TileStack.factoryPermute(['red','black','blue','white'], 4),
 }
+
+export const HexDefault : GameSettings = {
+    gridType : GridTypes['hex'],
+    initialTile: ['red','black','blue','white','orange','purple'],
+    tilesShownOnStack: 3,
+    newTileStack : TileStack.factoryPermute(
+        ['red','black','blue','white','orange','purple'], 4),
+}
+
+export const CubeDefault : GameSettings = {
+    gridType : GridTypes['hex'],
+    initialTile: ['red','red','black','black','blue','blue'],
+    tilesShownOnStack: 3,
+    newTileStack : TileStack.factoryRepeat(2,
+        TileStack.factoryPermute(['red','black','blue','white'], 3)),
+}

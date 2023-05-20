@@ -62,6 +62,7 @@ export class Game extends EventTarget {
             const tile = new this.gridType.createTile(this.grid, t.x, t.y);
             tile.colors = t.colors;
             this.grid.addTile(tile);
+            this.tileStack.remove(t.colors);
         }
 
         this.grid.updateFrontier();

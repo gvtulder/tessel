@@ -160,7 +160,7 @@ svg .tile-segments {
   stroke: #ddd;
 }
 
-.tileStackDisplay {
+.controlbar {
   position: fixed;
   right: 0;
   width: 120px;
@@ -179,6 +179,15 @@ svg .tile-segments {
 .tileStackDisplay .tileOnStack.dragging {
   z-index: 100;
   transition: none;
+}
+
+.scoreDisplay {
+  margin: 10px;
+  padding: 10px 0 10px 0;
+  background: #9acd32;
+  border-radius: 10px;
+  font-size: 25px;
+  text-align: center;
 }
 
 

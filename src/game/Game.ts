@@ -29,6 +29,8 @@ export class Game extends EventTarget {
     grid : Grid;
     tileStack : FixedOrderTileStack;
 
+    points : number;
+
     constructor(settings : GameSettings) {
         super();
 
@@ -39,6 +41,8 @@ export class Game extends EventTarget {
     }
 
     setup() {
+        this.points = 0;
+
         this.grid = new Grid(this.gridType);
         const tileStack = new TileStack();
         this.tileStack = new FixedOrderTileStack(tileStack, this.settings.tilesShownOnStack);
@@ -83,9 +87,8 @@ export class Game extends EventTarget {
     computeScores(target : Tile) {
         const shapes = Scorer.computeScores(this.grid, target);
         if (shapes.length > 0) {
-            console.log('Scorer shapes', shapes);
             const points = shapes.map((s) => s.points).reduce((a, b) => (a + b));
-            console.log('Points', points);
+            this.points += points;
 
             this.dispatchEvent(new GameEvent('score', this, shapes));
         }

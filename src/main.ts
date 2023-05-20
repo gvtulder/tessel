@@ -7,6 +7,7 @@ import { GridType, GridTypes } from './grid/GridType.js';
 import { OrientedColors, Tile } from './grid/Tile.js';
 import { Game } from './game/Game.js';
 import { GameDisplay } from './ui/GameDisplay.js';
+import * as SaveGames from './saveGames.js';
 
 
 export { GameManager } from './script.js';
@@ -31,7 +32,7 @@ function startDebug() {
     const gridType = (GridTypes[['hex', 'square', 'triangle'][DEBUG.SELECT_GRID]] as GridType);
 
     const grid = new Grid(gridType);
-    const tileStack = new TileStack();
+    const tileStack = SaveGames.HexDebug.newTileStack();
     const fixedOrderTileStack = new FixedOrderTileStack(tileStack, 3);
 
     const gridDisplay = new MainGridDisplay(grid);
@@ -86,29 +87,8 @@ function startDebug() {
 }
 
 export function start() {
-    const gridType = (GridTypes[['hex', 'square', 'triangle'][DEBUG.SELECT_GRID]] as GridType);
-
-    const game = new Game({
-        gridType: gridType,
-        initialTile: ['red', 'green', 'blue', 'orange', 'white', 'purple'],
-        tilesShownOnStack: 3,
-    });
-
-    let saved = [
-        [0,0,["red","green","blue","orange","white","purple"]],
-        [0,-2,["black","red","red","red","red","black"]],
-        [0,-3,["red","black","black","red","red","red"]],
-        [1,-4,["black","black","black","black","black","black"]],
-        [0,-5,["red","black","black","red","red","red"]],
-        [1,-2,["black","red","red","red","red","black"]],
-        [1,-3,["black","red","red","red","red","black"]],
-        [1,-6,["red","red","red","black","black","red"]],
-    //  [1,-5,["red","red","red","black","black","red"]]
-    ];
-    // saved = [];
-    for (const colors of saved) {
-        game.placeFromList(saved);
-    }
+    // const game = new Game(SaveGames.HexDebug_BlackRed);
+    const game = new Game(SaveGames.SquareDefault);
 
     const gameDisplay = new GameDisplay(game);
     document.body.appendChild(gameDisplay.element);

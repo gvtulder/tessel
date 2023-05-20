@@ -180,3 +180,27 @@ svg .tile-segments {
   z-index: 100;
   transition: none;
 }
+
+
+.svg-scoreOverlay-mask.disabled {
+  display: none;
+}
+.svg-scoreOverlay-mask.enabled {
+  animation-duration: 1s;
+  animation-name: scoreOverlay-opacity;
+  opacity: 0;
+}
+@keyframes scoreOverlay-opacity {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.3;
+  }
+  70% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}

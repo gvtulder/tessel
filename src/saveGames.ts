@@ -1,6 +1,6 @@
-import { TileStack } from "./game/TileStack.js";
 import { GameSettings } from "./game/Game.js";
 import { GridTypes } from "./grid/GridType.js";
+import { TileGenerators } from "./game/TileGenerator.js";
 
 
 // a few dummy hex tiles
@@ -8,7 +8,7 @@ export const HexDebug : GameSettings = {
     gridType : GridTypes['hex'],
     initialTile: ['red', 'green', 'blue', 'orange', 'white', 'purple'],
     tilesShownOnStack: 3,
-    newTileStack : TileStack.factoryFromArray([
+    tileGenerator : TileGenerators.fromList([
         ['red', 'blue', 'green', 'purple', 'orange', 'black'],
         ['red', 'red', 'green', 'white', 'blue', 'black'],
         ['blue', 'blue', 'green', 'red', 'black', 'black'],
@@ -23,7 +23,7 @@ export const HexDebug : GameSettings = {
 export const HexDebug_BlackRed : GameSettings = {
     gridType : GridTypes['hex'],
     tilesShownOnStack: 3,
-    newTileStack : TileStack.factoryFromArray([
+    tileGenerator : TileGenerators.fromList([
         ['black', 'black', 'black', 'black', 'black', 'black'],
         ['red', 'red', 'red', 'red', 'black', 'black'],
         ['red', 'red', 'red', 'red', 'black', 'black'],
@@ -49,20 +49,19 @@ export const SquareDefault : GameSettings = {
     gridType : GridTypes['square'],
     initialTile: ['red','black','blue','white'],
     tilesShownOnStack: 3,
-    newTileStack : TileStack.factoryPermute(['red','black','blue','white'], 4),
+    tileGenerator : TileGenerators.permutations(['red','black','blue','white'], 4),
 }
 
 export const HexDefault : GameSettings = {
     gridType : GridTypes['hex'],
     initialTile: ['red','black','blue','white','orange','purple'],
     tilesShownOnStack: 3,
-    newTileStack : TileStack.factoryPermute(
-        ['red','black','blue','white','orange','purple'], 4),
+    tileGenerator : TileGenerators.permutations(['red','black','blue','white','orange','purple'], 4),
 }
 
 export const CubeDefault : GameSettings = {
     gridType : GridTypes['cube'],
     initialTile: ['red','black','blue'],
     tilesShownOnStack: 3,
-    newTileStack : TileStack.factoryPermute(['red','black','blue','white'], 3),
+    tileGenerator : TileGenerators.permutations(['red','black','blue','white'], 3),
 }

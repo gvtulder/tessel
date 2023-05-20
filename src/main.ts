@@ -32,7 +32,7 @@ function startDebug() {
     const gridType = (GridTypes[['hex', 'square', 'triangle'][DEBUG.SELECT_GRID]] as GridType);
 
     const grid = new Grid(gridType);
-    const tileStack = SaveGames.HexDebug.newTileStack();
+    const tileStack = new TileStack(SaveGames.HexDebug.tileGenerator());
     const fixedOrderTileStack = new FixedOrderTileStack(tileStack, 3);
 
     const gridDisplay = new MainGridDisplay(grid);

@@ -1,8 +1,9 @@
 import { Grid, TileColors } from "src/grid/Grid.js";
-import { FixedOrderTileStack, TileStack, TileStackFactory } from "./TileStack.js";
+import { FixedOrderTileStack, TileStack } from "./TileStack.js";
 import { GridType } from "src/grid/GridType.js";
 import { OrientedColors, Tile } from "src/grid/Tile.js";
 import { Scorer, Shape } from "src/grid/Scorer.js";
+import { TileGenerator } from "./TileGenerator.js";
 
 
 export type GameSettings = {
@@ -10,7 +11,7 @@ export type GameSettings = {
     tilesShownOnStack : number,
     initialTile? : TileColors,
     initialTiles? : { colors: TileColors, x: number, y: number }[],
-    newTileStack : TileStackFactory,
+    tileGenerator : TileGenerator,
 }
 
 export class GameEvent extends Event {
@@ -46,7 +47,7 @@ export class Game extends EventTarget {
         this.points = 0;
 
         this.grid = new Grid(this.gridType);
-        const tileStack = this.settings.newTileStack();
+        const tileStack = new TileStack(this.settings.tileGenerator());
         this.tileStack = new FixedOrderTileStack(tileStack, this.settings.tilesShownOnStack);
 
         const initialTiles : GameSettings['initialTiles'] = [];

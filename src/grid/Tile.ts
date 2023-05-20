@@ -42,15 +42,23 @@ export abstract class Tile {
     abstract get rotationAngles() : number[];
     abstract findTriangles() : Triangle[];
 
+    protected mapColorsToTriangles(colors : TileColors) : TileColors {
+        return colors;
+    }
+    protected mapColorsFromTriangles(colors : TileColors) : TileColors {
+        return colors;
+    }
+
     get orientation() : string {
         return 'default';
     }
 
     get colors(): TileColors {
-        return this.triangles.map((t) => t.color);
+        return this.mapColorsFromTriangles(this.triangles.map((t) => t.color));
     }
 
     set colors(colors: TileColors) {
+        colors = this.mapColorsToTriangles(colors);
         for (let i = 0; i < this.triangles.length; i++) {
             this.triangles[i].color = colors ? colors[i] : null;
         }
@@ -70,7 +78,8 @@ export abstract class Tile {
     }
 
     checkFitOrientedColors(orientedColors : OrientedColors) : boolean {
-        const colors = this.computeFromOrientedColors(orientedColors);
+        let colors = this.computeFromOrientedColors(orientedColors);
+        colors = this.mapColorsToTriangles(colors);
         for (let i=0; i<this.triangles.length; i++) {
             const triangle = this.triangles[i];
             const neighbors = this.grid.getTriangleNeighbors(triangle);

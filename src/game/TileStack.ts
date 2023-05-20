@@ -52,7 +52,7 @@ export class TileStack {
 
             const cToComponents = (c : number) => {
                 const s = c.toString(numColors).split('');
-                while (s.length < numColors) s.unshift('0');
+                while (s.length < numTriangles) s.unshift('0');
                 return s;
             };
             const componentsToC = (components : string[]) => parseInt(components.join(''), numColors);

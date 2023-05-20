@@ -1,0 +1,19 @@
+import { TileColors } from "./Grid.js";
+import { HexTile } from "./HexTile.js";
+
+export class CubeTile extends HexTile {
+    get rotationAngles() {
+        return [0, 120, 240];
+    }
+
+    protected mapColorsToTriangles(colors : TileColors) : TileColors {
+        return [
+            colors[0], colors[0],
+            colors[1], colors[1],
+            colors[2], colors[2],
+        ];
+    }
+    protected mapColorsFromTriangles(colors : TileColors) : TileColors {
+        return [ colors[0], colors[2], colors[4] ];
+    }
+}

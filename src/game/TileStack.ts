@@ -34,6 +34,9 @@ export class TileStack {
         }
         return false;
     }
+    get tilesLeft() : number {
+        return this.tiles.length;
+    }
     isEmpty() {
         return this.tiles.length == 0;
     }
@@ -79,6 +82,14 @@ export class FixedOrderTileStack extends EventTarget {
             }
         }
         return this.tileStack.removeColors(colors);
+    }
+
+    get tilesLeft() : number {
+        let n = this.tileStack.tilesLeft;
+        for (const slot of this.slots) {
+            if (slot) n++;
+        }
+        return n;
     }
 
     isEmpty() {

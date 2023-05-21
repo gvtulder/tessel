@@ -14,6 +14,7 @@ export class TileStackDisplay {
     tileStack : FixedOrderTileStack;
     tileDisplays : SingleTileOnStackDisplay[];
     element : HTMLDivElement;
+    counter : HTMLSpanElement;
 
     constructor(gridType : GridType, tileStack : FixedOrderTileStack) {
         this.gridType = gridType;
@@ -31,6 +32,10 @@ export class TileStackDisplay {
         for (let i=0; i<this.tileStack.numberShown; i++) {
             const color = this.tileStack.slots[i];
             this.tileDisplays[i].tile.colors = color ? color : null;
+        }
+        const n = this.tileStack.tilesLeft;
+        if (n > 0) {
+            this.counter.innerHTML = `+ ${Math.max(0, n)} tiles`;
         }
     }
 
@@ -55,6 +60,14 @@ export class TileStackDisplay {
             this.element.appendChild(tileDisplay.element);
             this.tileDisplays.push(tileDisplay);
         }
+
+        const counterDiv = document.createElement('div');
+        div.appendChild(counterDiv);
+        counterDiv.className = 'tileStackDisplay-counter';
+
+        const counter = document.createElement('span');
+        counterDiv.appendChild(counter);
+        this.counter = counterDiv;
     }
 
     makeDraggable(mainGridDisplay : MainGridDisplay) {

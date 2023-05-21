@@ -3,7 +3,7 @@ import { SCALE } from 'src/settings.js';
 import { GridDisplay } from './GridDisplay.js';
 import { Grid } from "src/grid/Grid.js";
 import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
-import { ScoreOverlayDisplay_Outline } from "./ScoreOverlayDisplay_Outline.js";
+import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
 
 
 
@@ -13,7 +13,7 @@ export class MainGridDisplay extends GridDisplay {
     constructor(grid: Grid) {
         super(grid);
 
-        this.scoreOverlayDisplay = new ScoreOverlayDisplay_Outline();
+        this.scoreOverlayDisplay = new ScoreOverlayDisplay_Cutout();
         this.svgGrid.appendChild(this.scoreOverlayDisplay.element);
     }
 

@@ -94,9 +94,11 @@ class SingleTileOnStackDisplay {
     rotatable : HTMLDivElement;
     draggable : Interactable;
     rotation : number;
+    angle : number;
 
     constructor(indexOnStack : number, gridType : GridType) {
         this.rotation = 0;
+        this.angle = 0;
 
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(gridType);
@@ -126,8 +128,11 @@ class SingleTileOnStackDisplay {
 
     rotateTile() {
         const angles = this.tile.rotationAngles;
+        const oldAngle = angles[this.rotation];
         this.rotation = (this.rotation + 1) % angles.length;
-        this.rotatable.style.transform = `rotate(${angles[this.rotation]}deg)`;
+        const angleDiff = (360 + angles[this.rotation] - oldAngle) % 360;
+        this.angle += angleDiff;
+        this.rotatable.style.transform = `rotate(${this.angle}deg)`;
     }
 
     getOrientedColors() : OrientedColors {

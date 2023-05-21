@@ -181,6 +181,10 @@ svg .tile-segments {
   transition: none;
 }
 
+.tileOnStack-rotatable {
+  transition: transform 100ms ease;
+}
+
 .scoreDisplay {
   margin: 10px;
   padding: 10px 0 10px 0;

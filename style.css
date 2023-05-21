@@ -217,3 +217,56 @@ svg .tile-segments {
     opacity: 0;
   }
 }
+
+.svg-scoreOverlay {
+  transition-property: opacity;
+  transition-duration: 300ms;
+  opacity: 0;
+}
+.svg-scoreOverlay.disabled {
+  display: none;
+}
+.svg-scoreOverlay.hiding {
+  opacity: 0;
+  transition-duration: 500ms;
+  transition-delay: 500ms;
+}
+.svg-scoreOverlay.enabled {
+  opacity: 1;
+}
+.svg-scoreOverlay.enabled .scoreOverlay-outlineFG g {
+  stroke-dasharray: 6000 6000;
+  stroke-dashoffset: -6000;
+
+  animation-name: scoreOverlay-outlineFG-anim;
+  animation-duration: 2s;
+  animation-delay: 200ms;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+@keyframes scoreOverlay-outlineFG-anim {
+  0% {
+    stroke-dashoffset: -6000;
+  }
+  100% {
+    stroke-dashoffset: -12000;
+  }
+}
+.svg-scoreOverlay.hiding .scoreOverlay-outlineFG g {
+  stroke-dasharray: 6000 6000;
+  stroke-dasharray: -12000;
+
+  animation-name: scoreOverlay-outlineFG-anim-reverse;
+  animation-duration: 1s;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+@keyframes scoreOverlay-outlineFG-anim-reverse {
+  0% {
+    stroke-dashoffset: -12000;
+  }
+  100% {
+    stroke-dashoffset: -18000;
+  }
+}
+

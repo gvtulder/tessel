@@ -13,7 +13,15 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     outlineBG : SVGElement;
     outlineBGGroup : ReplacableGroup;
 
+    hideTimeout : number;
+
     build() {
+        this.element.classList.add('disabled');
+
+        this.element.addEventListener('transitionend', (evt) => {
+            this.element.classList.replace('hiding', 'disabled');
+        });
+
         // background (everything not select gray)
         const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         bg.setAttribute('mask', 'url(#scoreOverlay-bgmask');
@@ -77,6 +85,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
         // green outline around the shape
         const outlineFG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        outlineFG.setAttribute('class', 'scoreOverlay-outlineFG');
         outlineFG.setAttribute('stroke', Color.main);
         outlineFG.setAttribute('stroke-width', '5px');
         outlineFG.setAttribute('fill', 'transparent');
@@ -86,27 +95,46 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     }
 
     showScores(shapes : Shape[]) {
-        const bgMaskGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        const shadowMaskGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        const outlineBGGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        const outlineFGGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const groups = [
+            this.bgMaskGroup,
+            this.shadowMaskGroup,
+            this.outlineBGGroup,
+            this.outlineFGGroup,
+        ].map((g) => ({ group: g, elements: [] as SVGElement[] }));
 
         for (const shape of shapes) {
             const boundary : Vertex[] = this.computeOutline(shape);
             const pathComponents = (boundary.reverse().map((v) => `${v.x * SCALE},${v.y * SCALE}`));
             const roundPathString = roundPathCorners('M ' + pathComponents.join(' L ') + ' Z', 10, false);
 
-            for (const group of [bgMaskGroup, shadowMaskGroup, outlineBGGroup, outlineFGGroup]) {
+            for (const g of groups) {
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 path.setAttribute('d', roundPathString);
-                group.appendChild(path);
+                g.elements.push(path);
             }
         }
 
-        this.bgMaskGroup.contents = [bgMaskGroup];
-        this.shadowMaskGroup.contents = [shadowMaskGroup];
-        this.outlineBGGroup.contents = [outlineBGGroup];
-        this.outlineFGGroup.contents = [outlineFGGroup];
+        for (const g of groups) {
+            g.group.contents = g.elements;
+        }
+
+        this.element.classList.remove('disabled');
+        this.element.classList.remove('hiding');
+        this.element.classList.add('enabled');
+        this.scheduleHide();
+    }
+
+    scheduleHide() {
+        if (this.hideTimeout) window.clearTimeout(this.hideTimeout);
+        this.hideTimeout = window.setTimeout(() => {
+            this.hide();
+        }, 5000);
+    }
+
+    hide() {
+        if (this.hideTimeout) window.clearTimeout(this.hideTimeout);
+        this.element.classList.remove('enabled');
+        this.element.classList.add('hiding');
     }
 }
 
@@ -130,5 +158,42 @@ class ReplacableGroup {
             this.parentNode.appendChild(group);
         }
         this.group = group;
+    }
+}
+
+
+class AnimatedPath {
+    pathElement : SVGPathElement;
+    pathComponents : string[];
+    curPath : string[];
+    finished : boolean;
+
+    constructor(pathElement : SVGPathElement, pathComponents : string[]) {
+        this.pathElement = pathElement;
+        pathElement.setAttribute('d', '');
+
+        this.pathComponents = [...pathComponents];
+        this.curPath = [];
+        this.finished = false;
+    }
+
+    animate() {
+        const interval = window.setInterval(() => {
+            if (!this.step()) {
+                window.clearInterval(interval);
+            }
+        }, 50);
+    }
+
+    step() : boolean {
+        if (this.finished) return false;
+        if (this.pathComponents.length > 0) {
+            this.curPath.push(this.pathComponents.pop());
+        } else {
+            this.finished = true;
+        }
+        const roundPath = roundPathCorners('M ' + this.curPath.join(' L ') + (this.finished ? ' Z' : ''), 10, false);
+        this.pathElement.setAttribute('d', roundPath);
+        return true;
     }
 }

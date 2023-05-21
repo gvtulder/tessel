@@ -22,6 +22,10 @@ export abstract class ScoreOverlayDisplay {
     abstract build();
     abstract showScores(shapes : Shape[]);
 
+    hide() {
+        return;
+    }
+
     protected computeOutline(shape : Shape) : Vertex[] {
         type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };
         const edges = new Map<string, Edge[]>();

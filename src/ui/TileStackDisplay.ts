@@ -129,6 +129,7 @@ class SingleTileOnStackDisplay {
 
         this.rotatable.addEventListener('transitionend', () => {
             this.rotatable.classList.remove('animated');
+            this.rotatable.classList.remove('drag-return');
             this.normalizeRotation();
         });
     }

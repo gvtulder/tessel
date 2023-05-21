@@ -131,45 +131,49 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             const meanX = mean(boundary.map((v) => v.x));
             const meanY = mean(boundary.map((v) => v.y));
             const center = [meanX, meanY];
-            let smallestDistance : number = null;
-            let closestPoint : number[] = null;
-            for (const edge of shape.edges) {
-                for (const candidate of [
-                    // center of a triangle
-                    [edge.from.left + edge.from.center[0], edge.from.top + edge.from.center[1]],
-                    // mid-point between two triangles
-                    [(edge.from.left + edge.from.center[0] + edge.to.left + edge.to.center[0]) / 2,
-                     (edge.from.top + edge.from.center[1] + edge.to.top + edge.to.center[1]) / 2],
-                ]) {
-                    const d = dist(center, candidate);
-                    if (closestPoint == null || d < smallestDistance) {
-                        smallestDistance = d;
-                        closestPoint = candidate;
-                    }
+
+            const score = (candidate : [number, number]) => {
+                return dist(candidate, center);
+                return -Math.min(...boundary.map((v) => dist([v.x, v.y], candidate)));
+                return dist(candidate, center);
+                // furthest distance from the edge
+                return -Math.max(...boundary.map((v) => dist([v.x, v.y], candidate)));
+                return dist(candidate, center) - 10 * Math.max(...boundary.map((v) => dist([v.x, v.y], candidate)));
+                return -Math.min(...boundary.map((v) => dist([v.x, v.y], candidate)));
+                return -mean(boundary.map((v) => dist([v.x, v.y], candidate)));
+                return dist(candidate, center);
+                return -Math.max(...boundary.map((v) => dist([v.x, v.y], candidate)));
+                return -Math.min(...boundary.map((v) => dist([v.x, v.y], candidate)));
+            }
+
+            const best = { score: null, point: null as [number, number] };
+            const updateBest = (candidate : [number, number]) => {
+                const d = score(candidate);
+                if (best.point == null || d < best.score) {
+                    best.score = d;
+                    best.point = candidate;
                 }
+                console.log(best, d);
+            }
+
+            for (const edge of shape.edges) {
+                updateBest([edge.from.left + edge.from.center[0], edge.from.top + edge.from.center[1]]);
+                // mid-points between two triangles
+                updateBest([(edge.from.left + edge.from.center[0] + edge.to.left + edge.to.center[0]) / 2,
+                            (edge.from.top + edge.from.center[1] + edge.to.top + edge.to.center[1]) / 2]);
             }
             for (const [vertexId, edges] of outlineResult.edgesPerVertex.entries()) {
                 // point between three triangles of the same color
                 if (edges.length == 12) {
                     const vertex = (edges[0].from.id == vertexId) ? edges[0].from : edges[0].to;
-                    const candidate = [vertex.x, vertex.y];
-                    const d = dist(center, candidate);
-                    if (closestPoint == null || d < smallestDistance) {
-                        smallestDistance = d;
-                        closestPoint = candidate;
-                    }
+                    updateBest([vertex.x, vertex.y]);
                 }
                 // points between two midpoints
                 for (const a of edges) {
                     for (const b of edges) {
                         const midA = [(a.from.x + a.to.x) / 2, (a.from.y + a.to.y) / 2];
                         const midB = [(b.from.x + b.to.x) / 2, (b.from.y + b.to.y) / 2];
-                        const candidate = [(midA[0] + midB[0]) / 2, (midB[1] + midB[1]) / 2];
-                        const d = dist(center, candidate);
-                        if (closestPoint == null || d < smallestDistance) {
-                            smallestDistance = d;
-                            closestPoint = candidate;
-                        }
+                        updateBest([(midA[0] + midB[0]) / 2, (midB[1] + midB[1]) / 2]);
                     }
                 }
             }
@@ -177,8 +181,8 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             // circle with scores
             const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             circle.setAttribute('class', 'points');
-            circle.setAttribute('cx', `${closestPoint[0] * SCALE}`);
-            circle.setAttribute('cy', `${closestPoint[1] * SCALE}`);
+            circle.setAttribute('cx', `${best.point[0] * SCALE}`);
+            circle.setAttribute('cy', `${best.point[1] * SCALE}`);
             circle.setAttribute('r', shape.triangles.size < 3 ? '20' : '25');
             circle.setAttribute('fill', Color.light);
             circle.setAttribute('stroke', Color.dark);
@@ -188,8 +192,8 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
             const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             text.setAttribute('class', 'points');
-            text.setAttribute('x', `${closestPoint[0] * SCALE}`);
-            text.setAttribute('y', `${closestPoint[1] * SCALE + 1}`);
+            text.setAttribute('x', `${best.point[0] * SCALE}`);
+            text.setAttribute('y', `${best.point[1] * SCALE + 1}`);
             text.setAttribute('alignment-baseline', 'middle');
             text.setAttribute('dominant-baseline', 'middle');
             text.setAttribute('text-anchor', 'middle');

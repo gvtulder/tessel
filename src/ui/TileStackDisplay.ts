@@ -128,6 +128,12 @@ class SingleTileOnStackDisplay {
         this.gridDisplay.rescaleGrid();
     }
 
+    resetRotation() {
+        this.rotation = 0;
+        this.angle = 0;
+        this.rotatable.style.transform = `rotate(0deg)`;
+    }
+
     rotateTile() {
         const angles = this.tile.rotationAngles;
         const oldAngle = angles[this.rotation];

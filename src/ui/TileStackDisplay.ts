@@ -153,6 +153,8 @@ class SingleTileOnStackDisplay {
                     context.orientedColors = this.getOrientedColors();
                     console.log(evt.type, evt, evt.target);
                     evt.target.classList.add('dragging');
+
+                    evt.target.style.transformOrigin = `${evt.clientX - evt.rect.left}px ${evt.clientY - evt.rect.top}px`;
                     // TODO
                     // onDragStart(evt);
                 },
@@ -165,6 +167,7 @@ class SingleTileOnStackDisplay {
                     evt.target.classList.remove('dragging');
                     position.x = 0;
                     position.y = 0;
+                    evt.target.style.transformOrigin = 'center';
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
                 },
             }

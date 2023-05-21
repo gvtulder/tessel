@@ -7,11 +7,11 @@ export class CubeTile extends HexTile {
     }
 
     protected mapColorsToTriangles(colors : TileColors) : TileColors {
-        return [
+        return colors ? [
             colors[0], colors[0],
             colors[1], colors[1],
             colors[2], colors[2],
-        ];
+        ] : colors;
     }
     protected mapColorsFromTriangles(colors : TileColors) : TileColors {
         return [ colors[0], colors[2], colors[4] ];

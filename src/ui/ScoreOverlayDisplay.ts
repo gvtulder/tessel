@@ -9,11 +9,14 @@ const Color = {
     dark: '#63851d'
 };
 
+type Vertex = { id: string, x: number, y: number };
+
 export class ScoreOverlayDisplay {
     element : SVGElement;
     group : SVGElement;
+    maskOverlay : SVGElement;
     mask : SVGElement;
-    maskPath : SVGElement;
+    maskPathGroup : SVGElement;
 
     constructor() {
         this.element = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -46,13 +49,8 @@ export class ScoreOverlayDisplay {
         maskWhite.setAttribute('fill', 'white');
         mask.appendChild(maskWhite);
 
-        const maskPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        maskPath.setAttribute('fill', 'black');
-        mask.appendChild(maskPath);
-
-        this.maskPath = maskPath;
-
-        this.mask = group;
+        this.maskOverlay = group;
+        this.mask = mask;
     }
 
     showScores(shapes : Shape[]) {
@@ -62,75 +60,15 @@ export class ScoreOverlayDisplay {
 
     showScores_outline(shapes : Shape[]) {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const maskPathGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
         for (const shape of shapes) {
-            type Vertex = { id: string, x: number, y: number };
-            type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };
-            const edges = new Map<string, Edge[]>();
-            const edgesPerVertex = new Map<string, Edge[]>();
-            let leftMostVertex : Vertex;
-
-            for (const triangle of shape.triangles.values()) {
-                // rounding
-                const verts : Vertex[] = triangle.points.map((p) => {
-                    p = [p[0] + triangle.left, p[1] + triangle.top];
-                    return {
-                        id: `${Math.floor(p[0] * 100)},${Math.floor(p[1] * 100)}`,
-                        x: p[0], y: p[1]
-                    };
-                }).sort((a, b) => (a.x == b.x) ? (a.y - b.y) : (a.x - b.x));
-
-                for (const ab of [[0, 1], [0, 2], [1, 2]]) {
-                    const edge : Edge = {
-                        id: `${verts[ab[0]].id} ${verts[ab[1]].id}`,
-                        from: verts[ab[0]],
-                        to: verts[ab[1]],
-                        triangle: triangle,
-                    };
-                    if (!edges.has(edge.id)) {
-                        edges.set(edge.id, []);
-                    }
-                    edges.get(edge.id).push(edge);
-
-                    [edge.from, edge.to].forEach((e) => {
-                        if (!edgesPerVertex.has(e.id)) {
-                            edgesPerVertex.set(e.id, []);
-                        }
-                        edgesPerVertex.get(e.id).push(edge);
-                        if (!leftMostVertex || leftMostVertex.x > e.x) {
-                            leftMostVertex = e;
-                        }
-                    });
-                }
-            }
-
-            // follow along edges
-            const boundary : Vertex[] = [];
-            let prev : Vertex = null;
-            let cur : Vertex = leftMostVertex;
-            let i = 0;
-            while (i < 100 && (prev == null || cur.id != leftMostVertex.id)) {
-                i++;
-                const uniqueEdges = edgesPerVertex.get(cur.id).filter((e) => (
-                    (prev == null || (e.from.id != prev.id && e.to.id != prev.id)) && edges.get(e.id).length == 1
-                ));
-
-                // should have two unique edges
-                // console.log(uniqueEdges);
-                const nextEdge = uniqueEdges[0];
-                console.log(i, nextEdge);
-                const nextVertex = (nextEdge.to.id == cur.id) ? nextEdge.from : nextEdge.to;
-                boundary.push(cur);
-                prev = cur;
-                cur = nextVertex;
-            }
-
-            console.log(boundary);
-
+            const boundary : Vertex[] = this.computeOutline(shape);
 
             const pathString = 'M ' + (boundary.reverse().map((v) => `${v.x * SCALE},${v.y * SCALE}`)).join(' ') + ' Z';
             console.log(pathString);
 
+            // outline
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             path.setAttribute('d', pathString);
             path.setAttribute('fill', 'transparent');
@@ -139,15 +77,11 @@ export class ScoreOverlayDisplay {
             path.setAttribute('stroke-linecap', 'round');
             group.appendChild(path);
 
-            this.maskPath.setAttribute('d', pathString);
-
-
-            // make visible
-            this.mask.classList.remove('disabled');
-            this.mask.classList.add('enabled');
-            this.mask.addEventListener('animationend', () => {
-                this.mask.classList.replace('enabled', 'disabled');
-            });
+            // add mask
+            const maskPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            maskPath.setAttribute('d', pathString);
+            maskPath.setAttribute('fill', 'black');
+            maskPathGroup.appendChild(maskPath);
 
             // animate path
             const pathComponents = (boundary.reverse().map((v) => `${v.x * SCALE},${v.y * SCALE}`));
@@ -167,11 +101,87 @@ export class ScoreOverlayDisplay {
             }, 50);
         }
 
+        if (this.maskPathGroup) {
+            this.mask.removeChild(this.maskPathGroup);
+        }
+        this.mask.appendChild(maskPathGroup);
+        this.maskPathGroup = maskPathGroup;
+        this.mask.classList.remove('disabled');
+        this.mask.classList.add('enabled');
+        this.mask.addEventListener('animationend', () => {
+            this.mask.classList.replace('enabled', 'disabled');
+        });
+
         if (this.group) {
             this.element.removeChild(this.group);
         }
         this.element.appendChild(group);
         this.group = group;
+    }
+
+    private computeOutline(shape : Shape) : Vertex[] {
+        type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };
+        const edges = new Map<string, Edge[]>();
+        const edgesPerVertex = new Map<string, Edge[]>();
+        let leftMostVertex : Vertex;
+
+        for (const triangle of shape.triangles.values()) {
+            // rounding
+            const verts : Vertex[] = triangle.points.map((p) => {
+                p = [p[0] + triangle.left, p[1] + triangle.top];
+                return {
+                    id: `${Math.floor(p[0] * 100)},${Math.floor(p[1] * 100)}`,
+                    x: p[0], y: p[1]
+                };
+            }).sort((a, b) => (a.x == b.x) ? (a.y - b.y) : (a.x - b.x));
+
+            for (const ab of [[0, 1], [0, 2], [1, 2]]) {
+                const edge : Edge = {
+                    id: `${verts[ab[0]].id} ${verts[ab[1]].id}`,
+                    from: verts[ab[0]],
+                    to: verts[ab[1]],
+                    triangle: triangle,
+                };
+                if (!edges.has(edge.id)) {
+                    edges.set(edge.id, []);
+                }
+                edges.get(edge.id).push(edge);
+
+                [edge.from, edge.to].forEach((e) => {
+                    if (!edgesPerVertex.has(e.id)) {
+                        edgesPerVertex.set(e.id, []);
+                    }
+                    edgesPerVertex.get(e.id).push(edge);
+                    if (!leftMostVertex || leftMostVertex.x > e.x) {
+                        leftMostVertex = e;
+                    }
+                });
+            }
+        }
+
+        // follow along edges
+        const boundary : Vertex[] = [];
+        let prev : Vertex = null;
+        let cur : Vertex = leftMostVertex;
+        let i = 0;
+        while (i < 100 && (prev == null || cur.id != leftMostVertex.id)) {
+            i++;
+            const uniqueEdges = edgesPerVertex.get(cur.id).filter((e) => (
+                (prev == null || (e.from.id != prev.id && e.to.id != prev.id)) && edges.get(e.id).length == 1
+            ));
+
+            // should have two unique edges
+            // console.log(uniqueEdges);
+            const nextEdge = uniqueEdges[0];
+            console.log(i, nextEdge);
+            const nextVertex = (nextEdge.to.id == cur.id) ? nextEdge.from : nextEdge.to;
+            boundary.push(cur);
+            prev = cur;
+            cur = nextVertex;
+        }
+
+        console.log(boundary);
+        return boundary;
     }
 
     showScores_circles(shapes : Shape[]) {

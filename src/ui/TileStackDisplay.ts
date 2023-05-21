@@ -126,12 +126,11 @@ class SingleTileOnStackDisplay {
         this.rotatable.appendChild(this.gridDisplay.element);
 
         this.gridDisplay.rescaleGrid();
-    }
 
-    resetRotation() {
-        this.rotation = 0;
-        this.angle = 0;
-        this.rotatable.style.transform = `rotate(0deg)`;
+        this.rotatable.addEventListener('transitionend', () => {
+            this.rotatable.classList.remove('animated');
+            this.normalizeRotation();
+        });
     }
 
     rotateTile() {
@@ -141,6 +140,14 @@ class SingleTileOnStackDisplay {
         const angleDiff = (360 + angles[this.rotation] - oldAngle) % 360;
         this.angle += angleDiff;
         this.rotatable.style.transform = `rotate(${this.angle}deg)`;
+        this.rotatable.classList.add('animated');
+    }
+
+    normalizeRotation() {
+        if (this.angle % 360 != this.angle) {
+            this.angle = this.angle % 360;
+            this.rotatable.style.transform = `rotate(${this.angle}deg)`;
+        }
     }
 
     getOrientedColors() : OrientedColors {

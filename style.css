@@ -190,7 +190,7 @@ svg .tile-segments {
   transition-duration: 0ms;
 }
 
-.tileOnStack-rotatable {
+.tileOnStack-rotatable.animated {
   transition: transform 100ms ease;
 }
 

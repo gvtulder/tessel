@@ -60,9 +60,11 @@ lookup.set('SquareDefault', SquareDefault);
 
 export const HexDefault : GameSettings = {
     gridType : GridTypes['hex'],
-    initialTile: ['red','black','blue','white','orange','purple'],
+    // initialTile: ['red','black','blue','white','orange','purple'],
+    initialTile: ['red','black','black','orange','white','white'],
     tilesShownOnStack: 3,
-    tileGenerator : TileGenerators.permutations(['red','black','blue','white','orange','purple'], 4),
+    // tileGenerator : TileGenerators.permutations(['red','black','blue','white','orange','purple'], 6),
+    tileGenerator : TileGenerators.permutations(['red','black','orange','white'], 6),
 }
 lookup.set('HexDefault', HexDefault);
 

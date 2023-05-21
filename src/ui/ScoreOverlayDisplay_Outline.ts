@@ -49,7 +49,7 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
         const maskPathGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
         for (const shape of shapes) {
-            const boundary : Vertex[] = this.computeOutline(shape);
+            const boundary : Vertex[] = this.computeOutline(shape).boundary;
 
             const pathString = 'M ' + (boundary.reverse().map((v) => `${v.x * SCALE},${v.y * SCALE}`)).join(' ') + ' Z';
             console.log(pathString);

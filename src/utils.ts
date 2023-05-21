@@ -22,7 +22,7 @@ export function shuffle<T>(myArray : T[]) {
 
 type Coord = [x: number, y: number];
 
-function mean(numbers : number[]) : number {
+export function mean(numbers : number[]) : number {
   return numbers.reduce((prev, x) => prev + x) / numbers.length;
 }
 
@@ -33,4 +33,12 @@ export function shrinkOutline(points : Coord[], factor : number) : Coord[] {
     (p[0] - originX) * factor + originX,
     (p[1] - originY) * factor + originY,
   ]);
+}
+
+export const dist = (a : number[], b : number[]) => {
+  return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+};
+
+export const midPoint = (a : number[], b : number[]) => {
+  return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 }

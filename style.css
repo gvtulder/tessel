@@ -278,3 +278,54 @@ svg .tile-segments {
     stroke-dashoffset: -18000;
   }
 }
+.svg-scoreOverlay.enabled .points {
+  animation-name: scoreOverlay-points-opacity-anim;
+  animation-duration: 200ms;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+.svg-scoreOverlay.enabled circle.points {
+  animation-delay: 300ms;
+}
+.svg-scoreOverlay.enabled text.points {
+  animation-delay: 400ms;
+}
+.svg-scoreOverlay.hiding .points {
+  animation-name: scoreOverlay-points-opacity-anim;
+  animation-duration: 200ms;
+  animation-direction: reverse;
+  animation-fill-mode: forwards;
+}
+.svg-scoreOverlay.hiding circle.points {
+  animation-delay: 100ms;
+}
+.svg-scoreOverlay.hiding text.points {
+  animation-delay: 0ms;
+}
+@keyframes scoreOverlay-points-opacity-anim {
+  0% { opacity: 0; }
+  100% { opacity: 100; }
+}
+
+.svg-scoreOverlay.enabled .scoreOverlay-mask path,
+.svg-scoreOverlay.enabled .scoreOverlay-outlineBG path {
+  animation-name: scoreOverlay-stroke-width;
+  animation-duration: 300ms;
+  animation-fill-mode: forwards;
+}
+.svg-scoreOverlay.hiding .scoreOverlay-mask path,
+.svg-scoreOverlay.hiding .scoreOverlay-outlineBG path {
+  animation-name: scoreOverlay-stroke-width-reverse;
+  animation-duration: 300ms;
+  animation-delay: 500ms;
+  animation-fill-mode: forwards;
+  stroke-width: 10px;
+}
+@keyframes scoreOverlay-stroke-width {
+  0% { stroke-width: 1px }
+  100% { stroke-width: 10px }
+}
+@keyframes scoreOverlay-stroke-width-reverse {
+  0% { stroke-width: 10px }
+  100% { stroke-width: 1px }
+}

@@ -8,6 +8,7 @@ export const Color = {
 };
 
 export type Vertex = { id: string, x: number, y: number };
+export type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };
 
 export abstract class ScoreOverlayDisplay {
     element : SVGElement;
@@ -26,8 +27,7 @@ export abstract class ScoreOverlayDisplay {
         return;
     }
 
-    protected computeOutline(shape : Shape) : Vertex[] {
-        type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };
+    protected computeOutline(shape : Shape) : { boundary: Vertex[], edgesPerVertex: Map<string, Edge[]> } {
         const edges = new Map<string, Edge[]>();
         const edgesPerVertex = new Map<string, Edge[]>();
         let leftMostVertex : Vertex;
@@ -54,13 +54,13 @@ export abstract class ScoreOverlayDisplay {
                 }
                 edges.get(edge.id).push(edge);
 
-                [edge.from, edge.to].forEach((e) => {
-                    if (!edgesPerVertex.has(e.id)) {
-                        edgesPerVertex.set(e.id, []);
+                [edge.from, edge.to].forEach((v) => {
+                    if (!edgesPerVertex.has(v.id)) {
+                        edgesPerVertex.set(v.id, []);
                     }
-                    edgesPerVertex.get(e.id).push(edge);
-                    if (!leftMostVertex || leftMostVertex.x > e.x) {
-                        leftMostVertex = e;
+                    edgesPerVertex.get(v.id).push(edge);
+                    if (!leftMostVertex || leftMostVertex.x > v.x) {
+                        leftMostVertex = v;
                     }
                 });
             }
@@ -71,16 +71,15 @@ export abstract class ScoreOverlayDisplay {
         let prev : Vertex = null;
         let cur : Vertex = leftMostVertex;
         let i = 0;
-        while (i < 100 && (prev == null || cur.id != leftMostVertex.id)) {
+        while (i < 1000 && (prev == null || cur.id != leftMostVertex.id)) {
             i++;
             const uniqueEdges = edgesPerVertex.get(cur.id).filter((e) => (
                 (prev == null || (e.from.id != prev.id && e.to.id != prev.id)) && edges.get(e.id).length == 1
             ));
 
             // should have two unique edges
-            // console.log(uniqueEdges);
             const nextEdge = uniqueEdges[0];
-            console.log(i, nextEdge);
+            // console.log(i, nextEdge);
             const nextVertex = (nextEdge.to.id == cur.id) ? nextEdge.from : nextEdge.to;
             boundary.push(cur);
             prev = cur;
@@ -88,6 +87,6 @@ export abstract class ScoreOverlayDisplay {
         }
 
         console.log(boundary);
-        return boundary;
+        return { boundary: boundary, edgesPerVertex: edgesPerVertex };
     }
 }

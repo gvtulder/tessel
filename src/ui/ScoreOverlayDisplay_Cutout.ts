@@ -2,6 +2,7 @@ import { Shape } from "src/grid/Scorer.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { BGCOLOR, SCALE } from "src/settings.js";
 import { ScoreOverlayDisplay, Vertex, Color } from "./ScoreOverlayDisplay.js";
+import { dist, mean, midPoint } from "src/utils.js";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     bgMask : SVGElement;
@@ -12,6 +13,8 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     outlineFGGroup : ReplacableGroup;
     outlineBG : SVGElement;
     outlineBGGroup : ReplacableGroup;
+    points : SVGElement;
+    pointsGroup : ReplacableGroup;
 
     hideTimeout : number;
 
@@ -62,6 +65,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         this.element.appendChild(shadow);
 
         const shadowMask = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
+        shadowMask.setAttribute('class', 'scoreOverlay-mask');
         shadowMask.setAttribute('id', 'scoreOverlay-mask');
         this.element.append(shadowMask);
 
@@ -76,6 +80,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
         // white outline around the shape
         const outlineBG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        outlineBG.setAttribute('class', 'scoreOverlay-outlineBG');
         outlineBG.setAttribute('stroke', BGCOLOR);
         outlineBG.setAttribute('stroke-width', '10px');
         outlineBG.setAttribute('fill', 'transparent');
@@ -92,6 +97,12 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         this.element.append(outlineFG);
         this.outlineFG = outlineFG;
         this.outlineFGGroup = new ReplacableGroup(outlineFG);
+
+        // circles with points on top
+        const points = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        this.element.append(points);
+        this.points = points;
+        this.pointsGroup = new ReplacableGroup(points);
     }
 
     showScores(shapes : Shape[]) {
@@ -101,22 +112,83 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             this.outlineBGGroup,
             this.outlineFGGroup,
         ].map((g) => ({ group: g, elements: [] as SVGElement[] }));
+        const points = [] as SVGElement[];
 
         for (const shape of shapes) {
-            const boundary : Vertex[] = this.computeOutline(shape);
+            const outlineResult = this.computeOutline(shape);
+            const boundary = outlineResult.boundary;
             const pathComponents = (boundary.reverse().map((v) => `${v.x * SCALE},${v.y * SCALE}`));
             const roundPathString = roundPathCorners('M ' + pathComponents.join(' L ') + ' Z', 10, false);
 
+            // paths
             for (const g of groups) {
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 path.setAttribute('d', roundPathString);
                 g.elements.push(path);
             }
+
+            // find a good location for the points
+            const meanX = mean(boundary.map((v) => v.x));
+            const meanY = mean(boundary.map((v) => v.y));
+            const center = [meanX, meanY];
+            let smallestDistance : number = null;
+            let closestPoint : number[] = null;
+            for (const edge of shape.edges) {
+                for (const candidate of [
+                    // center of a triangle
+                    [edge.from.left + edge.from.center[0], edge.from.top + edge.from.center[1]],
+                    // mid-point between two triangles
+                    [(edge.from.left + edge.from.center[0] + edge.to.left + edge.to.center[0]) / 2,
+                     (edge.from.top + edge.from.center[1] + edge.to.top + edge.to.center[1]) / 2],
+                ]) {
+                    const d = dist(center, candidate);
+                    if (closestPoint == null || d < smallestDistance) {
+                        smallestDistance = d;
+                        closestPoint = candidate;
+                    }
+                }
+            }
+            for (const [vertexId, edges] of outlineResult.edgesPerVertex.entries()) {
+                // point between three triangles of the same color
+                if (edges.length == 12) {
+                    const vertex = (edges[0].from.id == vertexId) ? edges[0].from : edges[0].to;
+                    const candidate = [vertex.x, vertex.y];
+                    const d = dist(center, candidate);
+                    if (closestPoint == null || d < smallestDistance) {
+                        smallestDistance = d;
+                        closestPoint = candidate;
+                    }
+                }
+            }
+
+            // circle with scores
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('class', 'points');
+            circle.setAttribute('cx', `${closestPoint[0] * SCALE}`);
+            circle.setAttribute('cy', `${closestPoint[1] * SCALE}`);
+            circle.setAttribute('r', shape.triangles.size < 3 ? '20' : '25');
+            circle.setAttribute('fill', Color.light);
+            circle.setAttribute('stroke', Color.dark);
+            circle.setAttribute('stroke-width', '8');
+            circle.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
+            points.push(circle);
+
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('class', 'points');
+            text.setAttribute('x', `${closestPoint[0] * SCALE}`);
+            text.setAttribute('y', `${closestPoint[1] * SCALE + 1}`);
+            text.setAttribute('alignment-baseline', 'middle');
+            text.setAttribute('dominant-baseline', 'middle');
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '21');
+            text.appendChild(document.createTextNode(`${shape.points}`));
+            points.push(text);
         }
 
         for (const g of groups) {
             g.group.contents = g.elements;
         }
+        this.pointsGroup.contents = points;
 
         this.element.classList.remove('disabled');
         this.element.classList.remove('hiding');
@@ -160,42 +232,5 @@ class ReplacableGroup {
             this.parentNode.appendChild(group);
         }
         this.group = group;
-    }
-}
-
-
-class AnimatedPath {
-    pathElement : SVGPathElement;
-    pathComponents : string[];
-    curPath : string[];
-    finished : boolean;
-
-    constructor(pathElement : SVGPathElement, pathComponents : string[]) {
-        this.pathElement = pathElement;
-        pathElement.setAttribute('d', '');
-
-        this.pathComponents = [...pathComponents];
-        this.curPath = [];
-        this.finished = false;
-    }
-
-    animate() {
-        const interval = window.setInterval(() => {
-            if (!this.step()) {
-                window.clearInterval(interval);
-            }
-        }, 50);
-    }
-
-    step() : boolean {
-        if (this.finished) return false;
-        if (this.pathComponents.length > 0) {
-            this.curPath.push(this.pathComponents.pop());
-        } else {
-            this.finished = true;
-        }
-        const roundPath = roundPathCorners('M ' + this.curPath.join(' L ') + (this.finished ? ' Z' : ''), 10, false);
-        this.pathElement.setAttribute('d', roundPath);
-        return true;
     }
 }

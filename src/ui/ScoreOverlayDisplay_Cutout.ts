@@ -159,6 +159,19 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                         closestPoint = candidate;
                     }
                 }
+                // points between two midpoints
+                for (const a of edges) {
+                    for (const b of edges) {
+                        const midA = [(a.from.x + a.to.x) / 2, (a.from.y + a.to.y) / 2];
+                        const midB = [(b.from.x + b.to.x) / 2, (b.from.y + b.to.y) / 2];
+                        const candidate = [(midA[0] + midB[0]) / 2, (midB[1] + midB[1]) / 2];
+                        const d = dist(center, candidate);
+                        if (closestPoint == null || d < smallestDistance) {
+                            smallestDistance = d;
+                            closestPoint = candidate;
+                        }
+                    }
+                }
             }
 
             // circle with scores

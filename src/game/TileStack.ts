@@ -24,7 +24,7 @@ export class TileStack {
             this.tiles.splice(idx, 1);
         }
     }
-    remove(colors : TileColors) : boolean {
+    removeColors(colors : TileColors) : boolean {
         for (let i=0; i<this.tiles.length; i++) {
             if (tileColorsEqualWithRotation(this.tiles[i], colors)) {
                 console.log('removing duplicate!');
@@ -70,15 +70,15 @@ export class FixedOrderTileStack extends EventTarget {
         this.updateSlots();
     }
 
-    remove(colors : TileColors) : boolean {
+    removeColors(colors : TileColors) : boolean {
         for (let i=0; i<this.numberShown; i++) {
-            if (tileColorsEqualWithRotation(this.slots[i], colors)) {
+            if (this.slots[i] && tileColorsEqualWithRotation(this.slots[i], colors)) {
                 this.slots[i] = null;
                 this.updateSlots();
                 return true;
             }
         }
-        return this.tileStack.remove(colors);
+        return this.tileStack.removeColors(colors);
     }
 
     isEmpty() {
@@ -91,9 +91,10 @@ export class FixedOrderTileStack extends EventTarget {
 
 
 function tileColorsEqualWithRotation(a : TileColors, b : TileColors) : boolean {
+    const aS = a.join('-');
     for (let i=0; i<b.length; i++) {
         b = [...b.slice(1), b[0]];
-        if (a.join('-') == b.join('-')) {
+        if (aS == b.join('-')) {
             return true;
         }
     }

@@ -63,13 +63,13 @@ export class ScoreOverlayDisplay {
     showScores_outline(shapes : Shape[]) {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
-        type Vertex = { id: string, x: number, y: number };
-        type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };
-        const edges = new Map<string, Edge[]>();
-        const edgesPerVertex = new Map<string, Edge[]>();
-        let leftMostVertex : Vertex;
-
         for (const shape of shapes) {
+            type Vertex = { id: string, x: number, y: number };
+            type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };
+            const edges = new Map<string, Edge[]>();
+            const edgesPerVertex = new Map<string, Edge[]>();
+            let leftMostVertex : Vertex;
+
             for (const triangle of shape.triangles.values()) {
                 // rounding
                 const verts : Vertex[] = triangle.points.map((p) => {

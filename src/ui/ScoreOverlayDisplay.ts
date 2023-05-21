@@ -22,7 +22,15 @@ export class ScoreOverlayDisplay {
         this.element = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this.element.setAttribute('class', 'svg-scoreOverlay');
 
+        this.build_showScores_outline();
+    }
 
+    showScores(shapes : Shape[]) {
+        this.showScores_outline(shapes);
+        // this.showScores_circles(shapes);
+    }
+
+    build_showScores_outline() {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         group.setAttribute('class', 'svg-scoreOverlay-mask disabled')
 
@@ -51,11 +59,6 @@ export class ScoreOverlayDisplay {
 
         this.maskOverlay = group;
         this.mask = mask;
-    }
-
-    showScores(shapes : Shape[]) {
-        this.showScores_outline(shapes);
-        // this.showScores_circles(shapes);
     }
 
     showScores_outline(shapes : Shape[]) {

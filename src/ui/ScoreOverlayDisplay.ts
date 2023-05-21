@@ -13,8 +13,8 @@ type Vertex = { id: string, x: number, y: number };
 
 export class ScoreOverlayDisplay {
     element : SVGElement;
+    fg : SVGElement;
     group : SVGElement;
-    maskOverlay : SVGElement;
     mask : SVGElement;
     maskPathGroup : SVGElement;
 
@@ -33,6 +33,7 @@ export class ScoreOverlayDisplay {
     build_showScores_outline() {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         group.setAttribute('class', 'svg-scoreOverlay-mask disabled')
+        this.element.append(group);
 
         const overlayFill = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         overlayFill.setAttribute('class', 'svg-scoreOverlay-fill');
@@ -57,8 +58,11 @@ export class ScoreOverlayDisplay {
         maskWhite.setAttribute('fill', 'white');
         mask.appendChild(maskWhite);
 
-        this.maskOverlay = group;
         this.mask = mask;
+
+        const fg = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        this.element.append(fg);
+        this.fg = fg;
     }
 
     showScores_outline(shapes : Shape[]) {
@@ -116,9 +120,9 @@ export class ScoreOverlayDisplay {
         });
 
         if (this.group) {
-            this.element.removeChild(this.group);
+            this.fg.removeChild(this.group);
         }
-        this.element.appendChild(group);
+        this.fg.appendChild(group);
         this.group = group;
     }
 

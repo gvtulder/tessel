@@ -13,7 +13,6 @@ export class MainGridDisplay extends GridDisplay {
         super(grid);
 
         this.scoreOverlayDisplay = new ScoreOverlayDisplay();
-        this.svgGrid.appendChild(this.scoreOverlayDisplay.maskOverlay);
         this.svgGrid.appendChild(this.scoreOverlayDisplay.element);
     }
 

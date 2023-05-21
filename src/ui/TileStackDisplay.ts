@@ -33,9 +33,11 @@ export class TileStackDisplay {
             const color = this.tileStack.slots[i];
             this.tileDisplays[i].tile.colors = color ? color : null;
         }
-        const n = this.tileStack.tilesLeft;
+        const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
         if (n > 0) {
             this.counter.innerHTML = `+ ${Math.max(0, n)} tiles`;
+        } else {
+            this.counter.innerHTML = '';
         }
     }
 

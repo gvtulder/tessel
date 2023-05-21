@@ -3,6 +3,9 @@ import { GridTypes } from "./grid/GridType.js";
 import { TileGenerators } from "./game/TileGenerator.js";
 
 
+export const lookup = new Map<string, GameSettings>();
+
+
 // a few dummy hex tiles
 export const HexDebug : GameSettings = {
     gridType : GridTypes['hex'],
@@ -18,6 +21,7 @@ export const HexDebug : GameSettings = {
         ['red', 'red', 'red', 'red', 'black', 'black'],
     ]),
 }
+lookup.set('HexDebug', HexDebug);
 
 // almost finished black circle
 export const HexDebug_BlackRed : GameSettings = {
@@ -44,6 +48,7 @@ export const HexDebug_BlackRed : GameSettings = {
         {x: 1, y: -6, colors: ["red","red","red","black","black","red"]},
     ],
 }
+lookup.set('HexDebug_BlackRed', HexDebug_BlackRed);
 
 export const SquareDefault : GameSettings = {
     gridType : GridTypes['square'],
@@ -51,6 +56,7 @@ export const SquareDefault : GameSettings = {
     tilesShownOnStack: 3,
     tileGenerator : TileGenerators.permutations(['red','black','blue','white'], 4),
 }
+lookup.set('SquareDefault', SquareDefault);
 
 export const HexDefault : GameSettings = {
     gridType : GridTypes['hex'],
@@ -58,6 +64,7 @@ export const HexDefault : GameSettings = {
     tilesShownOnStack: 3,
     tileGenerator : TileGenerators.permutations(['red','black','blue','white','orange','purple'], 4),
 }
+lookup.set('HexDefault', HexDefault);
 
 export const CubeDefault : GameSettings = {
     gridType : GridTypes['cube'],
@@ -65,3 +72,13 @@ export const CubeDefault : GameSettings = {
     tilesShownOnStack: 3,
     tileGenerator : TileGenerators.permutations(['red','black','blue','white'], 3),
 }
+lookup.set('CubeDefault', CubeDefault);
+
+export const CubeDebug: GameSettings = {
+    gridType : GridTypes['cube'],
+    initialTile: ['red','black','blue'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.randomSubset(5, TileGenerators.permutations(['red','black','blue','white'], 3)),
+}
+lookup.set('CubeDebug', CubeDebug);
+

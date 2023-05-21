@@ -5,7 +5,7 @@ import { TileStackDisplay } from './ui/TileStackDisplay.js';
 import { FixedOrderTileStack, TileStack } from './game/TileStack.js';
 import { GridType, GridTypes } from './grid/GridType.js';
 import { OrientedColors, Tile } from './grid/Tile.js';
-import { Game } from './game/Game.js';
+import { Game, GameSettings } from './game/Game.js';
 import { GameDisplay } from './ui/GameDisplay.js';
 import * as SaveGames from './saveGames.js';
 
@@ -87,10 +87,17 @@ function startDebug() {
 }
 
 export function start() {
-    // const game = new Game(SaveGames.HexDebug_BlackRed);
-    // const game = new Game(SaveGames.SquareDefault);
-    // const game = new Game(SaveGames.HexDefault);
-    const game = new Game(SaveGames.CubeDefault);
+    let game : Game;
+    if (SaveGames.lookup.has(window.location.hash.replace('#', ''))) {
+        game = new Game(SaveGames.lookup.get(window.location.hash.replace('#', '')));
+    } else {
+        // game = new Game(SaveGames.HexDebug_BlackRed);
+        // game = new Game(SaveGames.SquareDefault);
+        // game = new Game(SaveGames.HexDefault);
+        // game = new Game(SaveGames.CubeDefault);
+        // game = new Game(SaveGames.HexDebug_BlackRed);
+        game = new Game(SaveGames.SquareDefault);
+    }
 
     const gameDisplay = new GameDisplay(game);
     document.body.appendChild(gameDisplay.element);

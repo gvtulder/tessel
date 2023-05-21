@@ -1,3 +1,5 @@
+import type { DragEvent } from '@interactjs/types';
+
 import { OrientedColors, Tile } from "../grid/Tile.js";
 import { SCALE } from 'src/settings.js';
 import { GridDisplay } from './GridDisplay.js';
@@ -64,9 +66,10 @@ export class MainGridDisplay extends GridDisplay {
     makeDroppable(ondrop: (target: Tile, orientedColors: OrientedColors, indexOnStack: number) => boolean) {
         for (const tileDisplay of this.tileDisplays) {
             if (tileDisplay.tile.isPlaceholder()) {
-                tileDisplay.makeDropzone((target: Tile, orientedColors: OrientedColors, indexOnStack: number) => {
+                tileDisplay.makeDropzone((evt : DragEvent, target: Tile, orientedColors: OrientedColors, indexOnStack: number) => {
                     if (ondrop(target, orientedColors, indexOnStack)) {
                         this.makeDroppable(ondrop);
+                        evt.relatedTarget.classList.add('drag-success');
                     }
                 });
             } else {

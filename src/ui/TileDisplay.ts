@@ -77,7 +77,7 @@ export class TileDisplay {
         this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
     }
 
-    makeDropzone(ondrop: (target : Tile, orientedColors : OrientedColors, indexOnStack : number) => void) {
+    makeDropzone(ondrop: (event : DragEvent, target : Tile, orientedColors : OrientedColors, indexOnStack : number) => void) {
         if (this.dropzone || !this.tile.isPlaceholder()) return;
 
         this.dropzone = interact(this.element).dropzone({
@@ -87,7 +87,7 @@ export class TileDisplay {
             console.log('dropped tile', (evt.relatedTarget as DraggableTileHTMLDivElement).tileDisplay);
 
             const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
-            ondrop(this.tile, rel.orientedColors, rel.indexOnStack);
+            ondrop(evt, this.tile, rel.orientedColors, rel.indexOnStack);
         }).on('dropactivate', (evt: DragEvent) => {
             evt.target.classList.add('drop-activated');
             /*

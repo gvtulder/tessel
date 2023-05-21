@@ -38,7 +38,9 @@ export class GameDisplay {
         controlbar.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
 
-        this.tileStackDisplay.makeDraggable(this.gridDisplay);
+        this.tileStackDisplay.makeDraggable(this.gridDisplay, () => {
+            this.gridDisplay.scoreOverlayDisplay.hide();
+        });
         this.gridDisplay.makeDroppable((target : Tile, orientedColors : OrientedColors, indexOnStack : number) => {
             return this.game.placeFromStack(target, orientedColors, indexOnStack);
         });

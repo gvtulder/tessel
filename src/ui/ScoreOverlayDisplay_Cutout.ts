@@ -30,7 +30,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         bg.setAttribute('width', '2000');
         bg.setAttribute('height', '2000');
         bg.setAttribute('fill', BGCOLOR);
-        bg.setAttribute('opacity', '0.5');
+        bg.setAttribute('opacity', '0.2');
         this.element.appendChild(bg);
 
         const bgMask = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
@@ -128,13 +128,15 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         if (this.hideTimeout) window.clearTimeout(this.hideTimeout);
         this.hideTimeout = window.setTimeout(() => {
             this.hide();
-        }, 5000);
+        }, 3000);
     }
 
     hide() {
         if (this.hideTimeout) window.clearTimeout(this.hideTimeout);
-        this.element.classList.remove('enabled');
-        this.element.classList.add('hiding');
+        if (this.element.classList.contains('enabled')) {
+            this.element.classList.remove('enabled');
+            this.element.classList.add('hiding');
+        }
     }
 }
 

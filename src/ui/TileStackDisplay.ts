@@ -72,9 +72,9 @@ export class TileStackDisplay {
         this.counter = counterDiv;
     }
 
-    makeDraggable(mainGridDisplay : MainGridDisplay) {
+    makeDraggable(mainGridDisplay : MainGridDisplay, onDragStart : (evt) => void) {
         for (const tileDisplay of this.tileDisplays) {
-            tileDisplay.makeDraggable(mainGridDisplay);
+            tileDisplay.makeDraggable(mainGridDisplay, onDragStart);
         }
     }
 }
@@ -147,13 +147,15 @@ class SingleTileOnStackDisplay {
         return this.tile.getOrientedColors(this.rotation);
     }
 
-    makeDraggable(mainGridDisplay : MainGridDisplay) {
+    makeDraggable(mainGridDisplay : MainGridDisplay, onDragStart: (evt) => void) {
         const context = (this.element as DraggableTileHTMLDivElement);
         context.tileDisplay = this;
 
         const position = { x: 0, y: 0 };
-        this.draggable = interact(this.element).on('tap', () => {
+        this.draggable = interact(this.element).on('tap', (evt) => {
             this.rotateTile();
+            // TODO rename this function
+            onDragStart(evt);
         }).draggable({
             listeners: {
                 start: (evt : DragEvent) => {
@@ -161,10 +163,11 @@ class SingleTileOnStackDisplay {
                     context.orientedColors = this.getOrientedColors();
                     console.log(evt.type, evt, evt.target);
                     evt.target.classList.add('dragging');
+                    evt.target.classList.remove('drag-success');
+                    evt.target.classList.remove('drag-return');
 
                     evt.target.style.transformOrigin = `${evt.clientX - evt.rect.left}px ${evt.clientY - evt.rect.top}px`;
-                    // TODO
-                    // onDragStart(evt);
+                    onDragStart(evt);
                 },
                 move: (evt : DragEvent) => {
                     position.x += evt.dx;
@@ -173,12 +176,18 @@ class SingleTileOnStackDisplay {
                 },
                 end: (evt : DragEvent) => {
                     evt.target.classList.remove('dragging');
+                    evt.target.classList.add('drag-return');
                     position.x = 0;
                     position.y = 0;
                     evt.target.style.transformOrigin = 'center';
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
                 },
             }
+        });
+
+        this.element.addEventListener('transitionend', () => {
+            this.element.classList.remove('drag-success');
+            this.element.classList.remove('drag-return');
         });
     }
 

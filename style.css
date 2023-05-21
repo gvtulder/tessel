@@ -156,8 +156,9 @@ svg .tile-segments {
 
 
 
-.gridDisplay .tile-outline {
-  stroke: #ddd;
+.gridDisplay.animated {
+  transition-property: all;
+  transition-duration: 200ms;
 }
 
 .controlbar {
@@ -179,6 +180,14 @@ svg .tile-segments {
 .tileStackDisplay .tileOnStack.dragging {
   z-index: 100;
   transition: none;
+}
+.tileStackDisplay .tileOnStack.drag-return {
+  z-index: 100;
+  transition-property: transform;
+  transition-duration: 150ms;
+}
+.tileStackDisplay .tileOnStack.drag-success {
+  transition-duration: 0ms;
 }
 
 .tileOnStack-rotatable {
@@ -269,4 +278,3 @@ svg .tile-segments {
     stroke-dashoffset: -18000;
   }
 }
-

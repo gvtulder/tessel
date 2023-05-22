@@ -239,6 +239,7 @@ svg .tile-segments {
 
 .tileStackDisplay .tileStackDisplay-counter {
   margin: 10px;
+  color: #555;
 }
 .tileStackDisplay .tile-outline {
   stroke: #ddd;
@@ -295,7 +296,7 @@ svg .tile-segments {
 @keyframes scoreDisplay-opacity-anim {
   0% { opacity: 0.5; transform: scale(1.0); }
   50% { opacity: 1.0; transform: scale(1.1); }
-  100% { opacity: 0.5; transofrm: scale(1.0); }
+  100% { opacity: 0.5; transform: scale(1.0); }
 }
 
 

@@ -49,6 +49,10 @@ export class MainMenuDisplay extends EventTarget {
 
             interact(exampleTile).on('tap', () => {
                 this.dispatchEvent(new MenuEvent('startgame', gameSettings));
+            }).on('doubletap', (evt : Event) => {
+                evt.preventDefault();
+            }).on('hold', (evt : Event) => {
+                evt.preventDefault();
             });
         }
     }

@@ -13,9 +13,11 @@ import { shuffle } from '../utils.js';
 export class MainGridDisplay extends GridDisplay {
     scoreOverlayDisplay : ScoreOverlayDisplay;
     ignorePlaceholders : boolean;
+    container : HTMLElement;
 
-    constructor(grid: Grid) {
+    constructor(grid: Grid, container : HTMLElement) {
         super(grid);
+        this.container = container;
 
         this.scoreOverlayDisplay = new ScoreOverlayDisplay_Cutout();
         this.svgGrid.appendChild(this.scoreOverlayDisplay.element);
@@ -51,14 +53,8 @@ export class MainGridDisplay extends GridDisplay {
             height = this.heightNoPlaceholders;
         }
 
-        let availWidth = document.documentElement.clientWidth - this.margins.left - this.margins.right;
-        let availHeight = document.documentElement.clientHeight - this.margins.top - this.margins.bottom;
-
-        if (document.body.classList.contains('horizontal-controls')) {
-            availHeight -= 120;
-        } else {
-            availWidth -= 120;
-        }
+        const availWidth = (this.container || document.documentElement).clientWidth - this.margins.left - this.margins.right;
+        const availHeight = (this.container || document.documentElement).clientHeight - this.margins.top - this.margins.bottom;
 
         let totalWidth = SCALE * (width - left);
         let totalHeight = SCALE * (height - top);
@@ -73,7 +69,9 @@ export class MainGridDisplay extends GridDisplay {
 
         this.scale = scale;
 
-        this.element.classList.add('animated');
+        window.setTimeout(() => {
+            this.element.classList.add('animated');
+        }, 1000);
     }
 
     makeDroppable(ondrop: (target: Tile, orientedColors: OrientedColors, indexOnStack: number) => boolean) {
@@ -94,15 +92,17 @@ export class MainGridDisplay extends GridDisplay {
     gameFinished() {
         const placeholders = this.tileDisplays.filter((d) => d.tile.isPlaceholder());
         shuffle(placeholders);
-        const interval = window.setInterval(() => {
+        let delay = 100;
+        const cleanUp = () => {
             if (placeholders.length > 0) {
                 placeholders.pop().hide();
+                delay = Math.max(20, delay * 0.9);
+                window.setTimeout(cleanUp, placeholders.length > 0 ? delay : 100);
             } else {
-                window.clearInterval(interval);
                 this.ignorePlaceholders = true;
                 this.rescaleGrid();
             }
-        }, 100);
-        return;
+        };
+        window.setTimeout(cleanUp, delay);
     }
 }

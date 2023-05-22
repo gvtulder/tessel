@@ -24,8 +24,12 @@ export class GameDisplay {
         div.className = 'gameDisplay';
         this.element = div;
 
-        this.gridDisplay = new MainGridDisplay(this.game.grid);
-        div.appendChild(this.gridDisplay.element);
+        const divGridContainer = document.createElement('div');
+        divGridContainer.className = 'mainGridContainer';
+        div.appendChild(divGridContainer);
+
+        this.gridDisplay = new MainGridDisplay(this.game.grid, divGridContainer);
+        divGridContainer.appendChild(this.gridDisplay.element);
 
         const controlbar = document.createElement('div');
         controlbar.className = 'controlbar';

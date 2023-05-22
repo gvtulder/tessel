@@ -101,6 +101,7 @@ export function start() {
 
     const gameDisplay = new GameDisplay(game);
     document.body.appendChild(gameDisplay.element);
+    gameDisplay.gridDisplay.rescaleGrid();
 
     window.gameDisplay = gameDisplay;
     window.game = game;

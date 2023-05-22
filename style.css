@@ -161,9 +161,21 @@ svg .tile-segments {
   transition-duration: 500ms;
 }
 
-.controlbar {
+.gameDisplay {
   position: fixed;
-  right: 0;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+.mainGridContainer {
+  width: auto;
+  position: relative;
+  flex-grow: 1;
+}
+.controlbar {
   width: 120px;
   background: #bbb;
   height: 100%;

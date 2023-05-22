@@ -208,10 +208,15 @@ svg .tile-segments {
 }
 .gameDisplay-buttons {
   order: 3;
+  margin: 0 0 10px 0;
+}
+.gameDisplay-toggles {
+  order: 4;
   margin: 0 0 20px 0;
 }
+
 .gameDisplay-buttons .game-button {
-  padding: 20px;
+  padding: 15px 20px;
   cursor: pointer;
 }
 .gameDisplay-buttons .game-button svg {
@@ -222,9 +227,48 @@ svg .tile-segments {
   transition-duration: 100ms;
   fill: #777777;
 }
-.gameDisplay-buttons .game-button:hover svg {
-  transform: scale(1.1);
-  fill: #333;
+@media (hover) {
+  .gameDisplay-buttons .game-button:hover svg {
+    transform: scale(1.1);
+    fill: #555;
+  }
+}
+
+.gameDisplay-toggles {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.gameDisplay-toggles .game-toggle {
+  padding: 10px;
+  cursor: pointer;
+  background: #aaa;
+  margin: 5px;
+  border-radius: 10px;
+
+  transform: scale(1);
+  transition-property: tranform;
+  transition-duration: 100ms;
+  fill: #777;
+}
+.gameDisplay-toggles .game-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+.gameDisplay-toggles .game-toggle.enabled {
+  background: #777;
+  fill: #bbb;
+}
+@media (hover) {
+  .gameDisplay-toggles .game-toggle:hover {
+    transform: scale(1.1);
+    background: #aaa;
+    fill: #444;
+  }
+  .gameDisplay-toggles .game-toggle.enabled:hover {
+    background: #444;
+    fill: #ccc;
+  }
 }
 
 
@@ -264,6 +308,9 @@ svg .tile-segments {
 
 .tileOnStack-rotatable.animated {
   transition: transform 100ms ease;
+}
+.tileOnStack.dragging .tileOnStack-rotatable.animated {
+  transition: transform 400ms;
 }
 
 
@@ -481,11 +528,16 @@ svg .tile-segments {
   100% { stroke-width: 1px }
 }
 
+.svg-tile {
+  transition-property: opacity;
+  transition-duration: 100ms;
+}
 .svg-tile.hide,
 .tileDisplay.hidden {
   opacity: 0;
-  transition-property: opacity;
-  transition-duration: 100ms;
+}
+.svg-tile.highlight-hint-notok {
+  opacity: 0;
 }
 
 .mainMenuDisplay {

@@ -92,6 +92,21 @@ export abstract class Tile {
         return true;
     }
 
+    checkFitOrientedColorsWithRotation(orientedColors : OrientedColors) : OrientedColors {
+        const currentRotation = orientedColors.rotation;
+        for (let r=0; r<this.rotationAngles.length; r++) {
+            const o = {
+                shape: orientedColors.shape,
+                colors: orientedColors.colors,
+                rotation: (currentRotation + r) % this.rotationAngles.length,
+            };
+            if (this.checkFitOrientedColors(o)) {
+                return o;
+            }
+        }
+        return null;
+    }
+
     computeFromOrientedColors(orientedColors : OrientedColors) : TileColors {
         // simple rotations
         // TODO remove for loop?

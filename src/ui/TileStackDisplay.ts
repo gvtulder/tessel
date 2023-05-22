@@ -91,6 +91,7 @@ export interface DraggableTileHTMLDivElement extends HTMLDivElement {
   tileDisplay? : SingleTileOnStackDisplay;
   indexOnStack? : number;
   orientedColors? : OrientedColors;
+  originalOrientedColors? : OrientedColors;
 }
 
 class SingleTileOnStackDisplay {
@@ -144,18 +145,27 @@ class SingleTileOnStackDisplay {
     }
 
     rotateTile() {
+        this.rotateTileTo(this.rotation + 1)
+    }
+
+    rotateTileTo(newRotation : number, reverse? : boolean, closest? : boolean) {
         const angles = this.tile.rotationAngles;
         const oldAngle = angles[this.rotation];
-        this.rotation = (this.rotation + 1) % angles.length;
-        const angleDiff = (360 + angles[this.rotation] - oldAngle) % 360;
-        this.angle += angleDiff;
+        this.rotation = newRotation % angles.length;
+        const reverseDiff = (360 + oldAngle - angles[this.rotation]) % 360;
+        const forwardDiff = (360 + angles[this.rotation] - oldAngle) % 360;
+        if (reverse || (closest && reverseDiff < forwardDiff)) {
+            this.angle -= reverseDiff;
+        } else {
+            this.angle += forwardDiff;
+        }
         this.rotatable.style.transform = `rotate(${this.angle}deg)`;
         this.rotatable.classList.add('animated');
     }
 
     normalizeRotation() {
-        if (this.angle % 360 != this.angle) {
-            this.angle = this.angle % 360;
+        if ((360 + this.angle) % 360 != this.angle) {
+            this.angle = (360 + this.angle) % 360;
             this.rotatable.style.transform = `rotate(${this.angle}deg)`;
         }
     }
@@ -183,12 +193,12 @@ class SingleTileOnStackDisplay {
                 start: (evt : DragEvent) => {
                     context.indexOnStack = this.indexOnStack;
                     context.orientedColors = this.getOrientedColors();
+                    context.originalOrientedColors = context.orientedColors;
                     console.log(evt.type, evt, evt.target);
 
                     this.tileStackDisplay.resetDragStatus();
                     evt.target.classList.add('dragging');
 
-                    evt.target.style.transformOrigin = `${evt.clientX - evt.rect.left}px ${evt.clientY - evt.rect.top}px`;
                     onDragStart(evt);
                 },
                 move: (evt : DragEvent) => {
@@ -221,5 +231,14 @@ class SingleTileOnStackDisplay {
             this.draggable.unset();
             this.draggable = null;
         }
+    }
+
+    startAutorotate(target : TileDisplay) : boolean {
+        const orientedColors = target.tile.checkFitOrientedColorsWithRotation(this.getOrientedColors());
+        if (orientedColors !== null) {
+            this.rotateTileTo(orientedColors.rotation, false, true);
+            return true;
+        }
+        return false;
     }
 }

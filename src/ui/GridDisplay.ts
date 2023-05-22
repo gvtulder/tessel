@@ -1,7 +1,7 @@
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { TileDisplay } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
-import { Tile } from "../grid/Tile.js";
+import { OrientedColors, Tile } from "../grid/Tile.js";
 import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';

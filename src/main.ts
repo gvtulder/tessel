@@ -18,7 +18,7 @@ export function runDebug() {
 
     const grid = new Grid(gridType);
 
-    const display = new MainGridDisplay(grid, document.body);
+    const display = new MainGridDisplay(grid, document.body, null);
     document.body.appendChild(display.element);
 
     if (DEBUG.CONNECT_TILES) {

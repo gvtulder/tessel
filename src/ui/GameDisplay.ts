@@ -18,6 +18,9 @@ export class GameDisplay extends EventTarget {
 
     element : HTMLDivElement;
 
+    autorotate : Toggle;
+    hints : Toggle;
+
     constructor(game : Game) {
         super();
         this.game = game;
@@ -33,7 +36,7 @@ export class GameDisplay extends EventTarget {
         divGridContainer.className = 'mainGridContainer';
         div.appendChild(divGridContainer);
 
-        this.gridDisplay = new MainGridDisplay(this.game.grid, divGridContainer);
+        this.gridDisplay = new MainGridDisplay(this.game.grid, divGridContainer, this);
         divGridContainer.appendChild(this.gridDisplay.element);
 
         const controlbar = document.createElement('div');
@@ -61,6 +64,22 @@ export class GameDisplay extends EventTarget {
             () => this.dispatchEvent(new Event('clickrestartgame'))
         ));
 
+        const toggles = document.createElement('div');
+        toggles.className = 'gameDisplay-toggles';
+        controlbar.appendChild(toggles);
+        this.autorotate = new Toggle(
+            icons.arrowsSpinIcon,
+            'Autorotate',
+            false
+        )
+        toggles.appendChild(this.autorotate.element);
+        this.hints = new Toggle(
+            icons.squareCheckIcon,
+            'Show hints',
+            false
+        )
+        toggles.appendChild(this.hints.element);
+
         this.tileStackDisplay.makeDraggable(this.gridDisplay, () => {
             this.gridDisplay.scoreOverlayDisplay.hide();
         });
@@ -85,5 +104,43 @@ export class GameDisplay extends EventTarget {
         button.innerHTML = icon;
         interact(button).on('tap', ontap);
         return button;
+    }
+}
+
+class Toggle extends EventTarget {
+    element : HTMLElement;
+    private _checked : boolean;
+
+    constructor(icon : string, title : string, checked? : boolean) {
+        super();
+
+        const toggle = document.createElement('div');
+        toggle.className = 'game-toggle';
+        toggle.title = title;
+        toggle.innerHTML = icon;
+        this.element = toggle;
+
+        this.checked = checked ? true : false;
+
+        interact(toggle).on('tap', (evt : Event) => {
+            this.toggle();
+        });
+    }
+
+    get checked() : boolean {
+        return this._checked;
+    }
+
+    set checked(state : boolean) {
+        this.element.classList.toggle('enabled', state);
+        if (this._checked != state) {
+            this._checked = state;
+            console.log(state, this, this.checked);
+            this.dispatchEvent(new Event('change'));
+        }
+    }
+
+    toggle() {
+        this.checked = !this.checked;
     }
 }

@@ -8,6 +8,7 @@ import { TriangleDisplay } from './TriangleDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
 import { shrinkOutline } from 'src/utils.js';
 import { DraggableTileHTMLDivElement } from './TileStackDisplay.js';
+import { GameDisplay } from './GameDisplay.js';
 
 
 export class TileDisplay {
@@ -17,7 +18,6 @@ export class TileDisplay {
     triangleDisplays : TriangleDisplay[];
 
     element : HTMLDivElement;
-    svgGroup : SVGElement;
     svgTriangles : SVGElement;
 
     dropzone : Interactable;
@@ -78,7 +78,7 @@ export class TileDisplay {
         this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
     }
 
-    makeDropzone(ondrop: (event : DragEvent, target : Tile, orientedColors : OrientedColors, indexOnStack : number) => void) {
+    makeDropzone(gameDisplay : GameDisplay, ondrop: (event : DragEvent, target : Tile, orientedColors : OrientedColors, indexOnStack : number) => void) {
         if (this.dropzone || !this.tile.isPlaceholder()) return;
 
         this.dropzone = interact(this.element).dropzone({
@@ -90,33 +90,33 @@ export class TileDisplay {
             const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
             ondrop(evt, this.tile, rel.orientedColors, rel.indexOnStack);
         }).on('dropactivate', (evt: DragEvent) => {
-            evt.target.classList.add('drop-activated');
-            /*
-            if (this.gameManager.settings.hints) {
-                console.log('dropactivate', (evt.relatedTarget as TileUIHTMLDivElement).tile.colors);
-                if (this.gameManager.board.checkFitWithRotations((evt.relatedTarget as TileUIHTMLDivElement).tile.colors,
-                    (evt.target as TileUIHTMLDivElement).tile.col,
-                    (evt.target as TileUIHTMLDivElement).tile.row) == null) {
-                    evt.target.classList.add('drop-hint-would-not-fit');
+            const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
+            if (gameDisplay && gameDisplay.hints.checked) {
+                let ok = false;
+                if (gameDisplay.autorotate.checked) {
+                    ok = (null !== this.tile.checkFitOrientedColorsWithRotation(rel.orientedColors));
                 } else {
-                    evt.target.classList.add('drop-hint-would-fit');
+                    ok = this.tile.checkFitOrientedColors(rel.orientedColors);
                 }
+                this.highlightHint(ok);
             }
-            */
         }).on('dropdeactivate', (evt: DragEvent) => {
-            evt.target.classList.remove('drop-activated');
-            evt.target.classList.remove('drop-hint-would-fit');
-            evt.target.classList.remove('drop-hint-would-not-fit');
+            this.removeHighlightHint();
         }).on('dragenter', (evt: DragEvent) => {
             console.log('dragenter', evt.target);
-            /*
-            (evt.relatedTarget as TileUIHTMLDivElement).tile.autoRotate((evt.target as TileUIHTMLDivElement).tile);
-            */
+            if (gameDisplay && gameDisplay.autorotate.checked) {
+                const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
+                if (rel.tileDisplay.startAutorotate(this)) {
+                    rel.orientedColors = rel.tileDisplay.getOrientedColors();
+                }
+            }
         }).on('dragleave', (evt: DragEvent) => {
             console.log('dragleave', evt.target);
-            /*
-            (evt.relatedTarget as TileUIHTMLDivElement).tile.resetAutoRotate();
-            */
+            if (gameDisplay && gameDisplay.autorotate.checked) {
+                // reset autorotate
+                const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
+                rel.tileDisplay.rotateTileTo(rel.originalOrientedColors.rotation, false, true);
+            }
         });
     }
 
@@ -130,5 +130,15 @@ export class TileDisplay {
     hide() {
         this.element.classList.add('hide');
         this.svgTriangles.classList.add('hide');
+    }
+
+    highlightHint(ok: boolean) {
+        this.svgTriangles.classList.toggle('highlight-hint-ok', ok);
+        this.svgTriangles.classList.toggle('highlight-hint-notok', !ok);
+    }
+
+    removeHighlightHint() {
+        this.svgTriangles.classList.remove('highlight-hint-ok');
+        this.svgTriangles.classList.remove('highlight-hint-notok');
     }
 }

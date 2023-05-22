@@ -40,11 +40,15 @@ export class GameController {
         gameDisplay.gridDisplay.rescaleGrid();
 
         gameDisplay.addEventListener('clickbacktomenu', () => {
-            this.showMainMenu();
+            if (this.game.finished || window.confirm('Stop the game?')) {
+                this.showMainMenu();
+            }
         });
 
         gameDisplay.addEventListener('clickrestartgame', () => {
-            this.startGame(gameSettings);
+            if (this.game.finished || window.confirm('Restart the game?')) {
+                this.startGame(gameSettings);
+            }
         });
     }
 

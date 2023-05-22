@@ -7,17 +7,20 @@ import { Grid } from "src/grid/Grid.js";
 import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
 import { shuffle } from '../utils.js';
+import { GameDisplay } from './GameDisplay.js';
 
 
 
 export class MainGridDisplay extends GridDisplay {
+    gameDisplay : GameDisplay;
     scoreOverlayDisplay : ScoreOverlayDisplay;
     ignorePlaceholders : boolean;
     container : HTMLElement;
 
-    constructor(grid: Grid, container : HTMLElement) {
+    constructor(grid: Grid, container : HTMLElement, gameDisplay : GameDisplay) {
         super(grid);
         this.container = container;
+        this.gameDisplay = gameDisplay;
 
         this.scoreOverlayDisplay = new ScoreOverlayDisplay_Cutout();
         this.svgGrid.appendChild(this.scoreOverlayDisplay.element);
@@ -75,7 +78,7 @@ export class MainGridDisplay extends GridDisplay {
     makeDroppable(ondrop: (target: Tile, orientedColors: OrientedColors, indexOnStack: number) => boolean) {
         for (const tileDisplay of this.tileDisplays) {
             if (tileDisplay.tile.isPlaceholder()) {
-                tileDisplay.makeDropzone((evt : DragEvent, target: Tile, orientedColors: OrientedColors, indexOnStack: number) => {
+                tileDisplay.makeDropzone(this.gameDisplay, (evt : DragEvent, target: Tile, orientedColors: OrientedColors, indexOnStack: number) => {
                     if (ondrop(target, orientedColors, indexOnStack)) {
                         this.makeDroppable(ondrop);
                         evt.relatedTarget.classList.add('drag-success');

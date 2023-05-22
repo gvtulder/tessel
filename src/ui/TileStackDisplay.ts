@@ -169,10 +169,15 @@ class SingleTileOnStackDisplay {
         context.tileDisplay = this;
 
         const position = { x: 0, y: 0 };
-        this.draggable = interact(this.element).on('tap', (evt) => {
+        this.draggable = interact(this.element).on('tap', (evt : Event) => {
             this.rotateTile();
             // TODO rename this function
             onDragStart(evt);
+            evt.preventDefault();
+        }).on('doubletap', (evt : Event) => {
+            evt.preventDefault();
+        }).on('hold', (evt : Event) => {
+            evt.preventDefault();
         }).draggable({
             listeners: {
                 start: (evt : DragEvent) => {

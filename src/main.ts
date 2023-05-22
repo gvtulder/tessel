@@ -10,6 +10,7 @@ import { GameDisplay } from './ui/GameDisplay.js';
 import * as SaveGames from './saveGames.js';
 import { MainMenuDisplay } from './ui/MainMenuDisplay.js';
 import { GameController } from './ui/GameController.js';
+import disableIosZoom from './lib/disable-ios-zoom.js';
 
 
 export function runDebug() {
@@ -107,6 +108,8 @@ export function start() {
 }
 
 export function startMainMenu() {
+    disableIosZoom();
+
     const controller = new GameController(document.body);
     controller.run();
 

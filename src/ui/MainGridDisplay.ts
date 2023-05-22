@@ -65,7 +65,7 @@ export class MainGridDisplay extends GridDisplay {
 
         this.scale = scale;
 
-        if (this.element.classList.contains('animated')) {
+        if (!this.element.classList.contains('animated')) {
             window.setTimeout(() => {
                 this.element.classList.add('animated');
             }, 1000);

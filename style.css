@@ -349,6 +349,7 @@ svg .tile-segments {
 .svg-scoreOverlay {
   transition-property: opacity;
   transition-duration: 300ms;
+  transition-delay: 200ms;
   opacity: 0;
 }
 .svg-scoreOverlay.disabled {
@@ -368,7 +369,7 @@ svg .tile-segments {
 
   animation-name: scoreOverlay-outlineFG-anim;
   animation-duration: 2s;
-  animation-delay: 200ms;
+  animation-delay: 400ms;
   animation-timing-function: ease-in;
   animation-fill-mode: forwards;
 }
@@ -399,7 +400,7 @@ svg .tile-segments {
 }
 .svg-scoreOverlay.enabled .points {
   animation-name: scoreOverlay-points-opacity-anim;
-  animation-duration: 600ms;
+  animation-duration: 800ms;
   animation-fill-mode: forwards;
   opacity: 0;
 }
@@ -407,10 +408,10 @@ svg .tile-segments {
   stroke-dasharray: 200 200;
 }
 .svg-scoreOverlay.enabled circle.points {
-  animation-delay: 300ms;
+  animation-delay: 500ms;
 }
 .svg-scoreOverlay.enabled text.points {
-  animation-delay: 400ms;
+  animation-delay: 600ms;
 }
 .svg-scoreOverlay.hiding .points {
   animation-name: scoreOverlay-points-opacity-anim-reverse;

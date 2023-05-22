@@ -4,7 +4,7 @@ import { Grid, GridEvent } from '../grid/Grid.js';
 import { Tile } from "../grid/Tile.js";
 import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
-import { DEBUG, SCALE } from 'src/settings.js';
+import { DEBUG, SCALE } from '../settings.js';
 
 export class GridDisplay {
     grid: Grid;

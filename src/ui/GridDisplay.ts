@@ -216,7 +216,7 @@ export class TileStackGridDisplay extends GridDisplay {
         totalWidth *= scale;
         totalHeight *= scale;
 
-        this.element.style.transform = `scale(${scale}`;
+        this.element.style.transform = `scale(${scale})`;
         this.element.style.left = `${(availWidth - totalWidth) / 2 - (this.left * SCALE * scale)}px`;
         this.element.style.top = `${(availHeight - totalHeight) / 2 - (this.top * SCALE * scale)}px`;
 

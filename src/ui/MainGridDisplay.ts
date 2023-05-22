@@ -27,10 +27,6 @@ export class MainGridDisplay extends GridDisplay {
     styleMainElement() {
         const div = this.element;
         div.className = 'gridDisplay';
-        div.style.position = 'fixed';
-        div.style.top = '0px';
-        div.style.left = '0px';
-        div.style.zIndex = '1000';
     }
 
     enableAutoRescale() {
@@ -63,15 +59,17 @@ export class MainGridDisplay extends GridDisplay {
         totalWidth *= scale;
         totalHeight *= scale;
 
-        this.element.style.transform = `scale(${scale}`;
+        this.element.style.transform = `scale(${scale})`;
         this.element.style.left = `${this.margins.left + (availWidth - totalWidth) / 2 - (left * SCALE * scale)}px`;
         this.element.style.top = `${this.margins.top + (availHeight - totalHeight) / 2 - (top * SCALE * scale)}px`;
 
         this.scale = scale;
 
-        window.setTimeout(() => {
-            this.element.classList.add('animated');
-        }, 1000);
+        if (this.element.classList.contains('animated')) {
+            window.setTimeout(() => {
+                this.element.classList.add('animated');
+            }, 1000);
+        }
     }
 
     makeDroppable(ondrop: (target: Tile, orientedColors: OrientedColors, indexOnStack: number) => boolean) {

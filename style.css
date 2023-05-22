@@ -189,14 +189,14 @@ svg .tile-segments {
 .tileStackDisplay {
   order: 1;
   flex-grow: 1;
-  margin: 40px 0 0 0;
+  margin: 10px 0 0 0;
 }
 .scoreDisplay {
   order: 2;
 }
 .gameDisplay-buttons {
   order: 3;
-  margin: 30px 0;
+  margin: 0 0 20px 0;
 }
 .gameDisplay-buttons .game-button {
   padding: 20px;
@@ -218,7 +218,7 @@ svg .tile-segments {
 
 
 .tileStackDisplay .tileStackDisplay-counter {
-  margin-top: 5px;
+  margin: 10px;
 }
 .tileStackDisplay .tile-outline {
   stroke: #ddd;
@@ -249,8 +249,8 @@ svg .tile-segments {
 
 .scoreDisplay {
   width: 100px;
+  margin: 0 0 10px 0;
   box-sizing: border-box;
-  margin: 30px 10px 40px 10px;
   padding: 10px 0 10px 0;
   border-radius: 50px;
   border: 8px solid #63851d;
@@ -367,9 +367,12 @@ svg .tile-segments {
 }
 .svg-scoreOverlay.enabled .points {
   animation-name: scoreOverlay-points-opacity-anim;
-  animation-duration: 200ms;
+  animation-duration: 600ms;
   animation-fill-mode: forwards;
   opacity: 0;
+}
+.svg-scoreOverlay circle.points {
+  stroke-dasharray: 200 200;
 }
 .svg-scoreOverlay.enabled circle.points {
   animation-delay: 300ms;
@@ -378,10 +381,9 @@ svg .tile-segments {
   animation-delay: 400ms;
 }
 .svg-scoreOverlay.hiding .points {
-  animation-name: scoreOverlay-points-opacity-anim;
-  animation-duration: 200ms;
-  animation-direction: reverse;
-  animation-fill-mode: forwards;
+  animation-name: scoreOverlay-points-opacity-anim-reverse;
+  animation-duration: 400ms;
+  animation-fill-mode: both;
 }
 .svg-scoreOverlay.hiding circle.points {
   animation-delay: 100ms;
@@ -390,8 +392,36 @@ svg .tile-segments {
   animation-delay: 0ms;
 }
 @keyframes scoreOverlay-points-opacity-anim {
-  0% { opacity: 0; }
-  100% { opacity: 100; }
+  0% {
+    opacity: 0;
+    stroke-dashoffset: -200;
+  }
+  25% {
+    stroke-dashoffset: -200;
+  }
+  75% {
+    opacity: 100;
+  }
+  100% {
+    opacity: 100;
+    stroke-dashoffset: -400;
+  }
+}
+@keyframes scoreOverlay-points-opacity-anim-reverse {
+  0% {
+    opacity: 100;
+    stroke-dashoffset: -400;
+  }
+  25% {
+    opacity: 100;
+  }
+  75% {
+    stroke-dashoffset: -600;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -600;
+  }
 }
 
 .svg-scoreOverlay.enabled .scoreOverlay-mask path,

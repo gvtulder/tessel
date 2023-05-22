@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "interactjs": "^1.10.17"
+    "interactjs": "^1.10.17",
+    "rollup": "^3.23.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.2",

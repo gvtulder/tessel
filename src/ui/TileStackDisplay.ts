@@ -58,7 +58,7 @@ export class TileStackDisplay {
         this.element = div;
 
         for (let i=0; i<this.tileStack.numberShown; i++) {
-            const tileDisplay = new SingleTileOnStackDisplay(i, this.gridType);
+            const tileDisplay = new SingleTileOnStackDisplay(this, i, this.gridType);
             this.element.appendChild(tileDisplay.element);
             this.tileDisplays.push(tileDisplay);
         }
@@ -77,6 +77,13 @@ export class TileStackDisplay {
             tileDisplay.makeDraggable(mainGridDisplay, onDragStart);
         }
     }
+
+    resetDragStatus() {
+        for (const t of this.tileDisplays) {
+            t.element.classList.remove('drag-success');
+            t.element.classList.remove('drag-return');
+        }
+    }
 }
 
 
@@ -87,6 +94,7 @@ export interface DraggableTileHTMLDivElement extends HTMLDivElement {
 }
 
 class SingleTileOnStackDisplay {
+    tileStackDisplay : TileStackDisplay;
     indexOnStack : number;
     grid : Grid;
     gridDisplay : GridDisplay;
@@ -98,10 +106,11 @@ class SingleTileOnStackDisplay {
     rotation : number;
     angle : number;
 
-    constructor(indexOnStack : number, gridType : GridType) {
+    constructor(tileStackDisplay : TileStackDisplay, indexOnStack : number, gridType : GridType) {
         this.rotation = 0;
         this.angle = 0;
 
+        this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(gridType);
         this.gridDisplay = new TileStackGridDisplay(this.grid);
@@ -170,9 +179,9 @@ class SingleTileOnStackDisplay {
                     context.indexOnStack = this.indexOnStack;
                     context.orientedColors = this.getOrientedColors();
                     console.log(evt.type, evt, evt.target);
+
+                    this.tileStackDisplay.resetDragStatus();
                     evt.target.classList.add('dragging');
-                    evt.target.classList.remove('drag-success');
-                    evt.target.classList.remove('drag-return');
 
                     evt.target.style.transformOrigin = `${evt.clientX - evt.rect.left}px ${evt.clientY - evt.rect.top}px`;
                     onDragStart(evt);

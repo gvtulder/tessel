@@ -35,11 +35,11 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         bg.setAttribute('height', '2000');
         bg.setAttribute('fill', BGCOLOR);
         bg.setAttribute('opacity', '0.2');
-        this.element.appendChild(bg);
+        // this.element.appendChild(bg);
 
         const bgMask = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
         bgMask.setAttribute('id', 'scoreOverlay-bgmask');
-        this.element.append(bgMask);
+        // this.element.append(bgMask);
 
         const bgBlack = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         bgBlack.setAttribute('x', '-1000');

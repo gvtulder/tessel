@@ -194,13 +194,21 @@ svg .tile-segments {
   transition: transform 100ms ease;
 }
 
+
+
 .scoreDisplay {
   margin: 10px;
   padding: 10px 0 10px 0;
-  background: #9acd32;
   border-radius: 10px;
-  font-size: 25px;
+  border: 8px solid #9acd32;
+  background: #e1f0c1;
+  font-size: 32px;
+  font-weight: bold;
   text-align: center;
+}
+.scoreDisplay p {
+  margin: 0;
+  padding: 0;
 }
 
 

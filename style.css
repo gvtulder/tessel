@@ -165,10 +165,16 @@ svg .tile-segments {
   position: fixed;
   right: 0;
   width: 120px;
-  background: #aaa;
+  background: #bbb;
   height: 100%;
   text-align: center;
   z-index: 1000;
+}
+.tileStackDisplay {
+  margin: 15px 0 50px 0;
+}
+.tileStackDisplay .tileStackDisplay-counter {
+  margin-top: 5px;
 }
 .tileStackDisplay .tile-outline {
   stroke: #ddd;
@@ -197,9 +203,13 @@ svg .tile-segments {
 
 
 .scoreDisplay {
-  margin: 10px;
+  position: absolute;
+  bottom: 10px;
+  width: 100px;
+  box-sizing: border-box;
+  margin: 10px 10px 40px 10px;
   padding: 10px 0 10px 0;
-  border-radius: 10px;
+  border-radius: 50px;
   border: 8px solid #9acd32;
   background: #e1f0c1;
   font-size: 32px;
@@ -209,6 +219,30 @@ svg .tile-segments {
 .scoreDisplay p {
   margin: 0;
   padding: 0;
+}
+
+
+.horizontal-controls .controlbar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 120px;
+  width: 100%;
+}
+.horizontal-controls .scoreDisplay {
+  position: absolute;
+  right: 10px;
+  bottom: initial;
+  margin: 25px 20px 20px 20px;
+  margin-top: 25px;
+  width: 100px;
+}
+.horizontal-controls .tileStackDisplay {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  text-align: center;
 }
 
 

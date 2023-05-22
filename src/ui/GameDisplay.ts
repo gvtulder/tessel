@@ -31,12 +31,12 @@ export class GameDisplay {
         controlbar.className = 'controlbar';
         div.appendChild(controlbar);
 
-        this.tileStackDisplay = new TileStackDisplay(this.game.gridType, this.game.tileStack);
-        controlbar.appendChild(this.tileStackDisplay.element);
-
         this.scoreDisplay = new ScoreDisplay();
         controlbar.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
+
+        this.tileStackDisplay = new TileStackDisplay(this.game.gridType, this.game.tileStack);
+        controlbar.appendChild(this.tileStackDisplay.element);
 
         this.tileStackDisplay.makeDraggable(this.gridDisplay, () => {
             this.gridDisplay.scoreOverlayDisplay.hide();

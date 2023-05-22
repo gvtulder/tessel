@@ -198,6 +198,9 @@ class SingleTileOnStackDisplay {
                     position.y = 0;
                     evt.target.style.transformOrigin = 'center';
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+                    if (this.tile.isPlaceholder()) {
+                        this.removeDraggable();
+                    }
                 },
             }
         });

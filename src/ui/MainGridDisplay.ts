@@ -37,19 +37,18 @@ export class MainGridDisplay extends GridDisplay {
     }
 
     rescaleGrid() {
-        const availWidth = document.documentElement.clientWidth - this.margins.left - this.margins.right;
-        const availHeight = document.documentElement.clientHeight - this.margins.top - this.margins.bottom;
+        let availWidth = document.documentElement.clientWidth - this.margins.left - this.margins.right;
+        let availHeight = document.documentElement.clientHeight - this.margins.top - this.margins.bottom;
+
+        if (document.body.classList.contains('horizontal-controls')) {
+            availHeight -= 120;
+        } else {
+            availWidth -= 120;
+        }
+
         let totalWidth = SCALE * (this.width - this.left);
         let totalHeight = SCALE * (this.height - this.top);
 
-        /* TODO
-        const skipPlaceholders = 0;
-        if (this.isGameFinished()) {
-            totalWidth -= 200;
-            totalHeight -= 200;
-            skipPlaceholders = 1;
-        }
-        */
         const scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
         totalWidth *= scale;
         totalHeight *= scale;

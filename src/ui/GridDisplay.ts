@@ -28,7 +28,7 @@ export class GridDisplay {
 
     scale : number;
     // margins = { top: 0, right: 0, bottom: 0, left: 0 };
-    margins = { top: 30, right: 150, bottom: 30, left: 30 };
+    margins = { top: 30, right: 30, bottom: 30, left: 30 };
     autorescale = false;
 
     constructor(grid: Grid) {

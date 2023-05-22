@@ -12,9 +12,6 @@ import { MainMenuDisplay } from './ui/MainMenuDisplay.js';
 import { GameController } from './ui/GameController.js';
 
 
-export { GameManager } from './script.js';
-
-
 export function runDebug() {
     const gridType = (GridTypes[['hex', 'square', 'triangle'][DEBUG.SELECT_GRID]] as GridType);
 

@@ -254,7 +254,9 @@ svg .tile-segments {
   padding: 10px 0 10px 0;
   border-radius: 50px;
   border: 8px solid #63851d;
+  border: 8px solid #777;
   background: #e1f0c1;
+  background: #ccc;
   font-size: 32px;
   font-weight: bold;
   text-align: center;

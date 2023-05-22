@@ -158,7 +158,7 @@ svg .tile-segments {
 
 .gridDisplay.animated {
   transition-property: all;
-  transition-duration: 500ms;
+  transition-duration: 400ms;
 }
 
 .gameDisplay {
@@ -176,6 +176,10 @@ svg .tile-segments {
   flex-grow: 1;
 }
 .controlbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 120px;
   background: #bbb;
   height: 100%;
@@ -183,8 +187,16 @@ svg .tile-segments {
   z-index: 1000;
 }
 .tileStackDisplay {
-  margin: 50px 0 50px 0;
+  order: 1;
+  flex-grow: 1;
+  margin: 40px 0 0 0;
 }
+.scoreDisplay {
+  order: 2;
+}
+
+
+
 .tileStackDisplay .tileStackDisplay-counter {
   margin-top: 5px;
 }
@@ -192,7 +204,7 @@ svg .tile-segments {
   stroke: #ddd;
 }
 .tileStackDisplay .tileOnStack {
-  margin-bottom: 10px;
+  margin: 5px;
   z-index: 0;
   transition: none;
 }
@@ -216,8 +228,6 @@ svg .tile-segments {
 
 
 .scoreDisplay {
-  position: absolute;
-  bottom: 10px;
   width: 100px;
   box-sizing: border-box;
   margin: 10px 10px 40px 10px;

@@ -76,6 +76,14 @@ export const CubeDefault : GameSettings = {
 }
 lookup.set('CubeDefault', CubeDefault);
 
+export const CubeHexDefault : GameSettings = {
+    gridType : GridTypes['hex'],
+    initialTile: ['red','red','black','black','blue','blue'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.repeatColors(2, TileGenerators.permutations(['red','black','blue','white'], 3)),
+}
+lookup.set('CubeHexDefault', CubeHexDefault);
+
 export const CubeDebug: GameSettings = {
     gridType : GridTypes['cube'],
     initialTile: ['red','black','blue'],

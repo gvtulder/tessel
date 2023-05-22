@@ -1,7 +1,7 @@
 import type { Interactable, PointerEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
 
-import { HexDefault, SquareDefault } from "src/saveGames.js";
+import { CubeHexDefault, HexDefault, SquareDefault } from "src/saveGames.js";
 import { MainMenuGridDisplay } from "./GridDisplay.js";
 import { Grid } from "src/grid/Grid.js";
 import { GameSettings } from 'src/game/Game.js';
@@ -33,7 +33,7 @@ export class MainMenuDisplay extends EventTarget {
         gameList.className = 'gameList';
         div.appendChild(gameList);
 
-        for (const gameSettings of [SquareDefault, HexDefault, CubeDefault]) {
+        for (const gameSettings of [SquareDefault, HexDefault, CubeHexDefault]) {
             const exampleTile = document.createElement('div');
             exampleTile.className = 'gameList-exampleTile';
             gameList.appendChild(exampleTile);

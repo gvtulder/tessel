@@ -44,6 +44,20 @@ export class TileGenerators {
         };
     }
 
+    static repeatColors(repeats : number, generator : TileGenerator) : TileGenerator {
+        return () => {
+            return generator().map((t : TileColors) => {
+                const tt : TileColors = [];
+                for (const c of t) {
+                    for (let i=0; i<repeats; i++) {
+                        tt.push(c);
+                    }
+                }
+                return tt;
+            });
+        }
+    }
+
     static randomSubset(n : number, generator : TileGenerator) : TileGenerator {
         return () => {
             const tiles = generator();

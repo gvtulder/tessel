@@ -1,8 +1,9 @@
-import { Shape } from "src/grid/Scorer.js";
+import { Shape } from "../grid/Scorer.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
-import { BGCOLOR, SCALE } from "src/settings.js";
+import { BGCOLOR, SCALE } from "../settings.js";
 import { ScoreOverlayDisplay, Vertex, Color } from "./ScoreOverlayDisplay.js";
-import { dist, mean, midPoint } from "src/utils.js";
+import { dist, mean, midPoint } from "../utils.js";
+import { polylabel } from "../lib/polylabel.js";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     bgMask : SVGElement;
@@ -127,6 +128,10 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                 g.elements.push(path);
             }
 
+            const polygon = [boundary.map((v) => [v.x, v.y])];
+            const polylabelPoint = polylabel(polygon as [number, number][][], 0.01, true);
+
+            /*
             // find a good location for the points
             const meanX = mean(boundary.map((v) => v.x));
             const meanY = mean(boundary.map((v) => v.y));
@@ -146,14 +151,14 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                 return -Math.min(...boundary.map((v) => dist([v.x, v.y], candidate)));
             }
 
-            const best = { score: null, point: null as [number, number] };
+            let bestScore = 0;
+            let bestPoint = center;
             const updateBest = (candidate : [number, number]) => {
                 const d = score(candidate);
-                if (best.point == null || d < best.score) {
-                    best.score = d;
-                    best.point = candidate;
+                if (bestPoint === center || d < bestScore) {
+                    bestScore = d;
+                    bestPoint = candidate;
                 }
-                console.log(best, d);
             }
 
             for (const edge of shape.edges) {
@@ -177,12 +182,15 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                     }
                 }
             }
+            */
+
+            const bestPoint = [polylabelPoint.x, polylabelPoint.y];
 
             // circle with scores
             const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             circle.setAttribute('class', 'points');
-            circle.setAttribute('cx', `${best.point[0] * SCALE}`);
-            circle.setAttribute('cy', `${best.point[1] * SCALE}`);
+            circle.setAttribute('cx', `${bestPoint[0] * SCALE}`);
+            circle.setAttribute('cy', `${bestPoint[1] * SCALE}`);
             circle.setAttribute('r', shape.triangles.size < 3 ? '20' : '25');
             circle.setAttribute('fill', Color.light);
             circle.setAttribute('stroke', Color.dark);
@@ -192,8 +200,8 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
             const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             text.setAttribute('class', 'points');
-            text.setAttribute('x', `${best.point[0] * SCALE}`);
-            text.setAttribute('y', `${best.point[1] * SCALE + 1}`);
+            text.setAttribute('x', `${bestPoint[0] * SCALE}`);
+            text.setAttribute('y', `${bestPoint[1] * SCALE + 1}`);
             text.setAttribute('alignment-baseline', 'middle');
             text.setAttribute('dominant-baseline', 'middle');
             text.setAttribute('text-anchor', 'middle');

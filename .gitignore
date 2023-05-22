@@ -4,3 +4,4 @@ src/script.js
 src/*.js.map
 dist/
 node_modules/
+public/

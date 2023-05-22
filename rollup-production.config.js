@@ -6,13 +6,13 @@ export default {
   input: 'src/main.ts',
   output: {
     name: 'tilegame',
-    dir: 'dist',
+    dir: 'public/dist/',
     format: 'iife',
-    sourcemap: true,
+    sourcemap: false,
     globals: {
       '@interactjs/interact/index': 'interact'
     }
   },
-  plugins: [typescript(), nodeResolve()],
+  plugins: [typescript(), nodeResolve(), terser()],
   external: ['@interactjs/interact/index']
 };

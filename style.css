@@ -238,7 +238,7 @@ svg .tile-segments {
   transition-duration: 150ms;
 }
 .tileStackDisplay .tileOnStack.drag-success {
-  transition-duration: 0ms;
+  transition-property: none;
 }
 
 .tileOnStack-rotatable.animated {

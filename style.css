@@ -171,7 +171,7 @@ svg .tile-segments {
   z-index: 1000;
 }
 .tileStackDisplay {
-  margin: 15px 0 50px 0;
+  margin: 50px 0 50px 0;
 }
 .tileStackDisplay .tileStackDisplay-counter {
   margin-top: 5px;
@@ -180,6 +180,7 @@ svg .tile-segments {
   stroke: #ddd;
 }
 .tileStackDisplay .tileOnStack {
+  margin-bottom: 15px;
   z-index: 0;
   transition: none;
 }
@@ -210,7 +211,7 @@ svg .tile-segments {
   margin: 10px 10px 40px 10px;
   padding: 10px 0 10px 0;
   border-radius: 50px;
-  border: 8px solid #9acd32;
+  border: 8px solid #63851d;
   background: #e1f0c1;
   font-size: 32px;
   font-weight: bold;

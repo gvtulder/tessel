@@ -8,6 +8,8 @@ import { OrientedColors, Tile } from './grid/Tile.js';
 import { Game, GameSettings } from './game/Game.js';
 import { GameDisplay } from './ui/GameDisplay.js';
 import * as SaveGames from './saveGames.js';
+import { MainMenuDisplay } from './ui/MainMenuDisplay.js';
+import { GameController } from './ui/GameController.js';
 
 
 export { GameManager } from './script.js';
@@ -18,7 +20,7 @@ export function runDebug() {
 
     const grid = new Grid(gridType);
 
-    const display = new MainGridDisplay(grid);
+    const display = new MainGridDisplay(grid, document.body);
     document.body.appendChild(display.element);
 
     if (DEBUG.CONNECT_TILES) {
@@ -35,7 +37,7 @@ function startDebug() {
     const tileStack = new TileStack(SaveGames.HexDebug.tileGenerator());
     const fixedOrderTileStack = new FixedOrderTileStack(tileStack, 3);
 
-    const gridDisplay = new MainGridDisplay(grid);
+    const gridDisplay = new MainGridDisplay(grid, document.body);
     document.body.appendChild(gridDisplay.element);
 
     const tileStackDisplay = new TileStackDisplay(gridType, fixedOrderTileStack);
@@ -105,4 +107,11 @@ export function start() {
 
     window.gameDisplay = gameDisplay;
     window.game = game;
+}
+
+export function startMainMenu() {
+    const controller = new GameController(document.body);
+    controller.run();
+
+    window.gameController = controller;
 }

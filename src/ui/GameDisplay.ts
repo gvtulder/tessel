@@ -1,11 +1,15 @@
+import type { Interactable, PointerEvent } from '@interactjs/types';
+import interact from '@interactjs/interact/index';
+
 import { Game, GameEvent } from "src/game/Game.js";
 import { GridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
 import { OrientedColors, Tile } from "src/grid/Tile.js";
 import { ScoreDisplay } from "./ScoreDisplay.js";
+import icons from './icons.js';
 
-export class GameDisplay {
+export class GameDisplay extends EventTarget {
     game : Game;
 
     gridDisplay : MainGridDisplay;
@@ -15,6 +19,7 @@ export class GameDisplay {
     element : HTMLDivElement;
 
     constructor(game : Game) {
+        super();
         this.game = game;
         this.build();
     }
@@ -42,6 +47,20 @@ export class GameDisplay {
         this.tileStackDisplay = new TileStackDisplay(this.game.gridType, this.game.tileStack);
         controlbar.appendChild(this.tileStackDisplay.element);
 
+        const buttons = document.createElement('div');
+        buttons.className = 'gameDisplay-buttons';
+        controlbar.appendChild(buttons);
+        buttons.appendChild(this.buildButton(
+            icons.houseIcon,
+            'Back to menu',
+            () => this.dispatchEvent(new Event('clickbacktomenu'))
+        ));
+        buttons.appendChild(this.buildButton(
+            icons.rotateLeftIcon,
+            'Restart game',
+            () => this.dispatchEvent(new Event('clickrestartgame'))
+        ));
+
         this.tileStackDisplay.makeDraggable(this.gridDisplay, () => {
             this.gridDisplay.scoreOverlayDisplay.hide();
         });
@@ -57,5 +76,14 @@ export class GameDisplay {
         this.game.addEventListener('endgame', () => {
             this.gridDisplay.gameFinished();
         });
+    }
+
+    buildButton(icon : string, title : string, ontap: (evt : PointerEvent) => void) {
+        const button = document.createElement('div');
+        button.className = 'game-button';
+        button.title = title;
+        button.innerHTML = icon;
+        interact(button).on('tap', ontap);
+        return button;
     }
 }

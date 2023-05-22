@@ -223,3 +223,36 @@ export class TileStackGridDisplay extends GridDisplay {
         this.scale = scale;
     }
 }
+
+
+export class MainMenuGridDisplay extends GridDisplay {
+    styleMainElement() {
+        const div = this.element;
+        div.className = 'mainMenu-gridDisplay';
+        div.style.position = 'absolute';
+        div.style.top = '0px';
+        div.style.left = '0px';
+        div.style.zIndex = '1000';
+    }
+
+    enableAutoRescale() {
+        return;
+    }
+
+    rescaleGrid() {
+        const availWidth = 300;
+        const availHeight = 300;
+        let totalWidth = SCALE * (this.width - this.left);
+        let totalHeight = SCALE * (this.height - this.top);
+
+        const scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
+        totalWidth *= scale;
+        totalHeight *= scale;
+
+        this.element.style.transform = `scale(${scale}`;
+        this.element.style.left = `${(availWidth - totalWidth) / 2 - (this.left * SCALE * scale)}px`;
+        this.element.style.top = `${(availHeight - totalHeight) / 2 - (this.top * SCALE * scale)}px`;
+
+        this.scale = scale;
+    }
+}

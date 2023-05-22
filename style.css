@@ -194,6 +194,26 @@ svg .tile-segments {
 .scoreDisplay {
   order: 2;
 }
+.gameDisplay-buttons {
+  order: 3;
+  margin: 30px 0;
+}
+.gameDisplay-buttons .game-button {
+  padding: 20px;
+  cursor: pointer;
+}
+.gameDisplay-buttons .game-button svg {
+  width: 50px;
+  height: 50px;
+  transform: scale(1);
+  transition-property: tranform;
+  transition-duration: 100ms;
+  fill: #777777;
+}
+.gameDisplay-buttons .game-button:hover svg {
+  transform: scale(1.1);
+  fill: #333;
+}
 
 
 
@@ -230,7 +250,7 @@ svg .tile-segments {
 .scoreDisplay {
   width: 100px;
   box-sizing: border-box;
-  margin: 10px 10px 40px 10px;
+  margin: 30px 10px 40px 10px;
   padding: 10px 0 10px 0;
   border-radius: 50px;
   border: 8px solid #63851d;
@@ -400,4 +420,58 @@ svg .tile-segments {
   opacity: 0;
   transition-property: opacity;
   transition-duration: 100ms;
+}
+
+.mainMenuDisplay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center
+}
+.gameList {
+  display: flex;
+  flex-direction: row;
+  margin: auto auto;
+}
+.gameList-exampleTile {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 20px;
+  cursor: pointer;
+  transform: scale(1.0);
+  transition-property: transform;
+  transition-duration: 100ms;
+}
+.gameList-exampleTile:hover {
+  transform: scale(1.1);
+}
+
+.mainMenuDisplay,
+.gameDisplay {
+  animation-name: animate-appear;
+  animation-delay: 100ms;
+  animation-duration: 500ms;
+  animation-fill-mode: backwards;
+}
+.mainMenuDisplay.disappear,
+.gameDisplay.disappear {
+  animation-name: animate-disappear;
+  animation-delay: 100ms;
+  animation-duration: 500ms;
+  animation-fill-mode: forwards;
+}
+
+@keyframes animate-appear {
+  0% { opacity: 0 }
+  100% { opacity: 100 }
+}
+@keyframes animate-disappear {
+  0% { opacity: 100 }
+  100% { opacity: 0 }
 }

@@ -30,6 +30,7 @@ export class TileDisplay {
 
     build() {
         const div = document.createElement('div');
+        div.classList.add('tileDisplay');
         div.style.position = 'absolute';
         div.style.left = `${this.tile.left * SCALE }px`;
         div.style.top = `${this.tile.top * SCALE}px`;
@@ -124,5 +125,10 @@ export class TileDisplay {
             this.dropzone.unset();
             this.dropzone = null;
         }
+    }
+
+    hide() {
+        this.element.classList.add('hide');
+        this.svgTriangles.classList.add('hide');
     }
 }

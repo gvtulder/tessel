@@ -12,7 +12,7 @@ export class ScoreDisplay {
         div.className = 'scoreDisplay';
         this.element = div;
 
-        let p = document.createElement('p');
+        const p = document.createElement('p');
         div.appendChild(p);
 
         const scoreField = document.createElement('span');

@@ -101,4 +101,7 @@ export function start() {
 
     const gameDisplay = new GameDisplay(game);
     document.body.appendChild(gameDisplay.element);
+
+    window.gameDisplay = gameDisplay;
+    window.game = game;
 }

@@ -33,12 +33,14 @@ export class Game extends EventTarget {
     tileStack : FixedOrderTileStack;
 
     points : number;
+    finished : boolean;
 
     constructor(settings : GameSettings) {
         super();
 
         this.settings = settings;
         this.gridType = settings.gridType;
+        this.finished = false;
 
         this.setup();
     }
@@ -68,6 +70,11 @@ export class Game extends EventTarget {
         this.grid.updateFrontier();
     }
 
+    finish() {
+        this.finished = true;
+        this.dispatchEvent(new GameEvent('endgame', this));
+    }
+
     placeFromStack(target : Tile, orientedColors : OrientedColors, index : number) : boolean {
         if (this.checkFit(target, orientedColors)) {
             // place tile
@@ -77,6 +84,11 @@ export class Game extends EventTarget {
 
             // compute scores
             this.computeScores(target);
+
+            // end of game?
+            if (this.tileStack.isEmpty()) {
+                this.finish();
+            }
 
             return true;
         } else {

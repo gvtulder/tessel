@@ -49,5 +49,9 @@ export class GameDisplay {
             this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes);
             this.scoreDisplay.points = this.game.points;
         });
+
+        this.game.addEventListener('endgame', () => {
+            this.gridDisplay.gameFinished();
+        });
     }
 }

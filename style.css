@@ -158,7 +158,7 @@ svg .tile-segments {
 
 .gridDisplay.animated {
   transition-property: all;
-  transition-duration: 200ms;
+  transition-duration: 500ms;
 }
 
 .controlbar {
@@ -180,7 +180,7 @@ svg .tile-segments {
   stroke: #ddd;
 }
 .tileStackDisplay .tileOnStack {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   z-index: 0;
   transition: none;
 }
@@ -371,4 +371,11 @@ svg .tile-segments {
 @keyframes scoreOverlay-stroke-width-reverse {
   0% { stroke-width: 10px }
   100% { stroke-width: 1px }
+}
+
+.svg-tile.hide,
+.tileDisplay.hidden {
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 100ms;
 }

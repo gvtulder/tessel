@@ -25,6 +25,10 @@ export class GridDisplay {
     top : number;
     width : number;
     height : number;
+    leftNoPlaceholders : number;
+    topNoPlaceholders : number;
+    widthNoPlaceholders : number;
+    heightNoPlaceholders : number;
 
     scale : number;
     // margins = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -137,6 +141,12 @@ export class GridDisplay {
         this.top = Math.min(...this.grid.tiles.map((t) => t.top));
         this.width = Math.max(...this.grid.tiles.map((t) => t.left + t.width));
         this.height = Math.max(...this.grid.tiles.map((t) => t.top + t.height));
+
+        const noPlaceholders = this.grid.tiles.filter((t) => !t.isPlaceholder());
+        this.leftNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.left));
+        this.topNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.top));
+        this.widthNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
+        this.heightNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.top + t.height));
 
         this.update();
     }

@@ -35,7 +35,7 @@ export class TileStackDisplay {
         }
         const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
         if (n > 0) {
-            this.counter.innerHTML = `+ ${Math.max(0, n)} tiles`;
+            this.counter.innerHTML = `+ ${n} tile${n == 1 ? '' : 's'}`;
         } else {
             this.counter.innerHTML = '';
         }

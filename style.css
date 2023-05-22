@@ -272,6 +272,7 @@ svg .tile-segments {
 }
 
 
+
 .mainGridContainer .gridDisplay {
   position: absolute;
   top: 0px;
@@ -593,4 +594,40 @@ svg .tile-segments {
 @keyframes animate-disappear {
   0% { opacity: 100 }
   100% { opacity: 0 }
+}
+
+
+@media screen and (orientation: portrait) {
+  
+  .gameDisplay {
+    flex-direction: column;
+  }
+  .mainGridContainer {
+    height: auto;
+  }
+  .controlbar {
+    flex-direction: row;
+    width: auto;
+    height: 120px;
+  }
+  .scoreDisplay {
+    margin: 0 10px 0 0;
+  }
+  .tileStackDisplay {
+    margin: 0 0 0 10px
+  }
+  .tileStackDisplay-counter {
+    display: none;
+  }
+  .gameDisplay-buttons {
+    margin: 0;
+  }
+  .gameDisplay-buttons .game-button {
+    display: inline-block;
+  }
+  .gameDisplay-toggles {
+    flex-direction: column;
+    margin: 0 20px 0 0;
+  }
+
 }

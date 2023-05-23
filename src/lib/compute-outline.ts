@@ -1,3 +1,4 @@
+import { Triangle } from "src/grid/Triangle.js";
 
 export type Vertex = { id: string, x: number, y: number };
 export type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };
@@ -61,6 +62,6 @@ export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[]
         cur = nextVertex;
     }
 
-    console.log(boundary);
+    // console.log(boundary);
     return { boundary: boundary, edgesPerVertex: edgesPerVertex };
 }

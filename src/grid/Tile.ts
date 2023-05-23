@@ -1,6 +1,7 @@
 import { Triangle } from './Triangle.js';
 import { makeConvexHull } from '../lib/convex-hull.js';
 import { Grid, TileColors, Coord } from './Grid.js';
+import { computeOutline } from 'src/lib/compute-outline.js';
 
 
 export type TileType = new (grid : Grid, x : number, y : number) => Tile;
@@ -141,13 +142,7 @@ export abstract class Tile extends EventTarget {
     }
 
     computeOutline() {
-        const points: Coord[] = [];
-        for (const triangle of this.triangles) {
-            for (const point of triangle.points) {
-                points.push([point[0] + triangle.left - this.left,
-                point[1] + triangle.top - this.top]);
-            }
-        }
-        return makeConvexHull(points);
+        const r = computeOutline(new Set<Triangle>(this.triangles));
+        return r.boundary.map((v) => [v.x - this.left, v.y - this.top]);
     }
 }

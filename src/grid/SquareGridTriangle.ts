@@ -13,7 +13,7 @@ export class SquareGridTriangle extends Triangle {
                 // top triangle pointing down
                 this.points = [[0, 0], [1, 0], [0.5, 0.5]];
                 this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, 0.5 + O], [0.5 - O, 0.5 + O], [0, O], [0, 0]];
-                this.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
+                this.neighborOffsets = [[0, -1], [0, 2], [0, 1]];
                 break;
             case 1:
                 // left triangle pointing right
@@ -26,14 +26,14 @@ export class SquareGridTriangle extends Triangle {
                 this.left += 0.5;
                 this.points = [[0, 0.5], [0.5, 0], [0.5, 1]];
                 this.polyPoints = [[0, 0.5], [0.5, 0], [0.5 + O, 0], [0.5 + O, 1 + O], [0.5, 1 + O], [0, 0.5 + O], [0, 0.5]];
-                this.neighborOffsets = [[1, -1], [0, -2], [0, 1]];
+                this.neighborOffsets = [[0, -2], [1, -1], [0, 1]];
                 break;
             case 3:
                 // bottom triangle pointing up
                 this.top += 0.5;
                 this.points = [[0, 0.5], [0.5, 0], [1, 0.5]];
                 this.polyPoints = [[0, 0.5], [0.5, 0], [1, 0.5], [1 + O, 0.5 + O], [0, 0.5 + O], [0, 0.5]];
-                this.neighborOffsets = [[0, 1], [0, -1], [0, -2]];
+                this.neighborOffsets = [[0, -2], [0, -1], [0, 1]];
                 break;
             default:
                 console.log('invalid side!');

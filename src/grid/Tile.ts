@@ -22,6 +22,7 @@ export abstract class Tile extends EventTarget {
     height: number;
     triangles: Triangle[];
 
+    // neighbors in clockwise order
     neighborOffsets: Coord[];
 
     constructor(grid: Grid, x: number, y: number) {

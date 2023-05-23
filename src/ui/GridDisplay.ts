@@ -49,6 +49,10 @@ export class GridDisplay extends EventTarget {
             this.addTile(evt.tile);
         });
 
+        this.grid.addEventListener('movetile', (evt: GridEvent) => {
+            this.moveTile(evt.tile, evt.oldX, evt.oldY);
+        });
+
         this.grid.addEventListener('removetile', (evt: GridEvent) => {
             this.removeTile(evt.tile);
         });
@@ -154,6 +158,12 @@ export class GridDisplay extends EventTarget {
         this.tileDisplayGrid[tile.x][tile.y] = null;
         this.tileElement.removeChild(td.element);
         this.svgTriangles.removeChild(td.svgTriangles);
+        this.updateDimensions();
+    }
+
+    moveTile(tile : Tile, oldX : number, oldY : number) {
+        this.tileDisplayGrid[tile.x][tile.y] = this.tileDisplayGrid[oldX][oldY];
+        this.tileDisplayGrid[oldX][oldY] = null;
         this.updateDimensions();
     }
 

@@ -4,6 +4,7 @@ import { Triangle } from './Triangle.js';
 import { GridDisplay } from '../ui/GridDisplay.js';
 import { DEBUG } from '../settings.js';
 import { GridType } from './GridType.js';
+import { EditableTile } from 'src/ui/TileEditorDisplay.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
@@ -20,12 +21,16 @@ export class GridEvent extends Event {
     grid : Grid;
     triangle? : Triangle;
     tile? : Tile;
+    oldX? : number;
+    oldY? : number;
 
-    constructor(type : string, grid : Grid, triangle : Triangle, tile : Tile) {
+    constructor(type : string, grid : Grid, triangle : Triangle, tile : Tile, oldX? : number, oldY? : number) {
         super(type);
         this.grid = grid;
         this.triangle = triangle;
         this.tile = tile;
+        this.oldX = oldX;
+        this.oldY = oldY;
     }
 }
 
@@ -90,6 +95,21 @@ export class Grid extends EventTarget {
         this.tileGrid[tile.x][tile.y] = null;
         tile.removeFromGrid();
         this.dispatchEvent(new GridEvent('removetile', this, null, tile));
+    }
+
+    moveTile(tile : EditableTile, x : number, y : number) {
+        // this only works for the editable tiles
+        // assumption: triangles are updated elsewhere
+        const oldX = tile.x;
+        const oldY = tile.y;
+        if (this.tileGrid[x][y]) {
+            this.removeTile(this.tileGrid[x][x]);
+        }
+        this.tileGrid[oldX][oldY] = null;
+        this.tileGrid[x][y] = tile;
+        tile.x = x;
+        tile.y = y;
+        this.dispatchEvent(new GridEvent('movetile', this, null, tile, oldX, oldY));
     }
 
     getTile(x : number, y : number) : Tile | null {

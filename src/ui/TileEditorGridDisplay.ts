@@ -59,18 +59,10 @@ export class TileEditorGridDisplay extends GridDisplay {
     }
 
     rescaleGrid() {
-        let left = this.left;
-        let top = this.top
-        let width = this.width;
-        let height = this.height;
-
-        // leave some space around
-        const extraWidth = (width - left) / 4;
-        const extraHeight = (height - top) / 4;
-        left = left - extraWidth;
-        top = top - extraHeight;
-        width = width + 2 * extraWidth;
-        height = height + 2 * extraHeight;
+        const left = this.left;
+        const top = this.top
+        const width = this.width;
+        const height = this.height;
 
         const availWidth = (this.container || document.documentElement).clientWidth - this.margins.left - this.margins.right;
         const availHeight = (this.container || document.documentElement).clientHeight - this.margins.top - this.margins.bottom;

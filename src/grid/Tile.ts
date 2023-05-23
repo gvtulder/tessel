@@ -49,7 +49,7 @@ export abstract class Tile {
         return colors;
     }
 
-    get orientation() : string {
+    get shape() : string {
         return 'default';
     }
 
@@ -79,6 +79,7 @@ export abstract class Tile {
 
     checkFitOrientedColors(orientedColors : OrientedColors) : boolean {
         let colors = this.computeFromOrientedColors(orientedColors);
+        if (colors === null) return false;
         colors = this.mapColorsToTriangles(colors);
         for (let i=0; i<this.triangles.length; i++) {
             const triangle = this.triangles[i];

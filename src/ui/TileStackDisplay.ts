@@ -8,6 +8,7 @@ import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
 import { GridType } from "src/grid/GridType.js";
+import { mean } from 'src/utils.js';
 
 export class TileStackDisplay {
     gridType : GridType;
@@ -115,7 +116,7 @@ class SingleTileOnStackDisplay {
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(gridType);
         this.gridDisplay = new TileStackGridDisplay(this.grid);
-        this.tile = new gridType.createTile(this.grid, 0, 0);
+        this.tile = new gridType.createTile(this.grid, 0, 1);
         this.grid.addTile(this.tile);
 
         this.element = document.createElement('div');
@@ -136,6 +137,12 @@ class SingleTileOnStackDisplay {
         this.rotatable.appendChild(this.gridDisplay.element);
 
         this.gridDisplay.rescaleGrid();
+
+        let meanX = mean(this.grid.triangles.map((t) => (t.left + t.center[0])));
+        let meanY = mean(this.grid.triangles.map((t) => (t.top + t.center[1])));
+        meanX = meanX * 100 + parseFloat(this.gridDisplay.element.style.left.replace('px', ''));
+        meanY = meanY * 100 + parseFloat(this.gridDisplay.element.style.top.replace('px', ''));
+        this.rotatable.style.transformOrigin = `${meanX}px ${meanY}px`;
 
         this.rotatable.addEventListener('transitionend', () => {
             this.rotatable.classList.remove('animated');

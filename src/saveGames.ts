@@ -92,3 +92,11 @@ export const CubeDebug: GameSettings = {
 }
 lookup.set('CubeDebug', CubeDebug);
 
+export const TriangleDefault: GameSettings = {
+    gridType : GridTypes['triangle'],
+    initialTile: ['red','black','blue'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.permutations(['red','black','blue','white'], 3),
+}
+lookup.set('TriangleDefault', TriangleDefault);
+

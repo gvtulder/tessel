@@ -138,11 +138,14 @@ class SingleTileOnStackDisplay {
 
         this.gridDisplay.rescaleGrid();
 
+        /*
+        // TODO : this doesn't work for the hexagons
         let meanX = mean(this.grid.triangles.map((t) => (t.left + t.center[0])));
         let meanY = mean(this.grid.triangles.map((t) => (t.top + t.center[1])));
         meanX = meanX * 100 + parseFloat(this.gridDisplay.element.style.left.replace('px', ''));
         meanY = meanY * 100 + parseFloat(this.gridDisplay.element.style.top.replace('px', ''));
         this.rotatable.style.transformOrigin = `${meanX}px ${meanY}px`;
+        */
 
         this.rotatable.addEventListener('transitionend', () => {
             this.rotatable.classList.remove('animated');

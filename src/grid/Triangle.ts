@@ -6,6 +6,7 @@ export type TriangleType = (new (x : number, y : number) => Triangle);
 export abstract class Triangle extends EventTarget {
     x: number;
     y: number;
+    shape: number;
     private _color: TriangleColor;
     tile? : Tile;
 

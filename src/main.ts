@@ -11,7 +11,84 @@ import * as SaveGames from './saveGames.js';
 import { MainMenuDisplay } from './ui/MainMenuDisplay.js';
 import { GameController } from './ui/GameController.js';
 import disableIosZoom from './lib/disable-ios-zoom.js';
+import { Pattern } from './grid/Pattern.js';
+import { TriangleOffsets, newCustomTileType } from './grid/CustomTile.js';
+import { PatternEditorGridDisplay } from './ui/PatternEditorGridDisplay.js';
 
+
+export function runEditorDebug() {
+    DEBUG.NUMBER_TRIANGLES = true;
+
+    let triangleOffsets : TriangleOffsets;
+    let gridType : GridType;
+
+
+    switch (window.location.hash) {
+    case '#squares':
+        // squares
+        // clockwise
+        triangleOffsets = [
+            [ [0, 0], [0, 1], [0, 2], [0, 3]],
+        ];
+        gridType = GridTypes['square'];
+        break;
+
+    case '#rhombushex':
+        // pointy hexagon
+        // clockwise
+        triangleOffsets = [
+            [ [0, -1], [0, 0], [1, 0], [1, 1], [0, 1], [0, 2], [-1, 1], [-1, 0] ],
+        ];
+        gridType = GridTypes['hex'];
+        break;
+
+    case '#rhombushex-tail':
+        // pointy hexagon with a tail
+        // clockwise
+        triangleOffsets = [
+            [ [0, -1], [0, 0], [1, 0], [1, 1], [0, 1], [0, 2], [-1, 1], [-1, 0] ],
+            // [ [3, 0], [3, 1], [4, 1], [4, 2], [3, 2], [3, 3], [2, 2], [2, 1] ],
+            [ [3, 0], [3, 1], [4, 1], [4, 2], [3, 2], [3, 3], [2, 2], [1, 2], [1,3], [2, 1] ],
+        ];
+        gridType = GridTypes['hex'];
+        break;
+
+    case '#hexagons':
+    default:
+        // hexagons
+        // clockwise
+        triangleOffsets = [
+            [ [0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0] ],
+        ];
+        gridType = GridTypes['hex'];
+        break;
+    }
+
+    const grid = new Grid(gridType);
+
+    const container = document.createElement('div');
+    container.className = 'mainGridContainer';
+    container.style.position = 'absolute';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    document.body.appendChild(container);
+
+    const display = new PatternEditorGridDisplay(grid, container, null);
+    container.appendChild(display.element);
+
+    const pattern = new Pattern(grid, triangleOffsets);
+
+    display.rescaleGrid();
+    display.enableAutoRescale();
+
+    if (DEBUG.CONNECT_TILES) {
+        display.debugConnectAllTriangles();
+    }
+
+    window.display = display;
+}
 
 export function runDebug() {
     const gridType = (GridTypes[['hex', 'square', 'triangle'][DEBUG.SELECT_GRID]] as GridType);

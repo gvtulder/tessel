@@ -33,7 +33,7 @@ export class MainMenuDisplay extends EventTarget {
         gameList.className = 'gameList';
         div.appendChild(gameList);
 
-        for (const gameSettings of [SquareDefault, HexDefault, TriangleDefault]) {
+        for (const gameSettings of [TriangleDefault, SquareDefault, HexDefault]) {
             const exampleTile = document.createElement('div');
             exampleTile.className = 'gameList-exampleTile';
             gameList.appendChild(exampleTile);

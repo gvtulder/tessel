@@ -10,7 +10,8 @@ export class EquilateralGridTriangle extends Triangle {
         const odd = wrapModulo(this.y, 12) < 6;
         this.left = this.x + (odd ? 0 : 0.5);
         this.top = height * Math.floor(this.y / 6);
-        switch (wrapModulo(this.y, 6)) {
+        this.shape = wrapModulo(this.y, 6);
+        switch (this.shape) {
             case 0:
                 // top triangle pointing down
                 this.points = [[0, 0], [1, 0], [0.5, h]];

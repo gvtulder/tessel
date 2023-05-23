@@ -7,7 +7,8 @@ export class SquareGridTriangle extends Triangle {
         // triangle in a square grid
         this.left = this.x;
         this.top = Math.floor(this.y / 4);
-        switch (wrapModulo(this.y, 4)) {
+        this.shape = wrapModulo(this.y, 4);
+        switch (this.shape) {
             case 0:
                 // top triangle pointing down
                 this.points = [[0, 0], [1, 0], [0.5, 0.5]];

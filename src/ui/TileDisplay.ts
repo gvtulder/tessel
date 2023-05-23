@@ -9,9 +9,10 @@ import { GridDisplay } from './GridDisplay.js';
 import { shrinkOutline } from 'src/utils.js';
 import { DraggableTileHTMLDivElement } from './TileStackDisplay.js';
 import { GameDisplay } from './GameDisplay.js';
+import { Triangle } from 'src/grid/Triangle.js';
 
 
-export class TileDisplay {
+export class TileDisplay extends EventTarget {
     tile : Tile;
 
     gridDisplay : GridDisplay;
@@ -23,9 +24,15 @@ export class TileDisplay {
     dropzone : Interactable;
 
     constructor(gridDisplay: GridDisplay, tile: Tile) {
+        super();
         this.gridDisplay = gridDisplay;
         this.tile = tile;
         this.build();
+
+        this.tile.addEventListener('updatetriangles', () => {
+            this.dispatchEvent(new Event('updatetile'));
+            this.redraw();
+        });
     }
 
     build() {
@@ -38,6 +45,10 @@ export class TileDisplay {
         div.style.height = `${this.tile.height * SCALE}px`;
         this.element = div;
 
+        this.redraw();
+    }
+
+    redraw() {
         this.drawTriangles();
         this.drawOutline();
 
@@ -47,23 +58,37 @@ export class TileDisplay {
     }
 
     drawTriangles() {
-        this.triangleDisplays = [];
+        if (!this.triangleDisplays) {
+            this.triangleDisplays = [];
 
-        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        group.setAttribute('class', 'svg-tile');
-        this.svgTriangles = group;
+            const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            group.setAttribute('class', 'svg-tile');
+            this.svgTriangles = group;
+        }
+
+        const displays = new Map<Triangle, TriangleDisplay>();
+        for (const t of this.triangleDisplays) {
+            displays.set(t.triangle, t);
+        }
 
         // add in correct order to make the overlapping work
         const sortedTriangles = [...this.tile.triangles].sort((a, b) => {
             return (a.y != b.y) ? (a.y - b.y) : (a.x - b.x);
         });
+        for (const c of [...this.svgTriangles.childNodes]) {
+            this.svgTriangles.removeChild(c);
+        }
         for (const triangle of sortedTriangles) {
+            let triangleDisplay = displays.get(triangle);
+            if (!triangleDisplay) {
+                triangleDisplay = new TriangleDisplay(triangle);
+                this.triangleDisplays.push(triangleDisplay);
+                displays.set(triangle, triangleDisplay);
+            }
             const left = (triangle.left - this.tile.left) * SCALE ;
             const top = (triangle.top - this.tile.top) * SCALE
-            const triangleDisplay = new TriangleDisplay(triangle);
             triangleDisplay.element.setAttribute('transform', `translate(${left} ${top})`);
-            this.triangleDisplays.push(triangleDisplay);
-            group.appendChild(triangleDisplay.element);
+            this.svgTriangles.appendChild(triangleDisplay.element);
         }
     }
 

@@ -14,6 +14,7 @@ import disableIosZoom from './lib/disable-ios-zoom.js';
 import { Pattern } from './grid/Pattern.js';
 import { TriangleOffsets, newCustomTileType } from './grid/CustomTile.js';
 import { PatternEditorGridDisplay } from './ui/PatternEditorGridDisplay.js';
+import { EditorDisplay } from './ui/EditorDisplay.js';
 
 
 export function runEditorDebug() {
@@ -77,27 +78,18 @@ export function runEditorDebug() {
         break;
     }
 
-    const grid = new Grid(gridType);
+    const tileGrid = new Grid(gridType);
+    const patternGrid = new Grid(gridType);
 
-    const container = document.createElement('div');
-    container.className = 'mainGridContainer';
-    container.style.position = 'absolute';
-    container.style.top = '0';
-    container.style.left = '0';
-    container.style.width = '100%';
-    container.style.height = '100%';
-    document.body.appendChild(container);
+    const display = new EditorDisplay(tileGrid, patternGrid);
+    document.body.appendChild(display.element);
 
-    const display = new PatternEditorGridDisplay(grid, container, null);
-    container.appendChild(display.element);
+    const pattern = new Pattern(patternGrid, triangleOffsets);
 
-    const pattern = new Pattern(grid, triangleOffsets);
-
-    display.rescaleGrid();
     display.enableAutoRescale();
 
     if (DEBUG.CONNECT_TILES) {
-        display.debugConnectAllTriangles();
+        display.tileEditorDisplay.debugConnectAllTriangles();
     }
 
     window.display = display;

@@ -6,7 +6,7 @@ import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
 
-export class GridDisplay {
+export class GridDisplay extends EventTarget {
     grid: Grid;
     element: HTMLDivElement;
     gridElement: HTMLDivElement;
@@ -36,6 +36,7 @@ export class GridDisplay {
     autorescale = false;
 
     constructor(grid: Grid) {
+        super();
         this.grid = grid;
 
         this.build();
@@ -46,6 +47,10 @@ export class GridDisplay {
 
         this.grid.addEventListener('addtile', (evt: GridEvent) => {
             this.addTile(evt.tile);
+        });
+
+        this.grid.addEventListener('removetile', (evt: GridEvent) => {
+            this.removeTile(evt.tile);
         });
 
         for (const triangle of this.grid.triangles) {
@@ -135,7 +140,25 @@ export class GridDisplay {
             this.tileDisplays.push(tileDisplay);
             this.tileElement.appendChild(tileDisplay.element);
             this.svgTriangles.appendChild(tileDisplay.svgTriangles);
+            tileDisplay.addEventListener('updatetile', () => {
+                this.updateDimensions();
+            });
         }
+        this.updateDimensions();
+    }
+
+    removeTile(tile : Tile) {
+        const td = this.tileDisplayGrid[tile.x][tile.y];
+        const idx = this.tileDisplays.indexOf(td);
+        if (idx > -1) this.tileDisplays.splice(idx, 1);
+        this.tileDisplayGrid[tile.x][tile.y] = null;
+        this.tileElement.removeChild(td.element);
+        this.svgTriangles.removeChild(td.svgTriangles);
+        this.updateDimensions();
+    }
+
+    updateDimensions() {
+        if (this.grid.tiles.length == 0) return;
 
         this.left = Math.min(...this.grid.tiles.map((t) => t.left));
         this.top = Math.min(...this.grid.tiles.map((t) => t.top));

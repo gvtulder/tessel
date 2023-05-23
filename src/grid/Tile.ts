@@ -11,7 +11,7 @@ export type OrientedColors = {
     colors : TileColors;
 }
 
-export abstract class Tile {
+export abstract class Tile extends EventTarget {
     grid: Grid;
     x: number;
     y: number;
@@ -24,23 +24,41 @@ export abstract class Tile {
     neighborOffsets: Coord[];
 
     constructor(grid: Grid, x: number, y: number) {
+        super();
+
         this.grid = grid;
         this.x = x;
         this.y = y;
 
-        this.triangles = this.findTriangles();
-        for (const triangle of this.triangles) {
-            triangle.tile = this;
-        }
-
-        this.left = Math.min(...this.triangles.map((t) => t.left));
-        this.top = Math.min(...this.triangles.map((t) => t.top));
-        this.width = Math.max(...this.triangles.map((t) => t.left + t.width)) - this.left;
-        this.height = Math.max(...this.triangles.map((t) => t.top + t.height)) - this.top;
+        this.updateTriangles();
     }
 
     abstract get rotationAngles() : number[];
     abstract findTriangles() : Triangle[];
+
+    protected updateTriangles() {
+        const oldTriangles = new Set<Triangle>(this.triangles || []);
+        this.triangles = this.findTriangles();
+        for (const triangle of this.triangles) {
+            triangle.tile = this;
+            oldTriangles.delete(triangle);
+        }
+        for (const triangle of oldTriangles.values()) {
+            triangle.tile = null;
+        }
+        this.left = Math.min(...this.triangles.map((t) => t.left));
+        this.top = Math.min(...this.triangles.map((t) => t.top));
+        this.width = Math.max(...this.triangles.map((t) => t.left + t.width)) - this.left;
+        this.height = Math.max(...this.triangles.map((t) => t.top + t.height)) - this.top;
+
+        this.dispatchEvent(new Event('updatetriangles'));
+    }
+
+    removeFromGrid() {
+        for (const triangle of this.triangles) {
+            triangle.tile = null;
+        }
+    }
 
     protected mapColorsToTriangles(colors : TileColors) : TileColors {
         return colors;

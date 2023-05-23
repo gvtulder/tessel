@@ -24,6 +24,8 @@ export class TriangleDisplay {
         const polyString = this.triangle.polyPoints.map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
 
         const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        el.setAttribute('data-x', `${this.triangle.x}`);
+        el.setAttribute('data-y', `${this.triangle.y}`);
         el.setAttribute('points', polyString.join(' '));
         if (DEBUG.OVERLAP) {
             el.setAttribute('opacity', `${DEBUG.OPACITY}`);

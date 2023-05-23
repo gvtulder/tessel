@@ -273,13 +273,43 @@ svg .tile-segments {
 
 
 
-.mainGridContainer .gridDisplay {
+.mainGridContainer .gridDisplay,
+.patternEditorGridContainer .gridDisplay,
+.tileEditorGridContainer .gridDisplay {
   position: absolute;
   top: 0px;
   left: 0px;
   z-index: 1000;
 }
 
+.editorDisplay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+.tileEditorGridContainer {
+  order: 1;
+  width: auto;
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden;
+}
+.patternEditorGridContainer {
+  border-left: 1px solid #000;
+  order: 2;
+  width: auto;
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden;
+}
+.editorDisplay .controlbar {
+  order: 3;
+}
 
 
 .tileStackDisplay .tileStackDisplay-counter {

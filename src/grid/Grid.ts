@@ -84,6 +84,14 @@ export class Grid extends EventTarget {
         this.dispatchEvent(new GridEvent('addtile', this, null, tile));
     }
 
+    removeTile(tile : Tile) {
+        const idx = this.tiles.indexOf(tile);
+        if (idx > -1) this.tiles.splice(idx, 1);
+        this.tileGrid[tile.x][tile.y] = null;
+        tile.removeFromGrid();
+        this.dispatchEvent(new GridEvent('removetile', this, null, tile));
+    }
+
     getTile(x : number, y : number) : Tile | null {
         if (!this.tileGrid[x]) return null;
         if (!this.tileGrid[x][y]) return null;
@@ -107,6 +115,11 @@ export class Grid extends EventTarget {
             }
         }
         return neighbors;
+    }
+
+    getOrAddTriangleNeighbors(triangle : Triangle) : Triangle[] {
+        return triangle.neighborOffsets.map((n) =>
+            this.getOrAddTriangle(triangle.x + n[0], triangle.y + n[1]));
     }
 
     getTileNeighbors(tile : Tile) : Tile[] {

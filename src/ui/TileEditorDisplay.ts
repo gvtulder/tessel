@@ -45,19 +45,24 @@ export class TileEditorDisplay {
             this.recomputeFrontier();
 
             // copy and rotate
-            const edgeFrom : Edge = {
-                from: this.grid.getOrAddRotationNeighbor(this.tile.triangles[0], -1),
-                to: this.tile.triangles[0],
-            };
+            const edgeFrom = this.grid.getOrAddRotationEdge(this.tile.triangles[0], 0);
             if (!window.targetTriangle) window.targetTriangle = [1, 24];
             const targetTriangle = this.grid.getOrAddTriangle(...window.targetTriangle);
-            const edgeTo : Edge = {
-                from: this.grid.getOrAddRotationNeighbor(targetTriangle, -1),
-                to: targetTriangle,
-            };
+            const edgeTo = this.grid.getOrAddRotationEdge(targetTriangle, 0);
             const rr = this.tile.rotateOffsets(edgeFrom, edgeTo);
             this.copyTile.replaceTriangleOffsets([...rr]);
         });
+
+        let rotation = 0;
+        window.setInterval(() => {
+            // copy and rotate
+            const edgeFrom = this.grid.getOrAddRotationEdge(this.tile.triangles[0], 0);
+            if (!window.targetTriangle) window.targetTriangle = [1, 24];
+            const targetTriangle = this.grid.getOrAddTriangle(...window.targetTriangle);
+            const edgeTo = this.grid.getOrAddRotationEdge(targetTriangle, rotation++);
+            const rr = this.tile.rotateOffsets(edgeFrom, edgeTo);
+            this.copyTile.replaceTriangleOffsets([...rr]);
+        }, 1000);
     }
 
     build() {

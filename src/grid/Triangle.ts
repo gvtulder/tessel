@@ -4,6 +4,7 @@ import { Tile } from './Tile.js';
 export type TriangleType = (new (x : number, y : number) => Triangle);
 
 export type Edge = { from: Triangle, to: Triangle };
+export type CoordEdge = { from: Coord, to: Coord };
 
 export abstract class Triangle extends EventTarget {
     x: number;
@@ -23,7 +24,7 @@ export abstract class Triangle extends EventTarget {
     neighborOffsets: Coord[];
 
     // rotation in clockwise order
-    rotationOffsets: Coord[];
+    rotationOffsets: CoordEdge[];
     rotationAngles: number[];
 
     private _changecolor: Event = new Event('changecolor');

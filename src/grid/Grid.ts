@@ -1,6 +1,6 @@
 
 import { Tile } from './Tile.js';
-import { Triangle } from './Triangle.js';
+import { Edge, Triangle } from './Triangle.js';
 import { GridDisplay } from '../ui/GridDisplay.js';
 import { DEBUG } from '../settings.js';
 import { GridType } from './GridType.js';
@@ -143,14 +143,20 @@ export class Grid extends EventTarget {
             this.getOrAddTriangle(triangle.x + n[0], triangle.y + n[1]));
     }
 
-    getRotationNeighbor(triangle : Triangle, rotation : number) : Triangle {
+    getRotationEdge(triangle : Triangle, rotation : number) : Edge {
         const offset = triangle.rotationOffsets[wrapModulo(rotation, triangle.rotationOffsets.length)];
-        return this.getTriangle(triangle.x + offset[0], triangle.y + offset[1]);
+        return {
+            from: this.getTriangle(triangle.x + offset.from[0], triangle.y + offset.from[1]),
+            to: this.getTriangle(triangle.x + offset.to[0], triangle.y + offset.to[1]),
+        };
     }
 
-    getOrAddRotationNeighbor(triangle : Triangle, rotation : number) : Triangle {
+    getOrAddRotationEdge(triangle : Triangle, rotation : number) : Edge {
         const offset = triangle.rotationOffsets[wrapModulo(rotation, triangle.rotationOffsets.length)];
-        return this.getOrAddTriangle(triangle.x + offset[0], triangle.y + offset[1]);
+        return {
+            from: this.getOrAddTriangle(triangle.x + offset.from[0], triangle.y + offset.from[1]),
+            to: this.getOrAddTriangle(triangle.x + offset.to[0], triangle.y + offset.to[1]),
+        };
     }
 
     getTileNeighbors(tile : Tile) : Tile[] {

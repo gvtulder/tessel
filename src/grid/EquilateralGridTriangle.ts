@@ -1,4 +1,4 @@
-import { Triangle } from './Triangle.js';
+import { CoordEdge, Triangle } from './Triangle.js';
 import { O } from '../settings.js';
 import { wrapModulo } from '../utils.js';
 
@@ -14,13 +14,25 @@ export class EquilateralGridTriangle extends Triangle {
         this.rotationAngles = [0, 60, 120, 180, 240, 300];
 
         // indices for rotation
-        const shiftRotationCoords = (start : number) : [number, number][] => {
-            // left-side triangles
-            const coords = [[0, 1], [0, 3], [0, 6], [-1, 10], [-1, 8], [-1, 5]];
-            // right-side triangles
-            // coords = [[0, 2], [0, 5], [0, 7], [-1, 9], [-1, 6], [-1, 4]];
-            const r = [...coords.slice(start), ...coords.slice(0, start)];
-            return coords.map((c) => [(c[0] - r[0][0]) % 12, c[1] - r[0][0]]);
+        const shiftRotationCoords = (start : number) : CoordEdge[] => {
+            // triangle coordinates in clockwise order
+            // start is the number of a left-side triangle (at even indices)
+            const coords = [[-1, 4], [0, 1], [0, 2], [0, 3], [0,5], [0, 6], [0, 7],
+                            [-1, 10], [-1, 9], [-1, 8], [-1, 6], [-1, 5]];
+            const edges : CoordEdge[] = [];
+            for (let r=0; r<6; r++) {
+                edges.push({
+                    from: [
+                        coords[((r + start) * 2) % 12][0] - coords[start * 2 + 1][0],
+                        coords[((r + start) * 2) % 12][1] - coords[start * 2 + 1][1]
+                    ],
+                    to: [
+                        coords[((r + start) * 2 + 1) % 12][0] - coords[start * 2 + 1][0],
+                        coords[((r + start) * 2 + 1) % 12][1] - coords[start * 2 + 1][1]
+                    ],
+                });
+            }
+            return edges;
         };
 
         switch (this.shape) {
@@ -63,7 +75,7 @@ export class EquilateralGridTriangle extends Triangle {
                 this.left += 1;
                 this.points = [[0, 0], [0.5, height], [0, 2 * h]];
                 this.polyPoints = [[0, 0], [O, 0], [0.5 + O, height + O], [0, 2 * h + O], [0, 0]];
-                this.neighborOffsets = [[0, -1], [0, -3], [0, 1]];
+                this.neighborOffsets = [[0, -1], [1, -3], [0, 1]];
                 this.rotationOffsets = shiftRotationCoords(3);
                 // this.rotationOffsets = [[0, 0], [0, 1], [0, 2]];
                 break;

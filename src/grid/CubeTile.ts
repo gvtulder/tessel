@@ -7,6 +7,9 @@ export class CubeTile extends HexTile {
     }
 
     protected mapColorsToTriangles(colors : TileColors) : TileColors {
+        if (typeof colors === 'string') {
+            return this.triangles.map(() => colors as string);
+        }
         return colors ? [
             colors[0], colors[0],
             colors[1], colors[1],

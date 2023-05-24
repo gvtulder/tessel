@@ -18,8 +18,6 @@ import { EditorDisplay } from './ui/EditorDisplay.js';
 
 
 export function runEditorDebug() {
-    DEBUG.NUMBER_TRIANGLES = true;
-
     let triangleOffsets : TriangleOffsets;
     let gridType : GridType;
 

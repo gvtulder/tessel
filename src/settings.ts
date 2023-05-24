@@ -7,10 +7,12 @@ export const DEBUG = {
     NUMBER_TRIANGLES: false,
     RANDOM_TRIANGLES: false,
     WHITE_TRIANGLES: false,
-    HIDE_TILE_OUTLINE: true,
+    HIDE_TILE_OUTLINE: false,
     RANDOM_TILES: false,
     CONNECT_TILES: false,
     PLOT_SINGLE_TRIANGLES: false,
+    TILE_EDITOR_COPY_TILE: false,
+    TILE_EDITOR_ROTATE_COPY: false,
 }
 
 export const SCALE = 100;

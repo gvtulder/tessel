@@ -1,7 +1,8 @@
-import { Triangle } from './Triangle.js';
+import { Edge, Triangle } from './Triangle.js';
 import { makeConvexHull } from '../lib/convex-hull.js';
-import { Grid, TileColors, Coord } from './Grid.js';
+import { Grid, TileColors, Coord, TriangleColor } from './Grid.js';
 import { computeOutline } from 'src/lib/compute-outline.js';
+import { wrapModulo } from 'src/utils.js';
 
 
 export type TileType = new (grid : Grid, x : number, y : number) => Tile;
@@ -61,7 +62,10 @@ export abstract class Tile extends EventTarget {
         }
     }
 
-    protected mapColorsToTriangles(colors : TileColors) : TileColors {
+    protected mapColorsToTriangles(colors : TileColors | TriangleColor) : TileColors {
+        if (!colors || typeof colors === 'string') {
+            return this.triangles.map(() => colors as string);
+        }
         return colors;
     }
     protected mapColorsFromTriangles(colors : TileColors) : TileColors {
@@ -76,7 +80,7 @@ export abstract class Tile extends EventTarget {
         return this.mapColorsFromTriangles(this.triangles.map((t) => t.color));
     }
 
-    set colors(colors: TileColors) {
+    set colors(colors: TileColors | TriangleColor) {
         colors = this.mapColorsToTriangles(colors);
         for (let i = 0; i < this.triangles.length; i++) {
             this.triangles[i].color = colors ? colors[i] : null;
@@ -144,5 +148,44 @@ export abstract class Tile extends EventTarget {
     computeOutline() {
         const r = computeOutline(new Set<Triangle>(this.triangles));
         return r.boundary.map((v) => [v.x - this.left, v.y - this.top]);
+    }
+
+
+    computeRotatedOffsets(targetGrid : Grid, edgeFrom : Edge, edgeTo : Edge) : number[][] {
+        const map = new Map<Triangle, Triangle>();
+        const todo = new Set<Triangle>(this.triangles);
+        map.set(edgeFrom.from, edgeTo.from);
+        map.set(edgeFrom.to, edgeTo.to);
+        console.log(edgeFrom, edgeTo);
+        const queue : [Edge, Edge][] = [[edgeFrom, edgeTo]];
+        while (queue.length > 0) {
+            const [edgeFrom, edgeTo] = queue.pop();
+            const sourceNeighbors = this.grid.getTriangleNeighbors(edgeFrom.to, true);
+            const targetNeighbors = targetGrid.getOrAddTriangleNeighbors(edgeTo.to);
+            const prevSrcIdx = sourceNeighbors.indexOf(edgeFrom.from);
+            const prevTgtIdx = targetNeighbors.indexOf(edgeTo.from);
+            for (let i=0; i<sourceNeighbors.length; i++) {
+                const neighbor = sourceNeighbors[i];
+                if (neighbor && todo.has(neighbor)) {
+                    const newIdx = wrapModulo(i + prevTgtIdx - prevSrcIdx, sourceNeighbors.length);
+                    const newTarget = targetNeighbors[newIdx];
+                    map.set(neighbor, newTarget);
+                    queue.push([
+                        { from: edgeFrom.to, to: neighbor },
+                        { from: edgeTo.to, to: newTarget },
+                    ]);
+                    todo.delete(neighbor);
+                }
+            }
+        }
+
+        // console.log(map);
+
+        const newTriangleOffsets = this.triangles.map((src) => {
+            const tgt = map.get(src);
+            return [tgt.x, tgt.y];
+        });
+
+        return [...newTriangleOffsets];
     }
 }

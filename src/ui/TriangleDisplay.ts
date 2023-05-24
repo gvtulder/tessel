@@ -36,6 +36,8 @@ export class TriangleDisplay {
 
         if (DEBUG.TRIANGLE_OUTLINE) {
             const outline = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            outline.setAttribute('data-x', `${this.triangle.x}`);
+            outline.setAttribute('data-y', `${this.triangle.y}`);
             outline.setAttribute('points', pointsString.join(' '));
             outline.setAttribute('fill', 'transparent');
             outline.setAttribute('stroke', 'yellow');

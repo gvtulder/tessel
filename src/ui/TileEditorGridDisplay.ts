@@ -32,7 +32,8 @@ export class TileEditorGridDisplay extends GridDisplay {
         super(grid);
         this.container = container;
 
-        interact(this.svgTriangles).on('tap', (evt : Event) => {
+        interact(this.svgTriangles)
+        .on('tap', (evt : Event) => {
             const tgt = evt.target as SVGElement;
             if (tgt.getAttribute) {
                 const x = tgt.getAttribute('data-x');
@@ -42,6 +43,17 @@ export class TileEditorGridDisplay extends GridDisplay {
                 }
             }
         })
+        .on('doubletap', (evt : Event) => {
+            console.log(evt);
+            const tgt = evt.target as SVGElement;
+            if (tgt.getAttribute) {
+                const x = tgt.getAttribute('data-x');
+                const y = tgt.getAttribute('data-y');
+                if (x !== undefined && x !== null) {
+                    this.dispatchEvent(new TileEditorGridEvent('doubleclicktriangle', parseInt(x), parseInt(y)));
+                }
+            }
+        });
         this.element.removeChild(this.tileElement);
     }
 

@@ -6,6 +6,7 @@ import { TileStack, FixedOrderTileStack } from "src/game/TileStack.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
 import { GridType } from "src/grid/GridType.js";
 import { Pattern } from "src/grid/Pattern.js";
+import { EditorTileStackDisplay } from "./EditorTileStackDisplay.js";
 
 export class EditorDisplay {
     tileGrid : Grid;
@@ -48,12 +49,18 @@ export class EditorDisplay {
         const gridType : GridType = {
             createTile: this.pattern.getCustomTileType(),
             createTriangle: this.patternGrid.gridType.createTriangle,
+            rotationAngles: this.patternGrid.gridType.rotationAngles,
         };
 
-        const tileStack = new FixedOrderTileStack(new TileStack([['red', 'green', 'blue', 'orange', 'pink']]), 3);
-        const tileStackDisplay = new TileStackDisplay(gridType, tileStack);
+        // tile stack
+        const tileStackDisplay = new EditorTileStackDisplay(gridType);
         controlbar.appendChild(tileStackDisplay.element);
         tileStackDisplay.makeDraggable(null, () => { return; });
+
+
+        this.tileEditorDisplay.addEventListener('edittile', () => {
+            tileStackDisplay.updateTiles(this.tileEditorDisplay.tile);
+        });
     }
 
     enableAutoRescale() {

@@ -10,6 +10,7 @@ import { TileDisplay } from "./TileDisplay.js";
 import { GridType } from "src/grid/GridType.js";
 import { mean } from 'src/utils.js';
 import { CopyTile } from './TileEditorDisplay.js';
+import { ProtoTile, TileVariant } from 'src/grid/ProtoTile.js';
 
 export class TileEditorStackDisplay {
     gridType : GridType;
@@ -23,10 +24,15 @@ export class TileEditorStackDisplay {
         this.build();
     }
 
-    updateTiles(protoTile : Tile) {
+    updateTiles(protoTile : ProtoTile) {
+        const tileVariants = protoTile.computeRotationVariants();
         for (let i=0; i<this.tileDisplays.length; i++) {
-            this.tileDisplays[i].updateTile(protoTile);
-            this.tileDisplays[i].tile.colors = protoTile.colors;
+            if (i < tileVariants.length) {
+                this.tileDisplays[i].updateTile(tileVariants[i]);
+                this.tileDisplays[i].tile.colors = protoTile.colors;
+            } else {
+                this.tileDisplays[i].disable();
+            }
         }
     }
 
@@ -36,7 +42,7 @@ export class TileEditorStackDisplay {
         this.element = div;
 
         for (let i=0; i<this.gridType.rotationAngles.length; i++) {
-            const tileDisplay = new SingleTileOnEditorStackDisplay(this, i, this.gridType, i);
+            const tileDisplay = new SingleTileOnEditorStackDisplay(this, i, this.gridType);
             this.element.appendChild(tileDisplay.element);
             this.tileDisplays.push(tileDisplay);
         }
@@ -74,11 +80,8 @@ class SingleTileOnEditorStackDisplay {
     element : HTMLDivElement;
     rotatable : HTMLDivElement;
     draggable : Interactable;
-    rotation : number;
 
-    constructor(tileStackDisplay : TileEditorStackDisplay, indexOnStack : number, gridType : GridType, rotation : number) {
-        this.rotation = rotation;
-
+    constructor(tileStackDisplay : TileEditorStackDisplay, indexOnStack : number, gridType : GridType) {
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(gridType);
@@ -177,10 +180,12 @@ class SingleTileOnEditorStackDisplay {
         }
     }
 
-    updateTile(protoTile : Tile) {
-        const edgeFrom = protoTile.grid.getOrAddRotationEdge(protoTile.triangles[0], 0);
-        const edgeTo = this.tile.grid.getOrAddRotationEdge(this.tile.grid.getOrAddTriangle(0, 0), this.rotation);
-        const offsets = protoTile.computeRotatedOffsets(this.tile.grid, edgeFrom, edgeTo);
-        this.tile.replaceTriangleOffsets(offsets);
+    updateTile(tileVariant : TileVariant) {
+        this.tile.replaceTriangleOffsets(tileVariant.offsets);
+        this.element.style.display = '';
+    }
+
+    disable() {
+        this.element.style.display = 'none';
     }
 }

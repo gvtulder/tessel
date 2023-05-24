@@ -11,7 +11,7 @@ export class SquareGridTriangle extends Triangle {
         this.rotationShape = 0;
         this.rotationAngles = [0, 90, 180, 270];
         this.xAtOrigin = 0;
-        this.yAtOrigin = wrapModulo(this.x, 4);
+        this.yAtOrigin = wrapModulo(this.y, 4);
 
         // indices for rotation
         const shiftRotationCoords = (start : number) : CoordEdge[] => {

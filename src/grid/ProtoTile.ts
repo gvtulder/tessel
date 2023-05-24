@@ -130,23 +130,37 @@ export class ProtoTile extends Tile {
     }
 
     moveOffsetsToOrigin(offsets : Coord[]) : Coord[] {
-        let topLeft = offsets[0];
-        for (const offset of offsets) {
-            if ((offset[0] < topLeft[0]) || ((offset[0] == topLeft[1]) && (offset[1] < topLeft[1]))) {
-                topLeft = offset;
+        const triangles = offsets.map((o) => this.grid.getOrAddTriangle(o[0], o[1]));
+        let topLeft = triangles[0];
+        for (const t of triangles) {
+            const cmpAtOrigin = (t.xAtOrigin - topLeft.xAtOrigin) || (t.yAtOrigin - topLeft.yAtOrigin);
+            const cmpAbsolute = (t.x - topLeft.x) || (t.y - topLeft.y)
+            if ((cmpAtOrigin || cmpAbsolute) < 0) {
+                topLeft = t;
             }
         }
-        return offsets.map((offset) => [offset[0] - topLeft[0], offset[1] - topLeft[1]]);
+        return offsets.map((offset) => [
+            offset[0] - topLeft.x + topLeft.xAtOrigin,
+            offset[1] - topLeft.y + topLeft.yAtOrigin
+        ]);
     }
 
     isEquivalentShape(a : TileVariant, b : TileVariant) {
         // assumption: offsets moved to origin
         if (a.offsets.length != b.offsets.length) return false;
-        const seen = new Set<string>();
-        for (const offset of a.offsets) {
-            seen.add(`${offset[0]} ${offset[1]}`);
+        const colorsInA = new Map<string, string>();
+        const colorAtoB = new Map<string, string>();
+        for (let i=0; i<a.offsets.length; i++) {
+            colorsInA.set(`${a.offsets[i][0]} ${a.offsets[i][1]}`, a.colors[i]);
         }
-        return b.offsets.every((offset) => seen.has(`${offset[0]} ${offset[1]}`));
+        for (let i=0; i<b.offsets.length; i++) {
+            const colorInA = colorsInA.get(`${b.offsets[i][0]} ${b.offsets[i][1]}`);
+            if (!colorInA) return false;
+            const colorInB = colorAtoB.get(colorInA);
+            if (!colorInB) colorAtoB.set(colorInA, b.colors[i]);
+            if (colorInB && colorInB != b.colors[i]) return false;
+        }
+        return true;
     }
 }
 

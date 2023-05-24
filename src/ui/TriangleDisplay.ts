@@ -6,6 +6,7 @@ export class TriangleDisplay {
 
     element: SVGElement;
     triangleElement : SVGElement;
+    centerElement : SVGElement;
 
     constructor(triangle: Triangle) {
         this.triangle = triangle;
@@ -19,6 +20,14 @@ export class TriangleDisplay {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         group.setAttribute('class', 'svg-triangle');
         this.element = group;
+
+        const centerEl = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        centerEl.setAttribute('cx', `${this.triangle.center[0] * SCALE}`);
+        centerEl.setAttribute('cy', `${this.triangle.center[1] * SCALE}`);
+        centerEl.setAttribute('r', '1');
+        centerEl.setAttribute('fill', 'transparent');
+        group.appendChild(centerEl);
+        this.centerElement = centerEl;
 
         const pointsString = [...this.triangle.points, this.triangle.points[0]].map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
         const polyString = this.triangle.polyPoints.map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
@@ -70,5 +79,14 @@ export class TriangleDisplay {
     updateColor() {
         const color = this.triangle.color || PLACEHOLDER;
         this.triangleElement.setAttribute('fill', color);
+    }
+
+    getBoundingClientRect() : DOMRect {
+        return this.centerElement.getBoundingClientRect();
+    }
+
+    getClientCenterCoord() : [number, number] {
+        const rect = this.centerElement.getBoundingClientRect();
+        return [rect.left + 0.5 * rect.width, rect.top + 0.5 * rect.height];
     }
 }

@@ -22,16 +22,16 @@ export class TriangleTile extends Tile {
 
         switch (wrapModulo(this.y, 4)) {
             case 0:
-                this.neighborOffsets = [[-1, 1], [0, 1], [-1, -1]];
+                this.neighborOffsets = [[0, -1], [0, 1], [-1, 1]];
                 break;
             case 1:
-                this.neighborOffsets = [[0, 1], [0, -1], [1, -1]];
+                this.neighborOffsets = [[0, -1], [0, 1], [1, -1]];
                 break;
             case 2:
-                this.neighborOffsets = [[-1, 1], [0, 1], [0, -1]];
+                this.neighborOffsets = [[0, 1], [0, -1], [-1, 1]];
                 break;
             case 3:
-                this.neighborOffsets = [[1, 1], [0, -1], [1, -1]];
+                this.neighborOffsets = [[0, 1], [0, -1], [1, -1]];
                 break;
         }
 

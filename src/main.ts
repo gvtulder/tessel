@@ -67,6 +67,18 @@ export function runEditorDebug() {
         gridType = GridTypes['hex'];
         break;
 
+    case '#triangle-small':
+        // small, two-triangle rhombus
+        // clockwise
+        triangleOffsets = [
+            [ [0, 0], [0, 1], [0, 2] ],
+            [ [0, 3], [0, 4], [0, 5] ],
+            [ [0, 6], [0, 7], [0, 8] ],
+            [ [0, 9], [0, 10], [0, 11] ],
+        ];
+        gridType = GridTypes['triangle'];
+        break;
+
     case '#hexagons':
     default:
         // hexagons
@@ -81,15 +93,16 @@ export function runEditorDebug() {
     const tileGrid = new Grid(gridType);
     const patternGrid = new Grid(gridType);
 
-    const display = new EditorDisplay(tileGrid, patternGrid);
-    document.body.appendChild(display.element);
-
     const pattern = new Pattern(patternGrid, triangleOffsets);
+
+    const display = new EditorDisplay(tileGrid, patternGrid, pattern);
+    document.body.appendChild(display.element);
 
     display.enableAutoRescale();
 
     if (DEBUG.CONNECT_TILES) {
-        display.tileEditorDisplay.debugConnectAllTriangles();
+        display.tileEditorDisplay.gridDisplay.debugConnectAllTriangles();
+        display.patternEditorDisplay.gridDisplay.debugConnectAllTriangles();
     }
 
     window.display = display;

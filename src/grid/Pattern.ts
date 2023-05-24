@@ -40,6 +40,10 @@ export class Pattern {
         }
     }
 
+    getCustomTileType() {
+        return newCustomTileType(this.triangleOffsetsPattern, this.periodX, this.stepY);
+    }
+
     private computePeriods() {
         const minX = Math.min(...this.triangleOffsetsPattern.map(
             (triangle) => Math.min(...triangle.map((o) => o[0]))));
@@ -106,7 +110,7 @@ export class Pattern {
                 while (stepY <= range) {
                     const touching = checkPeriodFits(periodX, stepX, stepY);
                     if (touching != -1) {
-                        // console.log('fits', [periodX, stepX, stepY], touching)
+                        // console.log('fits', [periodX, stepX, stepY], touching);
                         if (bestPeriodX == -1 || touching > bestTouching ||
                             (touching == bestTouching && Math.abs(stepX) < Math.abs(bestStepX)) ||
                             (touching == bestTouching && Math.abs(stepX) == Math.abs(bestStepX) &&  Math.abs(stepY) == Math.abs(bestStepY))) {
@@ -129,8 +133,8 @@ export class Pattern {
 
         /*
         bestPeriodX = 6;
-        bestStepX = 6;
-        bestStepY = 6;
+        bestStepX = 3;
+        bestStepY = 1;
 
         this.periodX = bestPeriodX;
         this.stepY = [bestStepX, bestStepY];

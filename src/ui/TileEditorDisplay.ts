@@ -1,14 +1,20 @@
 import { Grid, TileColors } from "src/grid/Grid.js";
 import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
-import { newCustomTileType } from "src/grid/CustomTile.js";
+import { TriangleOffsets, newCustomTileType } from "src/grid/CustomTile.js";
 import { Tile } from "src/grid/Tile.js";
-import { Triangle } from "src/grid/Triangle.js";
+import { Edge, Triangle } from "src/grid/Triangle.js";
+import { wrapModulo } from "src/utils.js";
+
+
 
 export class TileEditorDisplay {
     grid : Grid;
     tile : EditableTile;
     gridDisplay : TileEditorGridDisplay;
     element : HTMLDivElement;
+
+    // TODO
+    copyTile : CopyTile;
 
     constructor(grid : Grid) {
         this.grid = grid;
@@ -17,9 +23,12 @@ export class TileEditorDisplay {
         this.tile = new EditableTile(this.grid, 0, 0);
         this.grid.addTile(this.tile);
 
+
         this.recomputeFrontier();
 
-        window.editableTile = this.tile;
+        const copyTile = new CopyTile(this.grid, 0, 8);
+        this.grid.addTile(copyTile);
+        this.copyTile = copyTile;
 
         this.gridDisplay.addEventListener('clicktriangle', (evt : TileEditorGridEvent) => {
             const triangle = this.grid.getOrAddTriangle(evt.x, evt.y);
@@ -34,6 +43,20 @@ export class TileEditorDisplay {
                 this.tile.addTriangle(relX, relY);
             }
             this.recomputeFrontier();
+
+            // copy and rotate
+            const edgeFrom : Edge = {
+                from: this.grid.getOrAddRotationNeighbor(this.tile.triangles[0], -1),
+                to: this.tile.triangles[0],
+            };
+            // window.targetTriangle = [1, 24];
+            const targetTriangle = this.grid.getOrAddTriangle(...window.targetTriangle);
+            const edgeTo : Edge = {
+                from: this.grid.getOrAddRotationNeighbor(targetTriangle, -1),
+                to: targetTriangle,
+            };
+            const rr = this.tile.rotateOffsets(edgeFrom, edgeTo);
+            this.copyTile.replaceTriangleOffsets([...rr]);
         });
     }
 
@@ -50,7 +73,7 @@ export class TileEditorDisplay {
     recomputeFrontier() {
         const oldTriangles = new Set<Triangle>();
         for (const triangle of this.grid.triangles) {
-            if (triangle.tile && triangle.tile !== this.tile) {
+            if (triangle.tile && triangle.tile !== this.tile && triangle.tile !== this.copyTile) {
                 oldTriangles.add(triangle);
             }
         }
@@ -159,6 +182,49 @@ export class EditableTile extends Tile {
             return this.grid.getOrAddTriangle(this.x + o[0], this.y + o[1]);
         });
     }
+
+    replaceTriangleOffsets(offsets : number[][]) {
+        this.triangleOffsets = [...offsets.map((o) => [...o])];
+        this.updateTriangles();
+    }
+
+    rotateOffsets(edgeFrom : Edge, edgeTo : Edge) : number[][] {
+        const map = new Map<Triangle, Triangle>();
+        const todo = new Set<Triangle>(this.triangles);
+        map.set(edgeFrom.from, edgeTo.from);
+        map.set(edgeFrom.to, edgeTo.to);
+        console.log(edgeFrom, edgeTo);
+        const queue : [Edge, Edge][] = [[edgeFrom, edgeTo]];
+        while (queue.length > 0) {
+            const [edgeFrom, edgeTo] = queue.pop();
+            const sourceNeighbors = this.grid.getTriangleNeighbors(edgeFrom.to, true);
+            const targetNeighbors = this.grid.getOrAddTriangleNeighbors(edgeTo.to);
+            const prevSrcIdx = sourceNeighbors.indexOf(edgeFrom.from);
+            const prevTgtIdx = targetNeighbors.indexOf(edgeTo.from);
+            for (let i=0; i<sourceNeighbors.length; i++) {
+                const neighbor = sourceNeighbors[i];
+                if (neighbor && todo.has(neighbor)) {
+                    const newIdx = wrapModulo(i + prevTgtIdx - prevSrcIdx, sourceNeighbors.length);
+                    const newTarget = targetNeighbors[newIdx];
+                    map.set(neighbor, newTarget);
+                    queue.push([
+                        { from: edgeFrom.to, to: neighbor },
+                        { from: edgeTo.to, to: newTarget },
+                    ]);
+                    todo.delete(neighbor);
+                }
+            }
+        }
+
+        console.log(map);
+
+        const newTriangleOffsets = this.triangles.map((src) => {
+            const tgt = map.get(src);
+            return [tgt.x, tgt.y];
+        });
+
+        return [...newTriangleOffsets];
+    }
 }
 
 class PlaceholderTile extends Tile {
@@ -168,6 +234,28 @@ class PlaceholderTile extends Tile {
 
     findTriangles(): Triangle[] {
         return [this.grid.getOrAddTriangle(this.x, this.y)];
+    }
+}
+
+class CopyTile extends Tile {
+    triangleCoordinates : number[][] = [];
+
+    get rotationAngles() {
+        return [0];
+    }
+
+    findTriangles(): Triangle[] {
+        if (!this.triangleCoordinates) {
+            this.triangleCoordinates = [[this.x, this.y]];
+        }
+        return this.triangleCoordinates.map((o) => {
+            return this.grid.getOrAddTriangle(o[0], o[1]);
+        });
+    }
+
+    replaceTriangleOffsets(coordinates : number[][]) {
+        this.triangleCoordinates = [...coordinates.map((o) => [...o])];
+        this.updateTriangles();
     }
 }
 

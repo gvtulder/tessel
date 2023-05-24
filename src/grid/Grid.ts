@@ -5,6 +5,7 @@ import { GridDisplay } from '../ui/GridDisplay.js';
 import { DEBUG } from '../settings.js';
 import { GridType } from './GridType.js';
 import { EditableTile } from 'src/ui/TileEditorDisplay.js';
+import { wrapModulo } from 'src/utils.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
@@ -140,6 +141,16 @@ export class Grid extends EventTarget {
     getOrAddTriangleNeighbors(triangle : Triangle) : Triangle[] {
         return triangle.neighborOffsets.map((n) =>
             this.getOrAddTriangle(triangle.x + n[0], triangle.y + n[1]));
+    }
+
+    getRotationNeighbor(triangle : Triangle, rotation : number) : Triangle {
+        const offset = triangle.rotationOffsets[wrapModulo(rotation, triangle.rotationOffsets.length)];
+        return this.getTriangle(triangle.x + offset[0], triangle.y + offset[1]);
+    }
+
+    getOrAddRotationNeighbor(triangle : Triangle, rotation : number) : Triangle {
+        const offset = triangle.rotationOffsets[wrapModulo(rotation, triangle.rotationOffsets.length)];
+        return this.getOrAddTriangle(triangle.x + offset[0], triangle.y + offset[1]);
     }
 
     getTileNeighbors(tile : Tile) : Tile[] {

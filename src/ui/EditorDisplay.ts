@@ -2,17 +2,24 @@ import { Grid } from "src/grid/Grid.js";
 import { PatternEditorGridDisplay } from "./PatternEditorGridDisplay.js";
 import { TileEditorGridDisplay } from "./TileEditorGridDisplay.js";
 import { TileEditorDisplay } from "./TileEditorDisplay.js";
+import { TileStack, FixedOrderTileStack } from "src/game/TileStack.js";
+import { TileStackDisplay } from "./TileStackDisplay.js";
+import { GridType } from "src/grid/GridType.js";
+import { Pattern } from "src/grid/Pattern.js";
 
 export class EditorDisplay {
     tileGrid : Grid;
     patternGrid : Grid;
+    pattern : Pattern;
+
     tileEditorDisplay : TileEditorDisplay;
     patternEditorDisplay : PatternEditorGridDisplay
     element : HTMLDivElement;
 
-    constructor(tileGrid : Grid, patternGrid : Grid) {
+    constructor(tileGrid : Grid, patternGrid : Grid, pattern : Pattern) {
         this.tileGrid = tileGrid;
         this.patternGrid = patternGrid;
+        this.pattern = pattern;
         this.build();
     }
 
@@ -37,6 +44,16 @@ export class EditorDisplay {
         const controlbar = document.createElement('div');
         controlbar.className = 'controlbar';
         div.appendChild(controlbar);
+
+        const gridType : GridType = {
+            createTile: this.pattern.getCustomTileType(),
+            createTriangle: this.patternGrid.gridType.createTriangle,
+        };
+
+        const tileStack = new FixedOrderTileStack(new TileStack([['red', 'green', 'blue', 'orange', 'pink']]), 3);
+        const tileStackDisplay = new TileStackDisplay(gridType, tileStack);
+        controlbar.appendChild(tileStackDisplay.element);
+        tileStackDisplay.makeDraggable(null, () => { return; });
     }
 
     enableAutoRescale() {

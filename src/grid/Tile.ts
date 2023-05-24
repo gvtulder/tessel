@@ -151,12 +151,12 @@ export abstract class Tile extends EventTarget {
     }
 
 
-    computeRotatedOffsets(targetGrid : Grid, edgeFrom : Edge, edgeTo : Edge) : number[][] {
+    computeRotatedOffsets(targetGrid : Grid, edgeFrom : Edge, edgeTo : Edge) : Coord[] {
         const map = new Map<Triangle, Triangle>();
         const todo = new Set<Triangle>(this.triangles);
         map.set(edgeFrom.from, edgeTo.from);
         map.set(edgeFrom.to, edgeTo.to);
-        console.log(edgeFrom, edgeTo);
+        // console.log(edgeFrom, edgeTo);
         const queue : [Edge, Edge][] = [[edgeFrom, edgeTo]];
         while (queue.length > 0) {
             const [edgeFrom, edgeTo] = queue.pop();
@@ -181,11 +181,9 @@ export abstract class Tile extends EventTarget {
 
         // console.log(map);
 
-        const newTriangleOffsets = this.triangles.map((src) => {
+        return this.triangles.map((src) => {
             const tgt = map.get(src);
             return [tgt.x, tgt.y];
         });
-
-        return [...newTriangleOffsets];
     }
 }

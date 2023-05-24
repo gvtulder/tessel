@@ -39,6 +39,8 @@ export class HexGridTriangle extends Triangle {
             this.neighborOffsets = [[0, -1], [1, 0], [-1, 0]];
             this.rotationOffsets = shiftRotationCoords(0);
             this.shape = TriangleUp;
+            this.xAtOrigin = 0;
+            this.yAtOrigin = 1;
         } else {
             // triangle pointing up
             this.points = [[0.5, 0], [1, height], [0, height]];
@@ -46,6 +48,8 @@ export class HexGridTriangle extends Triangle {
             this.neighborOffsets = [[-1, 0], [1, 0], [0, 1]];
             this.rotationOffsets = shiftRotationCoords(1);
             this.shape = TriangleDown;
+            this.xAtOrigin = 0;
+            this.yAtOrigin = 0;
         }
 
         this.left = this.x * 0.5 * this.width;

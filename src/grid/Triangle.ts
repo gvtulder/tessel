@@ -11,6 +11,8 @@ export abstract class Triangle extends EventTarget {
     y: number;
     shape: number;
     rotationShape: number;
+    xAtOrigin: number;
+    yAtOrigin: number;
     private _color: TriangleColor;
     tile? : Tile;
 

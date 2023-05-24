@@ -6,7 +6,7 @@ import { TileStack, FixedOrderTileStack } from "src/game/TileStack.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
 import { GridType } from "src/grid/GridType.js";
 import { Pattern } from "src/grid/Pattern.js";
-import { EditorTileStackDisplay } from "./EditorTileStackDisplay.js";
+import { TileEditorStackDisplay } from "./TileEditorStackDisplay.js";
 
 export class EditorDisplay {
     tileGrid : Grid;
@@ -53,7 +53,7 @@ export class EditorDisplay {
         };
 
         // tile stack
-        const tileStackDisplay = new EditorTileStackDisplay(gridType);
+        const tileStackDisplay = new TileEditorStackDisplay(gridType);
         controlbar.appendChild(tileStackDisplay.element);
         tileStackDisplay.makeDraggable(null, () => { return; });
 

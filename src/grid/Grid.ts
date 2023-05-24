@@ -4,7 +4,7 @@ import { Edge, Triangle } from './Triangle.js';
 import { GridDisplay } from '../ui/GridDisplay.js';
 import { DEBUG } from '../settings.js';
 import { GridType } from './GridType.js';
-import { EditableTile } from 'src/ui/TileEditorDisplay.js';
+import { EditableTile } from "src/ui/EditableTile.js";
 import { wrapModulo } from 'src/utils.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];

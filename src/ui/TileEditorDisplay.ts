@@ -49,7 +49,7 @@ export class TileEditorDisplay {
                 from: this.grid.getOrAddRotationNeighbor(this.tile.triangles[0], -1),
                 to: this.tile.triangles[0],
             };
-            // window.targetTriangle = [1, 24];
+            if (!window.targetTriangle) window.targetTriangle = [1, 24];
             const targetTriangle = this.grid.getOrAddTriangle(...window.targetTriangle);
             const edgeTo : Edge = {
                 from: this.grid.getOrAddRotationNeighbor(targetTriangle, -1),

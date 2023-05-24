@@ -2,7 +2,7 @@ import type { Interactable, DragEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
 
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
-import { SCALE } from '../settings.js';
+import { DEBUG, SCALE } from '../settings.js';
 import { OrientedColors, Tile } from "../grid/Tile.js";
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
@@ -93,6 +93,8 @@ export class TileDisplay extends EventTarget {
     }
 
     drawOutline() {
+        if (DEBUG.HIDE_TILE_OUTLINE) return;
+
         let outline = this.tile.computeOutline();
         outline = shrinkOutline(outline, 0.95);
 

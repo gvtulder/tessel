@@ -38,7 +38,7 @@ export class TileEditorGridDisplay extends GridDisplay {
                 const x = tgt.getAttribute('data-x');
                 const y = tgt.getAttribute('data-y');
                 if (x !== undefined && x !== null) {
-                    this.dispatchEvent(new TileEditorGridEvent('clicktriangle', parseInt(x), parseInt(y));
+                    this.dispatchEvent(new TileEditorGridEvent('clicktriangle', parseInt(x), parseInt(y)));
                 }
             }
         })

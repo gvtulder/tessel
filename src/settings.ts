@@ -7,6 +7,7 @@ export const DEBUG = {
     NUMBER_TRIANGLES: false,
     RANDOM_TRIANGLES: false,
     WHITE_TRIANGLES: false,
+    HIDE_TILE_OUTLINE: true,
     RANDOM_TILES: false,
     CONNECT_TILES: false,
     PLOT_SINGLE_TRIANGLES: false,

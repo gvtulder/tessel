@@ -1,7 +1,6 @@
 
 import { Tile } from './Tile.js';
 import { CoordId, Triangle, TriangleType } from './Triangle.js';
-import { GridDisplay } from '../ui/GridDisplay.js';
 import { DEBUG } from '../settings.js';
 import { Pattern } from './Pattern.js';
 
@@ -42,9 +41,12 @@ export class Grid extends EventTarget {
     // TODO change to set?
     tiles : Map<CoordId, Tile>;
 
-    div : HTMLDivElement;
-    gridDisplay : GridDisplay;
-
+    /**
+     * Initializes a new grid.
+     *
+     * @param triangleType the triangle type (defines the grid)
+     * @param pattern the tile pattern for the grid
+     */
     constructor(triangleType : TriangleType, pattern? : Pattern) {
         super();
 

@@ -1,7 +1,7 @@
 import { wrapModulo } from "src/utils.js";
 import { Grid } from "./Grid.js";
 import { Tile, TileShape } from "./Tile.js";
-import { Coord, TriangleType, Triangle, CoordId } from "./Triangle.js";
+import { Coord, CoordId, Triangle, TriangleType } from "./Triangle.js";
 
 const COLORS = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'orange', 'green'];
 

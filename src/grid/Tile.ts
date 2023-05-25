@@ -1,8 +1,7 @@
-import { ColorGroup, Coord, CoordId, Edge, TileColors, Triangle, TriangleColor } from './Triangle.js';
-import { makeConvexHull } from '../lib/convex-hull.js';
-import { Grid } from './Grid.js';
 import { computeOutline } from 'src/lib/compute-outline.js';
 import { wrapModulo } from 'src/utils.js';
+import { Grid } from './Grid.js';
+import { ColorGroup, Coord, CoordId, Edge, Triangle } from './Triangle.js';
 
 
 export type TileRotation = {

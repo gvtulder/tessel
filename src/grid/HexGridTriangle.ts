@@ -5,7 +5,6 @@ import { wrapModulo } from '../utils.js';
 export class HexGridTriangle extends Triangle {
     protected calc() {
         const height = Math.sqrt(3) / 2;
-        this.rotationShape = 0;
         this.rotationAngles = [0, 60, 120, 180, 240, 300];
 
         // indices for rotation

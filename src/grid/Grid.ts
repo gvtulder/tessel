@@ -39,7 +39,7 @@ export class Grid extends EventTarget {
     pattern : Pattern;
 
     triangles : Map<CoordId, Triangle>;
-    // @deprecated  change to set
+    // TODO change to set?
     tiles : Map<CoordId, Tile>;
 
     div : HTMLDivElement;
@@ -65,6 +65,14 @@ export class Grid extends EventTarget {
         }
     }
 
+    /**
+     * Returns the triangle at the given coordinate.
+     *
+     * @param x
+     * @param y
+     * @param addMissing initialize the triangle if necessary
+     * @returns the triangle
+     */
     getTriangle(x : number, y : number, addMissing? : boolean) : Triangle | null {
         const coordId = CoordId(x, y);
         let triangle = this.triangles.get(coordId);
@@ -76,36 +84,74 @@ export class Grid extends EventTarget {
         return triangle;
     }
 
+    /**
+     * Returns the triangle at the given coordinate.
+     * Initializes the triangle if necessary.
+     *
+     * @param x
+     * @param y
+     * @returns the triangle
+     */
     getOrAddTriangle(x : number, y : number) : Triangle {
         return this.getTriangle(x, y, true);
     }
 
+    /**
+     * Adds a tile to the grid.
+     * @param tile the new tile
+     */
     addTile(tile : Tile) {
         this.tiles.set(CoordId(tile.x, tile.y), tile);
         this.dispatchEvent(new GridEvent(Grid.events.AddTile, this, null, tile));
     }
 
+    /**
+     * Removes a tile from the grid.
+     * @param tile the new tile
+     */
     removeTile(tile : Tile) {
         this.tiles.delete(CoordId(tile.x, tile.y));
         tile.removeFromGrid();
         this.dispatchEvent(new GridEvent(Grid.events.RemoveTile, this, null, tile));
     }
 
+    /**
+     * Returns the tile at the tile-X and tile-Y position.
+     *
+     * @param x tile x
+     * @param y tile y
+     * @param addMissing create a new tile if necessary (if pattern is set)
+     * @returns a new tile, or null if initialization was impossible
+     */
     getTile(x : number, y : number, addMissing? : boolean) : Tile | null {
-        if (!this.pattern) return null;
         const coordId = CoordId(x, y);
         let tile = this.tiles.get(coordId);
-        if (!tile && addMissing) {
+        if (!tile && addMissing && this.pattern) {
             tile = this.pattern.constructTile(this, x, y);
             this.addTile(tile);
         }
         return tile;
     }
 
+    /**
+     * Returns the tile at the tile-X and tile-Y position.
+     * Creates a new tile if necessary, and if a pattern is set.
+     *
+     * @param x tile x
+     * @param y tile y
+     * @returns a new tile, or null if initialization was impossible
+     */
     getOrAddTile(x : number, y : number) : Tile {
         return this.getTile(x, y, true);
     }
 
+    /**
+     * Returns the neighbors of the given tile.
+     *
+     * @param tile the tile
+     * @param addMissing create a new tile if necessary (if pattern is set)
+     * @returns a list of neighbor tiles
+     */
     getTileNeighbors(tile : Tile, addMissing? : boolean) : Tile[] {
         const tiles : Tile[] = [];
         const seen = new Set<CoordId>();
@@ -129,10 +175,22 @@ export class Grid extends EventTarget {
         return tiles;
     }
 
+    /**
+     * Returns the neighbors of the given tile.
+     * Initializing missing tiles if a pattern is set.
+     *
+     * @param tile the tile
+     * @returns a list of neighbor tiles
+     */
     getOrAddTileNeighbors(tile : Tile) : Tile[] {
         return this.getTileNeighbors(tile, true);
     }
 
+    /**
+     * Creates placeholder tiles at the boundary of the current grid.
+     *
+     * Requires a pattern to be set.
+     */
     updateFrontier() {
         for (const t of this.tiles.values()) {
             if (!t.isPlaceholder()) {

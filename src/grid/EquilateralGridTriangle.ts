@@ -10,7 +10,6 @@ export class EquilateralGridTriangle extends Triangle {
         this.left = this.x + Math.floor(this.y / 6) * 0.5;
         this.top = height * Math.floor(this.y / 6);
         this.shape = wrapModulo(this.y, 6);
-        this.rotationShape = 0;
         this.rotationAngles = [0, 60, 120, 180, 240, 300];
         this.xAtOrigin = 0;
         this.yAtOrigin = wrapModulo(this.y, 6);

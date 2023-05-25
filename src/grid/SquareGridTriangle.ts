@@ -8,7 +8,6 @@ export class SquareGridTriangle extends Triangle {
         this.left = this.x;
         this.top = Math.floor(this.y / 4);
         this.shape = wrapModulo(this.y, 4);
-        this.rotationShape = 0;
         this.rotationAngles = [0, 90, 180, 270];
         this.xAtOrigin = 0;
         this.yAtOrigin = wrapModulo(this.y, 4);

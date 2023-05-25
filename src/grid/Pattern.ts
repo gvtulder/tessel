@@ -9,12 +9,29 @@ const COLORS = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'or
 
 export class Pattern {
     triangleType : TriangleType;
+
+    /**
+     * The shape definition.
+     */
     shapes : TileShape[];
+    /**
+     * The period of the pattern: the increase in the triangle-x direction
+     * if the tile-x direction is increased with 1.
+     */
     periodX : number;
+    /**
+     * The step size in triangle coordinates for a change in the tile y direction.
+     */
     stepY : [number, number];
 
     private grid : Grid;
 
+    /**
+     * Initializes a new pattern.
+     *
+     * @param triangleType the triangle / grid type
+     * @param shapes a definition of the tiles in this pattern
+     */
     constructor(triangleType : TriangleType, shapes : TileShape[]) {
         this.grid = new Grid(triangleType);
         this.shapes = shapes;
@@ -22,6 +39,14 @@ export class Pattern {
         this.computePeriods();
     }
 
+    /**
+     * Constructs a new tile at the given tile position.
+     * 
+     * @param grid the grid to create the tile in
+     * @param x the tile x position
+     * @param y the tile y position
+     * @returns a new tile on the grid (must still be added)
+     */
     constructTile(grid : Grid, x : number, y : number) : Tile {
         const patterns = this.shapes;
         const shapeIdx = wrapModulo(x, patterns.length);
@@ -37,6 +62,12 @@ export class Pattern {
         return new Tile(grid, x, y, triangles);
     }
 
+    /**
+     * Maps a triangle coordinate to a tile coordinate.
+     *
+     * @param triangle the triangle coordinate
+     * @returns the tile coordinate
+     */
     mapTriangleCoordToTileCoord(triangle : Coord) : Coord {
         const patterns = this.shapes;
 
@@ -65,6 +96,9 @@ export class Pattern {
         return null;
     }
 
+    /**
+     * Computes the period and step size of the pattern, given the current shapes.
+     */
     computePeriods() {
         const allX : number[] = [];
         const allY : number[] = [];

@@ -1,52 +1,32 @@
 import { wrapModulo } from "src/utils.js";
-import { TriangleOffsets as TriangleOffsetsPattern, newCustomTileType } from "./CustomTile.js";
+import { newCustomTileType } from "./CustomTile.js";
 import { Grid } from "./Grid.js";
 import { Tile } from "./Tile.js";
-import { Coord, Triangle } from "./Triangle.js";
+import { Coord, CoordId, Triangle, TriangleType } from "./Triangle.js";
+
+const COLORS = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'orange', 'green'];
+
+// the tiles in a pattern
+export type TileShapes = Coord[][];
+
 
 export class Pattern {
-    grid : Grid;
+    triangleType : TriangleType;
+    shapes : TileShapes;
     periodX : number;
     stepY : [number, number];
-    triangleOffsetsPattern : TriangleOffsetsPattern;
 
-    triangles : Triangle[];
+    private grid : Grid;
 
-    constructor(grid : Grid, triangleOffsetsPattern : TriangleOffsetsPattern) {
-        this.grid = grid;
-        this.triangles = [];
-        this.triangleOffsetsPattern = triangleOffsetsPattern;
+    constructor(triangleType : TriangleType, shapes : TileShapes) {
+        this.grid = new Grid(triangleType);
+        this.shapes = shapes;
 
         this.computePeriods();
-
-        this.build();
-
-        window.pattern = this;
-    }
-
-    build() {
-        const CustomTileType = newCustomTileType(this.triangleOffsetsPattern, this.periodX, this.stepY);
-
-        const periodX = this.triangleOffsetsPattern.length;
-        for (let i=-2 * periodX; i<2 * periodX; i++) {
-            for (let j=-2; j<3; j++) {
-                const tile = new CustomTileType(this.grid, i, j);
-                if ((i >= 0 && i < periodX) && j == 0) {
-                    tile.colors = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'orange', 'green'];
-                } else {
-                    tile.colors = null;
-                }
-                this.grid.addTile(tile);
-            }
-        }
-    }
-
-    getCustomTileType() {
-        return newCustomTileType(this.triangleOffsetsPattern, this.periodX, this.stepY);
     }
 
     constructTile(grid : Grid, x : number, y : number) : Tile {
-        const patterns = this.triangleOffsetsPattern;
+        const patterns = this.shapes;
         const shapeIdx = wrapModulo(x, patterns.length);
 
         const triangles: Triangle[] = [];
@@ -59,7 +39,7 @@ export class Pattern {
     }
 
     mapTriangleCoordToTileCoord(triangle : Coord) : Coord {
-        const patterns = this.triangleOffsetsPattern;
+        const patterns = this.shapes;
 
         // triangleY = tileY * stepY[1] + offsetY
         // offsetY = triangleY - tileY * stepY[1]
@@ -85,13 +65,13 @@ export class Pattern {
     }
 
     private computePeriods() {
-        const minX = Math.min(...this.triangleOffsetsPattern.map(
+        const minX = Math.min(...this.shapes.map(
             (triangle) => Math.min(...triangle.map((o) => o[0]))));
-        const minY = Math.min(...this.triangleOffsetsPattern.map(
+        const minY = Math.min(...this.shapes.map(
             (triangle) => Math.min(...triangle.map((o) => o[1]))));
-        const maxX = Math.max(...this.triangleOffsetsPattern.map(
+        const maxX = Math.max(...this.shapes.map(
             (triangle) => Math.max(...triangle.map((o) => o[0]))));
-        const maxY = Math.max(...this.triangleOffsetsPattern.map(
+        const maxY = Math.max(...this.shapes.map(
             (triangle) => Math.max(...triangle.map((o) => o[1]))));
         const maxPeriodX = maxX - minX + 1;
         const maxPeriodY = maxY - minY + 1;
@@ -100,22 +80,23 @@ export class Pattern {
             // returns the number of touching triangles
             const trianglesInShape : Triangle[] = [];
             const seen = new Set<string>();
-            for (const t of this.triangleOffsetsPattern) {
-                for (const o of t) {
+            for (const shape of this.shapes) {
+                for (const offset of shape) {
+                    const coordId = CoordId(offset);
                     // this triangle
-                    const triangle = this.grid.getOrAddTriangle(o[0], o[1]);
+                    const triangle = this.grid.getOrAddTriangle(offset[0], offset[1]);
                     trianglesInShape.push(triangle);
-                    if (seen.has(`${o[0]} ${o[1]}`)) return -1;
-                    seen.add(`${o[0]} ${o[1]}`);
+                    if (seen.has(coordId)) return -1;
+                    seen.add(coordId);
                     const expectedShape = triangle.shape;
 
                     // check repetitions in both directions
                     for (let i=-periodX; i<2 * periodX; i++) {
                         for (let j=-2; j<3; j++) {
                             if (i==0 && j==0) continue;
-                            const x = i * periodX + j * stepX + o[0];
-                            const y = j * stepY + o[1];
-                            const s = `${x} ${y}`;
+                            const x = i * periodX + j * stepX + offset[0];
+                            const y = j * stepY + offset[1];
+                            const s = CoordId(x, y);
                             // console.log('triangle', x, y);
                             if (seen.has(s)) return -1;
                             const shape = this.grid.getOrAddTriangle(x, y).shape;
@@ -128,8 +109,8 @@ export class Pattern {
             // count number of touching triangles
             let touching = 0;
             for (const t of trianglesInShape) {
-                for (const n of this.grid.getTriangleNeighbors(t)) {
-                    if (seen.has(`${n.x} ${n.y}`)) touching++;
+                for (const n of t.getNeighbors()) {
+                    if (seen.has(n.coordId)) touching++;
                 }
             }
             return touching;

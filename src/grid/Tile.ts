@@ -63,6 +63,19 @@ export abstract class Tile extends EventTarget {
         }
     }
 
+    getNeighborTriangles() : Triangle[] {
+        const triangles = new Set<Triangle>();
+        for (const triangle of this.triangles) {
+            for (const neighbor of triangle.getOrAddNeighbors()) {
+                triangles.add(neighbor)
+            }
+        }
+        for (const triangle of this.triangles) {
+            triangles.delete(triangle);
+        }
+        return [...triangles];
+    }
+
     protected mapColorsToTriangles(colors : TileColors | TriangleColor) : TileColors {
         if (!colors || typeof colors === 'string') {
             return this.triangles.map(() => colors as string);

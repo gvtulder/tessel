@@ -1,8 +1,8 @@
 import { wrapModulo } from "src/utils.js";
 import { TriangleOffsets as TriangleOffsetsPattern, newCustomTileType } from "./CustomTile.js";
-import { Coord, Grid } from "./Grid.js";
+import { Grid } from "./Grid.js";
 import { Tile } from "./Tile.js";
-import { Triangle } from "./Triangle.js";
+import { Coord, Triangle } from "./Triangle.js";
 
 export class Pattern {
     grid : Grid;
@@ -45,8 +45,21 @@ export class Pattern {
         return newCustomTileType(this.triangleOffsetsPattern, this.periodX, this.stepY);
     }
 
+    constructTile(grid : Grid, x : number, y : number) : Tile {
+        const patterns = this.triangleOffsetsPattern;
+        const shapeIdx = wrapModulo(x, patterns.length);
+
+        const triangles: Triangle[] = [];
+        for (const [offsetX, offsetY] of patterns[shapeIdx]) {
+            const triangleX = Math.floor(x / patterns.length) * this.periodX + y * this.stepY[0] + offsetX;
+            const triangleY = y * this.stepY[1] + offsetY;
+            triangles.push(grid.getOrAddTriangle(triangleX, triangleY));
+        }
+        return new Tile(grid, x, y, triangles);
+    }
+
     mapTriangleCoordToTileCoord(triangle : Coord) : Coord {
-        const tiles = this.triangleOffsetsPattern;
+        const patterns = this.triangleOffsetsPattern;
 
         // triangleY = tileY * stepY[1] + offsetY
         // offsetY = triangleY - tileY * stepY[1]
@@ -56,13 +69,13 @@ export class Pattern {
         // tileX = Math.floor((triangleX - tileY * stepY[0] - offsetX) / periodX)
         // offsetX = triangleX - Math.floor(tileX / triangleOffsets.length) * periodX - tileY * stepY[0]
 
-        for (let i=0; i<tiles.length; i++) {
-            for (const offset of tiles[i]) {
+        for (let i=0; i<patterns.length; i++) {
+            for (const offset of patterns[i]) {
                 const tileY = Math.floor((triangle[1] - offset[1]) / this.stepY[1]);
                 const offsetY = triangle[1] - tileY * this.stepY[1];
 
                 const tileX = Math.floor((triangle[0] - tileY * this.stepY[0] - offset[0]) / this.periodX);
-                const offsetX = triangle[0] - Math.floor(tileX / tiles.length) * this.periodX - tileY * this.stepY[0]
+                const offsetX = triangle[0] - Math.floor(tileX / patterns.length) * this.periodX - tileY * this.stepY[0]
                 if (offset[0] == offsetX && offset[1] == offsetY) {
                     return [tileX, tileY];
                 }

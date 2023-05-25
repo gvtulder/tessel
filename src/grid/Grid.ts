@@ -1,11 +1,9 @@
 
 import { Tile } from './Tile.js';
-import { Edge, Triangle } from './Triangle.js';
+import { CoordId, Triangle, TriangleType } from './Triangle.js';
 import { GridDisplay } from '../ui/GridDisplay.js';
 import { DEBUG } from '../settings.js';
-import { GridType } from './GridType.js';
-import { wrapModulo } from 'src/utils.js';
-import { ProtoTile } from './ProtoTile.js';
+import { Pattern } from './Pattern.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
@@ -31,24 +29,30 @@ export class GridEvent extends Event {
 }
 
 export class Grid extends EventTarget {
-    gridType : GridType;
+    static events = {
+        AddTriangle: 'addtriangle',
+        AddTile: 'addtile',
+        RemoveTile: 'removetile',
+    };
 
-    grid : Triangle[][];
-    triangles : Triangle[];
-    tiles : Tile[];
-    tileGrid : Tile[][];
+    triangleType : TriangleType;
+    pattern : Pattern;
+
+    triangles : Map<CoordId, Triangle>;
+    // @deprecated  change to set
+    tiles : Map<CoordId, Tile>;
 
     div : HTMLDivElement;
     gridDisplay : GridDisplay;
 
-    constructor(gridType : GridType) {
+    constructor(triangleType : TriangleType, pattern? : Pattern) {
         super();
 
-        this.gridType = gridType;
-        this.grid = [];
-        this.triangles = [];
-        this.tiles = [];
-        this.tileGrid = [];
+        this.triangleType = triangleType;
+        this.pattern = pattern;
+
+        this.triangles = new Map<CoordId, Triangle>();
+        this.tiles = new Map<CoordId, Tile>();
 
         if (DEBUG.RANDOM_TRIANGLES) {
             this.createRandomTriangles();
@@ -62,14 +66,14 @@ export class Grid extends EventTarget {
     }
 
     getTriangle(x : number, y : number, addMissing? : boolean) : Triangle | null {
-        if (!this.grid[x]) this.grid[x] = [];
-        if (!this.grid[x][y] && addMissing) {
-            const triangle = new this.gridType.createTriangle(this, x, y);
-            this.grid[x][y] = triangle;
-            this.triangles.push(triangle);
-            this.dispatchEvent(new GridEvent('addtriangle', this, triangle, null));
+        const coordId = CoordId(x, y);
+        let triangle = this.triangles.get(coordId);
+        if (!triangle && addMissing) {
+            triangle = new this.triangleType(this, x, y);
+            this.triangles.set(coordId, triangle);
+            this.dispatchEvent(new GridEvent(Grid.events.AddTriangle, this, triangle, null));
         }
-        return this.grid[x][y];
+        return triangle;
     }
 
     getOrAddTriangle(x : number, y : number) : Triangle {
@@ -77,101 +81,53 @@ export class Grid extends EventTarget {
     }
 
     addTile(tile : Tile) {
-        if (!this.tileGrid[tile.x]) this.tileGrid[tile.x] = [];
-        this.tileGrid[tile.x][tile.y] = tile;
-        this.tiles.push(tile);
-        this.dispatchEvent(new GridEvent('addtile', this, null, tile));
+        this.tiles.set(CoordId(tile.x, tile.y), tile);
+        this.dispatchEvent(new GridEvent(Grid.events.AddTile, this, null, tile));
     }
 
     removeTile(tile : Tile) {
-        const idx = this.tiles.indexOf(tile);
-        if (idx > -1) this.tiles.splice(idx, 1);
-        this.tileGrid[tile.x][tile.y] = null;
+        this.tiles.delete(CoordId(tile.x, tile.y));
         tile.removeFromGrid();
-        this.dispatchEvent(new GridEvent('removetile', this, null, tile));
+        this.dispatchEvent(new GridEvent(Grid.events.RemoveTile, this, null, tile));
     }
 
-    moveTile(tile : ProtoTile, x : number, y : number) {
-        // this only works for the editable tiles
-        // assumption: triangles are updated elsewhere
-        const oldX = tile.x;
-        const oldY = tile.y;
-        if (this.tileGrid[x][y]) {
-            this.removeTile(this.tileGrid[x][x]);
+    getTile(x : number, y : number, addMissing? : boolean) : Tile | null {
+        if (!this.pattern) return null;
+        const coordId = CoordId(x, y);
+        let tile = this.tiles.get(coordId);
+        if (!tile && addMissing) {
+            tile = this.pattern.constructTile(this, x, y);
+            this.addTile(tile);
         }
-        this.tileGrid[oldX][oldY] = null;
-        this.tileGrid[x][y] = tile;
-        tile.x = x;
-        tile.y = y;
-        this.dispatchEvent(new GridEvent('movetile', this, null, tile, oldX, oldY));
-    }
-
-    getTile(x : number, y : number) : Tile | null {
-        if (!this.tileGrid[x]) return null;
-        if (!this.tileGrid[x][y]) return null;
-        return this.tileGrid[x][y];
-    }
-
-    getOrAddTile(x : number, y : number) : Tile | null {
-        if (!this.tileGrid[x]) this.tileGrid[x] = [];
-        if (this.tileGrid[x][y]) return this.tileGrid[x][y];
-        const tile = new this.gridType.createTile(this, x, y);
-        this.addTile(tile);
         return tile;
     }
 
-    /**
-     * @deprecated
-     */
-    getTriangleNeighbors(triangle : Triangle, includeNull? : boolean) : Triangle[] {
-        return triangle.getNeighbors(includeNull);
+    getOrAddTile(x : number, y : number) : Tile {
+        return this.getTile(x, y, true);
     }
 
-    /**
-     * @deprecated
-     */
-    getOrAddTriangleNeighbors(triangle : Triangle) : Triangle[] {
-        return triangle.getOrAddNeighbors();
-    }
-
-    /**
-     * @deprecated
-     */
-    getRotationEdge(triangle : Triangle, rotation : number) : Edge {
-        return triangle.getRotationEdge(rotation);
-    }
-
-    /**
-     * @deprecated
-     */
-    getOrAddRotationEdge(triangle : Triangle, rotation : number) : Edge {
-        return triangle.getOrAddRotationEdge(rotation);
-    }
-
-    getTileNeighbors(tile : Tile) : Tile[] {
-        const neighbors : Tile[] = [];
-        for (const n of tile.neighborOffsets) {
-            const neighbor = this.getTile(tile.x + n[0], tile.y + n[1]);
-            if (neighbor) {
-                neighbors.push(neighbor);
+    getTileNeighbors(tile : Tile, addMissing? : boolean) : Tile[] {
+        if (!this.pattern) return [];
+        const tiles : Tile[] = [];
+        const seen = new Set<CoordId>();
+        for (const triangle of tile.getNeighborTriangles()) {
+            const tileCoord = this.pattern.mapTriangleCoordToTileCoord(triangle.coord);
+            const coordId = CoordId(tileCoord);
+            if (!seen.has(coordId)) {
+                seen.add(coordId);
+                const tile = this.getTile(...tileCoord, addMissing);
+                if (tile) tiles.push(tile);
             }
         }
-        return neighbors;
+        return tiles;
     }
 
     getOrAddTileNeighbors(tile : Tile) : Tile[] {
-        const neighbors : Tile[] = [];
-        for (const n of tile.neighborOffsets) {
-            const neighbor = this.getOrAddTile(tile.x + n[0], tile.y + n[1]);
-            if (neighbor) {
-                neighbors.push(neighbor);
-            }
-        }
-        return neighbors;
+        return this.getTileNeighbors(tile, true);
     }
 
     updateFrontier() {
-        for (const t of this.tiles) {
+        for (const t of this.tiles.values()) {
             if (!t.isPlaceholder()) {
                 this.getOrAddTileNeighbors(t);
             }
@@ -194,7 +150,7 @@ export class Grid extends EventTarget {
 
     private fillTrianglesWithWhite() {
         let i = 0;
-        for (const triangle of this.triangles) {
+        for (const triangle of this.triangles.values()) {
             triangle.color = 'white';
             triangle.color = ['#aaa', '#888', '#ccc'][i % 3];
             i++;
@@ -202,6 +158,7 @@ export class Grid extends EventTarget {
     }
 
     private createRandomTiles() {
+        /*
         let i = 0;
         for (let x = 0; x < 5; x++) {
             for (let y = 0; y < 5; y++) {
@@ -212,5 +169,6 @@ export class Grid extends EventTarget {
                 i++;
             }
         }
+        */
     }
 }

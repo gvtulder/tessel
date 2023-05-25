@@ -51,6 +51,7 @@ export class GridDisplay extends EventTarget {
             this.addTile(evt.tile);
         });
 
+        // TODO @deprecated
         this.grid.addEventListener('movetile', (evt: GridEvent) => {
             this.moveTile(evt.tile, evt.oldX, evt.oldY);
         });
@@ -163,6 +164,9 @@ export class GridDisplay extends EventTarget {
         this.updateDimensions();
     }
 
+    /**
+     * @deprecated
+     */
     moveTile(tile : Tile, oldX : number, oldY : number) {
         this.tileDisplayGrid[tile.x][tile.y] = this.tileDisplayGrid[oldX][oldY];
         this.tileDisplayGrid[oldX][oldY] = null;

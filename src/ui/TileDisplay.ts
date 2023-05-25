@@ -6,11 +6,21 @@ import { DEBUG, SCALE } from '../settings.js';
 import { OrientedColors, Tile } from "../grid/Tile.js";
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
-import { shrinkOutline } from 'src/utils.js';
+import { dist, shrinkOutline } from 'src/utils.js';
 import { DraggableTileHTMLDivElement } from './TileStackDisplay.js';
 import { GameDisplay } from './GameDisplay.js';
 import { Triangle } from 'src/grid/Triangle.js';
 
+
+export type TriangleOnScreenPosition = {
+    triangle : Triangle,
+    clientCenterCoord : [number, number],
+}
+export type TriangleOnScreenMatch = {
+    moving: TriangleOnScreenPosition,
+    fixed: TriangleOnScreenPosition,
+    dist: number,
+};
 
 export class TileDisplay extends EventTarget {
     tile : Tile;
@@ -152,6 +162,39 @@ export class TileDisplay extends EventTarget {
             this.dropzone.unset();
             this.dropzone = null;
         }
+    }
+
+    getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
+        return this.triangleDisplays.map((td) => ({
+            triangle: td.triangle,
+            clientCenterCoord: td.getClientCenterCoord(),
+        }));
+    }
+
+    findClosestTriangleFromScreenPosition(pos : TriangleOnScreenPosition[]) : TriangleOnScreenMatch {
+        // check if the points are inside this tile
+        const rect = this.svgTriangles.getBoundingClientRect();
+        pos = pos.filter((p) => (
+            rect.left <= p.clientCenterCoord[0] &&
+            p.clientCenterCoord[0] <= rect.left + rect.width &&
+            rect.top <= p.clientCenterCoord[1] &&
+            p.clientCenterCoord[1] <= rect.top + rect.height
+        ));
+
+        // look for matching triangles
+        let closestDist = 0;
+        let closestPair : TriangleOnScreenMatch = null;
+        for (const thisPos of this.getTriangleOnScreenPosition()) {
+            for (const p of pos) {
+                const d = dist(thisPos.clientCenterCoord, p.clientCenterCoord);
+                if (closestPair === null || d < closestDist) {
+                    closestPair = { moving: p, fixed: thisPos, dist: d }
+                    closestDist = d;
+                }
+
+            }
+        }
+        return closestPair;
     }
 
     hide() {

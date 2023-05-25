@@ -1,10 +1,12 @@
 import { TriangleDisplay } from './TriangleDisplay.js';
-import { TileDisplay } from './TileDisplay.js';
+import { TileDisplay, TriangleOnScreenMatch, TriangleOnScreenPosition } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
 import { OrientedColors, Tile } from "../grid/Tile.js";
 import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
+import { dist } from 'src/utils.js';
+import { TileDragSource } from './TileDragController.js';
 
 export class GridDisplay extends EventTarget {
     grid: Grid;
@@ -184,6 +186,27 @@ export class GridDisplay extends EventTarget {
         this.update();
     }
 
+    getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
+        const t : TriangleOnScreenPosition[] = [];
+        for (const td of this.tileDisplays) {
+            t.push(...td.getTriangleOnScreenPosition());
+        }
+        return t;
+    }
+
+    findClosestTriangleFromScreenPosition(pos : TriangleOnScreenPosition[]) : TriangleOnScreenMatch {
+        let closestDist = 0;
+        let closest : TriangleOnScreenMatch = null;
+        for (const tsd of this.tileDisplays) {
+            const pair = tsd.findClosestTriangleFromScreenPosition(pos);
+            if (pair && (closest === null || pair.dist < closestDist)) {
+                closest = pair;
+                closestDist = pair.dist;
+            }
+        }
+        return closest;
+    }
+
     conn: ConnectorDisplay;
     debugConnectAllTriangles() {
         const conn = new ConnectorDisplay();
@@ -221,6 +244,10 @@ export class GridDisplay extends EventTarget {
 
     rescaleGrid() {
         return;
+    }
+
+    dropTile(source : TileDragSource, closestPair : TriangleOnScreenMatch) : boolean {
+        return false;
     }
 }
 

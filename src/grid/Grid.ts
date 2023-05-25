@@ -4,8 +4,8 @@ import { Edge, Triangle } from './Triangle.js';
 import { GridDisplay } from '../ui/GridDisplay.js';
 import { DEBUG } from '../settings.js';
 import { GridType } from './GridType.js';
-import { EditableTile } from "src/ui/EditableTile.js";
 import { wrapModulo } from 'src/utils.js';
+import { ProtoTile } from './ProtoTile.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
@@ -75,7 +75,7 @@ export class Grid extends EventTarget {
     getOrAddTriangle(x : number, y : number) : Triangle {
         if (!this.grid[x]) this.grid[x] = [];
         if (!this.grid[x][y]) {
-            const triangle = new this.gridType.createTriangle(x, y);
+            const triangle = new this.gridType.createTriangle(this, x, y);
             this.grid[x][y] = triangle;
             this.triangles.push(triangle);
             this.dispatchEvent(new GridEvent('addtriangle', this, triangle, null));
@@ -98,7 +98,7 @@ export class Grid extends EventTarget {
         this.dispatchEvent(new GridEvent('removetile', this, null, tile));
     }
 
-    moveTile(tile : EditableTile, x : number, y : number) {
+    moveTile(tile : ProtoTile, x : number, y : number) {
         // this only works for the editable tiles
         // assumption: triangles are updated elsewhere
         const oldX = tile.x;

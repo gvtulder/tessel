@@ -8,6 +8,7 @@ import { TileStackDisplay } from "./TileStackDisplay.js";
 import { OrientedColors, Tile } from "src/grid/Tile.js";
 import { ScoreDisplay } from "./ScoreDisplay.js";
 import icons from './icons.js';
+import { TileDragController } from './TileDragController.js';
 
 export class GameDisplay extends EventTarget {
     game : Game;
@@ -80,12 +81,17 @@ export class GameDisplay extends EventTarget {
         )
         toggles.appendChild(this.hints.element);
 
+        const tileDragController = new TileDragController(this.gridDisplay);
+        this.tileStackDisplay.makeDraggable(tileDragController);
+
+        /*
         this.tileStackDisplay.makeDraggable(this.gridDisplay, () => {
             this.gridDisplay.scoreOverlayDisplay.hide();
         });
         this.gridDisplay.makeDroppable((target : Tile, orientedColors : OrientedColors, indexOnStack : number) => {
             return this.game.placeFromStack(target, orientedColors, indexOnStack);
         });
+        */
 
         this.game.addEventListener('score', (evt : GameEvent) => {
             this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes);

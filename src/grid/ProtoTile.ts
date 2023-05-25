@@ -99,69 +99,6 @@ export class ProtoTile extends Tile {
         this.triangleOffsets = [...offsets.map((o) => [...o])];
         this.updateTriangles();
     }
-
-    computeRotationVariants() : TileVariant[] {
-        const originTriangle = this.triangles[0];
-        const variants : TileVariant[] = [];
-        const edgeFrom = this.grid.getOrAddRotationEdge(originTriangle, 0);
-        for (let r=0; r<this.triangles[0].rotationAngles.length; r++) {
-            const edgeTo = this.grid.getOrAddRotationEdge(originTriangle, r);
-            let offsets = this.computeRotatedOffsets(this.grid, edgeFrom, edgeTo);
-            offsets = this.moveOffsetsToOrigin(offsets);
-            const newVariant = {
-                rotation: r,
-                rotationAngle: this.triangles[0].rotationAngles[r],
-                offsets: offsets,
-                colors: [...this.colors],
-            };
-
-            // unique shape?
-            const unique = variants.every((variant) => !this.isEquivalentShape(variant, newVariant));
-            if (unique) {
-                variants.push({
-                    rotation: r,
-                    rotationAngle: this.triangles[0].rotationAngles[r],
-                    offsets: offsets,
-                    colors: [...this.colors],
-                });
-            }
-        }
-        return variants;
-    }
-
-    moveOffsetsToOrigin(offsets : Coord[]) : Coord[] {
-        const triangles = offsets.map((o) => this.grid.getOrAddTriangle(o[0], o[1]));
-        let topLeft = triangles[0];
-        for (const t of triangles) {
-            const cmpAtOrigin = (t.xAtOrigin - topLeft.xAtOrigin) || (t.yAtOrigin - topLeft.yAtOrigin);
-            const cmpAbsolute = (t.x - topLeft.x) || (t.y - topLeft.y)
-            if ((cmpAtOrigin || cmpAbsolute) < 0) {
-                topLeft = t;
-            }
-        }
-        return offsets.map((offset) => [
-            offset[0] - topLeft.x + topLeft.xAtOrigin,
-            offset[1] - topLeft.y + topLeft.yAtOrigin
-        ]);
-    }
-
-    isEquivalentShape(a : TileVariant, b : TileVariant) {
-        // assumption: offsets moved to origin
-        if (a.offsets.length != b.offsets.length) return false;
-        const colorsInA = new Map<string, string>();
-        const colorAtoB = new Map<string, string>();
-        for (let i=0; i<a.offsets.length; i++) {
-            colorsInA.set(`${a.offsets[i][0]} ${a.offsets[i][1]}`, a.colors[i]);
-        }
-        for (let i=0; i<b.offsets.length; i++) {
-            const colorInA = colorsInA.get(`${b.offsets[i][0]} ${b.offsets[i][1]}`);
-            if (!colorInA) return false;
-            const colorInB = colorAtoB.get(colorInA);
-            if (!colorInB) colorAtoB.set(colorInA, b.colors[i]);
-            if (colorInB && colorInB != b.colors[i]) return false;
-        }
-        return true;
-    }
 }
 
 export type TileVariant = {

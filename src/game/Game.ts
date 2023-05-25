@@ -1,9 +1,10 @@
-import { Grid, TileColors } from "src/grid/Grid.js";
+import { Grid, TileColors, TriangleColor } from "src/grid/Grid.js";
 import { FixedOrderTileStack, TileStack } from "./TileStack.js";
 import { GridType } from "src/grid/GridType.js";
 import { OrientedColors, Tile } from "src/grid/Tile.js";
 import { Scorer, Shape } from "src/grid/Scorer.js";
 import { TileGenerator } from "./TileGenerator.js";
+import { Triangle } from "src/grid/Triangle.js";
 
 
 export type GameSettings = {
@@ -74,6 +75,37 @@ export class Game extends EventTarget {
         this.finished = true;
         this.dispatchEvent(new GameEvent('endgame', this));
     }
+
+    placeTile(sourceTile : Tile, sourceRotation : number, sourceTriangle : Triangle, targetTriangle : Triangle) {
+        const targetTile = targetTriangle.tile;
+        if (!targetTile) return false;
+        const pairs = targetTile.matchShape(sourceTile, sourceRotation, sourceTriangle, targetTriangle);
+        if (!pairs) return false;
+        const newColors = pairs.map(([targetTriangle, sourceTriangle]) => sourceTriangle.color);
+        const orientedColors = { colors: newColors, rotation: 0, shape: targetTile.shape };
+
+        // TODO move to tile? remove orientedColors
+        if (targetTile.checkFitOrientedColors(orientedColors)) {
+            // place tile
+            targetTile.setOrientedColors(orientedColors);
+            this.grid.updateFrontier();
+
+            // compute scores
+            this.computeScores(targetTile);
+
+            // end of game?
+            if (this.tileStack.isEmpty()) {
+                this.finish();
+            }
+
+            return true;
+        } else {
+            // does not fit
+            return false;
+        }
+    }
+
+
 
     placeFromStack(target : Tile, orientedColors : OrientedColors, index : number) : boolean {
         if (this.checkFit(target, orientedColors)) {

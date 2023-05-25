@@ -6,9 +6,10 @@ import { FixedOrderTileStack } from "../game/TileStack.js";
 import { OrientedColors, Tile } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
-import { TileDisplay } from "./TileDisplay.js";
+import { TileDisplay, TriangleOnScreenPosition } from "./TileDisplay.js";
 import { GridType } from "src/grid/GridType.js";
 import { mean } from 'src/utils.js';
+import { TileDragController, TileDragSource } from './TileDragController.js';
 
 export class TileStackDisplay {
     gridType : GridType;
@@ -73,7 +74,13 @@ export class TileStackDisplay {
         this.counter = counterDiv;
     }
 
-    makeDraggable(mainGridDisplay : MainGridDisplay, onDragStart : (evt) => void) {
+    makeDraggable(tileDragController : TileDragController) {
+        for (const tileDisplay of this.tileDisplays) {
+            tileDragController.addSource(tileDisplay);
+        }
+    }
+
+    oldMakeDraggable(mainGridDisplay : MainGridDisplay, onDragStart : (evt) => void) {
         for (const tileDisplay of this.tileDisplays) {
             tileDisplay.makeDraggable(mainGridDisplay, onDragStart);
         }
@@ -95,13 +102,12 @@ export interface DraggableTileHTMLDivElement extends HTMLDivElement {
   originalOrientedColors? : OrientedColors;
 }
 
-class SingleTileOnStackDisplay {
+class SingleTileOnStackDisplay implements TileDragSource {
     tileStackDisplay : TileStackDisplay;
     indexOnStack : number;
     grid : Grid;
     gridDisplay : GridDisplay;
     tile : Tile;
-    tileDisplay : TileDisplay;
     element : HTMLDivElement;
     rotatable : HTMLDivElement;
     draggable : Interactable;
@@ -147,10 +153,17 @@ class SingleTileOnStackDisplay {
         this.rotatable.style.transformOrigin = `${meanX}px ${meanY}px`;
         */
 
+        this.initInteractable();
+
         this.rotatable.addEventListener('transitionend', () => {
             this.rotatable.classList.remove('animated');
             this.rotatable.classList.remove('drag-return');
             this.normalizeRotation();
+        });
+
+        this.element.addEventListener('transitionend', () => {
+            this.element.classList.remove('drag-success');
+            this.element.classList.remove('drag-return');
         });
     }
 
@@ -184,7 +197,49 @@ class SingleTileOnStackDisplay {
         return this.tile.getOrientedColors(this.rotation);
     }
 
-    makeDraggable(mainGridDisplay : MainGridDisplay, onDragStart: (evt) => void) {
+    getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
+        return this.gridDisplay.getTriangleOnScreenPosition();
+    }
+
+    initInteractable() {
+        const draggable = this.getDraggable();
+        draggable.on('tap', (evt : Event) => {
+            this.rotateTile();
+            // TODO hide scores
+            // onDragStart(evt);
+            evt.preventDefault();
+        }).on('doubletap', (evt : Event) => {
+            evt.preventDefault();
+        }).on('hold', (evt : Event) => {
+            evt.preventDefault();
+        });
+    }
+
+    getDraggable() {
+        if (!this.draggable) {
+            this.draggable = interact(this.element);
+        }
+        return this.draggable;
+    }
+
+    startDrag() {
+        this.element.classList.remove('drag-return', 'drag-success');
+        this.element.classList.add('dragging');
+    }
+
+    endDrag(successful : boolean) {
+        this.element.classList.remove('dragging');
+        this.element.classList.add('drag-return');
+        if (successful) {
+            this.element.classList.add('drag-success');
+        }
+    }
+
+    resetDragStatus() {
+        this.element.classList.remove('dragging', 'drag-return', 'drag-success');
+    }
+
+    oldMakeDraggable(mainGridDisplay : MainGridDisplay, onDragStart: (evt) => void) {
         const context = (this.element as DraggableTileHTMLDivElement);
         context.tileDisplay = this;
 

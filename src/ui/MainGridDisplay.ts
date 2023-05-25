@@ -1,4 +1,6 @@
-import type { DragEvent } from '@interactjs/types';
+import type { Interactable, DragEvent } from '@interactjs/types';
+import interact from '@interactjs/interact/index';
+
 
 import { OrientedColors, Tile } from "../grid/Tile.js";
 import { SCALE } from 'src/settings.js';
@@ -6,8 +8,11 @@ import { GridDisplay } from './GridDisplay.js';
 import { Grid } from "src/grid/Grid.js";
 import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
-import { shuffle } from '../utils.js';
+import { dist, shuffle } from '../utils.js';
 import { GameDisplay } from './GameDisplay.js';
+import { DraggableTileHTMLDivElement } from './TileStackDisplay.js';
+import { TriangleOnScreenMatch } from './TileDisplay.js';
+import { TileDragSource } from './TileDragController.js';
 
 
 
@@ -75,7 +80,37 @@ export class MainGridDisplay extends GridDisplay {
         }
     }
 
+    dropTile(source : TileDragSource, closestPair : TriangleOnScreenMatch) : boolean {
+        const targetTile = closestPair.fixed.triangle.tile;
+        if (targetTile && targetTile.isPlaceholder()) {
+            return this.gameDisplay.game.placeTile(source.tile, source.rotation, closestPair.moving.triangle, closestPair.fixed.triangle);
+        }
+        return false;
+    }
+
     makeDroppable(ondrop: (target: Tile, orientedColors: OrientedColors, indexOnStack: number) => boolean) {
+        interact(this.container).dropzone({}).on('dragenter', (evt: DragEvent) => {
+            console.log('NEW dragenter', evt.target);
+            const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
+
+            const pos = rel.tileDisplay.getTriangleOnScreenPosition();
+            console.log('clientCenterCoord', pos);
+
+            const closestPair = this.findClosestTriangleFromScreenPosition(pos);
+            console.log('closestPair', closestPair);
+            if (closestPair) {
+                console.log('closestPair',
+                            'moving',
+                            closestPair.moving.triangle.x,
+                            closestPair.moving.triangle.y,
+                            'fixed',
+                            closestPair.fixed.triangle.x,
+                            closestPair.fixed.triangle.y);
+            }
+        });
+
+
+        /*
         for (const tileDisplay of this.tileDisplays) {
             if (tileDisplay.tile.isPlaceholder()) {
                 tileDisplay.makeDropzone(this.gameDisplay, (evt : DragEvent, target: Tile, orientedColors: OrientedColors, indexOnStack: number) => {
@@ -88,6 +123,7 @@ export class MainGridDisplay extends GridDisplay {
                 tileDisplay.removeDropzone();
             }
         }
+        */
     }
 
     gameFinished() {

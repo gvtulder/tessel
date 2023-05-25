@@ -1,12 +1,13 @@
-import { TriangleColor, Coord } from './Grid.js';
+import { TriangleColor, Coord, Grid } from './Grid.js';
 import { Tile } from './Tile.js';
 
-export type TriangleType = (new (x : number, y : number) => Triangle);
+export type TriangleType = (new (grid : Grid, x : number, y : number) => Triangle);
 
 export type Edge = { from: Triangle, to: Triangle };
 export type CoordEdge = { from: Coord, to: Coord };
 
 export abstract class Triangle extends EventTarget {
+    grid: Grid;
     x: number;
     y: number;
     shape: number;
@@ -31,9 +32,10 @@ export abstract class Triangle extends EventTarget {
 
     private _changecolor: Event = new Event('changecolor');
 
-    constructor(x: number, y: number) {
+    constructor(grid : Grid, x: number, y: number) {
         super();
 
+        this.grid = grid;
         this.x = x;
         this.y = y;
         this.color = null;

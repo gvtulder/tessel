@@ -80,12 +80,6 @@ export class TileStackDisplay {
         }
     }
 
-    oldMakeDraggable(mainGridDisplay : MainGridDisplay, onDragStart : (evt) => void) {
-        for (const tileDisplay of this.tileDisplays) {
-            tileDisplay.makeDraggable(mainGridDisplay, onDragStart);
-        }
-    }
-
     resetDragStatus() {
         for (const t of this.tileDisplays) {
             t.element.classList.remove('drag-success');
@@ -239,59 +233,8 @@ class SingleTileOnStackDisplay implements TileDragSource {
         this.element.classList.remove('dragging', 'drag-return', 'drag-success');
     }
 
-    oldMakeDraggable(mainGridDisplay : MainGridDisplay, onDragStart: (evt) => void) {
-        const context = (this.element as DraggableTileHTMLDivElement);
-        context.tileDisplay = this;
-
-        const position = { x: 0, y: 0 };
-        this.draggable = interact(this.element).on('tap', (evt : Event) => {
-            this.rotateTile();
-            // TODO rename this function
-            onDragStart(evt);
-            evt.preventDefault();
-        }).on('doubletap', (evt : Event) => {
-            evt.preventDefault();
-        }).on('hold', (evt : Event) => {
-            evt.preventDefault();
-        }).draggable({
-            listeners: {
-                start: (evt : DragEvent) => {
-                    context.indexOnStack = this.indexOnStack;
-                    context.orientedColors = this.getOrientedColors();
-                    context.originalOrientedColors = context.orientedColors;
-                    console.log(evt.type, evt, evt.target);
-
-                    this.tileStackDisplay.resetDragStatus();
-                    evt.target.classList.add('dragging');
-
-                    onDragStart(evt);
-                },
-                move: (evt : DragEvent) => {
-                    position.x += evt.dx;
-                    position.y += evt.dy;
-                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px) scale(${mainGridDisplay.scale / this.gridDisplay.scale})`;
-                },
-                end: (evt : DragEvent) => {
-                    evt.target.classList.remove('dragging');
-                    evt.target.classList.add('drag-return');
-                    position.x = 0;
-                    position.y = 0;
-                    evt.target.style.transformOrigin = 'center';
-                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
-                    if (this.tile.isPlaceholder()) {
-                        this.removeDraggable();
-                    }
-                },
-            }
-        });
-
-        this.element.addEventListener('transitionend', () => {
-            this.element.classList.remove('drag-success');
-            this.element.classList.remove('drag-return');
-        });
-    }
-
     removeDraggable() {
+        // TODO
         if (this.draggable) {
             this.draggable.unset();
             this.draggable = null;

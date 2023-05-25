@@ -88,9 +88,6 @@ export class GameDisplay extends EventTarget {
         this.tileStackDisplay.makeDraggable(this.gridDisplay, () => {
             this.gridDisplay.scoreOverlayDisplay.hide();
         });
-        this.gridDisplay.makeDroppable((target : Tile, orientedColors : OrientedColors, indexOnStack : number) => {
-            return this.game.placeFromStack(target, orientedColors, indexOnStack);
-        });
         */
 
         this.game.addEventListener('score', (evt : GameEvent) => {

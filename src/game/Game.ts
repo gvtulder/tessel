@@ -76,7 +76,6 @@ export class Game extends EventTarget {
         this.dispatchEvent(new GameEvent('endgame', this));
     }
 
-    // new
     placeTile(sourceTile : Tile, sourceRotation : number, sourceTriangle : Triangle, targetTriangle : Triangle, indexOnStack : number) {
         const targetTile = targetTriangle.tile;
         if (!targetTile) return false;
@@ -96,29 +95,6 @@ export class Game extends EventTarget {
 
             // compute scores
             this.computeScores(targetTile);
-
-            // end of game?
-            if (this.tileStack.isEmpty()) {
-                this.finish();
-            }
-
-            return true;
-        } else {
-            // does not fit
-            return false;
-        }
-    }
-
-    // old
-    placeFromStack(target : Tile, orientedColors : OrientedColors, index : number) : boolean {
-        if (this.checkFit(target, orientedColors)) {
-            // place tile
-            target.setOrientedColors(orientedColors);
-            this.tileStack.take(index);
-            this.grid.updateFrontier();
-
-            // compute scores
-            this.computeScores(target);
 
             // end of game?
             if (this.tileStack.isEmpty()) {

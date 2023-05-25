@@ -169,7 +169,7 @@ function startDebug() {
     */
 
 
-    tileStackDisplay.makeDraggable(gridDisplay, ()=>{return});
+    tileStackDisplay.makeDraggable(gridDisplay);
     gridDisplay.makeDroppable((target : Tile, orientedColors : OrientedColors, indexOnStack : number) => {
         const colors = fixedOrderTileStack.slots[indexOnStack];
         target.colors = colors;

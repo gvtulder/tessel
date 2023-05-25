@@ -20,7 +20,7 @@ export function shuffle<T>(myArray : T[]) {
   }
 }
 
-type Coord = [x: number, y: number];
+type Coord = readonly [x: number, y: number];
 
 export function mean(numbers : number[]) : number {
   return numbers.reduce((prev, x) => prev + x) / numbers.length;
@@ -35,10 +35,10 @@ export function shrinkOutline(points : Coord[], factor : number) : Coord[] {
   ]);
 }
 
-export const dist = (a : number[], b : number[]) => {
+export const dist = (a : Coord, b : Coord) => {
   return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
 };
 
-export const midPoint = (a : number[], b : number[]) => {
+export const midPoint = (a : Coord, b : Coord) : Coord => {
   return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
 }

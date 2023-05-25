@@ -3,7 +3,7 @@ import { O } from '../settings.js';
 import { wrapModulo } from '../utils.js';
 
 export class SquareGridTriangle extends Triangle {
-    calc() {
+    protected calc() {
         // triangle in a square grid
         this.left = this.x;
         this.top = Math.floor(this.y / 4);

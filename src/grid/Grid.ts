@@ -10,11 +10,6 @@ import { ProtoTile } from './ProtoTile.js';
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
 
-export type TriangleColor = string;
-export type TileColors = TriangleColor[];
-
-
-export type Coord = [x : number, y : number];
 
 
 
@@ -66,21 +61,19 @@ export class Grid extends EventTarget {
         }
     }
 
-    getTriangle(x : number, y : number) : Triangle | null {
-        if (!this.grid[x]) return null;
-        if (!this.grid[x][y]) return null;
-        return this.grid[x][y];
-    }
-
-    getOrAddTriangle(x : number, y : number) : Triangle {
+    getTriangle(x : number, y : number, addMissing? : boolean) : Triangle | null {
         if (!this.grid[x]) this.grid[x] = [];
-        if (!this.grid[x][y]) {
+        if (!this.grid[x][y] && addMissing) {
             const triangle = new this.gridType.createTriangle(this, x, y);
             this.grid[x][y] = triangle;
             this.triangles.push(triangle);
             this.dispatchEvent(new GridEvent('addtriangle', this, triangle, null));
         }
         return this.grid[x][y];
+    }
+
+    getOrAddTriangle(x : number, y : number) : Triangle {
+        return this.getTriangle(x, y, true);
     }
 
     addTile(tile : Tile) {
@@ -127,36 +120,32 @@ export class Grid extends EventTarget {
         return tile;
     }
 
+    /**
+     * @deprecated
+     */
     getTriangleNeighbors(triangle : Triangle, includeNull? : boolean) : Triangle[] {
-        const neighbors : Triangle[] = [];
-        for (const n of triangle.neighborOffsets) {
-            const neighbor = this.getTriangle(triangle.x + n[0], triangle.y + n[1]);
-            if (neighbor || includeNull) {
-                neighbors.push(neighbor);
-            }
-        }
-        return neighbors;
+        return triangle.getNeighbors(includeNull);
     }
 
+    /**
+     * @deprecated
+     */
     getOrAddTriangleNeighbors(triangle : Triangle) : Triangle[] {
-        return triangle.neighborOffsets.map((n) =>
-            this.getOrAddTriangle(triangle.x + n[0], triangle.y + n[1]));
+        return triangle.getOrAddNeighbors();
     }
 
+    /**
+     * @deprecated
+     */
     getRotationEdge(triangle : Triangle, rotation : number) : Edge {
-        const offset = triangle.rotationOffsets[wrapModulo(rotation, triangle.rotationOffsets.length)];
-        return {
-            from: this.getTriangle(triangle.x + offset.from[0], triangle.y + offset.from[1]),
-            to: this.getTriangle(triangle.x + offset.to[0], triangle.y + offset.to[1]),
-        };
+        return triangle.getRotationEdge(rotation);
     }
 
+    /**
+     * @deprecated
+     */
     getOrAddRotationEdge(triangle : Triangle, rotation : number) : Edge {
-        const offset = triangle.rotationOffsets[wrapModulo(rotation, triangle.rotationOffsets.length)];
-        return {
-            from: this.getOrAddTriangle(triangle.x + offset.from[0], triangle.y + offset.from[1]),
-            to: this.getOrAddTriangle(triangle.x + offset.to[0], triangle.y + offset.to[1]),
-        };
+        return triangle.getOrAddRotationEdge(rotation);
     }
 
     getTileNeighbors(tile : Tile) : Tile[] {

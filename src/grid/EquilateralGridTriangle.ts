@@ -3,7 +3,7 @@ import { O } from '../settings.js';
 import { wrapModulo } from '../utils.js';
 
 export class EquilateralGridTriangle extends Triangle {
-    calc() {
+   protected calc() {
         // triangle in a grid of equilateral triangles
         const height = Math.sqrt(3) / 2;
         const h = height / 3;
@@ -44,7 +44,6 @@ export class EquilateralGridTriangle extends Triangle {
                 this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, h + O], [0.5 - O, h + O], [0, 0]];
                 this.neighborOffsets = [[0, -1], [0, 2], [0, 1]];
                 this.rotationOffsets = shiftRotationCoords(2);
-                // this.rotationOffsets = [[0, 0], [-1, 4], [0, -2]]
                 break;
             case 1:
                 // left triangle pointing up-right
@@ -52,7 +51,6 @@ export class EquilateralGridTriangle extends Triangle {
                 this.polyPoints = [[0, 0], [0.5, h], [0.5 + O, h], [0.5 + O, height + O], [0.5, height], [0, 0]];
                 this.neighborOffsets = [[-1, 3], [0, -1], [0, 1]];
                 this.rotationOffsets = shiftRotationCoords(0);
-                // this.rotationOffsets = [[0, 0], [0, -1], [0, 1]];
                 break;
             case 2:
                 // right triangle pointing up-left
@@ -61,7 +59,6 @@ export class EquilateralGridTriangle extends Triangle {
                 this.polyPoints = [[0, h], [0.5, 0], [0.5 + O, 0], [0, height], [0, h]];
                 this.neighborOffsets = [[0, -2], [0, 1], [0, -1]];
                 this.rotationOffsets = shiftRotationCoords(4);
-                // this.rotationOffsets = [[0, 0], [0, -1], [0, -2]];
                 break;
             case 3:
                 // left triangle pointing bottom-right
@@ -70,7 +67,6 @@ export class EquilateralGridTriangle extends Triangle {
                 this.polyPoints = [[0, height], [0.5, 0], [0.5 + O, 0], [0.5 + O, 2 * h + O], [0, height], [0, height]];
                 this.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
                 this.rotationOffsets = shiftRotationCoords(1);
-                // this.rotationOffsets = [[0, 0], [0, 1], [0, 2]];
                 break;
             case 4:
                 // right triangle pointing bottom-left
@@ -79,7 +75,6 @@ export class EquilateralGridTriangle extends Triangle {
                 this.polyPoints = [[0, 0], [O, 0], [0.5 + O, height + O], [0, 2 * h + O], [0, 0]];
                 this.neighborOffsets = [[0, -1], [1, -3], [0, 1]];
                 this.rotationOffsets = shiftRotationCoords(3);
-                // this.rotationOffsets = [[0, 0], [0, 1], [0, 2]];
                 break;
             case 5:
                 // bottom triangle pointing up
@@ -89,7 +84,6 @@ export class EquilateralGridTriangle extends Triangle {
                 this.polyPoints = [[0, h], [0.5, 0], [1, h], [1 + O, h + O], [O, h + O], [0, h]];
                 this.neighborOffsets = [[0, -2], [0, -1], [0, 1]];
                 this.rotationOffsets = shiftRotationCoords(5);
-                // this.rotationOffsets = [[0, 0], [0, -2], [0, -1]];
                 break;
             default:
                 console.log('invalid side!');

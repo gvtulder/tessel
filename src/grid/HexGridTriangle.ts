@@ -2,11 +2,8 @@ import { CoordEdge, Triangle } from './Triangle.js';
 import { O } from '../settings.js';
 import { wrapModulo } from '../utils.js';
 
-const TriangleUp = 0;
-const TriangleDown = 1;
-
 export class HexGridTriangle extends Triangle {
-    calc() {
+    protected calc() {
         const height = Math.sqrt(3) / 2;
         this.rotationShape = 0;
         this.rotationAngles = [0, 60, 120, 180, 240, 300];
@@ -38,7 +35,7 @@ export class HexGridTriangle extends Triangle {
             this.polyPoints = [[0, 0], [1 + O, 0], [0.5, height + O], [0.5, height], [0, 0]];
             this.neighborOffsets = [[0, -1], [1, 0], [-1, 0]];
             this.rotationOffsets = shiftRotationCoords(0);
-            this.shape = TriangleDown;
+            this.shape = 0;
             this.xAtOrigin = 0;
             this.yAtOrigin = 0;
         } else {
@@ -47,7 +44,7 @@ export class HexGridTriangle extends Triangle {
             this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height], [1 + O, height + O], [0, height + O], [0, height], [0.5, 0]];
             this.neighborOffsets = [[-1, 0], [1, 0], [0, 1]];
             this.rotationOffsets = shiftRotationCoords(1);
-            this.shape = TriangleUp;
+            this.shape = 1;
             this.xAtOrigin = 1;
             this.yAtOrigin = 0;
         }

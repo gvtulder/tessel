@@ -1,24 +1,21 @@
 import { wrapModulo } from "src/utils.js";
-import { newCustomTileType } from "./CustomTile.js";
 import { Grid } from "./Grid.js";
-import { Tile } from "./Tile.js";
-import { Coord, CoordId, Triangle, TriangleType } from "./Triangle.js";
+import { Tile, TileShape } from "./Tile.js";
+import { Coord, TriangleType, Triangle, CoordId } from "./Triangle.js";
 
 const COLORS = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'orange', 'green'];
 
-// the tiles in a pattern
-export type TileShapes = Coord[][];
 
 
 export class Pattern {
     triangleType : TriangleType;
-    shapes : TileShapes;
+    shapes : TileShape[];
     periodX : number;
     stepY : [number, number];
 
     private grid : Grid;
 
-    constructor(triangleType : TriangleType, shapes : TileShapes) {
+    constructor(triangleType : TriangleType, shapes : TileShape[]) {
         this.grid = new Grid(triangleType);
         this.shapes = shapes;
 
@@ -29,12 +26,14 @@ export class Pattern {
         const patterns = this.shapes;
         const shapeIdx = wrapModulo(x, patterns.length);
 
-        const triangles: Triangle[] = [];
-        for (const [offsetX, offsetY] of patterns[shapeIdx]) {
-            const triangleX = Math.floor(x / patterns.length) * this.periodX + y * this.stepY[0] + offsetX;
-            const triangleY = y * this.stepY[1] + offsetY;
-            triangles.push(grid.getOrAddTriangle(triangleX, triangleY));
-        }
+        const triangles = patterns[shapeIdx].map((offsets) => (
+            offsets.map(([offsetX, offsetY]) => {
+                const triangleX = Math.floor(x / patterns.length) * this.periodX + y * this.stepY[0] + offsetX;
+                const triangleY = y * this.stepY[1] + offsetY;
+                return grid.getOrAddTriangle(triangleX, triangleY);
+            })
+        ));
+
         return new Tile(grid, x, y, triangles);
     }
 
@@ -49,30 +48,38 @@ export class Pattern {
         // tileX = Math.floor((triangleX - tileY * stepY[0] - offsetX) / periodX)
         // offsetX = triangleX - Math.floor(tileX / triangleOffsets.length) * periodX - tileY * stepY[0]
 
-        for (let i=0; i<patterns.length; i++) {
-            for (const offset of patterns[i]) {
-                const tileY = Math.floor((triangle[1] - offset[1]) / this.stepY[1]);
-                const offsetY = triangle[1] - tileY * this.stepY[1];
+        for (const shape of this.shapes) {
+            for (const colorGroup of shape) {
+                for (const offset of colorGroup) {
+                    const tileY = Math.floor((triangle[1] - offset[1]) / this.stepY[1]);
+                    const offsetY = triangle[1] - tileY * this.stepY[1];
 
-                const tileX = Math.floor((triangle[0] - tileY * this.stepY[0] - offset[0]) / this.periodX);
-                const offsetX = triangle[0] - Math.floor(tileX / patterns.length) * this.periodX - tileY * this.stepY[0]
-                if (offset[0] == offsetX && offset[1] == offsetY) {
-                    return [tileX, tileY];
+                    const tileX = Math.floor((triangle[0] - tileY * this.stepY[0] - offset[0]) / this.periodX);
+                    const offsetX = triangle[0] - Math.floor(tileX / patterns.length) * this.periodX - tileY * this.stepY[0]
+                    if (offset[0] == offsetX && offset[1] == offsetY) {
+                        return [tileX, tileY];
+                    }
                 }
             }
         }
         return null;
     }
 
-    private computePeriods() {
-        const minX = Math.min(...this.shapes.map(
-            (triangle) => Math.min(...triangle.map((o) => o[0]))));
-        const minY = Math.min(...this.shapes.map(
-            (triangle) => Math.min(...triangle.map((o) => o[1]))));
-        const maxX = Math.max(...this.shapes.map(
-            (triangle) => Math.max(...triangle.map((o) => o[0]))));
-        const maxY = Math.max(...this.shapes.map(
-            (triangle) => Math.max(...triangle.map((o) => o[1]))));
+    computePeriods() {
+        const allX : number[] = [];
+        const allY : number[] = [];
+        for (const shape of this.shapes) {
+            for (const colorGroup of shape) {
+                for (const offset of colorGroup) {
+                    allX.push(offset[0]);
+                    allX.push(offset[1]);
+                }
+            }
+        }
+        const minX = Math.min(...allX);
+        const minY = Math.min(...allY);
+        const maxX = Math.max(...allX);
+        const maxY = Math.max(...allY);
         const maxPeriodX = maxX - minX + 1;
         const maxPeriodY = maxY - minY + 1;
 
@@ -81,27 +88,29 @@ export class Pattern {
             const trianglesInShape : Triangle[] = [];
             const seen = new Set<string>();
             for (const shape of this.shapes) {
-                for (const offset of shape) {
-                    const coordId = CoordId(offset);
-                    // this triangle
-                    const triangle = this.grid.getOrAddTriangle(offset[0], offset[1]);
-                    trianglesInShape.push(triangle);
-                    if (seen.has(coordId)) return -1;
-                    seen.add(coordId);
-                    const expectedShape = triangle.shape;
+                for (const colorGroup of shape) {
+                    for (const offset of colorGroup) {
+                        const coordId = CoordId(offset);
+                        // this triangle
+                        const triangle = this.grid.getOrAddTriangle(offset[0], offset[1]);
+                        trianglesInShape.push(triangle);
+                        if (seen.has(coordId)) return -1;
+                        seen.add(coordId);
+                        const expectedShape = triangle.shape;
 
-                    // check repetitions in both directions
-                    for (let i=-periodX; i<2 * periodX; i++) {
-                        for (let j=-2; j<3; j++) {
-                            if (i==0 && j==0) continue;
-                            const x = i * periodX + j * stepX + offset[0];
-                            const y = j * stepY + offset[1];
-                            const s = CoordId(x, y);
-                            // console.log('triangle', x, y);
-                            if (seen.has(s)) return -1;
-                            const shape = this.grid.getOrAddTriangle(x, y).shape;
-                            if (shape != expectedShape) return -1;
-                            seen.add(s);
+                        // check repetitions in both directions
+                        for (let i=-periodX; i<2 * periodX; i++) {
+                            for (let j=-2; j<3; j++) {
+                                if (i==0 && j==0) continue;
+                                const x = i * periodX + j * stepX + offset[0];
+                                const y = j * stepY + offset[1];
+                                const s = CoordId(x, y);
+                                // console.log('triangle', x, y);
+                                if (seen.has(s)) return -1;
+                                const shape = this.grid.getOrAddTriangle(x, y).shape;
+                                if (shape != expectedShape) return -1;
+                                seen.add(s);
+                            }
                         }
                     }
                 }

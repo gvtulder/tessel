@@ -107,16 +107,23 @@ export class Grid extends EventTarget {
     }
 
     getTileNeighbors(tile : Tile, addMissing? : boolean) : Tile[] {
-        if (!this.pattern) return [];
         const tiles : Tile[] = [];
         const seen = new Set<CoordId>();
         for (const triangle of tile.getNeighborTriangles()) {
-            const tileCoord = this.pattern.mapTriangleCoordToTileCoord(triangle.coord);
-            const coordId = CoordId(tileCoord);
-            if (!seen.has(coordId)) {
-                seen.add(coordId);
-                const tile = this.getTile(...tileCoord, addMissing);
-                if (tile) tiles.push(tile);
+            const tileCoord =
+                triangle.tile ?
+                triangle.tile.coord :
+                (this.pattern ?
+                    this.pattern.mapTriangleCoordToTileCoord(triangle.coord) :
+                    null);
+
+            if (tileCoord) {
+                const coordId = CoordId(tileCoord);
+                if (!seen.has(coordId)) {
+                    seen.add(coordId);
+                    const tile = this.getTile(...tileCoord, addMissing);
+                    if (tile) tiles.push(tile);
+                }
             }
         }
         return tiles;

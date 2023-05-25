@@ -100,10 +100,3 @@ export class ProtoTile extends Tile {
         this.updateTriangles();
     }
 }
-
-export type TileVariant = {
-    rotation: number,
-    rotationAngle: number,
-    offsets: Coord[],
-    colors: TileColors,
-};

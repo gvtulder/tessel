@@ -85,7 +85,7 @@ export class TileEditorDisplay extends EventTarget {
                 if (!window.targetTriangle) window.targetTriangle = [1, 24];
                 const targetTriangle = this.grid.getOrAddTriangle(...window.targetTriangle);
                 const edgeTo = this.grid.getOrAddRotationEdge(targetTriangle, 0);
-                const rr = this.tile.computeRotatedOffsets(this.grid, edgeFrom, edgeTo);
+                const rr = this.tile.computeRotatedTrianglePairs(this.grid, edgeFrom, edgeTo);
                 this.copyTile.replaceTriangleOffsets([...rr]);
             }
         });
@@ -98,7 +98,7 @@ export class TileEditorDisplay extends EventTarget {
                 if (!window.targetTriangle) window.targetTriangle = [1, 24];
                 const targetTriangle = this.grid.getOrAddTriangle(...window.targetTriangle);
                 const edgeTo = this.grid.getOrAddRotationEdge(targetTriangle, rotation++);
-                const rr = this.tile.computeRotatedOffsets(this.grid, edgeFrom, edgeTo);
+                const rr = this.tile.computeRotatedTrianglePairs(this.grid, edgeFrom, edgeTo);
                 this.copyTile.replaceTriangleOffsets([...rr]);
             }, 1000);
         }

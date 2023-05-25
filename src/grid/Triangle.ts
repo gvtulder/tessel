@@ -17,6 +17,7 @@ export type Coord = readonly [x : number, y : number];
 export type CoordEdge = { readonly from: Coord, readonly to: Coord };
 export type Edge = { readonly from: Triangle, readonly to: Triangle };
 
+export type ColorGroup = number;
 export type TriangleColor = string;
 export type TileColors = readonly TriangleColor[];
 
@@ -26,22 +27,30 @@ export class TriangleEvent extends Event {
     newColor? : TriangleColor;
     oldTile? : Tile;
     newTile? : Tile;
+    oldColorGroup? : ColorGroup;
+    newColorGroup? : ColorGroup;
 
     constructor(type : string, triangle : Triangle,
-                oldColor? : TriangleColor, newColor? : TriangleColor,
-                oldTile? : Tile, newTile? : Tile) {
+                properties : {
+                    oldColor? : TriangleColor, newColor? : TriangleColor,
+                    oldTile? : Tile, newTile? : Tile,
+                    oldColorGroup? : ColorGroup, newColorGroup? : ColorGroup
+                }) {
         super(type);
         this.triangle = triangle;
-        this.oldColor = oldColor;
-        this.newColor = newColor;
-        this.oldTile = oldTile;
-        this.newTile = newTile;
+        this.oldColor = properties.oldColor;
+        this.newColor = properties.newColor;
+        this.oldTile = properties.oldTile;
+        this.newTile = properties.newTile;
+        this.oldColorGroup = properties.oldColorGroup;
+        this.newColorGroup = properties.newColorGroup;
     }
 }
 
 export abstract class Triangle extends EventTarget {
     static events = {
         ChangeColor: 'changecolor',
+        ChangeColorGroup: 'changecolor',
         ChangeTile: 'changetile',
     };
 
@@ -56,6 +65,7 @@ export abstract class Triangle extends EventTarget {
     yAtOrigin: number;
     private _color: TriangleColor;
     private _tile : Tile | null;
+    private _colorGroup : ColorGroup | null;
 
     points: readonly [Coord, Coord, Coord];
     polyPoints: ReadonlyArray<Coord>;
@@ -77,6 +87,7 @@ export abstract class Triangle extends EventTarget {
         this.y = y;
         this._color = null;
         this._tile = null;
+        this._colorGroup = null;
 
         this.coord = [x, y];
         this.coordId = CoordId(x, y);
@@ -109,7 +120,9 @@ export abstract class Triangle extends EventTarget {
         if (changed) {
             const old = color;
             this._color = color;
-            this.dispatchEvent(new TriangleEvent(Triangle.events.ChangeColor, this, old, color, null, null));
+            this.dispatchEvent(new TriangleEvent(
+                Triangle.events.ChangeColor, this,
+                { oldColor: old, newColor: color }));
         }
     }
 
@@ -117,12 +130,29 @@ export abstract class Triangle extends EventTarget {
         return this._color;
     }
 
+    set colorGroup(colorGroup: ColorGroup) {
+        const changed = this._colorGroup != colorGroup;
+        if (changed) {
+            const old = colorGroup;
+            this._colorGroup = colorGroup;
+            this.dispatchEvent(new TriangleEvent(
+                Triangle.events.ChangeColorGroup, this,
+                { oldColorGroup: old, newColorGroup: colorGroup }));
+        }
+    }
+
+    get colorGroup(): ColorGroup {
+        return this._colorGroup;
+    }
+
     set tile(tile: Tile | null) {
         const changed = this._tile !== tile;
         if (changed) {
             const old = this._tile;
             this._tile = tile;
-            this.dispatchEvent(new TriangleEvent(Triangle.events.ChangeTile, this, null, null, old, tile));
+            this.dispatchEvent(new TriangleEvent(
+                Triangle.events.ChangeTile, this,
+                { oldTile: old, newTile: tile }));
         }
     }
 

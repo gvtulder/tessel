@@ -134,39 +134,33 @@ export abstract class Tile extends EventTarget {
 
     matchShape(other : Tile, otherRotation : number, otherTriangle : Triangle, thisTriangle : Triangle) : [Triangle, Triangle][] {
         if (other.triangles.length !== this.triangles.length) return null;
-        const trianglesSource = new Set<Triangle>(this.triangles);
-        const trianglesTarget = new Set<Triangle>(other.triangles);
-        const edgeSource = this.grid.getOrAddRotationEdge(thisTriangle, 0);
-        let edgeTarget = other.grid.getOrAddRotationEdge(otherTriangle, -otherRotation);
-        edgeTarget = { from: edgeTarget.to, to: edgeTarget.from };
 
-        const map = new Map<Triangle, Triangle>();
-        const queue : [Edge, Edge][] = [[edgeSource, edgeTarget]];
-        while (queue.length > 0) {
-            const [edgeSource, edgeTarget] = queue.pop();
-            map.set(edgeSource.from, edgeTarget.from);
-            const neighborsSource = this.grid.getTriangleNeighbors(edgeSource.from, true);
-            const neighborsTarget = other.grid.getTriangleNeighbors(edgeTarget.from, true);
-            const prevSrcIdx = neighborsSource.indexOf(edgeSource.to);
-            const prevTgtIdx = neighborsTarget.indexOf(edgeTarget.to);
-            for (let i=0; i<neighborsSource.length; i++) {
-                const neighbor = neighborsSource[i];
-                if (trianglesSource.has(neighbor) && !map.has(neighbor)) {
-                    const newIdx = wrapModulo(i + prevTgtIdx - prevSrcIdx, neighborsSource.length);
-                    const targetNeighbor = neighborsTarget[newIdx];
-                    if (!trianglesTarget.has(targetNeighbor)) return null;
-                    map.set(neighbor, targetNeighbor);
-                    queue.push([
-                        { from: neighbor, to: edgeSource.from },
-                        { from: targetNeighbor, to: edgeTarget.from },
-                    ]);
-                }
-            }
+        // rotate the other shape
+        const otherEdgeFrom = other.grid.getOrAddRotationEdge(otherTriangle, 0);
+        const otherEdgeTo = other.grid.getOrAddRotationEdge(otherTriangle, otherRotation);
+        const otherOffsets = other.computeRotatedOffsets(other.grid, otherEdgeFrom, otherEdgeTo);
+
+        // find the offset for the otherTriangle
+        const newCoord = otherOffsets[other.triangles.indexOf(otherTriangle)];
+
+        // map coordinates to match the target triangles
+        const otherOffsetsMapped = other.moveOffsetsToMatch(otherOffsets, newCoord, [thisTriangle.x, thisTriangle.y]);
+        if (!otherOffsetsMapped) return null;
+
+        // map new coordinates to triangles
+        const map = new Map<string, Triangle>();
+        for (let i=0; i<otherOffsetsMapped.length; i++) {
+            map.set(`${otherOffsetsMapped[i][0]} ${otherOffsetsMapped[i][1]}`, other.triangles[i]);
         }
 
-        if (map.size != trianglesSource.size) return null;
-
-        return [...map.entries()];
+        // compare coordinates with ours and pair
+        const pairs : [Triangle, Triangle][] = [];
+        for (let i=0; i<otherOffsets.length; i++) {
+            const o = map.get(`${this.triangles[i].x} ${this.triangles[i].y}`);
+            if (!o) return null;
+            pairs.push([this.triangles[i], o]);
+        }
+        return pairs;
     }
 
     computeFromOrientedColors(orientedColors : OrientedColors) : TileColors {
@@ -187,7 +181,6 @@ export abstract class Tile extends EventTarget {
         const r = computeOutline(new Set<Triangle>(this.triangles));
         return r.boundary.map((v) => [v.x - this.left, v.y - this.top]);
     }
-
 
     computeRotatedOffsets(targetGrid : Grid, edgeFrom : Edge, edgeTo : Edge) : Coord[] {
         const map = new Map<Triangle, Triangle>();
@@ -267,6 +260,16 @@ export abstract class Tile extends EventTarget {
         return offsets.map((offset) => [
             offset[0] - topLeft.x + topLeft.xAtOrigin,
             offset[1] - topLeft.y + topLeft.yAtOrigin
+        ]);
+    }
+
+    moveOffsetsToMatch(offsets : Coord[], from : Coord, to : Coord) : Coord[] {
+        const triangleFrom = this.grid.getOrAddTriangle(from[0], from[1]);
+        const triangleTo = this.grid.getOrAddTriangle(to[0], to[1]);
+        if (triangleFrom.shape != triangleTo.shape) return null;
+        return offsets.map((offset) => [
+            offset[0] - triangleFrom.x + triangleTo.x,
+            offset[1] - triangleFrom.y + triangleTo.y,
         ]);
     }
 

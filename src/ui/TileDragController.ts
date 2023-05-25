@@ -80,6 +80,7 @@ export interface TileDragSource {
     gridDisplay : GridDisplay;
     tile : Tile;
     rotation : number;
+    indexOnStack? : number;
     getTriangleOnScreenPosition() : TriangleOnScreenPosition[];
     getDraggable() : Interactable;
     startDrag();

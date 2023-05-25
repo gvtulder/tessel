@@ -83,7 +83,7 @@ export class MainGridDisplay extends GridDisplay {
     dropTile(source : TileDragSource, closestPair : TriangleOnScreenMatch) : boolean {
         const targetTile = closestPair.fixed.triangle.tile;
         if (targetTile && targetTile.isPlaceholder()) {
-            return this.gameDisplay.game.placeTile(source.tile, source.rotation, closestPair.moving.triangle, closestPair.fixed.triangle);
+            return this.gameDisplay.game.placeTile(source.tile, source.rotation, closestPair.moving.triangle, closestPair.fixed.triangle, source.indexOnStack);
         }
         return false;
     }

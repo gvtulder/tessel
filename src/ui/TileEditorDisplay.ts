@@ -5,13 +5,13 @@ import { Tile } from "src/grid/Tile.js";
 import { Edge, Triangle } from "src/grid/Triangle.js";
 import { wrapModulo } from "src/utils.js";
 import { DEBUG } from "src/settings.js";
-import { ProtoTile, COLORS } from "../grid/ProtoTile.js";
+import { EditableTile, COLORS } from "../grid/EditableTile.js";
 
 
 
 export class TileEditorDisplay extends EventTarget {
     grid : Grid;
-    tile : ProtoTile;
+    tile : EditableTile;
     gridDisplay : TileEditorGridDisplay;
     element : HTMLDivElement;
 
@@ -23,7 +23,7 @@ export class TileEditorDisplay extends EventTarget {
         this.grid = grid;
         this.build();
 
-        this.tile = new ProtoTile(this.grid, 0, 0);
+        this.tile = new EditableTile(this.grid, 0, 0);
         this.grid.addTile(this.tile);
         this.tile.colors = [COLORS[0]];
         window.protoTile = this.tile;

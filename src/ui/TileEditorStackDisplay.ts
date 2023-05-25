@@ -10,7 +10,7 @@ import { TileDisplay } from "./TileDisplay.js";
 import { GridType } from "src/grid/GridType.js";
 import { mean } from 'src/utils.js';
 import { CopyTile } from './TileEditorDisplay.js';
-import { ProtoTile, TileVariant } from 'src/grid/ProtoTile.js';
+import { EditableTile, TileVariant } from 'src/grid/ProtoTile.js';
 
 export class TileEditorStackDisplay {
     gridType : GridType;
@@ -24,7 +24,7 @@ export class TileEditorStackDisplay {
         this.build();
     }
 
-    updateTiles(protoTile : ProtoTile) {
+    updateTiles(protoTile : EditableTile) {
         const tileVariants = protoTile.computeRotationVariants();
         for (let i=0; i<this.tileDisplays.length; i++) {
             if (i < tileVariants.length) {

@@ -12,7 +12,7 @@ import { MainMenuDisplay } from './ui/MainMenuDisplay.js';
 import { GameController } from './ui/GameController.js';
 import disableIosZoom from './lib/disable-ios-zoom.js';
 import { Pattern } from './grid/Pattern.js';
-import { TriangleOffsets, newCustomTileType } from './grid/CustomTile.js';
+import { TriangleOffsets, newCustomTileType } from './grid/old.CustomTile.js';
 import { PatternEditorGridDisplay } from './ui/PatternEditorGridDisplay.js';
 import { EditorDisplay } from './ui/EditorDisplay.js';
 

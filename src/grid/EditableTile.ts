@@ -6,7 +6,7 @@ import { Triangle } from "src/grid/Triangle.js";
 export const COLORS = ['red', 'blue', 'white', 'black', 'green', 'orange', 'purple'];
 
 
-export class ProtoTile extends Tile {
+export class EditableTile extends Tile {
     triangleOffsets: number[][];
     triangles: Triangle[];
 

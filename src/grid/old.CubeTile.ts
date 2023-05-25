@@ -1,5 +1,5 @@
 import { TileColors } from "./Grid.js";
-import { HexTile } from "./HexTile.js";
+import { HexTile } from "./old.HexTile.js";
 
 export class CubeTile extends HexTile {
     get rotationAngles() {

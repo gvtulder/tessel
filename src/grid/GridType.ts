@@ -1,12 +1,12 @@
 import { TriangleType } from "./Triangle.js";
 import { TileType } from "./Tile.js";
 import { HexGridTriangle } from "./HexGridTriangle.js";
-import { HexTile } from "./HexTile.js";
+import { HexTile } from "./old.HexTile.js";
 import { EquilateralGridTriangle } from "./EquilateralGridTriangle.js";
 import { SquareGridTriangle } from "./SquareGridTriangle.js";
-import { SquareTile } from "./SquareTile.js";
-import { TriangleTile } from "./TriangleTile.js";
-import { CubeTile } from "./CubeTile.js";
+import { SquareTile } from "./old.SquareTile.js";
+import { TriangleTile } from "./old.TriangleTile.js";
+import { CubeTile } from "./old.CubeTile.js";
 
 export abstract class GridType {
     abstract createTile : TileType;

@@ -55,21 +55,60 @@ export abstract class Triangle extends EventTarget {
     };
 
     grid: Grid;
+
+    /**
+     * The position of the triangle on the grid.
+     */
     x: number;
+    /**
+     * The position of the triangle on the grid.
+     */
     y: number;
+    /**
+     * The position of the triangle on the grid.
+     */
     coord: Coord;
+    /**
+     * The position of the triangle on the grid.
+     */
     coordId: CoordId;
+
+    /**
+     * The shape number for this triangle.
+     *
+     * Triangles with the same number look the same
+     * (e.g., up/left/right/down).
+     */
     shape: number;
-    rotationShape: number;
+
+    /**
+     * The x position for this type of triangle nearest to the origin.
+     */
     xAtOrigin: number;
+    /**
+     * The y position for this type of triangle nearest to the origin.
+     */
     yAtOrigin: number;
+
     private _color: TriangleColor;
     private _tile : Tile | null;
     private _colorGroup : ColorGroup | null;
 
+    /**
+     * Points of the three corners of this triangle.
+     */
     points: readonly [Coord, Coord, Coord];
+    /**
+     * Points of the polygon (may overlap other polygons).
+     */
     polyPoints: ReadonlyArray<Coord>;
+    /**
+     * Left position of this triangle in grid coordinates.
+     */
     left: number;
+    /**
+     * Top position of this triangle in grid coordinates.
+     */
     top: number;
 
     // neighbors in clockwise order
@@ -79,6 +118,13 @@ export abstract class Triangle extends EventTarget {
     rotationOffsets: ReadonlyArray<CoordEdge>;
     rotationAngles: readonly number[];
 
+    /**
+     * Constructs a new triangle on the grid.
+     *
+     * @param grid
+     * @param x
+     * @param y
+     */
     constructor(grid : Grid, x: number, y: number) {
         super();
 
@@ -95,8 +141,14 @@ export abstract class Triangle extends EventTarget {
         this.calc();
     }
 
+    /**
+     * Populate the type-specific parameters.
+     */
     protected abstract calc();
 
+    /**
+     * Center of the triangle polygon in grid coordinates.
+     */
     get center(): Coord {
         // incenter coordinates
         const w0 = dist(this.points[1], this.points[2]);
@@ -107,14 +159,23 @@ export abstract class Triangle extends EventTarget {
         return [x, y];
     }
 
+    /**
+     * Width of the triangle polygon in grid coordinates.
+     */
     get width(): number {
         return Math.max(...this.points.map((p) => p[0]));
     }
 
+    /**
+     * Height of the triangle polygon in grid coordinates.
+     */
     get height(): number {
         return Math.max(...this.points.map((p) => p[1]));
     }
 
+    /**
+     * Updates the color of this triangle.
+     */
     set color(color: TriangleColor) {
         const changed = this._color != color;
         if (changed) {
@@ -126,10 +187,16 @@ export abstract class Triangle extends EventTarget {
         }
     }
 
+    /**
+     * The color of the triangle.
+     */
     get color(): TriangleColor {
         return this._color;
     }
 
+    /**
+     * Updates the color group of this triangle.
+     */
     set colorGroup(colorGroup: ColorGroup) {
         const changed = this._colorGroup != colorGroup;
         if (changed) {
@@ -141,10 +208,16 @@ export abstract class Triangle extends EventTarget {
         }
     }
 
+    /**
+     * The color group within the current tile.
+     */
     get colorGroup(): ColorGroup {
         return this._colorGroup;
     }
 
+    /**
+     * Sets or unsets the tile this triangle belongs to.
+     */
     set tile(tile: Tile | null) {
         const changed = this._tile !== tile;
         if (changed) {
@@ -156,10 +229,20 @@ export abstract class Triangle extends EventTarget {
         }
     }
 
+    /**
+     * The tile this triangle belongs to.
+     */
     get tile(): Tile {
         return this._tile;
     }
 
+    /**
+     * Returns the neighbors of this triangle.
+     *
+     * @param includeNull include uninitialized triangles as null
+     * @param addMissing initialize uninitialized triangles
+     * @returns a list of neighbors for this triangle
+     */
     getNeighbors(includeNull? : boolean, addMissing? : boolean) : Triangle[] {
         const neighbors : Triangle[] = [];
         for (const n of this.neighborOffsets) {
@@ -171,10 +254,22 @@ export abstract class Triangle extends EventTarget {
         return neighbors;
     }
 
+    /**
+     * Returns the neighbors of this triangle, initializing as-yet uninitialized triangles.
+     *
+     * @returns a list of neighbors for this triangle
+     */
     getOrAddNeighbors() : Triangle[] {
         return this.getNeighbors(true, true);
     }
 
+    /**
+     * Returns the rotation edge for the given rotation step.
+     *
+     * @param rotation the rotation step
+     * @param addMissing initialize triangles if necessary
+     * @returns an Edge from the this triangle to the next, in the rotation direction
+     */
     getRotationEdge(rotation : number, addMissing?: boolean) : Edge {
         const offset = this.rotationOffsets[wrapModulo(rotation, this.rotationOffsets.length)];
         return {
@@ -183,6 +278,12 @@ export abstract class Triangle extends EventTarget {
         };
     }
 
+    /**
+     * Returns the rotation edge for the given rotation step, initializing all triangles.
+     *
+     * @param rotation the rotation step
+     * @returns an Edge from the this triangle to the next, in the rotation direction
+     */
     getOrAddRotationEdge(rotation : number) : Edge {
         return this.getRotationEdge(rotation, true);
     }

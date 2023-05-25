@@ -1,5 +1,6 @@
+import { wrapModulo } from "src/utils.js";
 import { TriangleOffsets as TriangleOffsetsPattern, newCustomTileType } from "./CustomTile.js";
-import { Grid } from "./Grid.js";
+import { Coord, Grid } from "./Grid.js";
 import { Tile } from "./Tile.js";
 import { Triangle } from "./Triangle.js";
 
@@ -10,7 +11,6 @@ export class Pattern {
     triangleOffsetsPattern : TriangleOffsetsPattern;
 
     triangles : Triangle[];
-    mainTile : Tile;
 
     constructor(grid : Grid, triangleOffsetsPattern : TriangleOffsetsPattern) {
         this.grid = grid;
@@ -20,6 +20,8 @@ export class Pattern {
         this.computePeriods();
 
         this.build();
+
+        window.pattern = this;
     }
 
     build() {
@@ -31,7 +33,6 @@ export class Pattern {
                 const tile = new CustomTileType(this.grid, i, j);
                 if ((i >= 0 && i < periodX) && j == 0) {
                     tile.colors = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'orange', 'green'];
-                    this.mainTile = tile;
                 } else {
                     tile.colors = null;
                 }
@@ -42,6 +43,32 @@ export class Pattern {
 
     getCustomTileType() {
         return newCustomTileType(this.triangleOffsetsPattern, this.periodX, this.stepY);
+    }
+
+    mapTriangleCoordToTileCoord(triangle : Coord) : Coord {
+        const tiles = this.triangleOffsetsPattern;
+
+        // triangleY = tileY * stepY[1] + offsetY
+        // offsetY = triangleY - tileY * stepY[1]
+        // tileY = (triangleY - offsetY) / stepY[1]
+        //
+        // triangleX = Math.floor(tileX / triangleOffsets.length) * periodX + tileY * stepY[0] + offsetX
+        // tileX = Math.floor((triangleX - tileY * stepY[0] - offsetX) / periodX)
+        // offsetX = triangleX - Math.floor(tileX / triangleOffsets.length) * periodX - tileY * stepY[0]
+
+        for (let i=0; i<tiles.length; i++) {
+            for (const offset of tiles[i]) {
+                const tileY = Math.floor((triangle[1] - offset[1]) / this.stepY[1]);
+                const offsetY = triangle[1] - tileY * this.stepY[1];
+
+                const tileX = Math.floor((triangle[0] - tileY * this.stepY[0] - offset[0]) / this.periodX);
+                const offsetX = triangle[0] - Math.floor(tileX / tiles.length) * this.periodX - tileY * this.stepY[0]
+                if (offset[0] == offsetX && offset[1] == offsetY) {
+                    return [tileX, tileY];
+                }
+            }
+        }
+        return null;
     }
 
     private computePeriods() {

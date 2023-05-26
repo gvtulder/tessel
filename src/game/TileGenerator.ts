@@ -1,21 +1,23 @@
+import { Pattern } from "src/grid/Pattern.js";
 import { Tile } from "src/grid/Tile.js";
 import { TileColors, TriangleColor } from "src/grid/Triangle.js";
 import { shuffle } from "src/utils.js";
 
-export type TileGenerator = () => TileColors[];
+export type TileGenerator = (tiles : TileColors[], pattern : Pattern) => TileColors[];
 
 export class TileGenerators {
     static fromList(tiles : TileColors[]) : TileGenerator {
         return () => { return [...tiles]; };
     }
 
-    static permutations(colors : TileColors, numTriangles : number) : TileGenerator {
-        return () => {
+    static permutations(colors : TileColors) : TileGenerator {
+        return (tiles : TileColors[], pattern : Pattern) => {
             const numColors = colors.length;
+            const numColorGroups = pattern.numColorGroups;
 
             const cToComponents = (c : number) => {
                 const s = c.toString(numColors).split('');
-                while (s.length < numTriangles) s.unshift('0');
+                while (s.length < numColorGroups) s.unshift('0');
                 return s;
             };
             const componentsToC = (components : string[]) => parseInt(components.join(''), numColors);
@@ -32,7 +34,7 @@ export class TileGenerators {
             };
 
             const uniqueCs = new Set<number>();
-            const maxColor = Math.pow(numColors, numTriangles);
+            const maxColor = Math.pow(numColors, numColorGroups);
             for (let c=0; c<maxColor; c++) {
                 uniqueCs.add(computeEqualColors(c)[0]);
             }
@@ -45,9 +47,9 @@ export class TileGenerators {
         };
     }
 
-    static repeatColors(repeats : number, generator : TileGenerator) : TileGenerator {
-        return () => {
-            return generator().map((t : TileColors) => {
+    static repeatColors(repeats : number) : TileGenerator {
+        return (tiles : TileColors[]) => {
+            return tiles.map((t : TileColors) => {
                 const tt : TriangleColor[] = [];
                 for (const c of t) {
                     for (let i=0; i<repeats; i++) {
@@ -59,9 +61,8 @@ export class TileGenerators {
         }
     }
 
-    static repeat(repeats : number, generator : TileGenerator) : TileGenerator {
-        return () => {
-            const tiles = generator();
+    static repeat(repeats : number) : TileGenerator {
+        return (tiles : TileColors[]) => {
             const repeatedTiles : TileColors[] = [];
             for (let i=0; i<repeats; i++) {
                 repeatedTiles.push(...tiles);
@@ -70,9 +71,8 @@ export class TileGenerators {
         }
     }
 
-    static randomSubset(n : number, generator : TileGenerator) : TileGenerator {
-        return () => {
-            const tiles = generator();
+    static randomSubset(n : number) : TileGenerator {
+        return (tiles : TileColors[]) => {
             shuffle(tiles);
             return tiles.slice(0, n);
         };

@@ -18,8 +18,9 @@ export const SquareDefault : GameSettings = {
     },
     initialTile: ['red','black','blue','white'],
     tilesShownOnStack: 3,
-    tileGenerator : TileGenerators.permutations(
-        ['red','black','blue','white'], 4),
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+    ]
 }
 lookup.set('square', SquareDefault);
 
@@ -33,8 +34,9 @@ export const TriangleDefault : GameSettings = {
     },
     initialTile: ['red','black','blue','white'],
     tilesShownOnStack: 3,
-    tileGenerator : TileGenerators.permutations(
-        ['red','black','blue','white'], 4),
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+    ]
 }
 lookup.set('triangle', TriangleDefault);
 
@@ -48,8 +50,9 @@ export const HexDefault : GameSettings = {
     },
     initialTile: ['red','black','blue','white','black','blue'],
     tilesShownOnStack: 3,
-    tileGenerator : TileGenerators.permutations(
-        ['red','black','blue','white'], 6),
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+    ]
 }
 lookup.set('hex', HexDefault);
 
@@ -62,8 +65,9 @@ export const CubeDefault : GameSettings = {
     },
     initialTile: ['red','black','blue','white','black','blue'],
     tilesShownOnStack: 3,
-    tileGenerator : TileGenerators.permutations(
-        ['red','black','blue','white'], 3),
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+    ]
 }
 lookup.set('cube', CubeDefault);
 
@@ -76,8 +80,9 @@ export const RhombusDefault : GameSettings = {
     },
     initialTile: ['red','black'],
     tilesShownOnStack: 3,
-    tileGenerator : TileGenerators.permutations(
-        ['red','black','blue','white'], 2),
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+    ]
 }
 lookup.set('rhombus', RhombusDefault);
 
@@ -92,8 +97,9 @@ lookup.set('rhombus2', {
     },
     initialTile: ['red','black'],
     tilesShownOnStack: 3,
-    tileGenerator : TileGenerators.permutations(
-        ['red','black','blue','white'], 2),
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+    ]
 });
 
 // two-directional
@@ -108,8 +114,10 @@ lookup.set('rhombus3', {
     },
     initialTile: ['red','black'],
     tilesShownOnStack: 3,
-    tileGenerator : TileGenerators.repeat(10,
-        TileGenerators.permutations(['red','black','blue','white'], 2)),
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+        TileGenerators.repeat(10),
+    ]
 });
 
 

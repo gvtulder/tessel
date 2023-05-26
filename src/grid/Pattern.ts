@@ -10,8 +10,6 @@ export type RotationSet = {
     rotationVariants : TileVariant[]
 };
 
-
-
 export class Pattern {
     triangleType : TriangleType;
 

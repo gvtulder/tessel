@@ -19,7 +19,7 @@ export type GameSettings = {
         x: number,
         y: number
     }[],
-    tileGenerator : TileGenerator,
+    tileGenerator : TileGenerator[],
 }
 
 export class GameEvent extends Event {
@@ -57,7 +57,15 @@ export class Game extends EventTarget {
 
         this.pattern = new Pattern(this.settings.triangleType, this.settings.pattern.shapes);
         this.grid = new Grid(this.settings.triangleType, this.pattern);
-        const tileStack = new TileStack(this.settings.tileGenerator());
+
+        // generate tiles
+        let tiles : TileColors[] = [];
+        for (const tileGenerator of this.settings.tileGenerator) {
+            tiles = tileGenerator(tiles, this.pattern);
+        }
+
+        // construct the tile stack
+        const tileStack = new TileStack(tiles);
         this.tileStack = new FixedOrderTileStack(tileStack, this.settings.tilesShownOnStack);
 
         const initialTiles : GameSettings['initialTiles'] = [];

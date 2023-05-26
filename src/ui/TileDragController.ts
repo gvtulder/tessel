@@ -2,7 +2,7 @@ import type { Interactable, DragEvent } from '@interactjs/types';
 
 import { GridDisplay } from "./GridDisplay.js";
 import { TriangleOnScreenPosition } from "./TileDisplay.js";
-import { Tile } from 'src/grid/Tile.js';
+import { Tile, TileRotation } from 'src/grid/Tile.js';
 
 export class TileDragEvent extends Event {
     tileDragSource : TileDragSource;
@@ -79,7 +79,7 @@ export class TileDragController extends EventTarget {
 export interface TileDragSource {
     gridDisplay : GridDisplay;
     tile : Tile;
-    rotation : number;
+    rotation : TileRotation;
     indexOnStack? : number;
     getTriangleOnScreenPosition() : TriangleOnScreenPosition[];
     getDraggable() : Interactable;

@@ -3,7 +3,7 @@ import interact from '@interactjs/interact/index';
 
 import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
-import { Tile } from "../grid/Tile.js";
+import { Tile, TileRotation } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { TileDisplay, TriangleOnScreenPosition } from "./TileDisplay.js";
 import { TileDragController, TileDragSource } from './TileDragController.js';
@@ -101,11 +101,11 @@ class SingleTileOnStackDisplay implements TileDragSource {
     element : HTMLDivElement;
     rotatable : HTMLDivElement;
     draggable : Interactable;
-    rotation : number;
+    rotationIdx : number;
     angle : number;
 
     constructor(tileStackDisplay : TileStackDisplay, indexOnStack : number, pattern : Pattern) {
-        this.rotation = 0;
+        this.rotationIdx = 0;
         this.angle = 0;
 
         this.tileStackDisplay = tileStackDisplay;
@@ -156,16 +156,20 @@ class SingleTileOnStackDisplay implements TileDragSource {
         });
     }
 
+    get rotation() : TileRotation {
+        return this.tile.rotations[this.rotationIdx];
+    }
+
     rotateTile() {
-        this.rotateTileTo(this.rotation + 1)
+        this.rotateTileTo(this.rotationIdx + 1)
     }
 
     rotateTileTo(newRotation : number, reverse? : boolean, closest? : boolean) {
         const angles = this.tile.rotations.map((r) => r.angle);
-        const oldAngle = angles[this.rotation];
-        this.rotation = newRotation % angles.length;
-        const reverseDiff = (360 + oldAngle - angles[this.rotation]) % 360;
-        const forwardDiff = (360 + angles[this.rotation] - oldAngle) % 360;
+        const oldAngle = angles[this.rotationIdx];
+        this.rotationIdx = newRotation % angles.length;
+        const reverseDiff = (360 + oldAngle - angles[this.rotationIdx]) % 360;
+        const forwardDiff = (360 + angles[this.rotationIdx] - oldAngle) % 360;
         if (reverse || (closest && reverseDiff < forwardDiff)) {
             this.angle -= reverseDiff;
         } else {

@@ -427,7 +427,7 @@ export class Tile extends EventTarget {
     /**
      * Normalizes the shape offsets by shifting the top-left triangle to (0, 0).
      * (Or as close as possible as the grid type allows.)
-     * 
+     *
      * @param shape the input shape
      * @returns the normalized shape
      */

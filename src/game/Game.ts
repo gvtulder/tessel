@@ -1,6 +1,6 @@
 import { Grid } from "src/grid/Grid.js";
 import { ScoredRegion, Scorer } from "src/grid/Scorer.js";
-import { Tile, TileShape } from "src/grid/Tile.js";
+import { Tile, TileRotation, TileShape } from "src/grid/Tile.js";
 import { TileColors, Triangle, TriangleType } from "src/grid/Triangle.js";
 import { TileGenerator } from "./TileGenerator.js";
 import { FixedOrderTileStack, TileStack } from "./TileStack.js";
@@ -82,10 +82,10 @@ export class Game extends EventTarget {
         this.dispatchEvent(new GameEvent('endgame', this));
     }
 
-    placeTile(sourceTile : Tile, sourceRotation : number, sourceTriangle : Triangle, targetTriangle : Triangle, indexOnStack : number) {
+    placeTile(sourceTile : Tile, sourceRotation : TileRotation, sourceTriangle : Triangle, targetTriangle : Triangle, indexOnStack : number) {
         const targetTile = targetTriangle.tile;
         if (!targetTile) return false;
-        const match = targetTile.matchShape(sourceTile, sourceRotation, sourceTriangle, targetTriangle);
+        const match = targetTile.matchShape(sourceTile, sourceRotation.steps, sourceTriangle, targetTriangle);
         if (!match) return false;
 
         const newColors = targetTile.colors.map(

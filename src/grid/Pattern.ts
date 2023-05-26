@@ -34,7 +34,7 @@ export class Pattern {
      */
     constructor(triangleType : TriangleType, shapes : TileShape[]) {
         this.triangleType = triangleType;
-        this.grid = new Grid(triangleType);
+        this.grid = new Grid(triangleType, this);
         this.shapes = shapes;
 
         this.computePeriods();

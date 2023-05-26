@@ -249,15 +249,25 @@ class SingleTileOnStackDisplay implements TileDragSource {
         }
     }
 
-    startAutorotate(target : TileDisplay) : boolean {
+    /*
+    startAutorotate(target : ) : boolean {
         // TODO
-        /*
         const orientedColors = target.tile.checkFitOrientedColorsWithRotation(this.getOrientedColors());
         if (orientedColors !== null) {
             this.rotateTileTo(orientedColors.rotation, false, true);
             return true;
         }
-        */
+        return false;
+    }
+    */
+
+    startAutorotate(closestPair : TriangleOnScreenMatch) : boolean {
+        const targetTile = closestPair.fixed.triangle.tile;
+        if (targetTile && targetTile.isPlaceholder()) {
+            this.rotateTileTo(orientedColors.rotation, false, true);
+            console.log('autorotate over', targetTile);
+            // return this.gameDisplay.game.placeTile(source.tile, source.rotation, closestPair.moving.triangle, closestPair.fixed.triangle, source.indexOnStack);
+        }
         return false;
     }
 }

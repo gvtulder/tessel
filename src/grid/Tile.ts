@@ -280,9 +280,8 @@ export class Tile extends EventTarget {
 
         if (otherTriangle === undefined) {
             // find an anchor point
-            const shiftMapThis = this.mapTrianglesToOrigin([...otherPairsRotated.values()]);
-            const shiftMapOther = other.mapTrianglesToOrigin([...otherPairsRotated.values()]);
-
+            thisTriangle = this.findTopLeftTriangle(this.triangles);
+            otherTriangle = other.findTopLeftTriangle(other.triangles);
         }
 
         // find the offset for the otherTriangle
@@ -488,7 +487,7 @@ export class Tile extends EventTarget {
      * @param triangles the input triangles
      * @returns map of input -> normalized triangles
      */
-    mapTrianglesToOrigin(triangles : Triangle[]) : Map<Triangle, Triangle> {
+    mapTrianglesToOrigin(triangles : readonly Triangle[]) : Map<Triangle, Triangle> {
         const shift = this.computeShiftToOrigin(triangles);
         return new Map<Triangle, Triangle>(
             triangles.map((from) => [
@@ -509,7 +508,22 @@ export class Tile extends EventTarget {
      * @param triangles the input triangles
      * @returns the offset
      */
-    computeShiftToOrigin(triangles : Triangle[]) : Coord {
+    computeShiftToOrigin(triangles : readonly Triangle[]) : Coord {
+        let topLeft = this.findTopLeftTriangle(triangles);
+        return [
+            topLeft.xAtOrigin - topLeft.x,
+            topLeft.yAtOrigin - topLeft.y,
+        ];
+    }
+
+    /**
+     * Returns the triangle that is closest to the origin: the top-left triangle.
+     * (Or as close to the origin as possible as the grid type allows.)
+     *
+     * @param triangles the input triangles
+     * @returns the anchor triangle
+     */
+    findTopLeftTriangle(triangles : readonly Triangle[]) : Triangle {
         let topLeft = triangles[0];
         for (const t of triangles) {
             // select a standard, repeatable origin
@@ -519,10 +533,7 @@ export class Tile extends EventTarget {
                 topLeft = t;
             }
         }
-        return [
-            topLeft.xAtOrigin - topLeft.x,
-            topLeft.yAtOrigin - topLeft.y,
-        ];
+        return topLeft;
     }
 
     /**

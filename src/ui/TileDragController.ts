@@ -47,12 +47,14 @@ export class TileDragController extends EventTarget {
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px) scale(${this.gridDisplay.scale / source.gridDisplay.scale})`;
 
                     // figure out where we are
+                    /*
                     const movingPos = source.getTriangleOnScreenPosition();
                     const closestPair = this.gridDisplay.findClosestTriangleFromScreenPosition(movingPos);
                     if (closestPair && closestPair.dist < 50) {
                         source.startAutorotate(closestPair);
                     }
-                    console.log('MOVE', 'closestPair', closestPair);
+                    */
+                    // console.log('MOVE', 'closestPair', closestPair);
                 },
                 end: (evt : DragEvent) => {
                     // figure out where we are

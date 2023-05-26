@@ -161,7 +161,7 @@ export class Tile extends EventTarget {
         this.height = Math.max(...this.triangles.map((t) => t.top + t.height)) - this.top;
 
         // TODO optimize -> precompute
-        const tileVariants = this.computeRotationVariants();
+        const tileVariants = this.computeRotationVariants(true);
         this.rotations = tileVariants.map((v) => v.rotation);
     }
 
@@ -353,20 +353,33 @@ export class Tile extends EventTarget {
                 }
             }
         }
-        return map;
+        // only return the triangles of this tile
+        const result = new Map<Triangle, Triangle>();
+        for (const triangle of this._triangles.keys()) {
+            result.set(triangle, map.get(triangle));
+        }
+        return result;
     }
 
     /**
      * Computes the unique rotation variants of this tile, taking into account
      * the shape and color groups.
      * 
+     * @param colorSensitive the color groups should match exactly
      * @returns a list of unique rotation variants
      */
-    computeRotationVariants() : TileVariant[] {
+    computeRotationVariants(colorSensitive? : boolean) : TileVariant[] {
         const originTriangle = this.triangles[0];
         const rotationAngles = originTriangle.rotationAngles;
         const variants : TileVariant[] = [];
         const edgeFrom = originTriangle.getOrAddRotationEdge(0);
+
+        let shapesInPattern : TileShape[] = null;
+        if (this.grid.pattern) {
+            shapesInPattern = this.grid.pattern.shapes.map(
+                (shape) => this.moveToOrigin(shape)
+            );
+        }
 
         // try every possible rotation for this grid type
         for (let r=0; r<rotationAngles.length; r++) {
@@ -394,13 +407,41 @@ export class Tile extends EventTarget {
                 shape: shape,
             };
 
+            // does this exist in the pattern?
+            const existsInPattern = !shapesInPattern || shapesInPattern.some(
+                (shapeInPattern) => this.isEquivalentShape(shapeInPattern, newVariant.shape)
+            );
+            if (!existsInPattern) continue;
+
             // unique shape?
-            const unique = variants.every((variant) => !this.isEquivalentShape(variant, newVariant));
+            const unique = variants.every(
+                (variant) => !this.isEquivalentShape(variant.shape, newVariant.shape, colorSensitive)
+            );
             if (unique) {
                 variants.push(newVariant);
             }
         }
         return variants;
+    }
+
+    /**
+     * Normalizes the shape offsets by shifting the top-left triangle to (0, 0).
+     * (Or as close as possible as the grid type allows.)
+     * 
+     * @param shape the input shape
+     * @returns the normalized shape
+     */
+    moveToOrigin(shape: TileShape) : TileShape {
+        const triangles : Triangle[] = [];
+        for (const g of shape) {
+            triangles.push(...g.map((c) => this.grid.getOrAddTriangle(...c)));
+        }
+        const shiftMap = this.computeShiftToOrigin(triangles);
+        return shape.map(
+            (g) => g.map((coord) => (
+                shiftMap.get(this.grid.getOrAddTriangle(...coord)).coord
+            ))
+        );
     }
 
     /**
@@ -415,7 +456,7 @@ export class Tile extends EventTarget {
         for (const t of triangles) {
             // select a standard, repeatable origin
             const cmpAtOrigin = (t.xAtOrigin - topLeft.xAtOrigin) || (t.yAtOrigin - topLeft.yAtOrigin);
-            const cmpAbsolute = (t.x - topLeft.x) || (t.y - topLeft.y)
+            const cmpAbsolute = (t.x - topLeft.x) || (t.y - topLeft.y);
             if ((cmpAtOrigin || cmpAbsolute) < 0) {
                 topLeft = t;
             }
@@ -424,6 +465,12 @@ export class Tile extends EventTarget {
             topLeft.xAtOrigin - topLeft.x,
             topLeft.yAtOrigin - topLeft.y,
         ];
+        console.log('computeshift origin',
+                    topLeft.xAtOrigin, topLeft.yAtOrigin,
+                    'offset to minX, minY',
+                    topLeft.x - Math.min(...triangles.map((t) => t.x)),
+                    topLeft.y - Math.min(...triangles.map((t) => t.y)),
+                    triangles.map((t) => t.coordId));
         return new Map<Triangle, Triangle>(
             triangles.map((from) => [
                 from,
@@ -440,37 +487,45 @@ export class Tile extends EventTarget {
      * 
      * @param a tile variant A
      * @param b tile variant B
+     * @param colorSensitive color groups should match
      * @returns true if the variants have matching shape and color groups
      */
-    isEquivalentShape(a : TileVariant, b : TileVariant) {
+    isEquivalentShape(a : TileShape, b : TileShape, colorSensitive? : boolean) {
         // assumption: normalized shapes, moved to origin
 
         // must have same number of color groups
-        if (a.shape.length != b.shape.length) return false;
+        if (a.length != b.length) return false;
 
         // must have the same points in the same color groups,
         // but the color groups could be numbered differently
         const coordColorInA = new Map<CoordId, ColorGroup>();
         const colorAtoB = new Map<ColorGroup, ColorGroup>();
         let triangleCountA = 0;
-        for (let c=0; c<a.shape.length; c++) {
-            for (const offset of a.shape[c]) {
+        for (let c=0; c<a.length; c++) {
+            for (const offset of a[c]) {
                 coordColorInA.set(CoordId(offset), c);
                 triangleCountA++;
             }
         }
 
+        // should the color groups be in the same order?
+        if (colorSensitive) {
+            for (const colorGroup of coordColorInA.values()) {
+                colorAtoB.set(colorGroup, colorGroup);
+            }
+        }
+
         // compare with color groups in B
         let triangleCountB = 0;
-        for (let c=0; c<b.shape.length; c++) {
-            for (const offset of b.shape[c]) {
+        for (let c=0; c<b.length; c++) {
+            for (const offset of b[c]) {
                 // look up color of this triangle in A
                 const colorInA = coordColorInA.get(CoordId(offset));
                 // triangle must exist in A
                 if (colorInA === null) return false;
                 // check if it is the correct color group
                 let colorInB = colorAtoB.get(colorInA);
-                if (colorInB === null) {
+                if (colorInB === null || colorInB === undefined) {
                     // new color group in B
                     colorAtoB.set(colorInA, c);
                     colorInB = c;

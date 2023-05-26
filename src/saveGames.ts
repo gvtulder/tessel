@@ -53,6 +53,20 @@ export const HexDefault : GameSettings = {
 }
 lookup.set('hex', HexDefault);
 
+export const CubeDefault : GameSettings = {
+    triangleType : HexGridTriangle,
+    pattern : {
+        shapes : [
+            [ [[-1, 0], [0, 0]], [[1, 0], [1, 1]], [[0, 1], [-1, 1]] ],
+        ]
+    },
+    initialTile: ['red','black','blue','white','black','blue'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.permutations(
+        ['red','black','blue','white'], 3),
+}
+lookup.set('cube', CubeDefault);
+
 export const RhombusDefault : GameSettings = {
     triangleType : HexGridTriangle,
     pattern : {

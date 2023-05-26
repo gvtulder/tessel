@@ -1,20 +1,16 @@
-import { DEBUG } from './settings.js';
-import { MainGridDisplay } from "./ui/MainGridDisplay.js";
-import { Grid } from './grid/Grid.js';
-import { TileStackDisplay } from './ui/TileStackDisplay.js';
+import { Game } from './game/Game.js';
 import { FixedOrderTileStack, TileStack } from './game/TileStack.js';
-import { GridType, GridTypes } from './grid/old.GridType.js';
-import { Tile } from './grid/Tile.js';
-import { Game, GameSettings } from './game/Game.js';
-import { GameDisplay } from './ui/GameDisplay.js';
-import * as SaveGames from './saveGames.js';
-import { MainMenuDisplay } from './ui/MainMenuDisplay.js';
-import { GameController } from './ui/GameController.js';
-import disableIosZoom from './lib/disable-ios-zoom.js';
+import { Grid } from './grid/Grid.js';
 import { Pattern } from './grid/Pattern.js';
-import { TriangleOffsets, newCustomTileType } from './grid/old.CustomTile.js';
-import { PatternEditorGridDisplay } from './ui/PatternEditorGridDisplay.js';
+import { Tile } from './grid/Tile.js';
+import disableIosZoom from './lib/disable-ios-zoom.js';
+import * as SaveGames from './saveGames.js';
+import { DEBUG } from './settings.js';
 import { EditorDisplay } from './ui/EditorDisplay.js';
+import { GameController } from './ui/GameController.js';
+import { GameDisplay } from './ui/GameDisplay.js';
+import { MainGridDisplay } from "./ui/MainGridDisplay.js";
+import { TileStackDisplay } from './ui/TileStackDisplay.js';
 
 
 export function runEditorDebug() {
@@ -184,12 +180,7 @@ export function start() {
     if (SaveGames.lookup.has(window.location.hash.replace('#', ''))) {
         game = new Game(SaveGames.lookup.get(window.location.hash.replace('#', '')));
     } else {
-        // game = new Game(SaveGames.HexDebug_BlackRed);
-        // game = new Game(SaveGames.SquareDefault);
-        // game = new Game(SaveGames.HexDefault);
-        // game = new Game(SaveGames.CubeDefault);
-        // game = new Game(SaveGames.HexDebug_BlackRed);
-        game = new Game(SaveGames.SquareDefault);
+        game = new Game(SaveGames.lookup.get('square'));
     }
 
     const gameDisplay = new GameDisplay(game);

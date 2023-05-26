@@ -11,7 +11,8 @@ const COLORS = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'or
 export const lookup = new Map<string, GameSettings>();
 
 
-export const SquareDefault : GameSettings = {
+// squares
+lookup.set('square', {
     triangleType : SquareGridTriangle,
     pattern : {
         shapes : [
@@ -24,10 +25,10 @@ export const SquareDefault : GameSettings = {
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
     ]
-}
-lookup.set('square', SquareDefault);
+});
 
-export const TriangleDefault : GameSettings = {
+// triangles
+lookup.set('triangle', {
     triangleType : EquilateralGridTriangle,
     pattern : {
         shapes : [
@@ -40,10 +41,10 @@ export const TriangleDefault : GameSettings = {
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
     ]
-}
-lookup.set('triangle', TriangleDefault);
+});
 
-export const HexDefault : GameSettings = {
+// hexagons
+lookup.set('hex', {
     triangleType : HexGridTriangle,
     pattern : {
         shapes : [
@@ -56,10 +57,10 @@ export const HexDefault : GameSettings = {
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
     ]
-}
-lookup.set('hex', HexDefault);
+});
 
-export const CubeDefault : GameSettings = {
+// cube on hex grid
+lookup.set('cube', {
     triangleType : HexGridTriangle,
     pattern : {
         shapes : [
@@ -71,10 +72,10 @@ export const CubeDefault : GameSettings = {
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
     ]
-}
-lookup.set('cube', CubeDefault);
+});
 
-export const RhombusDefault : GameSettings = {
+// single-directional
+lookup.set('rhombus', {
     triangleType : HexGridTriangle,
     pattern : {
         shapes : [
@@ -86,8 +87,7 @@ export const RhombusDefault : GameSettings = {
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
     ]
-}
-lookup.set('rhombus', RhombusDefault);
+});
 
 // two-directional
 lookup.set('rhombus2', {

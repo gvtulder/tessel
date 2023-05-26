@@ -1,11 +1,8 @@
-import type { Interactable, PointerEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
 
-import { CubeHexDefault, HexDefault, SquareDefault } from "src/saveGames.js";
-import { MainMenuGridDisplay } from "./GridDisplay.js";
-import { Grid } from "src/grid/Grid.js";
 import { GameSettings } from 'src/game/Game.js';
-import { TriangleDefault } from '../saveGames.js';
+import { Grid } from "src/grid/Grid.js";
+import { MainMenuGridDisplay } from "./GridDisplay.js";
 
 
 export class MenuEvent extends Event {

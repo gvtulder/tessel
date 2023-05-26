@@ -1,38 +1,34 @@
 import { SCALE } from '../settings.js';
 import { Triangle } from "../grid/Triangle.js";
+import { Grid, GridEvent } from 'src/grid/Grid.js';
 
 
 
 export class ConnectorDisplay {
-    element: HTMLDivElement;
+    grid : Grid;
     svgGroup: SVGElement;
 
-    constructor() {
+    constructor(grid : Grid) {
+        this.grid = grid;
+
         this.build();
+        for (const triangle of grid.triangles.values()) {
+            this.addTriangle(triangle);
+        }
+
+        grid.addEventListener(Grid.events.AddTriangle,
+            (evt : GridEvent) => this.addTriangle(evt.triangle)
+        );
     }
 
     build() {
-        const div = document.createElement('div');
-        this.element = div;
-
-        const svg = this.generateSvg();
-        this.element.appendChild(svg);
-    }
-
-    generateSvg() {
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', `${100 * SCALE}`);
-        svg.setAttribute('height', `${100 * SCALE}`);
-
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        svg.appendChild(group);
+        group.setAttribute('class', 'svg-ConnectorDisplay');
         this.svgGroup = group;
-
-        return svg;
     }
 
-    connect(triangle: Triangle, neighbors: Triangle[]) {
-        for (const neighbor of neighbors) {
+    addTriangle(triangle: Triangle) {
+        for (const neighbor of triangle.getNeighbors()) {
             this.drawLine(triangle, neighbor);
         }
     }

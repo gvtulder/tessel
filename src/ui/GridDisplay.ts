@@ -15,9 +15,11 @@ export class GridDisplay extends EventTarget {
     svg : SVGElement;
     svgGrid : SVGElement;
     svgTriangles : SVGElement;
+    svgConnectors : SVGElement;
 
     tileDisplays : Map<Tile, TileDisplay>;
     triangleDisplays : Map<Triangle, TriangleDisplay>;
+    connectorDisplay : ConnectorDisplay;
 
     left : number;
     top : number;
@@ -88,6 +90,11 @@ export class GridDisplay extends EventTarget {
         this.svgTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this.svgTriangles.setAttribute('class', 'svg-tiles');
         this.svgGrid.appendChild(this.svgTriangles)
+
+        if (DEBUG.CONNECT_TILES) {
+            this.connectorDisplay = new ConnectorDisplay(this.grid);
+            this.svgGrid.appendChild(this.connectorDisplay.svgGroup);
+        }
     }
 
     addTile(tile: Tile) {

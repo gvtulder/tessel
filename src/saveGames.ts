@@ -1,5 +1,5 @@
 import { GameSettings } from "./game/Game.js";
-import { GridTypes } from "./grid/GridType.js";
+import { GridTypes } from "./grid/old.GridType.js";
 import { TileGenerators } from "./game/TileGenerator.js";
 
 

@@ -97,51 +97,6 @@ export class TileDisplay extends EventTarget {
         this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
     }
 
-    /*
-    // TODO drag, drop
-    makeDropzone(gameDisplay : GameDisplay, ondrop: (event : DragEvent, target : Tile, orientedColors : OrientedColors, indexOnStack : number) => void) {
-        if (this.dropzone || !this.tile.isPlaceholder()) return;
-
-        this.dropzone = interact(this.element).dropzone({
-            overlap: 0.6, // center',
-        }).on('drop', (evt: DragEvent) => {
-            console.log('drop', evt, evt.target, evt.relatedTarget);
-            console.log('dropped tile', (evt.relatedTarget as DraggableTileHTMLDivElement).tileDisplay);
-
-            const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
-            ondrop(evt, this.tile, rel.orientedColors, rel.indexOnStack);
-        }).on('dropactivate', (evt: DragEvent) => {
-            const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
-            if (gameDisplay && gameDisplay.hints.checked) {
-                let ok = false;
-                if (gameDisplay.autorotate.checked) {
-                    ok = (null !== this.tile.checkFitOrientedColorsWithRotation(rel.orientedColors));
-                } else {
-                    ok = this.tile.checkFitOrientedColors(rel.orientedColors);
-                }
-                this.highlightHint(ok);
-            }
-        }).on('dropdeactivate', (evt: DragEvent) => {
-            this.removeHighlightHint();
-        }).on('dragenter', (evt: DragEvent) => {
-            console.log('dragenter', evt.target);
-            if (gameDisplay && gameDisplay.autorotate.checked) {
-                const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
-                if (rel.tileDisplay.startAutorotate(this)) {
-                    rel.orientedColors = rel.tileDisplay.getOrientedColors();
-                }
-            }
-        }).on('dragleave', (evt: DragEvent) => {
-            console.log('dragleave', evt.target);
-            if (gameDisplay && gameDisplay.autorotate.checked) {
-                // reset autorotate
-                const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
-                rel.tileDisplay.rotateTileTo(rel.originalOrientedColors.rotation, false, true);
-            }
-        });
-    }
-    */
-
     removeDropzone() {
         if (this.dropzone) {
             this.dropzone.unset();

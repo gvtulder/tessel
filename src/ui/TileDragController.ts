@@ -60,10 +60,11 @@ export class TileDragController extends EventTarget {
                                 autorotateCache.set(placeholder, rotation);
                             }
                         }
-                        for (const tsd of this.gridDisplay.tileDisplays.values()) {
-                            if (tsd.tile.isPlaceholder()) {
-                                console.log('hint?', tsd, autorotateCache.has(tsd.tile));
-                                tsd.highlightHint(autorotateCache.has(tsd.tile));
+                        if (this.hints) {
+                            for (const tsd of this.gridDisplay.tileDisplays.values()) {
+                                if (tsd.tile.isPlaceholder()) {
+                                    tsd.highlightHint(autorotateCache.has(tsd.tile));
+                                }
                             }
                         }
                         console.log(autorotateCache);

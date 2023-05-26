@@ -139,7 +139,14 @@ export class GridDisplay extends EventTarget {
         this.widthNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
         this.heightNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.top + t.height));
 
-        this.update();
+        // TODO width is not really width?
+        this.svg.setAttribute('width', `${(this.width - this.left) * SCALE}`);
+        this.svg.setAttribute('height', `${(this.height - this.top) * SCALE}`);
+        this.svgGrid.setAttribute('transform', `translate(${-this.left * SCALE} ${-this.top * SCALE})`);
+        this.svg.style.left = `${this.left * SCALE}px`;
+        this.svg.style.top = `${this.top * SCALE}px`;
+
+        this.rescaleGrid();
     }
 
     getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
@@ -201,17 +208,6 @@ export class GridDisplay extends EventTarget {
 
         const triangleCoord = this.grid.gridPositionToTriangleCoord(gridPos);
         return triangleCoord;
-    }
-
-    update() {
-        // TODO width is not really width?
-        this.svg.setAttribute('width', `${(this.width - this.left) * SCALE}`);
-        this.svg.setAttribute('height', `${(this.height - this.top) * SCALE}`);
-        this.svgGrid.setAttribute('transform', `translate(${-this.left * SCALE} ${-this.top * SCALE})`);
-        this.svg.style.left = `${this.left * SCALE}px`;
-        this.svg.style.top = `${this.top * SCALE}px`;
-
-        this.rescaleGrid();
     }
 
     enableAutoRescale() {

@@ -31,8 +31,6 @@ export class TileDisplay extends EventTarget {
 
     svgTriangles : SVGElement;
 
-    dropzone : Interactable;
-
     constructor(gridDisplay: GridDisplay, tile: Tile) {
         super();
         this.gridDisplay = gridDisplay;
@@ -97,15 +95,7 @@ export class TileDisplay extends EventTarget {
         this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
     }
 
-    removeDropzone() {
-        if (this.dropzone) {
-            this.dropzone.unset();
-            this.dropzone = null;
-        }
-    }
-
     getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
-        console.log([...this.triangleDisplays.values()][0].getBoundingClientRect());
         return [...this.triangleDisplays.values()].map((td) => ({
             triangle: td.triangle,
             clientCenterCoord: td.getClientCenterCoord(),

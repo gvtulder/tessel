@@ -13,7 +13,7 @@ export const DEBUG = {
     PLOT_SINGLE_TRIANGLES: false,
     TILE_EDITOR_COPY_TILE: false,
     TILE_EDITOR_ROTATE_COPY: false,
-    LOG_MOUSE_POSITION: true,
+    LOG_MOUSE_POSITION: false,
 }
 
 export const SCALE = 100;

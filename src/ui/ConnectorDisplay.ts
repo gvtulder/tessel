@@ -3,7 +3,9 @@ import { Triangle } from "../grid/Triangle.js";
 import { Grid, GridEvent } from 'src/grid/Grid.js';
 
 
-
+/**
+ * Debugging helper to draw connecting lines between triangle centers.
+ */
 export class ConnectorDisplay {
     grid : Grid;
     svgGroup: SVGElement;

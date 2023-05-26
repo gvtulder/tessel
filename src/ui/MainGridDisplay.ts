@@ -1,16 +1,12 @@
-import type { Interactable, DragEvent } from '@interactjs/types';
-import interact from '@interactjs/interact/index';
 
 
-import { Tile } from "../grid/Tile.js";
-import { SCALE } from 'src/settings.js';
-import { GridDisplay } from './GridDisplay.js';
 import { Grid } from "src/grid/Grid.js";
+import { SCALE } from 'src/settings.js';
+import { shuffle } from '../utils.js';
+import { GameDisplay } from './GameDisplay.js';
+import { GridDisplay } from './GridDisplay.js';
 import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
-import { dist, shuffle } from '../utils.js';
-import { GameDisplay } from './GameDisplay.js';
-import { DraggableTileHTMLDivElement } from './TileStackDisplay.js';
 import { TriangleOnScreenMatch } from './TileDisplay.js';
 import { TileDragSource } from './TileDragController.js';
 
@@ -88,8 +84,8 @@ export class MainGridDisplay extends GridDisplay {
         return false;
     }
 
+    /*
     makeDroppable(ondrop: (target: Tile, orientedColors: OrientedColors, indexOnStack: number) => boolean) {
-        /*
         interact(this.container).dropzone({}).on('dragenter', (evt: DragEvent) => {
             console.log('NEW dragenter', evt.target);
             const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
@@ -125,11 +121,13 @@ export class MainGridDisplay extends GridDisplay {
                 tileDisplay.removeDropzone();
             }
         }
-        */
     }
+    */
 
     gameFinished() {
-        const placeholders = this.tileDisplays.filter((d) => d.tile.isPlaceholder());
+        const placeholders = [...this.tileDisplays.values()].filter(
+            (d) => d.tile.isPlaceholder()
+        );
         shuffle(placeholders);
         let delay = 100;
         const cleanUp = () => {

@@ -1,7 +1,7 @@
 import { computeOutline } from 'src/lib/compute-outline.js';
 import { wrapModulo } from 'src/utils.js';
 import { Grid } from './Grid.js';
-import { ColorGroup, Coord, CoordId, Edge, Triangle } from './Triangle.js';
+import { ColorGroup, Coord, CoordId, Edge, TileColors, Triangle } from './Triangle.js';
 
 
 export type TileRotation = {
@@ -28,6 +28,7 @@ export class TileEvent extends Event {
 export class Tile extends EventTarget {
     static events = {
         UpdateTriangles: 'updatetriangles',
+        UpdateColors: 'updatecolors',
     };
 
     grid: Grid;
@@ -41,6 +42,7 @@ export class Tile extends EventTarget {
     height: number;
     rotations: TileRotation[];
     protected _triangles: Map<Triangle, ColorGroup>;
+    protected _colors: TileColors;
 
     constructor(grid: Grid, x: number, y: number, triangles : Triangle[][]) {
         super();
@@ -56,6 +58,11 @@ export class Tile extends EventTarget {
         this.updateTriangles(triangles);
     }
 
+    /**
+     * Replace the triangles of this tile.
+     *
+     * @param newTriangles new set of triangles
+     */
     updateTriangles(newTriangles: readonly Triangle[][]) {
         const newSet = new Map<Triangle, ColorGroup>();
         for (let c=0; c<newTriangles.length; c++) {
@@ -83,6 +90,9 @@ export class Tile extends EventTarget {
         this.dispatchEvent(new TileEvent(Tile.events.UpdateTriangles, this));
     }
 
+    /**
+     * Remove this tile from the grid (called by Grid).
+     */
     removeFromGrid() {
         this.updateTriangles([]);
     }
@@ -124,6 +134,27 @@ export class Tile extends EventTarget {
         this.rotations = tileVariants.map((v) => v.rotation);
     }
 
+    /**
+     * Update the colors of this tile.
+     */
+    set colors(colors : TileColors) {
+        this._colors = colors;
+        for (const [triangle, colorGroup] of this._triangles) {
+            triangle.color = colors[colorGroup];
+        }
+        this.dispatchEvent(new TileEvent(Tile.events.UpdateColors, this));
+    }
+
+    /**
+     * Return the colors of this tile.
+     */
+    get colors() : TileColors {
+        return [...this._colors];
+    }
+
+    /**
+     * The triangles in this shape.
+     */
     get triangles() : readonly Triangle[] {
         return [...this._triangles.keys()];
     }

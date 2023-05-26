@@ -100,10 +100,9 @@ export class Pattern {
                     const tileY = Math.floor((triangle[1] - offset[1]) / this.stepY[1]);
                     const offsetY = triangle[1] - tileY * this.stepY[1];
 
-                    const tileX = (triangle[0] - tileY * this.stepY[0] - offset[0]) / this.periodX * patterns.length + shapeIdx;
+                    const tileX = Math.floor(triangle[0] - tileY * this.stepY[0] - offset[0]) / this.periodX * patterns.length + shapeIdx;
                     const offsetX = triangle[0] - Math.floor(tileX / patterns.length) * this.periodX - tileY * this.stepY[0]
                     if (offset[0] == offsetX && offset[1] == offsetY) {
-                        console.log('tileY without floor', tileY, (triangle[1] - offset[1]) / this.stepY[1]);
                         return [tileX, tileY];
                     }
                 }

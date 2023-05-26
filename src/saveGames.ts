@@ -13,7 +13,7 @@ export const SquareDefault : GameSettings = {
     pattern : {
         shapes : [
             [ [[0, 0]], [[0, 1]], [[0, 2]], [[0, 3]] ],
-            [ [[1, 0]], [[1, 1]], [[1, 2]], [[1, 3]] ],
+        //  [ [[1, 0]], [[1, 1]], [[1, 2]], [[1, 3]] ],
         ]
     },
     initialTile: ['red','black','blue','white'],
@@ -26,9 +26,10 @@ lookup.set('square', SquareDefault);
 export const TriangleDefault : GameSettings = {
     triangleType : EquilateralGridTriangle,
     pattern : {
-        shapes : [[
-            [ [0, 0], [0, 1], [0, 2] ]
-        ]]
+        shapes : [
+            [ [[0, 0]], [[0, 1]], [[0, 2]] ],
+            [ [[0, 3]], [[0, 4]], [[0, 5]] ],
+        ]
     },
     initialTile: ['red','black','blue','white'],
     tilesShownOnStack: 3,
@@ -41,7 +42,8 @@ export const HexDefault : GameSettings = {
     triangleType : HexGridTriangle,
     pattern : {
         shapes : [
-            [ [[0, 0]], [[1, 0]], [[1, 1]], [[0, 1]], [[-1, 1]], [[-1, 0]] ]
+            [ [[0, 0]], [[1, 0]], [[1, 1]], [[0, 1]], [[-1, 1]], [[-1, 0]] ],
+        //  [ [[3, 1]], [[4, 1]], [[4, 2]], [[3, 2]], [[2, 2]], [[2, 1]] ],
         ]
     },
     initialTile: ['red','black','blue','white','black','blue'],

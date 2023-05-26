@@ -156,22 +156,6 @@ export class GridDisplay extends EventTarget {
         return closest;
     }
 
-    conn: ConnectorDisplay;
-    debugConnectAllTriangles() {
-        const conn = new ConnectorDisplay();
-        this.element.appendChild(conn.element);
-        conn.element.style.position = 'absolute';
-        conn.element.style.top = '0px';
-        conn.element.style.left = '0px';
-        conn.element.style.zIndex = '200';
-
-        for (const triangle of this.grid.triangles) {
-            conn.connect(triangle, triangle.getNeighbors());
-        }
-
-        this.conn = conn;
-    }
-
     update() {
         // TODO width is not really width?
         this.svg.setAttribute('width', `${(this.width - this.left) * SCALE}`);

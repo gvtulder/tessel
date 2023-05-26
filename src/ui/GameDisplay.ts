@@ -105,6 +105,12 @@ export class GameDisplay extends EventTarget {
             localStorage.setItem('autorotate', this.autorotate.checked ? 'yes' : null);
         });
         this.autorotate.checked = localStorage.getItem('autorotate') == 'yes';
+
+        this.hints.addEventListener(Toggle.events.Change, () => {
+            tileDragController.hints = this.hints.checked;
+            localStorage.setItem('hints', this.hints.checked ? 'yes' : null);
+        });
+        this.hints.checked = localStorage.getItem('hints') == 'yes';
     }
 
     buildButton(icon : string, title : string, ontap: (evt : PointerEvent) => void) {

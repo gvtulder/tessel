@@ -245,25 +245,20 @@ class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     /**
-     * Rotates the tile to fit the target tile (if possible).
-     * @param targetTile the target tile
-     * @returns true if the rotation was successful
+     * Rotates the tile to fit the target tile.
+     * @param targetTile the correct rotation
      */
-    startAutorotate(targetTile : Tile) : boolean {
-        if (targetTile && targetTile.isPlaceholder()) {
-            const rotation = targetTile.computeRotationToFit(this.tile, this.rotation);
-            console.log('startAutorotate', rotation);
-            if (rotation) {
-                if (this.beforeAutorotationIdx === null) {
-                    this.beforeAutorotationIdx = this.rotationIdx;
-                }
-                const rotationIdx = this.tile.rotations.findIndex((r) => r.steps == rotation.steps);
-                this.rotateTileTo(rotationIdx, false, true);
-                return true;
+    startAutorotate(rotation : TileRotation) {
+        if (rotation) {
+            if (this.beforeAutorotationIdx === null) {
+                this.beforeAutorotationIdx = this.rotationIdx;
             }
+            const rotationIdx = this.tile.rotations.findIndex(
+                (r) => r.steps == rotation.steps);
+            this.rotateTileTo(rotationIdx, false, true);
+        } else {
+            this.resetAutorotate();
         }
-        this.resetAutorotate();
-        return false;
     }
 
     /**

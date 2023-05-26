@@ -21,12 +21,13 @@ export class TileDragController extends EventTarget {
 
     gridDisplay : GridDisplay;
     sources : TileDragSource[];
+
     autorotate : boolean;
+    hints : boolean;
 
     constructor(gridDisplay : GridDisplay) {
         super();
         this.gridDisplay = gridDisplay;
-        this.autorotate = false;
         this.sources = [];
     }
 
@@ -35,6 +36,7 @@ export class TileDragController extends EventTarget {
 
         let autorotateCurrentTarget : Tile = null;
         let autorotateTimeout : number = null;
+        const autorotateCache = new Map<Tile, TileRotation>();
 
         const draggable = source.getDraggable();
         const position = { x: 0, y: 0};
@@ -46,6 +48,26 @@ export class TileDragController extends EventTarget {
                     }
                     source.startDrag();
                     this.dispatchEvent(new TileDragEvent(TileDragController.events.StartDrag, source));
+
+                    // precompute the placeholder tiles where this tile would fit
+                    if (this.autorotate || this.hints) {
+                        autorotateCache.clear();
+                        // find possible locations where this tile would fit
+                        for (const placeholder of this.gridDisplay.grid.placeholderTiles) {
+                            const rotation = placeholder.computeRotationToFit(source.tile, source.rotation);
+                            if (rotation && (this.autorotate || rotation.steps == source.rotation.steps)) {
+                                // this tile would fit
+                                autorotateCache.set(placeholder, rotation);
+                            }
+                        }
+                        for (const tsd of this.gridDisplay.tileDisplays.values()) {
+                            if (tsd.tile.isPlaceholder()) {
+                                console.log('hint?', tsd, autorotateCache.has(tsd.tile));
+                                tsd.highlightHint(autorotateCache.has(tsd.tile));
+                            }
+                        }
+                        console.log(autorotateCache);
+                    }
                 },
                 move: (evt : DragEvent) => {
                     position.x += evt.dx;
@@ -60,9 +82,13 @@ export class TileDragController extends EventTarget {
                             if (autorotateCurrentTarget !== closestPair.fixed.triangle.tile) {
                                 // autorotate after a small delay
                                 autorotateCurrentTarget = closestPair.fixed.triangle.tile;
-                                autorotateTimeout = window.setTimeout(() => {
-                                    source.startAutorotate(autorotateCurrentTarget);
-                                }, 200);
+                                const rotation = autorotateCache.get(autorotateCurrentTarget);
+                                if (rotation) {
+                                    // this tile would fit
+                                    autorotateTimeout = window.setTimeout(() => {
+                                        source.startAutorotate(rotation);
+                                    }, 200);
+                                }
                             }
                         } else {
                             // cancel the autorotation
@@ -84,12 +110,16 @@ export class TileDragController extends EventTarget {
                     let successful = false;
                     if (closestPair && closestPair.dist < 50) {
                         successful = this.gridDisplay.dropTile(source, closestPair);
-                    } else {
-                        source.resetAutorotate();
                     }
                     console.log('DROPPED', 'closestPair', closestPair, successful ? 'success' : 'no success');
 
+                    for (const tsd of this.gridDisplay.tileDisplays.values()) {
+                        tsd.removeHighlightHint();
+                    }
+
                     // reset
+                    source.resetAutorotate();
+                    autorotateCache.clear();
                     source.endDrag(successful);
                     position.x = 0;
                     position.y = 0;
@@ -115,6 +145,6 @@ export interface TileDragSource {
     startDrag();
     endDrag(successful : boolean);
     resetDragStatus();
-    startAutorotate(targetTile : Tile);
+    startAutorotate(rotation : TileRotation);
     resetAutorotate();
 }

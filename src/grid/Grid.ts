@@ -76,6 +76,13 @@ export class Grid extends EventTarget {
     }
 
     /**
+     * The list of placeholder tiles.
+     */
+    get placeholderTiles() : Tile[] {
+        return this.tiles.filter((t) => t.isPlaceholder());
+    }
+
+    /**
      * Returns the triangle at the given coordinate.
      *
      * @param x

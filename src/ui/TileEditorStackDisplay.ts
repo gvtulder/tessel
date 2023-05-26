@@ -1,16 +1,11 @@
-import type { Interactable, DragEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
+import type { DragEvent, Interactable } from '@interactjs/types';
 
 import { Grid } from "../grid/Grid.js";
-import { FixedOrderTileStack } from "../game/TileStack.js";
-import { OrientedColors, Tile } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
-import { GridType } from "src/grid/GridType.js";
-import { mean } from 'src/utils.js';
 import { CopyTile } from './TileEditorDisplay.js';
-import { EditableTile, TileVariant } from 'src/grid/ProtoTile.js';
 
 export class TileEditorStackDisplay {
     gridType : GridType;

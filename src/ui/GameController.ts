@@ -1,6 +1,7 @@
 import { Game, GameSettings } from "src/game/Game.js";
 import { GameDisplay } from "./GameDisplay.js";
 import { MainMenuDisplay, MenuEvent } from "./MainMenuDisplay.js";
+import * as SaveGames from 'src/saveGames.js';
 
 export class GameController {
     container : HTMLElement;
@@ -12,8 +13,13 @@ export class GameController {
         this.container = container;
     }
 
-    run() {
-        this.showMainMenu();
+    run(saveGameId : string) {
+        const gameSettings = SaveGames.lookup.get(saveGameId);
+        if (gameSettings) {
+            this.startGame(gameSettings);
+        } else {
+            this.showMainMenu();
+        }
     }
 
     showMainMenu() {

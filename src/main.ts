@@ -175,27 +175,11 @@ function startDebug() {
     });
 }
 
-export function start() {
-    let game : Game;
-    if (SaveGames.lookup.has(window.location.hash.replace('#', ''))) {
-        game = new Game(SaveGames.lookup.get(window.location.hash.replace('#', '')));
-    } else {
-        game = new Game(SaveGames.lookup.get('square'));
-    }
-
-    const gameDisplay = new GameDisplay(game);
-    document.body.appendChild(gameDisplay.element);
-    gameDisplay.gridDisplay.rescaleGrid();
-
-    window.gameDisplay = gameDisplay;
-    window.game = game;
-}
-
 export function startMainMenu() {
     disableIosZoom();
 
     const controller = new GameController(document.body);
-    controller.run();
+    controller.run(window.location.hash.replace('#', ''));
 
     window.gameController = controller;
 }

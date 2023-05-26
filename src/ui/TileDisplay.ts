@@ -1,15 +1,12 @@
-import type { Interactable, DragEvent } from '@interactjs/types';
-import interact from '@interactjs/interact/index';
+import type { Interactable } from '@interactjs/types';
 
+import { Triangle } from 'src/grid/Triangle.js';
+import { dist, shrinkOutline } from 'src/utils.js';
+import { Tile } from "../grid/Tile.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { DEBUG, SCALE } from '../settings.js';
-import { Tile } from "../grid/Tile.js";
-import { TriangleDisplay } from './TriangleDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
-import { dist, shrinkOutline } from 'src/utils.js';
-import { DraggableTileHTMLDivElement } from './TileStackDisplay.js';
-import { GameDisplay } from './GameDisplay.js';
-import { Triangle } from 'src/grid/Triangle.js';
+import { TriangleDisplay } from './TriangleDisplay.js';
 
 
 export type TriangleOnScreenPosition = {
@@ -26,7 +23,7 @@ export class TileDisplay extends EventTarget {
     tile : Tile;
 
     gridDisplay : GridDisplay;
-    triangleDisplays : TriangleDisplay[];
+    triangleDisplays : Map<Triangle, TriangleDisplay>;
 
     element : HTMLDivElement;
     svgTriangles : SVGElement;
@@ -36,6 +33,7 @@ export class TileDisplay extends EventTarget {
     constructor(gridDisplay: GridDisplay, tile: Tile) {
         super();
         this.gridDisplay = gridDisplay;
+        this.triangleDisplays = new Map<Triangle, TriangleDisplay>();
         this.tile = tile;
         this.build();
 
@@ -55,6 +53,10 @@ export class TileDisplay extends EventTarget {
         div.style.height = `${this.tile.height * SCALE}px`;
         this.element = div;
 
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('class', 'svg-tile');
+        this.svgTriangles = group;
+
         this.redraw();
     }
 
@@ -68,19 +70,6 @@ export class TileDisplay extends EventTarget {
     }
 
     drawTriangles() {
-        if (!this.triangleDisplays) {
-            this.triangleDisplays = [];
-
-            const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            group.setAttribute('class', 'svg-tile');
-            this.svgTriangles = group;
-        }
-
-        const displays = new Map<Triangle, TriangleDisplay>();
-        for (const t of this.triangleDisplays) {
-            displays.set(t.triangle, t);
-        }
-
         // add in correct order to make the overlapping work
         const sortedTriangles = [...this.tile.triangles].sort((a, b) => {
             return (a.y != b.y) ? (a.y - b.y) : (a.x - b.x);
@@ -89,11 +78,10 @@ export class TileDisplay extends EventTarget {
             this.svgTriangles.removeChild(c);
         }
         for (const triangle of sortedTriangles) {
-            let triangleDisplay = displays.get(triangle);
+            let triangleDisplay = this.triangleDisplays.get(triangle);
             if (!triangleDisplay) {
                 triangleDisplay = new TriangleDisplay(triangle);
-                this.triangleDisplays.push(triangleDisplay);
-                displays.set(triangle, triangleDisplay);
+                this.triangleDisplays.set(triangle, triangleDisplay);
             }
             const left = (triangle.left - this.tile.left) * SCALE ;
             const top = (triangle.top - this.tile.top) * SCALE
@@ -115,6 +103,8 @@ export class TileDisplay extends EventTarget {
         this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
     }
 
+    /*
+    // TODO drag, drop
     makeDropzone(gameDisplay : GameDisplay, ondrop: (event : DragEvent, target : Tile, orientedColors : OrientedColors, indexOnStack : number) => void) {
         if (this.dropzone || !this.tile.isPlaceholder()) return;
 
@@ -156,6 +146,7 @@ export class TileDisplay extends EventTarget {
             }
         });
     }
+    */
 
     removeDropzone() {
         if (this.dropzone) {
@@ -165,7 +156,7 @@ export class TileDisplay extends EventTarget {
     }
 
     getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
-        return this.triangleDisplays.map((td) => ({
+        return [...this.triangleDisplays.values()].map((td) => ({
             triangle: td.triangle,
             clientCenterCoord: td.getClientCenterCoord(),
         }));

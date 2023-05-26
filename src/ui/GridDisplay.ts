@@ -5,7 +5,6 @@ import { Tile } from "../grid/Tile.js";
 import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
-import { dist } from 'src/utils.js';
 import { TileDragSource } from './TileDragController.js';
 
 export class GridDisplay extends EventTarget {
@@ -18,10 +17,8 @@ export class GridDisplay extends EventTarget {
     svgGrid : SVGElement;
     svgTriangles : SVGElement;
 
-    triangleDisplays: TriangleDisplay[];
-    tileDisplays: TileDisplay[];
-    triangleDisplayGrid: TriangleDisplay[][];
-    tileDisplayGrid: TileDisplay[][];
+    tileDisplays : Map<Tile, TileDisplay>;
+    triangleDisplays : Map<Triangle, TriangleDisplay>;
 
     left : number;
     top : number;

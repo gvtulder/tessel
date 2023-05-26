@@ -1,6 +1,9 @@
 import { SCALE, DEBUG, PLACEHOLDER } from '../settings.js';
 import { Triangle } from "../grid/Triangle.js";
 
+/**
+ * Display a triangle on the SVG grid.
+ */
 export class TriangleDisplay {
     triangle: Triangle;
 

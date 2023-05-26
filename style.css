@@ -336,9 +336,6 @@ svg .tile-segments {
 .tileStackDisplay .tileOnStack.drag-success {
   transition-property: none;
 }
-.tileStackDisplay .tileOnStack.drag-success .tileOnStack-rotatable.animated {
-  transition-property: none;
-}
 
 .tileOnStack-rotatable.animated {
   transition: transform 100ms ease;

@@ -203,7 +203,6 @@ export abstract class Triangle extends EventTarget {
         const approx = this.approxGridPositionToTriangleCoord(gridPos);
         // try the actual polygons
         for (let r=0; r<100; r++) {
-            console.log('r', r);
             for (let x=-r; x<r; x++) {
                 for (let y=-r; y<r; y++) {
                     if (x==-r || x==r-1 || y==-r || y==r-1) {

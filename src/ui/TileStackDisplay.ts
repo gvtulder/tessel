@@ -38,6 +38,7 @@ export class TileStackDisplay extends EventTarget {
         for (let i=0; i<this.tileStack.numberShown; i++) {
             const color = this.tileStack.slots[i];
             this.tileDisplays[i].tile.colors = color ? color : null;
+            if (!color) this.tileDisplays[i].disable();
         }
         const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
         if (n > 0) {
@@ -194,6 +195,13 @@ class SingleTileOnStackDisplay implements TileDragSource {
 
     getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
         return this.gridDisplay.getTriangleOnScreenPosition();
+    }
+
+    /**
+     * Disable the tile if there are no tiles on the stack.
+     */
+    disable() {
+        this.getDraggable().unset();
     }
 
     initInteractable() {

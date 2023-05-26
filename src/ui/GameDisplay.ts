@@ -70,14 +70,15 @@ export class GameDisplay extends EventTarget {
             icons.arrowsSpinIcon,
             'Autorotate',
             false
-        )
+        );
         toggles.appendChild(this.autorotate.element);
         this.hints = new Toggle(
             icons.squareCheckIcon,
             'Show hints',
             false
-        )
+        );
         toggles.appendChild(this.hints.element);
+
 
         const tileDragController = new TileDragController(this.gridDisplay);
         this.tileStackDisplay.makeDraggable(tileDragController);
@@ -98,6 +99,12 @@ export class GameDisplay extends EventTarget {
         this.game.addEventListener('endgame', () => {
             this.gridDisplay.gameFinished();
         });
+
+        this.autorotate.addEventListener(Toggle.events.Change, () => {
+            tileDragController.autorotate = this.autorotate.checked;
+            localStorage.setItem('autorotate', this.autorotate.checked ? 'yes' : null);
+        });
+        this.autorotate.checked = localStorage.getItem('autorotate') == 'yes';
     }
 
     buildButton(icon : string, title : string, ontap: (evt : PointerEvent) => void) {
@@ -111,6 +118,9 @@ export class GameDisplay extends EventTarget {
 }
 
 class Toggle extends EventTarget {
+    static events = {
+        Change: 'change',
+    };
     element : HTMLElement;
     private _checked : boolean;
 
@@ -139,7 +149,7 @@ class Toggle extends EventTarget {
         if (this._checked != state) {
             this._checked = state;
             console.log(state, this, this.checked);
-            this.dispatchEvent(new Event('change'));
+            this.dispatchEvent(new Event(Toggle.events.Change));
         }
     }
 

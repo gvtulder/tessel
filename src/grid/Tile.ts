@@ -1,5 +1,5 @@
 import { computeOutline } from 'src/lib/compute-outline.js';
-import { shiftCoordinates2, wrapModulo } from 'src/utils.js';
+import { angleDist, shiftCoordinates2, wrapModulo } from 'src/utils.js';
 import { Grid } from './Grid.js';
 import { ColorGroup, Coord, CoordId, Edge, TileColors, Triangle } from './Triangle.js';
 
@@ -228,15 +228,20 @@ export class Tile extends EventTarget {
      * @param other the other tile
      * @returns the rotation to make it fit, or null if that is impossible
      */
-    rotateToFit(other : Tile, currentRotation : TileRotation) : TileRotation {
-        // TODO start with currentRotation
-        for (let r=0; r<other.rotations.length; r++) {
-            const match = this.matchShape(other, other.rotations[r]);
-            if (match) {
-                return other.rotations[r];
+    computeRotationToFit(other : Tile, currentRotation : TileRotation) : TileRotation {
+        let bestRotation : TileRotation = null;
+        for (const rotation of other.rotations) {
+            const newColors = this.matchShapeMapColors(other, rotation);
+            if (newColors && this.checkFitColors(newColors)) {
+                // find the rotation closest to the current angle
+                if (bestRotation === null ||
+                    angleDist(bestRotation.angle, currentRotation.angle) >
+                    angleDist(rotation.angle, currentRotation.angle)) {
+                    bestRotation = rotation;
+                }
             }
         }
-        return null;
+        return bestRotation;
     }
 
     /**
@@ -248,8 +253,8 @@ export class Tile extends EventTarget {
      * @param thisTriangle anchor in this tile
      * @returns list of colors for this tile, or null if the mapping failed
      */
-    matchShapeMapColors(other : Tile, otherRotation : TileRotation, otherTriangle : Triangle,
-                        thisTriangle : Triangle) : TileColors {
+    matchShapeMapColors(other : Tile, otherRotation : TileRotation, otherTriangle? : Triangle,
+                        thisTriangle? : Triangle) : TileColors {
         const match = this.matchShape(other, otherRotation, otherTriangle, thisTriangle);
         if (!match) return null;
 
@@ -274,18 +279,21 @@ export class Tile extends EventTarget {
         if (other._triangles.size !== this._triangles.size) return null;
 
         // rotate the other shape
-        const otherEdgeFrom = otherTriangle.getOrAddRotationEdge(0);
-        const otherEdgeTo = otherTriangle.getOrAddRotationEdge(otherRotation.steps);
+        const otherEdgeFrom = other.triangles[0].getOrAddRotationEdge(0);
+        const otherEdgeTo = other.triangles[0].getOrAddRotationEdge(otherRotation.steps);
         const otherPairsRotated = other.computeRotatedTrianglePairs(otherEdgeFrom, otherEdgeTo);
 
+        let rotatedOtherTriangle : Triangle;
         if (otherTriangle === undefined) {
             // find an anchor point
             thisTriangle = this.findTopLeftTriangle(this.triangles);
-            otherTriangle = other.findTopLeftTriangle(other.triangles);
+            rotatedOtherTriangle = other.findTopLeftTriangle([...otherPairsRotated.values()]);
+        } else {
+            // find the offset for the otherTriangle
+            rotatedOtherTriangle = otherPairsRotated.get(otherTriangle);
         }
 
         // find the offset for the otherTriangle
-        const rotatedOtherTriangle = otherPairsRotated.get(otherTriangle);
         const shift = [
             thisTriangle.x - rotatedOtherTriangle.x,
             thisTriangle.y - rotatedOtherTriangle.y,
@@ -509,7 +517,7 @@ export class Tile extends EventTarget {
      * @returns the offset
      */
     computeShiftToOrigin(triangles : readonly Triangle[]) : Coord {
-        let topLeft = this.findTopLeftTriangle(triangles);
+        const topLeft = this.findTopLeftTriangle(triangles);
         return [
             topLeft.xAtOrigin - topLeft.x,
             topLeft.yAtOrigin - topLeft.y,

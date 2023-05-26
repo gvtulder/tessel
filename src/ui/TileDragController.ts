@@ -3,6 +3,7 @@ import type { Interactable, DragEvent } from '@interactjs/types';
 import { GridDisplay } from "./GridDisplay.js";
 import { TriangleOnScreenMatch, TriangleOnScreenPosition } from "./TileDisplay.js";
 import { Tile, TileRotation } from 'src/grid/Tile.js';
+import { GameController } from './GameController.js';
 
 export class TileDragEvent extends Event {
     tileDragSource : TileDragSource;
@@ -20,15 +21,20 @@ export class TileDragController extends EventTarget {
 
     gridDisplay : GridDisplay;
     sources : TileDragSource[];
+    autorotate : boolean;
 
     constructor(gridDisplay : GridDisplay) {
         super();
         this.gridDisplay = gridDisplay;
+        this.autorotate = false;
         this.sources = [];
     }
 
     addSource(source : TileDragSource) {
         this.sources.push(source);
+
+        let autorotateCurrentTarget : Tile = null;
+        let autorotateTimeout : number = null;
 
         const draggable = source.getDraggable();
         const position = { x: 0, y: 0};
@@ -46,15 +52,29 @@ export class TileDragController extends EventTarget {
                     position.y += evt.dy;
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px) scale(${this.gridDisplay.scale / source.gridDisplay.scale})`;
 
-                    // figure out where we are
-                    /*
-                    const movingPos = source.getTriangleOnScreenPosition();
-                    const closestPair = this.gridDisplay.findClosestTriangleFromScreenPosition(movingPos);
-                    if (closestPair && closestPair.dist < 50) {
-                        source.startAutorotate(closestPair);
+                    if (this.autorotate) {
+                        // figure out where we are
+                        const movingPos = source.getTriangleOnScreenPosition();
+                        const closestPair = this.gridDisplay.findClosestTriangleFromScreenPosition(movingPos);
+                        if (closestPair && closestPair.dist < 100 && closestPair.fixed.triangle.tile) {
+                            if (autorotateCurrentTarget !== closestPair.fixed.triangle.tile) {
+                                // autorotate after a small delay
+                                autorotateCurrentTarget = closestPair.fixed.triangle.tile;
+                                autorotateTimeout = window.setTimeout(() => {
+                                    source.startAutorotate(autorotateCurrentTarget);
+                                }, 200);
+                            }
+                        } else {
+                            // cancel the autorotation
+                            autorotateCurrentTarget = null;
+                            if (autorotateTimeout) {
+                                window.clearTimeout(autorotateTimeout);
+                                autorotateTimeout = null;
+                            }
+                            source.resetAutorotate();
+                        }
+                        // console.log('MOVE', 'closestPair', closestPair);
                     }
-                    */
-                    // console.log('MOVE', 'closestPair', closestPair);
                 },
                 end: (evt : DragEvent) => {
                     // figure out where we are
@@ -64,6 +84,8 @@ export class TileDragController extends EventTarget {
                     let successful = false;
                     if (closestPair && closestPair.dist < 50) {
                         successful = this.gridDisplay.dropTile(source, closestPair);
+                    } else {
+                        source.resetAutorotate();
                     }
                     console.log('DROPPED', 'closestPair', closestPair, successful ? 'success' : 'no success');
 
@@ -93,5 +115,6 @@ export interface TileDragSource {
     startDrag();
     endDrag(successful : boolean);
     resetDragStatus();
-    startAutorotate(closestPair : TriangleOnScreenMatch) : boolean;
+    startAutorotate(targetTile : Tile);
+    resetAutorotate();
 }

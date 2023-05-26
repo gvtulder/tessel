@@ -43,7 +43,7 @@ export function shrinkOutline(points : Coord[], factor : number) : Coord[] {
  */
 export function dist(a : Coord, b : Coord) : number {
   return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
-};
+}
 
 /**
  * Compute the mid-point between two points.
@@ -73,4 +73,16 @@ export function shiftCoordinates(coords : Coord[], shift : Coord) : Coord[] {
  */
 export function shiftCoordinates2(coords : Coord[][], shift : Coord) : Coord[][] {
   return coords.map((g) => g.map((coord) => [coord[0] + shift[0], coord[1] + shift[1]]));
+}
+
+/**
+ * Computes the absolute rotation difference between two angles.
+ * @param a
+ * @param b
+ * @returns the distance ([0, 180]) 
+ */
+export function angleDist(a : number, b : number) : number {
+  const ab = (360 + a - b) % 360;
+  const ba = (360 + b - a) % 360;
+  return (ab < ba) ? ab : ba;
 }

@@ -120,19 +120,10 @@ export class Game extends EventTarget {
         }
     }
 
-    checkAutorotate(sourceTile : Tile, sourceRotation : TileRotation, sourceTriangle : Triangle, targetTriangle : Triangle, indexOnStack : number) {
+    checkAutorotate(sourceTile : Tile, sourceRotation : TileRotation, sourceTriangle : Triangle, targetTriangle : Triangle) : TileRotation {
         const targetTile = targetTriangle.tile;
-        if (!targetTile) return false;
-        const match = targetTile.matchShape(sourceTile, sourceRotation, sourceTriangle, targetTriangle);
-        if (!match) return false;
-
-        // map colors to the target tile
-        const newColors = targetTile.colors.map(
-            (c, idx) => sourceTile.colors[match.colorGroups.get(idx)]
-        );
-
-        if (targetTile.checkFitColors(newColors)) {
-        }
+        if (!targetTile) return null;
+        return targetTile.computeRotationToFit(sourceTile, sourceRotation);
     }
 
     computeScores(target : Tile) {

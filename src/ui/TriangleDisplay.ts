@@ -75,7 +75,7 @@ export class TriangleDisplay {
             text.setAttribute('dominant-baseline', 'middle');
             text.setAttribute('text-anchor', 'middle');
             text.setAttribute('font-size', '11');
-            text.setAttribute('fill', 'white');
+            text.setAttribute('fill', '#aaa');
             text.appendChild(document.createTextNode(`(${this.triangle.x},${this.triangle.y})`));
             group.append(text);
         }

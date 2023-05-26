@@ -5,7 +5,7 @@ import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
 import { Tile, TileRotation } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
-import { TileDisplay, TriangleOnScreenMatch, TriangleOnScreenPosition } from "./TileDisplay.js";
+import { TriangleOnScreenPosition } from "./TileDisplay.js";
 import { TileDragController, TileDragSource } from './TileDragController.js';
 import { Pattern } from 'src/grid/Pattern.js';
 
@@ -110,10 +110,12 @@ class SingleTileOnStackDisplay implements TileDragSource {
     draggable : Interactable;
     rotationIdx : number;
     angle : number;
+    beforeAutorotationIdx : number;
 
     constructor(tileStackDisplay : TileStackDisplay, indexOnStack : number, pattern : Pattern) {
         this.rotationIdx = 0;
         this.angle = 0;
+        this.beforeAutorotationIdx = null;
 
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
@@ -261,13 +263,36 @@ class SingleTileOnStackDisplay implements TileDragSource {
     }
     */
 
-    startAutorotate(closestPair : TriangleOnScreenMatch) : boolean {
-        const targetTile = closestPair.fixed.triangle.tile;
+    /**
+     * Rotates the tile to fit the target tile (if possible).
+     * @param targetTile the target tile
+     * @returns true if the rotation was successful
+     */
+    startAutorotate(targetTile : Tile) : boolean {
         if (targetTile && targetTile.isPlaceholder()) {
-            this.rotateTileTo(orientedColors.rotation, false, true);
-            console.log('autorotate over', targetTile);
-            // return this.gameDisplay.game.placeTile(source.tile, source.rotation, closestPair.moving.triangle, closestPair.fixed.triangle, source.indexOnStack);
+            const rotation = targetTile.computeRotationToFit(this.tile, this.rotation);
+            console.log('startAutorotate', rotation);
+            if (rotation) {
+                if (this.beforeAutorotationIdx === null) {
+                    this.beforeAutorotationIdx = this.rotationIdx;
+                }
+                const rotationIdx = this.tile.rotations.findIndex((r) => r.steps == rotation.steps);
+                this.rotateTileTo(rotationIdx, false, true);
+                return true;
+            }
         }
+        this.resetAutorotate();
         return false;
+    }
+
+    /**
+     * Resets the rotation to the state before autorotation.
+     */
+    resetAutorotate() {
+        if (this.beforeAutorotationIdx !== null) {
+            const oldRotationIdx = this.beforeAutorotationIdx;
+            this.beforeAutorotationIdx = null;
+            this.rotateTileTo(oldRotationIdx, false, true);
+        }
     }
 }

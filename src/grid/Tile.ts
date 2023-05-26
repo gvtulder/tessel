@@ -40,7 +40,7 @@ export class Tile extends EventTarget {
     width: number;
     height: number;
     rotations: TileRotation[];
-    private _triangles: Map<Triangle, ColorGroup>;
+    protected _triangles: Map<Triangle, ColorGroup>;
 
     constructor(grid: Grid, x: number, y: number, triangles : Triangle[][]) {
         super();
@@ -87,7 +87,33 @@ export class Tile extends EventTarget {
         this.updateTriangles([]);
     }
 
-    private recomputeShapeParameters() {
+    /**
+     * Add a pre-checked triangle to the shape.
+     * @param triangle the new triangle
+     */
+    protected doAddTriangle(triangle : Triangle) {
+        // add the triangle
+        this._triangles.set(triangle, triangle.colorGroup);
+        triangle.tile = this;
+        this.recomputeShapeParameters();
+        this.dispatchEvent(new TileEvent(Tile.events.UpdateTriangles, this));
+    }
+
+    /**
+     * Remove a pre-checked triangle to the shape.
+     * @param triangle the triangle to be removed
+     */
+    protected doRemoveTriangle(triangle : Triangle) {
+        // remove the triangle
+        this._triangles.delete(triangle);
+        triangle.tile = null;
+        triangle.colorGroup = null;
+        triangle.color = null;
+        this.recomputeShapeParameters();
+        this.dispatchEvent(new TileEvent(Tile.events.UpdateTriangles, this));
+    }
+
+    protected recomputeShapeParameters() {
         this.left = Math.min(...this.triangles.map((t) => t.left));
         this.top = Math.min(...this.triangles.map((t) => t.top));
         this.width = Math.max(...this.triangles.map((t) => t.left + t.width)) - this.left;

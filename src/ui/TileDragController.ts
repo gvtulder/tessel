@@ -55,7 +55,7 @@ export class TileDragController extends EventTarget {
                         // find possible locations where this tile would fit
                         for (const placeholder of this.gridDisplay.grid.placeholderTiles) {
                             const rotation = placeholder.computeRotationToFit(source.tile, source.rotation);
-                            if (rotation && (this.autorotate || rotation.steps == source.rotation.steps)) {
+                            if (rotation) {
                                 // this tile would fit
                                 autorotateCache.set(placeholder, rotation);
                             }

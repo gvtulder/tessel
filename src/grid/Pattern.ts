@@ -54,6 +54,10 @@ export class Pattern {
 
         const triangles = patterns[shapeIdx].map((offsets) => (
             offsets.map(([offsetX, offsetY]) => {
+                // the shapes are included in the tile-x direction
+                // tile-x : [shape 0, shape 1, ...] [shape 0, shape 1, ...] ...
+                //          [  pattern-x 0        ] [  pattern-x 1        ] ...
+                // tile-y == pattern-y
                 const triangleX = Math.floor(x / patterns.length) * this.periodX + y * this.stepY[0] + offsetX;
                 const triangleY = y * this.stepY[1] + offsetY;
                 return grid.getOrAddTriangle(triangleX, triangleY);
@@ -72,23 +76,34 @@ export class Pattern {
     mapTriangleCoordToTileCoord(triangle : Coord) : Coord {
         const patterns = this.shapes;
 
-        // triangleY = tileY * stepY[1] + offsetY
-        // offsetY = triangleY - tileY * stepY[1]
-        // tileY = (triangleY - offsetY) / stepY[1]
-        //
-        // triangleX = Math.floor(tileX / triangleOffsets.length) * periodX + tileY * stepY[0] + offsetX
-        // tileX = Math.floor((triangleX - tileY * stepY[0] - offsetX) / periodX)
-        // offsetX = triangleX - Math.floor(tileX / triangleOffsets.length) * periodX - tileY * stepY[0]
+        // patternX = (tileX - shapeIdx) / patterns.length;
+        // triangleX = patternX * this.periodX + tileY * this.stepY[0] + offsetX;
+        // triangleY = tileY * this.stepY[1] + offsetY;
 
-        for (const shape of this.shapes) {
+        // deriving tileY:
+        //   tileY = (triangleY - offsetY) / this.stepY[1]       // should be integer
+        // deriving offsetY:
+        //   offsetY = triangleY - tileY * this.stepY[1]
+
+        // deriving tileX:
+        //   patternX * this.periodX = triangleX - tileY * this.stepY[0] - offsetX;
+        //   patternX = (triangleX - tileY * this.stepY[0] - offsetX) / this.periodX;
+        //   (tileX - shapeIdx) = (triangleX - tileY * this.stepY[0] - offsetX) / this.periodX * patterns.length
+        //   tileX = (triangleX - tileY * this.stepY[0] - offsetX) / this.periodX * patterns.length + shapeIdx
+        // deriving offsetX:
+        //   offsetX = triangleX - patternX * this.periodX - tileY * this.stepY[0];
+
+        for (let shapeIdx=0; shapeIdx<this.shapes.length; shapeIdx++) {
+            const shape = this.shapes[shapeIdx];
             for (const colorGroup of shape) {
                 for (const offset of colorGroup) {
                     const tileY = Math.floor((triangle[1] - offset[1]) / this.stepY[1]);
                     const offsetY = triangle[1] - tileY * this.stepY[1];
 
-                    const tileX = Math.floor((triangle[0] - tileY * this.stepY[0] - offset[0]) / this.periodX);
+                    const tileX = (triangle[0] - tileY * this.stepY[0] - offset[0]) / this.periodX * patterns.length + shapeIdx;
                     const offsetX = triangle[0] - Math.floor(tileX / patterns.length) * this.periodX - tileY * this.stepY[0]
                     if (offset[0] == offsetX && offset[1] == offsetY) {
+                        console.log('tileY without floor', tileY, (triangle[1] - offset[1]) / this.stepY[1]);
                         return [tileX, tileY];
                     }
                 }

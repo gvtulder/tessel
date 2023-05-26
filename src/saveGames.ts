@@ -12,7 +12,8 @@ export const SquareDefault : GameSettings = {
     triangleType : SquareGridTriangle,
     pattern : {
         shapes : [
-            [ [[0, 0]], [[0, 1]], [[0, 2]], [[0, 3]] ]
+            [ [[0, 0]], [[0, 1]], [[0, 2]], [[0, 3]] ],
+            [ [[1, 0]], [[1, 1]], [[1, 2]], [[1, 3]] ],
         ]
     },
     initialTile: ['red','black','blue','white'],
@@ -49,6 +50,20 @@ export const HexDefault : GameSettings = {
         ['red','black','blue','white'], 6),
 }
 lookup.set('hex', HexDefault);
+
+export const RhombusDefault : GameSettings = {
+    triangleType : HexGridTriangle,
+    pattern : {
+        shapes : [
+            [ [[0, 0]], [[1, 0]] ],
+        ]
+    },
+    initialTile: ['red','black'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.permutations(
+        ['red','black','blue','white'], 2),
+}
+lookup.set('rhombus', RhombusDefault);
 
 
 

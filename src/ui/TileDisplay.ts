@@ -20,6 +20,10 @@ export type TriangleOnScreenMatch = {
 };
 
 export class TileDisplay extends EventTarget {
+    static events = {
+        UpdateTile: 'updatetile',
+    };
+
     tile : Tile;
 
     gridDisplay : GridDisplay;
@@ -36,8 +40,8 @@ export class TileDisplay extends EventTarget {
         this.tile = tile;
         this.build();
 
-        this.tile.addEventListener('updatetriangles', () => {
-            this.dispatchEvent(new Event('updatetile'));
+        this.tile.addEventListener(Tile.events.UpdateTriangles, () => {
+            this.dispatchEvent(new Event(TileDisplay.events.UpdateTile));
             this.redraw();
         });
     }

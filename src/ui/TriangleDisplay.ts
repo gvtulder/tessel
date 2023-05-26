@@ -16,7 +16,9 @@ export class TriangleDisplay {
 
         this.build();
 
-        this.triangle.addEventListener('changecolor', () => { this.updateColor(); });
+        this.triangle.addEventListener(Triangle.events.ChangeColor,
+            () => { this.updateColor();
+        });
     }
 
     build() {

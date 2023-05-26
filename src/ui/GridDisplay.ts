@@ -37,28 +37,23 @@ export class GridDisplay extends EventTarget {
         super();
         this.grid = grid;
 
+        this.tileDisplays = new Map<Tile, TileDisplay>();
+        this.triangleDisplays = new Map<Triangle, TriangleDisplay>();
+
         this.build();
 
-        this.grid.addEventListener('addtriangle', (evt: GridEvent) => {
-            this.addTriangle(evt.triangle);
-        });
-
-        this.grid.addEventListener('addtile', (evt: GridEvent) => {
+        this.grid.addEventListener(Grid.events.AddTile, (evt: GridEvent) => {
             this.addTile(evt.tile);
         });
 
         // TODO @deprecated
-        this.grid.addEventListener('movetile', (evt: GridEvent) => {
-            this.moveTile(evt.tile, evt.oldX, evt.oldY);
+        this.grid.addEventListener('movetile', () => {
+            this.updateDimensions();
         });
 
-        this.grid.addEventListener('removetile', (evt: GridEvent) => {
+        this.grid.addEventListener(Grid.events.RemoveTile, (evt: GridEvent) => {
             this.removeTile(evt.tile);
         });
-
-        for (const triangle of this.grid.triangles) {
-            this.addTriangle(triangle);
-        }
 
         for (const tile of this.grid.tiles) {
             this.addTile(tile);
@@ -69,11 +64,6 @@ export class GridDisplay extends EventTarget {
     }
 
     build() {
-        this.triangleDisplayGrid = [];
-        this.triangleDisplays = [];
-        this.tileDisplayGrid = [];
-        this.tileDisplays = [];
-
         const div = document.createElement('div');
         this.element = div;
 
@@ -87,11 +77,6 @@ export class GridDisplay extends EventTarget {
         this.element.appendChild(gridElement);
 
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        // TODO
-        // svg.setAttribute('width', `${width}`);
-        // svg.setAttribute('height', `${height}`);
-        svg.setAttribute('width', '1000');
-        svg.setAttribute('height', '1000');
         svg.style.position = 'absolute';
         this.gridElement.appendChild(svg);
         this.svg = svg;
@@ -105,35 +90,12 @@ export class GridDisplay extends EventTarget {
         this.svgGrid.appendChild(this.svgTriangles)
     }
 
-    addTriangle(triangle: Triangle) {
-        if (DEBUG.PLOT_SINGLE_TRIANGLES) {
-            if (!this.triangleDisplayGrid[triangle.x]) {
-                this.triangleDisplayGrid[triangle.x] = [];
-            }
-            if (!this.triangleDisplayGrid[triangle.x][triangle.y]) {
-                const triangleDisplay = new TriangleDisplay(triangle);
-                this.triangleDisplayGrid[triangle.x][triangle.y] = triangleDisplay;
-                this.triangleDisplays.push(triangleDisplay);
-                // TODO
-                const group = triangleDisplay.element;
-                this.svgTriangles.appendChild(group);
-                const left = triangle.left * SCALE;
-                const top = triangle.top * SCALE;
-                group.setAttribute('transform', `translate(${left} ${top})`);
-            }
-        }
-    }
-
     addTile(tile: Tile) {
-        if (!this.tileDisplayGrid[tile.x]) {
-            this.tileDisplayGrid[tile.x] = [];
-        }
-        if (!this.tileDisplayGrid[tile.x][tile.y]) {
+        if (!this.tileDisplays.has(tile)) {
             const tileDisplay = new TileDisplay(this, tile);
-            this.tileDisplayGrid[tile.x][tile.y] = tileDisplay;
-            this.tileDisplays.push(tileDisplay);
+            this.tileDisplays.set(tile, tileDisplay);
             this.svgTriangles.appendChild(tileDisplay.svgTriangles);
-            tileDisplay.addEventListener('updatetile', () => {
+            tileDisplay.addEventListener(TileDisplay.events.UpdateTile, () => {
                 this.updateDimensions();
             });
         }
@@ -141,20 +103,10 @@ export class GridDisplay extends EventTarget {
     }
 
     removeTile(tile : Tile) {
-        const td = this.tileDisplayGrid[tile.x][tile.y];
-        const idx = this.tileDisplays.indexOf(td);
-        if (idx > -1) this.tileDisplays.splice(idx, 1);
-        this.tileDisplayGrid[tile.x][tile.y] = null;
+        const td = this.tileDisplays.get(tile);
+        if (!td) return;
+        this.tileDisplays.delete(tile);
         this.svgTriangles.removeChild(td.svgTriangles);
-        this.updateDimensions();
-    }
-
-    /**
-     * @deprecated
-     */
-    moveTile(tile : Tile, oldX : number, oldY : number) {
-        this.tileDisplayGrid[tile.x][tile.y] = this.tileDisplayGrid[oldX][oldY];
-        this.tileDisplayGrid[oldX][oldY] = null;
         this.updateDimensions();
     }
 
@@ -178,7 +130,7 @@ export class GridDisplay extends EventTarget {
 
     getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
         const t : TriangleOnScreenPosition[] = [];
-        for (const td of this.tileDisplays) {
+        for (const td of this.tileDisplays.values()) {
             t.push(...td.getTriangleOnScreenPosition());
         }
         return t;
@@ -187,7 +139,7 @@ export class GridDisplay extends EventTarget {
     findClosestTriangleFromScreenPosition(pos : TriangleOnScreenPosition[]) : TriangleOnScreenMatch {
         let closestDist = 0;
         let closest : TriangleOnScreenMatch = null;
-        for (const tsd of this.tileDisplays) {
+        for (const tsd of this.tileDisplays.values()) {
             const pair = tsd.findClosestTriangleFromScreenPosition(pos);
             if (pair && (closest === null || pair.dist < closestDist)) {
                 closest = pair;

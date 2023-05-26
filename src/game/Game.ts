@@ -88,14 +88,13 @@ export class Game extends EventTarget {
         const match = targetTile.matchShape(sourceTile, sourceRotation.steps, sourceTriangle, targetTriangle);
         if (!match) return false;
 
+        // map colors to the target tile
         const newColors = targetTile.colors.map(
             (c, idx) => sourceTile.colors[match.colorGroups.get(idx)]
         );
 
-        // TODO move to tile? remove orientedColors
         if (targetTile.checkFitColors(newColors)) {
             // place tile
-            // targetTile.setOrientedColors(orientedColors);
             targetTile.colors = newColors;
             this.grid.updateFrontier();
 
@@ -115,15 +114,6 @@ export class Game extends EventTarget {
             // does not fit
             return false;
         }
-    }
-
-    placeFromList(tiles : []) {
-        for (const tileDef of tiles) {
-            const tile = new this.gridType.createTile(this.grid, tileDef[0], tileDef[1]);
-            tile.colors = tileDef[2];
-            this.grid.addTile(tile);
-        }
-        this.grid.updateFrontier();
     }
 
     computeScores(target : Tile) {

@@ -82,11 +82,13 @@ export class GameDisplay extends EventTarget {
         const tileDragController = new TileDragController(this.gridDisplay);
         this.tileStackDisplay.makeDraggable(tileDragController);
 
-        /*
-        this.tileStackDisplay.makeDraggable(this.gridDisplay, () => {
-            this.gridDisplay.scoreOverlayDisplay.hide();
-        });
-        */
+        this.tileStackDisplay.addEventListener(TileStackDisplay.events.TapTile,
+            () =>this.gridDisplay.scoreOverlayDisplay.hide()
+        );
+
+        tileDragController.addEventListener(TileDragController.events.StartDrag,
+            () =>this.gridDisplay.scoreOverlayDisplay.hide()
+        );
 
         this.game.addEventListener('score', (evt : GameEvent) => {
             this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes);
@@ -123,7 +125,7 @@ class Toggle extends EventTarget {
 
         this.checked = checked ? true : false;
 
-        interact(toggle).on('tap', (evt : Event) => {
+        interact(toggle).on('tap', () => {
             this.toggle();
         });
     }

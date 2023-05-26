@@ -9,7 +9,11 @@ import { TileDisplay, TriangleOnScreenPosition } from "./TileDisplay.js";
 import { TileDragController, TileDragSource } from './TileDragController.js';
 import { Pattern } from 'src/grid/Pattern.js';
 
-export class TileStackDisplay {
+export class TileStackDisplay extends EventTarget {
+    static events = {
+        TapTile: 'taptile',
+    };
+
     pattern : Pattern;
     tileStack : FixedOrderTileStack;
     tileDisplays : SingleTileOnStackDisplay[];
@@ -17,6 +21,8 @@ export class TileStackDisplay {
     counter : HTMLSpanElement;
 
     constructor(pattern : Pattern, tileStack : FixedOrderTileStack) {
+        super();
+
         this.pattern = pattern;
         this.tileStack = tileStack;
         this.tileDisplays = [];
@@ -194,8 +200,7 @@ class SingleTileOnStackDisplay implements TileDragSource {
         const draggable = this.getDraggable();
         draggable.on('tap', (evt : Event) => {
             this.rotateTile();
-            // TODO hide scores
-            // onDragStart(evt);
+            this.tileStackDisplay.dispatchEvent(new Event(TileStackDisplay.events.TapTile));
             evt.preventDefault();
         }).on('doubletap', (evt : Event) => {
             evt.preventDefault();

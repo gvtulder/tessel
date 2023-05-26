@@ -13,6 +13,11 @@ export class TileDragEvent extends Event {
 }
 
 export class TileDragController extends EventTarget {
+    static events = {
+        StartDrag: 'startdrag',
+        EndDrag: 'enddrag',
+    };
+
     gridDisplay : GridDisplay;
     sources : TileDragSource[];
 
@@ -34,7 +39,7 @@ export class TileDragController extends EventTarget {
                         if (s !== source) s.resetDragStatus();
                     }
                     source.startDrag();
-                    this.dispatchEvent(new TileDragEvent('startdrag', source));
+                    this.dispatchEvent(new TileDragEvent(TileDragController.events.StartDrag, source));
                 },
                 move: (evt : DragEvent) => {
                     position.x += evt.dx;
@@ -62,7 +67,7 @@ export class TileDragController extends EventTarget {
                     position.x = 0;
                     position.y = 0;
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
-                    this.dispatchEvent(new TileDragEvent('enddrag', source));
+                    this.dispatchEvent(new TileDragEvent(TileDragController.events.EndDrag, source));
                     /*
                     evt.target.style.transformOrigin = 'center';
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;

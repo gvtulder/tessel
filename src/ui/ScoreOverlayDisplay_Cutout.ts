@@ -1,4 +1,4 @@
-import { Shape } from "../grid/Scorer.js";
+import { ScoredRegion } from "../grid/Scorer.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { BGCOLOR, SCALE } from "../settings.js";
 import { ScoreOverlayDisplay, Vertex, Color } from "./ScoreOverlayDisplay.js";
@@ -106,7 +106,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         this.pointsGroup = new ReplacableGroup(points);
     }
 
-    showScores(shapes : Shape[]) {
+    showScores(shapes : ScoredRegion[]) {
         const groups = [
             this.bgMaskGroup,
             this.shadowMaskGroup,

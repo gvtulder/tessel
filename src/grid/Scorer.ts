@@ -1,8 +1,7 @@
-import { Grid, TriangleColor } from "./Grid.js";
 import { Tile } from "./Tile.js";
-import { Triangle } from "./Triangle.js";
+import { Triangle, TriangleColor } from "./Triangle.js";
 
-export type Shape = {
+export type ScoredRegion = {
     origin : Triangle,
     color : TriangleColor,
     tiles : Set<Tile>,
@@ -13,19 +12,27 @@ export type Shape = {
 }
 
 export class Scorer {
-    static computeScores(grid : Grid, tile : Tile, includeIncomplete? : boolean) : Shape[] {
+    /**
+     * Computes the score after placing the given tile.
+     *
+     * @param tile the last tile played
+     * @param includeIncomplete return incomplete regions?
+     * @returns the regions found from the tile
+     */
+    static computeScores(tile : Tile, includeIncomplete? : boolean) : ScoredRegion[] {
         const visited = new Set<Triangle>();
 
-        const shapes : Shape[] = [];
+        const shapes : ScoredRegion[] = [];
 
+        // visit each triangle of the shape in turn
         for (const origin of tile.triangles) {
             if (!visited.has(origin)) {
                 const color = origin.color;
                 const tilesInShape = new Set<Tile>();
                 const trianglesInShape = new Set<Triangle>();
-                const edgesInShape : Shape['edges'] = [];
+                const edgesInShape : ScoredRegion['edges'] = [];
 
-                const shape : Shape = {
+                const shape : ScoredRegion = {
                     origin: origin,
                     color: origin.color,
                     tiles: tilesInShape,
@@ -47,7 +54,7 @@ export class Scorer {
                     trianglesInShape.add(triangle);
 
                     // add neighbors
-                    for (const neighbor of grid.getTriangleNeighbors(triangle, true)) {
+                    for (const neighbor of triangle.getOrAddNeighbors()) {
                         if (!neighbor || !neighbor.color) {
                             shape.finished = false;
                         } else if (neighbor.color === color) {

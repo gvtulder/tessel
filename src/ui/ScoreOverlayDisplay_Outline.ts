@@ -1,4 +1,4 @@
-import { Shape } from "src/grid/Scorer.js";
+import { ScoredRegion } from "src/grid/Scorer.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { BGCOLOR, SCALE } from "src/settings.js";
 import { ScoreOverlayDisplay, Vertex, Color } from "./ScoreOverlayDisplay.js";
@@ -44,7 +44,7 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
         this.fg = fg;
     }
 
-    showScores(shapes : Shape[]) {
+    showScores(shapes : ScoredRegion[]) {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         const maskPathGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 

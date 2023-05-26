@@ -1,4 +1,4 @@
-import { Shape } from "src/grid/Scorer.js";
+import { ScoredRegion } from "src/grid/Scorer.js";
 import { Triangle } from "src/grid/Triangle.js";
 import { computeOutline } from "src/lib/compute-outline.js";
 
@@ -22,13 +22,13 @@ export abstract class ScoreOverlayDisplay {
     }
 
     abstract build();
-    abstract showScores(shapes : Shape[]);
+    abstract showScores(shapes : ScoredRegion[]);
 
     hide() {
         return;
     }
 
-    protected computeOutline(shape : Shape) : { boundary: Vertex[], edgesPerVertex: Map<string, Edge[]> } {
+    protected computeOutline(shape : ScoredRegion) : { boundary: Vertex[], edgesPerVertex: Map<string, Edge[]> } {
         return computeOutline(shape.triangles);
     }
 }

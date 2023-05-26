@@ -1,4 +1,4 @@
-import { Shape } from "src/grid/Scorer.js";
+import { ScoredRegion } from "src/grid/Scorer.js";
 import { SCALE } from "src/settings.js";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay.js";
 import { Triangle } from "src/grid/Triangle.js";
@@ -8,7 +8,7 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
 
     build: () => void;
 
-    showScores(shapes : Shape[]) {
+    showScores(shapes : ScoredRegion[]) {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
         for (const shape of shapes) {
@@ -45,7 +45,7 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             */
 
 
-            const edgesPerTriangle = new Map<Triangle, Shape['edges']>();
+            const edgesPerTriangle = new Map<Triangle, ScoredRegion['edges']>();
             for (const edge of shape.edges) {
                 if (!edgesPerTriangle.has(edge.from)) edgesPerTriangle.set(edge.from, []);
                 edgesPerTriangle.get(edge.from).push(edge);

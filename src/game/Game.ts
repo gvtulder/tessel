@@ -2,7 +2,7 @@ import { Grid, TileColors, TriangleColor } from "src/grid/Grid.js";
 import { FixedOrderTileStack, TileStack } from "./TileStack.js";
 import { GridType } from "src/grid/GridType.js";
 import { OrientedColors, Tile } from "src/grid/Tile.js";
-import { Scorer, Shape } from "src/grid/Scorer.js";
+import { Scorer, ScoredRegion } from "src/grid/Scorer.js";
 import { TileGenerator } from "./TileGenerator.js";
 import { Triangle } from "src/grid/Triangle.js";
 
@@ -17,9 +17,9 @@ export type GameSettings = {
 
 export class GameEvent extends Event {
     game : Game;
-    scoreShapes? : Shape[];
+    scoreShapes? : ScoredRegion[];
 
-    constructor(type : string, game : Game, scoreShapes? : Shape[]) {
+    constructor(type : string, game : Game, scoreShapes? : ScoredRegion[]) {
         super(type);
         this.game = game;
         this.scoreShapes = scoreShapes;

@@ -54,7 +54,6 @@ export class TileEditorGridDisplay extends GridDisplay {
                 }
             }
         });
-        this.element.removeChild(this.tileElement);
     }
 
     styleMainElement() {

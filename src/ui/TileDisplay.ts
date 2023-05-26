@@ -25,7 +25,6 @@ export class TileDisplay extends EventTarget {
     gridDisplay : GridDisplay;
     triangleDisplays : Map<Triangle, TriangleDisplay>;
 
-    element : HTMLDivElement;
     svgTriangles : SVGElement;
 
     dropzone : Interactable;
@@ -44,15 +43,6 @@ export class TileDisplay extends EventTarget {
     }
 
     build() {
-        const div = document.createElement('div');
-        div.classList.add('tileDisplay');
-        div.style.position = 'absolute';
-        div.style.left = `${this.tile.left * SCALE }px`;
-        div.style.top = `${this.tile.top * SCALE}px`;
-        div.style.width = `${this.tile.width * SCALE}px`;
-        div.style.height = `${this.tile.height * SCALE}px`;
-        this.element = div;
-
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         group.setAttribute('class', 'svg-tile');
         this.svgTriangles = group;
@@ -189,7 +179,6 @@ export class TileDisplay extends EventTarget {
     }
 
     hide() {
-        this.element.classList.add('hide');
         this.svgTriangles.classList.add('hide');
     }
 

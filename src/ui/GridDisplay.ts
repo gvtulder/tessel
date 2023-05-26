@@ -11,7 +11,6 @@ export class GridDisplay extends EventTarget {
     grid: Grid;
     element: HTMLDivElement;
     gridElement: HTMLDivElement;
-    tileElement: HTMLDivElement;
 
     svg : SVGElement;
     svgGrid : SVGElement;
@@ -87,15 +86,6 @@ export class GridDisplay extends EventTarget {
         this.gridElement = gridElement;
         this.element.appendChild(gridElement);
 
-        const tileElement = document.createElement('div');
-        tileElement.className = 'tiles';
-        tileElement.style.position = 'absolute';
-        tileElement.style.top = '0px';
-        tileElement.style.left = '0px';
-        tileElement.style.zIndex = '200';
-        this.tileElement = tileElement;
-        this.element.appendChild(tileElement);
-
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         // TODO
         // svg.setAttribute('width', `${width}`);
@@ -142,7 +132,6 @@ export class GridDisplay extends EventTarget {
             const tileDisplay = new TileDisplay(this, tile);
             this.tileDisplayGrid[tile.x][tile.y] = tileDisplay;
             this.tileDisplays.push(tileDisplay);
-            this.tileElement.appendChild(tileDisplay.element);
             this.svgTriangles.appendChild(tileDisplay.svgTriangles);
             tileDisplay.addEventListener('updatetile', () => {
                 this.updateDimensions();
@@ -156,7 +145,6 @@ export class GridDisplay extends EventTarget {
         const idx = this.tileDisplays.indexOf(td);
         if (idx > -1) this.tileDisplays.splice(idx, 1);
         this.tileDisplayGrid[tile.x][tile.y] = null;
-        this.tileElement.removeChild(td.element);
         this.svgTriangles.removeChild(td.svgTriangles);
         this.updateDimensions();
     }

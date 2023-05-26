@@ -120,12 +120,6 @@ export class Game extends EventTarget {
         }
     }
 
-    checkAutorotate(sourceTile : Tile, sourceRotation : TileRotation, sourceTriangle : Triangle, targetTriangle : Triangle) : TileRotation {
-        const targetTile = targetTriangle.tile;
-        if (!targetTile) return null;
-        return targetTile.computeRotationToFit(sourceTile, sourceRotation);
-    }
-
     computeScores(target : Tile) {
         const shapes = Scorer.computeScores(target);
         if (shapes.length > 0) {

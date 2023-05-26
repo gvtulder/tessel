@@ -84,46 +84,6 @@ export class MainGridDisplay extends GridDisplay {
         return false;
     }
 
-    /*
-    makeDroppable(ondrop: (target: Tile, orientedColors: OrientedColors, indexOnStack: number) => boolean) {
-        interact(this.container).dropzone({}).on('dragenter', (evt: DragEvent) => {
-            console.log('NEW dragenter', evt.target);
-            const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
-
-            const pos = rel.tileDisplay.getTriangleOnScreenPosition();
-            console.log('clientCenterCoord', pos);
-
-            const closestPair = this.findClosestTriangleFromScreenPosition(pos);
-            console.log('closestPair', closestPair);
-            if (closestPair) {
-                console.log('closestPair',
-                            'moving',
-                            closestPair.moving.triangle.x,
-                            closestPair.moving.triangle.y,
-                            'fixed',
-                            closestPair.fixed.triangle.x,
-                            closestPair.fixed.triangle.y);
-            }
-        });
-        */
-
-
-        /*
-        for (const tileDisplay of this.tileDisplays) {
-            if (tileDisplay.tile.isPlaceholder()) {
-                tileDisplay.makeDropzone(this.gameDisplay, (evt : DragEvent, target: Tile, orientedColors: OrientedColors, indexOnStack: number) => {
-                    if (ondrop(target, orientedColors, indexOnStack)) {
-                        this.makeDroppable(ondrop);
-                        evt.relatedTarget.classList.add('drag-success');
-                    }
-                });
-            } else {
-                tileDisplay.removeDropzone();
-            }
-        }
-    }
-    */
-
     gameFinished() {
         const placeholders = [...this.tileDisplays.values()].filter(
             (d) => d.tile.isPlaceholder()

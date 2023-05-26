@@ -38,7 +38,7 @@ export class TileStackDisplay extends EventTarget {
         for (let i=0; i<this.tileStack.numberShown; i++) {
             const color = this.tileStack.slots[i];
             this.tileDisplays[i].tile.colors = color ? color : null;
-            if (!color) this.tileDisplays[i].disable();
+            if (!color) this.tileDisplays[i].removeDraggable();
         }
         const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
         if (n > 0) {
@@ -199,13 +199,6 @@ class SingleTileOnStackDisplay implements TileDragSource {
         return this.gridDisplay.getTriangleOnScreenPosition();
     }
 
-    /**
-     * Disable the tile if there are no tiles on the stack.
-     */
-    disable() {
-        this.getDraggable().unset();
-    }
-
     initInteractable() {
         const draggable = this.getDraggable();
         draggable.on('tap', (evt : Event) => {
@@ -234,6 +227,7 @@ class SingleTileOnStackDisplay implements TileDragSource {
     endDrag(successful : boolean) {
         this.element.classList.remove('dragging');
         this.element.classList.add('drag-return');
+        this.resetAutorotate();
         if (successful) {
             this.element.classList.add('drag-success');
         }
@@ -244,24 +238,11 @@ class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     removeDraggable() {
-        // TODO
         if (this.draggable) {
             this.draggable.unset();
             this.draggable = null;
         }
     }
-
-    /*
-    startAutorotate(target : ) : boolean {
-        // TODO
-        const orientedColors = target.tile.checkFitOrientedColorsWithRotation(this.getOrientedColors());
-        if (orientedColors !== null) {
-            this.rotateTileTo(orientedColors.rotation, false, true);
-            return true;
-        }
-        return false;
-    }
-    */
 
     /**
      * Rotates the tile to fit the target tile (if possible).

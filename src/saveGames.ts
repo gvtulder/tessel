@@ -5,6 +5,9 @@ import { HexGridTriangle } from "./grid/HexGridTriangle.js";
 import { SquareGridTriangle } from "./grid/SquareGridTriangle.js";
 
 
+const COLORS = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'orange', 'green'];
+
+
 export const lookup = new Map<string, GameSettings>();
 
 

@@ -3,8 +3,6 @@ import { Grid } from "./Grid.js";
 import { Tile, TileShape, TileVariant } from "./Tile.js";
 import { Coord, CoordId, Triangle, TriangleType } from "./Triangle.js";
 
-const COLORS = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'orange', 'green'];
-
 
 export type RotationSet = {
     rotationVariants : TileVariant[]

@@ -1,5 +1,4 @@
 import { Pattern } from "src/grid/Pattern.js";
-import { Tile } from "src/grid/Tile.js";
 import { TileColors, TriangleColor } from "src/grid/Triangle.js";
 import { shuffle } from "src/utils.js";
 

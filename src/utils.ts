@@ -35,10 +35,42 @@ export function shrinkOutline(points : Coord[], factor : number) : Coord[] {
   ]);
 }
 
-export const dist = (a : Coord, b : Coord) => {
+/**
+ * Compute the distance between two points.
+ * @param a
+ * @param b
+ * @returns the distance between a and b
+ */
+export function dist(a : Coord, b : Coord) : number {
   return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
 };
 
-export const midPoint = (a : Coord, b : Coord) : Coord => {
+/**
+ * Compute the mid-point between two points.
+ * @param a
+ * @param b
+ * @returns the distance between a and b
+ */
+export function midPoint(a : Coord, b : Coord) : Coord {
   return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+}
+
+/**
+ * Adds the given offset to the coordinates.
+ * @param coords a list of coordinates
+ * @param shift the dx, dy to be added
+ * @returns the new coordinates
+ */
+export function shiftCoordinates(coords : Coord[], shift : Coord) : Coord[] {
+  return coords.map((coord) => [coord[0] + shift[0], coord[1] + shift[1]]);
+}
+
+/**
+ * Adds the given offset to the coordinates.
+ * @param coords a list of coordinates
+ * @param shift the dx, dy to be added
+ * @returns the new coordinates
+ */
+export function shiftCoordinates2(coords : Coord[][], shift : Coord) : Coord[][] {
+  return coords.map((g) => g.map((coord) => [coord[0] + shift[0], coord[1] + shift[1]]));
 }

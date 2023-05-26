@@ -93,13 +93,9 @@ export class Game extends EventTarget {
     placeTile(sourceTile : Tile, sourceRotation : TileRotation, sourceTriangle : Triangle, targetTriangle : Triangle, indexOnStack : number) {
         const targetTile = targetTriangle.tile;
         if (!targetTile) return false;
-        const match = targetTile.matchShape(sourceTile, sourceRotation.steps, sourceTriangle, targetTriangle);
-        if (!match) return false;
-
-        // map colors to the target tile
-        const newColors = targetTile.colors.map(
-            (c, idx) => sourceTile.colors[match.colorGroups.get(idx)]
-        );
+        const newColors = targetTile.matchShapeMapColors(
+            sourceTile, sourceRotation, sourceTriangle, targetTriangle);
+        if (!newColors) return false;
 
         if (targetTile.checkFitColors(newColors)) {
             // place tile

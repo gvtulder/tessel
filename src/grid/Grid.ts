@@ -1,5 +1,5 @@
 
-import { Tile } from './Tile.js';
+import { Tile, TileShape } from './Tile.js';
 import { CoordId, Triangle, TriangleType } from './Triangle.js';
 import { DEBUG } from '../settings.js';
 import { Pattern } from './Pattern.js';
@@ -207,6 +207,21 @@ export class Grid extends EventTarget {
                 this.getOrAddTileNeighbors(t);
             }
         }
+    }
+
+    /**
+     * Convert the shape coordinates to triangles by
+     * calling this.getOrAddTriangle.
+     *
+     * @param shape the shape coordinates
+     * @returns triangles in the same order
+     */
+    shapeToTriangles(shape : TileShape) : Triangle[] {
+        const triangles : Triangle[] = [];
+        for (const g of shape) {
+            triangles.push(...g.map((c) => this.getOrAddTriangle(...c)));
+        }
+        return triangles;
     }
 
 

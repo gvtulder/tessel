@@ -5,7 +5,7 @@ import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
 import { Tile, TileRotation } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
-import { TileDisplay, TriangleOnScreenPosition } from "./TileDisplay.js";
+import { TileDisplay, TriangleOnScreenMatch, TriangleOnScreenPosition } from "./TileDisplay.js";
 import { TileDragController, TileDragSource } from './TileDragController.js';
 import { Pattern } from 'src/grid/Pattern.js';
 

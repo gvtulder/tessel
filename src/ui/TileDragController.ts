@@ -1,7 +1,7 @@
 import type { Interactable, DragEvent } from '@interactjs/types';
 
 import { GridDisplay } from "./GridDisplay.js";
-import { TriangleOnScreenPosition } from "./TileDisplay.js";
+import { TriangleOnScreenMatch, TriangleOnScreenPosition } from "./TileDisplay.js";
 import { Tile, TileRotation } from 'src/grid/Tile.js';
 
 export class TileDragEvent extends Event {
@@ -49,7 +49,10 @@ export class TileDragController extends EventTarget {
                     // figure out where we are
                     const movingPos = source.getTriangleOnScreenPosition();
                     const closestPair = this.gridDisplay.findClosestTriangleFromScreenPosition(movingPos);
-                    // console.log('MOVE', 'closestPair', closestPair);
+                    if (closestPair && closestPair.dist < 50) {
+                        source.startAutorotate(closestPair);
+                    }
+                    console.log('MOVE', 'closestPair', closestPair);
                 },
                 end: (evt : DragEvent) => {
                     // figure out where we are
@@ -71,9 +74,6 @@ export class TileDragController extends EventTarget {
                     /*
                     evt.target.style.transformOrigin = 'center';
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
-                    if (this.tile.isPlaceholder()) {
-                        this.removeDraggable();
-                    }
                     */
                 },
             }
@@ -91,4 +91,5 @@ export interface TileDragSource {
     startDrag();
     endDrag(successful : boolean);
     resetDragStatus();
+    startAutorotate(closestPair : TriangleOnScreenMatch) : boolean;
 }

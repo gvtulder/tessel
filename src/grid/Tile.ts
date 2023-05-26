@@ -1,5 +1,5 @@
 import { computeOutline } from 'src/lib/compute-outline.js';
-import { wrapModulo } from 'src/utils.js';
+import { shiftCoordinates2, wrapModulo } from 'src/utils.js';
 import { Grid } from './Grid.js';
 import { ColorGroup, Coord, CoordId, Edge, TileColors, Triangle } from './Triangle.js';
 
@@ -223,6 +223,43 @@ export class Tile extends EventTarget {
     }
 
     /**
+     * Tries to rotate the other tile to fit in this location
+     *
+     * @param other the other tile
+     * @returns the rotation to make it fit, or null if that is impossible
+     */
+    rotateToFit(other : Tile, currentRotation : TileRotation) : TileRotation {
+        // TODO start with currentRotation
+        for (let r=0; r<other.rotations.length; r++) {
+            const match = this.matchShape(other, other.rotations[r]);
+            if (match) {
+                return other.rotations[r];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Matches the triangles from this tile to the other and computs the color list.
+     *
+     * @param other the other tile
+     * @param otherRotation the rotation step of the other tile
+     * @param otherTriangle anchor in the other tile
+     * @param thisTriangle anchor in this tile
+     * @returns list of colors for this tile, or null if the mapping failed
+     */
+    matchShapeMapColors(other : Tile, otherRotation : TileRotation, otherTriangle : Triangle,
+                        thisTriangle : Triangle) : TileColors {
+        const match = this.matchShape(other, otherRotation, otherTriangle, thisTriangle);
+        if (!match) return null;
+
+        // map colors to the target tile
+        return this.colors.map(
+            (c, idx) => other.colors[match.colorGroups.get(idx)]
+        );
+    }
+
+    /**
      * Matches the triangles from this tile to the other.
      * 
      * @param other the other tile
@@ -231,15 +268,22 @@ export class Tile extends EventTarget {
      * @param thisTriangle anchor in this tile
      * @returns map of this -> other triangles and color groups, or null if the mapping failed
      */
-    matchShape(other : Tile, otherRotation : number, otherTriangle : Triangle,
-               thisTriangle : Triangle) :
+    matchShape(other : Tile, otherRotation : TileRotation,
+               otherTriangle? : Triangle, thisTriangle? : Triangle) :
                { triangles: Map<Triangle, Triangle>, colorGroups: Map<ColorGroup, ColorGroup> } {
         if (other._triangles.size !== this._triangles.size) return null;
 
         // rotate the other shape
         const otherEdgeFrom = otherTriangle.getOrAddRotationEdge(0);
-        const otherEdgeTo = otherTriangle.getOrAddRotationEdge(otherRotation);
+        const otherEdgeTo = otherTriangle.getOrAddRotationEdge(otherRotation.steps);
         const otherPairsRotated = other.computeRotatedTrianglePairs(otherEdgeFrom, otherEdgeTo);
+
+        if (otherTriangle === undefined) {
+            // find an anchor point
+            const shiftMapThis = this.mapTrianglesToOrigin([...otherPairsRotated.values()]);
+            const shiftMapOther = other.mapTrianglesToOrigin([...otherPairsRotated.values()]);
+
+        }
 
         // find the offset for the otherTriangle
         const rotatedOtherTriangle = otherPairsRotated.get(otherTriangle);
@@ -388,7 +432,7 @@ export class Tile extends EventTarget {
             const rotationMap = this.computeRotatedTrianglePairs(edgeFrom, edgeTo);
 
             // normalize the coordinates by moving the shape
-            const shiftMap = this.computeShiftToOrigin([...rotationMap.values()]);
+            const shiftMap = this.mapTrianglesToOrigin([...rotationMap.values()]);
 
             // collect the offsets per color group
             const shape : TileShape = [];
@@ -432,16 +476,9 @@ export class Tile extends EventTarget {
      * @returns the normalized shape
      */
     moveToOrigin(shape: TileShape) : TileShape {
-        const triangles : Triangle[] = [];
-        for (const g of shape) {
-            triangles.push(...g.map((c) => this.grid.getOrAddTriangle(...c)));
-        }
-        const shiftMap = this.computeShiftToOrigin(triangles);
-        return shape.map(
-            (g) => g.map((coord) => (
-                shiftMap.get(this.grid.getOrAddTriangle(...coord)).coord
-            ))
-        );
+        const triangles = this.grid.shapeToTriangles(shape);
+        const shift = this.computeShiftToOrigin(triangles);
+        return shiftCoordinates2(shape, shift);
     }
 
     /**
@@ -451,20 +488,8 @@ export class Tile extends EventTarget {
      * @param triangles the input triangles
      * @returns map of input -> normalized triangles
      */
-    computeShiftToOrigin(triangles : Triangle[]) : Map<Triangle, Triangle> {
-        let topLeft = triangles[0];
-        for (const t of triangles) {
-            // select a standard, repeatable origin
-            const cmpAtOrigin = (t.xAtOrigin - topLeft.xAtOrigin) || (t.yAtOrigin - topLeft.yAtOrigin);
-            const cmpAbsolute = (t.x - topLeft.x) || (t.y - topLeft.y);
-            if ((cmpAtOrigin || cmpAbsolute) < 0) {
-                topLeft = t;
-            }
-        }
-        const shift = [
-            topLeft.xAtOrigin - topLeft.x,
-            topLeft.yAtOrigin - topLeft.y,
-        ];
+    mapTrianglesToOrigin(triangles : Triangle[]) : Map<Triangle, Triangle> {
+        const shift = this.computeShiftToOrigin(triangles);
         return new Map<Triangle, Triangle>(
             triangles.map((from) => [
                 from,
@@ -474,6 +499,30 @@ export class Tile extends EventTarget {
                 )
             ])
         );
+    }
+
+    /**
+     * Computes the shift that normalizes the triangle set by moving
+     * the top-left triangle to (0, 0).
+     * (Or as close as possible as the grid type allows.)
+     *
+     * @param triangles the input triangles
+     * @returns the offset
+     */
+    computeShiftToOrigin(triangles : Triangle[]) : Coord {
+        let topLeft = triangles[0];
+        for (const t of triangles) {
+            // select a standard, repeatable origin
+            const cmpAtOrigin = (t.xAtOrigin - topLeft.xAtOrigin) || (t.yAtOrigin - topLeft.yAtOrigin);
+            const cmpAbsolute = (t.x - topLeft.x) || (t.y - topLeft.y);
+            if ((cmpAtOrigin || cmpAbsolute) < 0) {
+                topLeft = t;
+            }
+        }
+        return [
+            topLeft.xAtOrigin - topLeft.x,
+            topLeft.yAtOrigin - topLeft.y,
+        ];
     }
 
     /**

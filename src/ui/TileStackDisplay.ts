@@ -3,23 +3,21 @@ import interact from '@interactjs/interact/index';
 
 import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
-import { OrientedColors, Tile } from "../grid/Tile.js";
+import { Tile } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
-import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileDisplay, TriangleOnScreenPosition } from "./TileDisplay.js";
-import { GridType } from "src/grid/GridType.js";
-import { mean } from 'src/utils.js';
 import { TileDragController, TileDragSource } from './TileDragController.js';
+import { Pattern } from 'src/grid/Pattern.js';
 
 export class TileStackDisplay {
-    gridType : GridType;
+    pattern : Pattern;
     tileStack : FixedOrderTileStack;
     tileDisplays : SingleTileOnStackDisplay[];
     element : HTMLDivElement;
     counter : HTMLSpanElement;
 
-    constructor(gridType : GridType, tileStack : FixedOrderTileStack) {
-        this.gridType = gridType;
+    constructor(pattern : Pattern, tileStack : FixedOrderTileStack) {
+        this.pattern = pattern;
         this.tileStack = tileStack;
         this.tileDisplays = [];
         this.build();
@@ -60,7 +58,7 @@ export class TileStackDisplay {
         this.element = div;
 
         for (let i=0; i<this.tileStack.numberShown; i++) {
-            const tileDisplay = new SingleTileOnStackDisplay(this, i, this.gridType);
+            const tileDisplay = new SingleTileOnStackDisplay(this, i, this.pattern);
             this.element.appendChild(tileDisplay.element);
             this.tileDisplays.push(tileDisplay);
         }
@@ -92,8 +90,6 @@ export class TileStackDisplay {
 export interface DraggableTileHTMLDivElement extends HTMLDivElement {
   tileDisplay? : SingleTileOnStackDisplay;
   indexOnStack? : number;
-  orientedColors? : OrientedColors;
-  originalOrientedColors? : OrientedColors;
 }
 
 class SingleTileOnStackDisplay implements TileDragSource {
@@ -108,16 +104,15 @@ class SingleTileOnStackDisplay implements TileDragSource {
     rotation : number;
     angle : number;
 
-    constructor(tileStackDisplay : TileStackDisplay, indexOnStack : number, gridType : GridType) {
+    constructor(tileStackDisplay : TileStackDisplay, indexOnStack : number, pattern : Pattern) {
         this.rotation = 0;
         this.angle = 0;
 
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
-        this.grid = new Grid(gridType);
+        this.grid = new Grid(pattern.triangleType, pattern);
         this.gridDisplay = new TileStackGridDisplay(this.grid);
-        this.tile = new gridType.createTile(this.grid, 0, 1);
-        this.grid.addTile(this.tile);
+        this.tile = this.grid.getOrAddTile(0, 0);
 
         this.element = document.createElement('div');
         this.element.className = 'tileOnStack';
@@ -166,7 +161,7 @@ class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     rotateTileTo(newRotation : number, reverse? : boolean, closest? : boolean) {
-        const angles = this.tile.rotationAngles;
+        const angles = this.tile.rotations.map((r) => r.angle);
         const oldAngle = angles[this.rotation];
         this.rotation = newRotation % angles.length;
         const reverseDiff = (360 + oldAngle - angles[this.rotation]) % 360;
@@ -185,10 +180,6 @@ class SingleTileOnStackDisplay implements TileDragSource {
             this.angle = (360 + this.angle) % 360;
             this.rotatable.style.transform = `rotate(${this.angle}deg)`;
         }
-    }
-
-    getOrientedColors() : OrientedColors {
-        return this.tile.getOrientedColors(this.rotation);
     }
 
     getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
@@ -242,11 +233,14 @@ class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     startAutorotate(target : TileDisplay) : boolean {
+        // TODO
+        /*
         const orientedColors = target.tile.checkFitOrientedColorsWithRotation(this.getOrientedColors());
         if (orientedColors !== null) {
             this.rotateTileTo(orientedColors.rotation, false, true);
             return true;
         }
+        */
         return false;
     }
 }

@@ -4,7 +4,7 @@ import { Grid } from './grid/Grid.js';
 import { TileStackDisplay } from './ui/TileStackDisplay.js';
 import { FixedOrderTileStack, TileStack } from './game/TileStack.js';
 import { GridType, GridTypes } from './grid/old.GridType.js';
-import { OrientedColors, Tile } from './grid/Tile.js';
+import { Tile } from './grid/Tile.js';
 import { Game, GameSettings } from './game/Game.js';
 import { GameDisplay } from './ui/GameDisplay.js';
 import * as SaveGames from './saveGames.js';

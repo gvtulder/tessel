@@ -85,6 +85,7 @@ export class Tile extends EventTarget {
             triangle.colorGroup = colorGroup;
         }
 
+        this.recomputeColorGroups();
         this.recomputeShapeParameters();
 
         this.dispatchEvent(new TileEvent(Tile.events.UpdateTriangles, this));
@@ -142,7 +143,7 @@ export class Tile extends EventTarget {
 
         // remap colors
         const oldColors = this._colors;
-        const newColors = sortedColorGroups.map((c) => oldColors[c]);
+        const newColors = sortedColorGroups.map((c) => oldColors ? oldColors[c] : null);
         this._colors = newColors;
 
         // update triangles
@@ -178,8 +179,24 @@ export class Tile extends EventTarget {
     /**
      * Return the colors of this tile.
      */
-    get colors() : TileColors {
-        return [...this._colors];
+    get colors() : TileColors | null {
+        return this._colors ? [...this._colors] : null;
+    }
+
+    /**
+     * Returns true if these colors would fit.
+     */
+    checkFitColors(colors : TileColors) {
+        for (const [triangle, colorGroup] of this._triangles) {
+            const mismatch = triangle.getNeighbors().some((neighbor) => (
+                neighbor.tile !== this &&
+                neighbor.tile &&
+                !neighbor.tile.isPlaceholder() &&
+                neighbor.color != colors[colorGroup]
+            ));
+            if (mismatch) return false;
+        }
+        return true;
     }
 
     /**
@@ -212,10 +229,11 @@ export class Tile extends EventTarget {
      * @param otherRotation the rotation step of the other tile
      * @param otherTriangle anchor in the other tile
      * @param thisTriangle anchor in this tile
-     * @returns map of this -> other triangles, or null if the mapping failed
+     * @returns map of this -> other triangles and color groups, or null if the mapping failed
      */
     matchShape(other : Tile, otherRotation : number, otherTriangle : Triangle,
-               thisTriangle : Triangle) : Map<Triangle, Triangle> {
+               thisTriangle : Triangle) :
+               { triangles: Map<Triangle, Triangle>, colorGroups: Map<ColorGroup, ColorGroup> } {
         if (other._triangles.size !== this._triangles.size) return null;
 
         // rotate the other shape
@@ -237,7 +255,7 @@ export class Tile extends EventTarget {
                 to.x + shift[0],
                 to.y + shift[1]
             );
-            if (from.shape != newTo.shape) return null;
+            if (to.shape != newTo.shape) return null;
             thisCoordToOtherTriangles.set(newTo.coordId, from);
         }
 
@@ -249,11 +267,10 @@ export class Tile extends EventTarget {
 
             // check if there is a triangle in the other shape for this coordinate
             if (!otherTriangle) return null;
-            if (triangle.shape != otherTriangle.shape) return null;
 
             // check if the color groups match
             let expectColorGroup = mapColorGroups.get(triangle.colorGroup);
-            if (expectColorGroup === null) {
+            if (expectColorGroup === null || expectColorGroup === undefined) {
                 expectColorGroup = otherTriangle.colorGroup;
                 mapColorGroups.set(triangle.colorGroup, expectColorGroup);
             }
@@ -263,7 +280,7 @@ export class Tile extends EventTarget {
             pairs.set(triangle, otherTriangle);
         }
 
-        return pairs;
+        return { triangles: pairs, colorGroups: mapColorGroups };
     }
 
     /**
@@ -290,7 +307,7 @@ export class Tile extends EventTarget {
      * @returns true if the tile is a placeholder
      */
     isPlaceholder() {
-        return this.triangles[0].color == null;
+        return this._colors === null || (this._colors && this._colors[0] === null);
     }
 
     /**

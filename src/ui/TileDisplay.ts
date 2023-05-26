@@ -3,7 +3,7 @@ import interact from '@interactjs/interact/index';
 
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { DEBUG, SCALE } from '../settings.js';
-import { OrientedColors, Tile } from "../grid/Tile.js";
+import { Tile } from "../grid/Tile.js";
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
 import { dist, shrinkOutline } from 'src/utils.js';

@@ -2,10 +2,8 @@ import type { Interactable, PointerEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
 
 import { Game, GameEvent } from "src/game/Game.js";
-import { GridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
-import { OrientedColors, Tile } from "src/grid/Tile.js";
 import { ScoreDisplay } from "./ScoreDisplay.js";
 import icons from './icons.js';
 import { TileDragController } from './TileDragController.js';
@@ -48,7 +46,7 @@ export class GameDisplay extends EventTarget {
         controlbar.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
 
-        this.tileStackDisplay = new TileStackDisplay(this.game.gridType, this.game.tileStack);
+        this.tileStackDisplay = new TileStackDisplay(this.game.pattern, this.game.tileStack);
         controlbar.appendChild(this.tileStackDisplay.element);
 
         const buttons = document.createElement('div');

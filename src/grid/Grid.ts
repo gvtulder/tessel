@@ -37,9 +37,9 @@ export class Grid extends EventTarget {
     triangleType : TriangleType;
     pattern : Pattern;
 
-    triangles : Map<CoordId, Triangle>;
+    private _triangles : Map<CoordId, Triangle>;
     // TODO change to set?
-    tiles : Map<CoordId, Tile>;
+    private _tiles : Map<CoordId, Tile>;
 
     /**
      * Initializes a new grid.
@@ -47,14 +47,14 @@ export class Grid extends EventTarget {
      * @param triangleType the triangle type (defines the grid)
      * @param pattern the tile pattern for the grid
      */
-    constructor(triangleType : TriangleType, pattern? : Pattern) {
+    constructor(triangleType : TriangleType, pattern : Pattern) {
         super();
 
         this.triangleType = triangleType;
         this.pattern = pattern;
 
-        this.triangles = new Map<CoordId, Triangle>();
-        this.tiles = new Map<CoordId, Tile>();
+        this._triangles = new Map<CoordId, Triangle>();
+        this._tiles = new Map<CoordId, Tile>();
 
         if (DEBUG.RANDOM_TRIANGLES) {
             this.createRandomTriangles();
@@ -67,6 +67,14 @@ export class Grid extends EventTarget {
         }
     }
 
+    get tiles() : Tile[] {
+        return [...this._tiles.values()];
+    }
+
+    get triangles() : Triangle[] {
+        return [...this._triangles.values()];
+    }
+
     /**
      * Returns the triangle at the given coordinate.
      *
@@ -77,10 +85,10 @@ export class Grid extends EventTarget {
      */
     getTriangle(x : number, y : number, addMissing? : boolean) : Triangle | null {
         const coordId = CoordId(x, y);
-        let triangle = this.triangles.get(coordId);
+        let triangle = this._triangles.get(coordId);
         if (!triangle && addMissing) {
             triangle = new this.triangleType(this, x, y);
-            this.triangles.set(coordId, triangle);
+            this._triangles.set(coordId, triangle);
             this.dispatchEvent(new GridEvent(Grid.events.AddTriangle, this, triangle, null));
         }
         return triangle;
@@ -103,7 +111,7 @@ export class Grid extends EventTarget {
      * @param tile the new tile
      */
     addTile(tile : Tile) {
-        this.tiles.set(CoordId(tile.x, tile.y), tile);
+        this._tiles.set(CoordId(tile.x, tile.y), tile);
         this.dispatchEvent(new GridEvent(Grid.events.AddTile, this, null, tile));
     }
 
@@ -112,7 +120,7 @@ export class Grid extends EventTarget {
      * @param tile the new tile
      */
     removeTile(tile : Tile) {
-        this.tiles.delete(CoordId(tile.x, tile.y));
+        this._tiles.delete(CoordId(tile.x, tile.y));
         tile.removeFromGrid();
         this.dispatchEvent(new GridEvent(Grid.events.RemoveTile, this, null, tile));
     }
@@ -127,7 +135,7 @@ export class Grid extends EventTarget {
      */
     getTile(x : number, y : number, addMissing? : boolean) : Tile | null {
         const coordId = CoordId(x, y);
-        let tile = this.tiles.get(coordId);
+        let tile = this._tiles.get(coordId);
         if (!tile && addMissing && this.pattern) {
             tile = this.pattern.constructTile(this, x, y);
             this.addTile(tile);
@@ -194,7 +202,7 @@ export class Grid extends EventTarget {
      * Requires a pattern to be set.
      */
     updateFrontier() {
-        for (const t of this.tiles.values()) {
+        for (const t of this._tiles.values()) {
             if (!t.isPlaceholder()) {
                 this.getOrAddTileNeighbors(t);
             }
@@ -217,7 +225,7 @@ export class Grid extends EventTarget {
 
     private fillTrianglesWithWhite() {
         let i = 0;
-        for (const triangle of this.triangles.values()) {
+        for (const triangle of this._triangles.values()) {
             triangle.color = 'white';
             triangle.color = ['#aaa', '#888', '#ccc'][i % 3];
             i++;

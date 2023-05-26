@@ -1,7 +1,7 @@
 import { TriangleDisplay } from './TriangleDisplay.js';
 import { TileDisplay, TriangleOnScreenMatch, TriangleOnScreenPosition } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
-import { OrientedColors, Tile } from "../grid/Tile.js";
+import { Tile } from "../grid/Tile.js";
 import { Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
@@ -176,12 +176,13 @@ export class GridDisplay extends EventTarget {
     updateDimensions() {
         if (this.grid.tiles.length == 0) return;
 
-        this.left = Math.min(...this.grid.tiles.map((t) => t.left));
-        this.top = Math.min(...this.grid.tiles.map((t) => t.top));
-        this.width = Math.max(...this.grid.tiles.map((t) => t.left + t.width));
-        this.height = Math.max(...this.grid.tiles.map((t) => t.top + t.height));
+        const tiles = [...this.grid.tiles.values()];
+        this.left = Math.min(...tiles.map((t) => t.left));
+        this.top = Math.min(...tiles.map((t) => t.top));
+        this.width = Math.max(...tiles.map((t) => t.left + t.width));
+        this.height = Math.max(...tiles.map((t) => t.top + t.height));
 
-        const noPlaceholders = this.grid.tiles.filter((t) => !t.isPlaceholder());
+        const noPlaceholders = tiles.filter((t) => !t.isPlaceholder());
         this.leftNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.left));
         this.topNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.top));
         this.widthNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
@@ -221,7 +222,7 @@ export class GridDisplay extends EventTarget {
         conn.element.style.zIndex = '200';
 
         for (const triangle of this.grid.triangles) {
-            conn.connect(triangle, this.grid.getTriangleNeighbors(triangle));
+            conn.connect(triangle, triangle.getNeighbors());
         }
 
         this.conn = conn;

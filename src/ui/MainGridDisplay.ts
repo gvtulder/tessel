@@ -2,7 +2,7 @@ import type { Interactable, DragEvent } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
 
 
-import { OrientedColors, Tile } from "../grid/Tile.js";
+import { Tile } from "../grid/Tile.js";
 import { SCALE } from 'src/settings.js';
 import { GridDisplay } from './GridDisplay.js';
 import { Grid } from "src/grid/Grid.js";
@@ -89,6 +89,7 @@ export class MainGridDisplay extends GridDisplay {
     }
 
     makeDroppable(ondrop: (target: Tile, orientedColors: OrientedColors, indexOnStack: number) => boolean) {
+        /*
         interact(this.container).dropzone({}).on('dragenter', (evt: DragEvent) => {
             console.log('NEW dragenter', evt.target);
             const rel = (evt.relatedTarget as DraggableTileHTMLDivElement);
@@ -108,6 +109,7 @@ export class MainGridDisplay extends GridDisplay {
                             closestPair.fixed.triangle.y);
             }
         });
+        */
 
 
         /*

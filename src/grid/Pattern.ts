@@ -33,6 +33,7 @@ export class Pattern {
      * @param shapes a definition of the tiles in this pattern
      */
     constructor(triangleType : TriangleType, shapes : TileShape[]) {
+        this.triangleType = triangleType;
         this.grid = new Grid(triangleType);
         this.shapes = shapes;
 
@@ -106,7 +107,7 @@ export class Pattern {
             for (const colorGroup of shape) {
                 for (const offset of colorGroup) {
                     allX.push(offset[0]);
-                    allX.push(offset[1]);
+                    allY.push(offset[1]);
                 }
             }
         }

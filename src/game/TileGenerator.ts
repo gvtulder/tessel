@@ -1,4 +1,4 @@
-import { TileColors } from "src/grid/Grid.js";
+import { TileColors, TriangleColor } from "src/grid/Triangle.js";
 import { shuffle } from "src/utils.js";
 
 export type TileGenerator = () => TileColors[];
@@ -47,7 +47,7 @@ export class TileGenerators {
     static repeatColors(repeats : number, generator : TileGenerator) : TileGenerator {
         return () => {
             return generator().map((t : TileColors) => {
-                const tt : TileColors = [];
+                const tt : TriangleColor[] = [];
                 for (const c of t) {
                     for (let i=0; i<repeats; i++) {
                         tt.push(c);

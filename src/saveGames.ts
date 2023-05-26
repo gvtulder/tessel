@@ -1,10 +1,59 @@
 import { GameSettings } from "./game/Game.js";
-import { GridTypes } from "./grid/old.GridType.js";
 import { TileGenerators } from "./game/TileGenerator.js";
+import { EquilateralGridTriangle } from "./grid/EquilateralGridTriangle.js";
+import { HexGridTriangle } from "./grid/HexGridTriangle.js";
+import { SquareGridTriangle } from "./grid/SquareGridTriangle.js";
 
 
 export const lookup = new Map<string, GameSettings>();
 
+
+export const SquareDefault : GameSettings = {
+    triangleType : SquareGridTriangle,
+    pattern : {
+        shapes : [
+            [ [[0, 0]], [[0, 1]], [[0, 2]], [[0, 3]] ]
+        ]
+    },
+    initialTile: ['red','black','blue','white'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.permutations(
+        ['red','black','blue','white'], 4),
+}
+lookup.set('square', SquareDefault);
+
+export const TriangleDefault : GameSettings = {
+    triangleType : EquilateralGridTriangle,
+    pattern : {
+        shapes : [[
+            [ [0, 0], [0, 1], [0, 2] ]
+        ]]
+    },
+    initialTile: ['red','black','blue','white'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.permutations(
+        ['red','black','blue','white'], 4),
+}
+lookup.set('triangle', TriangleDefault);
+
+export const HexDefault : GameSettings = {
+    triangleType : HexGridTriangle,
+    pattern : {
+        shapes : [
+            [ [[0, 0]], [[1, 0]], [[1, 1]], [[0, 1]], [[-1, 1]], [[-1, 0]] ]
+        ]
+    },
+    initialTile: ['red','black','blue','white','black','blue'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.permutations(
+        ['red','black','blue','white'], 6),
+}
+lookup.set('hex', HexDefault);
+
+
+
+
+/*
 
 // a few dummy hex tiles
 export const HexDebug : GameSettings = {
@@ -100,3 +149,5 @@ export const TriangleDefault: GameSettings = {
 }
 lookup.set('TriangleDefault', TriangleDefault);
 
+
+*/

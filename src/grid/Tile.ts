@@ -105,6 +105,7 @@ export class Tile extends EventTarget {
         // add the triangle
         this._triangles.set(triangle, triangle.colorGroup);
         triangle.tile = this;
+        this.recomputeColorGroups();
         this.recomputeShapeParameters();
         this.dispatchEvent(new TileEvent(Tile.events.UpdateTriangles, this));
     }
@@ -119,8 +120,37 @@ export class Tile extends EventTarget {
         triangle.tile = null;
         triangle.colorGroup = null;
         triangle.color = null;
+        this.recomputeColorGroups();
         this.recomputeShapeParameters();
         this.dispatchEvent(new TileEvent(Tile.events.UpdateTriangles, this));
+    }
+
+    /**
+     * Recompute and renumber the color groups if necessary.
+     */
+    protected recomputeColorGroups() {
+        // find the number of unique color groups
+        const colorGroups = new Set<ColorGroup>(this._triangles.values());
+        const remappedColorGroups = new Map<ColorGroup, ColorGroup>();
+
+        // renumber
+        const sortedColorGroups = [...colorGroups];
+        sortedColorGroups.sort();
+        for (let c=0; c<sortedColorGroups.length; c++) {
+            remappedColorGroups.set(sortedColorGroups[c], c);
+        }
+
+        // remap colors
+        const oldColors = this._colors;
+        const newColors = sortedColorGroups.map((c) => oldColors[c]);
+        this._colors = newColors;
+
+        // update triangles
+        for (const triangle of this._triangles.keys()) {
+            const newColorGroup = remappedColorGroups.get(triangle.colorGroup);
+            this._triangles.set(triangle, newColorGroup);
+            triangle.colorGroup = newColorGroup;
+        }
     }
 
     protected recomputeShapeParameters() {

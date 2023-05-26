@@ -171,7 +171,7 @@ export class Tile extends EventTarget {
     set colors(colors : TileColors) {
         this._colors = colors;
         for (const [triangle, colorGroup] of this._triangles) {
-            triangle.color = colors[colorGroup];
+            triangle.color = colors ? colors[colorGroup] : null;
         }
         this.dispatchEvent(new TileEvent(Tile.events.UpdateColors, this));
     }
@@ -465,12 +465,6 @@ export class Tile extends EventTarget {
             topLeft.xAtOrigin - topLeft.x,
             topLeft.yAtOrigin - topLeft.y,
         ];
-        console.log('computeshift origin',
-                    topLeft.xAtOrigin, topLeft.yAtOrigin,
-                    'offset to minX, minY',
-                    topLeft.x - Math.min(...triangles.map((t) => t.x)),
-                    topLeft.y - Math.min(...triangles.map((t) => t.y)),
-                    triangles.map((t) => t.coordId));
         return new Map<Triangle, Triangle>(
             triangles.map((from) => [
                 from,
@@ -522,7 +516,7 @@ export class Tile extends EventTarget {
                 // look up color of this triangle in A
                 const colorInA = coordColorInA.get(CoordId(offset));
                 // triangle must exist in A
-                if (colorInA === null) return false;
+                if (colorInA === null || colorInA === undefined) return false;
                 // check if it is the correct color group
                 let colorInB = colorAtoB.get(colorInA);
                 if (colorInB === null || colorInB === undefined) {

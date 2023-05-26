@@ -1,9 +1,14 @@
 import { wrapModulo } from "src/utils.js";
 import { Grid } from "./Grid.js";
-import { Tile, TileShape } from "./Tile.js";
+import { Tile, TileShape, TileVariant } from "./Tile.js";
 import { Coord, CoordId, Triangle, TriangleType } from "./Triangle.js";
 
 const COLORS = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'orange', 'green'];
+
+
+export type RotationSet = {
+    rotationVariants : TileVariant[]
+};
 
 
 
@@ -24,6 +29,14 @@ export class Pattern {
      */
     stepY : [number, number];
 
+    /**
+     * The number of color groups in this pattern.
+     */
+    readonly numColorGroups : number;
+
+    /**
+     * Dummy grid for computations.
+     */
     private grid : Grid;
 
     /**
@@ -37,7 +50,18 @@ export class Pattern {
         this.grid = new Grid(triangleType, this);
         this.shapes = shapes;
 
+        // TODO what if there are multiple types of tile?
+        this.numColorGroups = shapes[0].length;
+
+        this.computeProperties();
+    }
+
+    /**
+     * Computes the properties (period, step etc.) of this pattern.
+     */
+    computeProperties() {
         this.computePeriods();
+        this.computeTileVariants();
     }
 
     /**
@@ -109,6 +133,39 @@ export class Pattern {
             }
         }
         return null;
+    }
+
+    /**
+     * Compute the rotation variants of the tiles in this pattern.
+     */
+    computeTileVariants() {
+        const variants : RotationSet[] = [];
+
+        for (let shapeIdx=0; shapeIdx<this.shapes.length; shapeIdx++) {
+            // construct a tile of this shape
+            const tile = this.constructTile(this.grid, shapeIdx, 0);
+            // compute the color-sensitive rotation variants
+            const rotationVariants = tile.computeRotationVariants(true);
+
+            let exists = false;
+            for (const newVariant of rotationVariants) {
+                // compare with the variants we already have
+                exists = exists || variants.some((existingVariant) =>
+                    tile.isEquivalentShape(existingVariant.rotationVariants[0].shape,
+                                           newVariant.shape)
+                );
+                if (exists) break;
+            }
+
+            // this is a new variant
+            if (!exists) {
+                variants.push({
+                    rotationVariants: rotationVariants
+                });
+            }
+        }
+
+        console.log('variants', variants);
     }
 
     /**

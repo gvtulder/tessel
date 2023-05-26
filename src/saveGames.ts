@@ -81,6 +81,37 @@ export const RhombusDefault : GameSettings = {
 }
 lookup.set('rhombus', RhombusDefault);
 
+// two-directional
+lookup.set('rhombus2', {
+    triangleType : HexGridTriangle,
+    pattern : {
+        shapes : [
+            [ [[0, 0]], [[1, 0]] ],
+            [ [[1, 1]], [[0, 1]] ],
+        ]
+    },
+    initialTile: ['red','black'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.permutations(
+        ['red','black','blue','white'], 2),
+});
+
+// two-directional
+lookup.set('rhombus3', {
+    triangleType : HexGridTriangle,
+    pattern : {
+        shapes : [
+            [ [[0, 0]], [[1, 0]] ],
+            [ [[1, 1]], [[0, 1]] ],
+            [ [[-1, 1]], [[-1, 0]] ],
+        ]
+    },
+    initialTile: ['red','black'],
+    tilesShownOnStack: 3,
+    tileGenerator : TileGenerators.repeat(10,
+        TileGenerators.permutations(['red','black','blue','white'], 2)),
+});
+
 
 
 

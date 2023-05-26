@@ -105,6 +105,7 @@ export class TileDisplay extends EventTarget {
     }
 
     getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
+        console.log([...this.triangleDisplays.values()][0].getBoundingClientRect());
         return [...this.triangleDisplays.values()].map((td) => ({
             triangle: td.triangle,
             clientCenterCoord: td.getClientCenterCoord(),

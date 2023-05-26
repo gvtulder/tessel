@@ -4,6 +4,7 @@ import { GridDisplay } from "./GridDisplay.js";
 import { TriangleOnScreenMatch, TriangleOnScreenPosition } from "./TileDisplay.js";
 import { Tile, TileRotation } from 'src/grid/Tile.js';
 import { GameController } from './GameController.js';
+import { Coord } from 'src/grid/Triangle.js';
 
 export class TileDragEvent extends Event {
     tileDragSource : TileDragSource;
@@ -75,6 +76,25 @@ export class TileDragController extends EventTarget {
                     position.y += evt.dy;
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px) scale(${this.gridDisplay.scale / source.gridDisplay.scale})`;
 
+                    /*
+                    console.log('unitCircle',
+                                'target', this.gridDisplay.svgUnitCircle.getBoundingClientRect(),
+                                'source', source.gridDisplay.svgUnitCircle.getBoundingClientRect());
+                    */
+
+                    const movingOriginScreenPos = source.gridDisplay.getOriginScreenPosition();
+                    console.log('gridDisplay position',
+                                movingOriginScreenPos,
+                                this.gridDisplay.screenPositionToTriangleCoord(movingOriginScreenPos));
+                    /*
+                    const movingOriginScreenPos = source.gridDisplay.screenPositionToGridPosition([0, 0]);
+                    const fixedOriginScreenPos = this.gridDisplay.screenPositionToGridPosition([0, 0]);
+                    console.log('gridDisplay position',
+                                [movingOriginScreenPos[0] - fixedOriginScreenPos[0],
+                                 movingOriginScreenPos[1] - fixedOriginScreenPos[1]],
+                                this.gridDisplay.screenPositionToTriangleCoord(movingOriginScreenPos));
+                    */
+
                     if (this.autorotate) {
                         // figure out where we are
                         const movingPos = source.getTriangleOnScreenPosition();
@@ -126,6 +146,7 @@ export class TileDragController extends EventTarget {
                     position.y = 0;
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
                     this.dispatchEvent(new TileDragEvent(TileDragController.events.EndDrag, source));
+
                     /*
                     evt.target.style.transformOrigin = 'center';
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
@@ -133,6 +154,12 @@ export class TileDragController extends EventTarget {
                 },
             }
         });
+
+        this.gridDisplay.element.addEventListener('mouseover', (evt : PointerEvent) => {
+            const cursorPos : Coord = [evt.clientX, evt.clientY];
+            console.log('gridDisplay position',  cursorPos,
+                this.gridDisplay.screenPositionToTriangleCoord(cursorPos));
+        })
     }
 }
 

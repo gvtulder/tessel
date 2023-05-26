@@ -1,6 +1,6 @@
 
 import { Tile, TileShape } from './Tile.js';
-import { CoordId, Triangle, TriangleType } from './Triangle.js';
+import { Coord, CoordId, Triangle, TriangleType } from './Triangle.js';
 import { DEBUG } from '../settings.js';
 import { Pattern } from './Pattern.js';
 
@@ -229,6 +229,11 @@ export class Grid extends EventTarget {
             triangles.push(...g.map((c) => this.getOrAddTriangle(...c)));
         }
         return triangles;
+    }
+
+    gridPositionToTriangleCoord(gridPos : Coord) : Coord {
+        const triangle = this.getOrAddTriangle(0, 0);
+        return triangle.mapGridPositionToTriangleCoord(gridPos);
     }
 
 

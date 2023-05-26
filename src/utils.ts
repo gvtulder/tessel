@@ -86,3 +86,20 @@ export function angleDist(a : number, b : number) : number {
   const ba = (360 + b - a) % 360;
   return (ab < ba) ? ab : ba;
 }
+
+
+
+// https://stackoverflow.com/a/2049593
+function sign(p1 : Coord, p2 : Coord, p3 : Coord) : number {
+    return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1]);
+}
+export function pointInTriangle(pt : Coord, [v1, v2, v3] : readonly [Coord, Coord, Coord]) : boolean {
+    const d1 = sign(pt, v1, v2);
+    const d2 = sign(pt, v2, v3);
+    const d3 = sign(pt, v3, v1);
+
+    const has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+    const has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+    return !(has_neg && has_pos);
+}

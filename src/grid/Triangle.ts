@@ -1,4 +1,4 @@
-import { dist, wrapModulo } from 'src/utils.js';
+import { dist, pointInTriangle, wrapModulo } from 'src/utils.js';
 import { Grid } from './Grid.js';
 import { Tile } from './Tile.js';
 
@@ -20,6 +20,19 @@ export type Edge = { readonly from: Triangle, readonly to: Triangle };
 export type ColorGroup = number;
 export type TriangleColor = string;
 export type TileColors = readonly TriangleColor[];
+
+export type TriangleParams = {
+    shape?: number;
+    xAtOrigin?: number;
+    yAtOrigin?: number;
+    points?: readonly [Coord, Coord, Coord];
+    polyPoints?: ReadonlyArray<Coord>;
+    left?: number;
+    top?: number;
+    neighborOffsets?: ReadonlyArray<Coord>;
+    rotationOffsets?: ReadonlyArray<CoordEdge>;
+    rotationAngles?: readonly number[];
+}
 
 export class TriangleEvent extends Event {
     triangle : Triangle;
@@ -138,13 +151,13 @@ export abstract class Triangle extends EventTarget {
         this.coord = [x, y];
         this.coordId = CoordId(x, y);
 
-        this.calc();
+        Object.assign(this, this.calc(x, y));
     }
 
     /**
      * Populate the type-specific parameters.
      */
-    protected abstract calc();
+    protected abstract calc(x : number, y : number) : TriangleParams;
 
     /**
      * Center of the triangle polygon in grid coordinates.
@@ -171,6 +184,41 @@ export abstract class Triangle extends EventTarget {
      */
     get height(): number {
         return Math.max(...this.points.map((p) => p[1]));
+    }
+
+    /**
+     * Estimates the triangle coordinate for the grid position.
+     * @param gridPos the grid position
+     * @returns the closest triangle coordinate
+     */
+    protected abstract approxGridPositionToTriangleCoord(gridPos : Coord) : Coord;
+
+    /**
+     * Computes the closest triangle coordinate for the grid position.
+     * @param gridPos the grid position
+     * @returns the closest triangle coordinate
+     */
+    mapGridPositionToTriangleCoord(gridPos : Coord) : Coord {
+        // find an approximate starting point
+        const approx = this.approxGridPositionToTriangleCoord(gridPos);
+        // try the actual polygons
+        for (let r=0; r<100; r++) {
+            console.log('r', r);
+            for (let x=-r; x<r; x++) {
+                for (let y=-r; y<r; y++) {
+                    if (x==-r || x==r-1 || y==-r || y==r-1) {
+                        const params = this.calc(x + approx[0], y + approx[1]);
+                        if (pointInTriangle([
+                                gridPos[0] - params.left,
+                                gridPos[1] - params.top
+                            ], params.points)) {
+                            return [x + approx[0], y + approx[1]];
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**

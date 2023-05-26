@@ -2,7 +2,7 @@ import { TriangleDisplay } from './TriangleDisplay.js';
 import { TileDisplay, TriangleOnScreenMatch, TriangleOnScreenPosition } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
 import { Tile } from "../grid/Tile.js";
-import { Triangle } from "../grid/Triangle.js";
+import { Coord, Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
 import { TileDragSource } from './TileDragController.js';
@@ -14,11 +14,11 @@ export class GridDisplay extends EventTarget {
 
     svg : SVGElement;
     svgGrid : SVGElement;
+    svgUnitCircle : SVGElement;
     svgTriangles : SVGElement;
     svgConnectors : SVGElement;
 
     tileDisplays : Map<Tile, TileDisplay>;
-    triangleDisplays : Map<Triangle, TriangleDisplay>;
     connectorDisplay : ConnectorDisplay;
 
     left : number;
@@ -40,7 +40,6 @@ export class GridDisplay extends EventTarget {
         this.grid = grid;
 
         this.tileDisplays = new Map<Tile, TileDisplay>();
-        this.triangleDisplays = new Map<Triangle, TriangleDisplay>();
 
         this.build();
 
@@ -86,6 +85,14 @@ export class GridDisplay extends EventTarget {
         this.svgGrid = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this.svgGrid.setAttribute('class', 'svg-grid');
         this.svg.appendChild(this.svgGrid)
+
+        const unitCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        unitCircle.setAttribute('cx', '0');
+        unitCircle.setAttribute('cy', '0');
+        unitCircle.setAttribute('r', '1');
+        unitCircle.setAttribute('fill', 'transparent');
+        this.svgGrid.appendChild(unitCircle);
+        this.svgUnitCircle = unitCircle;
 
         this.svgTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this.svgTriangles.setAttribute('class', 'svg-tiles');
@@ -154,6 +161,46 @@ export class GridDisplay extends EventTarget {
             }
         }
         return closest;
+    }
+
+    getOriginScreenPosition() : Coord {
+        const rect = this.svgUnitCircle.getBoundingClientRect();
+        return [rect.left + rect.width / 2, rect.top + rect.height / 2];
+    }
+
+    /**
+     * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
+     * @param clientPos the client position
+     * @returns the coordinates in the SVG grid space
+     */
+    screenPositionToGridPosition(clientPos : Coord) : Coord {
+        const rect = this.svgUnitCircle.getBoundingClientRect();
+        const scale = rect.width;
+        const gridPos = [
+            (clientPos[0] - (rect.left + rect.width / 2) / scale),
+            (clientPos[1] - (rect.top + rect.height / 2) / scale),
+        ] as Coord;
+        return gridPos;
+    }
+
+    /**
+     * Maps the client position (from getBoundingClient rect) to a triangle.
+     * @param clientPos the client position
+     * @returns the triangle coordinates
+     */
+    screenPositionToTriangleCoord(clientPos : Coord) : Coord {
+        const rect = this.svgUnitCircle.getBoundingClientRect();
+        // radius of 1
+        const scale = rect.width / 2;
+
+        // position in grid space w.r.t. origin
+        const gridPos = [
+            ((clientPos[0] - (rect.left + rect.width / 2)) / scale) / SCALE,
+            ((clientPos[1] - (rect.top + rect.height / 2)) / scale) / SCALE,
+        ] as Coord;
+
+        const triangleCoord = this.grid.gridPositionToTriangleCoord(gridPos);
+        return triangleCoord;
     }
 
     update() {

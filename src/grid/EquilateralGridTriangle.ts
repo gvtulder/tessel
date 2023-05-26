@@ -1,18 +1,20 @@
-import { CoordEdge, Triangle } from './Triangle.js';
+import { Coord, CoordEdge, Triangle, TriangleParams } from './Triangle.js';
 import { O } from '../settings.js';
 import { wrapModulo } from '../utils.js';
 
 export class EquilateralGridTriangle extends Triangle {
-   protected calc() {
+    protected calc(x : number, y : number) : TriangleParams {
+        const p : TriangleParams = {};
+
         // triangle in a grid of equilateral triangles
         const height = Math.sqrt(3) / 2;
         const h = height / 3;
-        this.left = this.x + Math.floor(this.y / 6) * 0.5;
-        this.top = height * Math.floor(this.y / 6);
-        this.shape = wrapModulo(this.y, 6);
-        this.rotationAngles = [0, 60, 120, 180, 240, 300];
-        this.xAtOrigin = 0;
-        this.yAtOrigin = wrapModulo(this.y, 6);
+        p.left = x + Math.floor(y / 6) * 0.5;
+        p.top = height * Math.floor(y / 6);
+        p.shape = wrapModulo(y, 6);
+        p.rotationAngles = [0, 60, 120, 180, 240, 300];
+        p.xAtOrigin = 0;
+        p.yAtOrigin = wrapModulo(y, 6);
 
         // indices for rotation
         const shiftRotationCoords = (start : number) : CoordEdge[] => {
@@ -36,56 +38,65 @@ export class EquilateralGridTriangle extends Triangle {
             return edges;
         };
 
-        switch (this.shape) {
+        switch (p.shape) {
             case 0:
                 // top triangle pointing down
-                this.points = [[0, 0], [1, 0], [0.5, h]];
-                this.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, h + O], [0.5 - O, h + O], [0, 0]];
-                this.neighborOffsets = [[0, -1], [0, 2], [0, 1]];
-                this.rotationOffsets = shiftRotationCoords(2);
+                p.points = [[0, 0], [1, 0], [0.5, h]];
+                p.polyPoints = [[0, 0], [1 + O, 0], [0.5 + O, h + O], [0.5 - O, h + O], [0, 0]];
+                p.neighborOffsets = [[0, -1], [0, 2], [0, 1]];
+                p.rotationOffsets = shiftRotationCoords(2);
                 break;
             case 1:
                 // left triangle pointing up-right
-                this.points = [[0, 0], [0.5, h], [0.5, height]];
-                this.polyPoints = [[0, 0], [0.5, h], [0.5 + O, h], [0.5 + O, height + O], [0.5, height], [0, 0]];
-                this.neighborOffsets = [[-1, 3], [0, -1], [0, 1]];
-                this.rotationOffsets = shiftRotationCoords(0);
+                p.points = [[0, 0], [0.5, h], [0.5, height]];
+                p.polyPoints = [[0, 0], [0.5, h], [0.5 + O, h], [0.5 + O, height + O], [0.5, height], [0, 0]];
+                p.neighborOffsets = [[-1, 3], [0, -1], [0, 1]];
+                p.rotationOffsets = shiftRotationCoords(0);
                 break;
             case 2:
                 // right triangle pointing up-left
-                this.left += 0.5;
-                this.points = [[0, h], [0.5, 0], [0, height]];
-                this.polyPoints = [[0, h], [0.5, 0], [0.5 + O, 0], [0, height], [0, h]];
-                this.neighborOffsets = [[0, -2], [0, 1], [0, -1]];
-                this.rotationOffsets = shiftRotationCoords(4);
+                p.left += 0.5;
+                p.points = [[0, h], [0.5, 0], [0, height]];
+                p.polyPoints = [[0, h], [0.5, 0], [0.5 + O, 0], [0, height], [0, h]];
+                p.neighborOffsets = [[0, -2], [0, 1], [0, -1]];
+                p.rotationOffsets = shiftRotationCoords(4);
                 break;
             case 3:
                 // left triangle pointing bottom-right
-                this.left += 0.5;
-                this.points = [[0, height], [0.5, 0], [0.5, 2 * h]];
-                this.polyPoints = [[0, height], [0.5, 0], [0.5 + O, 0], [0.5 + O, 2 * h + O], [0, height], [0, height]];
-                this.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
-                this.rotationOffsets = shiftRotationCoords(1);
+                p.left += 0.5;
+                p.points = [[0, height], [0.5, 0], [0.5, 2 * h]];
+                p.polyPoints = [[0, height], [0.5, 0], [0.5 + O, 0], [0.5 + O, 2 * h + O], [0, height], [0, height]];
+                p.neighborOffsets = [[0, -1], [0, 1], [0, 2]];
+                p.rotationOffsets = shiftRotationCoords(1);
                 break;
             case 4:
                 // right triangle pointing bottom-left
-                this.left += 1;
-                this.points = [[0, 0], [0.5, height], [0, 2 * h]];
-                this.polyPoints = [[0, 0], [O, 0], [0.5 + O, height + O], [0, 2 * h + O], [0, 0]];
-                this.neighborOffsets = [[0, -1], [1, -3], [0, 1]];
-                this.rotationOffsets = shiftRotationCoords(3);
+                p.left += 1;
+                p.points = [[0, 0], [0.5, height], [0, 2 * h]];
+                p.polyPoints = [[0, 0], [O, 0], [0.5 + O, height + O], [0, 2 * h + O], [0, 0]];
+                p.neighborOffsets = [[0, -1], [1, -3], [0, 1]];
+                p.rotationOffsets = shiftRotationCoords(3);
                 break;
             case 5:
                 // bottom triangle pointing up
-                this.left += 0.5;
-                this.top += 2 * h;
-                this.points = [[0, h], [0.5, 0], [1, h]];
-                this.polyPoints = [[0, h], [0.5, 0], [1, h], [1 + O, h + O], [O, h + O], [0, h]];
-                this.neighborOffsets = [[0, -2], [0, -1], [0, 1]];
-                this.rotationOffsets = shiftRotationCoords(5);
+                p.left += 0.5;
+                p.top += 2 * h;
+                p.points = [[0, h], [0.5, 0], [1, h]];
+                p.polyPoints = [[0, h], [0.5, 0], [1, h], [1 + O, h + O], [O, h + O], [0, h]];
+                p.neighborOffsets = [[0, -2], [0, -1], [0, 1]];
+                p.rotationOffsets = shiftRotationCoords(5);
                 break;
             default:
                 console.log('invalid side!');
         }
+
+        return p;
+    }
+
+    protected approxGridPositionToTriangleCoord(gridPos : Coord) : Coord {
+        const height = Math.sqrt(3) / 2;
+        const approxY = Math.floor((gridPos[1] / height) * 6);
+        const approxX = Math.floor(gridPos[0] - Math.floor(approxY / 6) * 0.5);
+        return [ approxX, approxY ];
     }
 }

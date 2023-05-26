@@ -1,11 +1,14 @@
-import { CoordEdge, Triangle } from './Triangle.js';
+import { Coord, CoordEdge, Triangle, TriangleParams } from './Triangle.js';
 import { O } from '../settings.js';
 import { wrapModulo } from '../utils.js';
 
 export class HexGridTriangle extends Triangle {
-    protected calc() {
+    protected calc(x : number, y : number) : TriangleParams {
+        const p : TriangleParams = {};
+
+        const width = 1;
         const height = Math.sqrt(3) / 2;
-        this.rotationAngles = [0, 60, 120, 180, 240, 300];
+        p.rotationAngles = [0, 60, 120, 180, 240, 300];
 
         // indices for rotation
         const shiftRotationCoords = (start : number) : CoordEdge[] => {
@@ -28,27 +31,37 @@ export class HexGridTriangle extends Triangle {
         };
 
         // equilateral triangle in a hexagonal grid
-        if (wrapModulo(this.x, 2) == wrapModulo(this.y, 2)) {
+        if (wrapModulo(x, 2) == wrapModulo(y, 2)) {
             // triangle pointing down
-            this.points = [[0, 0], [1, 0], [0.5, height]];
-            this.polyPoints = [[0, 0], [1 + O, 0], [0.5, height + O], [0.5, height], [0, 0]];
-            this.neighborOffsets = [[0, -1], [1, 0], [-1, 0]];
-            this.rotationOffsets = shiftRotationCoords(0);
-            this.shape = 0;
-            this.xAtOrigin = 0;
-            this.yAtOrigin = 0;
+            p.points = [[0, 0], [1, 0], [0.5, height]];
+            p.polyPoints = [[0, 0], [1 + O, 0], [0.5, height + O], [0.5, height], [0, 0]];
+            p.neighborOffsets = [[0, -1], [1, 0], [-1, 0]];
+            p.rotationOffsets = shiftRotationCoords(0);
+            p.shape = 0;
+            p.xAtOrigin = 0;
+            p.yAtOrigin = 0;
         } else {
             // triangle pointing up
-            this.points = [[0.5, 0], [1, height], [0, height]];
-            this.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height], [1 + O, height + O], [0, height + O], [0, height], [0.5, 0]];
-            this.neighborOffsets = [[-1, 0], [1, 0], [0, 1]];
-            this.rotationOffsets = shiftRotationCoords(1);
-            this.shape = 1;
-            this.xAtOrigin = 1;
-            this.yAtOrigin = 0;
+            p.points = [[0.5, 0], [1, height], [0, height]];
+            p.polyPoints = [[0.5, 0], [0.5 + O, 0], [1 + O, height], [1 + O, height + O], [0, height + O], [0, height], [0.5, 0]];
+            p.neighborOffsets = [[-1, 0], [1, 0], [0, 1]];
+            p.rotationOffsets = shiftRotationCoords(1);
+            p.shape = 1;
+            p.xAtOrigin = 1;
+            p.yAtOrigin = 0;
         }
 
-        this.left = this.x * 0.5 * this.width;
-        this.top = this.y * this.height;
+        p.left = x * 0.5 * width;
+        p.top = y * height;
+
+        return p;
+    }
+
+    protected approxGridPositionToTriangleCoord(gridPos : Coord) : Coord {
+        const height = Math.sqrt(3) / 2;
+        return [
+            Math.floor(gridPos[0] / (0.5 * height)),
+            Math.floor(gridPos[1] / height),
+        ];
     }
 }

@@ -3,7 +3,8 @@ import interact from '@interactjs/interact/index';
 import { GameSettings } from 'src/game/Game.js';
 import { Grid } from "src/grid/Grid.js";
 import { MainMenuGridDisplay } from "./GridDisplay.js";
-
+import * as SaveGames from 'src/saveGames.js';
+import { Pattern } from 'src/grid/Pattern.js';
 
 export class MenuEvent extends Event {
     gameSettings : GameSettings;
@@ -30,16 +31,18 @@ export class MainMenuDisplay extends EventTarget {
         gameList.className = 'gameList';
         div.appendChild(gameList);
 
-        for (const gameSettings of [TriangleDefault, SquareDefault, HexDefault]) {
+        for (const saveGameId of ['triangle', 'square', 'hex']) {
+            const gameSettings = SaveGames.lookup.get(saveGameId);
             const exampleTile = document.createElement('div');
             exampleTile.className = 'gameList-exampleTile';
             gameList.appendChild(exampleTile);
 
-            const grid = new Grid(gameSettings.gridType);
-            const gridDisplay = new MainMenuGridDisplay(grid);
-            const tile = new gameSettings.gridType.createTile(grid, 0, 0);
+            const pattern = new Pattern(gameSettings.triangleType, gameSettings.pattern.shapes);
+            const grid = new Grid(gameSettings.triangleType, pattern);
+            const tile = grid.getOrAddTile(0, 0);
             tile.colors = gameSettings.initialTile;
-            grid.addTile(tile);
+
+            const gridDisplay = new MainMenuGridDisplay(grid);
             exampleTile.appendChild(gridDisplay.element);
 
             gridDisplay.rescaleGrid();

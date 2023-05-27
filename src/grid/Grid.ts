@@ -67,6 +67,11 @@ export class Grid extends EventTarget {
         }
     }
 
+    destroy() {
+        this._tiles.clear();
+        this._triangles.clear();
+    }
+
     get tiles() : Tile[] {
         return [...this._tiles.values()];
     }

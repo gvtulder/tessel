@@ -357,7 +357,7 @@ svg .tile-segments {
 }
 
 .tileOnStack-rotatable.animated {
-  transition: transform 100ms ease;
+  transition: transform 400ms ease;
 }
 .tileOnStack.dragging .tileOnStack-rotatable.animated {
   transition: transform 200ms;

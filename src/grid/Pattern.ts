@@ -31,11 +31,6 @@ export class Pattern {
     readonly numColorGroups : number;
 
     /**
-     * Dummy grid for computations.
-     */
-    private grid : Grid;
-
-    /**
      * Initializes a new pattern.
      *
      * @param triangleType the triangle / grid type
@@ -43,7 +38,6 @@ export class Pattern {
      */
     constructor(triangleType : TriangleType, shapes : TileShape[]) {
         this.triangleType = triangleType;
-        this.grid = new Grid(triangleType, this);
         this.shapes = shapes;
 
         // TODO what if there are multiple types of tile?
@@ -56,8 +50,9 @@ export class Pattern {
      * Computes the properties (period, step etc.) of this pattern.
      */
     computeProperties() {
-        this.computePeriods();
-        this.computeTileVariants();
+        const grid = new Grid(this.triangleType, this);
+        this.computePeriods(grid);
+        this.computeTileVariants(grid);
     }
 
     /**
@@ -135,13 +130,14 @@ export class Pattern {
 
     /**
      * Compute the rotation variants of the tiles in this pattern.
+     * @param grid a dummy grid to use for the computations
      */
-    computeTileVariants() {
+    computeTileVariants(grid : Grid) {
         const variants : RotationSet[] = [];
 
         for (let shapeIdx=0; shapeIdx<this.shapes.length; shapeIdx++) {
             // construct a tile of this shape
-            const tile = this.constructTile(this.grid, shapeIdx, 0);
+            const tile = this.constructTile(grid, shapeIdx, 0);
             // compute the color-sensitive rotation variants
             const rotationVariants = tile.computeRotationVariants(true);
 
@@ -168,8 +164,9 @@ export class Pattern {
 
     /**
      * Computes the period and step size of the pattern, given the current shapes.
+     * @param grid a dummy grid to use for the computations
      */
-    computePeriods() {
+    computePeriods(grid : Grid) {
         const allX : number[] = [];
         const allY : number[] = [];
         for (const shape of this.shapes) {
@@ -196,7 +193,7 @@ export class Pattern {
                     for (const offset of colorGroup) {
                         const coordId = CoordId(offset);
                         // this triangle
-                        const triangle = this.grid.getOrAddTriangle(offset[0], offset[1]);
+                        const triangle = grid.getOrAddTriangle(offset[0], offset[1]);
                         trianglesInShape.push(triangle);
                         if (seen.has(coordId)) return -1;
                         seen.add(coordId);
@@ -211,7 +208,7 @@ export class Pattern {
                                 const s = CoordId(x, y);
                                 // console.log('triangle', x, y);
                                 if (seen.has(s)) return -1;
-                                const shape = this.grid.getOrAddTriangle(x, y).shape;
+                                const shape = grid.getOrAddTriangle(x, y).shape;
                                 if (shape != expectedShape) return -1;
                                 seen.add(s);
                             }

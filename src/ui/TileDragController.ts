@@ -198,5 +198,5 @@ export interface TileDragSource {
     endDrag(successful : boolean);
     resetDragStatus();
     startAutorotate(rotation : TileRotation);
-    resetAutorotate();
+    resetAutorotate(keepRotation : boolean);
 }

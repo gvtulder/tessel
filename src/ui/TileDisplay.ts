@@ -14,11 +14,7 @@ export type TriangleOnScreenMatch = {
     fixed: Triangle,
 };
 
-export class TileDisplay extends EventTarget {
-    static events = {
-        UpdateTile: 'updatetile',
-    };
-
+export class TileDisplay {
     tile : Tile;
 
     gridDisplay : GridDisplay;
@@ -27,16 +23,10 @@ export class TileDisplay extends EventTarget {
     svgTriangles : SVGElement;
 
     constructor(gridDisplay: GridDisplay, tile: Tile) {
-        super();
         this.gridDisplay = gridDisplay;
         this.triangleDisplays = new Map<Triangle, TriangleDisplay>();
         this.tile = tile;
         this.build();
-
-        this.tile.addEventListener(Tile.events.UpdateTriangles, () => {
-            this.dispatchEvent(new Event(TileDisplay.events.UpdateTile));
-            this.redraw();
-        });
     }
 
     build() {
@@ -69,6 +59,7 @@ export class TileDisplay extends EventTarget {
             if (!triangleDisplay) {
                 triangleDisplay = new TriangleDisplay(triangle);
                 this.triangleDisplays.set(triangle, triangleDisplay);
+                this.gridDisplay.triangleDisplays.set(triangle, triangleDisplay);
             }
             const left = (triangle.left - this.tile.left) * SCALE ;
             const top = (triangle.top - this.tile.top) * SCALE

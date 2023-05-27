@@ -60,10 +60,10 @@ export class TriangleEvent extends Event {
     }
 }
 
-export abstract class Triangle extends EventTarget {
+export abstract class Triangle {
     static events = {
-        ChangeColor: 'changecolor',
-        ChangeColorGroup: 'changecolor',
+        ChangeColor: 'changetilecolor',
+        ChangeColorGroup: 'changetilecolor',
         ChangeTile: 'changetile',
     };
 
@@ -139,8 +139,6 @@ export abstract class Triangle extends EventTarget {
      * @param y
      */
     constructor(grid : Grid, x: number, y: number) {
-        super();
-
         this.grid = grid;
         this.x = x;
         this.y = y;
@@ -192,6 +190,10 @@ export abstract class Triangle extends EventTarget {
      * @returns the closest triangle coordinate
      */
     protected abstract approxGridPositionToTriangleCoord(gridPos : Coord) : Coord;
+
+    private dispatchEvent(evt : Event) {
+        if (this.grid) this.grid.dispatchEvent(evt);
+    }
 
     /**
      * Computes the closest triangle coordinate for the grid position.

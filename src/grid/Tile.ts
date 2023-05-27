@@ -25,7 +25,7 @@ export class TileEvent extends Event {
     }
 }
 
-export class Tile extends EventTarget {
+export class Tile {
     static events = {
         UpdateTriangles: 'updatetriangles',
         UpdateColors: 'updatecolors',
@@ -45,8 +45,6 @@ export class Tile extends EventTarget {
     protected _colors: TileColors;
 
     constructor(grid: Grid, x: number, y: number, triangles : Triangle[][]) {
-        super();
-
         this.grid = grid;
         this.x = x;
         this.y = y;
@@ -56,6 +54,10 @@ export class Tile extends EventTarget {
 
         this._triangles = new Map<Triangle, number>();
         this.updateTriangles(triangles);
+    }
+
+    private dispatchEvent(evt : Event) {
+        if (this.grid) this.grid.dispatchEvent(evt);
     }
 
     /**

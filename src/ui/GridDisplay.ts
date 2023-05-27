@@ -1,7 +1,7 @@
 import { TileDisplay, TriangleOnScreenMatch } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
-import { Tile } from "../grid/Tile.js";
-import { Coord, Triangle } from "../grid/Triangle.js";
+import { Tile, TileEvent } from "../grid/Tile.js";
+import { Coord, Triangle, TriangleEvent } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
 import { TileDragSource } from './TileDragController.js';
@@ -20,6 +20,7 @@ export class GridDisplay extends EventTarget {
 
     coordinateMapper : CoordinateMapper;
 
+    triangleDisplays: Map<Triangle, TriangleDisplay>;
     tileDisplays : Map<Tile, TileDisplay>;
     connectorDisplay : ConnectorDisplay;
 
@@ -42,6 +43,7 @@ export class GridDisplay extends EventTarget {
         this.container = container;
 
         this.tileDisplays = new Map<Tile, TileDisplay>();
+        this.triangleDisplays = new Map<Triangle, TriangleDisplay>();
 
         this.build();
 
@@ -56,6 +58,17 @@ export class GridDisplay extends EventTarget {
 
         this.grid.addEventListener(Grid.events.RemoveTile, (evt: GridEvent) => {
             this.removeTile(evt.tile);
+        });
+
+        this.grid.addEventListener(Triangle.events.ChangeColor, (evt: TriangleEvent) => {
+            const td = this.triangleDisplays.get(evt.triangle);
+            if (td) td.updateColor();
+        });
+
+        this.grid.addEventListener(Tile.events.UpdateTriangles, (evt: TileEvent) => {
+            const td = this.tileDisplays.get(evt.tile);
+            if (td) td.redraw();
+            this.updateDimensions();
         });
 
         for (const tile of this.grid.tiles) {
@@ -115,9 +128,6 @@ export class GridDisplay extends EventTarget {
             const tileDisplay = new TileDisplay(this, tile);
             this.tileDisplays.set(tile, tileDisplay);
             this.svgTriangles.appendChild(tileDisplay.svgTriangles);
-            tileDisplay.addEventListener(TileDisplay.events.UpdateTile, () => {
-                this.updateDimensions();
-            });
         }
         this.updateDimensions();
     }

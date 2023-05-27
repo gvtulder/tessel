@@ -19,6 +19,7 @@ export class GameDisplay extends EventTarget {
 
     autorotate : Toggle;
     hints : Toggle;
+    snap : Toggle;
 
     constructor(game : Game) {
         super();
@@ -78,6 +79,12 @@ export class GameDisplay extends EventTarget {
             false
         );
         toggles.appendChild(this.hints.element);
+        this.snap = new Toggle(
+            icons.magnetIcon,
+            'Snap',
+            false
+        );
+        toggles.appendChild(this.snap.element);
 
 
         const tileDragController = new TileDragController(this.gridDisplay);
@@ -111,6 +118,12 @@ export class GameDisplay extends EventTarget {
             localStorage.setItem('hints', this.hints.checked ? 'yes' : null);
         });
         this.hints.checked = localStorage.getItem('hints') == 'yes';
+
+        this.snap.addEventListener(Toggle.events.Change, () => {
+            tileDragController.snap = this.snap.checked;
+            localStorage.setItem('snap', this.snap.checked ? 'yes' : null);
+        });
+        this.snap.checked = localStorage.getItem('snap') == 'yes';
 
         this.rescale();
     }

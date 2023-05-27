@@ -6,6 +6,7 @@ import { Tile, TileRotation } from 'src/grid/Tile.js';
 import { GameController } from './GameController.js';
 import { Coord, Triangle } from 'src/grid/Triangle.js';
 import { DEBUG } from 'src/settings.js';
+import { dist } from 'src/utils.js';
 
 export class TileDragEvent extends Event {
     tileDragSource : TileDragSource;
@@ -26,6 +27,7 @@ export class TileDragController extends EventTarget {
 
     autorotate : boolean;
     hints : boolean;
+    snap : boolean;
 
     constructor(gridDisplay : GridDisplay) {
         super();
@@ -52,7 +54,7 @@ export class TileDragController extends EventTarget {
                     this.dispatchEvent(new TileDragEvent(TileDragController.events.StartDrag, source));
 
                     // precompute the placeholder tiles where this tile would fit
-                    if (this.autorotate || this.hints) {
+                    if (this.autorotate || this.hints || this.snap) {
                         autorotateCache.clear();
                         // find possible locations where this tile would fit
                         for (const placeholder of this.gridDisplay.grid.placeholderTiles) {
@@ -94,6 +96,7 @@ export class TileDragController extends EventTarget {
                                 const rotation = autorotateCache.get(autorotateCurrentTarget);
                                 if (rotation) {
                                     // this tile would fit
+                                    if (autorotateTimeout) window.clearTimeout(autorotateTimeout);
                                     autorotateTimeout = window.setTimeout(() => {
                                         source.startAutorotate(rotation);
                                     }, 100);
@@ -106,9 +109,37 @@ export class TileDragController extends EventTarget {
                                 window.clearTimeout(autorotateTimeout);
                                 autorotateTimeout = null;
                             }
-                            source.resetAutorotate();
+                            autorotateTimeout = window.setTimeout(() => {
+                                // source.resetAutorotate();
+                            }, 100);
                         }
                         // console.log('MOVE', 'closestPair', closestPair);
+                    }
+
+                    if (this.snap) {
+                        // snapping?
+                        const movingTriangle = source.tile.triangles[0];
+                        const movingPos = source.gridDisplay.triangleToScreenPosition(movingTriangle)
+                        const fixedTriangleCoord = this.gridDisplay.screenPositionToTriangleCoord(movingPos);
+
+                        if (fixedTriangleCoord) {
+                            const rotatedMovingTriangle = movingTriangle.getRotationEdge(source.rotation.steps).to;
+                            const centerSnapFrom = source.gridDisplay.triangleToScreenPosition(movingTriangle);
+                            const fixedTriangle = this.gridDisplay.grid.getOrAddTriangle(...fixedTriangleCoord);
+                            const centerSnapTo = this.gridDisplay.triangleToScreenPosition(fixedTriangle);
+                            if (fixedTriangle &&
+                                fixedTriangle.tile &&
+                                fixedTriangle.tile.isPlaceholder() &&
+                                fixedTriangle.shape == rotatedMovingTriangle.shape &&
+                                dist(centerSnapFrom, centerSnapFrom) < 30) {
+                                const rot = autorotateCache.get(fixedTriangle.tile);
+                                if (rot && rot.steps == source.rotation.steps) {
+                                    const snap = { x: position.x + centerSnapTo[0] - centerSnapFrom[0],
+                                                y: position.y + centerSnapTo[1] - centerSnapFrom[1] };
+                                    evt.target.style.transform = `translate(${snap.x}px, ${snap.y}px) scale(${this.gridDisplay.scale / source.gridDisplay.scale})`;
+                                }
+                            }
+                        }
                     }
                 },
                 end: (evt : DragEvent) => {

@@ -237,7 +237,8 @@ svg .tile-segments {
 .gameDisplay-toggles {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 .gameDisplay-toggles .game-toggle {
   padding: 10px;

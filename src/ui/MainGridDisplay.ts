@@ -76,10 +76,10 @@ export class MainGridDisplay extends GridDisplay {
         }
     }
 
-    dropTile(source : TileDragSource, closestPair : TriangleOnScreenMatch) : boolean {
-        const targetTile = closestPair.fixed.triangle.tile;
+    dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
+        const targetTile = pair.fixed.tile;
         if (targetTile && targetTile.isPlaceholder()) {
-            return this.gameDisplay.game.placeTile(source.tile, source.rotation, closestPair.moving.triangle, closestPair.fixed.triangle, source.indexOnStack);
+            return this.gameDisplay.game.placeTile(source.tile, source.rotation, pair.moving, pair.fixed, source.indexOnStack);
         }
         return false;
     }

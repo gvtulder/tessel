@@ -1,10 +1,10 @@
 import type { Interactable, DragEvent } from '@interactjs/types';
 
 import { GridDisplay } from "./GridDisplay.js";
-import { TriangleOnScreenMatch, TriangleOnScreenPosition } from "./TileDisplay.js";
+import { TriangleOnScreenMatch } from "./TileDisplay.js";
 import { Tile, TileRotation } from 'src/grid/Tile.js';
 import { GameController } from './GameController.js';
-import { Coord } from 'src/grid/Triangle.js';
+import { Coord, Triangle } from 'src/grid/Triangle.js';
 import { DEBUG } from 'src/settings.js';
 
 export class TileDragEvent extends Event {
@@ -80,18 +80,23 @@ export class TileDragController extends EventTarget {
 
                     if (this.autorotate) {
                         // figure out where we are
-                        const movingPos = source.getTriangleOnScreenPosition();
-                        const closestPair = this.gridDisplay.findClosestTriangleFromScreenPosition(movingPos);
-                        if (closestPair && closestPair.dist < 100 && closestPair.fixed.triangle.tile) {
-                            if (autorotateCurrentTarget !== closestPair.fixed.triangle.tile) {
+                        const movingTriangle = source.tile.triangles[0];
+                        const movingPos = source.gridDisplay.triangleToScreenPosition(movingTriangle)
+                        // match moving to fixed
+                        const fixedTriangleCoord = this.gridDisplay.screenPositionToTriangleCoord(movingPos);
+                        const fixedTriangle = this.gridDisplay.grid.getTriangle(...fixedTriangleCoord);
+
+                        // triangle matched?
+                        if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.isPlaceholder()) {
+                            if (autorotateCurrentTarget !== fixedTriangle.tile) {
                                 // autorotate after a small delay
-                                autorotateCurrentTarget = closestPair.fixed.triangle.tile;
+                                autorotateCurrentTarget = fixedTriangle.tile;
                                 const rotation = autorotateCache.get(autorotateCurrentTarget);
                                 if (rotation) {
                                     // this tile would fit
                                     autorotateTimeout = window.setTimeout(() => {
                                         source.startAutorotate(rotation);
-                                    }, 200);
+                                    }, 100);
                                 }
                             }
                         } else {
@@ -108,14 +113,17 @@ export class TileDragController extends EventTarget {
                 },
                 end: (evt : DragEvent) => {
                     // figure out where we are
-                    const movingPos = source.getTriangleOnScreenPosition();
-                    const closestPair = this.gridDisplay.findClosestTriangleFromScreenPosition(movingPos);
+                    const movingTriangle = source.tile.triangles[0];
+                    const movingPos = source.gridDisplay.triangleToScreenPosition(movingTriangle)
+                    // match moving to fixed
+                    const fixedTriangleCoord = this.gridDisplay.screenPositionToTriangleCoord(movingPos);
+                    const fixedTriangle = this.gridDisplay.grid.getTriangle(...fixedTriangleCoord);
 
                     let successful = false;
-                    if (closestPair && closestPair.dist < 50) {
-                        successful = this.gridDisplay.dropTile(source, closestPair);
+                    if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.isPlaceholder()) {
+                        successful = this.gridDisplay.dropTile(source, { fixed: fixedTriangle, moving: movingTriangle });
                     }
-                    console.log('DROPPED', 'closestPair', closestPair, successful ? 'success' : 'no success');
+                    console.log('DROPPED', movingTriangle, fixedTriangle, successful ? 'success' : 'no success');
 
                     for (const tsd of this.gridDisplay.tileDisplays.values()) {
                         tsd.removeHighlightHint();
@@ -153,7 +161,6 @@ export interface TileDragSource {
     tile : Tile;
     rotation : TileRotation;
     indexOnStack? : number;
-    getTriangleOnScreenPosition() : TriangleOnScreenPosition[];
     getDraggable() : Interactable;
     startDrag();
     endDrag(successful : boolean);

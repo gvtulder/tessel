@@ -1,7 +1,7 @@
 import type { Interactable } from '@interactjs/types';
 
 import { Triangle } from 'src/grid/Triangle.js';
-import { dist, shrinkOutline } from 'src/utils.js';
+import { shrinkOutline } from 'src/utils.js';
 import { Tile } from "../grid/Tile.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { DEBUG, SCALE } from '../settings.js';
@@ -9,14 +9,9 @@ import { GridDisplay } from './GridDisplay.js';
 import { TriangleDisplay } from './TriangleDisplay.js';
 
 
-export type TriangleOnScreenPosition = {
-    triangle : Triangle,
-    clientCenterCoord : [number, number],
-}
 export type TriangleOnScreenMatch = {
-    moving: TriangleOnScreenPosition,
-    fixed: TriangleOnScreenPosition,
-    dist: number,
+    moving: Triangle,
+    fixed: Triangle,
 };
 
 export class TileDisplay extends EventTarget {
@@ -93,39 +88,6 @@ export class TileDisplay extends EventTarget {
         const roundPath = roundPathCorners(path, 8, false);
 
         this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
-    }
-
-    getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
-        return [...this.triangleDisplays.values()].map((td) => ({
-            triangle: td.triangle,
-            clientCenterCoord: td.getClientCenterCoord(),
-        }));
-    }
-
-    findClosestTriangleFromScreenPosition(pos : TriangleOnScreenPosition[]) : TriangleOnScreenMatch {
-        // check if the points are inside this tile
-        const rect = this.svgTriangles.getBoundingClientRect();
-        pos = pos.filter((p) => (
-            rect.left <= p.clientCenterCoord[0] &&
-            p.clientCenterCoord[0] <= rect.left + rect.width &&
-            rect.top <= p.clientCenterCoord[1] &&
-            p.clientCenterCoord[1] <= rect.top + rect.height
-        ));
-
-        // look for matching triangles
-        let closestDist = 0;
-        let closestPair : TriangleOnScreenMatch = null;
-        for (const thisPos of this.getTriangleOnScreenPosition()) {
-            for (const p of pos) {
-                const d = dist(thisPos.clientCenterCoord, p.clientCenterCoord);
-                if (closestPair === null || d < closestDist) {
-                    closestPair = { moving: p, fixed: thisPos, dist: d }
-                    closestDist = d;
-                }
-
-            }
-        }
-        return closestPair;
     }
 
     hide() {

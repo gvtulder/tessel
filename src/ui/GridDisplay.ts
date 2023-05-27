@@ -1,5 +1,4 @@
-import { TriangleDisplay } from './TriangleDisplay.js';
-import { TileDisplay, TriangleOnScreenMatch, TriangleOnScreenPosition } from './TileDisplay.js';
+import { TileDisplay, TriangleOnScreenMatch } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
 import { Tile } from "../grid/Tile.js";
 import { Coord, Triangle } from "../grid/Triangle.js";
@@ -145,25 +144,17 @@ export class GridDisplay extends EventTarget {
         this.rescaleGrid();
     }
 
-    getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
-        const t : TriangleOnScreenPosition[] = [];
-        for (const td of this.tileDisplays.values()) {
-            t.push(...td.getTriangleOnScreenPosition());
-        }
-        return t;
-    }
-
-    findClosestTriangleFromScreenPosition(pos : TriangleOnScreenPosition[]) : TriangleOnScreenMatch {
-        let closestDist = 0;
-        let closest : TriangleOnScreenMatch = null;
-        for (const tsd of this.tileDisplays.values()) {
-            const pair = tsd.findClosestTriangleFromScreenPosition(pos);
-            if (pair && (closest === null || pair.dist < closestDist)) {
-                closest = pair;
-                closestDist = pair.dist;
-            }
-        }
-        return closest;
+    /**
+     * Returns the screen coordinates of the triangle center.
+     * @param triangle the triangle
+     * @returns the pixel coordinates
+     */
+    triangleToScreenPosition(triangle : Triangle) : Coord {
+        const triangleCenter = triangle.center;
+        return this.coordinateMapper.gridToScreen([
+            triangle.left + triangleCenter[0],
+            triangle.top + triangleCenter[1],
+        ]);
     }
 
     /**
@@ -197,7 +188,7 @@ export class GridDisplay extends EventTarget {
         return;
     }
 
-    dropTile(source : TileDragSource, closestPair : TriangleOnScreenMatch) : boolean {
+    dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
         return false;
     }
 }

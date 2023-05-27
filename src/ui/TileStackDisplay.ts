@@ -5,7 +5,6 @@ import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
 import { Tile, TileRotation } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
-import { TriangleOnScreenPosition } from "./TileDisplay.js";
 import { TileDragController, TileDragSource } from './TileDragController.js';
 import { Pattern } from 'src/grid/Pattern.js';
 
@@ -193,10 +192,6 @@ class SingleTileOnStackDisplay implements TileDragSource {
             this.angle = (360 + this.angle) % 360;
             this.rotatable.style.transform = `rotate(${this.angle}deg)`;
         }
-    }
-
-    getTriangleOnScreenPosition() : TriangleOnScreenPosition[] {
-        return this.gridDisplay.getTriangleOnScreenPosition();
     }
 
     initInteractable() {

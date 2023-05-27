@@ -29,7 +29,7 @@ div, p, input, span {
   position: absolute;
   right: 0;
   top: 0;
-  width: 120px;
+  width: 150px;
   height: 100%;
   padding-top: 350px;
   background: #ccc;
@@ -192,7 +192,7 @@ svg .tile-segments {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 120px;
+  width: 150px;
   background: #bbb;
   height: 100%;
   text-align: center;
@@ -209,6 +209,8 @@ svg .tile-segments {
 .gameDisplay-buttons {
   order: 3;
   margin: 0 0 10px 0;
+  display: flex;
+  flex-direction: row;
 }
 .gameDisplay-toggles {
   order: 4;
@@ -216,12 +218,12 @@ svg .tile-segments {
 }
 
 .gameDisplay-buttons .game-button {
-  padding: 15px 20px;
+  padding: 10px 10px;
   cursor: pointer;
 }
 .gameDisplay-buttons .game-button svg {
-  width: 50px;
-  height: 50px;
+  width: 46px;
+  height: 46px;
   transform: scale(1);
   transition-property: tranform;
   transition-duration: 100ms;
@@ -237,15 +239,14 @@ svg .tile-segments {
 .gameDisplay-toggles {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
+  justify-content: center;
 }
 .gameDisplay-toggles .game-toggle {
-  padding: 10px;
+  padding: 5px;
   cursor: pointer;
   background: #aaa;
-  margin: 5px;
-  border-radius: 10px;
+  margin: 4px;
+  border-radius: 6px;
 
   transform: scale(1);
   transition-property: tranform;
@@ -253,8 +254,8 @@ svg .tile-segments {
   fill: #777;
 }
 .gameDisplay-toggles .game-toggle svg {
-  width: 20px;
-  height: 20px;
+  width: 23px;
+  height: 23px;
 }
 .gameDisplay-toggles .game-toggle.enabled {
   background: #777;
@@ -659,7 +660,7 @@ svg .tile-segments {
   .controlbar {
     flex-direction: row;
     width: auto;
-    height: 120px;
+    height: 150px;
   }
   .scoreDisplay {
     margin: 0 10px 0 0;
@@ -681,9 +682,7 @@ svg .tile-segments {
   }
   .gameDisplay-buttons {
     margin: 0;
-  }
-  .gameDisplay-buttons .game-button {
-    display: inline-block;
+    flex-direction: column;
   }
   .gameDisplay-toggles {
     flex-direction: column;

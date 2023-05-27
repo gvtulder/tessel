@@ -50,9 +50,13 @@ export class Pattern {
      * Computes the properties (period, step etc.) of this pattern.
      */
     computeProperties() {
+        const start = Date.now();
         const grid = new Grid(this.triangleType, this);
         this.computePeriods(grid);
         this.computeTileVariants(grid);
+        grid.destroy();
+        const end = Date.now();
+        console.log(`Analyzed pattern in ${(end - start) / 1000} seconds`);
     }
 
     /**
@@ -167,81 +171,111 @@ export class Pattern {
      * @param grid a dummy grid to use for the computations
      */
     computePeriods(grid : Grid) {
-        const allX : number[] = [];
-        const allY : number[] = [];
-        for (const shape of this.shapes) {
-            for (const colorGroup of shape) {
-                for (const offset of colorGroup) {
-                    allX.push(offset[0]);
-                    allY.push(offset[1]);
-                }
+        // create one triangle to get the parameters
+        const protoTriangle = grid.getOrAddTriangle(0, 0);
+        const minGridPeriodX = protoTriangle.tileMinGridPeriodX;
+        const minGridPeriodY = protoTriangle.tileMinGridPeriodY;
+        const maxGridPeriodX = protoTriangle.tileGridPeriodX;
+        const maxGridPeriodY = protoTriangle.tileGridPeriodY;
+
+        // calculate the shapes of the triangle grid
+        const triangleShapes : number[][] = [];
+        for (let x=0; x<maxGridPeriodX; x++) {
+            triangleShapes[x] = [];
+            for (let y=0; y<maxGridPeriodY; y++) {
+                const p = protoTriangle.getParameters(x, y);
+                triangleShapes[x].push(p.shape);
             }
         }
-        const minX = Math.min(...allX);
-        const minY = Math.min(...allY);
-        const maxX = Math.max(...allX);
-        const maxY = Math.max(...allY);
-        const maxPeriodX = maxX - minX + 1;
-        const maxPeriodY = maxY - minY + 1;
+
+        // collect all of the coordinates and shapes for the initial pattern
+        const coordinates : Coord[] = [];
+        for (const shape of this.shapes) {
+            for (const coords of shape) {
+                coordinates.push(...coords);
+            }
+        }
 
         const checkPeriodFits = (periodX : number, stepX : number, stepY : number) : number => {
-            // returns the number of touching triangles
-            const trianglesInShape : Triangle[] = [];
-            const seen = new Set<string>();
-            for (const shape of this.shapes) {
-                for (const colorGroup of shape) {
-                    for (const offset of colorGroup) {
-                        const coordId = CoordId(offset);
-                        // this triangle
-                        const triangle = grid.getOrAddTriangle(offset[0], offset[1]);
-                        trianglesInShape.push(triangle);
-                        if (seen.has(coordId)) return -1;
-                        seen.add(coordId);
-                        const expectedShape = triangle.shape;
+            // returns the tightness of the pattern fit
+            const marked = new Set<CoordId>();
+            let touching = 0;
+            for (let r=0; r<10; r++) {
+                for (let j=0; j<=r; j++) {
+                    for (let i=0; i<=r; i++) {
+                        if (j != r && i != r) continue;
 
-                        // check repetitions in both directions
-                        for (let i=-periodX; i<2 * periodX; i++) {
-                            for (let j=-2; j<3; j++) {
-                                if (i==0 && j==0) continue;
-                                const x = i * periodX + j * stepX + offset[0];
-                                const y = j * stepY + offset[1];
-                                const s = CoordId(x, y);
-                                // console.log('triangle', x, y);
-                                if (seen.has(s)) return -1;
-                                const shape = grid.getOrAddTriangle(x, y).shape;
-                                if (shape != expectedShape) return -1;
-                                seen.add(s);
+                        for (let c=0; c<coordinates.length; c++) {
+                            const coord = coordinates[c];
+                            const x = i * periodX + j * stepX + coord[0];
+                            const y = j * stepY + coord[1];
+
+                            // the triangle shapes should match
+                            if (triangleShapes[((coord[0] % maxGridPeriodX) + maxGridPeriodX) % maxGridPeriodX][
+                                               ((coord[1] % maxGridPeriodY) + maxGridPeriodY) % maxGridPeriodY] !=
+                                triangleShapes[((x % maxGridPeriodX) + maxGridPeriodX) % maxGridPeriodX][
+                                               ((y % maxGridPeriodY) + maxGridPeriodY) % maxGridPeriodY]) {
+                                return null;
                             }
+
+                            const coordIdOffset = `${x} ${y}`;
+
+                            // it should not yet belong to a tile
+                            if (marked.has(coordIdOffset)) {
+                                return null;
+                            }
+                            marked.add(coordIdOffset);
+
+                            // estimate for touching triangles,
+                            // faster than asking for neighbors explictly
+                            if (marked.has(`${x - 1} ${y}`)) touching++;
+                            if (marked.has(`${x} ${y - 1}`)) touching++;
+                            if (marked.has(`${x - 1} ${y - 1}`)) touching++;
+                            if (marked.has(`${x + 1} ${y}`)) touching++;
+                            if (marked.has(`${x} ${y + 1}`)) touching++;
+                            if (marked.has(`${x + 1} ${y + 1}`)) touching++;
                         }
                     }
-                }
-            }
-            // count number of touching triangles
-            let touching = 0;
-            for (const t of trianglesInShape) {
-                for (const n of t.getNeighbors()) {
-                    if (seen.has(n.coordId)) touching++;
                 }
             }
             return touching;
         }
 
-        let bestTouching = 0;
-        let bestPeriodX = -1;
-        let bestStepX = -1;
-        let bestStepY = -1;
+
+        // estimate the range of coordinates
+        const minX = Math.min(...coordinates.map((c) => c[0]));
+        const maxX = Math.max(...coordinates.map((c) => c[0]));
+        const minY = Math.min(...coordinates.map((c) => c[1]));
+        const maxY = Math.max(...coordinates.map((c) => c[1]));
+        // the pattern should definitely fit after this
+        const maxPeriodX = 2 * Math.ceil((maxX - minX) / maxGridPeriodX) * maxGridPeriodX + maxGridPeriodX;
+        const maxStepY = 2 * Math.ceil((maxY - minY) / maxGridPeriodY) * maxGridPeriodY + maxGridPeriodY;
+        console.log(`Max period X: ${maxPeriodX}, max step Y: ${maxStepY}.`);
+
+
+        let bestTouching : number = null;
+        let bestPeriodX : number = null;
+        let bestStepX : number = null;
+        let bestStepY : number = null;
+        let tries = 0;
 
         for (let r=0; r<10; r++) {
-            for (let periodX=1; periodX<r+1; periodX++) {
+            for (let i = 0; i < r + 1; i++) {
+                const periodX = i * minGridPeriodX;
+                if (periodX > maxPeriodX) continue;
                 for (let stepX=-r; stepX<r+1; stepX++) {
+                    if (stepX < -periodX || stepX > periodX) continue;
                     for (let stepY=-r; stepY<r+1; stepY++) {
-                        if (periodX == r || stepX == -r || stepX == r || stepY == -r || stepY == r) {
+                        if (stepX < -maxStepY|| stepX > maxStepY) continue;
+                        // only try settings we have not yet tried
+                        if (i == r || stepX == -r || stepX == r || stepY == -r || stepY == r) {
+                            tries++;
                             const touching = checkPeriodFits(periodX, stepX, stepY);
-                            if (touching != -1) {
+                            if (touching !== null) {
                                 // console.log('fits', [periodX, stepX, stepY], touching);
-                                if (bestPeriodX == -1 || touching > bestTouching ||
+                                if (bestPeriodX === null || touching > bestTouching ||
                                     (touching == bestTouching && Math.abs(stepX) < Math.abs(bestStepX)) ||
-                                    (touching == bestTouching && Math.abs(stepX) == Math.abs(bestStepX) &&  Math.abs(stepY) == Math.abs(bestStepY))) {
+                                    (touching == bestTouching && Math.abs(stepX) == Math.abs(bestStepX) && Math.abs(stepY) == Math.abs(bestStepY))) {
                                     bestPeriodX = periodX;
                                     bestStepX = stepX;
                                     bestStepY = stepY;
@@ -256,7 +290,7 @@ export class Pattern {
 
         this.periodX = bestPeriodX;
         this.stepY = [bestStepX, bestStepY];
-        console.log('bestPeriod', this.periodX, this.stepY, [minX, maxX], [minY, maxY]);
+        console.log(`Best period: ${this.periodX} with step (${this.stepY[0]}, ${this.stepY[1]}). Tried ${tries} options.`, 'min-max y', [minX, maxX], 'min-max y', [minY, maxY]);
 
         /*
         bestPeriodX = 6;

@@ -13,6 +13,10 @@ export class SquareGridTriangle extends Triangle {
         p.rotationAngles = [0, 90, 180, 270];
         p.xAtOrigin = 0;
         p.yAtOrigin = wrapModulo(y, 4);
+        p.tileMinGridPeriodX = 1;
+        p.tileMinGridPeriodY = 4;
+        p.tileGridPeriodX = 1;
+        p.tileGridPeriodY = 4;
 
         // indices for rotation
         const shiftRotationCoords = (start : number) : CoordEdge[] => {

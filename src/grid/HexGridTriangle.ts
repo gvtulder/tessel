@@ -6,6 +6,11 @@ export class HexGridTriangle extends Triangle {
     protected calc(x : number, y : number) : TriangleParams {
         const p : TriangleParams = {};
 
+        p.tileMinGridPeriodX = 1;
+        p.tileMinGridPeriodY = 1;
+        p.tileGridPeriodX = 2;
+        p.tileGridPeriodY = 2;
+
         const width = 1;
         const height = Math.sqrt(3) / 2;
         p.rotationAngles = [0, 60, 120, 180, 240, 300];

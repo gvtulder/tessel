@@ -6,6 +6,11 @@ export class SnubSquareGridTriangle extends Triangle {
     protected calc(x : number, y : number) : TriangleParams {
         const p : TriangleParams = {};
 
+        p.tileMinGridPeriodX = 12;
+        p.tileMinGridPeriodY = 1;
+        p.tileGridPeriodX = 12;
+        p.tileGridPeriodY = 1;
+
         // snub square tiles
         const r = 1;
         const angle = 0 ; // 135;

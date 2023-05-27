@@ -23,6 +23,10 @@ export type TileColors = readonly TriangleColor[];
 
 export type TriangleParams = {
     shape?: number;
+    tileMinGridPeriodX : number;
+    tileMinGridPeriodY : number;
+    tileGridPeriodX : number;
+    tileGridPeriodY : number;
     xAtOrigin?: number;
     yAtOrigin?: number;
     points?: readonly [Coord, Coord, Coord];
@@ -103,6 +107,30 @@ export abstract class Triangle {
      */
     yAtOrigin: number;
 
+    /**
+     * The smallest number of x steps after which the triangle
+     * pattern repeats. Used as the resolution for pattern-fitting.
+     */
+    tileMinGridPeriodX : number;
+
+    /**
+     * The smallest number of y steps after which the triangle
+     * pattern repeats. Used as the resolution for pattern-fitting.
+     */
+    tileMinGridPeriodY : number;
+
+    /**
+     * The number of x steps after which the triangle pattern repeats.
+     * A pattern shifted by this number should find the same shapes.
+     */
+    tileGridPeriodX : number;
+
+    /**
+     * The number of y steps after which the triangle pattern repeats.
+     * A pattern shifted by this number should find the same shapes.
+     */
+    tileGridPeriodY : number;
+
     private _color: TriangleColor;
     private _tile : Tile | null;
     private _colorGroup : ColorGroup | null;
@@ -156,6 +184,16 @@ export abstract class Triangle {
      * Populate the type-specific parameters.
      */
     protected abstract calc(x : number, y : number) : TriangleParams;
+
+    /**
+     * Returns the type-specific parameters for a triangle at this coordinate.
+     * @param x triangle coordinate x
+     * @param y triangle coordinate y
+     * @returns a parameters object
+     */
+    getParameters(x : number, y : number) : TriangleParams {
+        return this.calc(x, y);
+    }
 
     /**
      * Center of the triangle polygon in grid coordinates.

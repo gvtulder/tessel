@@ -15,6 +15,10 @@ export class EquilateralGridTriangle extends Triangle {
         p.rotationAngles = [0, 60, 120, 180, 240, 300];
         p.xAtOrigin = 0;
         p.yAtOrigin = wrapModulo(y, 6);
+        p.tileMinGridPeriodX = 6;
+        p.tileMinGridPeriodY = 1;
+        p.tileGridPeriodX = 6;
+        p.tileGridPeriodY = 1;
 
         // indices for rotation
         const shiftRotationCoords = (start : number) : CoordEdge[] => {

@@ -14,9 +14,10 @@ export class GridDisplay extends EventTarget {
 
     svg : SVGElement;
     svgGrid : SVGElement;
-    svgUnitCircle : SVGElement;
     svgTriangles : SVGElement;
     svgConnectors : SVGElement;
+
+    coordinateMapper : CoordinateMapper;
 
     tileDisplays : Map<Tile, TileDisplay>;
     connectorDisplay : ConnectorDisplay;
@@ -86,13 +87,8 @@ export class GridDisplay extends EventTarget {
         this.svgGrid.setAttribute('class', 'svg-grid');
         this.svg.appendChild(this.svgGrid)
 
-        const unitCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        unitCircle.setAttribute('cx', '0');
-        unitCircle.setAttribute('cy', '0');
-        unitCircle.setAttribute('r', '1');
-        unitCircle.setAttribute('fill', 'transparent');
-        this.svgGrid.appendChild(unitCircle);
-        this.svgUnitCircle = unitCircle;
+        this.coordinateMapper = new CoordinateMapper();
+        this.svgGrid.appendChild(this.coordinateMapper.svgGroup);
 
         this.svgTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this.svgTriangles.setAttribute('class', 'svg-tiles');
@@ -170,24 +166,13 @@ export class GridDisplay extends EventTarget {
         return closest;
     }
 
-    getOriginScreenPosition() : Coord {
-        const rect = this.svgUnitCircle.getBoundingClientRect();
-        return [rect.left + rect.width / 2, rect.top + rect.height / 2];
-    }
-
     /**
      * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      * @param clientPos the client position
      * @returns the coordinates in the SVG grid space
      */
     screenPositionToGridPosition(clientPos : Coord) : Coord {
-        const rect = this.svgUnitCircle.getBoundingClientRect();
-        const scale = rect.width;
-        const gridPos = [
-            (clientPos[0] - (rect.left + rect.width / 2) / scale),
-            (clientPos[1] - (rect.top + rect.height / 2) / scale),
-        ] as Coord;
-        return gridPos;
+        return this.coordinateMapper.screenToGrid(clientPos);
     }
 
     /**
@@ -196,18 +181,8 @@ export class GridDisplay extends EventTarget {
      * @returns the triangle coordinates
      */
     screenPositionToTriangleCoord(clientPos : Coord) : Coord {
-        const rect = this.svgUnitCircle.getBoundingClientRect();
-        // radius of 1
-        const scale = rect.width / 2;
-
-        // position in grid space w.r.t. origin
-        const gridPos = [
-            ((clientPos[0] - (rect.left + rect.width / 2)) / scale) / SCALE,
-            ((clientPos[1] - (rect.top + rect.height / 2)) / scale) / SCALE,
-        ] as Coord;
-
-        const triangleCoord = this.grid.gridPositionToTriangleCoord(gridPos);
-        return triangleCoord;
+        const gridCoord = this.coordinateMapper.screenToGrid(clientPos);
+        return this.grid.gridPositionToTriangleCoord(gridCoord);
     }
 
     enableAutoRescale() {
@@ -290,5 +265,80 @@ export class MainMenuGridDisplay extends GridDisplay {
         this.element.style.top = `${(availHeight - totalHeight) / 2 - (this.top * SCALE * scale)}px`;
 
         this.scale = scale;
+    }
+}
+
+class CoordinateMapper {
+    svgGroup : SVGElement;
+    svgUnitCircle00 : SVGElement;
+    svgUnitCircle01 : SVGElement;
+    svgUnitCircle10 : SVGElement;
+
+    constructor() {
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('name', 'svg-CoordinateMapper');
+        this.svgGroup = group;
+
+        // measurement circles
+        const unitCircle00 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        unitCircle00.setAttribute('cx', '0');
+        unitCircle00.setAttribute('cy', '0');
+        unitCircle00.setAttribute('r', '1');
+        unitCircle00.setAttribute('fill', 'transparent');
+        group.appendChild(unitCircle00);
+        this.svgUnitCircle00 = unitCircle00;
+
+        const unitCircle01 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        unitCircle01.setAttribute('cx', '0');
+        unitCircle01.setAttribute('cy', '1');
+        unitCircle01.setAttribute('r', '1');
+        unitCircle01.setAttribute('fill', 'transparent');
+        group.appendChild(unitCircle01);
+        this.svgUnitCircle01 = unitCircle01;
+
+        const unitCircle10 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        unitCircle10.setAttribute('cx', '1');
+        unitCircle10.setAttribute('cy', '0');
+        unitCircle10.setAttribute('r', '1');
+        unitCircle10.setAttribute('fill', 'transparent');
+        group.appendChild(unitCircle10);
+        this.svgUnitCircle10 = unitCircle10;
+    }
+
+    private get coeff() : { x0 : number, y0 : number, scale : number, dxdx : number,
+                            dydx : number, dxdy : number, dydy : number } {
+        const rect00 = this.svgUnitCircle00.getBoundingClientRect();
+        const rect01 = this.svgUnitCircle01.getBoundingClientRect();
+        const rect10 = this.svgUnitCircle10.getBoundingClientRect();
+        return {
+            x0: rect00.left,
+            y0: rect00.top,
+            scale: rect00.width / 2,
+            dxdx: rect10.left - rect00.left,
+            dydx: rect10.top - rect00.top,
+            dxdy: rect01.left - rect00.left,
+            dydy: rect01.top - rect00.top,
+        };
+    }
+
+    gridToScreen(gridPos : Coord) : Coord {
+        const coeff = this.coeff;
+        const x = gridPos[0] * SCALE;
+        const y = gridPos[1] * SCALE;
+        return [
+            x * coeff.dxdx + y * coeff.dxdy + coeff.x0,
+            x * coeff.dydx + y * coeff.dydy + coeff.y0,
+        ];
+    }
+
+    screenToGrid(screenPos : Coord) : Coord {
+        const coeff = this.coeff;
+        const s = (coeff.dydx * coeff.dxdy - coeff.dxdx * coeff.dydy);
+        const x = (screenPos[0] - coeff.x0) / (SCALE * s);
+        const y = (screenPos[1] - coeff.y0) / (SCALE * s);
+        return [
+            -x * coeff.dydy + y * coeff.dxdy,
+            x * coeff.dydx - y * coeff.dxdx,
+        ];
     }
 }

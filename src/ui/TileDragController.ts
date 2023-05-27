@@ -62,6 +62,7 @@ export class TileDragController extends EventTarget {
                                 autorotateCache.set(placeholder, rotation);
                             }
                         }
+                        // if hints are enabled, highlight possible/impossible tiles
                         if (this.hints) {
                             for (const tsd of this.gridDisplay.tileDisplays.values()) {
                                 if (tsd.tile.isPlaceholder()) {

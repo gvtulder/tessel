@@ -1,3 +1,4 @@
+import type { Interactable } from '@interactjs/types';
 import interact from '@interactjs/interact/index';
 
 import { GameSettings } from 'src/game/Game.js';
@@ -16,7 +17,9 @@ export class MenuEvent extends Event {
 
 export class MainMenuDisplay extends EventTarget {
     element : HTMLDivElement;
+    grids : Grid[];
     gridDisplays : GridDisplay[];
+    interactables : Interactable[];
 
     constructor() {
         super();
@@ -32,7 +35,9 @@ export class MainMenuDisplay extends EventTarget {
         gameList.className = 'gameList';
         div.appendChild(gameList);
 
+        this.grids = [];
         this.gridDisplays = [];
+        this.interactables = [];
 
         for (const saveGameId of ['triangle', 'square', 'hex']) {
             const gameSettings = SaveGames.lookup.get(saveGameId);
@@ -44,19 +49,36 @@ export class MainMenuDisplay extends EventTarget {
             const grid = new Grid(gameSettings.triangleType, pattern);
             const tile = grid.getOrAddTile(0, 0);
             tile.colors = gameSettings.initialTile;
+            this.grids.push(grid);
 
-            const gridDisplay = new MainMenuGridDisplay(grid exampleTile);
+            const gridDisplay = new MainMenuGridDisplay(grid, exampleTile);
             this.gridDisplays.push(gridDisplay);
             exampleTile.appendChild(gridDisplay.element);
 
-            interact(exampleTile).on('tap', () => {
+            this.interactables.push(interact(exampleTile).on('tap', () => {
                 this.dispatchEvent(new MenuEvent('startgame', gameSettings));
             }).on('doubletap', (evt : Event) => {
                 evt.preventDefault();
             }).on('hold', (evt : Event) => {
                 evt.preventDefault();
-            });
+            }));
         }
+    }
+
+    destroy() {
+        for (const i of this.interactables) {
+            i.unset();
+        }
+        for (const gd of this.gridDisplays) {
+            gd.destroy();
+        }
+        for (const grid of this.grids) {
+            grid.destroy();
+        }
+        this.interactables = [];
+        this.gridDisplays = [];
+        this.grids = [];
+        this.element.remove();
     }
 
     rescale() {

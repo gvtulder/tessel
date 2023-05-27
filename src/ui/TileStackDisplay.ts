@@ -33,6 +33,11 @@ export class TileStackDisplay extends EventTarget {
         });
     }
 
+    /** @deprecated */
+    destroy() {
+        return;
+    }
+
     updateTiles() {
         for (let i=0; i<this.tileStack.numberShown; i++) {
             const color = this.tileStack.slots[i];
@@ -225,9 +230,11 @@ class SingleTileOnStackDisplay implements TileDragSource {
     endDrag(successful : boolean) {
         this.element.classList.remove('dragging');
         this.element.classList.add('drag-return');
-        this.resetAutorotate();
         if (successful) {
             this.element.classList.add('drag-success');
+            this.resetAutorotate(true);
+        } else {
+            this.resetAutorotate(false);
         }
     }
 
@@ -261,12 +268,15 @@ class SingleTileOnStackDisplay implements TileDragSource {
 
     /**
      * Resets the rotation to the state before autorotation.
+     * @param keepRotation if true, does not rotate back
      */
-    resetAutorotate() {
+    resetAutorotate(keepRotation? : boolean) {
         if (this.beforeAutorotationIdx !== null) {
             const oldRotationIdx = this.beforeAutorotationIdx;
             this.beforeAutorotationIdx = null;
-            this.rotateTileTo(oldRotationIdx, false, true);
+            if (!keepRotation) {
+                this.rotateTileTo(oldRotationIdx, false, true);
+            }
         }
     }
 }

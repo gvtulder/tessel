@@ -14,16 +14,33 @@ export class GameDisplay extends EventTarget {
     gridDisplay : MainGridDisplay;
     tileStackDisplay : TileStackDisplay;
     scoreDisplay : ScoreDisplay;
+    tileDragController : TileDragController;
 
     element : HTMLDivElement;
 
+    backtomenubutton : Button;
+    restartgamebutton : Button;
     autorotate : Toggle;
     hints : Toggle;
     snap : Toggle;
 
+    onTapTile : EventListener;
+    onStartDrag : EventListener;
+    onGameScore : EventListener;
+    onGameEndGame : EventListener;
+
     constructor(game : Game) {
         super();
         this.game = game;
+
+        this.onTapTile = () =>this.gridDisplay.scoreOverlayDisplay.hide();
+        this.onStartDrag = () => this.gridDisplay.scoreOverlayDisplay.hide();
+        this.onGameScore = (evt : GameEvent) => {
+            this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes);
+            this.scoreDisplay.points = this.game.points;
+        };
+        this.onGameEndGame = () => this.gridDisplay.gameFinished();
+
         this.build();
     }
 
@@ -53,16 +70,20 @@ export class GameDisplay extends EventTarget {
         const buttons = document.createElement('div');
         buttons.className = 'gameDisplay-buttons';
         controlbar.appendChild(buttons);
-        buttons.appendChild(this.buildButton(
+
+        this.backtomenubutton = new Button(
             icons.houseIcon,
             'Back to menu',
             () => this.dispatchEvent(new Event('clickbacktomenu'))
-        ));
-        buttons.appendChild(this.buildButton(
+        );
+        buttons.appendChild(this.backtomenubutton.element);
+
+        this.restartgamebutton= new Button(
             icons.rotateLeftIcon,
             'Restart game',
             () => this.dispatchEvent(new Event('clickrestartgame'))
-        ));
+        );
+        buttons.appendChild(this.restartgamebutton.element);
 
         const toggles = document.createElement('div');
         toggles.className = 'gameDisplay-toggles';
@@ -70,18 +91,30 @@ export class GameDisplay extends EventTarget {
         this.autorotate = new Toggle(
             icons.arrowsSpinIcon,
             'Autorotate',
+            () => {
+                tileDragController.autorotate = this.autorotate.checked;
+                localStorage.setItem('autorotate', this.autorotate.checked ? 'yes' : null);
+            },
             false
         );
         toggles.appendChild(this.autorotate.element);
         this.hints = new Toggle(
             icons.squareCheckIcon,
             'Show hints',
+            () => {
+                tileDragController.hints = this.hints.checked;
+                localStorage.setItem('hints', this.hints.checked ? 'yes' : null);
+            },
             false
         );
         toggles.appendChild(this.hints.element);
         this.snap = new Toggle(
             icons.magnetIcon,
             'Snap',
+            () => {
+                tileDragController.snap = this.snap.checked;
+                localStorage.setItem('snap', this.snap.checked ? 'yes' : null);
+            },
             false
         );
         toggles.appendChild(this.snap.element);
@@ -89,69 +122,77 @@ export class GameDisplay extends EventTarget {
 
         const tileDragController = new TileDragController(this.gridDisplay);
         this.tileStackDisplay.makeDraggable(tileDragController);
+        this.tileDragController = tileDragController;
 
-        this.tileStackDisplay.addEventListener(TileStackDisplay.events.TapTile,
-            () =>this.gridDisplay.scoreOverlayDisplay.hide()
-        );
+        this.tileStackDisplay.addEventListener(
+            TileStackDisplay.events.TapTile, this.onTapTile);
+        tileDragController.addEventListener(
+            TileDragController.events.StartDrag, this.onTapTile);
+        this.game.addEventListener('score', this.onGameScore);
+        this.game.addEventListener('endgame', this.onGameEndGame);
 
-        tileDragController.addEventListener(TileDragController.events.StartDrag,
-            () =>this.gridDisplay.scoreOverlayDisplay.hide()
-        );
-
-        this.game.addEventListener('score', (evt : GameEvent) => {
-            this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes);
-            this.scoreDisplay.points = this.game.points;
-        });
-
-        this.game.addEventListener('endgame', () => {
-            this.gridDisplay.gameFinished();
-        });
-
-        this.autorotate.addEventListener(Toggle.events.Change, () => {
-            tileDragController.autorotate = this.autorotate.checked;
-            localStorage.setItem('autorotate', this.autorotate.checked ? 'yes' : null);
-        });
         this.autorotate.checked = localStorage.getItem('autorotate') == 'yes';
-
-        this.hints.addEventListener(Toggle.events.Change, () => {
-            tileDragController.hints = this.hints.checked;
-            localStorage.setItem('hints', this.hints.checked ? 'yes' : null);
-        });
         this.hints.checked = localStorage.getItem('hints') == 'yes';
-
-        this.snap.addEventListener(Toggle.events.Change, () => {
-            tileDragController.snap = this.snap.checked;
-            localStorage.setItem('snap', this.snap.checked ? 'yes' : null);
-        });
         this.snap.checked = localStorage.getItem('snap') == 'yes';
 
         this.rescale();
+    }
+
+    destroy() {
+        this.tileStackDisplay.removeEventListener(
+            TileStackDisplay.events.TapTile, this.onTapTile);
+        this.tileDragController.removeEventListener(
+            TileDragController.events.StartDrag, this.onTapTile);
+        this.game.removeEventListener('score', this.onGameScore);
+        this.game.removeEventListener('endgame', this.onGameEndGame);
+
+        this.backtomenubutton.destroy();
+        this.restartgamebutton.destroy();
+        this.autorotate.destroy();
+        this.hints.destroy();
+        this.snap.destroy();
+
+        this.tileStackDisplay.destroy();
+        this.scoreDisplay.destroy();
+        this.gridDisplay.destroy();
     }
 
     rescale() {
         this.gridDisplay.rescale();
         this.tileStackDisplay.rescale();
     }
+}
 
-    buildButton(icon : string, title : string, ontap: (evt : PointerEvent) => void) {
+class Button {
+    element : HTMLElement;
+    interactable : Interactable;
+
+    constructor(icon : string, title : string, ontap: (evt : PointerEvent) => void) {
         const button = document.createElement('div');
         button.className = 'game-button';
         button.title = title;
         button.innerHTML = icon;
-        interact(button).on('tap', ontap);
-        return button;
+        this.element = button;
+        this.interactable = interact(button).on('tap', ontap);
+    }
+
+    destroy() {
+        this.interactable.unset();
+        this.element.remove();
     }
 }
 
-class Toggle extends EventTarget {
+class Toggle {
     static events = {
         Change: 'change',
     };
     element : HTMLElement;
     private _checked : boolean;
 
-    constructor(icon : string, title : string, checked? : boolean) {
-        super();
+    private onchange : () => void;
+    private interactable : Interactable;
+
+    constructor(icon : string, title : string, onchange : () => void, checked? : boolean) {
 
         const toggle = document.createElement('div');
         toggle.className = 'game-toggle';
@@ -160,10 +201,16 @@ class Toggle extends EventTarget {
         this.element = toggle;
 
         this.checked = checked ? true : false;
+        this.onchange = onchange;
 
-        interact(toggle).on('tap', () => {
+        this.interactable = interact(toggle).on('tap', () => {
             this.toggle();
         });
+    }
+
+    destroy() {
+        this.interactable.unset();
+        this.element.remove();
     }
 
     get checked() : boolean {
@@ -174,8 +221,7 @@ class Toggle extends EventTarget {
         this.element.classList.toggle('enabled', state);
         if (this._checked != state) {
             this._checked = state;
-            console.log(state, this, this.checked);
-            this.dispatchEvent(new Event(Toggle.events.Change));
+            if (this.onchange) this.onchange();
         }
     }
 

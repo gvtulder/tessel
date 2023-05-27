@@ -11,6 +11,8 @@ export class ConnectorDisplay {
     grid : Grid;
     svgGroup: SVGElement;
 
+    private addTriangleEventListener : EventListener;
+
     constructor(grid : Grid) {
         this.grid = grid;
 
@@ -19,15 +21,24 @@ export class ConnectorDisplay {
             this.addTriangle(triangle);
         }
 
-        grid.addEventListener(Grid.events.AddTriangle,
-            (evt : GridEvent) => this.addTriangle(evt.triangle)
-        );
+        this.addTriangleEventListener =
+            (evt : GridEvent) => this.addTriangle(evt.triangle);
+
+        grid.addEventListener(Grid.events.AddTriangle, this.addTriangleEventListener);
     }
 
     build() {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         group.setAttribute('class', 'svg-ConnectorDisplay');
         this.svgGroup = group;
+    }
+
+    destroy() {
+        this.grid.removeEventListener(
+            Grid.events.AddTriangle,
+            this.addTriangleEventListener);
+        this.addTriangleEventListener = null;
+        this.svgGroup.remove();
     }
 
     addTriangle(triangle: Triangle) {

@@ -77,6 +77,12 @@ export class TriangleDisplay {
         }
     }
 
+    destroy() {
+        this.element.remove();
+        this.triangleElement.remove();
+        this.centerElement.remove();
+    }
+
     updateColor() {
         const color = this.triangle.color || PLACEHOLDER;
         this.triangleElement.setAttribute('fill', color);

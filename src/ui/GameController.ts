@@ -69,6 +69,7 @@ export class GameController {
             menuDisplay.element.classList.add('disappear');
             window.setTimeout(() => {
                 this.container.removeChild(menuDisplay.element);
+                menuDisplay.destroy();
             }, 1000);
         }
         if (this.gameDisplay) {
@@ -78,6 +79,7 @@ export class GameController {
             gameDisplay.element.classList.add('disappear');
             window.setTimeout(() => {
                 this.container.removeChild(gameDisplay.element);
+                gameDisplay.destroy();
             }, 1000);
         }
     }

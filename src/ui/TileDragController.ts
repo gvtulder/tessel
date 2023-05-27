@@ -161,9 +161,9 @@ export class TileDragController extends EventTarget {
                     }
 
                     // reset
-                    source.resetAutorotate();
                     autorotateCache.clear();
                     source.endDrag(successful);
+                    source.resetAutorotate(successful);
                     position.x = 0;
                     position.y = 0;
                     evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;

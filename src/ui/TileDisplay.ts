@@ -37,6 +37,13 @@ export class TileDisplay {
         this.redraw();
     }
 
+    destroy() {
+        for (const td of this.triangleDisplays.values()) {
+            td.destroy();
+        }
+        this.svgTriangles.remove();
+    }
+
     redraw() {
         this.drawTriangles();
         this.drawOutline();

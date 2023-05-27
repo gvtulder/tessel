@@ -16,13 +16,18 @@ export class GridDisplay extends EventTarget {
     svg : SVGElement;
     svgGrid : SVGElement;
     svgTriangles : SVGElement;
-    svgConnectors : SVGElement;
 
     coordinateMapper : CoordinateMapper;
 
     triangleDisplays: Map<Triangle, TriangleDisplay>;
     tileDisplays : Map<Tile, TileDisplay>;
     connectorDisplay : ConnectorDisplay;
+
+    onAddTile : EventListener;
+    onMoveTile : EventListener;
+    onRemoveTile : EventListener;
+    onChangeColor : EventListener
+    onUpdateTriangles : EventListener;
 
     left : number;
     top : number;
@@ -47,29 +52,25 @@ export class GridDisplay extends EventTarget {
 
         this.build();
 
-        this.grid.addEventListener(Grid.events.AddTile, (evt: GridEvent) => {
-            this.addTile(evt.tile);
-        });
-
+        this.onAddTile = (evt: GridEvent) => this.addTile(evt.tile);
         // TODO @deprecated
-        this.grid.addEventListener('movetile', () => {
-            this.updateDimensions();
-        });
-
-        this.grid.addEventListener(Grid.events.RemoveTile, (evt: GridEvent) => {
-            this.removeTile(evt.tile);
-        });
-
-        this.grid.addEventListener(Triangle.events.ChangeColor, (evt: TriangleEvent) => {
+        this.onMoveTile = () => this.updateDimensions();
+        this.onRemoveTile = (evt: GridEvent) => this.removeTile(evt.tile);
+        this.onChangeColor = (evt: TriangleEvent) => {
             const td = this.triangleDisplays.get(evt.triangle);
             if (td) td.updateColor();
-        });
-
-        this.grid.addEventListener(Tile.events.UpdateTriangles, (evt: TileEvent) => {
+        };
+        this.onUpdateTriangles = (evt: TileEvent) => {
             const td = this.tileDisplays.get(evt.tile);
             if (td) td.redraw();
             this.updateDimensions();
-        });
+        };
+        
+        this.grid.addEventListener(Grid.events.AddTile, this.onAddTile);
+        this.grid.addEventListener('movetile', this.onMoveTile);
+        this.grid.addEventListener(Grid.events.RemoveTile, this.onRemoveTile);
+        this.grid.addEventListener(Triangle.events.ChangeColor, this.onChangeColor);
+        this.grid.addEventListener(Tile.events.UpdateTriangles, this.onUpdateTriangles);
 
         for (const tile of this.grid.tiles) {
             this.addTile(tile);
@@ -121,6 +122,28 @@ export class GridDisplay extends EventTarget {
             this.connectorDisplay = new ConnectorDisplay(this.grid);
             this.svgGrid.appendChild(this.connectorDisplay.svgGroup);
         }
+    }
+
+    destroy() {
+        for (const td of this.tileDisplays.values()) {
+            td.destroy();
+        }
+        if (this.connectorDisplay) {
+            this.connectorDisplay.destroy();
+            this.connectorDisplay = null;
+        }
+        
+        this.grid.removeEventListener(Grid.events.AddTile, this.onAddTile);
+        this.grid.removeEventListener('movetile', this.onMoveTile);
+        this.grid.removeEventListener(Grid.events.RemoveTile, this.onRemoveTile);
+        this.grid.removeEventListener(Triangle.events.ChangeColor, this.onChangeColor);
+        this.grid.removeEventListener(Tile.events.UpdateTriangles, this.onUpdateTriangles);
+        this.container.remove();
+        this.element.remove();
+        this.gridElement.remove();
+        this.svg.remove();
+        this.svgGrid.remove();
+        this.svgTriangles.remove();
     }
 
     addTile(tile: Tile) {
@@ -322,6 +345,10 @@ class CoordinateMapper {
         unitCircle10.setAttribute('fill', 'transparent');
         group.appendChild(unitCircle10);
         this.svgUnitCircle10 = unitCircle10;
+    }
+
+    destroy() {
+        this.svgGroup.remove();
     }
 
     private get coeff() : { x0 : number, y0 : number, scale : number, dxdx : number,

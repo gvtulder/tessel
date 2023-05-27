@@ -281,6 +281,7 @@ export class Tile extends EventTarget {
         // rotate the other shape
         const otherEdgeFrom = other.triangles[0].getOrAddRotationEdge(0);
         const otherEdgeTo = other.triangles[0].getOrAddRotationEdge(otherRotation.steps);
+        if (!otherEdgeFrom || !otherEdgeTo) return null;
         const otherPairsRotated = other.computeRotatedTrianglePairs(otherEdgeFrom, otherEdgeTo);
 
         let rotatedOtherTriangle : Triangle;
@@ -382,11 +383,10 @@ export class Tile extends EventTarget {
         const todo = new Set<Triangle>(this._triangles.keys());
         map.set(edgeFrom.from, edgeTo.from);
         map.set(edgeFrom.to, edgeTo.to);
-        // console.log(edgeFrom, edgeTo);
         const queue : [Edge, Edge][] = [[edgeFrom, edgeTo]];
         while (queue.length > 0) {
             const [edgeFrom, edgeTo] = queue.pop();
-            const sourceNeighbors = edgeFrom.to.getNeighbors(true, false);
+            const sourceNeighbors = edgeFrom.to.getOrAddNeighbors();
             const targetNeighbors = edgeTo.to.getOrAddNeighbors();
             const prevSrcIdx = sourceNeighbors.indexOf(edgeFrom.from);
             const prevTgtIdx = targetNeighbors.indexOf(edgeTo.from);
@@ -436,6 +436,7 @@ export class Tile extends EventTarget {
         for (let r=0; r<rotationAngles.length; r++) {
             // apply rotation
             const edgeTo = originTriangle.getOrAddRotationEdge(r);
+            if (!edgeTo) continue;
             const rotationMap = this.computeRotatedTrianglePairs(edgeFrom, edgeTo);
 
             // normalize the coordinates by moving the shape

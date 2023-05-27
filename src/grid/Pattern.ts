@@ -96,6 +96,8 @@ export class Pattern {
     mapTriangleCoordToTileCoord(triangle : Coord) : Coord {
         const patterns = this.shapes;
 
+        if (this.periodX == -1) return null;
+
         // patternX = (tileX - shapeIdx) / patterns.length;
         // triangleX = patternX * this.periodX + tileY * this.stepY[0] + offsetX;
         // triangleY = tileY * this.stepY[1] + offsetY;
@@ -232,31 +234,27 @@ export class Pattern {
         let bestStepX = -1;
         let bestStepY = -1;
 
-        console.log(maxPeriodX, maxPeriodY);
-        const range = Math.max(maxPeriodX, maxPeriodY);
-        let periodX = 1;
-        while (periodX <= range * 2) {
-            let stepX = -range;
-            while (stepX <= range) {
-                let stepY = -range;
-                while (stepY <= range) {
-                    const touching = checkPeriodFits(periodX, stepX, stepY);
-                    if (touching != -1) {
-                        // console.log('fits', [periodX, stepX, stepY], touching);
-                        if (bestPeriodX == -1 || touching > bestTouching ||
-                            (touching == bestTouching && Math.abs(stepX) < Math.abs(bestStepX)) ||
-                            (touching == bestTouching && Math.abs(stepX) == Math.abs(bestStepX) &&  Math.abs(stepY) == Math.abs(bestStepY))) {
-                            bestPeriodX = periodX;
-                            bestStepX = stepX;
-                            bestStepY = stepY;
-                            bestTouching = touching;
+        for (let r=0; r<30; r++) {
+            for (let periodX=1; periodX<r+1; periodX++) {
+                for (let stepX=-r; stepX<r+1; stepX++) {
+                    for (let stepY=-r; stepY<r+1; stepY++) {
+                        if (periodX == r || stepX == -r || stepX == r || stepY == -r || stepY == r) {
+                            const touching = checkPeriodFits(periodX, stepX, stepY);
+                            if (touching != -1) {
+                                // console.log('fits', [periodX, stepX, stepY], touching);
+                                if (bestPeriodX == -1 || touching > bestTouching ||
+                                    (touching == bestTouching && Math.abs(stepX) < Math.abs(bestStepX)) ||
+                                    (touching == bestTouching && Math.abs(stepX) == Math.abs(bestStepX) &&  Math.abs(stepY) == Math.abs(bestStepY))) {
+                                    bestPeriodX = periodX;
+                                    bestStepX = stepX;
+                                    bestStepY = stepY;
+                                    bestTouching = touching;
+                                }
+                            }
                         }
                     }
-                    stepY++;
                 }
-                stepX++;
             }
-            periodX++;
         }
 
         this.periodX = bestPeriodX;

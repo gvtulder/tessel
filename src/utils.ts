@@ -76,6 +76,28 @@ export function shiftCoordinates2(coords : Coord[][], shift : Coord) : Coord[][]
 }
 
 /**
+ * Move the coordinates to make min [0, 0].
+ * @param coords input coordinates
+ * @returns the new coordinates
+ */
+export function shiftToOrigin(coords : readonly Coord[]) : Coord[] {
+  const minX = Math.min(...coords.map((c) => c[0]));
+  const minY = Math.min(...coords.map((c) => c[1]));
+  return coords.map((c) => [c[0] - minX, c[1] - minY]);
+}
+
+/**
+ * Move the coordinates to make min [0, 0].
+ * @param coords input coordinates
+ * @returns the new coordinates
+ */
+export function shiftToOrigin2(coords : readonly Coord[][]) : Coord[][] {
+  const minX = Math.min(...coords.map((g) => Math.min(...g.map((c) => c[0]))));
+  const minY = Math.min(...coords.map((g) => Math.min(...g.map((c) => c[1]))));
+  return coords.map((g) => g.map((c) => [c[0] - minX, c[1] - minY]));
+}
+
+/**
  * Computes the absolute rotation difference between two angles.
  * @param a
  * @param b
@@ -102,4 +124,17 @@ export function pointInTriangle(pt : Coord, [v1, v2, v3] : readonly [Coord, Coor
     const has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
 
     return !(has_neg && has_pos);
+}
+
+
+/**
+ * Converts polar coordinates to cartesian coordinates.
+ * @param polar polar coordinate (r, angle in radians)
+ * @returns cartesian coordinate
+ */
+export function polarToCartesian(polar : Coord) : Coord {
+  return [
+    polar[0] * Math.cos(polar[1]),
+    polar[0] * Math.sin(polar[1]),
+  ];
 }

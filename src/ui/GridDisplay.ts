@@ -5,6 +5,7 @@ import { Coord, Triangle } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
 import { TileDragSource } from './TileDragController.js';
+import { TriangleDisplay } from './TriangleDisplay.js';
 
 export class GridDisplay extends EventTarget {
     grid: Grid;
@@ -59,6 +60,16 @@ export class GridDisplay extends EventTarget {
 
         for (const tile of this.grid.tiles) {
             this.addTile(tile);
+        }
+
+        if (DEBUG.PLOT_SINGLE_TRIANGLES) {
+            for (let x=-11; x<24; x++) {
+                for (let y=-1; y<2; y++) {
+                    const tile = new Tile(this.grid, Math.floor(x / 12), y, [[this.grid.getOrAddTriangle(x, y)]]);
+                    this.grid.addTile(tile);
+                    this.addTile(tile);
+                }
+            }
         }
 
         this.styleMainElement();

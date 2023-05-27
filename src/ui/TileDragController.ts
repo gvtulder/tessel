@@ -180,8 +180,9 @@ export class TileDragController extends EventTarget {
         if (DEBUG.LOG_MOUSE_POSITION) {
             this.gridDisplay.element.addEventListener('mouseover', (evt : PointerEvent) => {
                 const cursorPos : Coord = [evt.clientX, evt.clientY];
-                console.log('Mouse cursor:',  cursorPos, 'Triangle on grid:',
-                    this.gridDisplay.screenPositionToTriangleCoord(cursorPos));
+                console.log('Mouse cursor:',  cursorPos,
+                            'Grid coordinates:', this.gridDisplay.screenPositionToGridPosition(cursorPos),
+                            'Triangle on grid:', this.gridDisplay.screenPositionToTriangleCoord(cursorPos));
             });
         }
     }

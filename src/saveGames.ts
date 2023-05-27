@@ -2,6 +2,7 @@ import { GameSettings } from "./game/Game.js";
 import { TileGenerators } from "./game/TileGenerator.js";
 import { EquilateralGridTriangle } from "./grid/EquilateralGridTriangle.js";
 import { HexGridTriangle } from "./grid/HexGridTriangle.js";
+import { SnubSquareGridTriangle } from "./grid/SnubSquareGridTriangle.js";
 import { SquareGridTriangle } from "./grid/SquareGridTriangle.js";
 
 
@@ -123,6 +124,43 @@ lookup.set('rhombus3', {
     ]
 });
 
+
+lookup.set('snubsquare', {
+    triangleType : SnubSquareGridTriangle,
+    pattern : {
+        shapes : [
+            [ [[5,0]], [[7,0], [8,0]], [[9,0],[10,0]], [[11,0]] ],
+            [ [[0, 0]], [[1,0], [2,0], [3,0], [4,0]], [[18,0]] ],
+        ]
+    },
+    initialTile: ['red','black','blue','white'],
+    tilesShownOnStack: 3,
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+        TileGenerators.repeat(100),
+    ]
+});
+
+lookup.set('snubsquaredebug', {
+    triangleType : SnubSquareGridTriangle,
+    pattern : {
+        shapes : [
+//          [ [[1, 0]], [[2, 0]], [[3, 0]], [[4, 0]] ],
+//          [[ [0, 0], [1, 0], [2, 0], [3, 0],
+//             [4, 0], [5, 0], [6, 0], [7, 0],
+//             [8, 0], [9, 0], [10, 0], [11, 0] ]],
+            [ [[0, 0], [1, 0], [2, 0], [3, 0]],
+              [[4, 0], [5, 0], [6, 0], [7, 0]],
+              [[8, 0], [9, 0], [10, 0], [11, 0]] ],
+        ]
+    },
+    initialTile: ['red','black','blue','white'],
+    tilesShownOnStack: 3,
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+        TileGenerators.repeat(100),
+    ]
+});
 
 
 

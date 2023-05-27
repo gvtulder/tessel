@@ -312,24 +312,26 @@ export abstract class Triangle extends EventTarget {
 
     /**
      * Returns the rotation edge for the given rotation step.
+     * Returns null if the rotation is invalid.
      *
      * @param rotation the rotation step
      * @param addMissing initialize triangles if necessary
-     * @returns an Edge from the this triangle to the next, in the rotation direction
+     * @returns an Edge from this previous triangle to this one, in the rotation direction, or null
      */
     getRotationEdge(rotation : number, addMissing?: boolean) : Edge {
         const offset = this.rotationOffsets[wrapModulo(rotation, this.rotationOffsets.length)];
-        return {
+        return offset ? {
             from: this.grid.getTriangle(this.x + offset.from[0], this.y + offset.from[1], addMissing),
             to: this.grid.getTriangle(this.x + offset.to[0], this.y + offset.to[1], addMissing),
-        };
+        } : null;
     }
 
     /**
      * Returns the rotation edge for the given rotation step, initializing all triangles.
+     * Returns null if the rotation is invalid.
      *
      * @param rotation the rotation step
-     * @returns an Edge from the this triangle to the next, in the rotation direction
+     * @returns an Edge from this previous triangle to this one, in the rotation direction, or null
      */
     getOrAddRotationEdge(rotation : number) : Edge {
         return this.getRotationEdge(rotation, true);

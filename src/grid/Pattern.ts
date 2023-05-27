@@ -234,7 +234,7 @@ export class Pattern {
         let bestStepX = -1;
         let bestStepY = -1;
 
-        for (let r=0; r<30; r++) {
+        for (let r=0; r<10; r++) {
             for (let periodX=1; periodX<r+1; periodX++) {
                 for (let stepX=-r; stepX<r+1; stepX++) {
                     for (let stepY=-r; stepY<r+1; stepY++) {

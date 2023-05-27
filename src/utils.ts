@@ -78,12 +78,21 @@ export function shiftCoordinates2(coords : Coord[][], shift : Coord) : Coord[][]
 /**
  * Move the coordinates to make min [0, 0].
  * @param coords input coordinates
+ * @returns the new coordinates and the origin coordinate
+ */
+export function shiftToAndReturnOrigin(coords : readonly Coord[]) : [Coord[], Coord] {
+  const minX = Math.min(...coords.map((c) => c[0]));
+  const minY = Math.min(...coords.map((c) => c[1]));
+  return [ coords.map((c) => [c[0] - minX, c[1] - minY]), [minX, minY] ];
+}
+
+/**
+ * Move the coordinates to make min [0, 0].
+ * @param coords input coordinates
  * @returns the new coordinates
  */
 export function shiftToOrigin(coords : readonly Coord[]) : Coord[] {
-  const minX = Math.min(...coords.map((c) => c[0]));
-  const minY = Math.min(...coords.map((c) => c[1]));
-  return coords.map((c) => [c[0] - minX, c[1] - minY]);
+  return shiftToAndReturnOrigin(coords)[0];
 }
 
 /**

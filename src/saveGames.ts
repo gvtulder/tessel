@@ -129,15 +129,31 @@ lookup.set('snubsquare', {
     triangleType : SnubSquareGridTriangle,
     pattern : {
         shapes : [
-            [ [[5,0]], [[7,0], [8,0]], [[9,0],[10,0]], [[11,0]] ],
-            [ [[0, 0]], [[1,0], [2,0], [3,0], [4,0]], [[18,0]] ],
+            [ [[7,0], [8,0]], [[9,0],[10,0]], [[11,0]], [[5,0]] ],
+            [ [[1,0], [4,0]], [[2,0], [3,0]], [[18,0]], [[0, 0]] ],
         ]
     },
     initialTile: ['red','black','blue','white'],
     tilesShownOnStack: 3,
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
-        TileGenerators.repeat(100),
+        TileGenerators.repeat(10),
+    ]
+});
+
+lookup.set('snubsquare3', {
+    triangleType : SnubSquareGridTriangle,
+    pattern : {
+        shapes : [
+            [ [[7,0], [8,0]], [[9,0],[10,0], [11,0]], [[5,0]] ],
+            [ [[1,0], [4,0]], [[2,0], [3,0], [18,0]], [[0, 0]] ],
+        ]
+    },
+    initialTile: ['red','black','blue'],
+    tilesShownOnStack: 3,
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+        TileGenerators.repeat(10),
     ]
 });
 

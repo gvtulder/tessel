@@ -1,6 +1,6 @@
 import { Coord, CoordEdge, Triangle, TriangleParams } from './Triangle.js';
 import { O } from '../settings.js';
-import { polarToCartesian, shiftToOrigin as shiftCoordinatesToOrigin, shiftToOrigin2, wrapModulo } from '../utils.js';
+import { polarToCartesian, shiftToAndReturnOrigin, shiftToOrigin, shiftToOrigin2, wrapModulo } from '../utils.js';
 
 export class SnubSquareGridTriangle extends Triangle {
     protected calc(x : number, y : number) : TriangleParams {
@@ -79,12 +79,13 @@ export class SnubSquareGridTriangle extends Triangle {
         const stepY = [stepY_A[0] - stepY_B[0], stepY_A[1] - stepY_B[1]];
 
         p.shape = wrapModulo(x, 12);
-        p.points = tri[p.shape];
+        const [movedTri, origin] = shiftToAndReturnOrigin(tri[p.shape]);
+        p.points = movedTri as [Coord, Coord, Coord]
         p.polyPoints = [...p.points, p.points[0]];
         p.neighborOffsets = neighborOffsets[p.shape];
 
-        p.left = Math.floor(x / 12) * stepX[0] + y * stepY[0];
-        p.top = Math.floor(x / 12) * stepX[1] + y * stepY[1];
+        p.left = Math.floor(x / 12) * stepX[0] + y * stepY[0] + origin[0];
+        p.top = Math.floor(x / 12) * stepX[1] + y * stepY[1] + origin[1];
         p.xAtOrigin = wrapModulo(x, 12);
         p.yAtOrigin = 0;
 
@@ -93,7 +94,7 @@ export class SnubSquareGridTriangle extends Triangle {
         p.rotationAngles = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
 
         const rotSequences = [
-            // large equilateral triangle do 90-degree rotations
+            // large equilateral triangles do 90-degree rotations
             [ [11, 0], null, null, [5, 6],  null, null,
               [0, 11], null, null, [6, 5], null, null ],
             // triangles in square do 90-degrees and some 30-degrees

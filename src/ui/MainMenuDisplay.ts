@@ -32,6 +32,8 @@ export class MainMenuDisplay extends EventTarget {
         gameList.className = 'gameList';
         div.appendChild(gameList);
 
+        this.gridDisplays = [];
+
         for (const saveGameId of ['triangle', 'square', 'hex']) {
             const gameSettings = SaveGames.lookup.get(saveGameId);
             const exampleTile = document.createElement('div');
@@ -43,7 +45,7 @@ export class MainMenuDisplay extends EventTarget {
             const tile = grid.getOrAddTile(0, 0);
             tile.colors = gameSettings.initialTile;
 
-            const gridDisplay = new MainMenuGridDisplay(grid);
+            const gridDisplay = new MainMenuGridDisplay(grid exampleTile);
             this.gridDisplays.push(gridDisplay);
             exampleTile.appendChild(gridDisplay.element);
 

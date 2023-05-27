@@ -177,7 +177,7 @@ class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     rotateTile() {
-        this.rotateTileTo(this.rotationIdx + 1)
+        this.rotateTileTo(this.rotationIdx + 1, false, true);
     }
 
     rotateTileTo(newRotation : number, reverse? : boolean, closest? : boolean) {

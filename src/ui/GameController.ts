@@ -11,6 +11,8 @@ export class GameController {
 
     constructor(container : HTMLElement) {
         this.container = container;
+
+        window.addEventListener('resize', () => this.rescale());
     }
 
     run(saveGameId : string) {
@@ -26,7 +28,9 @@ export class GameController {
         this.resetState();
 
         const menuDisplay = new MainMenuDisplay();
+        this.menuDisplay = menuDisplay;
         this.container.appendChild(menuDisplay.element);
+        menuDisplay.rescale();
 
         menuDisplay.addEventListener('startgame', (evt : MenuEvent) => {
             this.container.removeChild(menuDisplay.element);
@@ -43,7 +47,7 @@ export class GameController {
         const gameDisplay = new GameDisplay(game);
         this.gameDisplay = gameDisplay;
         this.container.appendChild(gameDisplay.element);
-        gameDisplay.gridDisplay.rescaleGrid();
+        gameDisplay.rescale();
 
         gameDisplay.addEventListener('clickbacktomenu', () => {
             if (this.game.finished || window.confirm('Stop the game?')) {
@@ -75,6 +79,15 @@ export class GameController {
             window.setTimeout(() => {
                 this.container.removeChild(gameDisplay.element);
             }, 1000);
+        }
+    }
+
+    rescale() {
+        if (this.gameDisplay) {
+            this.gameDisplay.rescale();
+        }
+        if (this.menuDisplay) {
+            this.menuDisplay.rescale();
         }
     }
 }

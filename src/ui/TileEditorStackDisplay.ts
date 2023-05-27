@@ -101,7 +101,7 @@ class SingleTileOnEditorStackDisplay {
 
         this.rotatable.appendChild(this.gridDisplay.element);
 
-        this.gridDisplay.rescaleGrid();
+        this.gridDisplay.rescale();
 
         /*
         // TODO : this doesn't work for the hexagons

@@ -8,6 +8,7 @@ import { TileDragSource } from './TileDragController.js';
 
 export class GridDisplay extends EventTarget {
     grid: Grid;
+    container : HTMLElement;
     element: HTMLDivElement;
     gridElement: HTMLDivElement;
 
@@ -33,11 +34,11 @@ export class GridDisplay extends EventTarget {
     scale : number;
     // margins = { top: 0, right: 0, bottom: 0, left: 0 };
     margins = { top: 30, right: 30, bottom: 30, left: 30 };
-    autorescale = false;
 
-    constructor(grid: Grid) {
+    constructor(grid: Grid, container : HTMLElement) {
         super();
         this.grid = grid;
+        this.container = container;
 
         this.tileDisplays = new Map<Tile, TileDisplay>();
 
@@ -61,7 +62,6 @@ export class GridDisplay extends EventTarget {
         }
 
         this.styleMainElement();
-        this.enableAutoRescale();
     }
 
     build() {
@@ -141,7 +141,7 @@ export class GridDisplay extends EventTarget {
         this.svg.style.left = `${this.left * SCALE}px`;
         this.svg.style.top = `${this.top * SCALE}px`;
 
-        this.rescaleGrid();
+        this.rescale();
     }
 
     /**
@@ -176,16 +176,47 @@ export class GridDisplay extends EventTarget {
         return this.grid.gridPositionToTriangleCoord(gridCoord);
     }
 
-    enableAutoRescale() {
-        return;
-    }
-
     styleMainElement() {
         return;
     } 
 
-    rescaleGrid() {
-        return;
+    protected computeDimensionsForRescale() :
+    { left : number, top : number, width : number, height : number
+      availWidth : number, availHeight : number } {
+        return {
+            left: this.left,
+            top: this.top,
+            width: this.width,
+            height: this.height,
+            availWidth: (this.container || document.documentElement).clientWidth - this.margins.left - this.margins.right,
+            availHeight: (this.container || document.documentElement).clientHeight - this.margins.top - this.margins.bottom,
+        };
+    }
+
+    /**
+     * Rescale the grid based on the container size.
+     */
+    rescale() {
+        const dim = this.computeDimensionsForRescale();
+
+        let totalWidth = SCALE * (dim.width - dim.left);
+        let totalHeight = SCALE * (dim.height - dim.top);
+
+        const scale = Math.min(dim.availWidth / totalWidth, dim.availHeight / totalHeight);
+        totalWidth *= scale;
+        totalHeight *= scale;
+
+        this.element.style.transform = `scale(${scale})`;
+        this.element.style.left = `${this.margins.left + (dim.availWidth - totalWidth) / 2 - (dim.left * SCALE * scale)}px`;
+        this.element.style.top = `${this.margins.top + (dim.availHeight - totalHeight) / 2 - (dim.top * SCALE * scale)}px`;
+
+        this.scale = scale;
+
+        if (!this.element.classList.contains('animated')) {
+            window.setTimeout(() => {
+                this.element.classList.add('animated');
+            }, 1000);
+        }
     }
 
     dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
@@ -195,22 +226,18 @@ export class GridDisplay extends EventTarget {
 
 
 export class TileStackGridDisplay extends GridDisplay {
+    margins = { top: 0, right: 0, bottom: 0, left: 0 };
+
     styleMainElement() {
         const div = this.element;
         div.className = 'tileStack-gridDisplay';
-        div.style.position = 'absolute';
-        div.style.top = '0px';
-        div.style.left = '0px';
         div.style.zIndex = '1000';
     }
 
-    enableAutoRescale() {
-        return;
-    }
-
-    rescaleGrid() {
-        const availWidth = 100;
-        const availHeight = 100;
+    /*
+    rescaleGrid(): void {
+        const availWidth = this.container.clientWidth;
+        const availHeight = this.container.clientHeight;
         let totalWidth = SCALE * (this.width - this.left);
         let totalHeight = SCALE * (this.height - this.top);
 
@@ -224,6 +251,7 @@ export class TileStackGridDisplay extends GridDisplay {
 
         this.scale = scale;
     }
+    */
 }
 
 
@@ -235,27 +263,6 @@ export class MainMenuGridDisplay extends GridDisplay {
         div.style.top = '0px';
         div.style.left = '0px';
         div.style.zIndex = '1000';
-    }
-
-    enableAutoRescale() {
-        return;
-    }
-
-    rescaleGrid() {
-        const availWidth = 300;
-        const availHeight = 300;
-        let totalWidth = SCALE * (this.width - this.left);
-        let totalHeight = SCALE * (this.height - this.top);
-
-        const scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
-        totalWidth *= scale;
-        totalHeight *= scale;
-
-        this.element.style.transform = `scale(${scale}`;
-        this.element.style.left = `${(availWidth - totalWidth) / 2 - (this.left * SCALE * scale)}px`;
-        this.element.style.top = `${(availHeight - totalHeight) / 2 - (this.top * SCALE * scale)}px`;
-
-        this.scale = scale;
     }
 }
 

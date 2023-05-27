@@ -92,8 +92,6 @@ export function runEditorDebug() {
     const display = new EditorDisplay(tileGrid, patternGrid, pattern);
     document.body.appendChild(display.element);
 
-    display.enableAutoRescale();
-
     if (DEBUG.CONNECT_TILES) {
         display.tileEditorDisplay.gridDisplay.debugConnectAllTriangles();
         display.patternEditorDisplay.gridDisplay.debugConnectAllTriangles();

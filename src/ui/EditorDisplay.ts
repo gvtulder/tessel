@@ -65,9 +65,9 @@ export class EditorDisplay {
 
     enableAutoRescale() {
         this.tileEditorDisplay.gridDisplay.enableAutoRescale();
-        this.tileEditorDisplay.gridDisplay.rescaleGrid();
+        this.tileEditorDisplay.gridDisplay.rescale();
 
         this.patternEditorDisplay.enableAutoRescale();
-        this.patternEditorDisplay.rescaleGrid();
+        this.patternEditorDisplay.rescale();
     }
 }

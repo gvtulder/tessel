@@ -90,6 +90,12 @@ export class TileStackDisplay extends EventTarget {
             t.element.classList.remove('drag-return');
         }
     }
+
+    rescale() {
+        for (const t of this.tileDisplays) {
+            t.rescale();
+        }
+    }
 }
 
 
@@ -119,27 +125,20 @@ class SingleTileOnStackDisplay implements TileDragSource {
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(pattern.triangleType, pattern);
-        this.gridDisplay = new TileStackGridDisplay(this.grid);
         this.tile = this.grid.getOrAddTile(0, 0);
 
         this.element = document.createElement('div');
         this.element.className = 'tileOnStack';
-        this.element.style.position = 'relative';
-        this.element.style.display = 'inline-block';
-        this.element.style.width = '100px';
-        this.element.style.height = '100px';
 
         this.rotatable = document.createElement('div');
         this.rotatable.className = 'tileOnStack-rotatable';
-        this.rotatable.style.position = 'relative';
-        this.rotatable.style.display = 'inline-block';
-        this.rotatable.style.width = '100px';
-        this.rotatable.style.height = '100px';
         this.element.appendChild(this.rotatable);
+
+        this.gridDisplay = new TileStackGridDisplay(this.grid, this.rotatable);
 
         this.rotatable.appendChild(this.gridDisplay.element);
 
-        this.gridDisplay.rescaleGrid();
+        this.rescale();
 
         /*
         // TODO : this doesn't work for the hexagons
@@ -162,6 +161,10 @@ class SingleTileOnStackDisplay implements TileDragSource {
             this.element.classList.remove('drag-success');
             this.element.classList.remove('drag-return');
         });
+    }
+
+    rescale() {
+        this.gridDisplay.rescale();
     }
 
     get rotation() : TileRotation {

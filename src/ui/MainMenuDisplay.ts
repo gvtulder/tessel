@@ -2,7 +2,7 @@ import interact from '@interactjs/interact/index';
 
 import { GameSettings } from 'src/game/Game.js';
 import { Grid } from "src/grid/Grid.js";
-import { MainMenuGridDisplay } from "./GridDisplay.js";
+import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay.js";
 import * as SaveGames from 'src/saveGames.js';
 import { Pattern } from 'src/grid/Pattern.js';
 
@@ -16,6 +16,7 @@ export class MenuEvent extends Event {
 
 export class MainMenuDisplay extends EventTarget {
     element : HTMLDivElement;
+    gridDisplays : GridDisplay[];
 
     constructor() {
         super();
@@ -43,9 +44,8 @@ export class MainMenuDisplay extends EventTarget {
             tile.colors = gameSettings.initialTile;
 
             const gridDisplay = new MainMenuGridDisplay(grid);
+            this.gridDisplays.push(gridDisplay);
             exampleTile.appendChild(gridDisplay.element);
-
-            gridDisplay.rescaleGrid();
 
             interact(exampleTile).on('tap', () => {
                 this.dispatchEvent(new MenuEvent('startgame', gameSettings));
@@ -54,6 +54,12 @@ export class MainMenuDisplay extends EventTarget {
             }).on('hold', (evt : Event) => {
                 evt.preventDefault();
             });
+        }
+    }
+
+    rescale() {
+        for (const gridDisplay of this.gridDisplays) {
+            gridDisplay.rescale();
         }
     }
 }

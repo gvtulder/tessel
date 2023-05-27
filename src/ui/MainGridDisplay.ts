@@ -1,7 +1,6 @@
 
 
 import { Grid } from "src/grid/Grid.js";
-import { SCALE } from 'src/settings.js';
 import { shuffle } from '../utils.js';
 import { GameDisplay } from './GameDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
@@ -16,11 +15,9 @@ export class MainGridDisplay extends GridDisplay {
     gameDisplay : GameDisplay;
     scoreOverlayDisplay : ScoreOverlayDisplay;
     ignorePlaceholders : boolean;
-    container : HTMLElement;
 
     constructor(grid: Grid, container : HTMLElement, gameDisplay : GameDisplay) {
-        super(grid);
-        this.container = container;
+        super(grid, container);
         this.gameDisplay = gameDisplay;
 
         this.scoreOverlayDisplay = new ScoreOverlayDisplay_Cutout();
@@ -33,46 +30,27 @@ export class MainGridDisplay extends GridDisplay {
         div.className = 'gridDisplay';
     }
 
-    enableAutoRescale() {
-        this.autorescale = true;
-        window.addEventListener('resize', () => {
-            this.rescaleGrid();
-        });
-        this.rescaleGrid();
-    }
-
-    rescaleGrid() {
-        let left = this.left;
-        let top = this.top
-        let width = this.width;
-        let height = this.height;
-        if (this.ignorePlaceholders) {
-            left = this.leftNoPlaceholders;
-            top = this.topNoPlaceholders
-            width = this.widthNoPlaceholders;
-            height = this.heightNoPlaceholders;
-        }
-
+    protected computeDimensionsForRescale() {
         const availWidth = (this.container || document.documentElement).clientWidth - this.margins.left - this.margins.right;
         const availHeight = (this.container || document.documentElement).clientHeight - this.margins.top - this.margins.bottom;
-
-        let totalWidth = SCALE * (width - left);
-        let totalHeight = SCALE * (height - top);
-
-        const scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
-        totalWidth *= scale;
-        totalHeight *= scale;
-
-        this.element.style.transform = `scale(${scale})`;
-        this.element.style.left = `${this.margins.left + (availWidth - totalWidth) / 2 - (left * SCALE * scale)}px`;
-        this.element.style.top = `${this.margins.top + (availHeight - totalHeight) / 2 - (top * SCALE * scale)}px`;
-
-        this.scale = scale;
-
-        if (!this.element.classList.contains('animated')) {
-            window.setTimeout(() => {
-                this.element.classList.add('animated');
-            }, 1000);
+        if (this.ignorePlaceholders) {
+            return {
+                left: this.leftNoPlaceholders,
+                top: this.topNoPlaceholders,
+                width: this.widthNoPlaceholders,
+                height: this.heightNoPlaceholders,
+                availWidth: availWidth,
+                availHeight: availHeight,
+            };
+        } else {
+            return {
+                left: this.left,
+                top: this.top,
+                width: this.width,
+                height: this.height,
+                availWidth: availWidth,
+                availHeight: availHeight,
+            };
         }
     }
 
@@ -97,7 +75,7 @@ export class MainGridDisplay extends GridDisplay {
                 window.setTimeout(cleanUp, placeholders.length > 0 ? delay : 100);
             } else {
                 this.ignorePlaceholders = true;
-                this.rescaleGrid();
+                this.rescale();
             }
         };
         window.setTimeout(cleanUp, delay);

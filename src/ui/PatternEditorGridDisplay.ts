@@ -26,15 +26,7 @@ export class PatternEditorGridDisplay extends GridDisplay {
         div.className = 'gridDisplay';
     }
 
-    enableAutoRescale() {
-        this.autorescale = true;
-        window.addEventListener('resize', () => {
-            this.rescaleGrid();
-        });
-        this.rescaleGrid();
-    }
-
-    rescaleGrid() {
+    rescale() {
         let left = this.left;
         let top = this.top
         let width = this.width;

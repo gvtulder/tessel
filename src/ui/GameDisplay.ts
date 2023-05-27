@@ -111,6 +111,13 @@ export class GameDisplay extends EventTarget {
             localStorage.setItem('hints', this.hints.checked ? 'yes' : null);
         });
         this.hints.checked = localStorage.getItem('hints') == 'yes';
+
+        this.rescale();
+    }
+
+    rescale() {
+        this.gridDisplay.rescale();
+        this.tileStackDisplay.rescale();
     }
 
     buildButton(icon : string, title : string, ontap: (evt : PointerEvent) => void) {

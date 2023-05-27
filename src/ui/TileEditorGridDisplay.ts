@@ -61,15 +61,7 @@ export class TileEditorGridDisplay extends GridDisplay {
         div.className = 'gridDisplay';
     }
 
-    enableAutoRescale() {
-        this.autorescale = true;
-        window.addEventListener('resize', () => {
-            this.rescaleGrid();
-        });
-        this.rescaleGrid();
-    }
-
-    rescaleGrid() {
+    rescale() {
         const left = this.left;
         const top = this.top
         const width = this.width;

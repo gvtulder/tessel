@@ -312,6 +312,12 @@ svg .tile-segments {
 }
 
 
+.tileStackDisplay {
+  margin: 10px 0;
+  padding: 0 15px;
+  box-sizing: border-box;
+  width: 100%;
+}
 .tileStackDisplay .tileStackDisplay-counter {
   margin: 10px;
   color: #555;
@@ -320,9 +326,19 @@ svg .tile-segments {
   stroke: #ddd;
 }
 .tileStackDisplay .tileOnStack {
-  margin: 5px;
+  margin: 5px 0;
   z-index: 0;
   transition: none;
+  position: relative;
+  aspect-ratio: 1/1;
+}
+.tileStack-gridDisplay {
+  position: absolute;
+}
+.tileOnStack-rotatable {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 .tileStackDisplay .tileOnStack.dragging {
   z-index: 100;
@@ -644,7 +660,16 @@ svg .tile-segments {
     margin: 0 10px 0 0;
   }
   .tileStackDisplay {
-    margin: 0 0 0 10px
+    margin: 0 0 0 10px;
+    padding: 10px 0;
+    box-sizing: border-box;
+    width: auto;
+    height: 100%;
+  }
+  .tileStackDisplay .tileOnStack {
+    display: inline-block;
+    margin: 0 5px;
+    height: 100%;
   }
   .tileStackDisplay-counter {
     display: none;
@@ -660,4 +685,15 @@ svg .tile-segments {
     margin: 0 20px 0 0;
   }
 
+}
+
+@media screen and (orientation: portrait) and (max-width: 740px) {
+  .gameDisplay-buttons .game-button {
+    display: block;
+    padding: 10px 20px;
+  }
+  .gameDisplay-buttons .game-button svg {
+    width: 33px;
+    height: 33px;
+  }
 }

@@ -40,10 +40,12 @@ export class Pattern {
         this.triangleType = triangleType;
         this.shapes = shapes;
 
-        // TODO what if there are multiple types of tile?
-        this.numColorGroups = shapes[0].length;
+        if (shapes) {
+            // TODO what if there are multiple types of tile?
+            this.numColorGroups = shapes[0].length;
 
-        this.computeProperties();
+            this.computeProperties();
+        }
     }
 
     /**

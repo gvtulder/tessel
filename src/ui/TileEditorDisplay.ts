@@ -23,6 +23,19 @@ export class TileEditorDisplay extends EventTarget {
         this.grid = grid;
         this.build();
 
+        this.gridDisplay.addEventListener('clicktriangle',
+            (evt : TileEditorGridEvent) => this.handleTileEditorGridEvent(evt));
+
+        // start with a new tile
+        this.tile = new EditableTile(this.grid, 0, 0, [[this.grid.getOrAddTriangle(0, 0)]]);
+        this.tile.colors = [COLORS[0]];
+        this.grid.addTile(this.tile);
+
+        this.recomputeFrontier();
+
+        this.rescale();
+
+        /*
         this.tile = new EditableTile(this.grid, 0, 0);
         this.grid.addTile(this.tile);
         this.tile.colors = [COLORS[0]];
@@ -102,6 +115,7 @@ export class TileEditorDisplay extends EventTarget {
                 this.copyTile.replaceTriangleOffsets([...rr]);
             }, 1000);
         }
+        */
     }
 
     build() {
@@ -110,33 +124,66 @@ export class TileEditorDisplay extends EventTarget {
         tileGridContainer.className = 'tileEditorGridContainer';
         this.element = tileGridContainer;
 
-        this.gridDisplay = new TileEditorGridDisplay(this.grid, tileGridContainer, this);
+        this.gridDisplay = new TileEditorGridDisplay(this.grid, tileGridContainer);
         tileGridContainer.appendChild(this.gridDisplay.element);
+
+        window.editorDisplay = this;
+        this.rescale();
+    }
+
+    rescale() {
+        this.gridDisplay.rescale();
+    }
+
+    handleTileEditorGridEvent(evt : TileEditorGridEvent) {
+        if (evt.type == TileEditorGridDisplay.events.ClickTriangle) {
+            const triangle = this.grid.getOrAddTriangle(...evt.triangleCoord);
+            if (triangle.tile === this.tile) {
+                // change color group
+                this.tile.rotateColorGroup(triangle);
+            } else {
+                if (triangle.tile) {
+                    this.grid.removeTile(triangle.tile);
+                }
+                this.tile.addTriangle(triangle);
+                const c = this.tile.colors;
+                this.tile.colors = c;
+            }
+            this.recomputeFrontier();
+            this.dispatchEvent(new Event('edittile'));
+        }
     }
     
     recomputeFrontier() {
+        // collect the old placeholder triangles from the grid
         const oldTriangles = new Set<Triangle>();
         for (const triangle of this.grid.triangles) {
             if (triangle.tile && triangle.tile !== this.tile && triangle.tile !== this.copyTile) {
                 oldTriangles.add(triangle);
             }
         }
+
+        // compute the new frontier
         const frontier : Triangle[] = [];
         for (const triangle of this.tile.triangles) {
-            for (const n of this.grid.getOrAddTriangleNeighbors(triangle)) {
+            for (const n of triangle.getOrAddNeighbors()) {
                 oldTriangles.delete(n);
                 if (n.tile !== this.tile) {
                     frontier.push(n);
                 }
             }
         }
+
+        // construct new tiles for the new triangles
         for (const triangle of frontier) {
             if (!triangle.tile) {
-                const p = new PlaceholderTile(this.grid, triangle.x, triangle.y);
+                const p = new Tile(this.grid, triangle.x, triangle.y, [[triangle]]);
                 this.grid.addTile(p);
                 p.colors = null;
             }
         }
+
+        // remove the tiles away from the frontier
         for (const triangle of oldTriangles.values()) {
             if (triangle.tile) {
                 this.grid.removeTile(triangle.tile);
@@ -146,16 +193,6 @@ export class TileEditorDisplay extends EventTarget {
 
     getTileOffsets() : number[][] {
         return this.tile.triangles.map((t) => [t.x, t.y]);
-    }
-}
-
-class PlaceholderTile extends Tile {
-    get rotationAngles() {
-        return [0];
-    }
-
-    findTriangles(): Triangle[] {
-        return [this.grid.getOrAddTriangle(this.x, this.y)];
     }
 }
 

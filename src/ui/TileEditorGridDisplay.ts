@@ -10,83 +10,52 @@ import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
 import { shuffle } from '../utils.js';
 import { GameDisplay } from './GameDisplay.js';
 import { TileEditorDisplay } from './TileEditorDisplay.js';
+import { Coord } from 'src/grid/Triangle.js';
 
 
 
 // TODO merge with MainGridDisplay and PatternEditorGridDisplay
 
 export class TileEditorGridEvent extends Event {
-    x : number;
-    y : number;
-    constructor(type : string, x : number, y : number) {
+    triangleCoord : Coord;
+    constructor(type : string, triangleCoord : Coord) {
         super(type);
-        this.x = x;
-        this.y = y;
+        this.triangleCoord = triangleCoord;
     }
 }
 
 export class TileEditorGridDisplay extends GridDisplay {
+    static events = {
+        ClickTriangle: 'clicktriangle',
+        DoubleClickTriangle: 'doubleclicktriangle',
+    };
     container : HTMLElement;
+    interactable : Interactable;
 
     constructor(grid: Grid, container : HTMLElement) {
-        super(grid);
-        this.container = container;
+        super(grid, container);
 
-        interact(this.svgTriangles)
-        .on('tap', (evt : Event) => {
-            const tgt = evt.target as SVGElement;
-            if (tgt.getAttribute) {
-                const x = tgt.getAttribute('data-x');
-                const y = tgt.getAttribute('data-y');
-                if (x !== undefined && x !== null) {
-                    this.dispatchEvent(new TileEditorGridEvent('clicktriangle', parseInt(x), parseInt(y)));
-                }
-            }
+        this.interactable = interact(this.svgTriangles)
+        .on('tap', (evt : PointerEvent) => {
+            // find the triangle
+            const triangleCoord = this.screenPositionToTriangleCoord([evt.clientX, evt.clientY]);
+            console.log("clicked", triangleCoord);
+            this.dispatchEvent(new TileEditorGridEvent(TileEditorGridDisplay.events.ClickTriangle, triangleCoord));
         })
-        .on('doubletap', (evt : Event) => {
-            console.log(evt);
-            const tgt = evt.target as SVGElement;
-            if (tgt.getAttribute) {
-                const x = tgt.getAttribute('data-x');
-                const y = tgt.getAttribute('data-y');
-                if (x !== undefined && x !== null) {
-                    this.dispatchEvent(new TileEditorGridEvent('doubleclicktriangle', parseInt(x), parseInt(y)));
-                }
-            }
+        .on('doubletap', (evt : PointerEvent) => {
+            const triangleCoord = this.screenPositionToTriangleCoord([evt.clientX, evt.clientY]);
+            console.log("doubleclicked", triangleCoord);
+            this.dispatchEvent(new TileEditorGridEvent(TileEditorGridDisplay.events.ClickTriangle, triangleCoord));
         });
+    }
+
+    destroy() {
+        this.interactable.unset();
+        super.destroy();
     }
 
     styleMainElement() {
         const div = this.element;
         div.className = 'gridDisplay';
-    }
-
-    rescale() {
-        const left = this.left;
-        const top = this.top
-        const width = this.width;
-        const height = this.height;
-
-        const availWidth = (this.container || document.documentElement).clientWidth - this.margins.left - this.margins.right;
-        const availHeight = (this.container || document.documentElement).clientHeight - this.margins.top - this.margins.bottom;
-
-        let totalWidth = SCALE * (width - left);
-        let totalHeight = SCALE * (height - top);
-
-        const scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
-        totalWidth *= scale;
-        totalHeight *= scale;
-
-        this.element.style.transform = `scale(${scale})`;
-        this.element.style.left = `${this.margins.left + (availWidth - totalWidth) / 2 - (left * SCALE * scale)}px`;
-        this.element.style.top = `${this.margins.top + (availHeight - totalHeight) / 2 - (top * SCALE * scale)}px`;
-
-        this.scale = scale;
-
-        if (!this.element.classList.contains('animated')) {
-            window.setTimeout(() => {
-                this.element.classList.add('animated');
-            }, 1000);
-        }
     }
 }

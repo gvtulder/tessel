@@ -1,11 +1,19 @@
 import { Tile } from "src/grid/Tile.js";
-import { ColorGroup, Triangle } from "src/grid/Triangle.js";
+import { ColorGroup, TileColors, Triangle, TriangleColor } from "src/grid/Triangle.js";
+import { Grid } from "./Grid.js";
 
 
 export const COLORS = ['red', 'blue', 'white', 'black', 'green', 'orange', 'purple'];
 
 
 export class EditableTile extends Tile {
+    colorGroupsToColors : Map<ColorGroup, TriangleColor>;
+    colorsToColorGroup : Map<ColorGroup, TriangleColor>;
+
+    constructor(grid: Grid, x: number, y: number, triangles : Triangle[][]) {
+        super(grid, x, y, triangles);
+    }
+
     /**
      * Adds a triangle to the current tile.
      * 
@@ -81,5 +89,35 @@ export class EditableTile extends Tile {
         this.doRemoveTriangle(triangle);
 
         return true;
+    }
+
+    /**
+     * Rotates the color group of this triangle. If this is the only
+     * triangle with the current color, the triangle will be changed
+     * to one of the other colors.
+     * @param triangle the triangle to update
+     */
+    rotateColorGroup(triangle : Triangle) {
+        // is this the only tile in this colorgroup?
+        let newColorGroup = triangle.colorGroup + 1;
+        if (this.triangles.filter((t) => t.colorGroup == triangle.colorGroup).length == 1) {
+            // yes, rotate back to another color group
+            newColorGroup = newColorGroup % this._colors.length;
+        } else {
+            // rotate, maybe start a new color group
+            newColorGroup = newColorGroup % (this._colors.length + 1);
+        }
+
+        // update the color group
+        this._triangles.set(triangle, newColorGroup);
+        triangle.colorGroup = newColorGroup;
+        if (!this._colors[newColorGroup]) {
+            // find an unused color
+            const newColors = [...this._colors];
+            newColors[newColorGroup] = COLORS.find((c) => this._colors.indexOf(c) == -1);
+            this._colors = newColors;
+        }
+        triangle.color = this._colors[triangle.colorGroup];
+        this.recomputeColorGroups();
     }
 }

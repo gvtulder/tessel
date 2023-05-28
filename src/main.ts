@@ -1,5 +1,6 @@
 import { Game } from './game/Game.js';
 import { FixedOrderTileStack, TileStack } from './game/TileStack.js';
+import { EditablePattern } from './grid/EditablePattern.js';
 import { Grid } from './grid/Grid.js';
 import { Pattern } from './grid/Pattern.js';
 import { Tile } from './grid/Tile.js';
@@ -14,88 +15,17 @@ import { TileStackDisplay } from './ui/TileStackDisplay.js';
 
 
 export function runEditorDebug() {
-    let triangleOffsets : TriangleOffsets;
-    let gridType : GridType;
+    const gameSettings = SaveGames.lookup.get(window.location.hash.replace('#', ''));
 
-
-    switch (window.location.hash) {
-    case '#squares':
-        // squares
-        // clockwise
-        triangleOffsets = [
-            [ [0, 0], [0, 1], [0, 2], [0, 3]],
-        ];
-        gridType = GridTypes['square'];
-        break;
-
-    case '#rhombushex':
-        // pointy hexagon
-        // clockwise
-        triangleOffsets = [
-            [ [0, -1], [0, 0], [1, 0], [1, 1], [0, 1], [0, 2], [-1, 1], [-1, 0] ],
-        ];
-        gridType = GridTypes['hex'];
-        break;
-
-    case '#rhombushex-tail':
-        // pointy hexagon with a tail
-        // clockwise
-        triangleOffsets = [
-            [ [0, -1], [0, 0], [1, 0], [1, 1], [0, 1], [0, 2], [-1, 1], [-1, 0] ],
-            // [ [3, 0], [3, 1], [4, 1], [4, 2], [3, 2], [3, 3], [2, 2], [2, 1] ],
-            [ [3, 0], [3, 1], [4, 1], [4, 2], [3, 2], [3, 3], [2, 2], [1, 2], [1,3], [2, 1] ],
-            [ [2,0], [2, -1], [3, -1], [4, -1], [3, -2], [4, 0] ],
-        ];
-        gridType = GridTypes['hex'];
-        break;
-
-    case '#rhombus-small':
-        // small, two-triangle rhombus
-        // clockwise
-        triangleOffsets = [
-            [ [1, 0], [2, 0] ],
-            [ [3, 0], [3, 1] ],
-            [ [1, 1], [2, 1] ],
-            [ [4, 1], [4, 2] ],
-        ];
-        gridType = GridTypes['hex'];
-        break;
-
-    case '#triangle-small':
-        // small, two-triangle rhombus
-        // clockwise
-        triangleOffsets = [
-            [ [0, 0], [0, 1], [0, 2] ],
-            [ [0, 3], [0, 4], [0, 5] ],
-            [ [0, 6], [0, 7], [0, 8] ],
-            [ [0, 9], [0, 10], [0, 11] ],
-        ];
-        gridType = GridTypes['triangle'];
-        break;
-
-    case '#hexagons':
-    default:
-        // hexagons
-        // clockwise
-        triangleOffsets = [
-            [ [0, 0], [1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0] ],
-        ];
-        gridType = GridTypes['hex'];
-        break;
-    }
-
-    const tileGrid = new Grid(gridType);
-    const patternGrid = new Grid(gridType);
-
-    const pattern = new Pattern(patternGrid, triangleOffsets);
+    const pattern = new EditablePattern(gameSettings.triangleType);
+    const tileGrid = new Grid(gameSettings.triangleType, pattern);
+    const patternGrid = new Grid(gameSettings.triangleType, pattern);
 
     const display = new EditorDisplay(tileGrid, patternGrid, pattern);
     document.body.appendChild(display.element);
+    display.rescale();
 
-    if (DEBUG.CONNECT_TILES) {
-        display.tileEditorDisplay.gridDisplay.debugConnectAllTriangles();
-        display.patternEditorDisplay.gridDisplay.debugConnectAllTriangles();
-    }
+    window.addEventListener('resize', () => display.rescale());
 
     window.display = display;
 }

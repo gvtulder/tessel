@@ -4,7 +4,6 @@ import { TileEditorGridDisplay } from "./TileEditorGridDisplay.js";
 import { TileEditorDisplay } from "./TileEditorDisplay.js";
 import { TileStack, FixedOrderTileStack } from "src/game/TileStack.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
-import { GridType } from "src/grid/GridType.js";
 import { Pattern } from "src/grid/Pattern.js";
 import { TileEditorStackDisplay } from "./TileEditorStackDisplay.js";
 
@@ -46,21 +45,20 @@ export class EditorDisplay {
         controlbar.className = 'controlbar';
         div.appendChild(controlbar);
 
-        const gridType : GridType = {
-            createTile: this.pattern.getCustomTileType(),
-            createTriangle: this.patternGrid.gridType.createTriangle,
-            rotationAngles: this.patternGrid.gridType.rotationAngles,
-        };
-
+        /*
         // tile stack
-        const tileStackDisplay = new TileEditorStackDisplay(gridType);
+        const tileStackDisplay = new TileEditorStackDisplay();
         controlbar.appendChild(tileStackDisplay.element);
         tileStackDisplay.makeDraggable(null, () => { return; });
-
 
         this.tileEditorDisplay.addEventListener('edittile', () => {
             tileStackDisplay.updateTiles(this.tileEditorDisplay.tile);
         });
+        */
+    }
+
+    rescale() {
+        this.tileEditorDisplay.rescale();
     }
 
     enableAutoRescale() {

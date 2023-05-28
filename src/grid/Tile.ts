@@ -87,10 +87,12 @@ export class Tile {
             triangle.colorGroup = colorGroup;
         }
 
-        this.recomputeColorGroups();
-        this.recomputeShapeParameters();
+        if (this._triangles.size > 0) {
+            this.recomputeColorGroups();
+            this.recomputeShapeParameters();
 
-        this.dispatchEvent(new TileEvent(Tile.events.UpdateTriangles, this));
+            this.dispatchEvent(new TileEvent(Tile.events.UpdateTriangles, this));
+        }
     }
 
     /**

@@ -28,7 +28,7 @@ export class Pattern {
     /**
      * The number of color groups in this pattern.
      */
-    readonly numColorGroups : number;
+    numColorGroups : number;
 
     /**
      * Initializes a new pattern.

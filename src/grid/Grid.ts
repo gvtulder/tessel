@@ -138,6 +138,15 @@ export class Grid extends EventTarget {
     }
 
     /**
+     * Remove all tiles from the grid.
+     */
+    removeAllTiles() {
+        for (const tile of this._tiles.values()) {
+            this.removeTile(tile);
+        }
+    }
+
+    /**
      * Returns the tile at the tile-X and tile-Y position.
      *
      * @param x tile x

@@ -6,6 +6,7 @@ import { Edge, Triangle } from "src/grid/Triangle.js";
 import { wrapModulo } from "src/utils.js";
 import { DEBUG } from "src/settings.js";
 import { EditableTile, COLORS } from "../grid/EditableTile.js";
+import { GridDisplay } from "./GridDisplay.js";
 
 
 
@@ -19,15 +20,12 @@ export class TileEditorDisplay extends EventTarget {
     gridDisplay : TileEditorGridDisplay;
     element : HTMLDivElement;
 
-    // TODO
-    copyTile : CopyTile;
-
     constructor(grid : Grid) {
         super();
         this.grid = grid;
         this.build();
 
-        this.gridDisplay.addEventListener('clicktriangle',
+        this.gridDisplay.addEventListener(TileEditorGridDisplay.events.ClickTriangle,
             (evt : TileEditorGridEvent) => this.handleTileEditorGridEvent(evt));
 
         // start with a new tile
@@ -38,88 +36,6 @@ export class TileEditorDisplay extends EventTarget {
         this.recomputeFrontier();
 
         this.rescale();
-
-        /*
-        this.tile = new EditableTile(this.grid, 0, 0);
-        this.grid.addTile(this.tile);
-        this.tile.colors = [COLORS[0]];
-        window.protoTile = this.tile;
-
-        this.recomputeFrontier();
-
-        if (DEBUG.TILE_EDITOR_COPY_TILE) {
-            const copyTile = new CopyTile(this.grid, 0, 8);
-            this.grid.addTile(copyTile);
-            this.copyTile = copyTile;
-        }
-
-        this.gridDisplay.addEventListener('clicktriangle', (evt : TileEditorGridEvent) => {
-            const triangle = this.grid.getOrAddTriangle(evt.x, evt.y);
-            const relX = evt.x - this.tile.x;
-            const relY = evt.y - this.tile.y;
-            if (triangle.tile === this.tile) {
-                // change color
-                const newColors = [...this.tile.colors];
-                for (let i=0; i<this.tile.triangles.length; i++) {
-                    if (this.tile.triangles[i] === triangle) {
-                        newColors[i] = COLORS[(COLORS.indexOf(newColors[i]) + 1) % COLORS.length];
-                    }
-                }
-                this.tile.colors = newColors;
-            } else {
-                if (triangle.tile) {
-                    this.grid.removeTile(triangle.tile);
-                }
-                this.tile.addTriangle(relX, relY);
-                const c = this.tile.colors;
-                this.tile.colors = c;
-            }
-            this.recomputeFrontier();
-            this.dispatchEvent(new Event('edittile'));
-        });
-
-        this.gridDisplay.addEventListener('doubleclicktriangle', (evt : TileEditorGridEvent) => {
-            const triangle = this.grid.getOrAddTriangle(evt.x, evt.y);
-            const relX = evt.x - this.tile.x;
-            const relY = evt.y - this.tile.y;
-            if (triangle.tile === this.tile) {
-                this.tile.removeTriangle(relX, relY);
-            } else {
-                if (triangle.tile) {
-                    this.grid.removeTile(triangle.tile);
-                }
-                this.tile.addTriangle(relX, relY);
-                const c = this.tile.colors;
-                this.tile.colors = c;
-            }
-            this.recomputeFrontier();
-
-            this.dispatchEvent(new Event('edittile'));
-
-            if (DEBUG.TILE_EDITOR_COPY_TILE) {
-                // copy and rotate
-                const edgeFrom = this.grid.getOrAddRotationEdge(this.tile.triangles[0], 0);
-                if (!window.targetTriangle) window.targetTriangle = [1, 24];
-                const targetTriangle = this.grid.getOrAddTriangle(...window.targetTriangle);
-                const edgeTo = this.grid.getOrAddRotationEdge(targetTriangle, 0);
-                const rr = this.tile.computeRotatedTrianglePairs(this.grid, edgeFrom, edgeTo);
-                this.copyTile.replaceTriangleOffsets([...rr]);
-            }
-        });
-
-        if (DEBUG.TILE_EDITOR_COPY_TILE && DEBUG.TILE_EDITOR_ROTATE_COPY) {
-            let rotation = 0;
-            window.setInterval(() => {
-                // copy and rotate
-                const edgeFrom = this.grid.getOrAddRotationEdge(this.tile.triangles[0], 0);
-                if (!window.targetTriangle) window.targetTriangle = [1, 24];
-                const targetTriangle = this.grid.getOrAddTriangle(...window.targetTriangle);
-                const edgeTo = this.grid.getOrAddRotationEdge(targetTriangle, rotation++);
-                const rr = this.tile.computeRotatedTrianglePairs(this.grid, edgeFrom, edgeTo);
-                this.copyTile.replaceTriangleOffsets([...rr]);
-            }, 1000);
-        }
-        */
     }
 
     build() {
@@ -131,7 +47,6 @@ export class TileEditorDisplay extends EventTarget {
         this.gridDisplay = new TileEditorGridDisplay(this.grid, tileGridContainer);
         tileGridContainer.appendChild(this.gridDisplay.element);
 
-        window.editorDisplay = this;
         this.rescale();
     }
 

@@ -6,21 +6,23 @@ import { TileStack, FixedOrderTileStack } from "src/game/TileStack.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
 import { Pattern } from "src/grid/Pattern.js";
 import { TileEditorStackDisplay } from "./TileEditorStackDisplay.js";
+import { PatternEditorDisplay } from "./PatternEditorDisplay.js";
+import { EditablePattern } from "src/grid/EditablePattern.js";
 
 export class EditorDisplay {
     tileGrid : Grid;
     patternGrid : Grid;
-    pattern : Pattern;
+    pattern : EditablePattern;
 
     tileEditorDisplay : TileEditorDisplay;
-    patternEditorDisplay : PatternEditorGridDisplay;
+    patternEditorDisplay : PatternEditorDisplay;
     tileStackDisplay : TileEditorStackDisplay; 
     element : HTMLDivElement;
 
-    constructor(pattern : Pattern) {
+    constructor(pattern : EditablePattern) {
         this.pattern = pattern;
         this.tileGrid = new Grid(pattern.triangleType, null);
-        this.patternGrid = new Grid(pattern.triangleType, null);
+        this.patternGrid = new Grid(pattern.triangleType, pattern);
 
         this.build();
     }
@@ -35,12 +37,8 @@ export class EditorDisplay {
         div.appendChild(this.tileEditorDisplay.element);
 
         // pattern editor
-        const patternGridContainer = document.createElement('div');
-        patternGridContainer.className = 'patternEditorGridContainer';
-        div.appendChild(patternGridContainer);
-
-        this.patternEditorDisplay = new PatternEditorGridDisplay(this.patternGrid, patternGridContainer, this);
-        patternGridContainer.appendChild(this.patternEditorDisplay.element);
+        this.patternEditorDisplay = new PatternEditorDisplay(this.patternGrid);
+        div.appendChild(this.patternEditorDisplay.element);
 
         // control bar
         const controlbar = document.createElement('div');
@@ -58,12 +56,37 @@ export class EditorDisplay {
         */
 
         this.tileEditorDisplay.addEventListener(TileEditorDisplay.events.EditTile, () => {
+            this.updatePattern();
             tileStackDisplay.updateTiles(this.tileEditorDisplay.tile);
         });
     }
 
     rescale() {
         this.tileEditorDisplay.rescale();
+        this.patternEditorDisplay.rescale();
         this.tileStackDisplay.rescale();
+    }
+
+    updatePattern() {
+        const tileVariants = this.tileEditorDisplay.tile.computeRotationVariants();
+        this.pattern.updatePattern([tileVariants[0].shape]);
+
+        this.patternGrid.removeAllTiles();
+
+        const tile = this.patternGrid.getOrAddTile(0, 0);
+        tile.colors = this.tileEditorDisplay.tile.colors;
+
+        for (const neighbor of this.patternGrid.getOrAddTileNeighbors(tile)) {
+            neighbor.colors = this.tileEditorDisplay.tile.colors;
+            for (const neighbor2 of this.patternGrid.getOrAddTileNeighbors(neighbor)) {
+                neighbor2.colors = this.tileEditorDisplay.tile.colors;
+            }
+        }
+
+        for (let x=-3; x<4; x++) {
+            for (let y=-3; y<4; y++) {
+                this.patternGrid.getOrAddTile(x, y);
+            }
+        }
     }
 }

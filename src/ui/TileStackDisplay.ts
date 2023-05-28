@@ -169,7 +169,7 @@ class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     rescale() {
-        this.gridDisplay.rescale();
+        this.gridDisplay.triggerRescale();
     }
 
     get rotation() : TileRotation {

@@ -42,6 +42,6 @@ export class PatternEditorDisplay extends EventTarget {
     }
 
     rescale() {
-        this.gridDisplay.rescale();
+        this.gridDisplay.triggerRescale();
     }
 }

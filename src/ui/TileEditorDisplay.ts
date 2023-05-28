@@ -51,7 +51,7 @@ export class TileEditorDisplay extends EventTarget {
     }
 
     rescale() {
-        this.gridDisplay.rescale();
+        this.gridDisplay.triggerRescale();
     }
 
     handleTileEditorGridEvent(evt : TileEditorGridEvent) {

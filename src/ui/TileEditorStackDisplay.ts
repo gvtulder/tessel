@@ -127,7 +127,7 @@ class SingleTileOnEditorStackDisplay {
     }
 
     rescale() {
-        this.gridDisplay.rescale();
+        this.gridDisplay.triggerRescale();
     }
 
     updateTile(tileVariant : TileVariant) {

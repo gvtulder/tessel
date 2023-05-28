@@ -1,7 +1,7 @@
 import { TileDisplay, TriangleOnScreenMatch } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
 import { Tile, TileEvent } from "../grid/Tile.js";
-import { Coord, Triangle, TriangleEvent } from "../grid/Triangle.js";
+import { Coord, CoordId, Triangle, TriangleEvent } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
 import { TileDragSource } from './TileDragController.js';
@@ -28,12 +28,15 @@ export class GridDisplay extends EventTarget {
     triangleDisplays: Map<Triangle, TriangleDisplay>;
     tileDisplays : Map<Tile, TileDisplay>;
     connectorDisplay : ConnectorDisplay;
+    backgroundGrid : BackgroundGrid;
 
     onAddTile : EventListener;
     onMoveTile : EventListener;
     onRemoveTile : EventListener;
     onChangeColor : EventListener
     onUpdateTriangles : EventListener;
+
+    rescaleTimeout : number;
 
     contentMinX : number;
     contentMinY : number;
@@ -122,6 +125,7 @@ export class GridDisplay extends EventTarget {
 
         const backgroundGrid = new BackgroundGrid(this.grid);
         this.svgGrid.appendChild(backgroundGrid.element);
+        this.backgroundGrid = backgroundGrid;
 
         this.svgTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this.svgTriangles.setAttribute('class', 'svg-tiles');
@@ -140,6 +144,10 @@ export class GridDisplay extends EventTarget {
         if (this.connectorDisplay) {
             this.connectorDisplay.destroy();
             this.connectorDisplay = null;
+        }
+        if (this.backgroundGrid) {
+            this.backgroundGrid.destroy();
+            this.backgroundGrid = null;
         }
         
         this.grid.removeEventListener(Grid.events.AddTile, this.onAddTile);
@@ -188,7 +196,7 @@ export class GridDisplay extends EventTarget {
         this.contentMaxXNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
         this.contentMaxYNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.top + t.height));
 
-        this.rescale();
+        this.triggerRescale();
     }
 
     /**
@@ -234,6 +242,14 @@ export class GridDisplay extends EventTarget {
             maxX: this.contentMaxX,
             maxY: this.contentMaxY,
         };
+    }
+
+    /**
+     * Trigger a rescale after a brief delay.
+     */
+    triggerRescale() {
+        if (this.rescaleTimeout) window.clearTimeout(this.rescaleTimeout);
+        this.rescaleTimeout = window.setTimeout(() => this.rescale(), 100);
     }
 
     /**
@@ -310,6 +326,13 @@ export class GridDisplay extends EventTarget {
         this.element.style.top= `${containerTop}px`;
 
         this.scale = scale;
+
+        // update the background grid
+        if (this.backgroundGrid) {
+            this.backgroundGrid.redraw(
+                viewBoxMinX / SCALE, viewBoxMinY / SCALE,
+                viewBoxWidth / SCALE, viewBoxHeight / SCALE);
+        }
 
         if (!this.element.classList.contains('animated')) {
             window.setTimeout(() => {
@@ -450,24 +473,34 @@ class BackgroundGrid {
 
     element : SVGElement;
 
+    dxdx : number;
+    dydx : number;
+    dxdy : number;
+    dydy : number;
+
+    drawn : Set<CoordId>;
+
     constructor(grid : Grid) {
         this.grid = grid;
         this.triangle = grid.getOrAddTriangle(0, 0);
+        this.drawn = new Set<CoordId>();
 
         this.build();
-        this.redraw();
+        this.redraw(0, 0, 1, 1);
     }
 
     build() {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         group.setAttribute('class', 'svg-backgroungGrid');
         this.element = group;
-    }
 
-    redraw() {
+        // make the tile a bit larger than the minimum period
+        const repeatX = 3;
+        const repeatY = 3;
+
         const pathComponents : string[] = [];
-        for (let x=0; x<this.triangle.tileGridPeriodX; x++) {
-            for (let y=0; y<this.triangle.tileGridPeriodY; y++) {
+        for (let x=0; x<repeatX * this.triangle.tileGridPeriodX; x++) {
+            for (let y=0; y<repeatX * this.triangle.tileGridPeriodY; y++) {
                 const params = this.triangle.getGridParameters(x, y);
                 const pointsString = params.points.map((p) => `${(p[0] + params.left) * SCALE},${(p[1] + params.top) * SCALE}`);
                 pathComponents.push(`M ${pointsString[0]} L ${pointsString.slice(1).join(' ')} Z`)
@@ -484,24 +517,36 @@ class BackgroundGrid {
         outline.setAttribute('stroke-linejoin', 'round');
         outline.setAttribute('stroke-linecap', 'round');
         this.element.append(outline);
+        this.drawn.add(CoordId(0, 0));
 
         // find out where to repeat it
         const params00 = this.triangle.getGridParameters(0, 0);
-        const params01 = this.triangle.getGridParameters(0, this.triangle.tileGridPeriodY);
-        const params10 = this.triangle.getGridParameters(this.triangle.tileGridPeriodX, 0);
-        const dxdx = params10.left - params00.left;
-        const dydx = params10.top - params00.top;
-        const dxdy = params01.left - params00.left;
-        const dydy = params01.top - params00.top;
+        const params01 = this.triangle.getGridParameters(0, repeatY * this.triangle.tileGridPeriodY);
+        const params10 = this.triangle.getGridParameters(repeatX * this.triangle.tileGridPeriodX, 0);
+        this.dxdx = params10.left - params00.left;
+        this.dydx = params10.top - params00.top;
+        this.dxdy = params01.left - params00.left;
+        this.dydy = params01.top - params00.top;
+    }
 
-        for (let x=-2; x<3; x++) {
-            for (let y=-2; y<3; y++) {
-                if (x != 0 || y != 0) {
+    redraw(minX : number, minY : number, width : number, height: number) {
+        for (let x=-10; x<10; x++) {
+            for (let y=-10; y<10; y++) {
+                const left = x * this.dxdx + y * this.dxdy;
+                const right = (x + 1) * this.dxdx + (y + 1) * this.dxdy;
+                const top = x * this.dydx + y * this.dydy;
+                const bottom = (x + 1) * this.dydx + (y + 1) * this.dydy;
+                // inside?
+                if ((minX <= right && left <= minX + width) &&
+                    (minY <= bottom && top <= minY + height) &&
+                    !(this.drawn.has(CoordId(x, y)))) {
+                    // yes: draw!
                     const outline2 = document.createElementNS('http://www.w3.org/2000/svg', 'use');
                     outline2.setAttribute('href', '#background-grid-pattern');
-                    outline2.setAttribute('x', `${(x * dxdx - y * dxdy) * SCALE}`);
-                    outline2.setAttribute('y', `${(x * dydx + y * dydy) * SCALE}`);
+                    outline2.setAttribute('x', `${(x * this.dxdx - y * this.dxdy) * SCALE}`);
+                    outline2.setAttribute('y', `${(x * this.dydx + y * this.dydy) * SCALE}`);
                     this.element.append(outline2);
+                    this.drawn.add(CoordId(x, y));
                 }
             }
         }

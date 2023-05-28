@@ -6,29 +6,44 @@ import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
 import { CopyTile } from './TileEditorDisplay.js';
+import { EditablePattern } from 'src/grid/EditablePattern.js';
+import { Tile, TileVariant } from 'src/grid/Tile.js';
+import { Pattern } from 'src/grid/Pattern.js';
+import { EditableTile } from 'src/grid/EditableTile.js';
 
 export class TileEditorStackDisplay {
-    gridType : GridType;
+    pattern : EditablePattern;
     tileDisplays : SingleTileOnEditorStackDisplay[];
     element : HTMLDivElement;
     counter : HTMLSpanElement;
 
-    constructor(gridType : GridType) {
-        this.gridType = gridType;
+    constructor(pattern : EditablePattern) {
+        this.pattern = pattern;
         this.tileDisplays = [];
         this.build();
     }
 
+    /** @deprecated */
+    destroy() {
+        return;
+    }
+
     updateTiles(protoTile : EditableTile) {
         const tileVariants = protoTile.computeRotationVariants();
-        for (let i=0; i<this.tileDisplays.length; i++) {
-            if (i < tileVariants.length) {
-                this.tileDisplays[i].updateTile(tileVariants[i]);
-                this.tileDisplays[i].tile.colors = protoTile.colors;
-            } else {
-                this.tileDisplays[i].disable();
+        for (let i=0; i<tileVariants.length; i++) {
+            if (this.tileDisplays.length <= i) {
+                const tileDisplay = new SingleTileOnEditorStackDisplay(this, i, this.pattern);
+                this.element.appendChild(tileDisplay.element);
+                this.tileDisplays.push(tileDisplay);
             }
+
+            this.tileDisplays[i].updateTile(tileVariants[i]);
+            this.tileDisplays[i].tile.colors = protoTile.colors;
         }
+        for (let i=tileVariants.length; i<this.tileDisplays.length; i++) {
+            this.tileDisplays[i].disable();
+        }
+        this.rescale();
     }
 
     build() {
@@ -36,13 +51,20 @@ export class TileEditorStackDisplay {
         div.className = 'tileStackDisplay';
         this.element = div;
 
-        for (let i=0; i<this.gridType.rotationAngles.length; i++) {
-            const tileDisplay = new SingleTileOnEditorStackDisplay(this, i, this.gridType);
+        for (let i=0; i<3; i++) {
+            const tileDisplay = new SingleTileOnEditorStackDisplay(this, i, this.pattern);
             this.element.appendChild(tileDisplay.element);
             this.tileDisplays.push(tileDisplay);
         }
     }
 
+    rescale() {
+        for (const t of this.tileDisplays) {
+            t.rescale();
+        }
+    }
+
+    /*
     makeDraggable(mainGridDisplay : MainGridDisplay, onDragStart : (evt) => void) {
         for (const tileDisplay of this.tileDisplays) {
             tileDisplay.makeDraggable(mainGridDisplay, onDragStart);
@@ -55,53 +77,44 @@ export class TileEditorStackDisplay {
             t.element.classList.remove('drag-return');
         }
     }
+    */
 }
 
-
-export interface DraggableTileHTMLDivElement extends HTMLDivElement {
-  tileDisplay? : SingleTileOnEditorStackDisplay;
-  indexOnStack? : number;
-  orientedColors? : OrientedColors;
-  originalOrientedColors? : OrientedColors;
-}
 
 class SingleTileOnEditorStackDisplay {
     tileStackDisplay : TileEditorStackDisplay;
     indexOnStack : number;
     grid : Grid;
     gridDisplay : GridDisplay;
-    tile : CopyTile;
+    tile : Tile;
     tileDisplay : TileDisplay;
     element : HTMLDivElement;
     rotatable : HTMLDivElement;
     draggable : Interactable;
 
-    constructor(tileStackDisplay : TileEditorStackDisplay, indexOnStack : number, gridType : GridType) {
+    constructor(tileStackDisplay : TileEditorStackDisplay, indexOnStack : number, pattern : Pattern) {
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
-        this.grid = new Grid(gridType);
-        this.gridDisplay = new TileStackGridDisplay(this.grid);
-        this.tile = new CopyTile(this.grid, 0, 0);
+
+        this.tileStackDisplay = tileStackDisplay;
+        this.indexOnStack = indexOnStack;
+        this.grid = new Grid(pattern.triangleType, pattern);
+        this.tile = new Tile(this.grid, 0, 0, [[this.grid.getOrAddTriangle(0, 0)]]);
         this.grid.addTile(this.tile);
+
 
         this.element = document.createElement('div');
         this.element.className = 'tileOnStack';
-        this.element.style.position = 'relative';
-        this.element.style.display = 'inline-block';
-        this.element.style.width = '100px';
-        this.element.style.height = '100px';
 
         this.rotatable = document.createElement('div');
         this.rotatable.className = 'tileOnStack-rotatable';
-        this.rotatable.style.position = 'relative';
-        this.rotatable.style.display = 'inline-block';
-        this.rotatable.style.width = '100px';
-        this.rotatable.style.height = '100px';
         this.element.appendChild(this.rotatable);
+
+        this.gridDisplay = new TileStackGridDisplay(this.grid, this.rotatable);
 
         this.rotatable.appendChild(this.gridDisplay.element);
 
-        this.gridDisplay.rescale();
+        this.rescale();
 
         /*
         // TODO : this doesn't work for the hexagons
@@ -113,70 +126,12 @@ class SingleTileOnEditorStackDisplay {
         */
     }
 
-    getOrientedColors() : OrientedColors {
-        return this.tile.getOrientedColors(0);
-    }
-
-    makeDraggable(mainGridDisplay : MainGridDisplay, onDragStart: (evt) => void) {
-        const context = (this.element as DraggableTileHTMLDivElement);
-        context.tileDisplay = this;
-
-        const position = { x: 0, y: 0 };
-        this.draggable = interact(this.element).on('tap', (evt : Event) => {
-            // TODO rename this function
-            onDragStart(evt);
-            evt.preventDefault();
-        }).on('doubletap', (evt : Event) => {
-            evt.preventDefault();
-        }).on('hold', (evt : Event) => {
-            evt.preventDefault();
-        }).draggable({
-            listeners: {
-                start: (evt : DragEvent) => {
-                    context.indexOnStack = this.indexOnStack;
-                    context.orientedColors = this.getOrientedColors();
-                    context.originalOrientedColors = context.orientedColors;
-                    console.log(evt.type, evt, evt.target);
-
-                    this.tileStackDisplay.resetDragStatus();
-                    evt.target.classList.add('dragging');
-
-                    onDragStart(evt);
-                },
-                move: (evt : DragEvent) => {
-                    position.x += evt.dx;
-                    position.y += evt.dy;
-                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px) scale(${mainGridDisplay.scale / this.gridDisplay.scale})`;
-                },
-                end: (evt : DragEvent) => {
-                    evt.target.classList.remove('dragging');
-                    evt.target.classList.add('drag-return');
-                    position.x = 0;
-                    position.y = 0;
-                    evt.target.style.transformOrigin = 'center';
-                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
-                    if (this.tile.isPlaceholder()) {
-                        this.removeDraggable();
-                    }
-                },
-            }
-        });
-
-        this.element.addEventListener('transitionend', () => {
-            this.element.classList.remove('drag-success');
-            this.element.classList.remove('drag-return');
-        });
-    }
-
-    removeDraggable() {
-        if (this.draggable) {
-            this.draggable.unset();
-            this.draggable = null;
-        }
+    rescale() {
+        this.gridDisplay.rescale();
     }
 
     updateTile(tileVariant : TileVariant) {
-        this.tile.replaceTriangleOffsets(tileVariant.offsets);
+        this.tile.updateTrianglesFromShape(tileVariant.shape);
         this.element.style.display = '';
     }
 

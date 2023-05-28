@@ -10,6 +10,10 @@ import { EditableTile, COLORS } from "../grid/EditableTile.js";
 
 
 export class TileEditorDisplay extends EventTarget {
+    static events = {
+        EditTile: 'edittile',
+    };
+
     grid : Grid;
     tile : EditableTile;
     gridDisplay : TileEditorGridDisplay;
@@ -155,7 +159,7 @@ export class TileEditorDisplay extends EventTarget {
                 this.tile.colors = c;
             }
             this.recomputeFrontier();
-            this.dispatchEvent(new Event('edittile'));
+            this.dispatchEvent(new Event(TileEditorDisplay.events.EditTile));
         }
     }
     

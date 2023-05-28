@@ -18,10 +18,8 @@ export function runEditorDebug() {
     const gameSettings = SaveGames.lookup.get(window.location.hash.replace('#', ''));
 
     const pattern = new EditablePattern(gameSettings.triangleType);
-    const tileGrid = new Grid(gameSettings.triangleType, pattern);
-    const patternGrid = new Grid(gameSettings.triangleType, pattern);
 
-    const display = new EditorDisplay(tileGrid, patternGrid, pattern);
+    const display = new EditorDisplay(pattern);
     document.body.appendChild(display.element);
     display.rescale();
 

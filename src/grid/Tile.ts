@@ -96,6 +96,18 @@ export class Tile {
     }
 
     /**
+     * Replace the triangles of this tile based on coordinates.
+     *
+     * @param newTriangles new set of triangle coordinates
+     */
+    updateTrianglesFromShape(newShape : TileShape) {
+        const triangles = newShape.map((colorGroup) =>
+            colorGroup.map((coord) => this.grid.getOrAddTriangle(...coord))
+        );
+        this.updateTriangles(triangles);
+    }
+
+    /**
      * Remove this tile from the grid (called by Grid).
      */
     removeFromGrid() {

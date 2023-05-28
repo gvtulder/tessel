@@ -13,13 +13,15 @@ export class EditorDisplay {
     pattern : Pattern;
 
     tileEditorDisplay : TileEditorDisplay;
-    patternEditorDisplay : PatternEditorGridDisplay
+    patternEditorDisplay : PatternEditorGridDisplay;
+    tileStackDisplay : TileEditorStackDisplay; 
     element : HTMLDivElement;
 
-    constructor(tileGrid : Grid, patternGrid : Grid, pattern : Pattern) {
-        this.tileGrid = tileGrid;
-        this.patternGrid = patternGrid;
+    constructor(pattern : Pattern) {
         this.pattern = pattern;
+        this.tileGrid = new Grid(pattern.triangleType, null);
+        this.patternGrid = new Grid(pattern.triangleType, null);
+
         this.build();
     }
 
@@ -45,27 +47,23 @@ export class EditorDisplay {
         controlbar.className = 'controlbar';
         div.appendChild(controlbar);
 
-        /*
         // tile stack
-        const tileStackDisplay = new TileEditorStackDisplay();
+        const tileStackDisplay = new TileEditorStackDisplay(this.pattern);
+        this.tileStackDisplay = tileStackDisplay;
         controlbar.appendChild(tileStackDisplay.element);
-        tileStackDisplay.makeDraggable(null, () => { return; });
 
-        this.tileEditorDisplay.addEventListener('edittile', () => {
+        this.rescale();
+        /*
+        tileStackDisplay.makeDraggable(null, () => { return; });
+        */
+
+        this.tileEditorDisplay.addEventListener(TileEditorDisplay.events.EditTile, () => {
             tileStackDisplay.updateTiles(this.tileEditorDisplay.tile);
         });
-        */
     }
 
     rescale() {
         this.tileEditorDisplay.rescale();
-    }
-
-    enableAutoRescale() {
-        this.tileEditorDisplay.gridDisplay.enableAutoRescale();
-        this.tileEditorDisplay.gridDisplay.rescale();
-
-        this.patternEditorDisplay.enableAutoRescale();
-        this.patternEditorDisplay.rescale();
+        this.tileStackDisplay.rescale();
     }
 }

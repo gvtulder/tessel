@@ -33,6 +33,7 @@ export class TileEditorGridDisplay extends GridDisplay {
             // find the triangle
             const triangleCoord = this.screenPositionToTriangleCoord([evt.clientX, evt.clientY]);
             this.dispatchEvent(new TileEditorGridEvent(TileEditorGridDisplay.events.ClickTriangle, triangleCoord));
+        })
         .on('doubletap', (evt : PointerEvent) => {
             // find the triangle
             const triangleCoord = this.screenPositionToTriangleCoord([evt.clientX, evt.clientY]);

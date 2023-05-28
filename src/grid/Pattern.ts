@@ -190,57 +190,84 @@ export class Pattern {
             }
         }
 
-        // collect all of the coordinates and shapes for the initial pattern
+        // combine all of the coordinates and shapes to a single tile
+        type CoordIdPair = [x: number, y: number, coordId: CoordId, cost: number];
+        // mark the closeness from the starting tile
+        const MAX_DEPTH = 2 * (maxGridPeriodX + maxGridPeriodY);
+        const scoreMap = new Map<CoordId, number>();
         const coordinates : Coord[] = [];
+        const queue : CoordIdPair[] = [];
         for (const shape of this.shapes) {
             for (const coords of shape) {
-                coordinates.push(...coords);
+                for (const coord of coords) {
+                    const c = [coord[0], coord[1], `${coord[0]} ${coord[1]}`, MAX_DEPTH] as CoordIdPair;
+                    coordinates.push(coord);
+                    // a starting triangle
+                    scoreMap.set(c[2], -1);
+                    queue.push(c);
+                }
             }
         }
 
-        const checkPeriodFits = (periodX : number, stepX : number, stepY : number) : number => {
+        // compute the distance to the initial tile
+        let maxTotalScore = 0;
+        while (queue.length > 0) {
+            const cur = queue.pop();
+            // find the neighbors
+            const params = protoTriangle.getGridParameters(cur[0], cur[1]);
+            for (const n of params.neighborOffsets) {
+                const neighborX = cur[0] + n[0];
+                const neighborY = cur[1] + n[1];
+                const neighborId = `${neighborX} ${neighborY}`;
+                if (!scoreMap.has(neighborId)) {
+                    scoreMap.set(neighborId, cur[3]);
+                    maxTotalScore += cur[3];
+                    if (cur[3] > 0) {
+                        queue.push([neighborX, neighborY, neighborId, cur[3] - 1]);
+                    }
+                }
+            }
+        }
+        console.log(`Marked ${scoreMap.size} neighbors. Maximum total score ${maxTotalScore}.`);
+        console.log([...scoreMap.values()].reduce((a, b) => a + b));
+
+        const checkPeriodFits = (periodX : number, stepX : number, stepY : number, bestScore : number) : number => {
             // returns the tightness of the pattern fit
-            const marked = new Set<CoordId>();
-            let touching = 0;
+            let totalScore = 0;
             for (let r=0; r<10; r++) {
-                for (let j=0; j<=r; j++) {
-                    for (let i=0; i<=r; i++) {
-                        if (j != r && i != r) continue;
+                for (let j=-r; j<=r+1; j++) {
+                    for (let i=-r; i<=r+1; i++) {
+                        if ((j == 0 && i == 0)) continue;
+                        if (i == -r || i == r && j == -r && j == r) {
+                            for (let c=0; c<coordinates.length; c++) {
+                                const coord = coordinates[c];
+                                const x = i * periodX + j * stepX + coord[0];
+                                const y = j * stepY + coord[1];
 
-                        for (let c=0; c<coordinates.length; c++) {
-                            const coord = coordinates[c];
-                            const x = i * periodX + j * stepX + coord[0];
-                            const y = j * stepY + coord[1];
+                                // not yet marked?
+                                const coordScore = scoreMap.get(`${x} ${y}`);
+                                // console.log('overlap!', coordCost, x, y, periodX, stepX, stepY, i, j, coord);
+                                if (coordScore === -1) {
+                                    return null;
+                                }
 
-                            // the triangle shapes should match
-                            if (triangleShapes[((coord[0] % maxGridPeriodX) + maxGridPeriodX) % maxGridPeriodX][
-                                               ((coord[1] % maxGridPeriodY) + maxGridPeriodY) % maxGridPeriodY] !=
-                                triangleShapes[((x % maxGridPeriodX) + maxGridPeriodX) % maxGridPeriodX][
-                                               ((y % maxGridPeriodY) + maxGridPeriodY) % maxGridPeriodY]) {
-                                return null;
+                                // the triangle shapes should match
+                                if (triangleShapes[((coord[0] % maxGridPeriodX) + maxGridPeriodX) % maxGridPeriodX][
+                                                ((coord[1] % maxGridPeriodY) + maxGridPeriodY) % maxGridPeriodY] !=
+                                    triangleShapes[((x % maxGridPeriodX) + maxGridPeriodX) % maxGridPeriodX][
+                                                ((y % maxGridPeriodY) + maxGridPeriodY) % maxGridPeriodY]) {
+                                    return null;
+                                }
+
+                                if (coordScore !== undefined && coordScore > 0) {
+                                    totalScore += coordScore;
+                                }
                             }
-
-                            const coordIdOffset = `${x} ${y}`;
-
-                            // it should not yet belong to a tile
-                            if (marked.has(coordIdOffset)) {
-                                return null;
-                            }
-                            marked.add(coordIdOffset);
-
-                            // estimate for touching triangles,
-                            // faster than asking for neighbors explictly
-                            if (marked.has(`${x - 1} ${y}`)) touching++;
-                            if (marked.has(`${x} ${y - 1}`)) touching++;
-                            if (marked.has(`${x - 1} ${y - 1}`)) touching++;
-                            if (marked.has(`${x + 1} ${y}`)) touching++;
-                            if (marked.has(`${x} ${y + 1}`)) touching++;
-                            if (marked.has(`${x + 1} ${y + 1}`)) touching++;
                         }
                     }
                 }
             }
-            return touching;
+            return totalScore;
         }
 
 
@@ -254,8 +281,12 @@ export class Pattern {
         const maxStepY = 2 * Math.ceil((maxY - minY) / maxGridPeriodY) * maxGridPeriodY + maxGridPeriodY;
         console.log(`Max period X: ${maxPeriodX}, max step Y: ${maxStepY}.`);
 
+        /*
+        this.periodX = 2;
+        this.stepY = [1, 1];
+        */
 
-        let bestTouching : number = null;
+        let bestScore : number = null;
         let bestPeriodX : number = null;
         let bestStepX : number = null;
         let bestStepY : number = null;
@@ -263,25 +294,26 @@ export class Pattern {
 
         for (let r=0; r<20; r++) {
             for (let i = 0; i < r + 1; i++) {
-                const periodX = i * minGridPeriodX;
-                if (periodX > maxPeriodX) continue;
+                const periodX = i;   // * minGridPeriodX;
+                // if (periodX > maxPeriodX) continue;
                 for (let stepX=-r; stepX<r+1; stepX++) {
-                    if (stepX < -periodX || stepX > periodX) continue;
+                    // if (stepX < -periodX || stepX > periodX) continue;
                     for (let stepY=-r; stepY<r+1; stepY++) {
-                        if (stepX < -maxStepY|| stepX > maxStepY) continue;
+                        // if (stepX < -maxStepY|| stepX > maxStepY) continue;
                         // only try settings we have not yet tried
                         if (i == r || stepX == -r || stepX == r || stepY == -r || stepY == r) {
                             tries++;
-                            const touching = checkPeriodFits(periodX, stepX, stepY);
-                            if (touching !== null) {
-                                // console.log('fits', [periodX, stepX, stepY], touching);
-                                if (bestPeriodX === null || touching > bestTouching ||
-                                    (touching == bestTouching && Math.abs(stepX) < Math.abs(bestStepX)) ||
-                                    (touching == bestTouching && Math.abs(stepX) == Math.abs(bestStepX) && Math.abs(stepY) == Math.abs(bestStepY))) {
+                            const score = checkPeriodFits(periodX, stepX, stepY, bestScore);
+                            // console.log(`Try periodX ${periodX} stepX ${stepX} stepY ${stepY} cost ${score}`);
+                            if (score !== null) {
+                                // console.log('fits', [periodX, stepX, stepY], cost);
+                                if (bestPeriodX === null || score > bestScore ||
+                                    (score == bestScore && Math.abs(stepX) < Math.abs(bestStepX)) ||
+                                    (score == bestScore && Math.abs(stepX) == Math.abs(bestStepX) && Math.abs(stepY) == Math.abs(bestStepY))) {
                                     bestPeriodX = periodX;
                                     bestStepX = stepX;
                                     bestStepY = stepY;
-                                    bestTouching = touching;
+                                    bestScore = score;
                                 }
                             }
                         }
@@ -292,7 +324,7 @@ export class Pattern {
 
         this.periodX = bestPeriodX;
         this.stepY = [bestStepX, bestStepY];
-        console.log(`Best period: ${this.periodX} with step (${this.stepY[0]}, ${this.stepY[1]}). Tried ${tries} options.`, 'min-max y', [minX, maxX], 'min-max y', [minY, maxY]);
+        console.log(`Best period: ${this.periodX} with step (${this.stepY[0]}, ${this.stepY[1]}), score ${bestScore}. Evaluated ${tries} options.`, 'min-max y', [minX, maxX], 'min-max y', [minY, maxY]);
 
         /*
         bestPeriodX = 6;

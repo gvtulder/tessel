@@ -23,6 +23,7 @@ export function mean(numbers : number[]) : number {
   return numbers.reduce((prev, x) => prev + x) / numbers.length;
 }
 
+// TODO make this work better for non-convex shapes
 export function shrinkOutline(points : Coord[], factor : number) : Coord[] {
   const originX = mean(points.map((p) => p[0]));
   const originY = mean(points.map((p) => p[1]));

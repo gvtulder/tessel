@@ -6,7 +6,7 @@ export class SnubSquareGridTriangle extends Triangle {
     protected calc(x : number, y : number) : TriangleParams {
         const p : TriangleParams = {};
 
-        p.tileMinGridPeriodX = 12;
+        p.tileMinGridPeriodX = 1;
         p.tileMinGridPeriodY = 1;
         p.tileGridPeriodX = 12;
         p.tileGridPeriodY = 1;

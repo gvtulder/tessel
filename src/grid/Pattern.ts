@@ -261,7 +261,7 @@ export class Pattern {
         let bestStepY : number = null;
         let tries = 0;
 
-        for (let r=0; r<10; r++) {
+        for (let r=0; r<20; r++) {
             for (let i = 0; i < r + 1; i++) {
                 const periodX = i * minGridPeriodX;
                 if (periodX > maxPeriodX) continue;

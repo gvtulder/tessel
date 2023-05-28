@@ -13,7 +13,7 @@ export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[]
         const verts : Vertex[] = triangle.points.map((p) => {
             p = [p[0] + triangle.left, p[1] + triangle.top];
             return {
-                id: `${Math.floor(p[0] * 100)},${Math.floor(p[1] * 100)}`,
+                id: `${Math.round(p[0] * 100)},${Math.round(p[1] * 100)}`,
                 x: p[0], y: p[1]
             };
         }).sort((a, b) => (a.x == b.x) ? (a.y - b.y) : (a.x - b.x));

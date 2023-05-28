@@ -170,10 +170,10 @@ lookup.set('snubsquaredebug', {
               [[8, 0], [9, 0], [10, 0], [11, 0]] ],
         ]
     },
-    initialTile: ['red','black','blue','white'],
+    initialTile: ['black','black','black','black'],
     tilesShownOnStack: 3,
     tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
+        TileGenerators.permutations(['black', 'black']),
         TileGenerators.repeat(100),
     ]
 });

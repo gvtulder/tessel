@@ -330,8 +330,8 @@ export class GridDisplay extends EventTarget {
         // update the background grid
         if (this.backgroundGrid) {
             this.backgroundGrid.redraw(
-                viewBoxMinX / SCALE, viewBoxMinY / SCALE,
-                viewBoxWidth / SCALE, viewBoxHeight / SCALE);
+                viewBoxMinX, viewBoxMinY,
+                viewBoxWidth, viewBoxHeight);
         }
 
         if (!this.element.classList.contains('animated')) {
@@ -477,6 +477,10 @@ class BackgroundGrid {
     dydx : number;
     dxdy : number;
     dydy : number;
+    bboxMinX : number;
+    bboxMinY : number;
+    bboxMaxX : number;
+    bboxMaxY : number;
 
     drawn : Set<CoordId>;
 
@@ -498,14 +502,20 @@ class BackgroundGrid {
         const repeatX = 3;
         const repeatY = 3;
 
+        const allPoints : Coord[] = [];
         const pathComponents : string[] = [];
         for (let x=0; x<repeatX * this.triangle.tileGridPeriodX; x++) {
             for (let y=0; y<repeatX * this.triangle.tileGridPeriodY; y++) {
                 const params = this.triangle.getGridParameters(x, y);
+                allPoints.push(...params.points.map((c) : Coord => [(c[0] + params.left) * SCALE, (c[1] + params.top) * SCALE]));
                 const pointsString = params.points.map((p) => `${(p[0] + params.left) * SCALE},${(p[1] + params.top) * SCALE}`);
                 pathComponents.push(`M ${pointsString[0]} L ${pointsString.slice(1).join(' ')} Z`)
             }
         }
+        this.bboxMinX = Math.min(...allPoints.map((c) => c[0]));
+        this.bboxMinY = Math.min(...allPoints.map((c) => c[1]));
+        this.bboxMaxX = Math.max(...allPoints.map((c) => c[0]));
+        this.bboxMaxY = Math.max(...allPoints.map((c) => c[1]));
 
         // draw the initial pattern
         const outline = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -529,22 +539,24 @@ class BackgroundGrid {
         this.dydy = params01.top - params00.top;
     }
 
-    redraw(minX : number, minY : number, width : number, height: number) {
+    redraw(screenMinX : number, screenMinY : number, screenWidth : number, screenHeight: number) {
         for (let x=-10; x<10; x++) {
             for (let y=-10; y<10; y++) {
-                const left = x * this.dxdx + y * this.dxdy;
-                const right = (x + 1) * this.dxdx + (y + 1) * this.dxdy;
-                const top = x * this.dydx + y * this.dydy;
-                const bottom = (x + 1) * this.dydx + (y + 1) * this.dydy;
+                const posX = SCALE * (x * this.dxdx + y * this.dxdy);
+                const posY = SCALE * (x * this.dydx + y * this.dydy);
+                const bboxLeft = posX + this.bboxMinX;
+                const bboxRight = posX + this.bboxMaxX;
+                const bboxTop = posY + this.bboxMinY;
+                const bboxBottom = posY + this.bboxMaxY;
                 // inside?
-                if ((minX <= right && left <= minX + width) &&
-                    (minY <= bottom && top <= minY + height) &&
+                if ((bboxLeft <= screenMinX + screenWidth && bboxRight >= screenMinX) &&
+                    (bboxTop <= screenMinY + screenHeight && bboxBottom >= screenMinY) &&
                     !(this.drawn.has(CoordId(x, y)))) {
                     // yes: draw!
                     const outline2 = document.createElementNS('http://www.w3.org/2000/svg', 'use');
                     outline2.setAttribute('href', '#background-grid-pattern');
-                    outline2.setAttribute('x', `${(x * this.dxdx - y * this.dxdy) * SCALE}`);
-                    outline2.setAttribute('y', `${(x * this.dydx + y * this.dydy) * SCALE}`);
+                    outline2.setAttribute('x', `${posX}`);
+                    outline2.setAttribute('y', `${posY}`);
                     this.element.append(outline2);
                     this.drawn.add(CoordId(x, y));
                 }

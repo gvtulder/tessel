@@ -114,6 +114,9 @@ export class GridDisplay extends EventTarget {
         this.coordinateMapper = new CoordinateMapper();
         this.svgGrid.appendChild(this.coordinateMapper.svgGroup);
 
+        const backgroundGrid = new BackgroundGrid(this.grid);
+        this.svgGrid.appendChild(backgroundGrid.element);
+
         this.svgTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this.svgTriangles.setAttribute('class', 'svg-tiles');
         this.svgGrid.appendChild(this.svgTriangles)
@@ -122,9 +125,6 @@ export class GridDisplay extends EventTarget {
             this.connectorDisplay = new ConnectorDisplay(this.grid);
             this.svgGrid.appendChild(this.connectorDisplay.svgGroup);
         }
-
-        const backgroundGrid = new BackgroundGrid(this.grid);
-        this.svgGrid.appendChild(backgroundGrid.element);
     }
 
     destroy() {
@@ -422,13 +422,37 @@ class BackgroundGrid {
             }
         }
 
+        // draw the initial pattern
         const outline = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        outline.setAttribute('id', 'background-grid-pattern');
         outline.setAttribute('d', pathComponents.join(' '));
         outline.setAttribute('fill', 'transparent');
-        outline.setAttribute('stroke', 'yellow');
-        outline.setAttribute('stroke-width', '10px');
+        outline.setAttribute('stroke', '#ccc');
+        outline.setAttribute('stroke-width', '1px');
+        outline.setAttribute('stroke-linejoin', 'round');
         outline.setAttribute('stroke-linecap', 'round');
         this.element.append(outline);
+
+        // find out where to repeat it
+        const params00 = this.triangle.getGridParameters(0, 0);
+        const params01 = this.triangle.getGridParameters(0, this.triangle.tileGridPeriodY);
+        const params10 = this.triangle.getGridParameters(this.triangle.tileGridPeriodX, 0);
+        const dxdx = params10.left - params00.left;
+        const dydx = params10.top - params00.top;
+        const dxdy = params01.left - params00.left;
+        const dydy = params01.top - params00.top;
+
+        for (let x=-2; x<3; x++) {
+            for (let y=-2; y<3; y++) {
+                if (x != 0 || y != 0) {
+                    const outline2 = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                    outline2.setAttribute('href', '#background-grid-pattern');
+                    outline2.setAttribute('x', `${(x * dxdx - y * dxdy) * SCALE}`);
+                    outline2.setAttribute('y', `${(x * dydx + y * dydy) * SCALE}`);
+                    this.element.append(outline2);
+                }
+            }
+        }
     }
 
     destroy() {

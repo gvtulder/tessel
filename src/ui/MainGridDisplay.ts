@@ -31,25 +31,19 @@ export class MainGridDisplay extends GridDisplay {
     }
 
     protected computeDimensionsForRescale() {
-        const availWidth = (this.container || document.documentElement).clientWidth - this.margins.left - this.margins.right;
-        const availHeight = (this.container || document.documentElement).clientHeight - this.margins.top - this.margins.bottom;
         if (this.ignorePlaceholders) {
             return {
-                left: this.contentMinXNoPlaceholders,
-                top: this.contentMinYNoPlaceholders,
-                width: this.contentMaxXNoPlaceholders,
-                height: this.contentMaxYNoPlaceholders,
-                availWidth: availWidth,
-                availHeight: availHeight,
+                minX: this.contentMinXNoPlaceholders,
+                minY: this.contentMinYNoPlaceholders,
+                maxX: this.contentMaxXNoPlaceholders,
+                maxY: this.contentMaxYNoPlaceholders,
             };
         } else {
             return {
-                left: this.contentMinX,
-                top: this.contentMinY,
-                width: this.contentMaxX,
-                height: this.contentMaxY,
-                availWidth: availWidth,
-                availHeight: availHeight,
+                minX: this.contentMinX,
+                minY: this.contentMinY,
+                maxX: this.contentMaxX,
+                maxY: this.contentMaxY,
             };
         }
     }

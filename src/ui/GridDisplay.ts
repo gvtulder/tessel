@@ -7,6 +7,12 @@ import { DEBUG, SCALE } from '../settings.js';
 import { TileDragSource } from './TileDragController.js';
 import { TriangleDisplay } from './TriangleDisplay.js';
 
+export enum GridDisplayScalingType {
+    EqualMargins,
+    TopLeft,
+    CenterOrigin,
+}
+
 export class GridDisplay extends EventTarget {
     grid: Grid;
     container : HTMLElement;
@@ -39,8 +45,8 @@ export class GridDisplay extends EventTarget {
     contentMaxYNoPlaceholders : number;
 
     scale : number;
-    // margins = { top: 0, right: 0, bottom: 0, left: 0 };
     margins = { top: 30, right: 30, bottom: 30, left: 30 };
+    scalingType = GridDisplayScalingType.EqualMargins;
 
     constructor(grid: Grid, container : HTMLElement) {
         super();
@@ -182,17 +188,6 @@ export class GridDisplay extends EventTarget {
         this.contentMaxXNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
         this.contentMaxYNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.top + t.height));
 
-        // adjust the viewBox to match the grid (0,0) to the container (0,0)
-        const minX = this.contentMinX * SCALE;
-        const minY = this.contentMinY * SCALE;
-        const maxX = this.contentMaxX * SCALE;
-        const maxY = this.contentMaxY * SCALE;
-        this.svg.setAttribute('viewBox', `${minX} ${minY} ${maxX - minX} ${maxY - minY}`);
-        this.svg.setAttribute('width', `${maxX - minX}`);
-        this.svg.setAttribute('height', `${maxY - minY}`);
-        this.svg.style.left = `${minX}px`;
-        this.svg.style.top = `${minY}px`;
-
         this.rescale();
     }
 
@@ -232,16 +227,12 @@ export class GridDisplay extends EventTarget {
         return;
     } 
 
-    protected computeDimensionsForRescale() :
-    { left : number, top : number, width : number, height : number
-      availWidth : number, availHeight : number } {
+    protected computeDimensionsForRescale() : { minX : number, minY : number, maxX : number, maxY : number } {
         return {
-            left: this.contentMinX,
-            top: this.contentMinY,
-            width: this.contentMaxX,
-            height: this.contentMaxY,
-            availWidth: (this.container || document.documentElement).clientWidth - this.margins.left - this.margins.right,
-            availHeight: (this.container || document.documentElement).clientHeight - this.margins.top - this.margins.bottom,
+            minX: this.contentMinX,
+            minY: this.contentMinY,
+            maxX: this.contentMaxX,
+            maxY: this.contentMaxY,
         };
     }
 
@@ -249,18 +240,74 @@ export class GridDisplay extends EventTarget {
      * Rescale the grid based on the container size.
      */
     rescale() {
+        const availWidth = (this.container || document.documentElement).clientWidth;
+        const availHeight = (this.container || document.documentElement).clientHeight;
         const dim = this.computeDimensionsForRescale();
 
-        let totalWidth = SCALE * (dim.width - dim.left);
-        let totalHeight = SCALE * (dim.height - dim.top);
+        // adjust the viewBox to match the grid (0,0) to the container (0,0)
+        const minX = this.contentMinX * SCALE;
+        const minY = this.contentMinY * SCALE;
+        const maxX = this.contentMaxX * SCALE;
+        const maxY = this.contentMaxY * SCALE;
 
-        const scale = Math.min(dim.availWidth / totalWidth, dim.availHeight / totalHeight);
-        totalWidth *= scale;
-        totalHeight *= scale;
+        // compute the width and height of the content
+        // TODO margins
+        const contentWidth = (dim.maxX - dim.minX) * SCALE;
+        const contentHeight = (dim.maxY - dim.minY) * SCALE;
 
+        // compute the scale that makes the content fit the container
+        const scale = Math.min(
+           (availWidth - this.margins.left - this.margins.right) / contentWidth,
+           (availHeight - this.margins.top - this.margins.bottom) / contentHeight
+        );
+        const finalWidth = contentWidth * scale;
+        const finalHeight = contentHeight * scale;
+
+        // make sure we can fill the container
+        let viewBoxMinX = minX;
+        let viewBoxMinY = minY;
+        let viewBoxWidth = maxX - minX;
+        let viewBoxHeight = maxY - minY;
+        if (viewBoxWidth * scale < availWidth) {
+            const adjustX = (availWidth / scale) - viewBoxWidth;
+            viewBoxMinX -= adjustX / 2;
+            viewBoxWidth += adjustX;
+        }
+        if (viewBoxHeight * scale < availHeight) {
+            const adjustY = (availHeight / scale) - viewBoxHeight;
+            viewBoxMinY -= adjustY / 2;
+            viewBoxHeight += adjustY;
+        }
+
+        // shift the origin to center the content in the container
+        let containerLeft : number;
+        let containerTop : number;
+        switch (this.scalingType) {
+            case GridDisplayScalingType.CenterOrigin:
+                containerLeft = availWidth / 2;
+                containerTop = availHeight / 2;
+                break;
+            case GridDisplayScalingType.TopLeft:
+                containerLeft = -dim.minX * SCALE * scale;
+                containerTop = -dim.minY * SCALE * scale;
+                break;
+            case GridDisplayScalingType.EqualMargins:
+            default:
+                containerLeft = (availWidth - finalWidth) / 2 - dim.minX * SCALE * scale;
+                containerTop = (availHeight - finalHeight) / 2 - dim.minY * SCALE * scale;
+        }
+
+        // adjust the viewBox to match the grid (0,0) to the container (0,0)
+        this.svg.setAttribute('viewBox', `${viewBoxMinX} ${viewBoxMinY} ${viewBoxWidth} ${viewBoxHeight}`);
+        this.svg.setAttribute('width', `${viewBoxWidth}`);
+        this.svg.setAttribute('height', `${viewBoxHeight}`);
+        this.svg.style.left = `${viewBoxMinX}px`;
+        this.svg.style.top = `${viewBoxMinY}px`;
+
+        // apply the scaling and shift to center
         this.element.style.transform = `scale(${scale})`;
-        this.element.style.left = `${this.margins.left + (dim.availWidth - totalWidth) / 2 - (dim.left * SCALE * scale)}px`;
-        this.element.style.top = `${this.margins.top + (dim.availHeight - totalHeight) / 2 - (dim.top * SCALE * scale)}px`;
+        this.element.style.left = `${containerLeft}px`;
+        this.element.style.top= `${containerTop}px`;
 
         this.scale = scale;
 

@@ -29,14 +29,14 @@ export class GridDisplay extends EventTarget {
     onChangeColor : EventListener
     onUpdateTriangles : EventListener;
 
-    left : number;
-    top : number;
-    width : number;
-    height : number;
-    leftNoPlaceholders : number;
-    topNoPlaceholders : number;
-    widthNoPlaceholders : number;
-    heightNoPlaceholders : number;
+    contentMinX : number;
+    contentMinY : number;
+    contentMaxX : number;
+    contentMaxY : number;
+    contentMinXNoPlaceholders : number;
+    contentMinYNoPlaceholders : number;
+    contentMaxXNoPlaceholders : number;
+    contentMaxYNoPlaceholders : number;
 
     scale : number;
     // margins = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -169,24 +169,29 @@ export class GridDisplay extends EventTarget {
     updateDimensions() {
         if (this.grid.tiles.length == 0) return;
 
+        // compute the extent of the content
         const tiles = [...this.grid.tiles.values()];
-        this.left = Math.min(...tiles.map((t) => t.left));
-        this.top = Math.min(...tiles.map((t) => t.top));
-        this.width = Math.max(...tiles.map((t) => t.left + t.width));
-        this.height = Math.max(...tiles.map((t) => t.top + t.height));
+        this.contentMinX = Math.min(...tiles.map((t) => t.left));
+        this.contentMinY = Math.min(...tiles.map((t) => t.top));
+        this.contentMaxX = Math.max(...tiles.map((t) => t.left + t.width));
+        this.contentMaxY = Math.max(...tiles.map((t) => t.top + t.height));
 
         const noPlaceholders = tiles.filter((t) => !t.isPlaceholder());
-        this.leftNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.left));
-        this.topNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.top));
-        this.widthNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
-        this.heightNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.top + t.height));
+        this.contentMinXNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.left));
+        this.contentMinYNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.top));
+        this.contentMaxXNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
+        this.contentMaxYNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.top + t.height));
 
-        // TODO width is not really width?
-        this.svg.setAttribute('width', `${(this.width - this.left) * SCALE}`);
-        this.svg.setAttribute('height', `${(this.height - this.top) * SCALE}`);
-        this.svgGrid.setAttribute('transform', `translate(${-this.left * SCALE} ${-this.top * SCALE})`);
-        this.svg.style.left = `${this.left * SCALE}px`;
-        this.svg.style.top = `${this.top * SCALE}px`;
+        // adjust the viewBox to match the grid (0,0) to the container (0,0)
+        const minX = this.contentMinX * SCALE;
+        const minY = this.contentMinY * SCALE;
+        const maxX = this.contentMaxX * SCALE;
+        const maxY = this.contentMaxY * SCALE;
+        this.svg.setAttribute('viewBox', `${minX} ${minY} ${maxX - minX} ${maxY - minY}`);
+        this.svg.setAttribute('width', `${maxX - minX}`);
+        this.svg.setAttribute('height', `${maxY - minY}`);
+        this.svg.style.left = `${minX}px`;
+        this.svg.style.top = `${minY}px`;
 
         this.rescale();
     }
@@ -231,10 +236,10 @@ export class GridDisplay extends EventTarget {
     { left : number, top : number, width : number, height : number
       availWidth : number, availHeight : number } {
         return {
-            left: this.left,
-            top: this.top,
-            width: this.width,
-            height: this.height,
+            left: this.contentMinX,
+            top: this.contentMinY,
+            width: this.contentMaxX,
+            height: this.contentMaxY,
             availWidth: (this.container || document.documentElement).clientWidth - this.margins.left - this.margins.right,
             availHeight: (this.container || document.documentElement).clientHeight - this.margins.top - this.margins.bottom,
         };

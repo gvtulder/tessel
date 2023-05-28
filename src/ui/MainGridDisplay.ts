@@ -35,19 +35,19 @@ export class MainGridDisplay extends GridDisplay {
         const availHeight = (this.container || document.documentElement).clientHeight - this.margins.top - this.margins.bottom;
         if (this.ignorePlaceholders) {
             return {
-                left: this.leftNoPlaceholders,
-                top: this.topNoPlaceholders,
-                width: this.widthNoPlaceholders,
-                height: this.heightNoPlaceholders,
+                left: this.contentMinXNoPlaceholders,
+                top: this.contentMinYNoPlaceholders,
+                width: this.contentMaxXNoPlaceholders,
+                height: this.contentMaxYNoPlaceholders,
                 availWidth: availWidth,
                 availHeight: availHeight,
             };
         } else {
             return {
-                left: this.left,
-                top: this.top,
-                width: this.width,
-                height: this.height,
+                left: this.contentMinX,
+                top: this.contentMinY,
+                width: this.contentMaxX,
+                height: this.contentMaxY,
                 availWidth: availWidth,
                 availHeight: availHeight,
             };

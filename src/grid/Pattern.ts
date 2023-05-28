@@ -185,7 +185,7 @@ export class Pattern {
         for (let x=0; x<maxGridPeriodX; x++) {
             triangleShapes[x] = [];
             for (let y=0; y<maxGridPeriodY; y++) {
-                const p = protoTriangle.getParameters(x, y);
+                const p = protoTriangle.getGridParameters(x, y);
                 triangleShapes[x].push(p.shape);
             }
         }

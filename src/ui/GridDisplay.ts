@@ -122,6 +122,9 @@ export class GridDisplay extends EventTarget {
             this.connectorDisplay = new ConnectorDisplay(this.grid);
             this.svgGrid.appendChild(this.connectorDisplay.svgGroup);
         }
+
+        const backgroundGrid = new BackgroundGrid(this.grid);
+        this.svgGrid.appendChild(backgroundGrid.element);
     }
 
     destroy() {
@@ -388,3 +391,48 @@ class CoordinateMapper {
         ];
     }
 }
+
+class BackgroundGrid {
+    grid : Grid;
+    triangle : Triangle;
+
+    element : SVGElement;
+
+    constructor(grid : Grid) {
+        this.grid = grid;
+        this.triangle = grid.getOrAddTriangle(0, 0);
+
+        this.build();
+        this.redraw();
+    }
+
+    build() {
+        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        group.setAttribute('class', 'svg-backgroungGrid');
+        this.element = group;
+    }
+
+    redraw() {
+        const pathComponents : string[] = [];
+        for (let x=0; x<this.triangle.tileGridPeriodX; x++) {
+            for (let y=0; y<this.triangle.tileGridPeriodY; y++) {
+                const params = this.triangle.getGridParameters(x, y);
+                const pointsString = params.points.map((p) => `${(p[0] + params.left) * SCALE},${(p[1] + params.top) * SCALE}`);
+                pathComponents.push(`M ${pointsString[0]} L ${pointsString.slice(1).join(' ')} Z`)
+            }
+        }
+
+        const outline = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        outline.setAttribute('d', pathComponents.join(' '));
+        outline.setAttribute('fill', 'transparent');
+        outline.setAttribute('stroke', 'yellow');
+        outline.setAttribute('stroke-width', '10px');
+        outline.setAttribute('stroke-linecap', 'round');
+        this.element.append(outline);
+    }
+
+    destroy() {
+        this.element.remove();
+    }
+}
+

@@ -191,7 +191,7 @@ export abstract class Triangle {
      * @param y triangle coordinate y
      * @returns a parameters object
      */
-    getParameters(x : number, y : number) : TriangleParams {
+    getGridParameters(x : number, y : number) : TriangleParams {
         return this.calc(x, y);
     }
 

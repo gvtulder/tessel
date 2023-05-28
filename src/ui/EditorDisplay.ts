@@ -85,7 +85,8 @@ export class EditorDisplay {
 
         for (let x=-3; x<4; x++) {
             for (let y=-3; y<4; y++) {
-                this.patternGrid.getOrAddTile(x, y);
+                const tile = this.patternGrid.getOrAddTile(x, y);
+                tile.colors = this.tileEditorDisplay.tile.colors;
             }
         }
     }

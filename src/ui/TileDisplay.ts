@@ -73,6 +73,13 @@ export class TileDisplay {
             triangleDisplay.element.setAttribute('transform', `translate(${left} ${top})`);
             this.svgTriangles.appendChild(triangleDisplay.element);
         }
+        const removedTriangles = [...this.triangleDisplays.keys()].filter(
+            (t) => t.tile !== this.tile);
+        for (const triangle of removedTriangles) {
+            this.triangleDisplays.get(triangle).destroy();
+            this.triangleDisplays.delete(triangle);
+            this.gridDisplay.triangleDisplays.delete(triangle);
+        }
     }
 
     drawOutline() {

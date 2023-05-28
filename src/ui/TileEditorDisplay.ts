@@ -140,12 +140,17 @@ export class TileEditorDisplay extends EventTarget {
             const triangle = this.grid.getOrAddTriangle(...evt.triangleCoord);
             if (triangle.tile === this.tile) {
                 // change color group
-                this.tile.rotateColorGroup(triangle);
+                const wasUnique = this.tile.rotateColorGroup(triangle);
+                if (wasUnique) {
+                    console.log(wasUnique);
+                    this.tile.removeTriangle(triangle);
+                    this.recomputeFrontier();
+                }
             } else {
                 if (triangle.tile) {
                     this.grid.removeTile(triangle.tile);
                 }
-                this.tile.addTriangle(triangle);
+                this.tile.addTriangle(triangle, 0);
                 const c = this.tile.colors;
                 this.tile.colors = c;
             }

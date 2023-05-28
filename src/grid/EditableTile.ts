@@ -83,7 +83,7 @@ export class EditableTile extends Tile {
             }
         }
         // do we get unreachable triangles if we remove this?
-        if (marked.size != this._triangles.size) return false;
+        if (marked.size < this._triangles.size - 1) return false;
 
         // all ok, remove the tile
         this.doRemoveTriangle(triangle);
@@ -96,13 +96,16 @@ export class EditableTile extends Tile {
      * triangle with the current color, the triangle will be changed
      * to one of the other colors.
      * @param triangle the triangle to update
+     * @returns true if the tile had a unique color
      */
-    rotateColorGroup(triangle : Triangle) {
+    rotateColorGroup(triangle : Triangle) : boolean {
         // is this the only tile in this colorgroup?
         let newColorGroup = triangle.colorGroup + 1;
+        let wasUnique = false;
         if (this.triangles.filter((t) => t.colorGroup == triangle.colorGroup).length == 1) {
             // yes, rotate back to another color group
             newColorGroup = newColorGroup % this._colors.length;
+            wasUnique = true;
         } else {
             // rotate, maybe start a new color group
             newColorGroup = newColorGroup % (this._colors.length + 1);
@@ -119,5 +122,7 @@ export class EditableTile extends Tile {
         }
         triangle.color = this._colors[triangle.colorGroup];
         this.recomputeColorGroups();
+
+        return wasUnique;
     }
 }

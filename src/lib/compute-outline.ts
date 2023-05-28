@@ -9,7 +9,7 @@ export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[]
     let leftMostVertex : Vertex;
 
     for (const triangle of triangles.values()) {
-        // rounding
+        // rounding down to make the CoordIds unique
         const verts : Vertex[] = triangle.points.map((p) => {
             p = [p[0] + triangle.left, p[1] + triangle.top];
             return {
@@ -18,11 +18,19 @@ export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[]
             };
         }).sort((a, b) => (a.x == b.x) ? (a.y - b.y) : (a.x - b.x));
 
+        // consider each edge of the triangle
         for (const ab of [[0, 1], [0, 2], [1, 2]]) {
+            let from = verts[ab[0]];
+            let to = verts[ab[1]];
+            if (to.id < from.id) {
+                // keep in a consistent order
+                from = verts[ab[1]];
+                to = verts[ab[0]];
+            }
             const edge : Edge = {
-                id: `${verts[ab[0]].id} ${verts[ab[1]].id}`,
-                from: verts[ab[0]],
-                to: verts[ab[1]],
+                id: `${from.id} ${to.id}`,
+                from: from,
+                to: to,
                 triangle: triangle,
             };
             if (!edges.has(edge.id)) {
@@ -30,6 +38,7 @@ export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[]
             }
             edges.get(edge.id).push(edge);
 
+            // add the vertices
             [edge.from, edge.to].forEach((v) => {
                 if (!edgesPerVertex.has(v.id)) {
                     edgesPerVertex.set(v.id, []);

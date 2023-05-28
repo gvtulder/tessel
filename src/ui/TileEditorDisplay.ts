@@ -27,6 +27,8 @@ export class TileEditorDisplay extends EventTarget {
 
         this.gridDisplay.addEventListener(TileEditorGridDisplay.events.ClickTriangle,
             (evt : TileEditorGridEvent) => this.handleTileEditorGridEvent(evt));
+        this.gridDisplay.addEventListener(TileEditorGridDisplay.events.DoubleClickTriangle,
+            (evt : TileEditorGridEvent) => this.handleTileEditorGridEvent(evt));
 
         // start with a new tile
         this.tile = new EditableTile(this.grid, 0, 0, [[this.grid.getOrAddTriangle(0, 0)]]);
@@ -74,6 +76,14 @@ export class TileEditorDisplay extends EventTarget {
                 this.tile.colors = c;
             }
             this.recomputeFrontier();
+            this.dispatchEvent(new Event(TileEditorDisplay.events.EditTile));
+        } else if (evt.type == TileEditorGridDisplay.events.DoubleClickTriangle) {
+            this.recomputeFrontier();
+            const triangle = this.grid.getOrAddTriangle(...evt.triangleCoord);
+            if (triangle.tile === this.tile) {
+                this.tile.removeTriangle(triangle);
+                this.recomputeFrontier();
+            }
             this.dispatchEvent(new Event(TileEditorDisplay.events.EditTile));
         }
     }

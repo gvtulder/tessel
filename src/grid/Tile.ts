@@ -51,7 +51,7 @@ export class Tile {
     top: number;
     width: number;
     height: number;
-    rotations: TileRotation[];
+    protected _rotations: TileRotation[];
     protected _triangles: Map<Triangle, ColorGroup>;
     protected _colors: TileColors;
 
@@ -197,8 +197,16 @@ export class Tile {
         this.height = Math.max(...this.triangles.map((t) => t.top + t.height)) - this.top;
 
         // TODO optimize -> precompute
-        const tileVariants = this.computeRotationVariants(true);
-        this.rotations = tileVariants.map((v) => v.rotation);
+        this._rotations = undefined;
+    }
+
+    get rotations() : TileRotation[] {
+        // TODO optimize -> precompute values?
+        if (!this._rotations) {
+            const tileVariants = this.computeRotationVariants(true);
+            this._rotations = tileVariants.map((v) => v.rotation);
+        }
+        return this._rotations;
     }
 
     /**

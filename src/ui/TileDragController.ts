@@ -38,142 +38,20 @@ export class TileDragController extends EventTarget {
     addSource(source : TileDragSource) {
         this.sources.push(source);
 
-        let autorotateCurrentTarget : Tile = null;
-        let autorotateTimeout : number = null;
-        const autorotateCache = new Map<Tile, TileRotation>();
+        const context : TileDragSourceContext = {
+            source: source,
+            autorotateCurrentTarget: null,
+            autorotateTimeout: null,
+            autorotateCache: new Map<Tile, TileRotation>(),
+            draggable: source.getDraggable(),
+            position: { x: 0, y: 0},
+        };
 
-        const draggable = source.getDraggable();
-        const position = { x: 0, y: 0};
-        draggable.draggable({
+        context.draggable.draggable({
             listeners: {
-                start: () => {
-                    for (const s of this.sources) {
-                        if (s !== source) s.resetDragStatus();
-                    }
-                    source.startDrag();
-                    this.dispatchEvent(new TileDragEvent(TileDragController.events.StartDrag, source));
-
-                    // precompute the placeholder tiles where this tile would fit
-                    if (this.autorotate || this.hints || this.snap) {
-                        autorotateCache.clear();
-                        // find possible locations where this tile would fit
-                        for (const placeholder of this.gridDisplay.grid.placeholderTiles) {
-                            const rotation = placeholder.computeRotationToFit(source.tile, source.rotation);
-                            if (rotation) {
-                                // this tile would fit
-                                autorotateCache.set(placeholder, rotation);
-                            }
-                        }
-                        // if hints are enabled, highlight possible/impossible tiles
-                        if (this.hints) {
-                            for (const tsd of this.gridDisplay.tileDisplays.values()) {
-                                if (tsd.tile.type === TileType.Placeholder) {
-                                    tsd.highlightHint(autorotateCache.has(tsd.tile));
-                                }
-                            }
-                        }
-                        console.log(autorotateCache);
-                    }
-                },
-                move: (evt : DragEvent) => {
-                    position.x += evt.dx;
-                    position.y += evt.dy;
-                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px) scale(${this.gridDisplay.scale / source.gridDisplay.scale})`;
-
-                    if (this.autorotate) {
-                        // figure out where we are
-                        const movingTriangle = source.tile.triangles[0];
-                        const movingPos = source.gridDisplay.triangleToScreenPosition(movingTriangle)
-                        // match moving to fixed
-                        const fixedTriangleCoord = this.gridDisplay.screenPositionToTriangleCoord(movingPos);
-                        const fixedTriangle = this.gridDisplay.grid.getTriangle(...fixedTriangleCoord);
-
-                        // triangle matched?
-                        if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.type === TileType.Placeholder) {
-                            if (autorotateCurrentTarget !== fixedTriangle.tile) {
-                                // autorotate after a small delay
-                                autorotateCurrentTarget = fixedTriangle.tile;
-                                const rotation = autorotateCache.get(autorotateCurrentTarget);
-                                if (rotation) {
-                                    // this tile would fit
-                                    if (autorotateTimeout) window.clearTimeout(autorotateTimeout);
-                                    autorotateTimeout = window.setTimeout(() => {
-                                        source.startAutorotate(rotation);
-                                    }, 100);
-                                }
-                            }
-                        } else {
-                            // cancel the autorotation
-                            autorotateCurrentTarget = null;
-                            if (autorotateTimeout) {
-                                window.clearTimeout(autorotateTimeout);
-                                autorotateTimeout = null;
-                            }
-                            autorotateTimeout = window.setTimeout(() => {
-                                // source.resetAutorotate();
-                            }, 100);
-                        }
-                        // console.log('MOVE', 'closestPair', closestPair);
-                    }
-
-                    if (this.snap) {
-                        // snapping?
-                        const movingTriangle = source.tile.triangles[0];
-                        const movingPos = source.gridDisplay.triangleToScreenPosition(movingTriangle)
-                        const fixedTriangleCoord = this.gridDisplay.screenPositionToTriangleCoord(movingPos);
-
-                        if (fixedTriangleCoord) {
-                            const rotatedMovingTriangle = movingTriangle.getRotationEdge(source.rotation.steps).to;
-                            const centerSnapFrom = source.gridDisplay.triangleToScreenPosition(movingTriangle);
-                            const fixedTriangle = this.gridDisplay.grid.getOrAddTriangle(...fixedTriangleCoord);
-                            const centerSnapTo = this.gridDisplay.triangleToScreenPosition(fixedTriangle);
-                            if (fixedTriangle &&
-                                fixedTriangle.tile &&
-                                fixedTriangle.tile.type === TileType.Placeholder &&
-                                fixedTriangle.shape == rotatedMovingTriangle.shape &&
-                                dist(centerSnapFrom, centerSnapFrom) < 30) {
-                                const rot = autorotateCache.get(fixedTriangle.tile);
-                                if (rot && rot.steps == source.rotation.steps) {
-                                    const snap = { x: position.x + centerSnapTo[0] - centerSnapFrom[0],
-                                                y: position.y + centerSnapTo[1] - centerSnapFrom[1] };
-                                    evt.target.style.transform = `translate(${snap.x}px, ${snap.y}px) scale(${this.gridDisplay.scale / source.gridDisplay.scale})`;
-                                }
-                            }
-                        }
-                    }
-                },
-                end: (evt : DragEvent) => {
-                    // figure out where we are
-                    const movingTriangle = source.tile.triangles[0];
-                    const movingPos = source.gridDisplay.triangleToScreenPosition(movingTriangle)
-                    // match moving to fixed
-                    const fixedTriangleCoord = this.gridDisplay.screenPositionToTriangleCoord(movingPos);
-                    const fixedTriangle = this.gridDisplay.grid.getTriangle(...fixedTriangleCoord);
-
-                    let successful = false;
-                    if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.type === TileType.Placeholder) {
-                        successful = this.gridDisplay.dropTile(source, { fixed: fixedTriangle, moving: movingTriangle });
-                    }
-                    console.log('DROPPED', movingTriangle, fixedTriangle, successful ? 'success' : 'no success');
-
-                    for (const tsd of this.gridDisplay.tileDisplays.values()) {
-                        tsd.removeHighlightHint();
-                    }
-
-                    // reset
-                    autorotateCache.clear();
-                    source.endDrag(successful);
-                    source.resetAutorotate(successful);
-                    position.x = 0;
-                    position.y = 0;
-                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
-                    this.dispatchEvent(new TileDragEvent(TileDragController.events.EndDrag, source));
-
-                    /*
-                    evt.target.style.transformOrigin = 'center';
-                    evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
-                    */
-                },
+                start: (evt : DragEvent) => this.onDragStart(context, evt),
+                move: (evt : DragEvent) => this.onDragMove(context, evt),
+                end: (evt : DragEvent) => this.onDragEnd(context, evt),
             }
         });
 
@@ -186,7 +64,147 @@ export class TileDragController extends EventTarget {
             });
         }
     }
+
+    onDragStart(context : TileDragSourceContext, evt : DragEvent) {
+        for (const s of this.sources) {
+            if (s !== context.source) s.resetDragStatus();
+        }
+        context.source.startDrag();
+        this.dispatchEvent(new TileDragEvent(TileDragController.events.StartDrag, context.source));
+
+        // precompute the placeholder tiles where this tile would fit
+        if (this.autorotate || this.hints || this.snap) {
+            context.autorotateCache.clear();
+            // find possible locations where this tile would fit
+            for (const placeholder of this.gridDisplay.grid.placeholderTiles) {
+                const rotation = placeholder.computeRotationToFit(context.source.tile, context.source.rotation);
+                if (rotation) {
+                    // this tile would fit
+                    context.autorotateCache.set(placeholder, rotation);
+                }
+            }
+            // if hints are enabled, highlight possible/impossible tiles
+            if (this.hints) {
+                for (const tsd of this.gridDisplay.tileDisplays.values()) {
+                    if (tsd.tile.type === TileType.Placeholder) {
+                        tsd.highlightHint(context.autorotateCache.has(tsd.tile));
+                    }
+                }
+            }
+            console.log(context.autorotateCache);
+        }
+    }
+
+    onDragMove(context : TileDragSourceContext, evt : DragEvent) {
+        context.position.x += evt.dx;
+        context.position.y += evt.dy;
+        evt.target.style.transform = `translate(${context.position.x}px, ${context.position.y}px) scale(${this.gridDisplay.scale / context.source.gridDisplay.scale})`;
+
+        if (this.autorotate) {
+            // figure out where we are
+            const movingTriangle = context.source.tile.triangles[0];
+            const movingPos = context.source.gridDisplay.triangleToScreenPosition(movingTriangle)
+            // match moving to fixed
+            const fixedTriangleCoord = this.gridDisplay.screenPositionToTriangleCoord(movingPos);
+            const fixedTriangle = this.gridDisplay.grid.getTriangle(...fixedTriangleCoord);
+
+            // triangle matched?
+            if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.type === TileType.Placeholder) {
+                if (context.autorotateCurrentTarget !== fixedTriangle.tile) {
+                    // autorotate after a small delay
+                    context.autorotateCurrentTarget = fixedTriangle.tile;
+                    const rotation = context.autorotateCache.get(context.autorotateCurrentTarget);
+                    if (rotation) {
+                        // this tile would fit
+                        if (context.autorotateTimeout) window.clearTimeout(context.autorotateTimeout);
+                        context.autorotateTimeout = window.setTimeout(() => {
+                            context.source.startAutorotate(rotation);
+                        }, 100);
+                    }
+                }
+            } else {
+                // cancel the autorotation
+                context.autorotateCurrentTarget = null;
+                if (context.autorotateTimeout) {
+                    window.clearTimeout(context.autorotateTimeout);
+                    context.autorotateTimeout = null;
+                }
+                context.autorotateTimeout = window.setTimeout(() => {
+                    // source.resetAutorotate();
+                }, 100);
+            }
+            // console.log('MOVE', 'closestPair', closestPair);
+        }
+
+        if (this.snap) {
+            // snapping?
+            const movingTriangle = context.source.tile.triangles[0];
+            const movingPos = context.source.gridDisplay.triangleToScreenPosition(movingTriangle)
+            const fixedTriangleCoord = this.gridDisplay.screenPositionToTriangleCoord(movingPos);
+
+            if (fixedTriangleCoord) {
+                const rotatedMovingTriangle = movingTriangle.getRotationEdge(context.source.rotation.steps).to;
+                const centerSnapFrom = context.source.gridDisplay.triangleToScreenPosition(movingTriangle);
+                const fixedTriangle = this.gridDisplay.grid.getOrAddTriangle(...fixedTriangleCoord);
+                const centerSnapTo = this.gridDisplay.triangleToScreenPosition(fixedTriangle);
+                if (fixedTriangle &&
+                    fixedTriangle.tile &&
+                    fixedTriangle.tile.type === TileType.Placeholder &&
+                    fixedTriangle.shape == rotatedMovingTriangle.shape &&
+                    dist(centerSnapFrom, centerSnapFrom) < 30) {
+                    const rot = context.autorotateCache.get(fixedTriangle.tile);
+                    if (rot && rot.steps == context.source.rotation.steps) {
+                        const snap = { x: context.position.x + centerSnapTo[0] - centerSnapFrom[0],
+                                       y: context.position.y + centerSnapTo[1] - centerSnapFrom[1] };
+                        evt.target.style.transform = `translate(${snap.x}px, ${snap.y}px) scale(${this.gridDisplay.scale / context.source.gridDisplay.scale})`;
+                    }
+                }
+            }
+        }
+    }
+
+    onDragEnd(context : TileDragSourceContext, evt : DragEvent) {
+        // figure out where we are
+        const movingTriangle = context.source.tile.triangles[0];
+        const movingPos = context.source.gridDisplay.triangleToScreenPosition(movingTriangle)
+        // match moving to fixed
+        const fixedTriangleCoord = this.gridDisplay.screenPositionToTriangleCoord(movingPos);
+        const fixedTriangle = this.gridDisplay.grid.getTriangle(...fixedTriangleCoord);
+
+        let successful = false;
+        if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.type === TileType.Placeholder) {
+            successful = this.gridDisplay.dropTile(context.source, { fixed: fixedTriangle, moving: movingTriangle });
+        }
+        console.log('DROPPED', movingTriangle, fixedTriangle, successful ? 'success' : 'no success');
+
+        for (const tsd of this.gridDisplay.tileDisplays.values()) {
+            tsd.removeHighlightHint();
+        }
+
+        // reset
+        context.autorotateCache.clear();
+        context.source.endDrag(successful);
+        context.source.resetAutorotate(successful);
+        context.position.x = 0;
+        context.position.y = 0;
+        evt.target.style.transform = `translate(${context.position.x}px, ${context.position.y}px)`;
+        this.dispatchEvent(new TileDragEvent(TileDragController.events.EndDrag, context.source));
+
+        /*
+        evt.target.style.transformOrigin = 'center';
+        evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+        */
+    }
 }
+
+type TileDragSourceContext = {
+    source : TileDragSource,
+    autorotateCurrentTarget : Tile,
+    autorotateTimeout : number,
+    autorotateCache : Map<Tile, TileRotation>,
+    draggable : Interactable,
+    position : { x: number, y: number },
+};
 
 export interface TileDragSource {
     gridDisplay : GridDisplay;

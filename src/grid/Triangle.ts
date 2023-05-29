@@ -23,10 +23,10 @@ export type TileColors = readonly TriangleColor[];
 
 export type TriangleParams = {
     shape?: number;
-    tileMinGridPeriodX : number;
-    tileMinGridPeriodY : number;
-    tileGridPeriodX : number;
-    tileGridPeriodY : number;
+    tileMinGridPeriodX? : number;
+    tileMinGridPeriodY? : number;
+    tileGridPeriodX? : number;
+    tileGridPeriodY? : number;
     xAtOrigin?: number;
     yAtOrigin?: number;
     points?: readonly [Coord, Coord, Coord];

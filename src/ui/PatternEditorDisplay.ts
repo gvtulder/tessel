@@ -1,6 +1,5 @@
 import { Grid } from "src/grid/Grid.js";
 import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
-import { TriangleOffsets, newCustomTileType } from "src/grid/CustomTile.js";
 import { Tile, TileType } from "src/grid/Tile.js";
 import { Edge, Triangle } from "src/grid/Triangle.js";
 import { wrapModulo } from "src/utils.js";

@@ -589,6 +589,9 @@ svg .tile-segments {
 .svg-tile.highlight-hint-notok {
   opacity: 0;
 }
+.svg-tile.svg-tile-PatternExample {
+  opacity: 0.3;
+}
 
 .mainMenuDisplay {
   position: absolute;
@@ -600,7 +603,7 @@ svg .tile-segments {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center
+  align-items: center;
   box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
 }
 .gameList {

@@ -62,6 +62,11 @@ export class EditorDisplay {
         });
     }
 
+    start() {
+        this.updatePattern();
+        this.rescale();
+    }
+
     rescale() {
         this.tileEditorDisplay.rescale();
         this.patternEditorDisplay.rescale();
@@ -77,9 +82,12 @@ export class EditorDisplay {
         const tile = this.patternGrid.getOrAddTile(0, 0, TileType.PatternEditorTile);
         tile.colors = this.tileEditorDisplay.tile.colors;
 
-        for (const neighbor of this.patternGrid.getOrAddTileNeighbors(tile, TileType.Placeholder)) {
+        this.patternEditorDisplay.gridDisplay.fillBackgroundPattern();
+
+        /*
+        for (const neighbor of this.patternGrid.getOrAddTileNeighbors(tile, TileType.PatternExample)) {
             neighbor.colors = this.tileEditorDisplay.tile.colors;
-            for (const neighbor2 of this.patternGrid.getOrAddTileNeighbors(neighbor, TileType.Placeholder)) {
+            for (const neighbor2 of this.patternGrid.getOrAddTileNeighbors(neighbor, TileType.PatternExample)) {
                 neighbor2.colors = this.tileEditorDisplay.tile.colors;
             }
         }
@@ -90,5 +98,6 @@ export class EditorDisplay {
                 tile.colors = this.tileEditorDisplay.tile.colors;
             }
         }
+        */
     }
 }

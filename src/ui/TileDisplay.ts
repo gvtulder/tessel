@@ -2,7 +2,7 @@ import type { Interactable } from '@interactjs/types';
 
 import { Triangle } from 'src/grid/Triangle.js';
 import { shrinkOutline } from 'src/utils.js';
-import { Tile } from "../grid/Tile.js";
+import { Tile, TileType } from "../grid/Tile.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { DEBUG, SCALE } from '../settings.js';
 import { GridDisplay } from './GridDisplay.js';
@@ -31,7 +31,11 @@ export class TileDisplay {
 
     build() {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        group.setAttribute('class', 'svg-tile');
+        let className = 'svg-tile';
+        if (this.tile.type === TileType.PatternExample) {
+            className = `${className} svg-tile-PatternExample`;
+        }
+        group.setAttribute('class', className);
         this.svgTriangles = group;
 
         this.redraw();

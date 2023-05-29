@@ -21,7 +21,7 @@ export function runEditorDebug() {
 
     const display = new EditorDisplay(pattern);
     document.body.appendChild(display.element);
-    display.rescale();
+    display.start();
 
     window.addEventListener('resize', () => display.rescale());
 

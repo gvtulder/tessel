@@ -52,6 +52,11 @@ export class GridDisplay extends EventTarget {
     viewBoxWidth : number;
     viewBoxHeight : number;
 
+    visibleLeft : number;
+    visibleRight : number;
+    visibleTop : number;
+    visibleBottom : number;
+
     scale : number;
     margins = { top: 30, right: 30, bottom: 30, left: 30 };
     scalingType = GridDisplayScalingType.EqualMargins;
@@ -331,6 +336,12 @@ export class GridDisplay extends EventTarget {
                 containerLeft = (availWidth - finalWidth) / 2 - dim.minX * SCALE * scale;
                 containerTop = (availHeight - finalHeight) / 2 - dim.minY * SCALE * scale;
         }
+
+        // compute the area that is visible on screen
+        this.visibleLeft = -containerLeft / scale;
+        this.visibleRight = (availWidth + containerLeft) / scale;
+        this.visibleTop = -containerTop / scale;
+        this.visibleBottom = (availHeight + containerTop) / scale;
 
         // adjust the viewBox to match the grid (0,0) to the container (0,0)
         this.svg.setAttribute('viewBox', `${viewBoxMinX} ${viewBoxMinY} ${viewBoxWidth} ${viewBoxHeight}`);

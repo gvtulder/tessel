@@ -72,6 +72,14 @@ export class Tile {
         if (this.grid) this.grid.dispatchEvent(evt);
     }
 
+    get right() : number {
+        return this.left + this.width;
+    }
+
+    get bottom() : number {
+        return this.top + this.height;
+    }
+
     /**
      * Replace the triangles of this tile.
      *

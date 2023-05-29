@@ -84,7 +84,16 @@ export class Grid extends EventTarget {
      * The list of placeholder tiles.
      */
     get placeholderTiles() : Tile[] {
-        return this.tiles.filter((t) => t.type === TileType.Placeholder);
+        return this.getTilesWithType(TileType.Placeholder);
+    }
+
+    /**
+     * Returns all tiles with a the requested type.
+     * @param type a tile type
+     * @returns all types of the given type
+     */
+    getTilesWithType(type : TileType) : Tile[] {
+        return this.tiles.filter((t) => t.type === type);
     }
 
     /**
@@ -249,6 +258,11 @@ export class Grid extends EventTarget {
         return triangles;
     }
 
+    /**
+     * Maps a grid position to a triangle coordinate.
+     * @param gridPos the grid position
+     * @returns the triangle coordinate
+     */
     gridPositionToTriangleCoord(gridPos : Coord) : Coord {
         const triangle = this.getOrAddTriangle(0, 0);
         return triangle.mapGridPositionToTriangleCoord(gridPos);

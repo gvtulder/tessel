@@ -296,9 +296,9 @@ export class Pattern {
         let tries = 0;
 
         // estiates
-        const maxShapeGridPeriodX = (shapeMaxX - shapeMinX) + maxGridPeriodX + 1;
+        const maxShapeGridPeriodX = 2 * (shapeMaxX - shapeMinX) + maxGridPeriodX + 1;
         const maxShapeStepX = maxShapeGridPeriodX;
-        const maxShapeStepY = (shapeMaxY - shapeMinY) + maxGridPeriodY + 1;
+        const maxShapeStepY = 2 * (shapeMaxY - shapeMinY) + maxGridPeriodY + 1;
         console.log('maxShapeGridPeriodX', maxShapeGridPeriodX);
         console.log('maxShapeStepX', maxShapeStepX);
         console.log('maxShapeStepY', maxShapeStepY);

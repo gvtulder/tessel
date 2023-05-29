@@ -191,6 +191,169 @@ export class Pattern {
         }
 
         // combine all of the coordinates and shapes to a single tile
+        const coordinates : Coord[] = [];
+        for (const shape of this.shapes) {
+            for (const coords of shape) {
+                for (const coord of coords) {
+                    coordinates.push(coord);
+                }
+            }
+        }
+        console.log(this.shapes);
+        console.log('Pattern coordinates:', coordinates);
+
+        // compute the size of the pattern
+        const shapeMinX = Math.min(...coordinates.map((c) => c[0]));
+        const shapeMaxX = Math.max(...coordinates.map((c) => c[0]));
+        const shapeMinY = Math.min(...coordinates.map((c) => c[1]));
+        const shapeMaxY = Math.max(...coordinates.map((c) => c[1]));
+        console.log(`Pattern bounds: x [${shapeMinX} ${shapeMaxX}] y [${shapeMinY} ${shapeMaxY}].`);
+
+        // define the scoring region
+        const roiMinX = shapeMinX - (shapeMaxX - shapeMinX) - 2 * maxGridPeriodX;
+        const roiMaxX = shapeMaxX + (shapeMaxX - shapeMinX) + 2 * maxGridPeriodX;
+        const roiMinY = shapeMinY - (shapeMaxY - shapeMinY) - 2 * maxGridPeriodY;
+        const roiMaxY = shapeMaxY + (shapeMaxY - shapeMinY) + 2 * maxGridPeriodY;
+        const maxScore = (roiMaxX - roiMinX) * (roiMaxY - roiMinY);
+        console.log(`Pattern ROI: x [${roiMinX} ${roiMaxX}] y [${roiMinY} ${roiMaxY}]. Max score: ${maxScore}.`);
+
+        const checkPeriodFits = (periodX : number, stepX : number, stepY : number) : number => {
+            // returns the tightness of the pattern fit
+            // keep track of the triangles that we already used
+            const marked = new Set<CoordId>();
+            // keep track of the pattern repetitions we've marked so far
+            const tried = new Set<CoordId>();
+            const queue : Coord[] = [];
+            // have we already placed any triangles?
+            let stillExploring = true;
+
+            // start with pattern [0,0]
+            tried.add('0 0');
+            queue.push([0, 0]);
+
+            while (queue.length > 0) {
+                // get the next x, y tile coordinate to try
+                const tileCoord = queue.shift();
+
+                // place the triangles for this tile
+                let anyMarked = false;
+                for (let c=0; c<coordinates.length; c++) {
+                    const coord = coordinates[c];
+                    const x = tileCoord[0] * periodX + tileCoord[1] * stepX + coord[0];
+                    const y = tileCoord[1] * stepY + coord[1];
+
+                    if (x < roiMinX || roiMaxX <= x || y < roiMinY || roiMaxY <= y) {
+                        continue;
+                    }
+
+                    const coordId = `${x} ${y}`;
+
+                    // not yet marked?
+                    if (marked.has(coordId)) {
+                        return null;
+                    }
+
+                    // the triangle shapes should match
+                    if (triangleShapes[((coord[0] % maxGridPeriodX) + maxGridPeriodX) % maxGridPeriodX][
+                                    ((coord[1] % maxGridPeriodY) + maxGridPeriodY) % maxGridPeriodY] !=
+                        triangleShapes[((x % maxGridPeriodX) + maxGridPeriodX) % maxGridPeriodX][
+                                    ((y % maxGridPeriodY) + maxGridPeriodY) % maxGridPeriodY]) {
+                        return null;
+                    }
+
+                    marked.add(coordId);
+                    anyMarked = true;
+                }
+
+                if (anyMarked) {
+                    // from now on, only work with parameters that reach the ROI
+                    stillExploring = false;
+                }
+
+                // was this a good coordinate? or are we still exploring?
+                if (anyMarked || stillExploring) {
+                    // add the neighboring parameters to the queue
+                    for (let newI=-1; newI<=1; newI++) {
+                        for (let newJ=-1; newJ<=1; newJ++) {
+                            const newTileCoord : Coord = [newI + tileCoord[0], newJ + tileCoord[1]];
+                            const newTileCoordId = CoordId(newTileCoord);
+                            if (!tried.has(newTileCoordId)) {
+                                tried.add(newTileCoordId);
+                                queue.push(newTileCoord);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return marked.size;
+        }
+
+        let bestScore : number = null;
+        let bestPeriodX : number = null;
+        let bestStepX : number = null;
+        let bestStepY : number = null;
+        let tries = 0;
+
+        // estiates
+        const maxShapeGridPeriodX = (shapeMaxX - shapeMinX) + maxGridPeriodX + 1;
+        const maxShapeStepX = maxShapeGridPeriodX;
+        const maxShapeStepY = (shapeMaxY - shapeMinY) + maxGridPeriodY + 1;
+        console.log('maxShapeGridPeriodX', maxShapeGridPeriodX);
+        console.log('maxShapeStepX', maxShapeStepX);
+        console.log('maxShapeStepY', maxShapeStepY);
+
+        for (let r=0; r<20; r++) {
+            for (let stepX=-r; stepX<=r; stepX++) {
+                if (bestScore == maxScore) break;
+                for (let stepY=-r; stepY<=r; stepY++) {
+                    if (!(stepX==-r || stepX==r || stepY==-r || stepY==r)) break;
+                    if (bestScore == maxScore) break;
+                    for (let periodX=0; periodX<maxShapeGridPeriodX; periodX++) {
+                        if (bestScore == maxScore) break;
+                        tries++;
+                        const score = checkPeriodFits(periodX, stepX, stepY);
+                        // console.log(`Try periodX ${periodX} stepX ${stepX} stepY ${stepY} cost ${score}`);
+                        if (score !== null) {
+                            // console.log('fits', [periodX, stepX, stepY], cost);
+                            if (bestPeriodX === null || score > bestScore ||
+                                (score == bestScore && Math.abs(stepX) < Math.abs(bestStepX)) ||
+                                (score == bestScore && Math.abs(stepX) == Math.abs(bestStepX) && Math.abs(stepY) == Math.abs(bestStepY))) {
+                                bestPeriodX = periodX;
+                                bestStepX = stepX;
+                                bestStepY = stepY;
+                                bestScore = score;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        this.periodX = bestPeriodX;
+        this.stepY = [bestStepX, bestStepY];
+        console.log(`Best period: ${this.periodX} with step (${this.stepY[0]}, ${this.stepY[1]}), score ${bestScore}. Evaluated ${tries} options.`);
+    }
+
+    oldComputePeriods(grid : Grid) {
+        // create one triangle to get the parameters
+        const protoTriangle = grid.getOrAddTriangle(0, 0);
+        const minGridPeriodX = protoTriangle.tileMinGridPeriodX;
+        const minGridPeriodY = protoTriangle.tileMinGridPeriodY;
+        const maxGridPeriodX = protoTriangle.tileGridPeriodX;
+        const maxGridPeriodY = protoTriangle.tileGridPeriodY;
+
+        // calculate the shapes of the triangle grid
+        const triangleShapes : number[][] = [];
+        for (let x=0; x<maxGridPeriodX; x++) {
+            triangleShapes[x] = [];
+            for (let y=0; y<maxGridPeriodY; y++) {
+                const p = protoTriangle.getGridParameters(x, y);
+                triangleShapes[x].push(p.shape);
+            }
+        }
+
+        // combine all of the coordinates and shapes to a single tile
         type CoordIdPair = [x: number, y: number, coordId: CoordId, cost: number];
         // mark the closeness from the starting tile
         const MAX_DEPTH = 2 * (maxGridPeriodX + maxGridPeriodY);
@@ -230,6 +393,25 @@ export class Pattern {
         }
         console.log(`Marked ${scoreMap.size} neighbors. Maximum total score ${maxTotalScore}.`);
         console.log([...scoreMap.values()].reduce((a, b) => a + b));
+
+        /*
+
+        - must fit the largest number of tiles in a given [x,y] region
+        - define region, count number of tiles fitted
+        - if region complete: stop
+
+        - size of a suitable region:
+
+        - for a set of parameters periodX/stepX/stepY:
+          - loop over tiles i, j:
+            - place triangles tile, checking for overlap
+            - break if no new triangles placed inside scoring region
+
+        - choose a suitable scoring region:
+          - based on grid period
+          - based on pattern width (measure mapped x,y coordinates)
+
+        */
 
         const checkPeriodFits = (periodX : number, stepX : number, stepY : number, bestScore : number) : number => {
             // returns the tightness of the pattern fit

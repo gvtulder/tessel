@@ -83,7 +83,7 @@ export class MainMenuDisplay extends EventTarget {
 
     rescale() {
         for (const gridDisplay of this.gridDisplays) {
-            gridDisplay.triggerRescale();
+            gridDisplay.rescale();
         }
     }
 }

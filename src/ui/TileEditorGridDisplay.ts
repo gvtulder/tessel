@@ -28,6 +28,8 @@ export class TileEditorGridDisplay extends GridDisplay {
     constructor(grid: Grid, container : HTMLElement) {
         super(grid, container);
 
+        this.addBackgroundGrid();
+
         this.interactable = interact(this.svgTriangles)
         .on('tap', (evt : PointerEvent) => {
             // find the triangle

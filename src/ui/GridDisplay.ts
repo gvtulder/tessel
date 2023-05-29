@@ -47,6 +47,11 @@ export class GridDisplay extends EventTarget {
     contentMaxXNoPlaceholders : number;
     contentMaxYNoPlaceholders : number;
 
+    viewBoxMinX : number;
+    viewBoxMinY : number;
+    viewBoxWidth : number;
+    viewBoxHeight : number;
+
     scale : number;
     margins = { top: 30, right: 30, bottom: 30, left: 30 };
     scalingType = GridDisplayScalingType.EqualMargins;
@@ -123,10 +128,6 @@ export class GridDisplay extends EventTarget {
         this.coordinateMapper = new CoordinateMapper();
         this.svgGrid.appendChild(this.coordinateMapper.svgGroup);
 
-        const backgroundGrid = new BackgroundGrid(this.grid);
-        this.svgGrid.appendChild(backgroundGrid.element);
-        this.backgroundGrid = backgroundGrid;
-
         this.svgTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         this.svgTriangles.setAttribute('class', 'svg-tiles');
         this.svgGrid.appendChild(this.svgTriangles)
@@ -134,6 +135,14 @@ export class GridDisplay extends EventTarget {
         if (DEBUG.CONNECT_TILES) {
             this.connectorDisplay = new ConnectorDisplay(this.grid);
             this.svgGrid.appendChild(this.connectorDisplay.svgGroup);
+        }
+    }
+
+    addBackgroundGrid() {
+        if (!this.backgroundGrid) {
+            const backgroundGrid = new BackgroundGrid(this.grid);
+            this.svgGrid.insertBefore(backgroundGrid.element, this.svgTriangles);
+            this.backgroundGrid = backgroundGrid;
         }
     }
 
@@ -196,7 +205,7 @@ export class GridDisplay extends EventTarget {
         this.contentMaxXNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
         this.contentMaxYNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.top + t.height));
 
-        this.triggerRescale();
+        this.rescale();
     }
 
     /**
@@ -259,6 +268,7 @@ export class GridDisplay extends EventTarget {
         const availWidth = (this.container || document.documentElement).clientWidth;
         const availHeight = (this.container || document.documentElement).clientHeight;
         const dim = this.computeDimensionsForRescale();
+        if (availWidth === 0 || availHeight === 0) return;
 
         // adjust the viewBox to match the grid (0,0) to the container (0,0)
         const minX = this.contentMinX * SCALE;
@@ -294,6 +304,10 @@ export class GridDisplay extends EventTarget {
             viewBoxMinY -= adjustY / 2;
             viewBoxHeight += adjustY;
         }
+        this.viewBoxMinX = viewBoxMinX;
+        this.viewBoxMinY = viewBoxMinY;
+        this.viewBoxWidth = viewBoxWidth;
+        this.viewBoxHeight = viewBoxHeight;
 
         // shift the origin to center the content in the container
         let containerLeft : number;

@@ -69,7 +69,7 @@ export class MainGridDisplay extends GridDisplay {
                 window.setTimeout(cleanUp, placeholders.length > 0 ? delay : 100);
             } else {
                 this.ignorePlaceholders = true;
-                this.triggerRescale();
+                this.rescale();
             }
         };
         window.setTimeout(cleanUp, delay);

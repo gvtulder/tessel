@@ -7,6 +7,7 @@ import { Tile, TileRotation, TileType } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { TileDragController, TileDragSource } from './TileDragController.js';
 import { Pattern } from 'src/grid/Pattern.js';
+import { MainGridTileDragController } from './MainGridTileDragController.js';
 
 export class TileStackDisplay extends EventTarget {
     static events = {
@@ -83,7 +84,7 @@ export class TileStackDisplay extends EventTarget {
         this.counter = counterDiv;
     }
 
-    makeDraggable(tileDragController : TileDragController) {
+    makeDraggable(tileDragController : MainGridTileDragController) {
         for (const tileDisplay of this.tileDisplays) {
             tileDragController.addSource(tileDisplay);
         }

@@ -370,10 +370,6 @@ export class GridDisplay extends EventTarget {
             }, 1000);
         }
     }
-
-    dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
-        return false;
-    }
 }
 
 

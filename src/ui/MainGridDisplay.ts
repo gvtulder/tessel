@@ -7,12 +7,12 @@ import { GridDisplay } from './GridDisplay.js';
 import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
 import { TriangleOnScreenMatch } from './TileDisplay.js';
-import { TileDragSource } from './TileDragController.js';
+import { TileDragSource, TileDropTarget } from './TileDragController.js';
 import { TileType } from "src/grid/Tile.js";
 
 
 
-export class MainGridDisplay extends GridDisplay {
+export class MainGridDisplay extends GridDisplay implements TileDropTarget {
     gameDisplay : GameDisplay;
     scoreOverlayDisplay : ScoreOverlayDisplay;
     ignorePlaceholders : boolean;
@@ -50,9 +50,11 @@ export class MainGridDisplay extends GridDisplay {
     }
 
     dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
-        const targetTile = pair.fixed.tile;
-        if (targetTile && targetTile.type === TileType.Placeholder) {
-            return this.gameDisplay.game.placeTile(source.tile, source.rotation, pair.moving, pair.fixed, source.indexOnStack);
+        if (pair.fixed && pair.fixed.tile && pair.fixed.tile.type === TileType.Placeholder) {
+            const targetTile = pair.fixed.tile;
+            if (targetTile && targetTile.type === TileType.Placeholder) {
+                return this.gameDisplay.game.placeTile(source.tile, source.rotation, pair.moving, pair.fixed, source.indexOnStack);
+            }
         }
         return false;
     }

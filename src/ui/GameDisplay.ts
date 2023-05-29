@@ -7,6 +7,7 @@ import { TileStackDisplay } from "./TileStackDisplay.js";
 import { ScoreDisplay } from "./ScoreDisplay.js";
 import icons from './icons.js';
 import { TileDragController } from './TileDragController.js';
+import { MainGridTileDragController } from './MainGridTileDragController.js';
 
 export class GameDisplay extends EventTarget {
     game : Game;
@@ -14,7 +15,7 @@ export class GameDisplay extends EventTarget {
     gridDisplay : MainGridDisplay;
     tileStackDisplay : TileStackDisplay;
     scoreDisplay : ScoreDisplay;
-    tileDragController : TileDragController;
+    tileDragController : MainGridTileDragController;
 
     element : HTMLDivElement;
 
@@ -120,7 +121,7 @@ export class GameDisplay extends EventTarget {
         toggles.appendChild(this.snap.element);
 
 
-        const tileDragController = new TileDragController(this.gridDisplay);
+        const tileDragController = new MainGridTileDragController(this.gridDisplay);
         this.tileStackDisplay.makeDraggable(tileDragController);
         this.tileDragController = tileDragController;
 

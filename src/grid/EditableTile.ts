@@ -1,4 +1,4 @@
-import { Tile } from "src/grid/Tile.js";
+import { Tile, TileType } from "src/grid/Tile.js";
 import { ColorGroup, TileColors, Triangle, TriangleColor } from "src/grid/Triangle.js";
 import { Grid } from "./Grid.js";
 
@@ -11,7 +11,7 @@ export class EditableTile extends Tile {
     colorsToColorGroup : Map<ColorGroup, TriangleColor>;
 
     constructor(grid: Grid, x: number, y: number, triangles : Triangle[][]) {
-        super(grid, x, y, triangles);
+        super(grid, x, y, TileType.EditableTile, triangles);
     }
 
     /**

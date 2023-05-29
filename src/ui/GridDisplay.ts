@@ -1,6 +1,6 @@
 import { TileDisplay, TriangleOnScreenMatch } from './TileDisplay.js';
 import { Grid, GridEvent } from '../grid/Grid.js';
-import { Tile, TileEvent } from "../grid/Tile.js";
+import { Tile, TileEvent, TileType } from "../grid/Tile.js";
 import { Coord, CoordId, Triangle, TriangleEvent } from "../grid/Triangle.js";
 import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
@@ -93,7 +93,7 @@ export class GridDisplay extends EventTarget {
         if (DEBUG.PLOT_SINGLE_TRIANGLES) {
             for (let x=-11; x<24; x++) {
                 for (let y=-1; y<2; y++) {
-                    const tile = new Tile(this.grid, Math.floor(x / 12), y, [[this.grid.getOrAddTriangle(x, y)]]);
+                    const tile = new Tile(this.grid, Math.floor(x / 12), y, TileType.NormalTile, [[this.grid.getOrAddTriangle(x, y)]]);
                     this.grid.addTile(tile);
                     this.addTile(tile);
                 }
@@ -199,7 +199,7 @@ export class GridDisplay extends EventTarget {
         this.contentMaxX = Math.max(...tiles.map((t) => t.left + t.width));
         this.contentMaxY = Math.max(...tiles.map((t) => t.top + t.height));
 
-        const noPlaceholders = tiles.filter((t) => !t.isPlaceholder());
+        const noPlaceholders = this.grid.placeholderTiles;
         this.contentMinXNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.left));
         this.contentMinYNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.top));
         this.contentMaxXNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
@@ -244,6 +244,11 @@ export class GridDisplay extends EventTarget {
         return;
     } 
 
+    /**
+     * Returns the dimensions of the content area (e.g., the display coordinates
+     * of the triangles to be shown on screen.)
+     * @returns the minimum dimensions 
+     */
     protected computeDimensionsForRescale() : { minX : number, minY : number, maxX : number, maxY : number } {
         return {
             minX: this.contentMinX,

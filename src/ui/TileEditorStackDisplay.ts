@@ -5,9 +5,8 @@ import { Grid } from "../grid/Grid.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
-import { CopyTile } from './TileEditorDisplay.js';
 import { EditablePattern } from 'src/grid/EditablePattern.js';
-import { Tile, TileVariant } from 'src/grid/Tile.js';
+import { Tile, TileType, TileVariant } from 'src/grid/Tile.js';
 import { Pattern } from 'src/grid/Pattern.js';
 import { EditableTile } from 'src/grid/EditableTile.js';
 
@@ -99,7 +98,7 @@ class SingleTileOnEditorStackDisplay {
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(pattern.triangleType, pattern);
-        this.tile = new Tile(this.grid, 0, 0, [[this.grid.getOrAddTriangle(0, 0)]]);
+        this.tile = new Tile(this.grid, 0, 0, TileType.TileOnStack, [[this.grid.getOrAddTriangle(0, 0)]]);
         this.grid.addTile(this.tile);
 
 

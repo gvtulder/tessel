@@ -1,7 +1,7 @@
 import { Grid } from "src/grid/Grid.js";
 import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
 import { TriangleOffsets, newCustomTileType } from "src/grid/CustomTile.js";
-import { Tile } from "src/grid/Tile.js";
+import { Tile, TileType } from "src/grid/Tile.js";
 import { Edge, Triangle } from "src/grid/Triangle.js";
 import { wrapModulo } from "src/utils.js";
 import { DEBUG } from "src/settings.js";
@@ -22,7 +22,7 @@ export class PatternEditorDisplay extends EventTarget {
         this.build();
 
         // start with a new tile
-        const tile = new Tile(this.grid, 0, 0, [[this.grid.getOrAddTriangle(0, 0)]]);
+        const tile = new Tile(this.grid, 0, 0, TileType.PatternEditorTile, [[this.grid.getOrAddTriangle(0, 0)]]);
         tile.colors = ['red'];
         this.grid.addTile(tile);
 

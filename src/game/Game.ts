@@ -1,6 +1,6 @@
 import { Grid } from "src/grid/Grid.js";
 import { ScoredRegion, Scorer } from "src/grid/Scorer.js";
-import { Tile, TileRotation, TileShape } from "src/grid/Tile.js";
+import { Tile, TileRotation, TileShape, TileType } from "src/grid/Tile.js";
 import { TileColors, Triangle, TriangleType } from "src/grid/Triangle.js";
 import { TileGenerator } from "./TileGenerator.js";
 import { FixedOrderTileStack, TileStack } from "./TileStack.js";
@@ -77,7 +77,7 @@ export class Game extends EventTarget {
         }
 
         for (const t of initialTiles) {
-            const tile = this.grid.getOrAddTile(t.x, t.y);
+            const tile = this.grid.getOrAddTile(t.x, t.y, TileType.NormalTile);
             tile.colors = t.colors;
             this.tileStack.removeColors(t.colors);
         }
@@ -100,6 +100,7 @@ export class Game extends EventTarget {
         if (targetTile.checkFitColors(newColors)) {
             // place tile
             targetTile.colors = newColors;
+            targetTile.type = TileType.NormalTile;
             this.grid.updateFrontier();
 
             // remove from stack

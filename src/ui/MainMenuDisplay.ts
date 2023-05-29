@@ -6,6 +6,7 @@ import { Grid } from "src/grid/Grid.js";
 import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay.js";
 import * as SaveGames from 'src/saveGames.js';
 import { Pattern } from 'src/grid/Pattern.js';
+import { TileType } from 'src/grid/Tile.js';
 
 export class MenuEvent extends Event {
     gameSettings : GameSettings;
@@ -47,7 +48,7 @@ export class MainMenuDisplay extends EventTarget {
 
             const pattern = new Pattern(gameSettings.triangleType, gameSettings.pattern.shapes);
             const grid = new Grid(gameSettings.triangleType, pattern);
-            const tile = grid.getOrAddTile(0, 0);
+            const tile = grid.getOrAddTile(0, 0, TileType.MenuExampleTile);
             tile.colors = gameSettings.initialTile;
             this.grids.push(grid);
 

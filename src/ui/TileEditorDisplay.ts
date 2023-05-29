@@ -1,7 +1,7 @@
 import { Grid } from "src/grid/Grid.js";
 import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
 import { TriangleOffsets, newCustomTileType } from "src/grid/CustomTile.js";
-import { Tile } from "src/grid/Tile.js";
+import { Tile, TileType } from "src/grid/Tile.js";
 import { Edge, Triangle } from "src/grid/Triangle.js";
 import { wrapModulo } from "src/utils.js";
 import { DEBUG } from "src/settings.js";
@@ -92,7 +92,7 @@ export class TileEditorDisplay extends EventTarget {
         // collect the old placeholder triangles from the grid
         const oldTriangles = new Set<Triangle>();
         for (const triangle of this.grid.triangles) {
-            if (triangle.tile && triangle.tile !== this.tile && triangle.tile !== this.copyTile) {
+            if (triangle.tile && triangle.tile !== this.tile) {
                 oldTriangles.add(triangle);
             }
         }
@@ -111,7 +111,7 @@ export class TileEditorDisplay extends EventTarget {
         // construct new tiles for the new triangles
         for (const triangle of frontier) {
             if (!triangle.tile) {
-                const p = new Tile(this.grid, triangle.x, triangle.y, [[triangle]]);
+                const p = new Tile(this.grid, triangle.x, triangle.y, TileType.Placeholder, [[triangle]]);
                 this.grid.addTile(p);
                 p.colors = null;
             }
@@ -127,28 +127,6 @@ export class TileEditorDisplay extends EventTarget {
 
     getTileOffsets() : number[][] {
         return this.tile.triangles.map((t) => [t.x, t.y]);
-    }
-}
-
-export class CopyTile extends Tile {
-    triangleCoordinates : number[][] = [];
-
-    get rotationAngles() {
-        return [0];
-    }
-
-    findTriangles(): Triangle[] {
-        if (!this.triangleCoordinates) {
-            this.triangleCoordinates = [[this.x, this.y]];
-        }
-        return this.triangleCoordinates.map((o) => {
-            return this.grid.getOrAddTriangle(o[0], o[1]);
-        });
-    }
-
-    replaceTriangleOffsets(coordinates : number[][]) {
-        this.triangleCoordinates = [...coordinates.map((o) => [...o])];
-        this.updateTriangles();
     }
 }
 

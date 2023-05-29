@@ -12,6 +12,16 @@ export type TileRotation = {
 type TriangleColorGroup = Coord[];
 export type TileShape = TriangleColorGroup[];
 
+export enum TileType {
+    NormalTile,
+    Placeholder,
+    TileOnStack,
+    EditableTile,
+    PatternEditorTile,
+    PatternExample,
+    MenuExampleTile,
+}
+
 export type TileVariant = {
     rotation: TileRotation,
     shape: TileShape,
@@ -31,6 +41,7 @@ export class Tile {
         UpdateColors: 'updatecolors',
     };
 
+    type : TileType;
     grid: Grid;
     x: number;
     y: number;
@@ -44,10 +55,11 @@ export class Tile {
     protected _triangles: Map<Triangle, ColorGroup>;
     protected _colors: TileColors;
 
-    constructor(grid: Grid, x: number, y: number, triangles : Triangle[][]) {
+    constructor(grid: Grid, x: number, y: number, type : TileType, triangles : Triangle[][]) {
         this.grid = grid;
         this.x = x;
         this.y = y;
+        this.type = type;
 
         this.coord = [x, y];
         this.coordId = CoordId(x, y);
@@ -207,7 +219,7 @@ export class Tile {
             const mismatch = triangle.getNeighbors().some((neighbor) => (
                 neighbor.tile !== this &&
                 neighbor.tile &&
-                !neighbor.tile.isPlaceholder() &&
+                neighbor.tile.type !== TileType.Placeholder &&
                 neighbor.color != colors[colorGroup]
             ));
             if (mismatch) return false;
@@ -369,13 +381,6 @@ export class Tile {
             map.set(triangle, newTriangle);
         }
         return map;
-    }
-
-    /**
-     * @returns true if the tile is a placeholder
-     */
-    isPlaceholder() {
-        return this._colors === null || (this._colors && this._colors[0] === null);
     }
 
     /**

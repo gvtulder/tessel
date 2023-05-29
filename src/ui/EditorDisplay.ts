@@ -8,6 +8,7 @@ import { Pattern } from "src/grid/Pattern.js";
 import { TileEditorStackDisplay } from "./TileEditorStackDisplay.js";
 import { PatternEditorDisplay } from "./PatternEditorDisplay.js";
 import { EditablePattern } from "src/grid/EditablePattern.js";
+import { TileType } from "src/grid/Tile.js";
 
 export class EditorDisplay {
     tileGrid : Grid;
@@ -73,19 +74,19 @@ export class EditorDisplay {
 
         this.patternGrid.removeAllTiles();
 
-        const tile = this.patternGrid.getOrAddTile(0, 0);
+        const tile = this.patternGrid.getOrAddTile(0, 0, TileType.PatternEditorTile);
         tile.colors = this.tileEditorDisplay.tile.colors;
 
-        for (const neighbor of this.patternGrid.getOrAddTileNeighbors(tile)) {
+        for (const neighbor of this.patternGrid.getOrAddTileNeighbors(tile, TileType.Placeholder)) {
             neighbor.colors = this.tileEditorDisplay.tile.colors;
-            for (const neighbor2 of this.patternGrid.getOrAddTileNeighbors(neighbor)) {
+            for (const neighbor2 of this.patternGrid.getOrAddTileNeighbors(neighbor, TileType.Placeholder)) {
                 neighbor2.colors = this.tileEditorDisplay.tile.colors;
             }
         }
 
         for (let x=-3; x<4; x++) {
             for (let y=-3; y<4; y++) {
-                const tile = this.patternGrid.getOrAddTile(x, y);
+                const tile = this.patternGrid.getOrAddTile(x, y, TileType.PatternExample);
                 tile.colors = this.tileEditorDisplay.tile.colors;
             }
         }

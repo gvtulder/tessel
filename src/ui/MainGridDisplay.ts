@@ -8,6 +8,7 @@ import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
 import { TriangleOnScreenMatch } from './TileDisplay.js';
 import { TileDragSource } from './TileDragController.js';
+import { TileType } from "src/grid/Tile.js";
 
 
 
@@ -50,7 +51,7 @@ export class MainGridDisplay extends GridDisplay {
 
     dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
         const targetTile = pair.fixed.tile;
-        if (targetTile && targetTile.isPlaceholder()) {
+        if (targetTile && targetTile.type === TileType.Placeholder) {
             return this.gameDisplay.game.placeTile(source.tile, source.rotation, pair.moving, pair.fixed, source.indexOnStack);
         }
         return false;
@@ -58,7 +59,7 @@ export class MainGridDisplay extends GridDisplay {
 
     gameFinished() {
         const placeholders = [...this.tileDisplays.values()].filter(
-            (d) => d.tile.isPlaceholder()
+            (d) => d.tile.type === TileType.Placeholder
         );
         shuffle(placeholders);
         let delay = 100;

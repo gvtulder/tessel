@@ -1,6 +1,6 @@
 import { wrapModulo } from "src/utils.js";
 import { Grid } from "./Grid.js";
-import { Tile, TileShape, TileVariant } from "./Tile.js";
+import { Tile, TileShape, TileType, TileVariant } from "./Tile.js";
 import { Coord, CoordId, Triangle, TriangleType } from "./Triangle.js";
 
 
@@ -69,7 +69,7 @@ export class Pattern {
      * @param y the tile y position
      * @returns a new tile on the grid (must still be added)
      */
-    constructTile(grid : Grid, x : number, y : number) : Tile {
+    constructTile(grid : Grid, x : number, y : number, type : TileType) : Tile {
         const patterns = this.shapes;
         const shapeIdx = wrapModulo(x, patterns.length);
 
@@ -85,7 +85,7 @@ export class Pattern {
             })
         ));
 
-        return new Tile(grid, x, y, triangles);
+        return new Tile(grid, x, y, type, triangles);
     }
 
     /**
@@ -143,7 +143,7 @@ export class Pattern {
 
         for (let shapeIdx=0; shapeIdx<this.shapes.length; shapeIdx++) {
             // construct a tile of this shape
-            const tile = this.constructTile(grid, shapeIdx, 0);
+            const tile = this.constructTile(grid, shapeIdx, 0, TileType.NormalTile);
             // compute the color-sensitive rotation variants
             const rotationVariants = tile.computeRotationVariants(true);
 

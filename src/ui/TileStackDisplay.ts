@@ -3,7 +3,7 @@ import interact from '@interactjs/interact/index';
 
 import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
-import { Tile, TileRotation } from "../grid/Tile.js";
+import { Tile, TileRotation, TileType } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { TileDragController, TileDragSource } from './TileDragController.js';
 import { Pattern } from 'src/grid/Pattern.js';
@@ -130,7 +130,7 @@ class SingleTileOnStackDisplay implements TileDragSource {
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(pattern.triangleType, pattern);
-        this.tile = this.grid.getOrAddTile(0, 0);
+        this.tile = this.grid.getOrAddTile(0, 0, TileType.TileOnStack);
 
         this.element = document.createElement('div');
         this.element.className = 'tileOnStack';

@@ -2,7 +2,7 @@ import type { Interactable, DragEvent } from '@interactjs/types';
 
 import { GridDisplay } from "./GridDisplay.js";
 import { TriangleOnScreenMatch } from "./TileDisplay.js";
-import { Tile, TileRotation } from 'src/grid/Tile.js';
+import { Tile, TileRotation, TileType } from 'src/grid/Tile.js';
 import { GameController } from './GameController.js';
 import { Coord, Triangle } from 'src/grid/Triangle.js';
 import { DEBUG } from 'src/settings.js';
@@ -67,7 +67,7 @@ export class TileDragController extends EventTarget {
                         // if hints are enabled, highlight possible/impossible tiles
                         if (this.hints) {
                             for (const tsd of this.gridDisplay.tileDisplays.values()) {
-                                if (tsd.tile.isPlaceholder()) {
+                                if (tsd.tile.type === TileType.Placeholder) {
                                     tsd.highlightHint(autorotateCache.has(tsd.tile));
                                 }
                             }
@@ -89,7 +89,7 @@ export class TileDragController extends EventTarget {
                         const fixedTriangle = this.gridDisplay.grid.getTriangle(...fixedTriangleCoord);
 
                         // triangle matched?
-                        if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.isPlaceholder()) {
+                        if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.type === TileType.Placeholder) {
                             if (autorotateCurrentTarget !== fixedTriangle.tile) {
                                 // autorotate after a small delay
                                 autorotateCurrentTarget = fixedTriangle.tile;
@@ -129,7 +129,7 @@ export class TileDragController extends EventTarget {
                             const centerSnapTo = this.gridDisplay.triangleToScreenPosition(fixedTriangle);
                             if (fixedTriangle &&
                                 fixedTriangle.tile &&
-                                fixedTriangle.tile.isPlaceholder() &&
+                                fixedTriangle.tile.type === TileType.Placeholder &&
                                 fixedTriangle.shape == rotatedMovingTriangle.shape &&
                                 dist(centerSnapFrom, centerSnapFrom) < 30) {
                                 const rot = autorotateCache.get(fixedTriangle.tile);
@@ -151,7 +151,7 @@ export class TileDragController extends EventTarget {
                     const fixedTriangle = this.gridDisplay.grid.getTriangle(...fixedTriangleCoord);
 
                     let successful = false;
-                    if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.isPlaceholder()) {
+                    if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.type === TileType.Placeholder) {
                         successful = this.gridDisplay.dropTile(source, { fixed: fixedTriangle, moving: movingTriangle });
                     }
                     console.log('DROPPED', movingTriangle, fixedTriangle, successful ? 'success' : 'no success');

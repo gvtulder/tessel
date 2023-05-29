@@ -1,5 +1,5 @@
 
-import { Tile, TileShape } from './Tile.js';
+import { Tile, TileShape, TileType } from './Tile.js';
 import { Coord, CoordId, Triangle, TriangleType } from './Triangle.js';
 import { DEBUG } from '../settings.js';
 import { Pattern } from './Pattern.js';
@@ -84,7 +84,7 @@ export class Grid extends EventTarget {
      * The list of placeholder tiles.
      */
     get placeholderTiles() : Tile[] {
-        return this.tiles.filter((t) => t.isPlaceholder());
+        return this.tiles.filter((t) => t.type === TileType.Placeholder);
     }
 
     /**
@@ -152,13 +152,14 @@ export class Grid extends EventTarget {
      * @param x tile x
      * @param y tile y
      * @param addMissing create a new tile if necessary (if pattern is set)
+     * @param type the tile type if a new tile is added
      * @returns a new tile, or null if initialization was impossible
      */
-    getTile(x : number, y : number, addMissing? : boolean) : Tile | null {
+    getTile(x : number, y : number, addMissing? : boolean, type? : TileType) : Tile | null {
         const coordId = CoordId(x, y);
         let tile = this._tiles.get(coordId);
         if (!tile && addMissing && this.pattern) {
-            tile = this.pattern.constructTile(this, x, y);
+            tile = this.pattern.constructTile(this, x, y, type);
             this.addTile(tile);
         }
         return tile;
@@ -170,10 +171,11 @@ export class Grid extends EventTarget {
      *
      * @param x tile x
      * @param y tile y
+     * @param type the tile type if a new tile is added
      * @returns a new tile, or null if initialization was impossible
      */
-    getOrAddTile(x : number, y : number) : Tile {
-        return this.getTile(x, y, true);
+    getOrAddTile(x : number, y : number, type : TileType) : Tile {
+        return this.getTile(x, y, true, type);
     }
 
     /**
@@ -181,9 +183,10 @@ export class Grid extends EventTarget {
      *
      * @param tile the tile
      * @param addMissing create a new tile if necessary (if pattern is set)
+     * @param type the type of any new tiles
      * @returns a list of neighbor tiles
      */
-    getTileNeighbors(tile : Tile, addMissing? : boolean) : Tile[] {
+    getTileNeighbors(tile : Tile, addMissing? : boolean, type? : TileType) : Tile[] {
         const tiles : Tile[] = [];
         const seen = new Set<CoordId>();
         for (const triangle of tile.getNeighborTriangles()) {
@@ -198,7 +201,7 @@ export class Grid extends EventTarget {
                 const coordId = CoordId(tileCoord);
                 if (!seen.has(coordId)) {
                     seen.add(coordId);
-                    const tile = this.getTile(...tileCoord, addMissing);
+                    const tile = this.getTile(...tileCoord, addMissing, type);
                     if (tile) tiles.push(tile);
                 }
             }
@@ -211,10 +214,11 @@ export class Grid extends EventTarget {
      * Initializing missing tiles if a pattern is set.
      *
      * @param tile the tile
+     * @param type the type of any new tiles
      * @returns a list of neighbor tiles
      */
-    getOrAddTileNeighbors(tile : Tile) : Tile[] {
-        return this.getTileNeighbors(tile, true);
+    getOrAddTileNeighbors(tile : Tile, type : TileType) : Tile[] {
+        return this.getTileNeighbors(tile, true, type);
     }
 
     /**
@@ -224,8 +228,8 @@ export class Grid extends EventTarget {
      */
     updateFrontier() {
         for (const t of this._tiles.values()) {
-            if (!t.isPlaceholder()) {
-                this.getOrAddTileNeighbors(t);
+            if (t.type !== TileType.Placeholder) {
+                this.getOrAddTileNeighbors(t, TileType.Placeholder);
             }
         }
     }

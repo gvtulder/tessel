@@ -78,7 +78,7 @@ export class EditorDisplay {
     }
 
     updatePattern() {
-        const tileVariants = this.tileEditorDisplay.tile.computeRotationVariants();
+        const tileVariants = this.tileEditorDisplay.tile.computeRotationVariants(false, false);
         this.pattern.updatePattern([tileVariants[0].shape]);
 
         this.patternGrid.removeAllTiles();

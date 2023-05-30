@@ -1,8 +1,9 @@
 
-import { Tile, TileShape, TileType } from './Tile.js';
-import { Coord, CoordId, Triangle, TriangleType } from './Triangle.js';
+import { Tile, TileShape, TileType, TileVariant } from './Tile.js';
+import { ColorGroup, Coord, CoordId, Edge, Triangle, TriangleType } from './Triangle.js';
 import { DEBUG } from '../settings.js';
 import { Pattern } from './Pattern.js';
+import { shiftCoordinates2, wrapModulo } from 'src/utils.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
@@ -267,6 +268,274 @@ export class Grid extends EventTarget {
         const triangle = this.getOrAddTriangle(0, 0);
         return triangle.mapGridPositionToTriangleCoord(gridPos);
     }
+
+
+
+    // triangle calculations
+
+    /**
+     * Shifts the triangles if this results in a valid shape.
+     * 
+     * @param triangles input triangles
+     * @param shift the shift to apply
+     * @returns (original -> new) triangle map, or null if the shift is invalid
+     */
+    static shiftToMatch(triangles : Triangle[], shift : Coord) : Map<Triangle, Triangle> {
+        const map = new Map<Triangle, Triangle>();
+        for (const triangle of triangles) {
+            const newTriangle = triangle.grid.getOrAddTriangle(
+                triangle.x + shift[0],
+                triangle.y + shift[1]
+            );
+            if (triangle.shape != newTriangle.shape) return null;
+            map.set(triangle, newTriangle);
+        }
+        return map;
+    }
+
+    /**
+     * Computes the offsets if the tile is rotated.
+     * Maps starting from edgeFrom to edgeTo.
+     * 
+     * @param triangles a set of (connected) triangles
+     * @param edgeFrom source rotation edge
+     * @param edgeTo target rotation edge
+     * @returns map of source to target triangles
+     */
+    static computeRotatedTrianglePairs(triangles : Iterable<Triangle>, edgeFrom : Edge, edgeTo : Edge) : Map<Triangle, Triangle> {
+        const map = new Map<Triangle, Triangle>();
+        const todo = new Set<Triangle>(triangles);
+        map.set(edgeFrom.from, edgeTo.from);
+        map.set(edgeFrom.to, edgeTo.to);
+        const queue : [Edge, Edge][] = [[edgeFrom, edgeTo]];
+        while (queue.length > 0) {
+            const [edgeFrom, edgeTo] = queue.pop();
+            const sourceNeighbors = edgeFrom.to.getOrAddNeighbors();
+            const targetNeighbors = edgeTo.to.getOrAddNeighbors();
+            const prevSrcIdx = sourceNeighbors.indexOf(edgeFrom.from);
+            const prevTgtIdx = targetNeighbors.indexOf(edgeTo.from);
+            for (let i=0; i<sourceNeighbors.length; i++) {
+                const neighbor = sourceNeighbors[i];
+                if (neighbor && todo.has(neighbor)) {
+                    const newIdx = wrapModulo(i + prevTgtIdx - prevSrcIdx, sourceNeighbors.length);
+                    const newTarget = targetNeighbors[newIdx];
+                    map.set(neighbor, newTarget);
+                    queue.push([
+                        { from: edgeFrom.to, to: neighbor },
+                        { from: edgeTo.to, to: newTarget },
+                    ]);
+                    todo.delete(neighbor);
+                }
+            }
+        }
+        // only return the triangles of this tile
+        const result = new Map<Triangle, Triangle>();
+        for (const triangle of triangles) {
+            result.set(triangle, map.get(triangle));
+        }
+        return result;
+    }
+
+    /**
+     * Normalizes the shape offsets by shifting the top-left triangle to (0, 0).
+     * (Or as close as possible as the grid type allows.)
+     *
+     * @param shape the input shape
+     * @returns the normalized shape
+     */
+    moveToOrigin(shape: TileShape) : TileShape {
+        const triangles = this.shapeToTriangles(shape);
+        const shift = Grid.computeShiftToOrigin(triangles);
+        return shiftCoordinates2(shape, shift);
+    }
+
+    /**
+     * Normalizes the triangle set by shifting the top-left triangle to (0, 0).
+     * (Or as close as possible as the grid type allows.)
+     * 
+     * @param triangles the input triangles
+     * @returns map of input -> normalized triangles
+     */
+    static mapTrianglesToOrigin(triangles : readonly Triangle[]) : Map<Triangle, Triangle> {
+        const shift = this.computeShiftToOrigin(triangles);
+        return new Map<Triangle, Triangle>(
+            triangles.map((from) => [
+                from,
+                from.grid.getOrAddTriangle(
+                    from.x + shift[0],
+                    from.y + shift[1]
+                )
+            ])
+        );
+    }
+
+    /**
+     * Computes the shift that normalizes the triangle set by moving
+     * the top-left triangle to (0, 0).
+     * (Or as close as possible as the grid type allows.)
+     *
+     * @param triangles the input triangles
+     * @returns the offset
+     */
+    static computeShiftToOrigin(triangles : readonly Triangle[]) : Coord {
+        const topLeft = this.findTopLeftTriangle(triangles);
+        return [
+            topLeft.xAtOrigin - topLeft.x,
+            topLeft.yAtOrigin - topLeft.y,
+        ];
+    }
+
+    /**
+     * Returns the triangle that is closest to the origin: the top-left triangle.
+     * (Or as close to the origin as possible as the grid type allows.)
+     *
+     * @param triangles the input triangles
+     * @returns the anchor triangle
+     */
+    static findTopLeftTriangle(triangles : Iterable<Triangle>) : Triangle {
+        let topLeft : Triangle = null;
+        for (const t of triangles) {
+            if (topLeft == null) {
+                topLeft = t;
+            } else {
+                // select a standard, repeatable origin
+                const cmpAtOrigin = (t.xAtOrigin - topLeft.xAtOrigin) || (t.yAtOrigin - topLeft.yAtOrigin);
+                const cmpAbsolute = (t.x - topLeft.x) || (t.y - topLeft.y);
+                if ((cmpAtOrigin || cmpAbsolute) < 0) {
+                    topLeft = t;
+                }
+            }
+        }
+        return topLeft;
+    }
+
+    /**
+     * Computes the unique rotation variants of this tile, taking into account
+     * the shape and color groups.
+     *
+     * @param triangles the set of connected triangles
+     * @param colorSensitive the color groups should match exactly
+     * @param patternSensitive only return shapes that are included in this pattern
+     * @returns a list of unique rotation variants
+     */
+    computeRotationVariants(triangles : Triangle[], colorSensitive? : boolean, patternSensitive? : boolean) : TileVariant[] {
+        return Grid.computeRotationVariants(triangles, colorSensitive, patternSensitive ? this.pattern : null);
+    }
+
+    /**
+     * Computes the unique rotation variants of this tile, taking into account
+     * the shape and color groups.
+     *
+     * @param triangles the set of connected triangles
+     * @param colorSensitive the color groups should match exactly
+     * @param pattern only return shapes that are included in this pattern
+     * @returns a list of unique rotation variants
+     */
+    static computeRotationVariants(triangles : Triangle[], colorSensitive? : boolean, pattern? : Pattern) : TileVariant[] {
+        const originTriangle = triangles[0];
+        const rotationAngles = originTriangle.rotationAngles;
+        const variants : TileVariant[] = [];
+        const edgeFrom = originTriangle.getOrAddRotationEdge(0);
+
+        // try every possible rotation for this grid type
+        for (let r=0; r<rotationAngles.length; r++) {
+            // apply rotation
+            const edgeTo = originTriangle.getOrAddRotationEdge(r);
+            if (!edgeTo) continue;
+            const rotationMap = this.computeRotatedTrianglePairs(triangles, edgeFrom, edgeTo);
+
+            // normalize the coordinates by moving the shape
+            const shiftMap = this.mapTrianglesToOrigin([...rotationMap.values()]);
+
+            // collect the offsets per color group
+            const shape : TileShape = [];
+            for (const triangle of triangles) {
+                if (!shape[triangle.colorGroup]) shape[triangle.colorGroup] = [];
+                shape[triangle.colorGroup].push(
+                    shiftMap.get(rotationMap.get(triangle)).coord);
+            }
+
+            // construct the normalized variant
+            const newVariant : TileVariant = {
+                rotation: {
+                    steps: r,
+                    angle: rotationAngles[r]
+                },
+                shape: shape,
+            };
+
+            // does this exist in the pattern?
+            if (pattern && !pattern.checkIncludesShape(newVariant.shape)) {
+                continue;
+            }
+
+            // unique shape?
+            const unique = variants.every(
+                (variant) => !this.isEquivalentShape(variant.shape, newVariant.shape, colorSensitive)
+            );
+            if (unique) {
+                variants.push(newVariant);
+            }
+        }
+        return variants;
+    }
+
+    /**
+     * Compares two rotations for shape and color groups.
+     * 
+     * @param a tile variant A
+     * @param b tile variant B
+     * @param colorSensitive color groups should match
+     * @returns true if the variants have matching shape and color groups
+     */
+    static isEquivalentShape(a : TileShape, b : TileShape, colorSensitive? : boolean) {
+        // assumption: normalized shapes, moved to origin
+
+        // must have same number of color groups
+        if (a.length != b.length) return false;
+
+        // must have the same points in the same color groups,
+        // but the color groups could be numbered differently
+        const coordColorInA = new Map<CoordId, ColorGroup>();
+        const colorAtoB = new Map<ColorGroup, ColorGroup>();
+        let triangleCountA = 0;
+        for (let c=0; c<a.length; c++) {
+            for (const offset of a[c]) {
+                coordColorInA.set(CoordId(offset), c);
+                triangleCountA++;
+            }
+        }
+
+        // should the color groups be in the same order?
+        if (colorSensitive) {
+            for (const colorGroup of coordColorInA.values()) {
+                colorAtoB.set(colorGroup, colorGroup);
+            }
+        }
+
+        // compare with color groups in B
+        let triangleCountB = 0;
+        for (let c=0; c<b.length; c++) {
+            for (const offset of b[c]) {
+                // look up color of this triangle in A
+                const colorInA = coordColorInA.get(CoordId(offset));
+                // triangle must exist in A
+                if (colorInA === null || colorInA === undefined) return false;
+                // check if it is the correct color group
+                let colorInB = colorAtoB.get(colorInA);
+                if (colorInB === null || colorInB === undefined) {
+                    // new color group in B
+                    colorAtoB.set(colorInA, c);
+                    colorInB = c;
+                }
+                if (colorInB != c) return false;
+                triangleCountB++;
+            }
+        }
+
+        return triangleCountA == triangleCountB;
+    }
+
 
 
     // debugging code

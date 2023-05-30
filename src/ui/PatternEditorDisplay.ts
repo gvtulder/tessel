@@ -47,6 +47,7 @@ export class PatternEditorDisplay extends EventTarget {
     }
 
     dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
+        // source.tile.shiftToMatch(source.tile.triangles)
 
         console.log('dropped', pair);
         return false;

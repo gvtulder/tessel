@@ -26,7 +26,7 @@ export class TileEditorStackDisplay extends BaseTileStackDisplay {
     }
 
     updateTiles(protoTile : EditableTile) {
-        const tileVariants = protoTile.computeRotationVariants();
+        const tileVariants = protoTile.computeRotationVariants(false, false);
         for (let i=0; i<tileVariants.length; i++) {
             if (this.tileDisplays.length <= i) {
                 const tileDisplay = new SingleTileOnStackDisplay(this, i, this.pattern, false);

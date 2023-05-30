@@ -136,18 +136,19 @@ export class Pattern {
 
     /**
      * @deprecated Move the grid logic from Tile and Grid.
-     * @param tile 
+     * @param grid a dummy grid to use for the computations
      * @param shape 
      * @returns 
      */
-    checkIncludesShape(tile : Tile, shape : TileShape) : boolean {
+    checkIncludesShape(shape : TileShape, grid? : Grid) : boolean {
         // TODO precompute
+        if (!grid) grid = new Grid(this.triangleType, this);
         let shapesInPattern : TileShape[] = null;
         shapesInPattern = this.shapes.map(
-            (shape) => tile.moveToOrigin(shape)
+            (shape) => grid.moveToOrigin(shape)
         );
         const existsInPattern = shapesInPattern.some(
-            (shapeInPattern) => tile.isEquivalentShape(shapeInPattern, shape)
+            (shapeInPattern) => Grid.isEquivalentShape(shapeInPattern, shape)
         );
         return existsInPattern;
     }
@@ -156,21 +157,22 @@ export class Pattern {
      * Compute the rotation variants of the tiles in this pattern.
      * @param grid a dummy grid to use for the computations
      */
-    computeTileVariants(grid : Grid) {
+    computeTileVariants(grid? : Grid) {
+        if (!grid) grid = new Grid(this.triangleType, this);
         const variants : RotationSet[] = [];
 
         for (let shapeIdx=0; shapeIdx<this.shapes.length; shapeIdx++) {
-            // construct a tile of this shape
-            const tile = this.constructTile(grid, shapeIdx, 0, TileType.NormalTile);
             // compute the color-sensitive rotation variants
-            const rotationVariants = tile.computeRotationVariants(true);
+            const triangles = grid.shapeToTriangles(this.shapes[shapeIdx]);
+            const rotationVariants = Grid.computeRotationVariants(triangles, true, null);
 
             let exists = false;
             for (const newVariant of rotationVariants) {
                 // compare with the variants we already have
                 exists = exists || variants.some((existingVariant) =>
-                    tile.isEquivalentShape(existingVariant.rotationVariants[0].shape,
-                                           newVariant.shape)
+                    Grid.isEquivalentShape(
+                        existingVariant.rotationVariants[0].shape,
+                        newVariant.shape)
                 );
                 if (exists) break;
             }
@@ -190,7 +192,8 @@ export class Pattern {
      * Computes the period and step size of the pattern, given the current shapes.
      * @param grid a dummy grid to use for the computations
      */
-    computePeriods(grid : Grid) {
+    computePeriods(grid? : Grid) {
+        if (!grid) grid = new Grid(this.triangleType, this);
         // create one triangle to get the parameters
         const protoTriangle = grid.getOrAddTriangle(0, 0);
         const minGridPeriodX = protoTriangle.tileMinGridPeriodX;

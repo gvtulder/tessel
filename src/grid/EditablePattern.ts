@@ -1,3 +1,4 @@
+import { Grid } from "./Grid.js";
 import { Pattern } from "./Pattern.js";
 import { TileShape } from "./Tile.js";
 import { TriangleType } from "./Triangle.js";
@@ -24,7 +25,7 @@ export class EditablePattern extends Pattern {
         this.computeProperties();
     }
 
-    checkIncludesShape(tile : Tile, shape : TileShape) : boolean {
+    checkIncludesShape(shape : TileShape, grid? : Grid) : boolean {
         return true
     }
 }

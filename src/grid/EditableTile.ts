@@ -125,4 +125,25 @@ export class EditableTile extends Tile {
 
         return wasUnique;
     }
+
+    /**
+     * Sets the triangle color to the required color, adding a
+     * new colorgroup if necessary.
+     * @param triangle the triangle to update
+     * @param color the new color
+     */
+    setTriangleColor(triangle : Triangle, color : TriangleColor) {
+        let colorGroup = this._colors.indexOf(color);
+        if (colorGroup === -1) {
+            // new color
+            const newColors = [...this._colors];
+            newColors.push(color);
+            colorGroup = this._colors.length;
+            this._colors = newColors;
+        }
+        this._triangles.set(triangle, colorGroup);
+        triangle.colorGroup = colorGroup;
+        triangle.color = this._colors[triangle.colorGroup];
+        this.recomputeColorGroups();
+    }
 }

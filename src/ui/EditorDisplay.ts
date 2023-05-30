@@ -10,6 +10,7 @@ import { PatternEditorDisplay } from "./PatternEditorDisplay.js";
 import { EditablePattern } from "src/grid/EditablePattern.js";
 import { TileType } from "src/grid/Tile.js";
 import { TileDragController } from "./TileDragController.js";
+import { ColorStackDisplay } from "./ColorStackDisplay.js";
 
 export class EditorDisplay {
     tileGrid : Grid;
@@ -18,6 +19,7 @@ export class EditorDisplay {
 
     tileEditorDisplay : TileEditorDisplay;
     patternEditorDisplay : PatternEditorDisplay;
+    colorStackDisplay : ColorStackDisplay;
     tileStackDisplay : TileEditorStackDisplay; 
     element : HTMLDivElement;
 
@@ -38,6 +40,12 @@ export class EditorDisplay {
         this.tileEditorDisplay = new TileEditorDisplay(this.tileGrid);
         div.appendChild(this.tileEditorDisplay.element);
 
+        // color stack
+        this.colorStackDisplay = new ColorStackDisplay(
+            (color) => this.tileEditorDisplay.updateActiveColor(color)
+        );
+        div.appendChild(this.colorStackDisplay.element);
+
         // pattern editor
         this.patternEditorDisplay = new PatternEditorDisplay(this.patternGrid, this.pattern);
         div.appendChild(this.patternEditorDisplay.element);
@@ -56,9 +64,6 @@ export class EditorDisplay {
         controlbar.appendChild(tileStackDisplay.element);
 
         this.rescale();
-        /*
-        tileStackDisplay.makeDraggable(null, () => { return; });
-        */
 
         this.tileEditorDisplay.addEventListener(TileEditorDisplay.events.EditTile, () => {
             this.updatePattern();

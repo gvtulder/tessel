@@ -1,7 +1,7 @@
 import { Grid } from "src/grid/Grid.js";
 import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
 import { Tile, TileType } from "src/grid/Tile.js";
-import { Edge, Triangle } from "src/grid/Triangle.js";
+import { Edge, Triangle, TriangleColor } from "src/grid/Triangle.js";
 import { wrapModulo } from "src/utils.js";
 import { DEBUG } from "src/settings.js";
 import { EditableTile, COLORS } from "../grid/EditableTile.js";
@@ -18,6 +18,7 @@ export class TileEditorDisplay extends EventTarget {
     tile : EditableTile;
     gridDisplay : TileEditorGridDisplay;
     element : HTMLDivElement;
+    activeColor : TriangleColor;
 
     constructor(grid : Grid) {
         super();
@@ -55,24 +56,27 @@ export class TileEditorDisplay extends EventTarget {
         this.gridDisplay.rescale();
     }
 
+    updateActiveColor(color : TriangleColor) {
+        this.activeColor = color;
+    }
+
     handleTileEditorGridEvent(evt : TileEditorGridEvent) {
         if (evt.type == TileEditorGridDisplay.events.ClickTriangle) {
             const triangle = this.grid.getOrAddTriangle(...evt.triangleCoord);
             if (triangle.tile === this.tile) {
-                // change color group
-                const wasUnique = this.tile.rotateColorGroup(triangle);
-                if (wasUnique) {
-                    console.log(wasUnique);
+                if (triangle.color == this.activeColor) {
+                    // already the active color: remove triangle
                     this.tile.removeTriangle(triangle);
-                    this.recomputeFrontier();
+                } else {
+                    // not the active color: change color
+                    this.tile.setTriangleColor(triangle, this.activeColor);
                 }
             } else {
                 if (triangle.tile) {
                     this.grid.removeTile(triangle.tile);
                 }
                 this.tile.addTriangle(triangle, 0);
-                const c = this.tile.colors;
-                this.tile.colors = c;
+                this.tile.setTriangleColor(triangle, this.activeColor);
             }
             this.recomputeFrontier();
             this.dispatchEvent(new Event(TileEditorDisplay.events.EditTile));

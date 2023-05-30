@@ -298,22 +298,29 @@ svg .tile-segments {
   width: 100%;
 }
 .tileEditorGridContainer {
-  order: 1;
-  width: auto;
-  position: relative;
-  flex-grow: 1;
-  overflow: hidden;
-}
-.patternEditorGridContainer {
-  border-left: 1px solid #000;
   order: 2;
   width: auto;
   position: relative;
   flex-grow: 1;
   overflow: hidden;
 }
-.editorDisplay .controlbar {
+.colorStackDisplay {
+  order: 1;
+  width: 60px;
+  padding: 10px 0;
+  position: relative;
+  overflow: hidden;
+}
+.patternEditorGridContainer {
+  border-left: 1px solid #000;
   order: 3;
+  width: auto;
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden;
+}
+.editorDisplay .controlbar {
+  order: 4;
 }
 
 
@@ -363,6 +370,25 @@ svg .tile-segments {
 }
 .tileOnStack.dragging .tileOnStack-rotatable.animated {
   transition: transform 200ms;
+}
+
+
+.colorStackDisplay {
+  background: #bbb;
+  text-align: center;
+}
+.colorStackDisplay .colorSwatch {
+  cursor: pointer;
+}
+.colorStackDisplay .svg-colorSwatch {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+}
+.colorStackDisplay .colorSwatch.active .svg-colorSwatch circle.svg-colorSwatch-outer {
+  stroke-width: 4px;
+  stroke: #666;
 }
 
 

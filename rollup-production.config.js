@@ -16,7 +16,7 @@ export default {
   plugins: [
     typescript({
       "compilerOptions": {
-        "outDir": "dist/build-tsc/"
+        "outDir": "public/dist/build-tsc"
       },
     }),
     nodeResolve(),

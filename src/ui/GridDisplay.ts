@@ -202,7 +202,7 @@ export class GridDisplay extends EventTarget {
         this.contentMaxX = Math.max(...tiles.map((t) => t.left + t.width));
         this.contentMaxY = Math.max(...tiles.map((t) => t.top + t.height));
 
-        const noPlaceholders = this.grid.placeholderTiles;
+        const noPlaceholders = this.grid.getTilesWithType(TileType.NormalTile);
         this.contentMinXNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.left));
         this.contentMinYNoPlaceholders = Math.min(...noPlaceholders.map((t) => t.top));
         this.contentMaxXNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));

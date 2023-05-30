@@ -336,6 +336,10 @@ svg .tile-segments {
   position: relative;
   aspect-ratio: 1/1;
 }
+.tileStackDisplay .tileOnStack svg {
+  width: 100%;
+  height: 100%;
+}
 .tileOnStack-rotatable {
   position: relative;
   width: 100%;

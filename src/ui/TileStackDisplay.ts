@@ -196,7 +196,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
      * @param shape the new tile shape
      * @param rotationIdx the required rotation
      */
-    updateTile(shape : TileShape, rotationIdx : number) {
+    updateTileFromShape(shape : TileShape, rotationIdx : number) {
         this.tile.updateTrianglesFromShape(shape);
         this.rotateTileTo(rotationIdx);
         this.element.style.display = '';

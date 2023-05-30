@@ -135,6 +135,24 @@ export class Pattern {
     }
 
     /**
+     * @deprecated Move the grid logic from Tile and Grid.
+     * @param tile 
+     * @param shape 
+     * @returns 
+     */
+    checkIncludesShape(tile : Tile, shape : TileShape) : boolean {
+        // TODO precompute
+        let shapesInPattern : TileShape[] = null;
+        shapesInPattern = this.shapes.map(
+            (shape) => tile.moveToOrigin(shape)
+        );
+        const existsInPattern = shapesInPattern.some(
+            (shapeInPattern) => tile.isEquivalentShape(shapeInPattern, shape)
+        );
+        return existsInPattern;
+    }
+
+    /**
      * Compute the rotation variants of the tiles in this pattern.
      * @param grid a dummy grid to use for the computations
      */

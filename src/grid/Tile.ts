@@ -462,13 +462,6 @@ export class Tile {
         const variants : TileVariant[] = [];
         const edgeFrom = originTriangle.getOrAddRotationEdge(0);
 
-        let shapesInPattern : TileShape[] = null;
-        if (this.grid.pattern) {
-            shapesInPattern = this.grid.pattern.shapes.map(
-                (shape) => this.moveToOrigin(shape)
-            );
-        }
-
         // try every possible rotation for this grid type
         for (let r=0; r<rotationAngles.length; r++) {
             // apply rotation
@@ -497,10 +490,9 @@ export class Tile {
             };
 
             // does this exist in the pattern?
-            const existsInPattern = !shapesInPattern || shapesInPattern.some(
-                (shapeInPattern) => this.isEquivalentShape(shapeInPattern, newVariant.shape)
-            );
-            if (!existsInPattern) continue;
+            if (this.grid.pattern && !this.grid.pattern.checkIncludesShape(this, newVariant.shape)) {
+                continue;
+            }
 
             // unique shape?
             const unique = variants.every(

@@ -23,4 +23,8 @@ export class EditablePattern extends Pattern {
         this.numColorGroups = shapes[0].length;
         this.computeProperties();
     }
+
+    checkIncludesShape(tile : Tile, shape : TileShape) : boolean {
+        return true
+    }
 }

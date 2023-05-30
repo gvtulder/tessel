@@ -53,8 +53,40 @@ export class PatternEditorDisplay extends EventTarget {
         console.log('dropped', pair);
 
         const map = source.tile.mapShape(pair.fixed, source.rotation, pair.moving);
-        console.log(map);
         if (map) {
+            // correct mapping, but does it fit?
+
+            // look at the current pattern
+            const existingTriangles = new Set<Triangle>();
+            const neighborTriangles = new Set<Triangle>();
+            for (const tile of this.grid.tiles) {
+                for (const triangle of tile.triangles) {
+                    existingTriangles.add(triangle);
+                    for (const neighbor of triangle.getOrAddNeighbors()) {
+                        neighborTriangles.add(neighbor);
+                    }
+                }
+            }
+
+            // must touch one of the existing tiles,
+            // but not overlap
+            let touch = false;
+            let overlap = false;
+            for (const triangle of map.values()) {
+                if (existingTriangles.has(triangle)) {
+                    overlap = true;
+                    break;
+                }
+                if (neighborTriangles.has(triangle)) {
+                    touch = true;
+                }
+            }
+
+            if (overlap || !touch) {
+                return false;
+            }
+
+            // everything ok
             const colorGroupMap = new Map<ColorGroup, number>();
             const shape : TileShape = [];
             for (const [from, to] of map.entries()) {
@@ -74,42 +106,6 @@ export class PatternEditorDisplay extends EventTarget {
         } else {
             return false;
         }
-
-        /*
-        // rotate the shape
-        const edgeFrom = source.tile.triangles[0].getOrAddRotationEdge(0);
-        const edgeTo = source.tile.triangles[0].getOrAddRotationEdge(source.rotation.steps);
-        if (!edgeFrom || !edgeTo) return null;
-        const otherPairsRotated = source.tile.computeRotatedTrianglePairs(edgeFrom, edgeTo);
-
-        // find the anchor triangle after rotation
-        const movingAfterRotation = otherPairsRotated.get(pair.moving);
-
-        // shift to the right location
-        const diff = subtractCoordinates(pair.fixed.coord, movingAfterRotation.coord);
-        const shiftMap = Grid.shiftToMatch([...otherPairsRotated.values()], diff);
-
-        if (shiftMap) {
-            // make the shape
-            const colorGroupMap = new Map<ColorGroup, number>();
-            const shape : TileShape = [];
-            for (const triangle of triangles) {
-                if (!colorGroupMap.has(triangle.colorGroup)) {
-                    colorGroupMap.set(triangle.colorGroup, colorGroupMap.size);
-                    shape.push([]);
-                }
-                shape[colorGroupMap.get(triangle.colorGroup)].push(triangle.coord);
-            }
-            this.pattern.addShape(shiftCoordinates2(shape, diff));
-            for (let i=0; i<this.pattern.shapes.length; i++) {
-                this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);
-            }
-            this.gridDisplay.fillBackgroundPattern();
-            return true;
-        } else {
-            return false;
-        }
-        */
     }
 
 }

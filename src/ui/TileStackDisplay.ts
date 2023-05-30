@@ -3,30 +3,67 @@ import interact from '@interactjs/interact/index';
 
 import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
-import { Tile, TileRotation, TileType } from "../grid/Tile.js";
+import { Tile, TileRotation, TileShape, TileType } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { TileDragController, TileDragSource } from './TileDragController.js';
 import { Pattern } from 'src/grid/Pattern.js';
 import { MainGridTileDragController } from './MainGridTileDragController.js';
 
-export class TileStackDisplay extends EventTarget {
+export abstract class BaseTileStackDisplay extends EventTarget {
     static events = {
         TapTile: 'taptile',
     };
 
     pattern : Pattern;
-    tileStack : FixedOrderTileStack;
+    tileDragController : TileDragController;
+
     tileDisplays : SingleTileOnStackDisplay[];
     element : HTMLDivElement;
-    counter : HTMLSpanElement;
 
-    constructor(pattern : Pattern, tileStack : FixedOrderTileStack) {
+    constructor(pattern : Pattern, tileDragController : TileDragController) {
         super();
 
         this.pattern = pattern;
-        this.tileStack = tileStack;
+        this.tileDragController = tileDragController;
         this.tileDisplays = [];
         this.build();
+    }
+
+    /** @deprecated */
+    destroy() {
+        return;
+    }
+
+    build() {
+        const div = document.createElement('div');
+        div.className = 'tileStackDisplay';
+        this.element = div;
+    }
+
+    resetDragStatus() {
+        for (const t of this.tileDisplays) {
+            t.element.classList.remove('drag-success');
+            t.element.classList.remove('drag-return');
+        }
+    }
+
+    rescale() {
+        for (const t of this.tileDisplays) {
+            t.rescale();
+        }
+    }
+}
+
+export class TileStackDisplay extends BaseTileStackDisplay {
+    tileStack : FixedOrderTileStack;
+    element : HTMLDivElement;
+    counterDiv : HTMLElement;
+    counter : HTMLElement;
+
+    constructor(pattern : Pattern, tileStack : FixedOrderTileStack, tileDragController : TileDragController) {
+        super(pattern, tileDragController);
+
+        this.tileStack = tileStack;
 
         this.updateTiles();
         this.tileStack.addEventListener('updateSlots', () => {
@@ -41,6 +78,13 @@ export class TileStackDisplay extends EventTarget {
 
     updateTiles() {
         for (let i=0; i<this.tileStack.numberShown; i++) {
+            if (this.tileDisplays.length <= i) {
+                const tileDisplay = new SingleTileOnStackDisplay(this, i, this.pattern, true);
+                this.element.insertBefore(tileDisplay.element, this.counterDiv);
+                this.tileDisplays.push(tileDisplay);
+                this.tileDragController.addSource(tileDisplay);
+            }
+
             const color = this.tileStack.slots[i];
             this.tileDisplays[i].tile.colors = color ? color : null;
             if (!color) this.tileDisplays[i].removeDraggable();
@@ -65,42 +109,16 @@ export class TileStackDisplay extends EventTarget {
     }
 
     build() {
-        const div = document.createElement('div');
-        div.className = 'tileStackDisplay';
-        this.element = div;
-
-        for (let i=0; i<this.tileStack.numberShown; i++) {
-            const tileDisplay = new SingleTileOnStackDisplay(this, i, this.pattern);
-            this.element.appendChild(tileDisplay.element);
-            this.tileDisplays.push(tileDisplay);
-        }
+        super.build();
 
         const counterDiv = document.createElement('div');
-        div.appendChild(counterDiv);
+        this.element.appendChild(counterDiv);
         counterDiv.className = 'tileStackDisplay-counter';
+        this.counterDiv = counterDiv;
 
         const counter = document.createElement('span');
         counterDiv.appendChild(counter);
         this.counter = counterDiv;
-    }
-
-    makeDraggable(tileDragController : MainGridTileDragController) {
-        for (const tileDisplay of this.tileDisplays) {
-            tileDragController.addSource(tileDisplay);
-        }
-    }
-
-    resetDragStatus() {
-        for (const t of this.tileDisplays) {
-            t.element.classList.remove('drag-success');
-            t.element.classList.remove('drag-return');
-        }
-    }
-
-    rescale() {
-        for (const t of this.tileDisplays) {
-            t.rescale();
-        }
     }
 }
 
@@ -110,8 +128,8 @@ export interface DraggableTileHTMLDivElement extends HTMLDivElement {
   indexOnStack? : number;
 }
 
-class SingleTileOnStackDisplay implements TileDragSource {
-    tileStackDisplay : TileStackDisplay;
+export class SingleTileOnStackDisplay implements TileDragSource {
+    tileStackDisplay : BaseTileStackDisplay;
     indexOnStack : number;
     grid : Grid;
     gridDisplay : GridDisplay;
@@ -123,7 +141,7 @@ class SingleTileOnStackDisplay implements TileDragSource {
     angle : number;
     beforeAutorotationIdx : number;
 
-    constructor(tileStackDisplay : TileStackDisplay, indexOnStack : number, pattern : Pattern) {
+    constructor(tileStackDisplay : BaseTileStackDisplay, indexOnStack : number, pattern : Pattern, makeRotatable : boolean) {
         this.rotationIdx = 0;
         this.angle = 0;
         this.beforeAutorotationIdx = null;
@@ -155,7 +173,7 @@ class SingleTileOnStackDisplay implements TileDragSource {
         this.rotatable.style.transformOrigin = `${meanX}px ${meanY}px`;
         */
 
-        this.initInteractable();
+        this.initInteractable(makeRotatable);
 
         this.rotatable.addEventListener('transitionend', () => {
             this.rotatable.classList.remove('animated');
@@ -171,6 +189,21 @@ class SingleTileOnStackDisplay implements TileDragSource {
 
     rescale() {
         this.gridDisplay.rescale();
+    }
+
+    /**
+     * Updates the tile shape and rotates to the given rotation.
+     * @param shape the new tile shape
+     * @param rotationIdx the required rotation
+     */
+    updateTile(shape : TileShape, rotationIdx : number) {
+        this.tile.updateTrianglesFromShape(shape);
+        this.rotateTileTo(rotationIdx);
+        this.element.style.display = '';
+    }
+
+    disable() {
+        this.element.style.display = 'none';
     }
 
     get rotation() : TileRotation {
@@ -203,10 +236,12 @@ class SingleTileOnStackDisplay implements TileDragSource {
         }
     }
 
-    initInteractable() {
+    initInteractable(makeRotatable : boolean) {
         const draggable = this.getDraggable();
         draggable.on('tap', (evt : Event) => {
-            this.rotateTile();
+            if (makeRotatable) {
+                this.rotateTile();
+            }
             this.tileStackDisplay.dispatchEvent(new Event(TileStackDisplay.events.TapTile));
             evt.preventDefault();
         }).on('doubletap', (evt : Event) => {

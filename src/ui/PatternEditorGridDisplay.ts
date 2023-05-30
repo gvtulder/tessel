@@ -9,13 +9,27 @@ import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
 import { shuffle } from '../utils.js';
 import { GameDisplay } from './GameDisplay.js';
 import { Coord, CoordId } from 'src/grid/Triangle.js';
+import { TileDragSource, TileDropTarget } from './TileDragController.js';
+import { TriangleOnScreenMatch } from './TileDisplay.js';
+import { PatternEditorDisplay } from './PatternEditorDisplay.js';
 
 
 
-export class PatternEditorGridDisplay extends GridDisplay {
+export class PatternEditorGridDisplay extends GridDisplay implements TileDropTarget {
+    patternEditorDisplay : PatternEditorDisplay;
+
+    constructor(patternEditorDisplay : PatternEditorDisplay, grid : Grid, container : HTMLElement) {
+        super(grid, container);
+        this.patternEditorDisplay = patternEditorDisplay;
+    }
+
     styleMainElement() {
         const div = this.element;
         div.className = 'gridDisplay';
+    }
+
+    dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
+        return this.patternEditorDisplay.dropTile(source, pair);
     }
 
     computeDimensionsForRescale() {

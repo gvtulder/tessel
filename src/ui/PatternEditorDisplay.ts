@@ -7,6 +7,8 @@ import { DEBUG } from "src/settings.js";
 import { EditableTile, COLORS } from "../grid/EditableTile.js";
 import { GridDisplay } from "./GridDisplay.js";
 import { PatternEditorGridDisplay } from "./PatternEditorGridDisplay.js";
+import { TileDragSource } from "./TileDragController.js";
+import { TriangleOnScreenMatch } from "./TileDisplay.js";
 
 
 
@@ -34,7 +36,7 @@ export class PatternEditorDisplay extends EventTarget {
         patternGridContainer.className = 'patternEditorGridContainer';
         this.element = patternGridContainer;
 
-        this.gridDisplay = new PatternEditorGridDisplay(this.grid, patternGridContainer);
+        this.gridDisplay = new PatternEditorGridDisplay(this, this.grid, patternGridContainer);
         patternGridContainer.appendChild(this.gridDisplay.element);
 
         this.rescale();
@@ -43,4 +45,11 @@ export class PatternEditorDisplay extends EventTarget {
     rescale() {
         this.gridDisplay.rescale();
     }
+
+    dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
+
+        console.log('dropped', pair);
+        return false;
+    }
+
 }

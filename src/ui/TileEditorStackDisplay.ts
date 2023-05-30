@@ -6,20 +6,18 @@ import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
 import { EditablePattern } from 'src/grid/EditablePattern.js';
-import { Tile, TileType, TileVariant } from 'src/grid/Tile.js';
+import { Tile, TileRotation, TileShape, TileType, TileVariant } from 'src/grid/Tile.js';
 import { Pattern } from 'src/grid/Pattern.js';
 import { EditableTile } from 'src/grid/EditableTile.js';
+import { TileDragController, TileDragSource } from './TileDragController.js';
+import { BaseTileStackDisplay, SingleTileOnStackDisplay, TileStackDisplay } from './TileStackDisplay.js';
 
-export class TileEditorStackDisplay {
-    pattern : EditablePattern;
-    tileDisplays : SingleTileOnEditorStackDisplay[];
-    element : HTMLDivElement;
-    counter : HTMLSpanElement;
+export class TileEditorStackDisplay extends BaseTileStackDisplay {
+    tileDragController : TileDragController;
 
-    constructor(pattern : EditablePattern) {
-        this.pattern = pattern;
-        this.tileDisplays = [];
-        this.build();
+    constructor(pattern : EditablePattern, tileDragController : TileDragController) {
+        super(pattern, tileDragController);
+        this.tileDragController = tileDragController;
     }
 
     /** @deprecated */
@@ -31,12 +29,13 @@ export class TileEditorStackDisplay {
         const tileVariants = protoTile.computeRotationVariants();
         for (let i=0; i<tileVariants.length; i++) {
             if (this.tileDisplays.length <= i) {
-                const tileDisplay = new SingleTileOnEditorStackDisplay(this, i, this.pattern);
+                const tileDisplay = new SingleTileOnStackDisplay(this, i, this.pattern, false);
                 this.element.appendChild(tileDisplay.element);
                 this.tileDisplays.push(tileDisplay);
+                this.tileDragController.addSource(tileDisplay);
             }
 
-            this.tileDisplays[i].updateTile(tileVariants[i]);
+            this.tileDisplays[i].updateTile(tileVariants[0].shape, i);
             this.tileDisplays[i].tile.colors = protoTile.colors;
         }
         for (let i=tileVariants.length; i<this.tileDisplays.length; i++) {
@@ -44,43 +43,13 @@ export class TileEditorStackDisplay {
         }
         this.rescale();
     }
-
-    build() {
-        const div = document.createElement('div');
-        div.className = 'tileStackDisplay';
-        this.element = div;
-
-        for (let i=0; i<3; i++) {
-            const tileDisplay = new SingleTileOnEditorStackDisplay(this, i, this.pattern);
-            this.element.appendChild(tileDisplay.element);
-            this.tileDisplays.push(tileDisplay);
-        }
-    }
-
-    rescale() {
-        for (const t of this.tileDisplays) {
-            t.rescale();
-        }
-    }
-
-    /*
-    makeDraggable(mainGridDisplay : MainGridDisplay, onDragStart : (evt) => void) {
-        for (const tileDisplay of this.tileDisplays) {
-            tileDisplay.makeDraggable(mainGridDisplay, onDragStart);
-        }
-    }
-
-    resetDragStatus() {
-        for (const t of this.tileDisplays) {
-            t.element.classList.remove('drag-success');
-            t.element.classList.remove('drag-return');
-        }
-    }
-    */
 }
 
 
-class SingleTileOnEditorStackDisplay {
+/**
+ * @deprecated
+ */
+class OldSingleTileOnEditorStackDisplay implements TileDragSource {
     tileStackDisplay : TileEditorStackDisplay;
     indexOnStack : number;
     grid : Grid;
@@ -90,6 +59,7 @@ class SingleTileOnEditorStackDisplay {
     element : HTMLDivElement;
     rotatable : HTMLDivElement;
     draggable : Interactable;
+    rotation: TileRotation;
 
     constructor(tileStackDisplay : TileEditorStackDisplay, indexOnStack : number, pattern : Pattern) {
         this.tileStackDisplay = tileStackDisplay;
@@ -125,12 +95,41 @@ class SingleTileOnEditorStackDisplay {
         */
     }
 
+    getDraggable(): Interactable {
+        if (!this.draggable) {
+            this.draggable = interact(this.element);
+        }
+        return this.draggable;
+    }
+
+    startDrag() {
+        return;
+    }
+    endDrag(successful: boolean) {
+        return;
+    }
+    resetDragStatus() {
+        return;
+    }
+    startAutorotate(rotation: TileRotation) {
+        throw new Error('Method not implemented.');
+    }
+    resetAutorotate(keepRotation: boolean) {
+        throw new Error('Method not implemented.');
+    }
+
     rescale() {
         this.gridDisplay.rescale();
     }
 
-    updateTile(tileVariant : TileVariant) {
-        this.tile.updateTrianglesFromShape(tileVariant.shape);
+    /**
+     * Updates the tile shape and rotates to the given rotation.
+     * @param shape the new tile shape
+     * @param rotationIdx the required rotation
+     */
+    updateTile(shape : TileShape, rotationIdx : number) {
+        this.tile.updateTrianglesFromShape(shape);
+        this.rotateTileTo(rotationIdx);
         this.element.style.display = '';
     }
 

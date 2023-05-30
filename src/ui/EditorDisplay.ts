@@ -9,6 +9,7 @@ import { TileEditorStackDisplay } from "./TileEditorStackDisplay.js";
 import { PatternEditorDisplay } from "./PatternEditorDisplay.js";
 import { EditablePattern } from "src/grid/EditablePattern.js";
 import { TileType } from "src/grid/Tile.js";
+import { TileDragController } from "./TileDragController.js";
 
 export class EditorDisplay {
     tileGrid : Grid;
@@ -46,8 +47,11 @@ export class EditorDisplay {
         controlbar.className = 'controlbar';
         div.appendChild(controlbar);
 
+        // tile drag controller
+        const tileDragController = new TileDragController(this.patternEditorDisplay.gridDisplay);
+
         // tile stack
-        const tileStackDisplay = new TileEditorStackDisplay(this.pattern);
+        const tileStackDisplay = new TileEditorStackDisplay(this.pattern, tileDragController);
         this.tileStackDisplay = tileStackDisplay;
         controlbar.appendChild(tileStackDisplay.element);
 

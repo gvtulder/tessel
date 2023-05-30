@@ -65,7 +65,10 @@ export class GameDisplay extends EventTarget {
         controlbar.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
 
-        this.tileStackDisplay = new TileStackDisplay(this.game.pattern, this.game.tileStack);
+        const tileDragController = new MainGridTileDragController(this.gridDisplay);
+        this.tileDragController = tileDragController;
+
+        this.tileStackDisplay = new TileStackDisplay(this.game.pattern, this.game.tileStack, tileDragController);
         controlbar.appendChild(this.tileStackDisplay.element);
 
         const buttons = document.createElement('div');
@@ -120,10 +123,6 @@ export class GameDisplay extends EventTarget {
         );
         toggles.appendChild(this.snap.element);
 
-
-        const tileDragController = new MainGridTileDragController(this.gridDisplay);
-        this.tileStackDisplay.makeDraggable(tileDragController);
-        this.tileDragController = tileDragController;
 
         this.tileStackDisplay.addEventListener(
             TileStackDisplay.events.TapTile, this.onTapTile);

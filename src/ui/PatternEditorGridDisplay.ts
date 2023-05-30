@@ -15,6 +15,8 @@ import { PatternEditorDisplay } from './PatternEditorDisplay.js';
 import { TriangleDisplay } from './TriangleDisplay.js';
 
 
+const COLORS = ['red', 'blue', 'white', 'black', 'orange', 'green', 'purple'];
+
 
 export class PatternEditorGridDisplay extends GridDisplay implements TileDropTarget {
     patternEditorDisplay : PatternEditorDisplay;
@@ -44,6 +46,11 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
     styleMainElement() {
         const div = this.element;
         div.className = 'gridDisplay';
+    }
+
+    rescale() {
+        super.rescale();
+        this.fillBackgroundPattern();
     }
 
     dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
@@ -83,6 +90,7 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
             td.destroy();
         }
 
+
         // fill the screen by adding neighbors until the edge of the viewbox is reached
         const done = new Set<CoordId>();
         const queueXY : Coord[] = [];
@@ -103,7 +111,6 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
                 tile.bottom * SCALE > this.visibleTop) {
                 for (let offsetX=-1; offsetX<=1; offsetX++) {
                     for (let offsetY=-1; offsetY<=1; offsetY++) {
-                        if (offsetX == 0 && offsetY == 0) continue;
                         const newTileCoordId = `${tileCoord[0] + offsetX} ${tileCoord[1] + offsetY}`;
                         if (!done.has(newTileCoordId) && done.size < 1000) {
                             queueXY.push([tileCoord[0] + offsetX, tileCoord[1] + offsetY]);
@@ -121,6 +128,124 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
 
 
 
+        // attempt a nice coloring
+        const allTriangles : Triangle[] = [];
+        for (const tile of this.backgroundFillPatternGrid.tiles) {
+            for (const triangle of tile.triangles) {
+                allTriangles.push(triangle);
+            }
+        }
+        if (allTriangles.length == 0) return;
+        const triangleMinX = Math.min(...allTriangles.map((t) => t.x));
+        const triangleMaxX = Math.max(...allTriangles.map((t) => t.x));
+        const width = triangleMaxX - triangleMinX + 1;
+        const triangleMinY = Math.min(...allTriangles.map((t) => t.y));
+        const triangleMaxY = Math.max(...allTriangles.map((t) => t.y));
+        const height = triangleMaxY - triangleMinY + 1;
+
+        // convert the triangle grid into an adjacency matrix
+        const constraintBuffer = new ArrayBuffer(width * height * width * height);
+        const constraints = new Int8Array(constraintBuffer);
+        for (const triangle of allTriangles) {
+            const tidx = (triangle.x - triangleMinX) + (triangle.y - triangleMinY) * width;
+            for (const neighbor of triangle.getNeighbors()) {
+                const nidx = (neighbor.x - triangleMinX) + (neighbor.y - triangleMinY) * width;
+                if (neighbor.tile !== triangle.tile || neighbor.colorGroup === triangle.colorGroup) {
+                    // must have the same color
+                    constraints[tidx + nidx * width * height] = 1;
+                    constraints[tidx * width * height + nidx] = 1;
+                } else if (neighbor.tile === triangle.tile) {
+                    // would be nice if they had a different color
+                    constraints[tidx + nidx * width * height] = -1;
+                    constraints[tidx * width * height + nidx] = -1;
+                }
+            }
+        }
+        console.log(constraints);
+
+        // walk the grid to group neighboring tiles in clusters
+        const clusterBuffer = new ArrayBuffer(width * height * 16);
+        const clusters = new Uint16Array(clusterBuffer);
+        const clusterAdjacencyBuffer = new ArrayBuffer(width * height * width * height);
+        const clusterAdjacency = new Uint8Array(clusterAdjacencyBuffer);
+        let clusterCount = 0;
+        for (let i=0; i<width*height; i++) {
+            if (clusters[i] === 0) {
+                clusterCount++;
+                // assign the same to all neighbors
+                const queue : number[] = [i];
+                while (queue.length > 0) {
+                    const j = queue.shift();
+                    clusters[j] = clusterCount;
+                    for (let n=0; n<width*height; n++) {
+                        if (constraints[n * width * height + j] === 1) {
+                            // neighbor
+                            if (clusters[n] === 0) {
+                                clusters[n] = clusterCount;
+                                queue.push(n);
+                            } else {
+                                clusterAdjacency[clusters[n] * width * height + clusters[j]] = 1;
+                                clusterAdjacency[clusters[j] * width * height + clusters[n]] = 1;
+                            }
+                        } else if (constraints[n * width * height + j] !== 1) {
+                            clusterAdjacency[clusters[n] * width * height + clusters[j]] = 1;
+                            clusterAdjacency[clusters[j] * width * height + clusters[n]] = 1;
+                        }
+                    }
+                }
+            }
+        }
+        console.log(`Found ${clusterCount} connected regions.`);
+        console.log(clusters);
+        let sum2 = 0;
+        for (let ca=0; ca<clusterCount; ca++) {
+            for (let cb=0; cb<ca; cb++) {
+                if (clusterAdjacency[ca * width * height + cb] === 1) {
+                    sum2++;
+                }
+            }
+        }
+        console.log(`Found ${sum2} cluster adjacencies.`);
+        let sum = 0;
+        for (let i=0; i<width*height*width*height; i++) {
+            if (clusterAdjacency[i] === 1) sum++;
+        }
+        console.log(`Found ${sum} cluster adjacencies.`);
+
+        const colorBuffer = new ArrayBuffer(clusterCount);
+        const colors = new Int8Array(colorBuffer);
+        for (let c=0; c<clusterCount; c++) {
+            // find adjacent clusters
+            const adjacentColors : number[] = [];
+            for (let ca=0; ca<c; ca++) {
+                if (clusterAdjacency[ca * width * height + c] === 1) {
+                    // this is an adjacent cluster
+                    adjacentColors.push(colors[ca]);
+                }
+            }
+            if (adjacentColors.length > 0 && Math.random() < 0.3) {
+                // pick a neighbouring color
+                colors[c] = adjacentColors[0];
+            } else if (adjacentColors.length < COLORS.length) {
+                // pick a different color
+                const newColors : number[] = [];
+                for (let i=0; i<COLORS.length; i++) {
+                    if (adjacentColors.indexOf(i) === -1) {
+                        newColors.push(i);
+                    }
+                }
+                colors[c] = newColors[Math.floor(Math.random() * newColors.length)];
+            } else {
+                // pick a random color
+                colors[c] = Math.floor(Math.random() * COLORS.length);
+            }
+        }
+
+        // assign colors to the clusters
+        for (const triangle of allTriangles) {
+            const tidx = (triangle.x - triangleMinX) + (triangle.y - triangleMinY) * width;
+            triangle.color = COLORS[colors[clusters[tidx]] % COLORS.length];
+        }
 
 
         const commonTriangleDisplays = { triangleDisplays: new Map<Triangle, TriangleDisplay>() };

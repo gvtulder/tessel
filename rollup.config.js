@@ -13,6 +13,13 @@ export default {
       '@interactjs/interact/index': 'interact'
     }
   },
-  plugins: [typescript(), nodeResolve()],
+  plugins: [
+    typescript({
+      "compilerOptions": {
+        "outDir": "dist/build-tsc/"
+      },
+    }),
+    nodeResolve(),
+  ],
   external: ['@interactjs/interact/index']
 };

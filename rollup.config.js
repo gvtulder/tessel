@@ -11,12 +11,15 @@ export default {
     sourcemap: true,
     globals: {
       '@interactjs/interact/index': 'interact'
-    }
+    },
+    sourcemapPathTransform: (relativeSourcePath, sourcemapPath) => {
+      return `${relativeSourcePath.replace(new RegExp('^\.\./'), '')}`;
+    },
   },
   plugins: [
     typescript({
       "compilerOptions": {
-        "outDir": "dist/build-tsc/"
+        "outDir": "dist/build-tsc"
       },
     }),
     nodeResolve(),

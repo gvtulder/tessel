@@ -183,7 +183,9 @@ export class GridDisplay extends EventTarget {
             this.tileDisplays.set(tile, tileDisplay);
             this.svgTriangles.appendChild(tileDisplay.svgTriangles);
         }
-        this.updateDimensions();
+        if (tile.type !== TileType.PatternExample) {
+            this.updateDimensions();
+        }
     }
 
     removeTile(tile : Tile) {

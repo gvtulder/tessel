@@ -8,20 +8,37 @@ import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
 import { shuffle } from '../utils.js';
 import { GameDisplay } from './GameDisplay.js';
-import { Coord, CoordId } from 'src/grid/Triangle.js';
+import { Coord, CoordId, Triangle } from 'src/grid/Triangle.js';
 import { TileDragSource, TileDropTarget } from './TileDragController.js';
-import { TriangleOnScreenMatch } from './TileDisplay.js';
+import { TileDisplay, TriangleOnScreenMatch } from './TileDisplay.js';
 import { PatternEditorDisplay } from './PatternEditorDisplay.js';
+import { TriangleDisplay } from './TriangleDisplay.js';
 
 
 
 export class PatternEditorGridDisplay extends GridDisplay implements TileDropTarget {
     patternEditorDisplay : PatternEditorDisplay;
 
+    backgroundFillPatternGrid : Grid;
+    backgroundFillTileDisplays : TileDisplay[];
+
+    svgBackgroundFillTriangles : SVGElement;
+
     constructor(patternEditorDisplay : PatternEditorDisplay, grid : Grid, container : HTMLElement) {
         super(grid, container);
         this.patternEditorDisplay = patternEditorDisplay;
+
         this.addBackgroundGrid();
+
+        this.backgroundFillPatternGrid = new Grid(grid.triangleType, grid.pattern);
+        this.backgroundFillTileDisplays = [];
+        this.addBackgroundFillPattern();
+    }
+
+    addBackgroundFillPattern() {
+        this.svgBackgroundFillTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        this.svgBackgroundFillTriangles.setAttribute('class', 'svg-tiles-editorBackgroundFillPattern');
+        this.svgGrid.insertBefore(this.svgBackgroundFillTriangles, this.svgTriangles);
     }
 
     styleMainElement() {
@@ -61,21 +78,10 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
     }
 
     fillBackgroundPattern() {
-        return;
-
-        for (const tile of this.grid.getTilesWithType(TileType.PatternExample)) {
-            this.grid.removeTile(tile);
+        this.backgroundFillPatternGrid.removeAllTiles();
+        for (const td of this.backgroundFillTileDisplays) {
+            td.destroy();
         }
-
-        const protoTile = this.grid.getTile(0, 0);
-        if (!protoTile) {
-            return;
-        }
-        /*
-        for (let i=0; i<this.grid.pattern.shapes.length; i++) {
-            this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);
-        }
-        */
 
         // fill the screen by adding neighbors until the edge of the viewbox is reached
         const done = new Set<CoordId>();
@@ -86,11 +92,11 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
         let tooMany = 0;
         while (queueXY.length > 0) {
             const tileCoord = queueXY.shift();
-            const tile = this.grid.getOrAddTile(tileCoord[0], tileCoord[1], TileType.PatternExample);
-            if (tile.type === TileType.PatternExample) {
-                tile.colors = protoTile.colors;
-                count++;
-            }
+            const tile = this.backgroundFillPatternGrid.getOrAddTile(tileCoord[0], tileCoord[1], TileType.PatternExample);
+            // TODO colors
+            // tile.colors = ...
+            tile.colors = tile.colors.map((c) => 'red');
+            count++;
             if (tile.left * SCALE < this.visibleRight &&
                 tile.right * SCALE > this.visibleLeft &&
                 tile.top * SCALE < this.visibleBottom &&
@@ -99,7 +105,7 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
                     for (let offsetY=-1; offsetY<=1; offsetY++) {
                         if (offsetX == 0 && offsetY == 0) continue;
                         const newTileCoordId = `${tileCoord[0] + offsetX} ${tileCoord[1] + offsetY}`;
-                        if (!done.has(newTileCoordId) && done.size < 500) {
+                        if (!done.has(newTileCoordId) && done.size < 1000) {
                             queueXY.push([tileCoord[0] + offsetX, tileCoord[1] + offsetY]);
                             done.add(newTileCoordId);
                         }
@@ -110,5 +116,14 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
             }
         }
         console.log(`Added ${count} background tiles, ${tooMany} outside the screen.`);
+
+
+        const commonTriangleDisplays = { triangleDisplays: new Map<Triangle, TriangleDisplay>() };
+
+        for (const tile of this.backgroundFillPatternGrid.tiles) {
+            const td = new TileDisplay(commonTriangleDisplays, tile);
+            this.backgroundFillTileDisplays.push(td);
+            this.svgBackgroundFillTriangles.appendChild(td.svgTriangles);
+        }
     }
 }

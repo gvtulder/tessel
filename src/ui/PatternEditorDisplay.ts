@@ -66,7 +66,8 @@ export class PatternEditorDisplay extends EventTarget {
             }
             this.pattern.addShape(shape);
             for (let i=0; i<this.pattern.shapes.length; i++) {
-                this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);
+                const tile = this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);
+                tile.colors = source.tile.colors;
             }
             this.gridDisplay.fillBackgroundPattern();
             return true;

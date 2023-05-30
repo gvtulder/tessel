@@ -589,8 +589,14 @@ svg .tile-segments {
 .svg-tile.highlight-hint-notok {
   opacity: 0;
 }
-.svg-tile.svg-tile-PatternExample {
-  opacity: 0.3;
+
+.svg-tiles-editorBackgroundFillPattern {
+  opacity: 0.5;
+  transition-property: opacity;
+  transition-duration: 200ms;
+}
+.dragging-active .svg-tiles-editorBackgroundFillPattern {
+  opacity: 0.1;
 }
 
 .mainMenuDisplay {

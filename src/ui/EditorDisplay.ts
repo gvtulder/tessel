@@ -64,6 +64,12 @@ export class EditorDisplay {
             this.updatePattern();
             tileStackDisplay.updateTiles(this.tileEditorDisplay.tile);
         });
+        tileDragController.addEventListener(TileDragController.events.StartDrag, () => {
+            this.element.classList.add('dragging-active');
+        });
+        tileDragController.addEventListener(TileDragController.events.EndDrag, () => {
+            this.element.classList.remove('dragging-active');
+        });
     }
 
     start() {

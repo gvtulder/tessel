@@ -193,7 +193,7 @@ svg .tile-segments {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 150px;
+  width: 100px;
   background: #bbb;
   height: 100%;
   text-align: center;
@@ -345,7 +345,7 @@ svg .tile-segments {
 }
 .tileStackDisplay .tileOnStack svg {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1/1;
 }
 .tileOnStack-rotatable {
   position: relative;

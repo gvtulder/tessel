@@ -318,8 +318,7 @@ svg .tile-segments {
 
 
 .tileStackDisplay {
-  margin: 10px 0;
-  padding: 0 15px;
+  padding: 0;
   box-sizing: border-box;
   width: 100%;
 }
@@ -336,9 +335,6 @@ svg .tile-segments {
   transition: none;
   position: relative;
   aspect-ratio: 1/1;
-}
-.tileStack-gridDisplay {
-  position: absolute;
 }
 .tileOnStack-rotatable {
   position: relative;

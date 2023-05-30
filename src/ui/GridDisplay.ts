@@ -6,6 +6,7 @@ import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
 import { TileDragSource } from './TileDragController.js';
 import { TriangleDisplay } from './TriangleDisplay.js';
+import { dist, mean } from 'src/utils.js';
 
 export enum GridDisplayScalingType {
     EqualMargins,
@@ -367,6 +368,44 @@ export class TileStackGridDisplay extends GridDisplay {
         const div = this.element;
         div.className = 'tileStack-gridDisplay';
         div.style.zIndex = '1000';
+    }
+
+    /**
+     * Returns the dimensions of the content area (e.g., the display coordinates
+     * of the triangles to be shown on screen.)
+     * @returns the minimum dimensions 
+     */
+    protected computeDimensionsForRescale() : { minX : number, minY : number, maxX : number, maxY : number } {
+        // diameter of a circle around the triangle points,
+        // with the mean as the center
+        const trianglePoints : Coord[] = [];
+        for (const tile of this.grid.tiles) {
+            for (const triangle of tile.triangles) {
+                for (const p of triangle.points) {
+                    trianglePoints.push([
+                        p[0] + triangle.left,
+                        p[1] + triangle.top
+                    ]);
+                }
+            }
+        }
+        const centerX = mean(trianglePoints.map((c) => c[0]));
+        const centerY = mean(trianglePoints.map((c) => c[1]));
+        let maxDist = Math.max(...trianglePoints.map((c) => dist([centerX, centerY], c)));
+        // compensation for almost-circular tiles, which would be too close to the edge otherwise
+        maxDist = Math.max(0.6 * (this.contentMaxX - this.contentMinX), maxDist);
+        return {
+            minX: centerX - maxDist,
+            minY: centerY - maxDist,
+            maxX: centerX + maxDist,
+            maxY: centerY + maxDist,
+        };
+        return {
+            minX: this.contentMinX,
+            minY: this.contentMinY,
+            maxX: this.contentMaxX,
+            maxY: this.contentMaxY,
+        };
     }
 }
 

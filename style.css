@@ -382,8 +382,8 @@ svg .tile-segments {
 }
 .colorStackDisplay .svg-colorSwatch {
   display: inline-block;
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   padding: 5px;
 }
 .colorStackDisplay .colorSwatch.active .svg-colorSwatch circle.svg-colorSwatch-outer {

@@ -52,12 +52,43 @@ export class PatternEditorDisplay extends EventTarget {
     dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
         console.log('dropped', pair);
 
-        // try this shift
-        const diff = subtractCoordinates(pair.fixed.coord, pair.moving.coord);
-        const triangles = source.tile.triangles;
-        const map = Grid.shiftToMatch(triangles, diff);
-
+        const map = source.tile.mapShape(pair.fixed, source.rotation, pair.moving);
+        console.log(map);
         if (map) {
+            const colorGroupMap = new Map<ColorGroup, number>();
+            const shape : TileShape = [];
+            for (const [from, to] of map.entries()) {
+                if (!colorGroupMap.has(from.colorGroup)) {
+                    colorGroupMap.set(from.colorGroup, colorGroupMap.size);
+                    shape.push([]);
+                }
+                shape[colorGroupMap.get(from.colorGroup)].push(to.coord);
+            }
+            this.pattern.addShape(shape);
+            for (let i=0; i<this.pattern.shapes.length; i++) {
+                this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);
+            }
+            this.gridDisplay.fillBackgroundPattern();
+            return true;
+        } else {
+            return false;
+        }
+
+        /*
+        // rotate the shape
+        const edgeFrom = source.tile.triangles[0].getOrAddRotationEdge(0);
+        const edgeTo = source.tile.triangles[0].getOrAddRotationEdge(source.rotation.steps);
+        if (!edgeFrom || !edgeTo) return null;
+        const otherPairsRotated = source.tile.computeRotatedTrianglePairs(edgeFrom, edgeTo);
+
+        // find the anchor triangle after rotation
+        const movingAfterRotation = otherPairsRotated.get(pair.moving);
+
+        // shift to the right location
+        const diff = subtractCoordinates(pair.fixed.coord, movingAfterRotation.coord);
+        const shiftMap = Grid.shiftToMatch([...otherPairsRotated.values()], diff);
+
+        if (shiftMap) {
             // make the shape
             const colorGroupMap = new Map<ColorGroup, number>();
             const shape : TileShape = [];
@@ -77,6 +108,7 @@ export class PatternEditorDisplay extends EventTarget {
         } else {
             return false;
         }
+        */
     }
 
 }

@@ -114,15 +114,10 @@ export class GridDisplay extends EventTarget {
 
         const gridElement = document.createElement('div');
         gridElement.className = 'grid';
-        gridElement.style.position = 'absolute';
-        gridElement.style.top = '0px';
-        gridElement.style.left = '0px';
-        gridElement.style.zIndex = '100';
         this.gridElement = gridElement;
         this.element.appendChild(gridElement);
 
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.style.position = 'absolute';
         this.gridElement.appendChild(svg);
         this.svg = svg;
 
@@ -345,17 +340,7 @@ export class GridDisplay extends EventTarget {
         this.visibleTop = -containerTop / scale;
         this.visibleBottom = (availHeight + containerTop) / scale;
 
-        // adjust the viewBox to match the grid (0,0) to the container (0,0)
-        this.svg.setAttribute('viewBox', `${viewBoxMinX} ${viewBoxMinY} ${viewBoxWidth} ${viewBoxHeight}`);
-        this.svg.setAttribute('width', `${viewBoxWidth}`);
-        this.svg.setAttribute('height', `${viewBoxHeight}`);
-        this.svg.style.left = `${viewBoxMinX}px`;
-        this.svg.style.top = `${viewBoxMinY}px`;
-
-        // apply the scaling and shift to center
-        this.element.style.transform = `scale(${scale})`;
-        this.element.style.left = `${containerLeft}px`;
-        this.element.style.top= `${containerTop}px`;
+        this.svgGrid.style.transform = `translate(${containerLeft}px, ${containerTop}px) scale(${scale})`;
 
         this.scale = scale;
 
@@ -383,36 +368,13 @@ export class TileStackGridDisplay extends GridDisplay {
         div.className = 'tileStack-gridDisplay';
         div.style.zIndex = '1000';
     }
-
-    /*
-    rescaleGrid(): void {
-        const availWidth = this.container.clientWidth;
-        const availHeight = this.container.clientHeight;
-        let totalWidth = SCALE * (this.width - this.left);
-        let totalHeight = SCALE * (this.height - this.top);
-
-        const scale = Math.min(availWidth / totalWidth, availHeight / totalHeight);
-        totalWidth *= scale;
-        totalHeight *= scale;
-
-        this.element.style.transform = `scale(${scale})`;
-        this.element.style.left = `${(availWidth - totalWidth) / 2 - (this.left * SCALE * scale)}px`;
-        this.element.style.top = `${(availHeight - totalHeight) / 2 - (this.top * SCALE * scale)}px`;
-
-        this.scale = scale;
-    }
-    */
 }
 
 
 export class MainMenuGridDisplay extends GridDisplay {
     styleMainElement() {
         const div = this.element;
-        div.className = 'mainMenu-gridDisplay';
-        div.style.position = 'absolute';
-        div.style.top = '0px';
-        div.style.left = '0px';
-        div.style.zIndex = '1000';
+        div.className = 'mainMenu-gridDisplay gridDisplay';
     }
 }
 
@@ -554,6 +516,7 @@ class BackgroundGrid {
         outline.setAttribute('stroke-width', '1px');
         outline.setAttribute('stroke-linejoin', 'round');
         outline.setAttribute('stroke-linecap', 'round');
+        outline.setAttribute('vector-effect', 'non-scaling-stroke');
         this.element.append(outline);
         this.drawn.add(CoordId(0, 0));
 

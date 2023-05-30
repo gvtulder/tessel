@@ -41,6 +41,7 @@ lookup.set('triangle', {
     tilesShownOnStack: 3,
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
+        TileGenerators.repeat(3),
     ]
 });
 
@@ -175,6 +176,24 @@ lookup.set('snubsquaredebug', {
     tileGenerator : [
         TileGenerators.permutations(['black', 'black']),
         TileGenerators.repeat(100),
+    ]
+});
+
+lookup.set('trianglearrows', {
+    triangleType : EquilateralGridTriangle,
+    pattern : {
+        shapes : [
+            [[[0,0],[0,1]],[[0,2]],[[0,-3],[0,-2]],[[0,-1]]],
+            [[[1,-4],[1,-6]],[[1,-5]],[[1,-3]],[[1,-2],[1,-1]]],
+            [[[1,1],[1,2]],[[1,0]],[[0,4]],[[0,5],[0,3]]]
+        ]
+      ]
+    },
+    initialTile: ['red','black','blue','white'],
+    tilesShownOnStack: 3,
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
+        TileGenerators.repeat(10),
     ]
 });
 

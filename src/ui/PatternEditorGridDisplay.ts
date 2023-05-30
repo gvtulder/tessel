@@ -21,6 +21,7 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
     constructor(patternEditorDisplay : PatternEditorDisplay, grid : Grid, container : HTMLElement) {
         super(grid, container);
         this.patternEditorDisplay = patternEditorDisplay;
+        this.addBackgroundGrid();
     }
 
     styleMainElement() {

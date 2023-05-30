@@ -83,8 +83,10 @@ export class EditorDisplay {
 
         this.patternGrid.removeAllTiles();
 
-        const tile = this.patternGrid.getOrAddTile(0, 0, TileType.PatternEditorTile);
-        tile.colors = this.tileEditorDisplay.tile.colors;
+        for (let i=0; i<this.pattern.shapes.length; i++) {
+            const tile = this.patternGrid.getOrAddTile(i, 0, TileType.PatternEditorTile);
+            tile.colors = this.tileEditorDisplay.tile.colors;
+        }
 
         this.patternEditorDisplay.gridDisplay.fillBackgroundPattern();
 

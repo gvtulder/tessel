@@ -280,7 +280,7 @@ export class Grid extends EventTarget {
      * @param shift the shift to apply
      * @returns (original -> new) triangle map, or null if the shift is invalid
      */
-    static shiftToMatch(triangles : Triangle[], shift : Coord) : Map<Triangle, Triangle> {
+    static shiftToMatch(triangles : readonly Triangle[], shift : Coord) : Map<Triangle, Triangle> {
         const map = new Map<Triangle, Triangle>();
         for (const triangle of triangles) {
             const newTriangle = triangle.grid.getOrAddTriangle(

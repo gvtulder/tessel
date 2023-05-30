@@ -42,13 +42,13 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
             if (left == null || tile.left < left) {
                 left = tile.left;
             }
-            if (right == null || tile.right < right) {
+            if (right == null || tile.right > right) {
                 right = tile.right;
             }
             if (top == null || tile.top < top) {
                 top = tile.top;
             }
-            if (bottom == null || tile.bottom < bottom) {
+            if (bottom == null || tile.bottom > bottom) {
                 bottom = tile.bottom;
             }
         }
@@ -61,6 +61,8 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
     }
 
     fillBackgroundPattern() {
+        return;
+
         for (const tile of this.grid.getTilesWithType(TileType.PatternExample)) {
             this.grid.removeTile(tile);
         }
@@ -69,6 +71,11 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
         if (!protoTile) {
             return;
         }
+        /*
+        for (let i=0; i<this.grid.pattern.shapes.length; i++) {
+            this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);
+        }
+        */
 
         // fill the screen by adding neighbors until the edge of the viewbox is reached
         const done = new Set<CoordId>();

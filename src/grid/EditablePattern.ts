@@ -1,7 +1,8 @@
+import { shiftCoordinates2, subtractCoordinates } from "src/utils.js";
 import { Grid } from "./Grid.js";
 import { Pattern } from "./Pattern.js";
 import { TileShape } from "./Tile.js";
-import { TriangleType } from "./Triangle.js";
+import { Coord, Triangle, TriangleType } from "./Triangle.js";
 
 export class EditablePattern extends Pattern {
     /**
@@ -27,5 +28,11 @@ export class EditablePattern extends Pattern {
 
     checkIncludesShape(shape : TileShape, grid? : Grid) : boolean {
         return true
+    }
+
+    addShape(shape : TileShape) {
+        this.shapes.push(shape);
+        console.log('shape added', this.shapes);
+        this.computeProperties();
     }
 }

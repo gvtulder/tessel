@@ -110,7 +110,7 @@ export class TileDragController extends EventTarget {
         const movingPos = context.source.gridDisplay.triangleToScreenPosition(movingTriangle)
         // match moving to fixed
         const fixedTriangleCoord = this.dropTarget.screenPositionToTriangleCoord(movingPos);
-        const fixedTriangle = this.dropTarget.grid.getTriangle(...fixedTriangleCoord);
+        const fixedTriangle = this.dropTarget.grid.getOrAddTriangle(...fixedTriangleCoord);
 
         let successful = false;
         if (fixedTriangle) {

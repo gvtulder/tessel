@@ -1,5 +1,5 @@
 import { computeOutline } from 'src/lib/compute-outline.js';
-import { angleDist, shiftCoordinates2, wrapModulo } from 'src/utils.js';
+import { angleDist } from 'src/utils.js';
 import { Grid } from './Grid.js';
 import { ColorGroup, Coord, CoordId, Edge, TileColors, Triangle } from './Triangle.js';
 
@@ -322,61 +322,78 @@ export class Tile {
                { triangles: Map<Triangle, Triangle>, colorGroups: Map<ColorGroup, ColorGroup> } {
         if (other._triangles.size !== this._triangles.size) return null;
 
-        // rotate the other shape
-        const otherEdgeFrom = other.triangles[0].getOrAddRotationEdge(0);
-        const otherEdgeTo = other.triangles[0].getOrAddRotationEdge(otherRotation.steps);
-        if (!otherEdgeFrom || !otherEdgeTo) return null;
-        const otherPairsRotated = other.computeRotatedTrianglePairs(otherEdgeFrom, otherEdgeTo);
-
-        let rotatedOtherTriangle : Triangle;
-        if (otherTriangle === undefined) {
+        if (thisTriangle === undefined) {
             // find an anchor point
             thisTriangle = Grid.findTopLeftTriangle(this.triangles);
-            rotatedOtherTriangle = Grid.findTopLeftTriangle([...otherPairsRotated.values()]);
-        } else {
-            // find the offset for the otherTriangle
-            rotatedOtherTriangle = otherPairsRotated.get(otherTriangle);
         }
 
-        // find the offset for the otherTriangle
-        const shift = [
-            thisTriangle.x - rotatedOtherTriangle.x,
-            thisTriangle.y - rotatedOtherTriangle.y,
-        ] as Coord;
-
-        // shift coordinates to match the triangles of this shape
-        const thisCoordToOtherTriangles = new Map<CoordId, Triangle>();
-        for (const [from, to] of otherPairsRotated) {
-            const newTo = to.grid.getOrAddTriangle(
-                to.x + shift[0],
-                to.y + shift[1]
-            );
-            if (to.shape != newTo.shape) return null;
-            thisCoordToOtherTriangles.set(newTo.coordId, from);
-        }
+        const otherToThisTriangles = other.mapShape(thisTriangle, otherRotation, otherTriangle);
+        if (!otherToThisTriangles) return null;
 
         // compare coordinates with ours and pair
         const mapColorGroups = new Map<ColorGroup, ColorGroup>();
         const pairs = new Map<Triangle, Triangle>();
-        for (const triangle of this.triangles) {
-            const otherTriangle = thisCoordToOtherTriangles.get(triangle.coordId);
+        for (const triangleSrc of other.triangles) {
+            const triangleTgt = otherToThisTriangles.get(triangleSrc);
 
             // check if there is a triangle in the other shape for this coordinate
-            if (!otherTriangle) return null;
+            if (!triangleTgt) return null;
 
             // check if the color groups match
-            let expectColorGroup = mapColorGroups.get(triangle.colorGroup);
+            let expectColorGroup = mapColorGroups.get(triangleTgt.colorGroup);
             if (expectColorGroup === null || expectColorGroup === undefined) {
-                expectColorGroup = otherTriangle.colorGroup;
-                mapColorGroups.set(triangle.colorGroup, expectColorGroup);
+                expectColorGroup = triangleSrc.colorGroup;
+                mapColorGroups.set(triangleTgt.colorGroup, expectColorGroup);
             }
-            if (expectColorGroup != otherTriangle.colorGroup) return null;
+            if (expectColorGroup != triangleSrc.colorGroup) return null;
 
             // pair checked and OK
-            pairs.set(triangle, otherTriangle);
+            pairs.set(triangleTgt, triangleSrc);
         }
 
         return { triangles: pairs, colorGroups: mapColorGroups };
+    }
+
+    /**
+     * Transforms the tile by rotating and shifting to match a pair of anchor triangles.
+     * @param otherTriangle anchor in the other tile
+     * @param thisRotation the rotation to apply to this tile
+     * @param thisTriangle anchor in this tile (default: top-left)
+     * @returns map of this -> other triangles, or null if the mapping failed
+     */
+    mapShape(otherTriangle : Triangle, thisRotation : TileRotation, thisTriangle? : Triangle) : Map<Triangle, Triangle> {
+        // rotate the tile
+        const rotOrigin = this.triangles[0];
+        const edgeFrom = rotOrigin.getOrAddRotationEdge(0);
+        const edgeTo = rotOrigin.getOrAddRotationEdge(thisRotation.steps);
+        if (!edgeFrom || !edgeTo) return null;
+        const pairsRotated = this.computeRotatedTrianglePairs(edgeFrom, edgeTo);
+
+        let rotatedTriangle : Triangle;
+        if (thisTriangle) {
+            rotatedTriangle = pairsRotated.get(thisTriangle);
+        } else {
+            rotatedTriangle = Grid.findTopLeftTriangle([...pairsRotated.values()]);
+        }
+
+        // find the shift offset
+        const shift = [
+            otherTriangle.x - rotatedTriangle.x,
+            otherTriangle.y - rotatedTriangle.y,
+        ] as Coord;
+
+        // shift coordinates to match the triangles of this shape
+        const thisToOtherTriangles = new Map<Triangle, Triangle>();
+        for (const [from, to] of pairsRotated) {
+            const newTo = otherTriangle.grid.getOrAddTriangle(
+                to.x + shift[0],
+                to.y + shift[1]
+            );
+            if (to.shape != newTo.shape) return null;
+            thisToOtherTriangles.set(from, newTo);
+        }
+
+        return thisToOtherTriangles;
     }
 
     /**

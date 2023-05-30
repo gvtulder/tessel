@@ -54,6 +54,16 @@ export function midPoint(a : Coord, b : Coord) : Coord {
 }
 
 /**
+ * Returns the difference between coordA and coordB.
+ * @param coordA coordinate A
+ * @param coordB coordinate B
+ * @returns (a.x - b.x, a.y - b.y)
+ */
+export function subtractCoordinates(coordA : Coord, coordB : Coord) : Coord {
+  return [coordA[0] - coordB[0], coordA[1] - coordB[1]];
+}
+
+/**
  * Adds the given offset to the coordinates.
  * @param coords a list of coordinates
  * @param shift the dx, dy to be added

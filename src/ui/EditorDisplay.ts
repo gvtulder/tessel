@@ -39,7 +39,7 @@ export class EditorDisplay {
         div.appendChild(this.tileEditorDisplay.element);
 
         // pattern editor
-        this.patternEditorDisplay = new PatternEditorDisplay(this.patternGrid);
+        this.patternEditorDisplay = new PatternEditorDisplay(this.patternGrid, this.pattern);
         div.appendChild(this.patternEditorDisplay.element);
 
         // control bar

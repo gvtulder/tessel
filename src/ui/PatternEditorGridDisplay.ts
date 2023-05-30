@@ -112,10 +112,15 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
                     }
                 }
             } else {
+                // outside screen
+                this.backgroundFillPatternGrid.removeTile(tile);
                 tooMany++;
             }
         }
         console.log(`Added ${count} background tiles, ${tooMany} outside the screen.`);
+
+
+
 
 
         const commonTriangleDisplays = { triangleDisplays: new Map<Triangle, TriangleDisplay>() };

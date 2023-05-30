@@ -332,7 +332,7 @@ export class Tile {
         if (otherTriangle === undefined) {
             // find an anchor point
             thisTriangle = Grid.findTopLeftTriangle(this.triangles);
-            rotatedOtherTriangle = Grid.findTopLeftTriangle([...otherPairsRotated.values()]);
+            rotatedOtherTriangle = Grid.findTopLeftTriangle(otherPairsRotated.values());
         } else {
             // find the offset for the otherTriangle
             rotatedOtherTriangle = otherPairsRotated.get(otherTriangle);

@@ -280,7 +280,7 @@ export class Grid extends EventTarget {
      * @param shift the shift to apply
      * @returns (original -> new) triangle map, or null if the shift is invalid
      */
-    static shiftToMatch(triangles : Triangle[], shift : Coord) : Map<Triangle, Triangle> {
+    static shiftToMatch(triangles : Iterable<Triangle>, shift : Coord) : Map<Triangle, Triangle> {
         const map = new Map<Triangle, Triangle>();
         for (const triangle of triangles) {
             const newTriangle = triangle.grid.getOrAddTriangle(
@@ -356,17 +356,19 @@ export class Grid extends EventTarget {
      * @param triangles the input triangles
      * @returns map of input -> normalized triangles
      */
-    static mapTrianglesToOrigin(triangles : readonly Triangle[]) : Map<Triangle, Triangle> {
+    static mapTrianglesToOrigin(triangles : Iterable<Triangle>) : Map<Triangle, Triangle> {
         const shift = this.computeShiftToOrigin(triangles);
-        return new Map<Triangle, Triangle>(
-            triangles.map((from) => [
+        const map = new Map<Triangle, Triangle>();
+        for (const from of triangles) {
+            map.set(
                 from,
                 from.grid.getOrAddTriangle(
                     from.x + shift[0],
                     from.y + shift[1]
                 )
-            ])
-        );
+            );
+        }
+        return map;
     }
 
     /**
@@ -377,7 +379,7 @@ export class Grid extends EventTarget {
      * @param triangles the input triangles
      * @returns the offset
      */
-    static computeShiftToOrigin(triangles : readonly Triangle[]) : Coord {
+    static computeShiftToOrigin(triangles : Iterable<Triangle>) : Coord {
         const topLeft = this.findTopLeftTriangle(triangles);
         return [
             topLeft.xAtOrigin - topLeft.x,
@@ -445,7 +447,7 @@ export class Grid extends EventTarget {
             const rotationMap = this.computeRotatedTrianglePairs(triangles, edgeFrom, edgeTo);
 
             // normalize the coordinates by moving the shape
-            const shiftMap = this.mapTrianglesToOrigin([...rotationMap.values()]);
+            const shiftMap = this.mapTrianglesToOrigin(rotationMap.values());
 
             // collect the offsets per color group
             const shape : TileShape = [];

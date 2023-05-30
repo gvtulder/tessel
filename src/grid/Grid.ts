@@ -302,7 +302,7 @@ export class Grid extends EventTarget {
      * @param edgeTo target rotation edge
      * @returns map of source to target triangles
      */
-    static computeRotatedTrianglePairs(triangles : Iterable<Triangle>, edgeFrom : Edge, edgeTo : Edge) : Map<Triangle, Triangle> {
+    static computeRotatedTrianglePairs(triangles : Triangle[], edgeFrom : Edge, edgeTo : Edge) : Map<Triangle, Triangle> {
         const map = new Map<Triangle, Triangle>();
         const todo = new Set<Triangle>(triangles);
         map.set(edgeFrom.from, edgeTo.from);
@@ -392,7 +392,7 @@ export class Grid extends EventTarget {
      * @param triangles the input triangles
      * @returns the anchor triangle
      */
-    static findTopLeftTriangle(triangles : Iterable<Triangle>) : Triangle {
+    static findTopLeftTriangle(triangles : readonly Triangle[]) : Triangle {
         let topLeft : Triangle = null;
         for (const t of triangles) {
             if (topLeft == null) {

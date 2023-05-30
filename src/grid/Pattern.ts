@@ -164,7 +164,7 @@ export class Pattern {
         for (let shapeIdx=0; shapeIdx<this.shapes.length; shapeIdx++) {
             // compute the color-sensitive rotation variants
             const triangles = grid.shapeToTriangles(this.shapes[shapeIdx]);
-            const rotationVariants = Grid.computeRotationVariants(triangles, true, null);
+            const rotationVariants = Grid.computeRotationVariants(triangles, true, this);
 
             let exists = false;
             for (const newVariant of rotationVariants) {

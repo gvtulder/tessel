@@ -396,7 +396,7 @@ export class Tile {
      * @returns map of source to target triangles
      */
     computeRotatedTrianglePairs(edgeFrom : Edge, edgeTo : Edge) : Map<Triangle, Triangle> {
-        return Grid.computeRotatedTrianglePairs(this._triangles.keys(), edgeFrom, edgeTo);
+        return Grid.computeRotatedTrianglePairs([...this._triangles.keys()], edgeFrom, edgeTo);
     }
 
     /**

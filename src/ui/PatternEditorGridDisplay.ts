@@ -161,6 +161,19 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
                 }
             }
         }
+        for (const tile of this.backgroundFillPatternGrid.tiles) {
+            for (const triangleA of tile.triangles) {
+                const idxA = (triangleA.x - triangleMinX) + (triangleA.y - triangleMinY) * width;
+                for (const triangleB of tile.triangles) {
+                    const idxB = (triangleB.x - triangleMinX) + (triangleB.y - triangleMinY) * width;
+                    if (triangleA.colorGroup === triangleB.colorGroup) {
+                        // same color group in the same tile
+                        constraints[idxA + idxB * width * height] = 1;
+                        constraints[idxA * width * height + idxB] = 1;
+                    }
+                }
+            }
+        }
         console.log(constraints);
 
         // walk the grid to group neighboring tiles in clusters

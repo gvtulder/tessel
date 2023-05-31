@@ -1,7 +1,10 @@
+import type { Interactable, DragEvent } from '@interactjs/types';
+import interact from '@interactjs/interact/index';
+
 import { Grid } from "src/grid/Grid.js";
 import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
 import { Tile, TileShape, TileType } from "src/grid/Tile.js";
-import { ColorGroup, Edge, Triangle } from "src/grid/Triangle.js";
+import { ColorGroup, Coord, Edge, Triangle } from "src/grid/Triangle.js";
 import { shiftCoordinates2, subtractCoordinates, wrapModulo } from "src/utils.js";
 import { DEBUG } from "src/settings.js";
 import { EditableTile, COLORS } from "../grid/EditableTile.js";
@@ -19,6 +22,8 @@ export class PatternEditorDisplay extends EventTarget {
     gridDisplay : PatternEditorGridDisplay;
     element : HTMLDivElement;
 
+    interactable : Interactable;
+
     constructor(grid : Grid, pattern : EditablePattern) {
         super();
         this.grid = grid;
@@ -29,6 +34,9 @@ export class PatternEditorDisplay extends EventTarget {
         const tile = new Tile(this.grid, 0, 0, TileType.PatternEditorTile, [[this.grid.getOrAddTriangle(0, 0)]]);
         tile.colors = ['red'];
         this.grid.addTile(tile);
+
+        this.interactable = interact(this.gridDisplay.element);
+        this.interactable.on('tap', (evt : PointerEvent) => this.handleGridTap(evt));
 
         this.rescale();
     }
@@ -97,15 +105,37 @@ export class PatternEditorDisplay extends EventTarget {
                 shape[colorGroupMap.get(from.colorGroup)].push(to.coord);
             }
             this.pattern.addShape(shape);
-            for (let i=0; i<this.pattern.shapes.length; i++) {
-                const tile = this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);
-                tile.colors = source.tile.colors;
-            }
-            this.gridDisplay.fillBackgroundPattern();
+            this.updateTileDisplays();
             return true;
         } else {
             return false;
         }
     }
 
+    handleGridTap(evt : PointerEvent) {
+        const cursorPos : Coord = [evt.clientX, evt.clientY];
+        const triangleCoord = this.gridDisplay.screenPositionToTriangleCoord(cursorPos);
+        if (triangleCoord) {
+            const triangle = this.grid.getTriangle(...triangleCoord);
+            if (triangle && triangle.tile) {
+                this.pattern.removeShape(triangle.tile.x);
+                this.grid.removeTile(triangle.tile);
+                this.updateTileDisplays();
+            }
+        }
+    }
+
+    updateTileDisplays() {
+        this.grid.removeAllTiles();
+        for (let i=0; i<this.pattern.shapes.length; i++) {
+            const tile = this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);
+        }
+        this.gridDisplay.fillBackgroundPattern();
+        for (const tile of this.grid.tiles) {
+            for (const triangle of tile.triangles) {
+                const coloredTriangle = this.gridDisplay.backgroundFillPatternGrid.getTriangle(...triangle.coord);
+                triangle.color = coloredTriangle.color;
+            }
+        }
+    }
 }

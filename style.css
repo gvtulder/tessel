@@ -619,7 +619,7 @@ svg .tile-segments {
 }
 
 .svg-tiles-editorBackgroundFillPattern {
-  opacity: 0.7;
+  opacity: 0.3;
   transition-property: opacity;
   transition-duration: 200ms;
 }

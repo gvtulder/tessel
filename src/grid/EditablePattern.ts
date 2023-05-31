@@ -35,4 +35,10 @@ export class EditablePattern extends Pattern {
         console.log('shape added', this.shapes);
         this.computeProperties();
     }
+
+    removeShape(index : number) {
+        this.shapes.splice(index, 1);
+        console.log('shape removed', this.shapes);
+        this.computeProperties();
+    }
 }

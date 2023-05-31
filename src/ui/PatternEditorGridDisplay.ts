@@ -15,7 +15,7 @@ import { PatternEditorDisplay } from './PatternEditorDisplay.js';
 import { TriangleDisplay } from './TriangleDisplay.js';
 
 
-const COLORS = ['red', 'blue', 'white', 'black', 'orange', 'green', 'purple'];
+const BGCOLORS = ['red', 'blue', 'black', 'orange', 'green', 'purple'];
 
 
 export class PatternEditorGridDisplay extends GridDisplay implements TileDropTarget {
@@ -226,10 +226,10 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
             if (adjacentColors.length > 0 && Math.random() < 0.3) {
                 // pick a neighbouring color
                 colors[c] = adjacentColors[0];
-            } else if (adjacentColors.length < COLORS.length) {
+            } else if (adjacentColors.length < BGCOLORS.length) {
                 // pick a different color
                 const newColors : number[] = [];
-                for (let i=0; i<COLORS.length; i++) {
+                for (let i=0; i<BGCOLORS.length; i++) {
                     if (adjacentColors.indexOf(i) === -1) {
                         newColors.push(i);
                     }
@@ -237,14 +237,14 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
                 colors[c] = newColors[Math.floor(Math.random() * newColors.length)];
             } else {
                 // pick a random color
-                colors[c] = Math.floor(Math.random() * COLORS.length);
+                colors[c] = Math.floor(Math.random() * BGCOLORS.length);
             }
         }
 
         // assign colors to the clusters
         for (const triangle of allTriangles) {
             const tidx = (triangle.x - triangleMinX) + (triangle.y - triangleMinY) * width;
-            triangle.color = COLORS[colors[clusters[tidx]] % COLORS.length];
+            triangle.color = BGCOLORS[colors[clusters[tidx]] % BGCOLORS.length];
         }
 
 

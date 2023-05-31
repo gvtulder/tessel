@@ -7,6 +7,7 @@ import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { DEBUG, SCALE } from '../settings.js';
 import { GridDisplay } from './GridDisplay.js';
 import { TriangleDisplay } from './TriangleDisplay.js';
+import offsetPolygon from 'src/lib/offset-polygon.js';
 
 
 export type TriangleOnScreenMatch = {
@@ -90,7 +91,9 @@ export class TileDisplay {
         if (DEBUG.HIDE_TILE_OUTLINE) return;
 
         let outline = this.tile.computeOutline();
-        outline = shrinkOutline(outline, 0.95);
+
+        outline = offsetPolygon(outline.reverse().map((p) => ({x: p[0], y: p[1]})), 0.03).map((v) => [v.x, v.y]);
+        // outline = shrinkOutline(outline, 0.95);
 
         let path = outline.map((p) => `${p[0] * SCALE} ${p[1] * SCALE}`).join(' L ');
         path = `M ${path} Z`;

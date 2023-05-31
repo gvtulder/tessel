@@ -52,9 +52,10 @@ export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[]
     }
 
     // follow along edges
-    const boundary : Vertex[] = [];
+    let boundary : Vertex[] = [];
     let prev : Vertex = null;
     let cur : Vertex = leftMostVertex;
+    let winding = 0;
     let i = 0;
     while (i < 1000 && (prev == null || cur.id != leftMostVertex.id)) {
         i++;
@@ -66,9 +67,19 @@ export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[]
         const nextEdge = uniqueEdges[0];
         // console.log(i, nextEdge);
         const nextVertex = (nextEdge.to.id == cur.id) ? nextEdge.from : nextEdge.to;
+        if (nextEdge.to.id == cur.id) {
+            winding += (nextEdge.from.x - nextEdge.to.x) * (nextEdge.from.y + nextEdge.to.y);
+        } else {
+            winding += (nextEdge.to.x - nextEdge.from.x) * (nextEdge.from.y + nextEdge.to.y);
+        }
         boundary.push(cur);
         prev = cur;
         cur = nextVertex;
+    }
+
+    if (winding > 0) {
+        // counter-clockwise, make clockwise
+        boundary = boundary.reverse();
     }
 
     // console.log(boundary);

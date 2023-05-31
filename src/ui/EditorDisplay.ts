@@ -91,30 +91,6 @@ export class EditorDisplay {
     updatePattern() {
         const tileVariants = this.tileEditorDisplay.tile.computeRotationVariants(false, false);
         this.pattern.updatePattern([tileVariants[0].shape]);
-
-        this.patternGrid.removeAllTiles();
-
-        for (let i=0; i<this.pattern.shapes.length; i++) {
-            const tile = this.patternGrid.getOrAddTile(i, 0, TileType.PatternEditorTile);
-            tile.colors = this.tileEditorDisplay.tile.colors;
-        }
-
-        this.patternEditorDisplay.gridDisplay.fillBackgroundPattern();
-
-        /*
-        for (const neighbor of this.patternGrid.getOrAddTileNeighbors(tile, TileType.PatternExample)) {
-            neighbor.colors = this.tileEditorDisplay.tile.colors;
-            for (const neighbor2 of this.patternGrid.getOrAddTileNeighbors(neighbor, TileType.PatternExample)) {
-                neighbor2.colors = this.tileEditorDisplay.tile.colors;
-            }
-        }
-
-        for (let x=-3; x<4; x++) {
-            for (let y=-3; y<4; y++) {
-                const tile = this.patternGrid.getOrAddTile(x, y, TileType.PatternExample);
-                tile.colors = this.tileEditorDisplay.tile.colors;
-            }
-        }
-        */
+        this.patternEditorDisplay.updateTileDisplays();
     }
 }

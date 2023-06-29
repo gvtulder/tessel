@@ -134,6 +134,7 @@ export abstract class Triangle {
     private _color: TriangleColor;
     private _tile : Tile | null;
     private _colorGroup : ColorGroup | null;
+    private _placeholder : Tile | null;
 
     /**
      * Points of the three corners of this triangle.
@@ -173,6 +174,7 @@ export abstract class Triangle {
         this._color = null;
         this._tile = null;
         this._colorGroup = null;
+        this._placeholder = null;
 
         this.coord = [x, y];
         this.coordId = CoordId(x, y);
@@ -322,6 +324,7 @@ export abstract class Triangle {
         if (changed) {
             const old = this._tile;
             this._tile = tile;
+            this._placeholder = null;
             this.dispatchEvent(new TriangleEvent(
                 Triangle.events.ChangeTile, this,
                 { oldTile: old, newTile: tile }));
@@ -333,6 +336,25 @@ export abstract class Triangle {
      */
     get tile(): Tile {
         return this._tile;
+    }
+
+    /**
+     * Sets or unsets the placeholder this triangle belongs to.
+     * (There can be more than one placeholder.)
+     */
+    set placeholder(placeholder : Tile | null) {
+        if (placeholder) {
+            this.tile = null;
+            this._placeholder = placeholder;
+        }
+    }
+
+    /**
+     * The placeholder this triangle belongs to.
+     * (There can be more than one placeholder.)
+     */
+    get placeholder() : Tile{
+        return this._placeholder;
     }
 
     /**

@@ -89,11 +89,10 @@ export class TileDragController extends EventTarget {
                 const fixedTriangle = this.dropTarget.grid.getOrAddTriangle(...fixedTriangleCoord);
                 const centerSnapTo = this.dropTarget.triangleToScreenPosition(fixedTriangle);
                 if (fixedTriangle &&
-                    fixedTriangle.tile &&
-                    fixedTriangle.tile.type === TileType.Placeholder &&
+                    fixedTriangle.placeholder &&
                     fixedTriangle.shape == rotatedMovingTriangle.shape &&
                     dist(centerSnapFrom, centerSnapFrom) < 30) {
-                    const rot = context.autorotateCache.get(fixedTriangle.tile);
+                    const rot = context.autorotateCache.get(fixedTriangle.placeholder);
                     if (rot && rot.steps == context.source.rotation.steps) {
                         const snap = { x: context.position.x + centerSnapTo[0] - centerSnapFrom[0],
                                        y: context.position.y + centerSnapTo[1] - centerSnapFrom[1] };

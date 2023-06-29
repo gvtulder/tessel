@@ -93,24 +93,9 @@ export class Game extends EventTarget {
     }
 
     placeTile(sourceTile : Tile, sourceRotation : TileRotation, sourceTriangle : Triangle, targetTriangle : Triangle, indexOnStack : number) {
-        // attempt to map triangles
-        const map = sourceTile.mapShape(targetTriangle, sourceRotation, sourceTriangle);
+        // attempt to map triangles and check fit
+        const map = this.grid.mapShapeCheckFit(sourceTile, sourceRotation, sourceTriangle, targetTriangle);
         if (map) {
-            // correct mapping, but does it fit?
-
-            // the tile must touch the existing tiles
-            if (![...map.values()].some((t) => this.grid.frontier.has(t))) {
-                // no triangles that are on the current frontier
-                return false;
-            }
-
-            // do the colors fit?
-            for (const [src, tgt] of map.entries()) {
-                if (!tgt.checkFitColor(src.color)) {
-                    return false;
-                }
-            }
-
             // everything OK
             const targetTriangles : Triangle[][] = [];
             for (const triangle of sourceTile.triangles) {

@@ -57,10 +57,10 @@ export class MainGridTileDragController extends TileDragController {
             const fixedTriangle = this.dropTarget.grid.getTriangle(...fixedTriangleCoord);
 
             // triangle matched?
-            if (fixedTriangle && fixedTriangle.tile && fixedTriangle.tile.type === TileType.Placeholder) {
-                if (context.autorotateCurrentTarget !== fixedTriangle.tile) {
+            if (fixedTriangle && fixedTriangle.placeholder) {
+                if (context.autorotateCurrentTarget !== fixedTriangle.placeholder) {
                     // autorotate after a small delay
-                    context.autorotateCurrentTarget = fixedTriangle.tile;
+                    context.autorotateCurrentTarget = fixedTriangle.placeholder;
                     const rotation = context.autorotateCache.get(context.autorotateCurrentTarget);
                     if (rotation) {
                         // this tile would fit

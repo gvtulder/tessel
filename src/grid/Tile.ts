@@ -90,7 +90,9 @@ export class Tile {
         }
         for (const triangle of del) {
             this._triangles.delete(triangle);
-            if (this.type !== TileType.Placeholder) {
+            if (this.type === TileType.Placeholder) {
+                triangle.placeholder = null;
+            } else {
                 triangle.tile = null;
                 triangle.colorGroup = null;
             }
@@ -99,6 +101,7 @@ export class Tile {
             this._triangles.set(triangle, colorGroup);
             if (this.type === TileType.Placeholder) {
                 triangle.color = null;
+                triangle.placeholder = this;
             } else {
                 triangle.tile = this;
                 triangle.colorGroup = colorGroup;
@@ -271,10 +274,12 @@ export class Tile {
      * @returns the rotation to make it fit, or null if that is impossible
      */
     computeRotationToFit(other : Tile, currentRotation : TileRotation) : TileRotation {
+        const thisTopLeft = Grid.findTopLeftTriangle(this.triangles);
         let bestRotation : TileRotation = null;
         for (const rotation of other.rotations) {
-            const newColors = this.matchShapeMapColors(other, rotation);
-            if (newColors && this.checkFitColors(newColors)) {
+            const map = other.mapShape(thisTopLeft, rotation);
+            if (map &&
+                [...map.entries()].every(([src, tgt]) => tgt.checkFitColor(src.color))) {
                 // find the rotation closest to the current angle
                 if (bestRotation === null ||
                     angleDist(bestRotation.angle, currentRotation.angle) >
@@ -287,7 +292,7 @@ export class Tile {
     }
 
     /**
-     * Matches the triangles from this tile to the other and computs the color list.
+     * Matches the triangles from this tile to the other and computes the color list.
      *
      * @param other the other tile
      * @param otherRotation the rotation step of the other tile

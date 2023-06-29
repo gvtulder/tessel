@@ -1,5 +1,5 @@
 
-import { Tile, TileShape, TileType, TileVariant } from './Tile.js';
+import { Tile, TileRotation, TileShape, TileType, TileVariant } from './Tile.js';
 import { ColorGroup, Coord, CoordId, Edge, Triangle, TriangleType } from './Triangle.js';
 import { DEBUG } from '../settings.js';
 import { Pattern } from './Pattern.js';
@@ -226,6 +226,38 @@ export class Grid extends EventTarget {
         for (const pid of oldPlaceholders) {
             this.removeTile(this.placeholders.get(pid));
             this.placeholders.delete(pid);
+        }
+    }
+
+    /**
+     * Map source to target triangles, if tiles touch the current frontier and the colors fit.
+     *
+     * @param sourceTile source tile to be placed on this grid
+     * @param sourceRotation source rotation
+     * @param sourceTriangle source triangle
+     * @param targetTriangle target triangle to map source triangle to
+     * @returns source to target map, or null
+     */
+    mapShapeCheckFit(sourceTile : Tile, sourceRotation : TileRotation, sourceTriangle : Triangle, targetTriangle : Triangle) {
+        // attempt to map triangles
+        const map = sourceTile.mapShape(targetTriangle, sourceRotation, sourceTriangle);
+        if (map) {
+            // correct mapping, but does it fit?
+
+            // the tile must touch the existing tiles
+            if (![...map.values()].some((t) => this.frontier.has(t))) {
+                // no triangles that are on the current frontier
+                return null;
+            }
+
+            // do the colors fit?
+            if (![...map.entries()].every(([src, tgt]) => tgt.checkFitColor(src.color))) {
+                return null;
+            }
+
+            return map;
+        } else {
+            return null;
         }
     }
 

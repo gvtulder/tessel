@@ -279,6 +279,7 @@ export class Tile {
         for (const rotation of other.rotations) {
             const map = other.mapShape(thisTopLeft, rotation);
             if (map &&
+                [...map.values()].some((t) => this.grid.frontier.has(t)) &&
                 [...map.entries()].every(([src, tgt]) => tgt.checkFitColor(src.color))) {
                 // find the rotation closest to the current angle
                 if (bestRotation === null ||

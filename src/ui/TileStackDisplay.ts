@@ -149,7 +149,8 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(pattern.triangleType, pattern);
-        this.tile = this.grid.getOrAddTile(0, 0, TileType.TileOnStack);
+        this.tile = this.grid.pattern.constructTile(this.grid, 0, 0, 0, TileType.TileOnStack);
+        this.grid.addTile(this.tile);
 
         this.element = document.createElement('div');
         this.element.className = 'tileOnStack';

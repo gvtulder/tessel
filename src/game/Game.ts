@@ -77,7 +77,9 @@ export class Game extends EventTarget {
         }
 
         for (const t of initialTiles) {
-            const tile = this.grid.getOrAddTile(t.x, t.y, TileType.NormalTile);
+            // TODO only works for the first initial tile
+            const tile = this.pattern.constructTile(this.grid, 0, 0, 0, TileType.NormalTile);
+            this.grid.addTile(tile);
             tile.colors = t.colors;
             this.tileStack.removeColors(t.colors);
         }

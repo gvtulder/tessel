@@ -48,7 +48,8 @@ export class MainMenuDisplay extends EventTarget {
 
             const pattern = new Pattern(gameSettings.triangleType, gameSettings.pattern.shapes);
             const grid = new Grid(gameSettings.triangleType, pattern);
-            const tile = grid.getOrAddTile(0, 0, TileType.MenuExampleTile);
+            const tile = pattern.constructTile(grid, 0, 0, 0, TileType.MenuExampleTile);
+            grid.addTile(tile);
             tile.colors = gameSettings.initialTile;
             this.grids.push(grid);
 

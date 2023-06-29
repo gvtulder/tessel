@@ -25,6 +25,7 @@ export enum TileType {
 export type TileVariant = {
     rotation: TileRotation,
     shape: TileShape,
+    triangleShapes: number[][],
 };
 
 export class TileEvent extends Event {
@@ -43,10 +44,6 @@ export class Tile {
 
     type : TileType;
     grid: Grid;
-    x: number;
-    y: number;
-    coord: Coord;
-    coordId: CoordId;
     left: number;
     top: number;
     width: number;
@@ -55,14 +52,9 @@ export class Tile {
     protected _triangles: Map<Triangle, ColorGroup>;
     protected _colors: TileColors;
 
-    constructor(grid: Grid, x: number, y: number, type : TileType, triangles : Triangle[][]) {
+    constructor(grid: Grid, type : TileType, triangles : Triangle[][]) {
         this.grid = grid;
-        this.x = x;
-        this.y = y;
         this.type = type;
-
-        this.coord = [x, y];
-        this.coordId = CoordId(x, y);
 
         this._triangles = new Map<Triangle, number>();
         this.updateTriangles(triangles);

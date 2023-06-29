@@ -155,3 +155,18 @@ export function polarToCartesian(polar : Coord) : Coord {
     polar[0] * Math.sin(polar[1]),
   ];
 }
+
+
+/**
+ * Returns a flattened list of elemens.
+ *
+ * @param list a single-level nested list
+ * @returns a flattened list
+ */
+export function flatten<T>(list : T[][]) : T[] {
+  const flat : T[] = [];
+  for (const g of list) {
+    flat.push(...g);
+  }
+  return flat;
+}

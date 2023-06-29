@@ -1,4 +1,4 @@
-import { wrapModulo } from "src/utils.js";
+import { shiftCoordinates2, wrapModulo } from "src/utils.js";
 import { Grid } from "./Grid.js";
 import { Tile, TileShape, TileType, TileVariant } from "./Tile.js";
 import { Coord, CoordId, Triangle, TriangleType } from "./Triangle.js";
@@ -24,6 +24,10 @@ export class Pattern {
      * The step size in triangle coordinates for a change in the tile y direction.
      */
     stepY : [number, number];
+    /**
+     * The rotation variants of the shapes in this pattern.
+     */
+    rotationVariants : RotationSet[];
 
     /**
      * The number of color groups in this pattern.
@@ -62,30 +66,31 @@ export class Pattern {
     }
 
     /**
-     * Constructs a new tile at the given tile position.
+     * Constructs a new tile of the given shape.
      * 
      * @param grid the grid to create the tile in
-     * @param x the tile x position
-     * @param y the tile y position
+     * @param shapeIdx the shape to generate
+     * @param offsetX the x triangle offset
+     * @param offsetY the y triangle offset
+     * @param type the type of the new tile
      * @returns a new tile on the grid (must still be added)
      */
-    constructTile(grid : Grid, x : number, y : number, type : TileType) : Tile {
+    constructTile(grid : Grid, shapeIdx : number, offsetX : number, offsetY : number, type : TileType) : Tile {
         const patterns = this.shapes;
-        const shapeIdx = wrapModulo(x, patterns.length);
 
         const triangles = patterns[shapeIdx].map((offsets) => (
-            offsets.map(([offsetX, offsetY]) => {
+            offsets.map(([x, y]) => {
                 // the shapes are included in the tile-x direction
                 // tile-x : [shape 0, shape 1, ...] [shape 0, shape 1, ...] ...
                 //          [  pattern-x 0        ] [  pattern-x 1        ] ...
                 // tile-y == pattern-y
-                const triangleX = Math.floor(x / patterns.length) * this.periodX + y * this.stepY[0] + offsetX;
-                const triangleY = y * this.stepY[1] + offsetY;
+                const triangleX = offsetX + x;
+                const triangleY = offsetY + y;
                 return grid.getOrAddTriangle(triangleX, triangleY);
             })
         ));
 
-        return new Tile(grid, x, y, type, triangles);
+        return new Tile(grid, type, triangles);
     }
 
     /**
@@ -93,6 +98,7 @@ export class Pattern {
      *
      * @param triangle the triangle coordinate
      * @returns the tile coordinate
+     * @deprecated
      */
     mapTriangleCoordToTileCoord(triangle : Coord) : Coord {
         const patterns = this.shapes;
@@ -132,6 +138,52 @@ export class Pattern {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns a list of the tile shapes that could be placed
+     * at the given triangle.
+     *
+     * @param grid the grid
+     * @param triangle the triangle
+     * @param checkOccupied return only shapes that fit on empty triangles
+     * @returns a list of possible tile shapes
+     */
+    computePossibleTiles(grid : Grid, triangle : Triangle, checkOccupied? : boolean) {
+        const shapes : TileShape[] = [];
+        for (const rotationSet of this.rotationVariants) {
+            for (const variant of rotationSet.rotationVariants) {
+                for (let c=0; c<variant.shape.length; c++) {
+                    for (let i=0; i<variant.shape[c].length; i++) {
+                        if (variant.triangleShapes[c][i] === triangle.shape) {
+                            // this could fit on this triangle
+                            const shift = [
+                                triangle.x - variant.shape[c][i][0],
+                                triangle.y - variant.shape[c][i][1],
+                            ] as Coord;
+                            const shiftedShape = shiftCoordinates2(variant.shape, shift);
+                            let ok = true;
+                            if (checkOccupied) {
+                                // check if these triangles are still empty
+                                for (const g of shiftedShape) {
+                                    for (const t of g) {
+                                        const triangle = grid.getTriangle(t[0], t[1]);
+                                        if (triangle && triangle.tile) {
+                                            ok = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            if (ok) {
+                                shapes.push(shiftedShape);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return shapes;
     }
 
     /**
@@ -185,6 +237,7 @@ export class Pattern {
             }
         }
 
+        this.rotationVariants = variants;
         console.log('variants', variants);
     }
 

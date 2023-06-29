@@ -3,7 +3,7 @@ import { Tile, TileShape, TileType, TileVariant } from './Tile.js';
 import { ColorGroup, Coord, CoordId, Edge, Triangle, TriangleType } from './Triangle.js';
 import { DEBUG } from '../settings.js';
 import { Pattern } from './Pattern.js';
-import { shiftCoordinates2, wrapModulo } from 'src/utils.js';
+import { flatten, shiftCoordinates2, wrapModulo } from 'src/utils.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 
@@ -15,16 +15,12 @@ export class GridEvent extends Event {
     grid : Grid;
     triangle? : Triangle;
     tile? : Tile;
-    oldX? : number;
-    oldY? : number;
 
-    constructor(type : string, grid : Grid, triangle : Triangle, tile : Tile, oldX? : number, oldY? : number) {
+    constructor(type : string, grid : Grid, triangle : Triangle, tile : Tile) {
         super(type);
         this.grid = grid;
         this.triangle = triangle;
         this.tile = tile;
-        this.oldX = oldX;
-        this.oldY = oldY;
     }
 }
 
@@ -39,8 +35,7 @@ export class Grid extends EventTarget {
     pattern : Pattern;
 
     private _triangles : Map<CoordId, Triangle>;
-    // TODO change to set?
-    private _tiles : Map<CoordId, Tile>;
+    private _tiles : Set<Tile>;
 
     /**
      * Initializes a new grid.
@@ -55,7 +50,7 @@ export class Grid extends EventTarget {
         this.pattern = pattern;
 
         this._triangles = new Map<CoordId, Triangle>();
-        this._tiles = new Map<CoordId, Tile>();
+        this._tiles = new Set<Tile>();
 
         if (DEBUG.RANDOM_TRIANGLES) {
             this.createRandomTriangles();
@@ -133,7 +128,7 @@ export class Grid extends EventTarget {
      * @param tile the new tile
      */
     addTile(tile : Tile) {
-        this._tiles.set(CoordId(tile.x, tile.y), tile);
+        this._tiles.add(tile);
         this.dispatchEvent(new GridEvent(Grid.events.AddTile, this, null, tile));
     }
 
@@ -142,7 +137,7 @@ export class Grid extends EventTarget {
      * @param tile the new tile
      */
     removeTile(tile : Tile) {
-        this._tiles.delete(CoordId(tile.x, tile.y));
+        this._tiles.delete(tile);
         tile.removeFromGrid();
         this.dispatchEvent(new GridEvent(Grid.events.RemoveTile, this, null, tile));
     }
@@ -157,78 +152,19 @@ export class Grid extends EventTarget {
     }
 
     /**
-     * Returns the tile at the tile-X and tile-Y position.
-     *
-     * @param x tile x
-     * @param y tile y
-     * @param addMissing create a new tile if necessary (if pattern is set)
-     * @param type the tile type if a new tile is added
-     * @returns a new tile, or null if initialization was impossible
-     */
-    getTile(x : number, y : number, addMissing? : boolean, type? : TileType) : Tile | null {
-        const coordId = CoordId(x, y);
-        let tile = this._tiles.get(coordId);
-        if (!tile && addMissing && this.pattern) {
-            tile = this.pattern.constructTile(this, x, y, type);
-            this.addTile(tile);
-        }
-        return tile;
-    }
-
-    /**
-     * Returns the tile at the tile-X and tile-Y position.
-     * Creates a new tile if necessary, and if a pattern is set.
-     *
-     * @param x tile x
-     * @param y tile y
-     * @param type the tile type if a new tile is added
-     * @returns a new tile, or null if initialization was impossible
-     */
-    getOrAddTile(x : number, y : number, type : TileType) : Tile {
-        return this.getTile(x, y, true, type);
-    }
-
-    /**
      * Returns the neighbors of the given tile.
      *
      * @param tile the tile
-     * @param addMissing create a new tile if necessary (if pattern is set)
-     * @param type the type of any new tiles
      * @returns a list of neighbor tiles
      */
-    getTileNeighbors(tile : Tile, addMissing? : boolean, type? : TileType) : Tile[] {
-        const tiles : Tile[] = [];
-        const seen = new Set<CoordId>();
+    getTileNeighbors(tile : Tile) : Tile[] {
+        const tiles = new Set<Tile>();
         for (const triangle of tile.getNeighborTriangles()) {
-            const tileCoord =
-                triangle.tile ?
-                triangle.tile.coord :
-                (this.pattern ?
-                    this.pattern.mapTriangleCoordToTileCoord(triangle.coord) :
-                    null);
-
-            if (tileCoord) {
-                const coordId = CoordId(tileCoord);
-                if (!seen.has(coordId)) {
-                    seen.add(coordId);
-                    const tile = this.getTile(...tileCoord, addMissing, type);
-                    if (tile) tiles.push(tile);
-                }
+            if (triangle.tile && triangle.tile !== tile) {
+                tiles.add(triangle.tile);
             }
         }
-        return tiles;
-    }
-
-    /**
-     * Returns the neighbors of the given tile.
-     * Initializing missing tiles if a pattern is set.
-     *
-     * @param tile the tile
-     * @param type the type of any new tiles
-     * @returns a list of neighbor tiles
-     */
-    getOrAddTileNeighbors(tile : Tile, type : TileType) : Tile[] {
-        return this.getTileNeighbors(tile, true, type);
+        return [...tiles];
     }
 
     /**
@@ -237,9 +173,29 @@ export class Grid extends EventTarget {
      * Requires a pattern to be set.
      */
     updateFrontier() {
-        for (const t of this._tiles.values()) {
-            if (t.type !== TileType.Placeholder) {
-                this.getOrAddTileNeighbors(t, TileType.Placeholder);
+        for (const tile of this._tiles.values()) {
+            if (tile.type !== TileType.Placeholder) {
+                for (const triangle of tile.getNeighborTriangles()) {
+                    if (!triangle.tile) {
+                        const possibleTiles = this.pattern.computePossibleTiles(this, triangle, true);
+                        console.log('possible tiles', possibleTiles);
+                        const triangles = new Set<Triangle>();
+                        // mark all triangle coordinates
+                        for (const s of possibleTiles) {
+                            for (const g of s) {
+                                for (const t of g) {
+                                    triangles.add(this.getOrAddTriangle(t[0], t[1]));
+                                }
+                            }
+                        }
+                        // TODO
+                        const placeholder = new Tile(this, TileType.Placeholder, [[...triangles]]);
+                        this.addTile(placeholder);
+                    }
+                }
+                // TODO
+                // this.getOrAddTileNeighbors(t, TileType.Placeholder);
+                console.log('TODO add placeholders');
             }
         }
     }
@@ -251,10 +207,10 @@ export class Grid extends EventTarget {
      * @param shape the shape coordinates
      * @returns triangles in the same order
      */
-    shapeToTriangles(shape : TileShape) : Triangle[] {
-        const triangles : Triangle[] = [];
+    shapeToTriangles(shape : TileShape) : Triangle[][] {
+        const triangles : Triangle[][] = [];
         for (const g of shape) {
-            triangles.push(...g.map((c) => this.getOrAddTriangle(...c)));
+            triangles.push(g.map((c) => this.getOrAddTriangle(...c)));
         }
         return triangles;
     }
@@ -344,8 +300,7 @@ export class Grid extends EventTarget {
      * @returns the normalized shape
      */
     moveToOrigin(shape: TileShape) : TileShape {
-        const triangles = this.shapeToTriangles(shape);
-        const shift = Grid.computeShiftToOrigin(triangles);
+        const shift = Grid.computeShiftToOrigin(flatten(this.shapeToTriangles(shape)));
         return shiftCoordinates2(shape, shift);
     }
 
@@ -418,7 +373,7 @@ export class Grid extends EventTarget {
      * @param patternSensitive only return shapes that are included in this pattern
      * @returns a list of unique rotation variants
      */
-    computeRotationVariants(triangles : Triangle[], colorSensitive? : boolean, patternSensitive? : boolean) : TileVariant[] {
+    computeRotationVariants(triangles : Triangle[][], colorSensitive? : boolean, patternSensitive? : boolean) : TileVariant[] {
         return Grid.computeRotationVariants(triangles, colorSensitive, patternSensitive ? this.pattern : null);
     }
 
@@ -431,8 +386,8 @@ export class Grid extends EventTarget {
      * @param pattern only return shapes that are included in this pattern
      * @returns a list of unique rotation variants
      */
-    static computeRotationVariants(triangles : Triangle[], colorSensitive? : boolean, pattern? : Pattern) : TileVariant[] {
-        const originTriangle = triangles[0];
+    static computeRotationVariants(triangles : Triangle[][], colorSensitive? : boolean, pattern? : Pattern) : TileVariant[] {
+        const originTriangle = triangles[0][0];
         const rotationAngles = originTriangle.rotationAngles;
         const variants : TileVariant[] = [];
         const edgeFrom = originTriangle.getOrAddRotationEdge(0);
@@ -442,17 +397,18 @@ export class Grid extends EventTarget {
             // apply rotation
             const edgeTo = originTriangle.getOrAddRotationEdge(r);
             if (!edgeTo) continue;
-            const rotationMap = this.computeRotatedTrianglePairs(triangles, edgeFrom, edgeTo);
+            const rotationMap = this.computeRotatedTrianglePairs(flatten(triangles), edgeFrom, edgeTo);
 
             // normalize the coordinates by moving the shape
             const shiftMap = this.mapTrianglesToOrigin([...rotationMap.values()]);
 
             // collect the offsets per color group
             const shape : TileShape = [];
-            for (const triangle of triangles) {
-                if (!shape[triangle.colorGroup]) shape[triangle.colorGroup] = [];
-                shape[triangle.colorGroup].push(
-                    shiftMap.get(rotationMap.get(triangle)).coord);
+            const triangleShapes : number[][] = [];
+            for (const g of triangles) {
+                const ts = g.map(triangle => shiftMap.get(rotationMap.get(triangle)));
+                shape.push(ts.map(t => t.coord));
+                triangleShapes.push(ts.map(t => t.shape));
             }
 
             // construct the normalized variant
@@ -462,6 +418,7 @@ export class Grid extends EventTarget {
                     angle: rotationAngles[r]
                 },
                 shape: shape,
+                triangleShapes: triangleShapes,
             };
 
             // does this exist in the pattern?

@@ -4,7 +4,7 @@ import { Triangle } from 'src/grid/Triangle.js';
 import { shrinkOutline } from 'src/utils.js';
 import { Tile, TileType } from "../grid/Tile.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
-import { DEBUG, SCALE } from '../settings.js';
+import { DEBUG, PLACEHOLDER, SCALE } from '../settings.js';
 import { GridDisplay } from './GridDisplay.js';
 import { TriangleDisplay } from './TriangleDisplay.js';
 import offsetPolygon from 'src/lib/offset-polygon.js';
@@ -99,7 +99,16 @@ export class TileDisplay {
         path = `M ${path} Z`;
         const roundPath = roundPathCorners(path, 8, false);
 
-        this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
+        if (this.tile.type === TileType.Placeholder) {
+            const outline = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            outline.setAttribute('d', roundPath);
+            outline.setAttribute('fill', PLACEHOLDER);
+            outline.setAttribute('fill-opacity', '0.5');
+            outline.setAttribute('stroke', PLACEHOLDER);
+            this.svgTriangles.appendChild(outline);
+        } else {
+            this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
+        }
     }
 
     hide() {

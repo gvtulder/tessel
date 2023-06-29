@@ -90,13 +90,19 @@ export class Tile {
         }
         for (const triangle of del) {
             this._triangles.delete(triangle);
-            triangle.tile = null;
-            triangle.colorGroup = null;
+            if (this.type !== TileType.Placeholder) {
+                triangle.tile = null;
+                triangle.colorGroup = null;
+            }
         }
         for (const [triangle, colorGroup] of newSet) {
             this._triangles.set(triangle, colorGroup);
-            triangle.tile = this;
-            triangle.colorGroup = colorGroup;
+            if (this.type === TileType.Placeholder) {
+                triangle.color = null;
+            } else {
+                triangle.tile = this;
+                triangle.colorGroup = colorGroup;
+            }
         }
 
         if (this._triangles.size > 0) {
@@ -417,6 +423,14 @@ export class Tile {
      * @returns a list of unique rotation variants
      */
     computeRotationVariants(colorSensitive? : boolean, patternSensitive? : boolean) : TileVariant[] {
-        return this.grid.computeRotationVariants([...this._triangles.keys()], colorSensitive, patternSensitive);
+        // group per color group
+        const triangles : Triangle[][] = [];
+        for (const t of this._triangles.keys()) {
+            if (!triangles[t.colorGroup]) {
+                triangles[t.colorGroup] = [];
+            }
+            triangles[t.colorGroup].push(t);
+        }
+        return this.grid.computeRotationVariants(triangles, colorSensitive, patternSensitive);
     }
 }

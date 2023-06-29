@@ -93,23 +93,47 @@ export class Game extends EventTarget {
     }
 
     placeTile(sourceTile : Tile, sourceRotation : TileRotation, sourceTriangle : Triangle, targetTriangle : Triangle, indexOnStack : number) {
-        const targetTile = targetTriangle.tile;
-        if (!targetTile) return false;
-        const newColors = targetTile.matchShapeMapColors(
-            sourceTile, sourceRotation, sourceTriangle, targetTriangle);
-        if (!newColors) return false;
+        // attempt to map triangles
+        const map = sourceTile.mapShape(targetTriangle, sourceRotation, sourceTriangle);
+        if (map) {
+            // correct mapping, but does it fit?
 
-        if (targetTile.checkFitColors(newColors)) {
-            // place tile
-            targetTile.colors = newColors;
-            targetTile.type = TileType.NormalTile;
+            // the tile must touch the existing tiles
+            if (![...map.values()].some((t) => this.grid.frontier.has(t))) {
+                // no triangles that are on the current frontier
+                return false;
+            }
+
+            // do the colors fit?
+            for (const [src, tgt] of map.entries()) {
+                if (!tgt.checkFitColor(src.color)) {
+                    return false;
+                }
+            }
+
+            // everything OK
+            const targetTriangles : Triangle[][] = [];
+            for (const triangle of sourceTile.triangles) {
+                const targetTriangle = map.get(triangle);
+                targetTriangle.colorGroup = triangle.colorGroup;
+                if (!targetTriangles[triangle.colorGroup]) {
+                    targetTriangles[triangle.colorGroup] = [];
+                }
+                if (targetTriangle.tile) {
+                    this.grid.removeTile(targetTriangle.tile);
+                }
+                targetTriangles[triangle.colorGroup].push(targetTriangle);
+            }
+            const tile = new Tile(this.grid, TileType.NormalTile, targetTriangles);
+            tile.colors = sourceTile.colors;
+            this.grid.addTile(tile);
             this.grid.updateFrontier();
 
             // remove from stack
             this.tileStack.take(indexOnStack);
 
             // compute scores
-            this.computeScores(targetTile);
+            this.computeScores(tile);
 
             // end of game?
             if (this.tileStack.isEmpty()) {

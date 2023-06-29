@@ -1,6 +1,6 @@
 import { dist, pointInTriangle, wrapModulo } from 'src/utils.js';
 import { Grid } from './Grid.js';
-import { Tile } from './Tile.js';
+import { Tile, TileType } from './Tile.js';
 
 export type TriangleType = (new (grid : Grid, x : number, y : number) => Triangle);
 
@@ -300,6 +300,18 @@ export abstract class Triangle {
      */
     get colorGroup(): ColorGroup {
         return this._colorGroup;
+    }
+
+    /**
+     * Returns true if this color would fit.
+     */
+    checkFitColor(color : TriangleColor) {
+        const mismatch = this.getNeighbors().some((neighbor) => (
+            neighbor.tile &&
+            neighbor.tile.type !== TileType.Placeholder &&
+            neighbor.color != color
+        ));
+        return !mismatch;
     }
 
     /**

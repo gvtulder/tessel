@@ -37,6 +37,9 @@ export class Grid extends EventTarget {
     private _triangles : Map<CoordId, Triangle>;
     private _tiles : Set<Tile>;
 
+    frontier : Set<Triangle>;
+    placeholders : Map<CoordId, Tile>;
+
     /**
      * Initializes a new grid.
      *
@@ -51,6 +54,8 @@ export class Grid extends EventTarget {
 
         this._triangles = new Map<CoordId, Triangle>();
         this._tiles = new Set<Tile>();
+        this.frontier = new Set<Triangle>();
+        this.placeholders = new Map<CoordId, Tile>();
 
         if (DEBUG.RANDOM_TRIANGLES) {
             this.createRandomTriangles();
@@ -173,30 +178,54 @@ export class Grid extends EventTarget {
      * Requires a pattern to be set.
      */
     updateFrontier() {
+        this.frontier.clear();
+        const newPlaceholders = new Map<CoordId, Triangle[]>();
+
         for (const tile of this._tiles.values()) {
             if (tile.type !== TileType.Placeholder) {
                 for (const triangle of tile.getNeighborTriangles()) {
-                    if (!triangle.tile) {
+                    if (!triangle.tile || triangle.tile.type === TileType.Placeholder) {
+                        this.frontier.add(triangle);
+
                         const possibleTiles = this.pattern.computePossibleTiles(this, triangle, true);
-                        console.log('possible tiles', possibleTiles);
-                        const triangles = new Set<Triangle>();
+
                         // mark all triangle coordinates
                         for (const s of possibleTiles) {
+                            const triangles = new Set<Triangle>();
                             for (const g of s) {
                                 for (const t of g) {
                                     triangles.add(this.getOrAddTriangle(t[0], t[1]));
                                 }
                             }
+                            if (triangles.size > 0) {
+                                // only save each placeholder once
+                                const placeholderCoordIds = [...triangles].map((t) => t.coordId);
+                                placeholderCoordIds.sort();
+                                const placeholderId = placeholderCoordIds.join(' -- '); 
+
+                                newPlaceholders.set(placeholderId, [...triangles]);
+                            }
                         }
-                        // TODO
-                        const placeholder = new Tile(this, TileType.Placeholder, [[...triangles]]);
-                        this.addTile(placeholder);
                     }
                 }
                 // TODO
                 // this.getOrAddTileNeighbors(t, TileType.Placeholder);
                 console.log('TODO add placeholders');
             }
+        }
+
+        // add and remove placeholders where necessary
+        const oldPlaceholders = [...this.placeholders.keys()].filter(p => !newPlaceholders.has(p));
+        for (const [pid, triangles] of newPlaceholders) {
+            if (!this.placeholders.has(pid)) {
+                const placeholder = new Tile(this, TileType.Placeholder, [[...triangles]]);
+                this.placeholders.set(pid, placeholder);
+                this.addTile(placeholder);
+            }
+        }
+        for (const pid of oldPlaceholders) {
+            this.removeTile(this.placeholders.get(pid));
+            this.placeholders.delete(pid);
         }
     }
 

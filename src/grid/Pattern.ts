@@ -168,7 +168,7 @@ export class Pattern {
                                 for (const g of shiftedShape) {
                                     for (const t of g) {
                                         const triangle = grid.getTriangle(t[0], t[1]);
-                                        if (triangle && triangle.tile) {
+                                        if (triangle && triangle.tile && triangle.tile.type !== TileType.Placeholder) {
                                             ok = false;
                                             break;
                                         }

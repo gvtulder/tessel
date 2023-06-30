@@ -278,9 +278,22 @@ export class Tile {
         let bestRotation : TileRotation = null;
         for (const rotation of other.rotations) {
             const map = other.mapShape(thisTopLeft, rotation);
-            if (map &&
-                [...map.values()].some((t) => this.grid.frontier.has(t)) &&
-                [...map.entries()].every(([src, tgt]) => tgt.checkFitColor(src.color))) {
+            if (map && map.size === this.triangles.length) {
+                // must contain the same triangles
+                const checkTriangles = new Set<CoordId>();
+                for (const t of map.values()) {
+                    checkTriangles.add(t.coordId);
+                }
+                if (!this.triangles.every(t => checkTriangles.has(t.coordId))) {
+                    console.log('triangle shape mismatch', this.triangles.map(t=>t.coordId), [...checkTriangles]);
+                    continue;
+                }
+
+                // the colors must fit
+                if (![...map.entries()].every(([src, tgt]) => tgt.checkFitColor(src.color))) {
+                    continue;
+                }
+
                 // find the rotation closest to the current angle
                 if (bestRotation === null ||
                     angleDist(bestRotation.angle, currentRotation.angle) >

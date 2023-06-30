@@ -89,14 +89,27 @@ export class TileDragController extends EventTarget {
                 const fixedTriangle = this.dropTarget.grid.getOrAddTriangle(...fixedTriangleCoord);
                 const centerSnapTo = this.dropTarget.triangleToScreenPosition(fixedTriangle);
                 if (fixedTriangle &&
-                    fixedTriangle.placeholder &&
+                    fixedTriangle.placeholders &&
                     fixedTriangle.shape == rotatedMovingTriangle.shape &&
                     dist(centerSnapFrom, centerSnapFrom) < 30) {
-                    const rot = context.autorotateCache.get(fixedTriangle.placeholder);
-                    if (rot && rot.steps == context.source.rotation.steps) {
-                        const snap = { x: context.position.x + centerSnapTo[0] - centerSnapFrom[0],
-                                       y: context.position.y + centerSnapTo[1] - centerSnapFrom[1] };
-                        evt.target.style.transform = `translate(${snap.x}px, ${snap.y}px) scale(${this.dropTarget.scale / context.source.gridDisplay.scale})`;
+
+                    // find the best placeholder
+                    const placeholders = fixedTriangle.placeholders.filter(
+                        // must have a rotation that fits
+                        placeholder => {
+                            const rot = context.autorotateCache.get(placeholder);
+                            return rot && rot.steps == context.source.rotation.steps;
+                        }
+                    );
+                    if (placeholders.length > 0) {
+                        // found a good placeholder
+                        const placeholder = placeholders[0];
+                        const rot = context.autorotateCache.get(placeholder);
+                        if (rot && rot.steps == context.source.rotation.steps) {
+                            const snap = { x: context.position.x + centerSnapTo[0] - centerSnapFrom[0],
+                                        y: context.position.y + centerSnapTo[1] - centerSnapFrom[1] };
+                            evt.target.style.transform = `translate(${snap.x}px, ${snap.y}px) scale(${this.dropTarget.scale / context.source.gridDisplay.scale})`;
+                        }
                     }
                 }
             }

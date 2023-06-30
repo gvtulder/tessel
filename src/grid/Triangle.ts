@@ -134,7 +134,7 @@ export abstract class Triangle {
     private _color: TriangleColor;
     private _tile : Tile | null;
     private _colorGroup : ColorGroup | null;
-    private _placeholder : Tile | null;
+    private _placeholders : Set<Tile>;
 
     /**
      * Points of the three corners of this triangle.
@@ -174,7 +174,7 @@ export abstract class Triangle {
         this._color = null;
         this._tile = null;
         this._colorGroup = null;
-        this._placeholder = null;
+        this._placeholders = new Set<Tile>();
 
         this.coord = [x, y];
         this.coordId = CoordId(x, y);
@@ -324,7 +324,7 @@ export abstract class Triangle {
         if (changed) {
             const old = this._tile;
             this._tile = tile;
-            this._placeholder = null;
+            this._placeholders.clear();
             this.dispatchEvent(new TriangleEvent(
                 Triangle.events.ChangeTile, this,
                 { oldTile: old, newTile: tile }));
@@ -339,22 +339,25 @@ export abstract class Triangle {
     }
 
     /**
-     * Sets or unsets the placeholder this triangle belongs to.
-     * (There can be more than one placeholder.)
+     * Add the placeholder this triangle belongs to.
      */
-    set placeholder(placeholder : Tile | null) {
-        if (placeholder) {
-            this.tile = null;
-            this._placeholder = placeholder;
-        }
+    addPlaceholder(placeholder : Tile) {
+        this.tile = null;
+        this._placeholders.add(placeholder);
     }
 
     /**
-     * The placeholder this triangle belongs to.
-     * (There can be more than one placeholder.)
+     * Removes the tile from the placeholders for this triangle.
      */
-    get placeholder() : Tile{
-        return this._placeholder;
+    removePlaceholder(placeholder : Tile) {
+        this._placeholders.delete(placeholder);
+    }
+
+    /**
+     * Returns one or more placeholders, or null.
+     */
+    get placeholders() : Tile[] | null {
+        return this._placeholders.size === 0 ? null : [...this._placeholders];
     }
 
     /**

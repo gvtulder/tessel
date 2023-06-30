@@ -57,10 +57,31 @@ export class MainGridTileDragController extends TileDragController {
             const fixedTriangle = this.dropTarget.grid.getTriangle(...fixedTriangleCoord);
 
             // triangle matched?
-            if (fixedTriangle && fixedTriangle.placeholder) {
-                if (context.autorotateCurrentTarget !== fixedTriangle.placeholder) {
+            if (fixedTriangle && fixedTriangle.placeholders) {
+                // find the best placeholder
+                // compute the screen center of each placeholder tile
+                const placeholdersWithCenterDist = fixedTriangle.placeholders.map(
+                    placeholder => [
+                        placeholder,
+                        dist(
+                            this.dropTarget.coordinateMapper.gridToScreen(
+                                [ (placeholder.right + placeholder.left) / 2,
+                                  (placeholder.bottom + placeholder.top) / 2 ]
+                            ),
+                            [evt.clientX, evt.clientY]
+                        )
+                    ] as [Tile, number]
+                );
+                // sort by distance to the mouse cursor
+                placeholdersWithCenterDist.sort(
+                    (a, b) => a[1] - b[1]
+                );
+                // use the closest placeholder
+                const placeholder = placeholdersWithCenterDist[0][0];
+
+                if (context.autorotateCurrentTarget !== placeholder) {
                     // autorotate after a small delay
-                    context.autorotateCurrentTarget = fixedTriangle.placeholder;
+                    context.autorotateCurrentTarget = placeholder;
                     const rotation = context.autorotateCache.get(context.autorotateCurrentTarget);
                     if (rotation) {
                         // this tile would fit

@@ -91,7 +91,7 @@ export class Tile {
         for (const triangle of del) {
             this._triangles.delete(triangle);
             if (this.type === TileType.Placeholder) {
-                triangle.placeholder = null;
+                triangle.removePlaceholder(this);
             } else {
                 triangle.tile = null;
                 triangle.colorGroup = null;
@@ -101,7 +101,7 @@ export class Tile {
             this._triangles.set(triangle, colorGroup);
             if (this.type === TileType.Placeholder) {
                 triangle.color = null;
-                triangle.placeholder = this;
+                triangle.addPlaceholder(this);
             } else {
                 triangle.tile = this;
                 triangle.colorGroup = colorGroup;
@@ -285,7 +285,6 @@ export class Tile {
                     checkTriangles.add(t.coordId);
                 }
                 if (!this.triangles.every(t => checkTriangles.has(t.coordId))) {
-                    console.log('triangle shape mismatch', this.triangles.map(t=>t.coordId), [...checkTriangles]);
                     continue;
                 }
 

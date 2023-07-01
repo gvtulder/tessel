@@ -90,6 +90,7 @@ export class EditorDisplay {
 
     updatePattern() {
         const tileVariants = this.tileEditorDisplay.tile.computeRotationVariants(false, false);
+        if (tileVariants.length == 0) return;
         this.pattern.updatePattern([tileVariants[0].shape]);
         this.patternEditorDisplay.updateTileDisplays();
     }

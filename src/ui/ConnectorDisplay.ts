@@ -44,9 +44,20 @@ export class ConnectorDisplay {
     addTriangle(triangle: Triangle) {
         for (const neighbor of triangle.getNeighbors()) {
             this.drawLine(triangle, neighbor);
+            for (const n of neighbor.getNeighbors()) {
+                this.drawLine(neighbor, n);
+            }
         }
-        const edge = triangle.getOrAddRotationEdge(0);
-        if (edge && edge.to) { this.drawRotationEdge(edge.from, edge.to); }
+        const edge = triangle.getRotationEdge(0);
+        if (edge && edge.to && edge.from) {
+            this.drawRotationEdge(edge.from, edge.to);
+        }
+        for (const neighbor of triangle.getNeighbors()) {
+            const edge = neighbor.getRotationEdge(0);
+            if (edge && edge.to && edge.from) {
+                this.drawRotationEdge(edge.from, edge.to);
+            }
+        }
     }
 
     drawLine(a: Triangle, b: Triangle) {

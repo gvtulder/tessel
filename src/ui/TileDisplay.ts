@@ -88,8 +88,6 @@ export class TileDisplay {
     }
 
     drawOutline() {
-        if (DEBUG.HIDE_TILE_OUTLINE) return;
-
         let outline = this.tile.computeOutline();
 
         outline = offsetPolygon(outline.reverse().map((p) => ({x: p[0], y: p[1]})), 0.03).map((v) => [v.x, v.y]);
@@ -103,10 +101,15 @@ export class TileDisplay {
             const outline = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             outline.setAttribute('d', roundPath);
             outline.setAttribute('fill', PLACEHOLDER);
-            outline.setAttribute('fill-opacity', '0.5');
+            if (DEBUG.HIDE_TILE_OUTLINE) {
+                outline.setAttribute('fill-opacity', '0.0');
+            } else {
+                outline.setAttribute('fill-opacity', '0.5');
+            }
             outline.setAttribute('stroke', PLACEHOLDER);
             this.svgTriangles.appendChild(outline);
         } else {
+            if (DEBUG.HIDE_TILE_OUTLINE) return;
             this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
         }
     }

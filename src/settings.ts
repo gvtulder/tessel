@@ -4,7 +4,7 @@ export const DEBUG = {
     OVERLAP: false,
     OPACITY: 0.6,
     TRIANGLE_OUTLINE: false,
-    NUMBER_TRIANGLES: false,
+    NUMBER_TRIANGLES: true,
     RANDOM_TRIANGLES: false,
     WHITE_TRIANGLES: false,
     HIDE_TILE_OUTLINE: false,

@@ -1,6 +1,7 @@
 import { GameSettings } from "./game/Game.js";
 import { TileGenerators } from "./game/TileGenerator.js";
 import { EquilateralGridTriangle } from "./grid/EquilateralGridTriangle.js";
+import { HalfHexGridTriangle } from "./grid/HalfHexGridTriangle.js";
 import { HexGridTriangle } from "./grid/HexGridTriangle.js";
 import { SnubSquareGridTriangle } from "./grid/SnubSquareGridTriangle.js";
 import { SquareGridTriangle } from "./grid/SquareGridTriangle.js";
@@ -193,6 +194,23 @@ lookup.set('trianglearrows', {
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
         TileGenerators.repeat(10),
+    ]
+});
+
+// hexagons split in 12 triangles
+lookup.set('halfhex', {
+    triangleType : HalfHexGridTriangle,
+    pattern : {
+        shapes : [
+            [ [[3, 0]], [[2, 0]], [[9, 1]], [[8, 1]] ],
+            [ [[19, 0]], [[18, 0]], [[1, 0]], [[0, 0]] ],
+            [ [[17, 0]], [[16, 0]], [[11, 1]], [[10, 1]] ],
+        ]
+    },
+    initialTile: ['red','black','blue','white','black','blue'],
+    tilesShownOnStack: 3,
+    tileGenerator : [
+        TileGenerators.permutations(['red','black','blue','white']),
     ]
 });
 

@@ -75,17 +75,12 @@ export class EditableTile extends Tile {
         }
         // - make sure all triangles have a direct connection if possible
         const doubleFrontier = new Set<Triangle>(newFrontier);
-        for (const t of newFrontier) {
-            for (const neighbor of t.getOrAddNeighbors()) {
-                if (neighbor !== newTriangle && neighbor.tile !== this) {
-                    doubleFrontier.add(neighbor);
-                }
-            }
-        }
-        for (const t of [...doubleFrontier]) {
-            for (const neighbor of t.getOrAddNeighbors()) {
-                if (neighbor !== newTriangle && neighbor.tile !== this) {
-                    doubleFrontier.add(neighbor);
+        for (let i=0; i<5; i++) {
+            for (const t of [...doubleFrontier]) {
+                for (const neighbor of t.getOrAddNeighbors()) {
+                    if (neighbor !== newTriangle && neighbor.tile !== this) {
+                        doubleFrontier.add(neighbor);
+                    }
                 }
             }
         }

@@ -31,7 +31,7 @@ export class TriangleDisplay {
         this.centerElement = centerEl;
 
         const pointsString = [...this.triangle.points, this.triangle.points[0]].map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
-        const polyString = this.triangle.polyPoints.map((p) => `${p[0] * SCALE},${p[1] * SCALE}`);
+        const polyString = this.triangle.polyPoints.map((p) => `${(p[0] * SCALE).toFixed(5)},${(p[1] * SCALE).toFixed(5)}`);
 
         const el = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         el.setAttribute('data-x', `${this.triangle.x}`);

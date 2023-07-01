@@ -53,8 +53,8 @@ export class TileDisplay {
         this.drawTriangles();
         this.drawOutline();
 
-        const left = this.tile.left * SCALE;
-        const top = this.tile.top * SCALE;
+        const left = (this.tile.left * SCALE).toFixed(5);
+        const top = (this.tile.top * SCALE).toFixed(5);
         this.svgTriangles.setAttribute('transform', `translate(${left} ${top})`);
     }
 
@@ -73,8 +73,8 @@ export class TileDisplay {
                 this.triangleDisplays.set(triangle, triangleDisplay);
                 this.gridDisplay.triangleDisplays.set(triangle, triangleDisplay);
             }
-            const left = (triangle.left - this.tile.left) * SCALE ;
-            const top = (triangle.top - this.tile.top) * SCALE
+            const left = ((triangle.left - this.tile.left) * SCALE).toFixed(5);
+            const top = ((triangle.top - this.tile.top) * SCALE).toFixed(5);
             triangleDisplay.element.setAttribute('transform', `translate(${left} ${top})`);
             this.svgTriangles.appendChild(triangleDisplay.element);
         }

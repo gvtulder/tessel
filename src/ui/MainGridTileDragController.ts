@@ -54,6 +54,7 @@ export class MainGridTileDragController extends TileDragController {
             const movingPos = context.source.gridDisplay.triangleToScreenPosition(movingTriangle)
             // match moving to fixed
             const fixedTriangleCoord = this.dropTarget.screenPositionToTriangleCoord(movingPos);
+            if (!fixedTriangleCoord) return;
             const fixedTriangle = this.dropTarget.grid.getTriangle(...fixedTriangleCoord);
 
             // triangle matched?

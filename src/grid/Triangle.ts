@@ -1,6 +1,7 @@
 import { dist, pointInTriangle, wrapModulo } from 'src/utils.js';
 import { Grid } from './Grid.js';
 import { Tile, TileType } from './Tile.js';
+import { DEBUG } from 'src/settings.js';
 
 export type TriangleType = (new (grid : Grid, x : number, y : number) => Triangle);
 
@@ -243,6 +244,9 @@ export abstract class Triangle {
     mapGridPositionToTriangleCoord(gridPos : Coord) : Coord {
         // find an approximate starting point
         const approx = this.approxGridPositionToTriangleCoord(gridPos);
+        if (DEBUG.LOG_MOUSE_POSITION) {
+            console.log('Grid position approximation: ', approx);
+        }
         // try the actual polygons
         for (let r=0; r<100; r++) {
             for (let x=-r; x<r; x++) {

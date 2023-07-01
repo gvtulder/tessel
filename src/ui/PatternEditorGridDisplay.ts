@@ -89,6 +89,7 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
         for (const td of this.backgroundFillTileDisplays) {
             td.destroy();
         }
+        return;
 
 
         // fill the screen by adding neighbors until the edge of the viewbox is reached

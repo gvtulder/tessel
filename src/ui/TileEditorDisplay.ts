@@ -31,7 +31,7 @@ export class TileEditorDisplay extends EventTarget {
             (evt : TileEditorGridEvent) => this.handleTileEditorGridEvent(evt));
 
         // start with a new tile
-        this.tile = new EditableTile(this.grid, 0, 0, [[this.grid.getOrAddTriangle(0, 0)]]);
+        this.tile = new EditableTile(this.grid, [[this.grid.getOrAddTriangle(0, 0)]]);
         this.tile.colors = [COLORS[0]];
         this.grid.addTile(this.tile);
 
@@ -75,8 +75,9 @@ export class TileEditorDisplay extends EventTarget {
                 if (triangle.tile) {
                     this.grid.removeTile(triangle.tile);
                 }
-                this.tile.addTriangle(triangle, 0);
-                this.tile.setTriangleColor(triangle, this.activeColor);
+                if (this.tile.addTriangle(triangle, 0)) {
+                    this.tile.setTriangleColor(triangle, this.activeColor);
+                }
             }
             this.recomputeFrontier();
             this.dispatchEvent(new Event(TileEditorDisplay.events.EditTile));
@@ -92,39 +93,37 @@ export class TileEditorDisplay extends EventTarget {
     }
     
     recomputeFrontier() {
-        // collect the old placeholder triangles from the grid
-        const oldTriangles = new Set<Triangle>();
-        for (const triangle of this.grid.triangles) {
-            if (triangle.tile && triangle.tile !== this.tile) {
-                oldTriangles.add(triangle);
+        // compute the new frontier
+        const frontier = new Set<Triangle>();
+        for (const triangle of this.tile.triangles) {
+            for (const n of triangle.getOrAddNeighbors()) {
+                if (n.tile !== this.tile) {
+                    frontier.add(n);
+                }
             }
         }
 
-        // compute the new frontier
-        const frontier : Triangle[] = [];
-        for (const triangle of this.tile.triangles) {
-            for (const n of triangle.getOrAddNeighbors()) {
-                oldTriangles.delete(n);
-                if (n.tile !== this.tile) {
-                    frontier.push(n);
-                }
+        // collect the old placeholder tiles
+        const oldPlaceholders = new Set<Tile>();
+        for (const tile of this.grid.placeholderTiles) {
+            if (!frontier.has(tile.triangles[0])) {
+                oldPlaceholders.add(tile);
             }
         }
 
         // construct new tiles for the new triangles
         for (const triangle of frontier) {
             if (!triangle.tile) {
-                const p = new Tile(this.grid, triangle.x, triangle.y, TileType.Placeholder, [[triangle]]);
+                const p = new Tile(this.grid, TileType.Placeholder, [[triangle]]);
                 this.grid.addTile(p);
                 p.colors = null;
             }
         }
 
         // remove the tiles away from the frontier
-        for (const triangle of oldTriangles.values()) {
-            if (triangle.tile) {
-                this.grid.removeTile(triangle.tile);
-            }
+        for (const placeholder of oldPlaceholders.values()) {
+            console.log('remove placeholder', placeholder);
+            this.grid.removeTile(placeholder);
         }
     }
 

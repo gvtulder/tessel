@@ -10,8 +10,8 @@ export class EditableTile extends Tile {
     colorGroupsToColors : Map<ColorGroup, TriangleColor>;
     colorsToColorGroup : Map<ColorGroup, TriangleColor>;
 
-    constructor(grid: Grid, x: number, y: number, triangles : Triangle[][]) {
-        super(grid, x, y, TileType.EditableTile, triangles);
+    constructor(grid: Grid, triangles : Triangle[][]) {
+        super(grid, TileType.EditableTile, triangles);
     }
 
     /**
@@ -34,6 +34,11 @@ export class EditableTile extends Tile {
         // must be connected
         if (!neighbor) return false;
 
+        if (!this.checkForHoles(triangle)) {
+            console.log('would create a hole, not adding triangle');
+            return false;
+        }
+
         // ok, choose a color group
         if (colorGroup === null || colorGroup === undefined) {
             // use the one of the neighbor
@@ -44,6 +49,63 @@ export class EditableTile extends Tile {
         this.doAddTriangle(triangle);
 
         return true;
+    }
+
+    /**
+     * Check if adding the triangle would create a hole in the shape.
+     * @param newTriangle the new triangle to add
+     * @returns true if there are no holes
+     */
+    checkForHoles(newTriangle : Triangle) : boolean {
+        // must not create a hole
+        // - find the new frontier
+        const newFrontier = new Set<Triangle>();
+        for (const t of this.triangles) {
+            for (const neighbor of t.getOrAddNeighbors()) {
+                if (neighbor !== newTriangle && neighbor.tile !== this) {
+                    newFrontier.add(neighbor);
+                }
+            }
+        }
+        // - add the new triangle
+        for (const neighbor of newTriangle.getOrAddNeighbors()) {
+            if (neighbor !== newTriangle && neighbor.tile !== this) {
+                newFrontier.add(neighbor);
+            }
+        }
+        // - make sure all triangles have a direct connection if possible
+        const doubleFrontier = new Set<Triangle>(newFrontier);
+        for (const t of newFrontier) {
+            for (const neighbor of t.getOrAddNeighbors()) {
+                if (neighbor !== newTriangle && neighbor.tile !== this) {
+                    doubleFrontier.add(neighbor);
+                }
+            }
+        }
+        for (const t of [...doubleFrontier]) {
+            for (const neighbor of t.getOrAddNeighbors()) {
+                if (neighbor !== newTriangle && neighbor.tile !== this) {
+                    doubleFrontier.add(neighbor);
+                }
+            }
+        }
+        // - check that all triangles are reachable
+        const seen = new Set<Triangle>();
+        const first = [...doubleFrontier.values()][0];
+        seen.add(first);
+        const queue : Triangle[] = [first];
+        while (queue.length > 0) {
+            const t = queue.pop();
+            for (const neighbor of t.getNeighbors()) {
+                if (!seen.has(neighbor) && doubleFrontier.has(neighbor)) {
+                    queue.push(neighbor);
+                    seen.add(neighbor);
+                }
+            }
+        }
+        // - should have seen all triangles
+        console.log('check for holes', seen.size, doubleFrontier.size);
+        return seen.size === doubleFrontier.size;
     }
 
     /**

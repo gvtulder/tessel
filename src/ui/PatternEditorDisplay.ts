@@ -31,7 +31,7 @@ export class PatternEditorDisplay extends EventTarget {
         this.build();
 
         // start with a new tile
-        const tile = new Tile(this.grid, 0, 0, TileType.PatternEditorTile, [[this.grid.getOrAddTriangle(0, 0)]]);
+        const tile = new Tile(this.grid, TileType.PatternEditorTile, [[this.grid.getOrAddTriangle(0, 0)]]);
         tile.colors = ['red'];
         this.grid.addTile(tile);
 
@@ -126,6 +126,7 @@ export class PatternEditorDisplay extends EventTarget {
     }
 
     updateTileDisplays() {
+        return;
         this.grid.removeAllTiles();
         for (let i=0; i<this.pattern.shapes.length; i++) {
             const tile = this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);

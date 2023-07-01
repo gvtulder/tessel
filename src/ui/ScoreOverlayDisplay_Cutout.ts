@@ -118,7 +118,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         for (const shape of shapes) {
             const outlineResult = this.computeOutline(shape);
             const boundary = outlineResult.boundary;
-            const pathComponents = (boundary.reverse().map((v) => `${v.x * SCALE},${v.y * SCALE}`));
+            const pathComponents = (boundary.reverse().map((v) => `${(v.x * SCALE).toFixed(5)},${(v.y * SCALE).toFixed(5)}`));
             const roundPathString = roundPathCorners('M ' + pathComponents.join(' L ') + ' Z', 10, false);
 
             // paths

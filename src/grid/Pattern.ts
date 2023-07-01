@@ -369,7 +369,7 @@ export class Pattern {
         let bestStepY : number = null;
         let tries = 0;
 
-        // estiates
+        // estimates
         const maxShapeGridPeriodX = 2 * (shapeMaxX - shapeMinX) + maxGridPeriodX + 1;
         const maxShapeStepX = maxShapeGridPeriodX;
         const maxShapeStepY = 2 * (shapeMaxY - shapeMinY) + maxGridPeriodY + 1;

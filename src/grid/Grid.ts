@@ -208,9 +208,6 @@ export class Grid extends EventTarget {
                         }
                     }
                 }
-                // TODO
-                // this.getOrAddTileNeighbors(t, TileType.Placeholder);
-                console.log('TODO add placeholders');
             }
         }
 

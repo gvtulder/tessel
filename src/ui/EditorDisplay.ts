@@ -57,6 +57,7 @@ export class EditorDisplay {
 
         // tile drag controller
         const tileDragController = new TileDragController(this.patternEditorDisplay.gridDisplay);
+        // TODO destroy
 
         // tile stack
         const tileStackDisplay = new TileEditorStackDisplay(this.pattern, tileDragController);

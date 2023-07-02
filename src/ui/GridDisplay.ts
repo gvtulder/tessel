@@ -171,6 +171,7 @@ export class GridDisplay extends EventTarget {
         this.svg.remove();
         this.svgGrid.remove();
         this.svgTriangles.remove();
+        this.coordinateMapper.destroy();
     }
 
     addTile(tile: Tile) {
@@ -208,7 +209,7 @@ export class GridDisplay extends EventTarget {
         this.contentMaxXNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.left + t.width));
         this.contentMaxYNoPlaceholders = Math.max(...noPlaceholders.map((t) => t.top + t.height));
 
-        this.rescale();
+        this.triggerRescale();
     }
 
     /**
@@ -264,9 +265,9 @@ export class GridDisplay extends EventTarget {
     /**
      * Trigger a rescale after a brief delay.
      */
-    triggerRescale() {
+    triggerRescale(timeout? : number) {
         if (this.rescaleTimeout) window.clearTimeout(this.rescaleTimeout);
-        this.rescaleTimeout = window.setTimeout(() => this.rescale(), 100);
+        this.rescaleTimeout = window.setTimeout(() => this.rescale(), timeout || 10);
     }
 
     /**
@@ -342,6 +343,7 @@ export class GridDisplay extends EventTarget {
         this.visibleBottom = (availHeight + containerTop) / scale;
 
         this.svgGrid.style.transform = `translate(${containerLeft}px, ${containerTop}px) scale(${scale})`;
+        console.log('update svgGrid.style.transform', this.svgGrid.style.transform);
 
         this.scale = scale;
 
@@ -469,6 +471,13 @@ class CoordinateMapper {
 
     resetCoeffCache() {
         this._coeffCache = null;
+    }
+
+    updateCoeffCache(dx : number, dy : number) {
+        if (this._coeffCache) {
+            this._coeffCache.x0 += dx;
+            this._coeffCache.y0 += dy;
+        }
     }
 
     private get coeff() : ScreenToGridCoeff {

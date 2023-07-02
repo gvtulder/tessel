@@ -72,7 +72,7 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
                 window.setTimeout(cleanUp, placeholders.length > 0 ? delay : 100);
             } else {
                 this.ignorePlaceholders = true;
-                this.rescale();
+                this.triggerRescale();
             }
         };
         window.setTimeout(cleanUp, delay);

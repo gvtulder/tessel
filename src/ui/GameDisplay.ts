@@ -152,6 +152,7 @@ export class GameDisplay extends EventTarget {
         this.hints.destroy();
         this.snap.destroy();
 
+        this.tileDragController.destroy();
         this.tileStackDisplay.destroy();
         this.scoreDisplay.destroy();
         this.gridDisplay.destroy();

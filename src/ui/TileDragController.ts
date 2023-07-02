@@ -34,6 +34,10 @@ export class TileDragController extends EventTarget {
         this.sources = [];
     }
 
+    destroy() {
+        // TODO
+    }
+
     addSource(source : TileDragSource) {
         this.sources.push(source);
 
@@ -69,6 +73,7 @@ export class TileDragController extends EventTarget {
             if (s !== context.source) s.resetDragStatus();
         }
         context.source.startDrag();
+        evt.target.style.transform = `translate(0px, 0px) scale(${this.dropTarget.scale / context.source.gridDisplay.scale})`;
         context.source.resetCoordinateMapperCache();
         this.dispatchEvent(new TileDragEvent(TileDragController.events.StartDrag, context.source));
     }

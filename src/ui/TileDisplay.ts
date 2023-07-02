@@ -61,7 +61,7 @@ export class TileDisplay {
     drawTriangles() {
         // add in correct order to make the overlapping work
         const sortedTriangles = [...this.tile.triangles].sort((a, b) => {
-            return (a.top.toFixed(2) != b.top.toFixed(2)) ? (a.top - b.top) : (a.left - b.left);
+            return (a.top.toFixed(2) != b.top.toFixed(2)) ? (a.top - b.top) : (a.left - b.left) || (a.height - b.height);
         });
         for (const c of [...this.svgTriangles.childNodes]) {
             this.svgTriangles.removeChild(c);

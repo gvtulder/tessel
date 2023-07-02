@@ -1,6 +1,7 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
+import strip from '@rollup/plugin-strip';
 
 export default {
   input: 'src/main.ts',
@@ -14,6 +15,15 @@ export default {
     }
   },
   plugins: [
+    strip({
+      include: [
+        '**/*.js',
+        '**/*.ts',
+      ],
+      functions: [
+        'console.*',
+      ],
+    }),
     typescript({
       "compilerOptions": {
         "outDir": "public/dist/build-tsc"

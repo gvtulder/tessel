@@ -38,7 +38,7 @@ export class HalfHexGridTriangle extends Triangle {
         ) as [Coord, Coord, Coord];
         const [movedTri, origin] = shiftToAndReturnOrigin(tri);
         p.points = movedTri as [Coord, Coord, Coord]
-        p.polyPoints = [...p.points, p.points[0]];
+        p.polyPoints = addOverlap(p.shape, [...p.points, p.points[0]]);
         p.rotationAngles = [0, 60, 120, 180, 240, 300];
         p.rotationOffsets = [0, 2, 4, 6, 8, 10].map(
             (i) => ({
@@ -82,4 +82,44 @@ export class HalfHexGridTriangle extends Triangle {
         const estimatedRow = Math.floor((gridPos[1] - estimatedCol * HEIGHT) / (2 * HEIGHT) + 0.5);
         return [estimatedCol * 12, estimatedRow];
     }
+}
+
+function addOverlap(shape : number, points : Coord[]) : Coord[] {
+    if (points.length != 4) return points;
+
+    let left : number = points[0][0];
+    let top : number = points[0][1];
+    for (const point of points) {
+        if (left > point[0]) left = point[0];
+        if (top > point[1]) top = point[1];
+    }
+
+    const OVERLAP = 0.01;
+    const EPSILON = 0.001;
+    const newPoints : Coord[] = [];
+    for (let i=0; i<points.length - 1; i++) {
+        const a = points[i];
+        const b = points[i + 1];
+        if (Math.abs(a[1] - b[1]) < EPSILON && a[0] > b[0]) {
+            // horizontal bottom going left
+            newPoints.push(a);
+            newPoints.push([a[0], a[1] + OVERLAP]);
+            newPoints.push([b[0], b[1] + OVERLAP]);
+        } else if (a[0] > b[0] && a[1] < b[1]) {
+            // right edge going down-left
+            newPoints.push(a);
+            newPoints.push([a[0] + OVERLAP, a[1]]);
+            newPoints.push([b[0] + OVERLAP, b[1]]);
+        } else if (a[0] <= b[0] && a[1] < b[1]) {
+            // right edge going down-right
+            newPoints.push(a);
+            newPoints.push([a[0] + OVERLAP, a[1]]);
+            newPoints.push([b[0] + OVERLAP, b[1]]);
+        } else {
+            newPoints.push(a);
+        }
+    }
+    newPoints.push(points[points.length - 1]);
+
+    return newPoints;
 }

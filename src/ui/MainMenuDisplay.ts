@@ -40,7 +40,7 @@ export class MainMenuDisplay extends EventTarget {
         this.gridDisplays = [];
         this.interactables = [];
 
-        for (const saveGameId of ['triangle', 'square', 'hex']) {
+        for (const saveGameId of ['triangle', 'square', 'halfhexbig', 'hex']) {
             const gameSettings = SaveGames.lookup.get(saveGameId);
             const exampleTile = document.createElement('div');
             exampleTile.className = 'gameList-exampleTile';

@@ -69,6 +69,7 @@ export class TileDragController extends EventTarget {
             if (s !== context.source) s.resetDragStatus();
         }
         context.source.startDrag();
+        context.source.resetCoordinateMapperCache();
         this.dispatchEvent(new TileDragEvent(TileDragController.events.StartDrag, context.source));
     }
 
@@ -76,6 +77,7 @@ export class TileDragController extends EventTarget {
         context.position.x += evt.dx;
         context.position.y += evt.dy;
         evt.target.style.transform = `translate(${context.position.x}px, ${context.position.y}px) scale(${this.dropTarget.scale / context.source.gridDisplay.scale})`;
+        context.source.resetCoordinateMapperCache();
 
         if (this.snap) {
             // snapping?
@@ -117,6 +119,8 @@ export class TileDragController extends EventTarget {
     }
 
     onDragEnd(context : TileDragSourceContext, evt : DragEvent) : boolean {
+        context.source.resetCoordinateMapperCache();
+
         // figure out where we are
         const movingTriangle = context.source.tile.triangles[0];
         const movingPos = context.source.gridDisplay.triangleToScreenPosition(movingTriangle)
@@ -166,6 +170,7 @@ export interface TileDragSource {
     resetDragStatus();
     startAutorotate(rotation : TileRotation);
     resetAutorotate(keepRotation : boolean);
+    resetCoordinateMapperCache();
 }
 
 export interface TileDropTarget {

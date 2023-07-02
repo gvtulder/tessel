@@ -345,6 +345,8 @@ export class GridDisplay extends EventTarget {
 
         this.scale = scale;
 
+        this.coordinateMapper.resetCoeffCache();
+
         // update the background grid
         if (this.backgroundGrid) {
             this.backgroundGrid.redraw(
@@ -417,11 +419,18 @@ export class MainMenuGridDisplay extends GridDisplay {
     }
 }
 
+type ScreenToGridCoeff = {
+    x0 : number, y0 : number, scale : number, dxdx : number,
+    dydx : number, dxdy : number, dydy : number
+};
+
 class CoordinateMapper {
     svgGroup : SVGElement;
     svgUnitCircle00 : SVGElement;
     svgUnitCircle01 : SVGElement;
     svgUnitCircle10 : SVGElement;
+
+    private _coeffCache : ScreenToGridCoeff;
 
     constructor() {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -458,20 +467,26 @@ class CoordinateMapper {
         this.svgGroup.remove();
     }
 
-    private get coeff() : { x0 : number, y0 : number, scale : number, dxdx : number,
-                            dydx : number, dxdy : number, dydy : number } {
-        const rect00 = this.svgUnitCircle00.getBoundingClientRect();
-        const rect01 = this.svgUnitCircle01.getBoundingClientRect();
-        const rect10 = this.svgUnitCircle10.getBoundingClientRect();
-        return {
-            x0: rect00.left,
-            y0: rect00.top,
-            scale: rect00.width / 2,
-            dxdx: rect10.left - rect00.left,
-            dydx: rect10.top - rect00.top,
-            dxdy: rect01.left - rect00.left,
-            dydy: rect01.top - rect00.top,
-        };
+    resetCoeffCache() {
+        this._coeffCache = null;
+    }
+
+    private get coeff() : ScreenToGridCoeff {
+        if (!this._coeffCache) {
+            const rect00 = this.svgUnitCircle00.getBoundingClientRect();
+            const rect01 = this.svgUnitCircle01.getBoundingClientRect();
+            const rect10 = this.svgUnitCircle10.getBoundingClientRect();
+            this._coeffCache = {
+                x0: rect00.left,
+                y0: rect00.top,
+                scale: rect00.width / 2,
+                dxdx: rect10.left - rect00.left,
+                dydx: rect10.top - rect00.top,
+                dxdy: rect01.left - rect00.left,
+                dydy: rect01.top - rect00.top,
+            };
+        }
+        return this._coeffCache;
     }
 
     gridToScreen(gridPos : Coord) : Coord {

@@ -279,6 +279,10 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.element.classList.remove('dragging', 'drag-return', 'drag-success');
     }
 
+    resetCoordinateMapperCache() {
+        this.gridDisplay.coordinateMapper.resetCoeffCache();
+    }
+
     removeDraggable() {
         if (this.draggable) {
             this.draggable.unset();

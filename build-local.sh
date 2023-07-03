@@ -2,16 +2,16 @@
 
 rm -rf public
 mkdir -p public
+mkdir -p public/fonts 
 
 cp style.css public/
 cp icon.png public/
+cp fonts/* public/fonts/
 
 timestamp=$(date +%s)
 sed -E 's/(style.css|main.js|icon.png)/\1?'$timestamp'/' < index.html > public/index.html
 cp newgame.html public/
 cp editor.html public/
-mkdir -p public/fonts/
-cp fonts/source-sans-3-latin-400.woff public/fonts/
 
 
 rollup -c rollup-production.config.js

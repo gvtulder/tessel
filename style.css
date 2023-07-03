@@ -646,12 +646,13 @@ svg .tile-segments {
   margin: auto auto;
   flex-grow: 1;
   align-items: center;
+  align-content: center;
   width: 80%;
+  flex-wrap: wrap;
 }
 .gameList-exampleTile {
   position: relative;
   margin: 10px;
-  width: 100%;
   aspect-ratio: 1/1;
   cursor: pointer;
   transform: scale(1.0);

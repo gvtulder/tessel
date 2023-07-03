@@ -3,7 +3,7 @@ import { O } from '../settings.js';
 import { polarToCartesian, shiftToAndReturnOrigin, wrapModulo } from '../utils.js';
 
 
-const RADIUS = 1;
+const RADIUS = 0.8;
 const BASE = 2 * RADIUS * Math.sin(30 / 180 * Math.PI);
 const HEIGHT = RADIUS * Math.cos(30 / 180 * Math.PI);
 
@@ -94,7 +94,7 @@ function addOverlap(shape : number, points : Coord[]) : Coord[] {
         if (top > point[1]) top = point[1];
     }
 
-    const OVERLAP = 0.01;
+    const OVERLAP = 0.01 * RADIUS;
     const EPSILON = 0.001;
     const newPoints : Coord[] = [];
     for (let i=0; i<points.length - 1; i++) {

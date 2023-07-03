@@ -185,27 +185,30 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             */
 
             const bestPoint = [polylabelPoint.x, polylabelPoint.y];
+            const pointsScale = polylabelPoint.distance;
 
             // circle with scores
             const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             circle.setAttribute('class', 'points');
-            circle.setAttribute('cx', `${bestPoint[0] * SCALE}`);
-            circle.setAttribute('cy', `${bestPoint[1] * SCALE}`);
-            circle.setAttribute('r', shape.triangles.size < 3 ? '20' : '25');
+            circle.setAttribute('cx', '0');  // `${bestPoint[0] * SCALE}`);
+            circle.setAttribute('cy', '0');  // `${bestPoint[1] * SCALE}`);
+            // circle.setAttribute('r', shape.triangles.size < 3 ? '20' : '25');
+            circle.setAttribute('r', `${SCALE * 0.7}`);
             circle.setAttribute('fill', Color.light);
             circle.setAttribute('stroke', Color.dark);
-            circle.setAttribute('stroke-width', '8');
-            circle.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
+            circle.setAttribute('stroke-width', '16');
+            circle.setAttribute('style', `filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2)); transform: translate(${bestPoint[0] * SCALE}px, ${bestPoint[1] * SCALE}px) scale(${pointsScale});`);
             points.push(circle);
 
             const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             text.setAttribute('class', 'points');
-            text.setAttribute('x', `${bestPoint[0] * SCALE}`);
-            text.setAttribute('y', `${bestPoint[1] * SCALE + 1}`);
+            text.setAttribute('x', '0'); // `${bestPoint[0] * SCALE}`);
+            text.setAttribute('y', '0'); // `${bestPoint[1] * SCALE + 1}`);
             text.setAttribute('alignment-baseline', 'middle');
             text.setAttribute('dominant-baseline', 'middle');
             text.setAttribute('text-anchor', 'middle');
-            text.setAttribute('font-size', '21');
+            text.setAttribute('font-size', '75');
+            text.setAttribute('style', `transform: translate(${bestPoint[0] * SCALE}px, ${bestPoint[1] * SCALE + 1}px) scale(${pointsScale});`);
             text.appendChild(document.createTextNode(`${shape.points}`));
             points.push(text);
         }

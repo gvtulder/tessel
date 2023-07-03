@@ -531,7 +531,7 @@ svg .tile-segments {
   opacity: 0;
 }
 .svg-scoreOverlay circle.points {
-  stroke-dasharray: 200 200;
+  stroke-dasharray: 600 600;
 }
 .svg-scoreOverlay.enabled circle.points {
   animation-delay: 500ms;
@@ -553,17 +553,17 @@ svg .tile-segments {
 @keyframes scoreOverlay-points-opacity-anim {
   0% {
     opacity: 0;
-    stroke-dashoffset: -200;
+    stroke-dashoffset: -600;
   }
   25% {
-    stroke-dashoffset: -200;
+    stroke-dashoffset: -600;
   }
   75% {
     opacity: 100;
   }
   100% {
     opacity: 100;
-    stroke-dashoffset: -400;
+    stroke-dashoffset: -1200;
   }
 }
 @keyframes scoreOverlay-points-opacity-anim-reverse {

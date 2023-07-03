@@ -656,7 +656,7 @@ svg .tile-segments {
   align-items: center;
   align-content: center;
   width: 80%;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
 }
 .gameList-exampleTile {
   position: relative;

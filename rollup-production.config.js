@@ -56,9 +56,6 @@ export default {
       ],
       sourcemap: false,
       cleanupOutdatedCaches: true,
-      runtimeCaching: {
-        handler: "NetworkFirst"
-      },
     }),
   ],
   external: ['@interactjs/interact/index']

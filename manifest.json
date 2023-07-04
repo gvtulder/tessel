@@ -12,7 +12,7 @@
             "purpose": "maskable any"
         }
     ],
-    "display": "fullscreen",
+    "display": "standalone",
     "theme_color": "#dddddd",
     "background_color": "#dddddd"
 }

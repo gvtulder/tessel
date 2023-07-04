@@ -1,6 +1,6 @@
 {
     "name": "Tile Game",
-    "short_name": "Tile",
+    "short_name": "Tile Game",
     "description": "A puzzle game with tiles.",
     "id": "/",
     "start_url": "/",
@@ -12,7 +12,7 @@
             "purpose": "maskable any"
         }
     ],
-    "display": "standalone",
+    "display": "fullscreen",
     "theme_color": "#dddddd",
     "background_color": "#dddddd"
 }

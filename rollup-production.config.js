@@ -40,6 +40,7 @@ export default {
         { src: 'icon.png', dest: 'public/' },
         { src: 'style.css', dest: 'public/' },
         { src: 'fonts/barlow-latin-400.woff', dest: 'public/fonts/' },
+        { src: 'interact.1.10.17.min.js', dest: 'public/' },
       ]
     }),
     generateSW({
@@ -54,6 +55,10 @@ export default {
         "fonts/*.woff",
       ],
       sourcemap: false,
+      cleanupOutdatedCaches: true,
+      runtimeCaching: {
+        handler: "NetworkFirst"
+      },
     }),
   ],
   external: ['@interactjs/interact/index']

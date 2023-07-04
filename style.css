@@ -642,31 +642,27 @@ svg .tile-segments {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
-}
-.gameList {
   display: flex;
   flex-direction: row;
-  margin: auto auto;
-  flex-grow: 1;
   align-items: center;
-  align-content: center;
-  width: 80%;
-  /* flex-wrap: wrap; */
+}
+.gameList {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 3%;
+  row-gap: 3%;
+  padding: 10%;
+  box-sizing: border-box;
 }
 .gameList-exampleTile {
   position: relative;
-  margin: 10px;
-  aspect-ratio: 1/1;
   cursor: pointer;
   transform: scale(1.0);
   transition-property: transform;
   transition-duration: 100ms;
-  flex-grow: 1;
+  aspect-ratio: 1 / 1;
 }
 .gameList-exampleTile:hover {
   transform: scale(1.1);
@@ -736,7 +732,6 @@ svg .tile-segments {
     flex-direction: column;
     margin: 0 20px 0 0;
   }
-
 }
 
 @media screen and (orientation: portrait) and (max-width: 740px) {
@@ -750,3 +745,20 @@ svg .tile-segments {
   }
 }
 
+@media screen and (max-aspect-ratio: 4.5/3) {
+  .mainMenuDisplay {
+    justify-content: center;
+  }
+  .gameList {
+    grid-template-columns: 1fr 1fr;
+    width: auto;
+    height: 100%;
+  }
+}
+
+@media screen and (max-aspect-ratio: 1/1) {
+  .gameList {
+    width: 100%;
+    height: auto;
+  }
+}

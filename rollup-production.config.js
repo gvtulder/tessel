@@ -2,6 +2,8 @@ import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import strip from '@rollup/plugin-strip';
+import copy from 'rollup-plugin-copy';
+import { generateSW } from 'rollup-plugin-workbox';
 
 export default {
   input: 'src/main.ts',
@@ -31,6 +33,28 @@ export default {
     }),
     nodeResolve(),
     terser(),
+    copy({
+      targets: [
+        { src: 'manifest.json', dest: 'public/' },
+        { src: 'index.html', dest: 'public/' },
+        { src: 'icon.png', dest: 'public/' },
+        { src: 'style.css', dest: 'public/' },
+        { src: 'fonts/barlow-latin-400.woff', dest: 'public/fonts/' },
+      ]
+    }),
+    generateSW({
+      swDest: "public/sw.js",
+      globDirectory: "public/",
+      globPatterns: [
+        "**/*.js",
+        "**/*.css",
+        "*.css",
+        "*.png",
+        "*.html",
+        "fonts/*.woff",
+      ],
+      sourcemap: false,
+    }),
   ],
   external: ['@interactjs/interact/index']
 };

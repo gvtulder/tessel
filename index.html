@@ -2,8 +2,8 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <link rel="apple-touch-icon" href="icon.png" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="icon" href="icon.png" />
+    <link rel="manifest" href="manifest.json" />
     <meta name="viewport" content="user-scalable=no, maximum-scale=1, minimum-scale=1" />
     <title>Tile Game</title>
   </head>
@@ -11,7 +11,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/interact.js/1.10.17/interact.min.js"></script>
     <script type="text/javascript" src="dist/main.js"></script>
     <script type="text/javascript">
-    tilegame.startMainMenu();
+      tilegame.startMainMenu();
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js");
+      }
     </script>
   </body>
 </html>

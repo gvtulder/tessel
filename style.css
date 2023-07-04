@@ -297,30 +297,6 @@ svg {
 }
 
 
-.horizontal-controls .controlbar {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 120px;
-  width: 100%;
-}
-.horizontal-controls .scoreDisplay {
-  position: absolute;
-  right: 10px;
-  bottom: initial;
-  margin: 25px 20px 20px 20px;
-  margin-top: 25px;
-  width: 100px;
-}
-.horizontal-controls .tileStackDisplay {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  text-align: center;
-}
-
-
 .svg-scoreOverlay-mask.disabled {
   display: none;
 }

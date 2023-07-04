@@ -59,6 +59,7 @@ lookup.set('hex', {
     tilesShownOnStack: 3,
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
+        TileGenerators.randomSubset(100),
     ]
 });
 

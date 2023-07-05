@@ -35,4 +35,6 @@ export function startMainMenu() {
     controller.run(window.location.hash.replace('#', ''));
 
     globalThis.gameController = controller;
+
+    document.getElementById('version').innerHTML = '{version}';
 }

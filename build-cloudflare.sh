@@ -2,6 +2,8 @@
 
 rm -rf public
 
-npm install --dev
+npm install --include=dev
 rollup -c rollup-production.config.js
+
+sed --in-place "s/{version}/$(git rev-parse --short HEAD)/" public/dist/main.js
 

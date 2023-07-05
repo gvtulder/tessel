@@ -661,7 +661,6 @@ svg {
   }
   .gameDisplay-buttons .game-button svg,
   .gameDisplay-toggles .game-toggle svg {
-    width: auto;
     height: 100%;
   }
   .scoreDisplay {

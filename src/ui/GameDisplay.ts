@@ -61,15 +61,18 @@ export class GameDisplay extends EventTarget {
         controlbar.className = 'controlbar';
         div.appendChild(controlbar);
 
+        const scoreDisplayContainer = document.createElement('div');
+        scoreDisplayContainer.className = 'scoreDisplayContainer';
         this.scoreDisplay = new ScoreDisplay();
-        controlbar.appendChild(this.scoreDisplay.element);
+        div.appendChild(scoreDisplayContainer);
+        scoreDisplayContainer.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
 
         const tileDragController = new MainGridTileDragController(this.gridDisplay);
         this.tileDragController = tileDragController;
 
         this.tileStackDisplay = new TileStackDisplay(this.game.pattern, this.game.tileStack, tileDragController);
-        controlbar.appendChild(this.tileStackDisplay.element);
+        div.appendChild(this.tileStackDisplay.element);
 
         const buttons = document.createElement('div');
         buttons.className = 'gameDisplay-buttons';

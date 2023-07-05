@@ -49,54 +49,57 @@ svg {
   top: 0;
   left: 0;
   overflow: hidden;
-  display: flex;
-  flex-direction: row;
   height: 100%;
   width: 100%;
   box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
+  display: grid;
+
+  grid-template-columns: 1fr 150px;
+  grid-template-rows: 1fr min-content min-content;
+  grid-template-areas:
+    "main-grid tile-stack"
+    "main-grid score-box"
+    "main-grid controls";
 }
 .mainGridContainer {
-  width: auto;
-  position: relative;
-  flex-grow: 1;
+  grid-area: main-grid;
 }
 .controlbar {
+  grid-area: controls;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 150px;
   background: #bbb;
-  height: 100%;
   text-align: center;
   z-index: 1000;
 }
 .tileStackDisplay {
-  order: 1;
-  flex-grow: 1;
-  margin: 10px 0 0 0;
+  grid-area: tile-stack;
+  background: #bbb;
 }
-.scoreDisplay {
-  order: 2;
+.scoreDisplayContainer {
+  grid-area: score-box;
+  background: #bbb;
 }
 .gameDisplay-buttons {
-  order: 3;
-  margin: 0 0 10px 0;
+  order: 1;
+  margin: 0 10px;
   display: flex;
   flex-direction: row;
 }
 .gameDisplay-toggles {
-  order: 4;
-  margin: 0 0 20px 0;
+  order: 2;
+  margin: 10px 10px;
 }
 
 .gameDisplay-buttons .game-button {
-  padding: 10px 10px;
+  padding: 10px;
   cursor: pointer;
 }
 .gameDisplay-buttons .game-button svg {
-  width: 46px;
-  height: 46px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   transform: scale(1);
   transition-property: tranform;
   transition-duration: 100ms;
@@ -127,8 +130,8 @@ svg {
   fill: #777;
 }
 .gameDisplay-toggles .game-toggle svg {
-  width: 23px;
-  height: 23px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
 }
 .gameDisplay-toggles .game-toggle.enabled {
   background: #777;
@@ -196,20 +199,15 @@ svg {
 }
 
 
-.tileStackDisplay {
-  padding: 0;
-  box-sizing: border-box;
-  width: 100%;
-}
 .tileStackDisplay .tileStackDisplay-counter {
   margin: 10px;
   color: #555;
+  text-align: center;
 }
 .tileStackDisplay .tile-outline {
   stroke: #ddd;
 }
 .tileStackDisplay .tileOnStack {
-  margin: 5px 0;
   z-index: 0;
   transition: none;
   position: relative;
@@ -266,8 +264,7 @@ svg {
 
 
 .scoreDisplay {
-  width: 120px;
-  margin: 0 0 10px 0;
+  margin: 15px 15px;
   box-sizing: border-box;
   padding: 8px 0 12px 0;
   border-radius: 20px;
@@ -503,6 +500,8 @@ svg {
   transition-property: transform;
   transition-duration: 100ms;
   aspect-ratio: 1 / 1;
+  min-width: 0;
+  min-height: 0;
 }
 .gameList-exampleTile:hover {
   transform: scale(1.1);
@@ -533,57 +532,136 @@ svg {
 }
 
 
-@media screen and (orientation: portrait) {
-  
+@media screen and (orientation: landscape) and (max-height: 740px) {
   .gameDisplay {
-    flex-direction: column;
+    grid-template-columns: 1fr 120px;
   }
-  .mainGridContainer {
-    height: auto;
-  }
-  .controlbar {
-    flex-direction: row;
-    width: auto;
-    height: 150px;
+  .gameDisplay-buttons .game-button {
+    padding: 5px;
   }
   .scoreDisplay {
-    margin: 0 10px 0 0;
+    margin: 10px;
+    padding: 4px 0 6px 0;
+    border-radius: 15px;
+    font-size: 30px;
   }
-  .tileStackDisplay {
-    margin: 0 0 0 10px;
-    padding: 10px 0;
-    box-sizing: border-box;
-    width: auto;
-    height: 100%;
+}
+@media screen and (orientation: landscape) and (max-height: 650px) {
+  .gameDisplay {
+    grid-template-columns: 1fr 100px;
   }
-  .tileStackDisplay .tileOnStack {
-    display: inline-block;
-    margin: 0 5px;
-    height: 100%;
+  .gameDisplay-buttons .game-button {
+    padding: 3px;
   }
-  .tileStackDisplay-counter {
-    display: none;
+  .gameDisplay-toggles {
+    margin: 5px 5px;
+  }
+  .scoreDisplay {
+    margin: 10px;
+    padding: 4px 0 6px 0;
+    border-radius: 15px;
+    font-size: 30px;
+  }
+}
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .gameDisplay {
+    grid-template-columns: 1fr 100px 40px;
+    grid-template-rows: 1fr min-content min-content;
+    grid-template-areas:
+      "main-grid tile-stack controls"
+      "main-grid tile-stack controls"
+      "main-grid score-box  controls";
+  }
+  .controlbar {
+    justify-content: end;
+    padding: 4px 0;
   }
   .gameDisplay-buttons {
-    margin: 0;
+    margin: 5px;
     flex-direction: column;
   }
   .gameDisplay-toggles {
+    margin: 5px;
     flex-direction: column;
-    margin: 0 20px 0 0;
+  }
+}
+@media screen and (orientation: landscape) and (max-height: 410px) {
+  .gameDisplay {
+    grid-template-columns: 1fr 90px 40px;
+    grid-template-rows: 1fr min-content min-content;
+    grid-template-areas:
+      "main-grid tile-stack controls"
+      "main-grid tile-stack controls"
+      "main-grid score-box  score-box";
+  }
+  .controlbar {
+    justify-content: start;
   }
 }
 
-@media screen and (orientation: portrait) and (max-width: 740px) {
-  .gameDisplay-buttons .game-button {
-    display: block;
-    padding: 10px 20px;
+@media screen and (orientation: portrait) {
+  .gameDisplay {
+    grid-template-columns: 1fr max(100px, 15%) max(100px, 20%);
+    grid-template-rows: 1fr min(150px, min-content);
+    grid-template-areas:
+      "main-grid main-grid main-grid"
+      "tile-stack score-box controls";
   }
-  .gameDisplay-buttons .game-button svg {
-    width: 33px;
-    height: 33px;
+  .tileStackDisplay {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .tileStackDisplay .tileStackDisplay-counter {
+    display: none;
+  }
+  .scoreDisplayContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }
+@media screen and (orientation: portrait) and (max-width: 650px) {
+  .gameDisplay-buttons .game-button {
+    padding: 3px;
+  }
+  .gameDisplay-toggles {
+    margin: 5px 5px;
+  }
+}
+@media screen and (orientation: portrait) and (max-width: 500px) {
+  .gameDisplay {
+    grid-template-columns: 1fr max(100px, 15%);
+    grid-template-rows: 50px 1fr 100px;
+    grid-template-areas:
+      "controls controls"
+      "main-grid main-grid"
+      "tile-stack score-box";
+  }
+  .gameDisplay-buttons,
+  .gameDisplay-toggles {
+    height: 75%;
+  }
+  .gameDisplay-buttons .game-button,
+  .gameDisplay-toggles .game-toggle {
+    margin: 0 5px;
+  }
+  .gameDisplay-buttons .game-button svg,
+  .gameDisplay-toggles .game-toggle svg {
+    width: auto;
+    height: 100%;
+  }
+  .scoreDisplay {
+    margin: 10px;
+    padding: 4px 0 6px 0;
+    border-radius: 15px;
+    font-size: 20px;
+  }
+  .controlbar {
+    flex-direction: row;
+  }
+}
+
 
 @media screen and (max-aspect-ratio: 4.5/3) {
   .mainMenuDisplay {
@@ -591,14 +669,23 @@ svg {
   }
   .gameList {
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
     width: auto;
     height: 100%;
+    padding: 5%;
   }
 }
 
 @media screen and (max-aspect-ratio: 1/1) {
+  .mainMenuDisplay {
+    justify-content: center;
+  }
   .gameList {
-    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: auto;
     height: auto;
+    padding: 5%;
   }
 }
+

@@ -56,6 +56,8 @@ export default {
       ],
       sourcemap: false,
       cleanupOutdatedCaches: true,
+      skipWaiting: true,
+      clientsClaim: true,
     }),
   ],
   external: ['@interactjs/interact/index']

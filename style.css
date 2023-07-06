@@ -501,8 +501,8 @@ svg {
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  column-gap: 3%;
-  row-gap: 3%;
+  column-gap: 20px;
+  row-gap: 20px;
   padding: 10%;
   box-sizing: border-box;
 }

@@ -46,18 +46,15 @@ export default {
     generateSW({
       swDest: "public/sw.js",
       globDirectory: "public/",
-      globPatterns: [
-        "**/*.js",
-        "**/*.css",
-        "*.css",
-        "*.png",
-        "*.html",
-        "fonts/*.woff",
-      ],
+      globPatterns: [],
       sourcemap: false,
       cleanupOutdatedCaches: true,
       skipWaiting: true,
       clientsClaim: true,
+      runtimeCaching: [{
+        urlPattern: new RegExp('.*(js|css|png|html|woff)'),
+        handler: 'StaleWhileRevalidate',
+      }],
     }),
   ],
   external: ['@interactjs/interact/index']

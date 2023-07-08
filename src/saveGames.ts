@@ -3,6 +3,7 @@ import { TileGenerators } from "./game/TileGenerator.js";
 import { EquilateralGridTriangle } from "./grid/EquilateralGridTriangle.js";
 import { HalfHexGridTriangle } from "./grid/HalfHexGridTriangle.js";
 import { HexGridTriangle } from "./grid/HexGridTriangle.js";
+import { PentagonGridTriangle } from "./grid/PentagonGridTriangle.js";
 import { SnubSquareGridTriangle } from "./grid/SnubSquareGridTriangle.js";
 import { SquareGridTriangle } from "./grid/SquareGridTriangle.js";
 
@@ -249,6 +250,24 @@ lookup.set('snubsquare4', {
     tilesShownOnStack: 3,
     tileGenerator : [
         TileGenerators.permutations(['red','black','blue','white']),
+    ]
+});
+
+// pentagons
+lookup.set('pentagon', {
+    triangleType : PentagonGridTriangle,
+    pattern : {
+        shapes: [
+            [[[0,0]],[[1,0]],[[2,0]],[[3,0]],[[4,0]]],
+            [[[5,0]],[[6,0]],[[7,0]],[[8,0]],[[9,0]]],
+            [[[10,0]],[[11,0]],[[12,0]],[[13,0]],[[14,0]]],
+            [[[15,0]],[[16,0]],[[17,0]],[[18,0]],[[19,0]]],
+        ]
+    },
+    initialTile: ['red','blue','white','red','blue'],
+    tilesShownOnStack: 3,
+    tileGenerator : [
+        TileGenerators.permutations(['red','blue','white']),
     ]
 });
 

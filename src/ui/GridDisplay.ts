@@ -97,8 +97,8 @@ export class GridDisplay extends EventTarget {
         }
 
         if (DEBUG.PLOT_SINGLE_TRIANGLES) {
-            for (let x=-11; x<24; x++) {
-                for (let y=-1; y<2; y++) {
+            for (let x=-41; x<44; x++) {
+                for (let y=-2; y<4; y++) {
                     const tile = new Tile(this.grid, TileType.NormalTile, [[this.grid.getOrAddTriangle(x, y)]]);
                     this.grid.addTile(tile);
                     this.addTile(tile);

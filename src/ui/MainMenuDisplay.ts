@@ -10,9 +10,11 @@ import { TileType } from 'src/grid/Tile.js';
 
 export class MenuEvent extends Event {
     gameSettings : GameSettings;
-    constructor(type : string, gameSettings? : GameSettings) {
+    gameId : string;
+    constructor(type : string, gameSettings? : GameSettings, gameId? : string) {
         super(type);
-        this.gameSettings = gameSettings;        
+        this.gameSettings = gameSettings;
+        this.gameId = gameId;
     }
 }
 
@@ -40,7 +42,7 @@ export class MainMenuDisplay extends EventTarget {
         this.gridDisplays = [];
         this.interactables = [];
 
-        for (const saveGameId of ['triangle', 'square', 'halfhexbig', 'hex']) {
+        for (const saveGameId of ['triangle', 'square', 'isometric', 'hex']) {
             const gameSettings = SaveGames.lookup.get(saveGameId);
             const exampleTile = document.createElement('div');
             exampleTile.className = 'gameList-exampleTile';
@@ -58,7 +60,7 @@ export class MainMenuDisplay extends EventTarget {
             exampleTile.appendChild(gridDisplay.element);
 
             this.interactables.push(interact(exampleTile).on('tap', () => {
-                this.dispatchEvent(new MenuEvent('startgame', gameSettings));
+                this.dispatchEvent(new MenuEvent('startgame', gameSettings, saveGameId));
             }).on('doubletap', (evt : Event) => {
                 evt.preventDefault();
             }).on('hold', (evt : Event) => {

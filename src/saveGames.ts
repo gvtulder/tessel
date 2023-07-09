@@ -217,7 +217,7 @@ lookup.set('halfhex', {
 });
 
 // hexagons split in 12 triangles
-lookup.set('halfhexbig', {
+lookup.set('isometric', {
     triangleType : HalfHexGridTriangle,
     pattern : {
         shapes : [

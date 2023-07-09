@@ -51,10 +51,16 @@ export default {
       cleanupOutdatedCaches: true,
       skipWaiting: true,
       clientsClaim: true,
-      runtimeCaching: [{
-        urlPattern: new RegExp('.*(js|css|png|html|woff)'),
-        handler: 'StaleWhileRevalidate',
-      }],
+      runtimeCaching: [
+        {
+          urlPattern: new RegExp('cloudflare'),
+          handler: 'NetworkOnly',
+        },
+        {
+          urlPattern: new RegExp('.*(js|css|png|html|woff)'),
+          handler: 'StaleWhileRevalidate',
+        },
+      ],
     }),
   ],
   external: ['@interactjs/interact/index']

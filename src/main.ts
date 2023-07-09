@@ -31,6 +31,11 @@ export function runEditorDebug() {
 export function startMainMenu() {
     disableIosZoom();
 
+    if (window.location.pathname != '/') {
+        window.location.href = '/';
+        return;
+    }
+
     const controller = new GameController(document.body);
     controller.run(window.location.hash.replace('#', ''));
 

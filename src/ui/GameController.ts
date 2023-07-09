@@ -36,7 +36,7 @@ export class GameController {
             this.container.removeChild(menuDisplay.element);
             this.menuDisplay = null;
             if (evt.gameId) {
-                window.history.pushState({}, '', `#${evt.gameId}`);
+                window.history.pushState({}, '', `/${evt.gameId}`);
             }
             this.startGame(evt.gameSettings);
         });
@@ -54,14 +54,14 @@ export class GameController {
 
         gameDisplay.addEventListener('clickbacktomenu', () => {
             if (this.game.finished || window.confirm('Stop the game?')) {
-                window.history.pushState({}, '', '#');
+                window.history.pushState({}, '', '/');
                 this.showMainMenu();
             }
         });
 
         gameDisplay.addEventListener('clickrestartgame', () => {
             if (this.game.finished || window.confirm('Restart the game?')) {
-                window.history.pushState({}, '', window.location.hash);
+                window.history.pushState({}, '', window.location.href);
                 this.startGame(gameSettings);
             }
         });

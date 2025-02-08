@@ -1,22 +1,22 @@
-import { dist, pointInTriangle, wrapModulo } from '../utils.js';
-import { Grid } from './Grid.js';
-import { Tile, TileType } from './Tile.js';
-import { DEBUG } from '../settings.js';
+import { dist, pointInTriangle, wrapModulo } from "../utils.js";
+import { Grid } from "./Grid.js";
+import { Tile, TileType } from "./Tile.js";
+import { DEBUG } from "../settings.js";
 
-export type TriangleType = (new (grid : Grid, x : number, y : number) => Triangle);
+export type TriangleType = new (grid: Grid, x: number, y: number) => Triangle;
 
 export type CoordId = string;
-export function CoordId(x : number, y : number) : CoordId;
-export function CoordId(c : Coord) : CoordId;
-export function CoordId(xOrCoord : number | Coord, y? : number) : CoordId {
-    return (y === undefined) ?
-           `${(xOrCoord as Coord)[0]} ${(xOrCoord as Coord)[1]}` :
-           `${xOrCoord as number} ${y}`;
+export function CoordId(x: number, y: number): CoordId;
+export function CoordId(c: Coord): CoordId;
+export function CoordId(xOrCoord: number | Coord, y?: number): CoordId {
+    return y === undefined
+        ? `${(xOrCoord as Coord)[0]} ${(xOrCoord as Coord)[1]}`
+        : `${xOrCoord as number} ${y}`;
 }
 
-export type Coord = readonly [x : number, y : number];
-export type CoordEdge = { readonly from: Coord, readonly to: Coord };
-export type Edge = { readonly from: Triangle, readonly to: Triangle };
+export type Coord = readonly [x: number, y: number];
+export type CoordEdge = { readonly from: Coord; readonly to: Coord };
+export type Edge = { readonly from: Triangle; readonly to: Triangle };
 
 export type ColorGroup = number;
 export type TriangleColor = string;
@@ -24,10 +24,10 @@ export type TileColors = readonly TriangleColor[];
 
 export type TriangleParams = {
     shape?: number;
-    tileMinGridPeriodX? : number;
-    tileMinGridPeriodY? : number;
-    tileGridPeriodX? : number;
-    tileGridPeriodY? : number;
+    tileMinGridPeriodX?: number;
+    tileMinGridPeriodY?: number;
+    tileGridPeriodX?: number;
+    tileGridPeriodY?: number;
     xAtOrigin?: number;
     yAtOrigin?: number;
     points?: readonly [Coord, Coord, Coord];
@@ -37,23 +37,29 @@ export type TriangleParams = {
     neighborOffsets?: ReadonlyArray<Coord>;
     rotationOffsets?: ReadonlyArray<CoordEdge>;
     rotationAngles?: readonly number[];
-}
+};
 
 export class TriangleEvent extends Event {
-    triangle : Triangle;
-    oldColor? : TriangleColor;
-    newColor? : TriangleColor;
-    oldTile? : Tile;
-    newTile? : Tile;
-    oldColorGroup? : ColorGroup;
-    newColorGroup? : ColorGroup;
+    triangle: Triangle;
+    oldColor?: TriangleColor;
+    newColor?: TriangleColor;
+    oldTile?: Tile;
+    newTile?: Tile;
+    oldColorGroup?: ColorGroup;
+    newColorGroup?: ColorGroup;
 
-    constructor(type : string, triangle : Triangle,
-                properties : {
-                    oldColor? : TriangleColor, newColor? : TriangleColor,
-                    oldTile? : Tile, newTile? : Tile,
-                    oldColorGroup? : ColorGroup, newColorGroup? : ColorGroup
-                }) {
+    constructor(
+        type: string,
+        triangle: Triangle,
+        properties: {
+            oldColor?: TriangleColor;
+            newColor?: TriangleColor;
+            oldTile?: Tile;
+            newTile?: Tile;
+            oldColorGroup?: ColorGroup;
+            newColorGroup?: ColorGroup;
+        },
+    ) {
         super(type);
         this.triangle = triangle;
         this.oldColor = properties.oldColor;
@@ -67,9 +73,9 @@ export class TriangleEvent extends Event {
 
 export abstract class Triangle {
     static events = {
-        ChangeColor: 'changetilecolor',
-        ChangeColorGroup: 'changetilecolor',
-        ChangeTile: 'changetile',
+        ChangeColor: "changetilecolor",
+        ChangeColorGroup: "changetilecolor",
+        ChangeTile: "changetile",
     };
 
     grid: Grid;
@@ -112,30 +118,30 @@ export abstract class Triangle {
      * The smallest number of x steps after which the triangle
      * pattern repeats. Used as the resolution for pattern-fitting.
      */
-    tileMinGridPeriodX : number;
+    tileMinGridPeriodX: number;
 
     /**
      * The smallest number of y steps after which the triangle
      * pattern repeats. Used as the resolution for pattern-fitting.
      */
-    tileMinGridPeriodY : number;
+    tileMinGridPeriodY: number;
 
     /**
      * The number of x steps after which the triangle pattern repeats.
      * A pattern shifted by this number should find the same shapes.
      */
-    tileGridPeriodX : number;
+    tileGridPeriodX: number;
 
     /**
      * The number of y steps after which the triangle pattern repeats.
      * A pattern shifted by this number should find the same shapes.
      */
-    tileGridPeriodY : number;
+    tileGridPeriodY: number;
 
     private _color: TriangleColor;
-    private _tile : Tile | null;
-    private _colorGroup : ColorGroup | null;
-    private _placeholders : Set<Tile>;
+    private _tile: Tile | null;
+    private _colorGroup: ColorGroup | null;
+    private _placeholders: Set<Tile>;
 
     /**
      * Points of the three corners of this triangle.
@@ -168,7 +174,7 @@ export abstract class Triangle {
      * @param x
      * @param y
      */
-    constructor(grid : Grid, x: number, y: number) {
+    constructor(grid: Grid, x: number, y: number) {
         this.grid = grid;
         this.x = x;
         this.y = y;
@@ -186,7 +192,7 @@ export abstract class Triangle {
     /**
      * Populate the type-specific parameters.
      */
-    protected abstract calc(x : number, y : number) : TriangleParams;
+    protected abstract calc(x: number, y: number): TriangleParams;
 
     /**
      * Returns the type-specific parameters for a triangle at this coordinate.
@@ -194,7 +200,7 @@ export abstract class Triangle {
      * @param y triangle coordinate y
      * @returns a parameters object
      */
-    getGridParameters(x : number, y : number) : TriangleParams {
+    getGridParameters(x: number, y: number): TriangleParams {
         return this.calc(x, y);
     }
 
@@ -206,8 +212,16 @@ export abstract class Triangle {
         const w0 = dist(this.points[1], this.points[2]);
         const w1 = dist(this.points[0], this.points[2]);
         const w2 = dist(this.points[0], this.points[1]);
-        const x = (w0 * this.points[0][0] + w1 * this.points[1][0] + w2 * this.points[2][0]) / (w0 + w1 + w2);
-        const y = (w0 * this.points[0][1] + w1 * this.points[1][1] + w2 * this.points[2][1]) / (w0 + w1 + w2);
+        const x =
+            (w0 * this.points[0][0] +
+                w1 * this.points[1][0] +
+                w2 * this.points[2][0]) /
+            (w0 + w1 + w2);
+        const y =
+            (w0 * this.points[0][1] +
+                w1 * this.points[1][1] +
+                w2 * this.points[2][1]) /
+            (w0 + w1 + w2);
         return [x, y];
     }
 
@@ -230,9 +244,9 @@ export abstract class Triangle {
      * @param gridPos the grid position
      * @returns the closest triangle coordinate
      */
-    protected abstract approxGridPositionToTriangleCoord(gridPos : Coord) : Coord;
+    protected abstract approxGridPositionToTriangleCoord(gridPos: Coord): Coord;
 
-    private dispatchEvent(evt : Event) {
+    private dispatchEvent(evt: Event) {
         if (this.grid) this.grid.dispatchEvent(evt);
     }
 
@@ -241,22 +255,27 @@ export abstract class Triangle {
      * @param gridPos the grid position
      * @returns the closest triangle coordinate
      */
-    mapGridPositionToTriangleCoord(gridPos : Coord) : Coord {
+    mapGridPositionToTriangleCoord(gridPos: Coord): Coord {
         // find an approximate starting point
         const approx = this.approxGridPositionToTriangleCoord(gridPos);
         if (DEBUG.LOG_MOUSE_POSITION) {
-            console.log('Grid position approximation: ', approx);
+            console.log("Grid position approximation: ", approx);
         }
         // try the actual polygons
-        for (let r=0; r<100; r++) {
-            for (let x=-r; x<r; x++) {
-                for (let y=-r; y<r; y++) {
-                    if (x==-r || x==r-1 || y==-r || y==r-1) {
+        for (let r = 0; r < 100; r++) {
+            for (let x = -r; x < r; x++) {
+                for (let y = -r; y < r; y++) {
+                    if (x == -r || x == r - 1 || y == -r || y == r - 1) {
                         const params = this.calc(x + approx[0], y + approx[1]);
-                        if (pointInTriangle([
-                                gridPos[0] - params.left,
-                                gridPos[1] - params.top
-                            ], params.points)) {
+                        if (
+                            pointInTriangle(
+                                [
+                                    gridPos[0] - params.left,
+                                    gridPos[1] - params.top,
+                                ],
+                                params.points,
+                            )
+                        ) {
                             return [x + approx[0], y + approx[1]];
                         }
                     }
@@ -274,9 +293,12 @@ export abstract class Triangle {
         if (changed) {
             const old = color;
             this._color = color;
-            this.dispatchEvent(new TriangleEvent(
-                Triangle.events.ChangeColor, this,
-                { oldColor: old, newColor: color }));
+            this.dispatchEvent(
+                new TriangleEvent(Triangle.events.ChangeColor, this, {
+                    oldColor: old,
+                    newColor: color,
+                }),
+            );
         }
     }
 
@@ -295,9 +317,12 @@ export abstract class Triangle {
         if (changed) {
             const old = colorGroup;
             this._colorGroup = colorGroup;
-            this.dispatchEvent(new TriangleEvent(
-                Triangle.events.ChangeColorGroup, this,
-                { oldColorGroup: old, newColorGroup: colorGroup }));
+            this.dispatchEvent(
+                new TriangleEvent(Triangle.events.ChangeColorGroup, this, {
+                    oldColorGroup: old,
+                    newColorGroup: colorGroup,
+                }),
+            );
         }
     }
 
@@ -311,12 +336,13 @@ export abstract class Triangle {
     /**
      * Returns true if this color would fit.
      */
-    checkFitColor(color : TriangleColor) {
-        const mismatch = this.getNeighbors().some((neighbor) => (
-            neighbor.tile &&
-            neighbor.tile.type !== TileType.Placeholder &&
-            neighbor.color != color
-        ));
+    checkFitColor(color: TriangleColor) {
+        const mismatch = this.getNeighbors().some(
+            (neighbor) =>
+                neighbor.tile &&
+                neighbor.tile.type !== TileType.Placeholder &&
+                neighbor.color != color,
+        );
         return !mismatch;
     }
 
@@ -329,9 +355,12 @@ export abstract class Triangle {
             const old = this._tile;
             this._tile = tile;
             this._placeholders.clear();
-            this.dispatchEvent(new TriangleEvent(
-                Triangle.events.ChangeTile, this,
-                { oldTile: old, newTile: tile }));
+            this.dispatchEvent(
+                new TriangleEvent(Triangle.events.ChangeTile, this, {
+                    oldTile: old,
+                    newTile: tile,
+                }),
+            );
         }
     }
 
@@ -345,7 +374,7 @@ export abstract class Triangle {
     /**
      * Add the placeholder this triangle belongs to.
      */
-    addPlaceholder(placeholder : Tile) {
+    addPlaceholder(placeholder: Tile) {
         this.tile = null;
         this._placeholders.add(placeholder);
     }
@@ -353,14 +382,14 @@ export abstract class Triangle {
     /**
      * Removes the tile from the placeholders for this triangle.
      */
-    removePlaceholder(placeholder : Tile) {
+    removePlaceholder(placeholder: Tile) {
         this._placeholders.delete(placeholder);
     }
 
     /**
      * Returns one or more placeholders, or null.
      */
-    get placeholders() : Tile[] | null {
+    get placeholders(): Tile[] | null {
         return this._placeholders.size === 0 ? null : [...this._placeholders];
     }
 
@@ -371,10 +400,14 @@ export abstract class Triangle {
      * @param addMissing initialize uninitialized triangles
      * @returns a list of neighbors for this triangle
      */
-    getNeighbors(includeNull? : boolean, addMissing? : boolean) : Triangle[] {
-        const neighbors : Triangle[] = [];
+    getNeighbors(includeNull?: boolean, addMissing?: boolean): Triangle[] {
+        const neighbors: Triangle[] = [];
         for (const n of this.neighborOffsets) {
-            const neighbor = this.grid.getTriangle(this.x + n[0], this.y + n[1], addMissing);
+            const neighbor = this.grid.getTriangle(
+                this.x + n[0],
+                this.y + n[1],
+                addMissing,
+            );
             if (neighbor || includeNull) {
                 neighbors.push(neighbor);
             }
@@ -387,7 +420,7 @@ export abstract class Triangle {
      *
      * @returns a list of neighbors for this triangle
      */
-    getOrAddNeighbors() : Triangle[] {
+    getOrAddNeighbors(): Triangle[] {
         return this.getNeighbors(true, true);
     }
 
@@ -399,12 +432,25 @@ export abstract class Triangle {
      * @param addMissing initialize triangles if necessary
      * @returns an Edge from this previous triangle to this one, in the rotation direction, or null
      */
-    getRotationEdge(rotation : number, addMissing?: boolean) : Edge {
-        const offset = this.rotationOffsets[wrapModulo(rotation, this.rotationOffsets.length)];
-        return offset ? {
-            from: this.grid.getTriangle(this.x + offset.from[0], this.y + offset.from[1], addMissing),
-            to: this.grid.getTriangle(this.x + offset.to[0], this.y + offset.to[1], addMissing),
-        } : null;
+    getRotationEdge(rotation: number, addMissing?: boolean): Edge {
+        const offset =
+            this.rotationOffsets[
+                wrapModulo(rotation, this.rotationOffsets.length)
+            ];
+        return offset
+            ? {
+                  from: this.grid.getTriangle(
+                      this.x + offset.from[0],
+                      this.y + offset.from[1],
+                      addMissing,
+                  ),
+                  to: this.grid.getTriangle(
+                      this.x + offset.to[0],
+                      this.y + offset.to[1],
+                      addMissing,
+                  ),
+              }
+            : null;
     }
 
     /**
@@ -414,7 +460,7 @@ export abstract class Triangle {
      * @param rotation the rotation step
      * @returns an Edge from this previous triangle to this one, in the rotation direction, or null
      */
-    getOrAddRotationEdge(rotation : number) : Edge {
+    getOrAddRotationEdge(rotation: number): Edge {
         return this.getRotationEdge(rotation, true);
     }
 }

@@ -6,27 +6,26 @@ import { TileGenerator } from "./TileGenerator.js";
 import { FixedOrderTileStack, TileStack } from "./TileStack.js";
 import { Pattern } from "../grid/Pattern.js";
 
-
 export type GameSettings = {
-    triangleType : TriangleType,
-    pattern : {
-        shapes : TileShape[],
-    }
-    tilesShownOnStack : number,
-    initialTile? : TileColors,
-    initialTiles? : {
-        colors: TileColors,
-        x: number,
-        y: number
-    }[],
-    tileGenerator : TileGenerator[],
-}
+    triangleType: TriangleType;
+    pattern: {
+        shapes: TileShape[];
+    };
+    tilesShownOnStack: number;
+    initialTile?: TileColors;
+    initialTiles?: {
+        colors: TileColors;
+        x: number;
+        y: number;
+    }[];
+    tileGenerator: TileGenerator[];
+};
 
 export class GameEvent extends Event {
-    game : Game;
-    scoreShapes? : ScoredRegion[];
+    game: Game;
+    scoreShapes?: ScoredRegion[];
 
-    constructor(type : string, game : Game, scoreShapes? : ScoredRegion[]) {
+    constructor(type: string, game: Game, scoreShapes?: ScoredRegion[]) {
         super(type);
         this.game = game;
         this.scoreShapes = scoreShapes;
@@ -34,16 +33,16 @@ export class GameEvent extends Event {
 }
 
 export class Game extends EventTarget {
-    settings : GameSettings;
+    settings: GameSettings;
 
-    pattern : Pattern;
-    grid : Grid;
-    tileStack : FixedOrderTileStack;
+    pattern: Pattern;
+    grid: Grid;
+    tileStack: FixedOrderTileStack;
 
-    points : number;
-    finished : boolean;
+    points: number;
+    finished: boolean;
 
-    constructor(settings : GameSettings) {
+    constructor(settings: GameSettings) {
         super();
 
         this.settings = settings;
@@ -55,22 +54,32 @@ export class Game extends EventTarget {
     setup() {
         this.points = 0;
 
-        this.pattern = new Pattern(this.settings.triangleType, this.settings.pattern.shapes);
+        this.pattern = new Pattern(
+            this.settings.triangleType,
+            this.settings.pattern.shapes,
+        );
         this.grid = new Grid(this.settings.triangleType, this.pattern);
 
         // generate tiles
-        let tiles : TileColors[] = [];
+        let tiles: TileColors[] = [];
         for (const tileGenerator of this.settings.tileGenerator) {
             tiles = tileGenerator(tiles, this.pattern);
         }
 
         // construct the tile stack
         const tileStack = new TileStack(tiles);
-        this.tileStack = new FixedOrderTileStack(tileStack, this.settings.tilesShownOnStack);
+        this.tileStack = new FixedOrderTileStack(
+            tileStack,
+            this.settings.tilesShownOnStack,
+        );
 
-        const initialTiles : GameSettings['initialTiles'] = [];
+        const initialTiles: GameSettings["initialTiles"] = [];
         if (this.settings.initialTile) {
-            initialTiles.push({ x: 0, y: 0, colors: this.settings.initialTile });
+            initialTiles.push({
+                x: 0,
+                y: 0,
+                colors: this.settings.initialTile,
+            });
         }
         if (this.settings.initialTiles) {
             initialTiles.push(...this.settings.initialTiles);
@@ -78,7 +87,13 @@ export class Game extends EventTarget {
 
         for (const t of initialTiles) {
             // TODO only works for the first initial tile
-            const tile = this.pattern.constructTile(this.grid, 0, 0, 0, TileType.NormalTile);
+            const tile = this.pattern.constructTile(
+                this.grid,
+                0,
+                0,
+                0,
+                TileType.NormalTile,
+            );
             this.grid.addTile(tile);
             tile.colors = t.colors;
             this.tileStack.removeColors(t.colors);
@@ -89,15 +104,26 @@ export class Game extends EventTarget {
 
     finish() {
         this.finished = true;
-        this.dispatchEvent(new GameEvent('endgame', this));
+        this.dispatchEvent(new GameEvent("endgame", this));
     }
 
-    placeTile(sourceTile : Tile, sourceRotation : TileRotation, sourceTriangle : Triangle, targetTriangle : Triangle, indexOnStack : number) {
+    placeTile(
+        sourceTile: Tile,
+        sourceRotation: TileRotation,
+        sourceTriangle: Triangle,
+        targetTriangle: Triangle,
+        indexOnStack: number,
+    ) {
         // attempt to map triangles and check fit
-        const map = this.grid.mapShapeCheckFit(sourceTile, sourceRotation, sourceTriangle, targetTriangle);
+        const map = this.grid.mapShapeCheckFit(
+            sourceTile,
+            sourceRotation,
+            sourceTriangle,
+            targetTriangle,
+        );
         if (map) {
             // everything OK
-            const targetTriangles : Triangle[][] = [];
+            const targetTriangles: Triangle[][] = [];
             for (const triangle of sourceTile.triangles) {
                 const targetTriangle = map.get(triangle);
                 targetTriangle.colorGroup = triangle.colorGroup;
@@ -109,7 +135,11 @@ export class Game extends EventTarget {
                 }
                 targetTriangles[triangle.colorGroup].push(targetTriangle);
             }
-            const tile = new Tile(this.grid, TileType.NormalTile, targetTriangles);
+            const tile = new Tile(
+                this.grid,
+                TileType.NormalTile,
+                targetTriangles,
+            );
             tile.colors = sourceTile.colors;
             this.grid.addTile(tile);
             this.grid.updateFrontier();
@@ -132,13 +162,13 @@ export class Game extends EventTarget {
         }
     }
 
-    computeScores(target : Tile) {
+    computeScores(target: Tile) {
         const shapes = Scorer.computeScores(target);
         if (shapes.length > 0) {
-            const points = shapes.map((s) => s.points).reduce((a, b) => (a + b));
+            const points = shapes.map((s) => s.points).reduce((a, b) => a + b);
             this.points += points;
 
-            this.dispatchEvent(new GameEvent('score', this, shapes));
+            this.dispatchEvent(new GameEvent("score", this, shapes));
         }
     }
 }

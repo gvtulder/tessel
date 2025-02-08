@@ -1,17 +1,15 @@
-import interact from 'interactjs';
-import type { Interactable } from '@interactjs/types';
+import interact from "interactjs";
+import type { Interactable } from "@interactjs/types";
 
 import { Grid } from "../grid/Grid.js";
-import { Coord } from '../grid/Triangle.js';
-import { GridDisplay } from './GridDisplay.js';
-
-
+import { Coord } from "../grid/Triangle.js";
+import { GridDisplay } from "./GridDisplay.js";
 
 // TODO merge with MainGridDisplay and PatternEditorGridDisplay
 
 export class TileEditorGridEvent extends Event {
-    triangleCoord : Coord;
-    constructor(type : string, triangleCoord : Coord) {
+    triangleCoord: Coord;
+    constructor(type: string, triangleCoord: Coord) {
         super(type);
         this.triangleCoord = triangleCoord;
     }
@@ -19,28 +17,44 @@ export class TileEditorGridEvent extends Event {
 
 export class TileEditorGridDisplay extends GridDisplay {
     static events = {
-        ClickTriangle: 'clicktriangle',
-        DoubleClickTriangle: 'doubleclicktriangle',
+        ClickTriangle: "clicktriangle",
+        DoubleClickTriangle: "doubleclicktriangle",
     };
-    container : HTMLElement;
-    interactable : Interactable;
+    container: HTMLElement;
+    interactable: Interactable;
 
-    constructor(grid: Grid, container : HTMLElement) {
+    constructor(grid: Grid, container: HTMLElement) {
         super(grid, container);
 
         this.addBackgroundGrid();
 
         this.interactable = interact(this.svgTriangles)
-        .on('tap', (evt : PointerEvent) => {
-            // find the triangle
-            const triangleCoord = this.screenPositionToTriangleCoord([evt.clientX, evt.clientY]);
-            this.dispatchEvent(new TileEditorGridEvent(TileEditorGridDisplay.events.ClickTriangle, triangleCoord));
-        })
-        .on('doubletap', (evt : PointerEvent) => {
-            // find the triangle
-            const triangleCoord = this.screenPositionToTriangleCoord([evt.clientX, evt.clientY]);
-            this.dispatchEvent(new TileEditorGridEvent(TileEditorGridDisplay.events.DoubleClickTriangle, triangleCoord));
-        });
+            .on("tap", (evt: PointerEvent) => {
+                // find the triangle
+                const triangleCoord = this.screenPositionToTriangleCoord([
+                    evt.clientX,
+                    evt.clientY,
+                ]);
+                this.dispatchEvent(
+                    new TileEditorGridEvent(
+                        TileEditorGridDisplay.events.ClickTriangle,
+                        triangleCoord,
+                    ),
+                );
+            })
+            .on("doubletap", (evt: PointerEvent) => {
+                // find the triangle
+                const triangleCoord = this.screenPositionToTriangleCoord([
+                    evt.clientX,
+                    evt.clientY,
+                ]);
+                this.dispatchEvent(
+                    new TileEditorGridEvent(
+                        TileEditorGridDisplay.events.DoubleClickTriangle,
+                        triangleCoord,
+                    ),
+                );
+            });
     }
 
     destroy() {
@@ -50,6 +64,6 @@ export class TileEditorGridDisplay extends GridDisplay {
 
     styleMainElement() {
         const div = this.element;
-        div.className = 'gridDisplay';
+        div.className = "gridDisplay";
     }
 }

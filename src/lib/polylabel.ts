@@ -8,7 +8,7 @@ type Polygon = [number, number][][];
 export function polylabel(
     polygon: Polygon,
     precision?: number,
-    debug?: boolean
+    debug?: boolean,
 ): Pole {
     precision = precision || 1.0;
 
@@ -61,7 +61,7 @@ export function polylabel(
                 console.log(
                     "found best %d after %d probes",
                     Math.round(1e4 * cell.d) / 1e4,
-                    numProbes
+                    numProbes,
                 );
         }
 
@@ -154,7 +154,7 @@ function getSegDistSq(
     px: number,
     py: number,
     a: [number, number],
-    b: [number, number]
+    b: [number, number],
 ): number {
     let x = a[0];
     let y = a[1];

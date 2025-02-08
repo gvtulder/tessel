@@ -1,4 +1,3 @@
-
 export const DEBUG = {
     SELECT_GRID: 0,
     OVERLAP: false,
@@ -14,11 +13,11 @@ export const DEBUG = {
     TILE_EDITOR_COPY_TILE: false,
     TILE_EDITOR_ROTATE_COPY: false,
     LOG_MOUSE_POSITION: false,
-}
+};
 
 export const SCALE = 100;
 
-export const O = (DEBUG.OVERLAP ? 0.1 : 0.05);
+export const O = DEBUG.OVERLAP ? 0.1 : 0.05;
 
-export const BGCOLOR = '#dddddd';
-export const PLACEHOLDER = '#cccccc';
+export const BGCOLOR = "#dddddd";
+export const PLACEHOLDER = "#cccccc";

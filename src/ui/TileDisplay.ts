@@ -1,27 +1,26 @@
-import type { Interactable } from '@interactjs/types';
+import type { Interactable } from "@interactjs/types";
 
-import { Triangle } from '../grid/Triangle.js';
-import { shrinkOutline } from '../utils.js';
+import { Triangle } from "../grid/Triangle.js";
+import { shrinkOutline } from "../utils.js";
 import { Tile, TileType } from "../grid/Tile.js";
-import { roundPathCorners } from '../lib/svg-rounded-corners.js';
-import { DEBUG, PLACEHOLDER, SCALE } from '../settings.js';
-import { GridDisplay } from './GridDisplay.js';
-import { TriangleDisplay } from './TriangleDisplay.js';
-import offsetPolygon from '../lib/offset-polygon.js';
-
+import { roundPathCorners } from "../lib/svg-rounded-corners.js";
+import { DEBUG, PLACEHOLDER, SCALE } from "../settings.js";
+import { GridDisplay } from "./GridDisplay.js";
+import { TriangleDisplay } from "./TriangleDisplay.js";
+import offsetPolygon from "../lib/offset-polygon.js";
 
 export type TriangleOnScreenMatch = {
-    moving: Triangle,
-    fixed: Triangle,
+    moving: Triangle;
+    fixed: Triangle;
 };
 
 export class TileDisplay {
-    tile : Tile;
+    tile: Tile;
 
-    gridDisplay : GridDisplay;
-    triangleDisplays : Map<Triangle, TriangleDisplay>;
+    gridDisplay: GridDisplay;
+    triangleDisplays: Map<Triangle, TriangleDisplay>;
 
-    svgTriangles : SVGElement;
+    svgTriangles: SVGElement;
 
     constructor(gridDisplay: GridDisplay, tile: Tile) {
         this.gridDisplay = gridDisplay;
@@ -31,12 +30,15 @@ export class TileDisplay {
     }
 
     build() {
-        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        let className = 'svg-tile';
+        const group = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
+        );
+        let className = "svg-tile";
         if (this.tile.type === TileType.PatternExample) {
             className = `${className} svg-tile-PatternExample`;
         }
-        group.setAttribute('class', className);
+        group.setAttribute("class", className);
         this.svgTriangles = group;
 
         this.redraw();
@@ -55,13 +57,18 @@ export class TileDisplay {
 
         const left = (this.tile.left * SCALE).toFixed(5);
         const top = (this.tile.top * SCALE).toFixed(5);
-        this.svgTriangles.setAttribute('transform', `translate(${left} ${top})`);
+        this.svgTriangles.setAttribute(
+            "transform",
+            `translate(${left} ${top})`,
+        );
     }
 
     drawTriangles() {
         // add in correct order to make the overlapping work
         const sortedTriangles = [...this.tile.triangles].sort((a, b) => {
-            return (a.top.toFixed(2) != b.top.toFixed(2)) ? (a.top - b.top) : (a.left - b.left) || (a.height - b.height);
+            return a.top.toFixed(2) != b.top.toFixed(2)
+                ? a.top - b.top
+                : a.left - b.left || a.height - b.height;
         });
         for (const c of [...this.svgTriangles.childNodes]) {
             this.svgTriangles.removeChild(c);
@@ -71,15 +78,22 @@ export class TileDisplay {
             if (!triangleDisplay) {
                 triangleDisplay = new TriangleDisplay(triangle);
                 this.triangleDisplays.set(triangle, triangleDisplay);
-                this.gridDisplay.triangleDisplays.set(triangle, triangleDisplay);
+                this.gridDisplay.triangleDisplays.set(
+                    triangle,
+                    triangleDisplay,
+                );
             }
             const left = ((triangle.left - this.tile.left) * SCALE).toFixed(5);
             const top = ((triangle.top - this.tile.top) * SCALE).toFixed(5);
-            triangleDisplay.element.setAttribute('transform', `translate(${left} ${top})`);
+            triangleDisplay.element.setAttribute(
+                "transform",
+                `translate(${left} ${top})`,
+            );
             this.svgTriangles.appendChild(triangleDisplay.element);
         }
         const removedTriangles = [...this.triangleDisplays.keys()].filter(
-            (t) => t.tile !== this.tile);
+            (t) => t.tile !== this.tile,
+        );
         for (const triangle of removedTriangles) {
             this.triangleDisplays.get(triangle).destroy();
             this.triangleDisplays.delete(triangle);
@@ -90,41 +104,49 @@ export class TileDisplay {
     drawOutline() {
         let outline = this.tile.computeOutline();
 
-        outline = offsetPolygon(outline.reverse().map((p) => ({x: p[0], y: p[1]})), 0.03).map((v) => [v.x, v.y]);
+        outline = offsetPolygon(
+            outline.reverse().map((p) => ({ x: p[0], y: p[1] })),
+            0.03,
+        ).map((v) => [v.x, v.y]);
         // outline = shrinkOutline(outline, 0.95);
 
-        let path = outline.map((p) => `${p[0] * SCALE} ${p[1] * SCALE}`).join(' L ');
+        let path = outline
+            .map((p) => `${p[0] * SCALE} ${p[1] * SCALE}`)
+            .join(" L ");
         path = `M ${path} Z`;
         const roundPath = roundPathCorners(path, 8, false);
 
         if (this.tile.type === TileType.Placeholder) {
-            const outline = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            outline.setAttribute('d', roundPath);
-            outline.setAttribute('fill', PLACEHOLDER);
+            const outline = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path",
+            );
+            outline.setAttribute("d", roundPath);
+            outline.setAttribute("fill", PLACEHOLDER);
             if (DEBUG.HIDE_TILE_OUTLINE) {
-                outline.setAttribute('fill-opacity', '0.0');
+                outline.setAttribute("fill-opacity", "0.0");
             } else {
-                outline.setAttribute('fill-opacity', '0.5');
+                outline.setAttribute("fill-opacity", "0.5");
             }
-            outline.setAttribute('stroke', PLACEHOLDER);
+            outline.setAttribute("stroke", PLACEHOLDER);
             this.svgTriangles.appendChild(outline);
         } else {
             if (DEBUG.HIDE_TILE_OUTLINE) return;
-            this.svgTriangles.setAttribute('clip-path', `path('${roundPath}')`);
+            this.svgTriangles.setAttribute("clip-path", `path('${roundPath}')`);
         }
     }
 
     hide() {
-        this.svgTriangles.classList.add('hide');
+        this.svgTriangles.classList.add("hide");
     }
 
     highlightHint(ok: boolean) {
-        this.svgTriangles.classList.toggle('highlight-hint-ok', ok);
-        this.svgTriangles.classList.toggle('highlight-hint-notok', !ok);
+        this.svgTriangles.classList.toggle("highlight-hint-ok", ok);
+        this.svgTriangles.classList.toggle("highlight-hint-notok", !ok);
     }
 
     removeHighlightHint() {
-        this.svgTriangles.classList.remove('highlight-hint-ok');
-        this.svgTriangles.classList.remove('highlight-hint-notok');
+        this.svgTriangles.classList.remove("highlight-hint-ok");
+        this.svgTriangles.classList.remove("highlight-hint-notok");
     }
 }

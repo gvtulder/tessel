@@ -1,112 +1,142 @@
 import { ScoredRegion } from "../grid/Scorer.js";
-import { roundPathCorners } from '../lib/svg-rounded-corners.js';
+import { roundPathCorners } from "../lib/svg-rounded-corners.js";
 import { BGCOLOR, SCALE } from "../settings.js";
 import { ScoreOverlayDisplay, Vertex, Color } from "./ScoreOverlayDisplay.js";
 import { dist, mean, midPoint } from "../utils.js";
 import { polylabel } from "../lib/polylabel.js";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
-    bgMask : SVGElement;
-    bgMaskGroup : ReplacableGroup;
-    shadowMask : SVGElement;
-    shadowMaskGroup : ReplacableGroup;
-    outlineFG : SVGElement;
-    outlineFGGroup : ReplacableGroup;
-    outlineBG : SVGElement;
-    outlineBGGroup : ReplacableGroup;
-    points : SVGElement;
-    pointsGroup : ReplacableGroup;
+    bgMask: SVGElement;
+    bgMaskGroup: ReplacableGroup;
+    shadowMask: SVGElement;
+    shadowMaskGroup: ReplacableGroup;
+    outlineFG: SVGElement;
+    outlineFGGroup: ReplacableGroup;
+    outlineBG: SVGElement;
+    outlineBGGroup: ReplacableGroup;
+    points: SVGElement;
+    pointsGroup: ReplacableGroup;
 
-    hideTimeout : number;
+    hideTimeout: number;
 
     build() {
-        this.element.classList.add('disabled');
+        this.element.classList.add("disabled");
 
-        this.element.addEventListener('transitionend', (evt) => {
-            this.element.classList.replace('hiding', 'disabled');
+        this.element.addEventListener("transitionend", (evt) => {
+            this.element.classList.replace("hiding", "disabled");
         });
 
         // background (everything not select gray)
-        const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        bg.setAttribute('mask', 'url(#scoreOverlay-bgmask');
-        bg.setAttribute('x', '-1000');
-        bg.setAttribute('y', '-1000');
-        bg.setAttribute('width', '2000');
-        bg.setAttribute('height', '2000');
-        bg.setAttribute('fill', BGCOLOR);
-        bg.setAttribute('opacity', '0.2');
+        const bg = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect",
+        );
+        bg.setAttribute("mask", "url(#scoreOverlay-bgmask");
+        bg.setAttribute("x", "-1000");
+        bg.setAttribute("y", "-1000");
+        bg.setAttribute("width", "2000");
+        bg.setAttribute("height", "2000");
+        bg.setAttribute("fill", BGCOLOR);
+        bg.setAttribute("opacity", "0.2");
         // this.element.appendChild(bg);
 
-        const bgMask = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
-        bgMask.setAttribute('id', 'scoreOverlay-bgmask');
+        const bgMask = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "mask",
+        );
+        bgMask.setAttribute("id", "scoreOverlay-bgmask");
         // this.element.append(bgMask);
 
-        const bgBlack = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        bgBlack.setAttribute('x', '-1000');
-        bgBlack.setAttribute('y', '-1000');
-        bgBlack.setAttribute('width', '2000');
-        bgBlack.setAttribute('height', '2000');
-        bgBlack.setAttribute('fill', 'white');
+        const bgBlack = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect",
+        );
+        bgBlack.setAttribute("x", "-1000");
+        bgBlack.setAttribute("y", "-1000");
+        bgBlack.setAttribute("width", "2000");
+        bgBlack.setAttribute("height", "2000");
+        bgBlack.setAttribute("fill", "white");
         bgMask.appendChild(bgBlack);
 
-        const bgMaskG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        bgMaskG.setAttribute('fill', 'black');
+        const bgMaskG = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
+        );
+        bgMaskG.setAttribute("fill", "black");
         bgMask.append(bgMaskG);
         this.bgMask = bgMaskG;
         this.bgMaskGroup = new ReplacableGroup(bgMaskG);
 
         // drop shadow around the shape
-        const shadow = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        shadow.setAttribute('mask', 'url(#scoreOverlay-mask');
-        shadow.setAttribute('x', '-1000');
-        shadow.setAttribute('y', '-1000');
-        shadow.setAttribute('width', '2000');
-        shadow.setAttribute('height', '2000');
-        shadow.setAttribute('fill', 'black');
+        const shadow = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect",
+        );
+        shadow.setAttribute("mask", "url(#scoreOverlay-mask");
+        shadow.setAttribute("x", "-1000");
+        shadow.setAttribute("y", "-1000");
+        shadow.setAttribute("width", "2000");
+        shadow.setAttribute("height", "2000");
+        shadow.setAttribute("fill", "black");
         this.element.appendChild(shadow);
 
-        const shadowMask = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
-        shadowMask.setAttribute('class', 'scoreOverlay-mask');
-        shadowMask.setAttribute('id', 'scoreOverlay-mask');
+        const shadowMask = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "mask",
+        );
+        shadowMask.setAttribute("class", "scoreOverlay-mask");
+        shadowMask.setAttribute("id", "scoreOverlay-mask");
         this.element.append(shadowMask);
 
-        const shadowMaskG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        shadowMaskG.setAttribute('filter', 'drop-shadow(0px 0px 10px white)');
-        shadowMaskG.setAttribute('fill', 'black');
-        shadowMaskG.setAttribute('stroke', 'black');
-        shadowMaskG.setAttribute('stroke-width', '10px');
+        const shadowMaskG = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
+        );
+        shadowMaskG.setAttribute("filter", "drop-shadow(0px 0px 10px white)");
+        shadowMaskG.setAttribute("fill", "black");
+        shadowMaskG.setAttribute("stroke", "black");
+        shadowMaskG.setAttribute("stroke-width", "10px");
         shadowMask.append(shadowMaskG);
         this.shadowMask = shadowMaskG;
         this.shadowMaskGroup = new ReplacableGroup(shadowMaskG);
 
         // white outline around the shape
-        const outlineBG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        outlineBG.setAttribute('class', 'scoreOverlay-outlineBG');
-        outlineBG.setAttribute('stroke', BGCOLOR);
-        outlineBG.setAttribute('stroke-width', '10px');
-        outlineBG.setAttribute('fill', 'transparent');
+        const outlineBG = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
+        );
+        outlineBG.setAttribute("class", "scoreOverlay-outlineBG");
+        outlineBG.setAttribute("stroke", BGCOLOR);
+        outlineBG.setAttribute("stroke-width", "10px");
+        outlineBG.setAttribute("fill", "transparent");
         this.element.append(outlineBG);
         this.outlineBG = outlineBG;
         this.outlineBGGroup = new ReplacableGroup(outlineBG);
 
         // green outline around the shape
-        const outlineFG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        outlineFG.setAttribute('class', 'scoreOverlay-outlineFG');
-        outlineFG.setAttribute('stroke', Color.main);
-        outlineFG.setAttribute('stroke-width', '5px');
-        outlineFG.setAttribute('fill', 'transparent');
+        const outlineFG = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
+        );
+        outlineFG.setAttribute("class", "scoreOverlay-outlineFG");
+        outlineFG.setAttribute("stroke", Color.main);
+        outlineFG.setAttribute("stroke-width", "5px");
+        outlineFG.setAttribute("fill", "transparent");
         this.element.append(outlineFG);
         this.outlineFG = outlineFG;
         this.outlineFGGroup = new ReplacableGroup(outlineFG);
 
         // circles with points on top
-        const points = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const points = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
+        );
         this.element.append(points);
         this.points = points;
         this.pointsGroup = new ReplacableGroup(points);
     }
 
-    showScores(shapes : ScoredRegion[]) {
+    showScores(shapes: ScoredRegion[]) {
         const groups = [
             this.bgMaskGroup,
             this.shadowMaskGroup,
@@ -118,18 +148,33 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         for (const shape of shapes) {
             const outlineResult = this.computeOutline(shape);
             const boundary = outlineResult.boundary;
-            const pathComponents = (boundary.reverse().map((v) => `${(v.x * SCALE).toFixed(5)},${(v.y * SCALE).toFixed(5)}`));
-            const roundPathString = roundPathCorners('M ' + pathComponents.join(' L ') + ' Z', 10, false);
+            const pathComponents = boundary
+                .reverse()
+                .map(
+                    (v) =>
+                        `${(v.x * SCALE).toFixed(5)},${(v.y * SCALE).toFixed(5)}`,
+                );
+            const roundPathString = roundPathCorners(
+                "M " + pathComponents.join(" L ") + " Z",
+                10,
+                false,
+            );
 
             // paths
             for (const g of groups) {
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('d', roundPathString);
+                const path = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "path",
+                );
+                path.setAttribute("d", roundPathString);
                 g.elements.push(path);
             }
 
             const polygon = [boundary.map((v) => [v.x, v.y])];
-            const polylabelPoint = polylabel(polygon as [number, number][][], 0.1);
+            const polylabelPoint = polylabel(
+                polygon as [number, number][][],
+                0.1,
+            );
 
             /*
             // find a good location for the points
@@ -188,27 +233,39 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             const pointsScale = polylabelPoint.distance;
 
             // circle with scores
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('class', 'points');
-            circle.setAttribute('cx', '0');  // `${bestPoint[0] * SCALE}`);
-            circle.setAttribute('cy', '0');  // `${bestPoint[1] * SCALE}`);
+            const circle = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "circle",
+            );
+            circle.setAttribute("class", "points");
+            circle.setAttribute("cx", "0"); // `${bestPoint[0] * SCALE}`);
+            circle.setAttribute("cy", "0"); // `${bestPoint[1] * SCALE}`);
             // circle.setAttribute('r', shape.triangles.size < 3 ? '20' : '25');
-            circle.setAttribute('r', `${SCALE * 0.7}`);
-            circle.setAttribute('fill', Color.light);
-            circle.setAttribute('stroke', Color.dark);
-            circle.setAttribute('stroke-width', '16');
-            circle.setAttribute('style', `filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2)); transform: translate(${bestPoint[0] * SCALE}px, ${bestPoint[1] * SCALE}px) scale(${pointsScale});`);
+            circle.setAttribute("r", `${SCALE * 0.7}`);
+            circle.setAttribute("fill", Color.light);
+            circle.setAttribute("stroke", Color.dark);
+            circle.setAttribute("stroke-width", "16");
+            circle.setAttribute(
+                "style",
+                `filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2)); transform: translate(${bestPoint[0] * SCALE}px, ${bestPoint[1] * SCALE}px) scale(${pointsScale});`,
+            );
             points.push(circle);
 
-            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            text.setAttribute('class', 'points');
-            text.setAttribute('x', '0'); // `${bestPoint[0] * SCALE}`);
-            text.setAttribute('y', '0'); // `${bestPoint[1] * SCALE + 1}`);
-            text.setAttribute('alignment-baseline', 'middle');
-            text.setAttribute('dominant-baseline', 'middle');
-            text.setAttribute('text-anchor', 'middle');
-            text.setAttribute('font-size', '75');
-            text.setAttribute('style', `transform: translate(${bestPoint[0] * SCALE}px, ${bestPoint[1] * SCALE + 1}px) scale(${pointsScale});`);
+            const text = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "text",
+            );
+            text.setAttribute("class", "points");
+            text.setAttribute("x", "0"); // `${bestPoint[0] * SCALE}`);
+            text.setAttribute("y", "0"); // `${bestPoint[1] * SCALE + 1}`);
+            text.setAttribute("alignment-baseline", "middle");
+            text.setAttribute("dominant-baseline", "middle");
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("font-size", "75");
+            text.setAttribute(
+                "style",
+                `transform: translate(${bestPoint[0] * SCALE}px, ${bestPoint[1] * SCALE + 1}px) scale(${pointsScale});`,
+            );
             text.appendChild(document.createTextNode(`${shape.points}`));
             points.push(text);
         }
@@ -218,9 +275,9 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         }
         this.pointsGroup.contents = points;
 
-        this.element.classList.remove('disabled');
-        this.element.classList.remove('hiding');
-        this.element.classList.add('enabled');
+        this.element.classList.remove("disabled");
+        this.element.classList.remove("hiding");
+        this.element.classList.add("enabled");
         this.scheduleHide();
     }
 
@@ -233,24 +290,26 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
     hide() {
         if (this.hideTimeout) window.clearTimeout(this.hideTimeout);
-        if (this.element.classList.contains('enabled')) {
-            this.element.classList.remove('enabled');
-            this.element.classList.add('hiding');
+        if (this.element.classList.contains("enabled")) {
+            this.element.classList.remove("enabled");
+            this.element.classList.add("hiding");
         }
     }
 }
 
-
 class ReplacableGroup {
-    parentNode : SVGElement;
-    group : SVGElement;
+    parentNode: SVGElement;
+    group: SVGElement;
 
-    constructor(parentNode : SVGElement) {
+    constructor(parentNode: SVGElement) {
         this.parentNode = parentNode;
     }
 
-    set contents(elements : SVGElement[]) {
-        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    set contents(elements: SVGElement[]) {
+        const group = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
+        );
         for (const element of elements) {
             group.appendChild(element);
         }

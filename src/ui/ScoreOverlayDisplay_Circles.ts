@@ -4,12 +4,15 @@ import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay.js";
 import { Triangle } from "../grid/Triangle.js";
 
 export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
-    group : SVGElement;
+    group: SVGElement;
 
     build: () => void;
 
-    showScores(shapes : ScoredRegion[]) {
-        const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    showScores(shapes: ScoredRegion[]) {
+        const group = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
+        );
 
         for (const shape of shapes) {
             /*
@@ -44,15 +47,15 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             }
             */
 
-
-            const edgesPerTriangle = new Map<Triangle, ScoredRegion['edges']>();
+            const edgesPerTriangle = new Map<Triangle, ScoredRegion["edges"]>();
             for (const edge of shape.edges) {
-                if (!edgesPerTriangle.has(edge.from)) edgesPerTriangle.set(edge.from, []);
+                if (!edgesPerTriangle.has(edge.from))
+                    edgesPerTriangle.set(edge.from, []);
                 edgesPerTriangle.get(edge.from).push(edge);
             }
 
-            const pathStrings : string[] = [];
-            const circles : [number, number][] = [];
+            const pathStrings: string[] = [];
+            const circles: [number, number][] = [];
 
             for (const triangle of edgesPerTriangle.keys()) {
                 const edges = edgesPerTriangle.get(triangle);
@@ -61,22 +64,31 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
                 const fc = 0.0;
 
                 const tO = edges[0].from;
-                const cO : [number, number] = [(tO.left + tO.center[0]) * SCALE, (tO.top + tO.center[1]) * SCALE];
+                const cO: [number, number] = [
+                    (tO.left + tO.center[0]) * SCALE,
+                    (tO.top + tO.center[1]) * SCALE,
+                ];
 
                 if (edges.length == 1) {
                     const tA = edges[0].to;
-                    const cA = [(tA.left + tA.center[0]) * SCALE, (tA.top + tA.center[1]) * SCALE];
+                    const cA = [
+                        (tA.left + tA.center[0]) * SCALE,
+                        (tA.top + tA.center[1]) * SCALE,
+                    ];
 
-                    const midAO : [number, number] = [(f * cA[0] + (1 - f) * cO[0]), (f * cA[1] + (1 - f) * cO[1])];
+                    const midAO: [number, number] = [
+                        f * cA[0] + (1 - f) * cO[0],
+                        f * cA[1] + (1 - f) * cO[1],
+                    ];
 
                     // non-quadratic curves
-                    pathStrings.push(
-                    //    `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${cO[0]},${cO[1]}`
-                    );
+                    pathStrings
+                        .push
+                        //    `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${cO[0]},${cO[1]}`
+                        ();
 
                     // circles.push(cO)
-                    circles.push(midAO)
-
+                    circles.push(midAO);
                 } else {
                     for (const edgeA of edges) {
                         for (const edgeB of edges) {
@@ -87,19 +99,37 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
                                 const tA = edgeA.to;
                                 const tB = edgeB.to;
 
-                                const cA = [(tA.left + tA.center[0]) * SCALE, (tA.top + tA.center[1]) * SCALE];
-                                const cB = [(tB.left + tB.center[0]) * SCALE, (tB.top + tB.center[1]) * SCALE];
+                                const cA = [
+                                    (tA.left + tA.center[0]) * SCALE,
+                                    (tA.top + tA.center[1]) * SCALE,
+                                ];
+                                const cB = [
+                                    (tB.left + tB.center[0]) * SCALE,
+                                    (tB.top + tB.center[1]) * SCALE,
+                                ];
 
-                                const midAO = [(f * cA[0] + (1 - f) * cO[0]), (f * cA[1] + (1 - f) * cO[1])];
-                                const midBO = [(f * cB[0] + (1 - f) * cO[0]), (f * cB[1] + (1 - f) * cO[1])];
+                                const midAO = [
+                                    f * cA[0] + (1 - f) * cO[0],
+                                    f * cA[1] + (1 - f) * cO[1],
+                                ];
+                                const midBO = [
+                                    f * cB[0] + (1 - f) * cO[0],
+                                    f * cB[1] + (1 - f) * cO[1],
+                                ];
 
-                                const cpAO = [(fc * midAO[0] + (1 - fc) * cO[0]), (fc * midAO[1] + (1 - fc) * cO[1])];
-                                const cpBO = [(fc * midBO[0] + (1 - fc) * cO[0]), (fc * midBO[1] + (1 - fc) * cO[1])];
+                                const cpAO = [
+                                    fc * midAO[0] + (1 - fc) * cO[0],
+                                    fc * midAO[1] + (1 - fc) * cO[1],
+                                ];
+                                const cpBO = [
+                                    fc * midBO[0] + (1 - fc) * cO[0],
+                                    fc * midBO[1] + (1 - fc) * cO[1],
+                                ];
 
                                 // non-quadratic curves
                                 pathStrings.push(
-                                //  `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`
-                                    `M ${midAO[0]},${midAO[1]} C ${cpAO[0]},${cpAO[1]} ${cpBO[0]},${cpBO[1]} ${midBO[0]},${midBO[1]}`
+                                    //  `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`
+                                    `M ${midAO[0]},${midAO[1]} C ${cpAO[0]},${cpAO[1]} ${cpBO[0]},${cpBO[1]} ${midBO[0]},${midBO[1]}`,
                                 );
 
                                 if (edgeA.to.tile !== edgeA.from.tile) {
@@ -118,29 +148,38 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             }
 
             for (const pathString of pathStrings) {
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                path.setAttribute('d', pathString);
-                path.setAttribute('fill', 'transparent');
-                path.setAttribute('stroke', Color.main);
-                path.setAttribute('stroke-width', '8');
-                path.setAttribute('stroke-linecap', 'round');
+                const path = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "path",
+                );
+                path.setAttribute("d", pathString);
+                path.setAttribute("fill", "transparent");
+                path.setAttribute("stroke", Color.main);
+                path.setAttribute("stroke-width", "8");
+                path.setAttribute("stroke-linecap", "round");
                 group.appendChild(path);
             }
 
             for (const circle of circles) {
-                const path = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                path.setAttribute('cx', `${circle[0]}`);
-                path.setAttribute('cy', `${circle[1]}`);
-                path.setAttribute('r', '11');
-                path.setAttribute('r', '10');
-                path.setAttribute('r', '7');
-                path.setAttribute('r', '11');
-                path.setAttribute('fill', Color.light);
-                path.setAttribute('stroke', Color.dark);
-                path.setAttribute('stroke-width', '8');
-                path.setAttribute('stroke-width', '5');
-                path.setAttribute('stroke-width', '8');
-                path.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
+                const path = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "circle",
+                );
+                path.setAttribute("cx", `${circle[0]}`);
+                path.setAttribute("cy", `${circle[1]}`);
+                path.setAttribute("r", "11");
+                path.setAttribute("r", "10");
+                path.setAttribute("r", "7");
+                path.setAttribute("r", "11");
+                path.setAttribute("fill", Color.light);
+                path.setAttribute("stroke", Color.dark);
+                path.setAttribute("stroke-width", "8");
+                path.setAttribute("stroke-width", "5");
+                path.setAttribute("stroke-width", "8");
+                path.setAttribute(
+                    "style",
+                    "filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));",
+                );
                 group.appendChild(path);
             }
 
@@ -152,23 +191,32 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             };
             */
 
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('cx', `${scorePos[0]}`);
-            circle.setAttribute('cy', `${scorePos[1]}`);
-            circle.setAttribute('r', '20');
-            circle.setAttribute('fill', Color.light);
-            circle.setAttribute('stroke', Color.dark);
-            circle.setAttribute('stroke-width', '8');
-            circle.setAttribute('style', 'filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));');
+            const circle = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "circle",
+            );
+            circle.setAttribute("cx", `${scorePos[0]}`);
+            circle.setAttribute("cy", `${scorePos[1]}`);
+            circle.setAttribute("r", "20");
+            circle.setAttribute("fill", Color.light);
+            circle.setAttribute("stroke", Color.dark);
+            circle.setAttribute("stroke-width", "8");
+            circle.setAttribute(
+                "style",
+                "filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2));",
+            );
             group.appendChild(circle);
 
-            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            text.setAttribute('x', `${scorePos[0]}`);
-            text.setAttribute('y', `${scorePos[1] + 1}`);
-            text.setAttribute('alignment-baseline', 'middle');
-            text.setAttribute('dominant-baseline', 'middle');
-            text.setAttribute('text-anchor', 'middle');
-            text.setAttribute('font-size', '21');
+            const text = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "text",
+            );
+            text.setAttribute("x", `${scorePos[0]}`);
+            text.setAttribute("y", `${scorePos[1] + 1}`);
+            text.setAttribute("alignment-baseline", "middle");
+            text.setAttribute("dominant-baseline", "middle");
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("font-size", "21");
             text.appendChild(document.createTextNode(`${shape.points}`));
             group.appendChild(text);
         }

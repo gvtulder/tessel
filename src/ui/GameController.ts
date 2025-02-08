@@ -1,21 +1,21 @@
 import { Game, GameSettings } from "../game/Game.js";
 import { GameDisplay } from "./GameDisplay.js";
 import { MainMenuDisplay, MenuEvent } from "./MainMenuDisplay.js";
-import * as SaveGames from '../saveGames.js';
+import * as SaveGames from "../saveGames.js";
 
 export class GameController {
-    container : HTMLElement;
-    game : Game;
-    gameDisplay : GameDisplay;
-    menuDisplay : MainMenuDisplay;
+    container: HTMLElement;
+    game: Game;
+    gameDisplay: GameDisplay;
+    menuDisplay: MainMenuDisplay;
 
-    constructor(container : HTMLElement) {
+    constructor(container: HTMLElement) {
         this.container = container;
 
-        window.addEventListener('resize', () => this.rescale());
+        window.addEventListener("resize", () => this.rescale());
     }
 
-    run(saveGameId : string) {
+    run(saveGameId: string) {
         const gameSettings = SaveGames.lookup.get(saveGameId);
         if (gameSettings) {
             this.startGame(gameSettings);
@@ -32,17 +32,17 @@ export class GameController {
         this.container.appendChild(menuDisplay.element);
         menuDisplay.rescale();
 
-        menuDisplay.addEventListener('startgame', (evt : MenuEvent) => {
+        menuDisplay.addEventListener("startgame", (evt: MenuEvent) => {
             this.container.removeChild(menuDisplay.element);
             this.menuDisplay = null;
             if (evt.gameId) {
-                window.history.pushState({}, '', `/${evt.gameId}`);
+                window.history.pushState({}, "", `/${evt.gameId}`);
             }
             this.startGame(evt.gameSettings);
         });
     }
 
-    startGame(gameSettings : GameSettings) {
+    startGame(gameSettings: GameSettings) {
         this.resetState();
 
         const game = new Game(gameSettings);
@@ -52,16 +52,16 @@ export class GameController {
         this.container.appendChild(gameDisplay.element);
         gameDisplay.rescale();
 
-        gameDisplay.addEventListener('clickbacktomenu', () => {
-            if (this.game.finished || window.confirm('Stop the game?')) {
-                window.history.pushState({}, '', '/');
+        gameDisplay.addEventListener("clickbacktomenu", () => {
+            if (this.game.finished || window.confirm("Stop the game?")) {
+                window.history.pushState({}, "", "/");
                 this.showMainMenu();
             }
         });
 
-        gameDisplay.addEventListener('clickrestartgame', () => {
-            if (this.game.finished || window.confirm('Restart the game?')) {
-                window.history.pushState({}, '', window.location.href);
+        gameDisplay.addEventListener("clickrestartgame", () => {
+            if (this.game.finished || window.confirm("Restart the game?")) {
+                window.history.pushState({}, "", window.location.href);
                 this.startGame(gameSettings);
             }
         });
@@ -71,7 +71,7 @@ export class GameController {
         if (this.menuDisplay) {
             const menuDisplay = this.menuDisplay;
             this.menuDisplay = null;
-            menuDisplay.element.classList.add('disappear');
+            menuDisplay.element.classList.add("disappear");
             window.setTimeout(() => {
                 this.container.removeChild(menuDisplay.element);
                 menuDisplay.destroy();
@@ -81,7 +81,7 @@ export class GameController {
             const gameDisplay = this.gameDisplay;
             this.gameDisplay = null;
             this.game = null;
-            gameDisplay.element.classList.add('disappear');
+            gameDisplay.element.classList.add("disappear");
             window.setTimeout(() => {
                 this.container.removeChild(gameDisplay.element);
                 gameDisplay.destroy();

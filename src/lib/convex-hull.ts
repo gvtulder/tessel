@@ -42,7 +42,7 @@ function makeHull<P extends Point>(points: Readonly<Array<P>>): Array<P> {
 
 // Returns the convex hull, assuming that each points[i] <= points[i + 1]. Runs in O(n) time.
 function makeHullPresorted<P extends Point>(
-    points: Readonly<Array<P>>
+    points: Readonly<Array<P>>,
 ): Array<P> {
     if (points.length <= 1) return points.slice();
 

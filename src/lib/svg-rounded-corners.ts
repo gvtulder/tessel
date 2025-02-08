@@ -43,12 +43,12 @@ type Command = (string | number)[] & {
 export function roundPathCorners(
     pathString: string,
     radius: number,
-    useFractionalRadius: boolean
+    useFractionalRadius: boolean,
 ): string {
     function moveTowardsLength(
         movingPoint: Point,
         targetPoint: Point,
-        amount: number
+        amount: number,
     ): Point {
         const width = targetPoint.x - movingPoint.x;
         const height = targetPoint.y - movingPoint.y;
@@ -58,13 +58,13 @@ export function roundPathCorners(
         return moveTowardsFractional(
             movingPoint,
             targetPoint,
-            Math.min(1, amount / distance)
+            Math.min(1, amount / distance),
         );
     }
     function moveTowardsFractional(
         movingPoint: Point,
         targetPoint: Point,
-        fraction: number
+        fraction: number,
     ): Point {
         return {
             x: movingPoint.x + (targetPoint.x - movingPoint.x) * fraction,
@@ -117,7 +117,7 @@ export function roundPathCorners(
 
             return commands;
         },
-        []
+        [],
     );
 
     // The resulting commands, also grouped
@@ -168,12 +168,12 @@ export function roundPathCorners(
                     curveStart = moveTowardsFractional(
                         curPoint,
                         prevCmd.origPoint || prevPoint,
-                        radius
+                        radius,
                     );
                     curveEnd = moveTowardsFractional(
                         curPoint,
                         nextCmd.origPoint || nextPoint,
-                        radius
+                        radius,
                     );
                 } else {
                     curveStart = moveTowardsLength(curPoint, prevPoint, radius);
@@ -190,12 +190,12 @@ export function roundPathCorners(
                 const startControl = moveTowardsFractional(
                     curveStart,
                     curPoint,
-                    0.5
+                    0.5,
                 );
                 const endControl = moveTowardsFractional(
                     curPoint,
                     curveEnd,
-                    0.5
+                    0.5,
                 );
 
                 // Create the curve
@@ -220,7 +220,7 @@ export function roundPathCorners(
         // Fix up the starting point and restore the close path if the path was orignally closed
         if (virtualCloseLine) {
             const newStartPoint = pointForCommand(
-                resultCommands[resultCommands.length - 1]
+                resultCommands[resultCommands.length - 1],
             );
             resultCommands.push(["Z"]);
             adjustCommand(resultCommands[0], newStartPoint);

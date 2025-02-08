@@ -2,14 +2,14 @@ import { Tile } from "./Tile.js";
 import { Triangle, TriangleColor } from "./Triangle.js";
 
 export type ScoredRegion = {
-    origin : Triangle,
-    color : TriangleColor,
-    tiles : Set<Tile>,
-    triangles : Set<Triangle>,
-    edges: { from: Triangle, to: Triangle }[],
-    finished : boolean,
-    points : number,
-}
+    origin: Triangle;
+    color: TriangleColor;
+    tiles: Set<Tile>;
+    triangles: Set<Triangle>;
+    edges: { from: Triangle; to: Triangle }[];
+    finished: boolean;
+    points: number;
+};
 
 export class Scorer {
     /**
@@ -19,10 +19,13 @@ export class Scorer {
      * @param includeIncomplete return incomplete regions?
      * @returns the regions found from the tile
      */
-    static computeScores(tile : Tile, includeIncomplete? : boolean) : ScoredRegion[] {
+    static computeScores(
+        tile: Tile,
+        includeIncomplete?: boolean,
+    ): ScoredRegion[] {
         const visited = new Set<Triangle>();
 
-        const shapes : ScoredRegion[] = [];
+        const shapes: ScoredRegion[] = [];
 
         // visit each triangle of the shape in turn
         for (const origin of tile.triangles) {
@@ -30,9 +33,9 @@ export class Scorer {
                 const color = origin.color;
                 const tilesInShape = new Set<Tile>();
                 const trianglesInShape = new Set<Triangle>();
-                const edgesInShape : ScoredRegion['edges'] = [];
+                const edgesInShape: ScoredRegion["edges"] = [];
 
-                const shape : ScoredRegion = {
+                const shape: ScoredRegion = {
                     origin: origin,
                     color: origin.color,
                     tiles: tilesInShape,
@@ -44,7 +47,7 @@ export class Scorer {
                 shapes.push(shape);
 
                 // start at origin
-                const queue : Triangle[] = [origin];
+                const queue: Triangle[] = [origin];
                 visited.add(origin);
 
                 while (queue.length > 0) {
@@ -72,7 +75,8 @@ export class Scorer {
         for (const shape of shapes) {
             if (shape.finished) {
                 // double points for shapes with four tiles or more
-                shape.points = (shape.tiles.size > 3 ? 2 : 1) * shape.tiles.size;
+                shape.points =
+                    (shape.tiles.size > 3 ? 2 : 1) * shape.tiles.size;
             }
         }
 

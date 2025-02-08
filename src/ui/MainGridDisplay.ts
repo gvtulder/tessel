@@ -1,23 +1,19 @@
-
-
 import { Grid } from "../grid/Grid.js";
-import { shuffle } from '../utils.js';
-import { GameDisplay } from './GameDisplay.js';
-import { GridDisplay } from './GridDisplay.js';
+import { shuffle } from "../utils.js";
+import { GameDisplay } from "./GameDisplay.js";
+import { GridDisplay } from "./GridDisplay.js";
 import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
-import { TriangleOnScreenMatch } from './TileDisplay.js';
-import { TileDragSource, TileDropTarget } from './TileDragController.js';
+import { TriangleOnScreenMatch } from "./TileDisplay.js";
+import { TileDragSource, TileDropTarget } from "./TileDragController.js";
 import { TileType } from "../grid/Tile.js";
 
-
-
 export class MainGridDisplay extends GridDisplay implements TileDropTarget {
-    gameDisplay : GameDisplay;
-    scoreOverlayDisplay : ScoreOverlayDisplay;
-    ignorePlaceholders : boolean;
+    gameDisplay: GameDisplay;
+    scoreOverlayDisplay: ScoreOverlayDisplay;
+    ignorePlaceholders: boolean;
 
-    constructor(grid: Grid, container : HTMLElement, gameDisplay : GameDisplay) {
+    constructor(grid: Grid, container: HTMLElement, gameDisplay: GameDisplay) {
         super(grid, container);
         this.gameDisplay = gameDisplay;
 
@@ -28,7 +24,7 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
 
     styleMainElement() {
         const div = this.element;
-        div.className = 'gridDisplay';
+        div.className = "gridDisplay";
     }
 
     protected computeDimensionsForRescale() {
@@ -49,19 +45,26 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
         }
     }
 
-    dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
-        if (pair.fixed) { // && pair.fixed.tile && pair.fixed.tile.type === TileType.Placeholder) {
-//          const targetTile = pair.fixed.tile;
-//          if (targetTile && targetTile.type === TileType.Placeholder) {
-                return this.gameDisplay.game.placeTile(source.tile, source.rotation, pair.moving, pair.fixed, source.indexOnStack);
-//          }
+    dropTile(source: TileDragSource, pair: TriangleOnScreenMatch): boolean {
+        if (pair.fixed) {
+            // && pair.fixed.tile && pair.fixed.tile.type === TileType.Placeholder) {
+            //          const targetTile = pair.fixed.tile;
+            //          if (targetTile && targetTile.type === TileType.Placeholder) {
+            return this.gameDisplay.game.placeTile(
+                source.tile,
+                source.rotation,
+                pair.moving,
+                pair.fixed,
+                source.indexOnStack,
+            );
+            //          }
         }
         return false;
     }
 
     gameFinished() {
         const placeholders = [...this.tileDisplays.values()].filter(
-            (d) => d.tile.type === TileType.Placeholder
+            (d) => d.tile.type === TileType.Placeholder,
         );
         shuffle(placeholders);
         let delay = 100;
@@ -69,7 +72,10 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
             if (placeholders.length > 0) {
                 placeholders.pop().hide();
                 delay = Math.max(20, delay * 0.9);
-                window.setTimeout(cleanUp, placeholders.length > 0 ? delay : 100);
+                window.setTimeout(
+                    cleanUp,
+                    placeholders.length > 0 ? delay : 100,
+                );
             } else {
                 this.ignorePlaceholders = true;
                 this.triggerRescale();

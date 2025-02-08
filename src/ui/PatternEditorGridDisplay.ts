@@ -1,51 +1,68 @@
-import type { DragEvent } from '@interactjs/types';
+import type { DragEvent } from "@interactjs/types";
 
 import { Tile, TileType } from "../grid/Tile.js";
-import { SCALE } from '../settings.js';
-import { GridDisplay } from './GridDisplay.js';
+import { SCALE } from "../settings.js";
+import { GridDisplay } from "./GridDisplay.js";
 import { Grid } from "../grid/Grid.js";
 import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
-import { shuffle } from '../utils.js';
-import { GameDisplay } from './GameDisplay.js';
-import { Coord, CoordId, Triangle } from '../grid/Triangle.js';
-import { TileDragSource, TileDropTarget } from './TileDragController.js';
-import { TileDisplay, TriangleOnScreenMatch } from './TileDisplay.js';
-import { PatternEditorDisplay } from './PatternEditorDisplay.js';
-import { TriangleDisplay } from './TriangleDisplay.js';
+import { shuffle } from "../utils.js";
+import { GameDisplay } from "./GameDisplay.js";
+import { Coord, CoordId, Triangle } from "../grid/Triangle.js";
+import { TileDragSource, TileDropTarget } from "./TileDragController.js";
+import { TileDisplay, TriangleOnScreenMatch } from "./TileDisplay.js";
+import { PatternEditorDisplay } from "./PatternEditorDisplay.js";
+import { TriangleDisplay } from "./TriangleDisplay.js";
 
+const BGCOLORS = ["red", "blue", "black", "orange", "green", "purple"];
 
-const BGCOLORS = ['red', 'blue', 'black', 'orange', 'green', 'purple'];
+export class PatternEditorGridDisplay
+    extends GridDisplay
+    implements TileDropTarget
+{
+    patternEditorDisplay: PatternEditorDisplay;
 
+    backgroundFillPatternGrid: Grid;
+    backgroundFillTileDisplays: TileDisplay[];
 
-export class PatternEditorGridDisplay extends GridDisplay implements TileDropTarget {
-    patternEditorDisplay : PatternEditorDisplay;
+    svgBackgroundFillTriangles: SVGElement;
 
-    backgroundFillPatternGrid : Grid;
-    backgroundFillTileDisplays : TileDisplay[];
-
-    svgBackgroundFillTriangles : SVGElement;
-
-    constructor(patternEditorDisplay : PatternEditorDisplay, grid : Grid, container : HTMLElement) {
+    constructor(
+        patternEditorDisplay: PatternEditorDisplay,
+        grid: Grid,
+        container: HTMLElement,
+    ) {
         super(grid, container);
         this.patternEditorDisplay = patternEditorDisplay;
 
         this.addBackgroundGrid();
 
-        this.backgroundFillPatternGrid = new Grid(grid.triangleType, grid.pattern);
+        this.backgroundFillPatternGrid = new Grid(
+            grid.triangleType,
+            grid.pattern,
+        );
         this.backgroundFillTileDisplays = [];
         this.addBackgroundFillPattern();
     }
 
     addBackgroundFillPattern() {
-        this.svgBackgroundFillTriangles = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        this.svgBackgroundFillTriangles.setAttribute('class', 'svg-tiles-editorBackgroundFillPattern');
-        this.svgGrid.insertBefore(this.svgBackgroundFillTriangles, this.svgTriangles);
+        this.svgBackgroundFillTriangles = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "g",
+        );
+        this.svgBackgroundFillTriangles.setAttribute(
+            "class",
+            "svg-tiles-editorBackgroundFillPattern",
+        );
+        this.svgGrid.insertBefore(
+            this.svgBackgroundFillTriangles,
+            this.svgTriangles,
+        );
     }
 
     styleMainElement() {
         const div = this.element;
-        div.className = 'gridDisplay';
+        div.className = "gridDisplay";
     }
 
     rescale() {
@@ -53,16 +70,18 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
         this.fillBackgroundPattern();
     }
 
-    dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
+    dropTile(source: TileDragSource, pair: TriangleOnScreenMatch): boolean {
         return this.patternEditorDisplay.dropTile(source, pair);
     }
 
     computeDimensionsForRescale() {
-        let left : number = null;
-        let top : number = null;
-        let right : number = null;
-        let bottom : number = null;
-        for (const tile of this.grid.getTilesWithType(TileType.PatternEditorTile)) {
+        let left: number = null;
+        let top: number = null;
+        let right: number = null;
+        let bottom: number = null;
+        for (const tile of this.grid.getTilesWithType(
+            TileType.PatternEditorTile,
+        )) {
             if (left == null || tile.left < left) {
                 left = tile.left;
             }

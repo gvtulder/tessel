@@ -1,11 +1,18 @@
-import type { Interactable, DragEvent } from '@interactjs/types';
-import interact from 'interactjs';
+import type { Interactable, DragEvent } from "@interactjs/types";
+import interact from "interactjs";
 
 import { Grid } from "../grid/Grid.js";
-import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
+import {
+    TileEditorGridDisplay,
+    TileEditorGridEvent,
+} from "./TileEditorGridDisplay.js";
 import { Tile, TileShape, TileType } from "../grid/Tile.js";
 import { ColorGroup, Coord, Edge, Triangle } from "../grid/Triangle.js";
-import { shiftCoordinates2, subtractCoordinates, wrapModulo } from "../utils.js";
+import {
+    shiftCoordinates2,
+    subtractCoordinates,
+    wrapModulo,
+} from "../utils.js";
 import { DEBUG } from "../settings.js";
 import { EditableTile, COLORS } from "../grid/EditableTile.js";
 import { GridDisplay } from "./GridDisplay.js";
@@ -14,40 +21,46 @@ import { TileDragSource } from "./TileDragController.js";
 import { TriangleOnScreenMatch } from "./TileDisplay.js";
 import { EditablePattern } from "../grid/EditablePattern.js";
 
-
-
 export class PatternEditorDisplay extends EventTarget {
-    grid : Grid;
-    pattern : EditablePattern;
-    gridDisplay : PatternEditorGridDisplay;
-    element : HTMLDivElement;
+    grid: Grid;
+    pattern: EditablePattern;
+    gridDisplay: PatternEditorGridDisplay;
+    element: HTMLDivElement;
 
-    interactable : Interactable;
+    interactable: Interactable;
 
-    constructor(grid : Grid, pattern : EditablePattern) {
+    constructor(grid: Grid, pattern: EditablePattern) {
         super();
         this.grid = grid;
         this.pattern = pattern;
         this.build();
 
         // start with a new tile
-        const tile = new Tile(this.grid, TileType.PatternEditorTile, [[this.grid.getOrAddTriangle(0, 0)]]);
-        tile.colors = ['red'];
+        const tile = new Tile(this.grid, TileType.PatternEditorTile, [
+            [this.grid.getOrAddTriangle(0, 0)],
+        ]);
+        tile.colors = ["red"];
         this.grid.addTile(tile);
 
         this.interactable = interact(this.gridDisplay.element);
-        this.interactable.on('tap', (evt : PointerEvent) => this.handleGridTap(evt));
+        this.interactable.on("tap", (evt: PointerEvent) =>
+            this.handleGridTap(evt),
+        );
 
         this.rescale();
     }
 
     build() {
         // pattern editor
-        const patternGridContainer = document.createElement('div');
-        patternGridContainer.className = 'patternEditorGridContainer';
+        const patternGridContainer = document.createElement("div");
+        patternGridContainer.className = "patternEditorGridContainer";
         this.element = patternGridContainer;
 
-        this.gridDisplay = new PatternEditorGridDisplay(this, this.grid, patternGridContainer);
+        this.gridDisplay = new PatternEditorGridDisplay(
+            this,
+            this.grid,
+            patternGridContainer,
+        );
         patternGridContainer.appendChild(this.gridDisplay.element);
 
         this.rescale();
@@ -57,10 +70,14 @@ export class PatternEditorDisplay extends EventTarget {
         this.gridDisplay.rescale();
     }
 
-    dropTile(source : TileDragSource, pair : TriangleOnScreenMatch) : boolean {
-        console.log('dropped', pair);
+    dropTile(source: TileDragSource, pair: TriangleOnScreenMatch): boolean {
+        console.log("dropped", pair);
 
-        const map = source.tile.mapShape(pair.fixed, source.rotation, pair.moving);
+        const map = source.tile.mapShape(
+            pair.fixed,
+            source.rotation,
+            pair.moving,
+        );
         if (map) {
             // correct mapping, but does it fit?
 
@@ -96,7 +113,7 @@ export class PatternEditorDisplay extends EventTarget {
 
             // everything ok
             const colorGroupMap = new Map<ColorGroup, number>();
-            const shape : TileShape = [];
+            const shape: TileShape = [];
             for (const [from, to] of map.entries()) {
                 if (!colorGroupMap.has(from.colorGroup)) {
                     colorGroupMap.set(from.colorGroup, colorGroupMap.size);
@@ -112,9 +129,10 @@ export class PatternEditorDisplay extends EventTarget {
         }
     }
 
-    handleGridTap(evt : PointerEvent) {
-        const cursorPos : Coord = [evt.clientX, evt.clientY];
-        const triangleCoord = this.gridDisplay.screenPositionToTriangleCoord(cursorPos);
+    handleGridTap(evt: PointerEvent) {
+        const cursorPos: Coord = [evt.clientX, evt.clientY];
+        const triangleCoord =
+            this.gridDisplay.screenPositionToTriangleCoord(cursorPos);
         if (triangleCoord) {
             const triangle = this.grid.getTriangle(...triangleCoord);
             if (triangle && triangle.tile) {

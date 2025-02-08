@@ -1,5 +1,8 @@
 import { Grid } from "../grid/Grid.js";
-import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
+import {
+    TileEditorGridDisplay,
+    TileEditorGridEvent,
+} from "./TileEditorGridDisplay.js";
 import { Tile, TileType } from "../grid/Tile.js";
 import { Edge, Triangle, TriangleColor } from "../grid/Triangle.js";
 import { wrapModulo } from "../utils.js";
@@ -7,31 +10,35 @@ import { DEBUG } from "../settings.js";
 import { EditableTile, COLORS } from "../grid/EditableTile.js";
 import { GridDisplay } from "./GridDisplay.js";
 
-
-
 export class TileEditorDisplay extends EventTarget {
     static events = {
-        EditTile: 'edittile',
+        EditTile: "edittile",
     };
 
-    grid : Grid;
-    tile : EditableTile;
-    gridDisplay : TileEditorGridDisplay;
-    element : HTMLDivElement;
-    activeColor : TriangleColor;
+    grid: Grid;
+    tile: EditableTile;
+    gridDisplay: TileEditorGridDisplay;
+    element: HTMLDivElement;
+    activeColor: TriangleColor;
 
-    constructor(grid : Grid) {
+    constructor(grid: Grid) {
         super();
         this.grid = grid;
         this.build();
 
-        this.gridDisplay.addEventListener(TileEditorGridDisplay.events.ClickTriangle,
-            (evt : TileEditorGridEvent) => this.handleTileEditorGridEvent(evt));
-        this.gridDisplay.addEventListener(TileEditorGridDisplay.events.DoubleClickTriangle,
-            (evt : TileEditorGridEvent) => this.handleTileEditorGridEvent(evt));
+        this.gridDisplay.addEventListener(
+            TileEditorGridDisplay.events.ClickTriangle,
+            (evt: TileEditorGridEvent) => this.handleTileEditorGridEvent(evt),
+        );
+        this.gridDisplay.addEventListener(
+            TileEditorGridDisplay.events.DoubleClickTriangle,
+            (evt: TileEditorGridEvent) => this.handleTileEditorGridEvent(evt),
+        );
 
         // start with a new tile
-        this.tile = new EditableTile(this.grid, [[this.grid.getOrAddTriangle(0, 0)]]);
+        this.tile = new EditableTile(this.grid, [
+            [this.grid.getOrAddTriangle(0, 0)],
+        ]);
         this.tile.colors = [COLORS[0]];
         this.grid.addTile(this.tile);
 
@@ -42,11 +49,14 @@ export class TileEditorDisplay extends EventTarget {
 
     build() {
         // tile editor
-        const tileGridContainer = document.createElement('div');
-        tileGridContainer.className = 'tileEditorGridContainer';
+        const tileGridContainer = document.createElement("div");
+        tileGridContainer.className = "tileEditorGridContainer";
         this.element = tileGridContainer;
 
-        this.gridDisplay = new TileEditorGridDisplay(this.grid, tileGridContainer);
+        this.gridDisplay = new TileEditorGridDisplay(
+            this.grid,
+            tileGridContainer,
+        );
         tileGridContainer.appendChild(this.gridDisplay.element);
 
         this.rescale();
@@ -56,11 +66,11 @@ export class TileEditorDisplay extends EventTarget {
         this.gridDisplay.rescale();
     }
 
-    updateActiveColor(color : TriangleColor) {
+    updateActiveColor(color: TriangleColor) {
         this.activeColor = color;
     }
 
-    handleTileEditorGridEvent(evt : TileEditorGridEvent) {
+    handleTileEditorGridEvent(evt: TileEditorGridEvent) {
         if (evt.type == TileEditorGridDisplay.events.ClickTriangle) {
             const triangle = this.grid.getOrAddTriangle(...evt.triangleCoord);
             if (triangle.tile === this.tile) {
@@ -81,7 +91,9 @@ export class TileEditorDisplay extends EventTarget {
             }
             this.recomputeFrontier();
             this.dispatchEvent(new Event(TileEditorDisplay.events.EditTile));
-        } else if (evt.type == TileEditorGridDisplay.events.DoubleClickTriangle) {
+        } else if (
+            evt.type == TileEditorGridDisplay.events.DoubleClickTriangle
+        ) {
             this.recomputeFrontier();
             const triangle = this.grid.getOrAddTriangle(...evt.triangleCoord);
             if (triangle.tile === this.tile) {
@@ -91,7 +103,7 @@ export class TileEditorDisplay extends EventTarget {
             this.dispatchEvent(new Event(TileEditorDisplay.events.EditTile));
         }
     }
-    
+
     recomputeFrontier() {
         // compute the new frontier
         const frontier = new Set<Triangle>();
@@ -114,7 +126,9 @@ export class TileEditorDisplay extends EventTarget {
         // construct new tiles for the new triangles
         for (const triangle of frontier) {
             if (!triangle.tile) {
-                const p = new Tile(this.grid, TileType.Placeholder, [[triangle]]);
+                const p = new Tile(this.grid, TileType.Placeholder, [
+                    [triangle],
+                ]);
                 this.grid.addTile(p);
                 p.colors = null;
             }
@@ -122,13 +136,12 @@ export class TileEditorDisplay extends EventTarget {
 
         // remove the tiles away from the frontier
         for (const placeholder of oldPlaceholders.values()) {
-            console.log('remove placeholder', placeholder);
+            console.log("remove placeholder", placeholder);
             this.grid.removeTile(placeholder);
         }
     }
 
-    getTileOffsets() : number[][] {
+    getTileOffsets(): number[][] {
         return this.tile.triangles.map((t) => [t.x, t.y]);
     }
 }
-

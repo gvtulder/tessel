@@ -75,7 +75,7 @@ export function computeOutline(triangles: Set<Triangle>): {
                 (e) =>
                     (prev == null ||
                         (e.from.id != prev.id && e.to.id != prev.id)) &&
-                    edges.get(e.id).length == 1
+                    edges.get(e.id).length == 1,
             );
 
         // should have two unique edges

@@ -7,271 +7,597 @@ import { PentagonGridTriangle } from "./grid/PentagonGridTriangle.js";
 import { SnubSquareGridTriangle } from "./grid/SnubSquareGridTriangle.js";
 import { SquareGridTriangle } from "./grid/SquareGridTriangle.js";
 
-
-const COLORS = ['red', 'green', 'blue', 'black', 'orange', 'purple', 'grey', 'orange', 'green'];
-
+const COLORS = [
+    "red",
+    "green",
+    "blue",
+    "black",
+    "orange",
+    "purple",
+    "grey",
+    "orange",
+    "green",
+];
 
 export const lookup = new Map<string, GameSettings>();
 
-
 // squares
-lookup.set('square', {
-    triangleType : SquareGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[0, 0]], [[0, 1]], [[0, 3]], [[0, 2]] ],
-        //  [ [[1, 0]], [[1, 1]], [[1, 2]], [[1, 3]] ],
-        ]
+lookup.set("square", {
+    triangleType: SquareGridTriangle,
+    pattern: {
+        shapes: [
+            [[[0, 0]], [[0, 1]], [[0, 3]], [[0, 2]]],
+            //  [ [[1, 0]], [[1, 1]], [[1, 2]], [[1, 3]] ],
+        ],
     },
-    initialTile: ['red','black','blue','white'],
+    initialTile: ["red", "black", "blue", "white"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
-    ]
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
+    ],
 });
 
 // triangles
-lookup.set('triangle', {
-    triangleType : EquilateralGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[0, 0]], [[0, 1]], [[0, 2]] ],
-            [ [[0, 3]], [[0, 4]], [[0, 5]] ],
-        ]
+lookup.set("triangle", {
+    triangleType: EquilateralGridTriangle,
+    pattern: {
+        shapes: [
+            [[[0, 0]], [[0, 1]], [[0, 2]]],
+            [[[0, 3]], [[0, 4]], [[0, 5]]],
+        ],
     },
-    initialTile: ['red','black','blue','white'],
+    initialTile: ["red", "black", "blue", "white"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
         TileGenerators.repeat(3),
-    ]
+    ],
 });
 
 // hexagons
-lookup.set('hex', {
-    triangleType : HexGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[0, 0]], [[1, 0]], [[1, 1]], [[0, 1]], [[-1, 1]], [[-1, 0]] ],
-        //  [ [[3, 1]], [[4, 1]], [[4, 2]], [[3, 2]], [[2, 2]], [[2, 1]] ],
-        ]
+lookup.set("hex", {
+    triangleType: HexGridTriangle,
+    pattern: {
+        shapes: [
+            [[[0, 0]], [[1, 0]], [[1, 1]], [[0, 1]], [[-1, 1]], [[-1, 0]]],
+            //  [ [[3, 1]], [[4, 1]], [[4, 2]], [[3, 2]], [[2, 2]], [[2, 1]] ],
+        ],
     },
-    initialTile: ['red','black','blue','white','black','blue'],
+    initialTile: ["red", "black", "blue", "white", "black", "blue"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
         TileGenerators.randomSubset(100),
-    ]
+    ],
 });
 
 // cube on hex grid
-lookup.set('cube', {
-    triangleType : HexGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[-1, 0], [0, 0]], [[1, 0], [1, 1]], [[0, 1], [-1, 1]] ],
-        ]
+lookup.set("cube", {
+    triangleType: HexGridTriangle,
+    pattern: {
+        shapes: [
+            [
+                [
+                    [-1, 0],
+                    [0, 0],
+                ],
+                [
+                    [1, 0],
+                    [1, 1],
+                ],
+                [
+                    [0, 1],
+                    [-1, 1],
+                ],
+            ],
+        ],
     },
-    initialTile: ['red','black','blue','white','black','blue'],
+    initialTile: ["red", "black", "blue", "white", "black", "blue"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
-    ]
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
+    ],
 });
 
 // single-directional
-lookup.set('rhombus', {
-    triangleType : HexGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[0, 0]], [[1, 0]] ],
-        ]
+lookup.set("rhombus", {
+    triangleType: HexGridTriangle,
+    pattern: {
+        shapes: [[[[0, 0]], [[1, 0]]]],
     },
-    initialTile: ['red','black'],
+    initialTile: ["red", "black"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
-    ]
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
+    ],
 });
 
 // two-directional
-lookup.set('rhombus2', {
-    triangleType : HexGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[0, 0]], [[1, 0]] ],
-            [ [[1, 1]], [[0, 1]] ],
-        ]
+lookup.set("rhombus2", {
+    triangleType: HexGridTriangle,
+    pattern: {
+        shapes: [
+            [[[0, 0]], [[1, 0]]],
+            [[[1, 1]], [[0, 1]]],
+        ],
     },
-    initialTile: ['red','black'],
+    initialTile: ["red", "black"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
-    ]
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
+    ],
 });
 
 // two-directional
-lookup.set('rhombus3', {
-    triangleType : HexGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[0, 0]], [[1, 0]] ],
-            [ [[1, 1]], [[0, 1]] ],
-            [ [[-1, 1]], [[-1, 0]] ],
-        ]
+lookup.set("rhombus3", {
+    triangleType: HexGridTriangle,
+    pattern: {
+        shapes: [
+            [[[0, 0]], [[1, 0]]],
+            [[[1, 1]], [[0, 1]]],
+            [[[-1, 1]], [[-1, 0]]],
+        ],
     },
-    initialTile: ['red','black'],
+    initialTile: ["red", "black"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
         TileGenerators.repeat(10),
-    ]
+    ],
 });
 
-
-lookup.set('snubsquare', {
-    triangleType : SnubSquareGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[7,0], [8,0]], [[9,0],[10,0]], [[11,0]], [[5,0]] ],
-            [ [[1,0], [4,0]], [[2,0], [3,0]], [[18,0]], [[0, 0]] ],
-        ]
+lookup.set("snubsquare", {
+    triangleType: SnubSquareGridTriangle,
+    pattern: {
+        shapes: [
+            [
+                [
+                    [7, 0],
+                    [8, 0],
+                ],
+                [
+                    [9, 0],
+                    [10, 0],
+                ],
+                [[11, 0]],
+                [[5, 0]],
+            ],
+            [
+                [
+                    [1, 0],
+                    [4, 0],
+                ],
+                [
+                    [2, 0],
+                    [3, 0],
+                ],
+                [[18, 0]],
+                [[0, 0]],
+            ],
+        ],
     },
-    initialTile: ['red','black','blue','white'],
+    initialTile: ["red", "black", "blue", "white"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
         TileGenerators.repeat(10),
-    ]
+    ],
 });
 
-lookup.set('snubsquare3', {
-    triangleType : SnubSquareGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[7,0], [8,0]], [[9,0],[10,0], [11,0]], [[5,0]] ],
-            [ [[1,0], [4,0]], [[2,0], [3,0], [18,0]], [[0, 0]] ],
-        ]
+lookup.set("snubsquare3", {
+    triangleType: SnubSquareGridTriangle,
+    pattern: {
+        shapes: [
+            [
+                [
+                    [7, 0],
+                    [8, 0],
+                ],
+                [
+                    [9, 0],
+                    [10, 0],
+                    [11, 0],
+                ],
+                [[5, 0]],
+            ],
+            [
+                [
+                    [1, 0],
+                    [4, 0],
+                ],
+                [
+                    [2, 0],
+                    [3, 0],
+                    [18, 0],
+                ],
+                [[0, 0]],
+            ],
+        ],
     },
-    initialTile: ['red','black','blue'],
+    initialTile: ["red", "black", "blue"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
         TileGenerators.repeat(10),
-    ]
+    ],
 });
 
-lookup.set('snubsquaredebug', {
-    triangleType : SnubSquareGridTriangle,
-    pattern : {
-        shapes : [
-//          [ [[1, 0]], [[2, 0]], [[3, 0]], [[4, 0]] ],
-//          [[ [0, 0], [1, 0], [2, 0], [3, 0],
-//             [4, 0], [5, 0], [6, 0], [7, 0],
-//             [8, 0], [9, 0], [10, 0], [11, 0] ]],
-            [ [[0, 0], [1, 0], [2, 0], [3, 0]],
-              [[4, 0], [5, 0], [6, 0], [7, 0]],
-              [[8, 0], [9, 0], [10, 0], [11, 0]] ],
-        ]
+lookup.set("snubsquaredebug", {
+    triangleType: SnubSquareGridTriangle,
+    pattern: {
+        shapes: [
+            //          [ [[1, 0]], [[2, 0]], [[3, 0]], [[4, 0]] ],
+            //          [[ [0, 0], [1, 0], [2, 0], [3, 0],
+            //             [4, 0], [5, 0], [6, 0], [7, 0],
+            //             [8, 0], [9, 0], [10, 0], [11, 0] ]],
+            [
+                [
+                    [0, 0],
+                    [1, 0],
+                    [2, 0],
+                    [3, 0],
+                ],
+                [
+                    [4, 0],
+                    [5, 0],
+                    [6, 0],
+                    [7, 0],
+                ],
+                [
+                    [8, 0],
+                    [9, 0],
+                    [10, 0],
+                    [11, 0],
+                ],
+            ],
+        ],
     },
-    initialTile: ['black','black','black','black'],
+    initialTile: ["black", "black", "black", "black"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['black', 'black']),
+    tileGenerator: [
+        TileGenerators.permutations(["black", "black"]),
         TileGenerators.repeat(100),
-    ]
+    ],
 });
 
-lookup.set('trianglearrows', {
-    triangleType : EquilateralGridTriangle,
-    pattern : {
-        shapes : [
-            [[[0,0],[0,1]],[[0,2]],[[0,-3],[0,-2]],[[0,-1]]],
-            [[[1,-4],[1,-6]],[[1,-5]],[[1,-3]],[[1,-2],[1,-1]]],
-            [[[1,1],[1,2]],[[1,0]],[[0,4]],[[0,5],[0,3]]]
-        ]
+lookup.set("trianglearrows", {
+    triangleType: EquilateralGridTriangle,
+    pattern: {
+        shapes: [
+            [
+                [
+                    [0, 0],
+                    [0, 1],
+                ],
+                [[0, 2]],
+                [
+                    [0, -3],
+                    [0, -2],
+                ],
+                [[0, -1]],
+            ],
+            [
+                [
+                    [1, -4],
+                    [1, -6],
+                ],
+                [[1, -5]],
+                [[1, -3]],
+                [
+                    [1, -2],
+                    [1, -1],
+                ],
+            ],
+            [
+                [
+                    [1, 1],
+                    [1, 2],
+                ],
+                [[1, 0]],
+                [[0, 4]],
+                [
+                    [0, 5],
+                    [0, 3],
+                ],
+            ],
+        ],
     },
-    initialTile: ['red','black','blue','white'],
+    initialTile: ["red", "black", "blue", "white"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
         TileGenerators.repeat(10),
-    ]
+    ],
 });
 
 // hexagons split in 12 triangles
-lookup.set('halfhex', {
-    triangleType : HalfHexGridTriangle,
-    pattern : {
-        shapes : [
-            [ [[3, 0]], [[2, 0]], [[9, 1]], [[8, 1]] ],
-            [ [[19, 0]], [[18, 0]], [[1, 0]], [[0, 0]] ],
-            [ [[17, 0]], [[16, 0]], [[11, 1]], [[10, 1]] ],
-        ]
+lookup.set("halfhex", {
+    triangleType: HalfHexGridTriangle,
+    pattern: {
+        shapes: [
+            [[[3, 0]], [[2, 0]], [[9, 1]], [[8, 1]]],
+            [[[19, 0]], [[18, 0]], [[1, 0]], [[0, 0]]],
+            [[[17, 0]], [[16, 0]], [[11, 1]], [[10, 1]]],
+        ],
     },
-    initialTile: ['red','black','blue','white','black','blue'],
+    initialTile: ["red", "black", "blue", "white", "black", "blue"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
-    ]
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
+    ],
 });
 
 // hexagons split in 12 triangles
-lookup.set('isometric', {
-    triangleType : HalfHexGridTriangle,
-    pattern : {
-        shapes : [
-            [[[11,0],[16,-1],[15,-1]],[[0,0],[19,0],[20,0]],[[14,-1],[13,-1],[30,-1]],[[21,0],[22,0],[29,-1]]],[[[1,-1],[18,-1],[17,-1]],[[2,-1],[9,0],[10,0]],[[16,-1],[15,-1],[20,0]],[[11,0],[0,0],[19,0]]],[[[15,-1],[20,0],[19,0]],[[16,-1],[11,0],[0,0]],[[18,0],[17,0],[10,1]],[[1,0],[2,0],[9,1]]],[[[29,-1],[22,0],[21,0]],[[30,-1],[13,-1],[14,-1]],[[20,0],[19,0],[0,0]],[[15,-1],[16,-1],[11,0]]],[[[19,0],[0,0],[11,0]],[[20,0],[15,-1],[16,-1]],[[10,0],[9,0],[2,-1]],[[17,-1],[18,-1],[1,-1]]],[[[9,1],[2,0],[1,0]],[[10,1],[17,0],[18,0]],[[0,0],[11,0],[16,-1]],[[19,0],[20,0],[15,-1]]]
-        ]
+lookup.set("isometric", {
+    triangleType: HalfHexGridTriangle,
+    pattern: {
+        shapes: [
+            [
+                [
+                    [11, 0],
+                    [16, -1],
+                    [15, -1],
+                ],
+                [
+                    [0, 0],
+                    [19, 0],
+                    [20, 0],
+                ],
+                [
+                    [14, -1],
+                    [13, -1],
+                    [30, -1],
+                ],
+                [
+                    [21, 0],
+                    [22, 0],
+                    [29, -1],
+                ],
+            ],
+            [
+                [
+                    [1, -1],
+                    [18, -1],
+                    [17, -1],
+                ],
+                [
+                    [2, -1],
+                    [9, 0],
+                    [10, 0],
+                ],
+                [
+                    [16, -1],
+                    [15, -1],
+                    [20, 0],
+                ],
+                [
+                    [11, 0],
+                    [0, 0],
+                    [19, 0],
+                ],
+            ],
+            [
+                [
+                    [15, -1],
+                    [20, 0],
+                    [19, 0],
+                ],
+                [
+                    [16, -1],
+                    [11, 0],
+                    [0, 0],
+                ],
+                [
+                    [18, 0],
+                    [17, 0],
+                    [10, 1],
+                ],
+                [
+                    [1, 0],
+                    [2, 0],
+                    [9, 1],
+                ],
+            ],
+            [
+                [
+                    [29, -1],
+                    [22, 0],
+                    [21, 0],
+                ],
+                [
+                    [30, -1],
+                    [13, -1],
+                    [14, -1],
+                ],
+                [
+                    [20, 0],
+                    [19, 0],
+                    [0, 0],
+                ],
+                [
+                    [15, -1],
+                    [16, -1],
+                    [11, 0],
+                ],
+            ],
+            [
+                [
+                    [19, 0],
+                    [0, 0],
+                    [11, 0],
+                ],
+                [
+                    [20, 0],
+                    [15, -1],
+                    [16, -1],
+                ],
+                [
+                    [10, 0],
+                    [9, 0],
+                    [2, -1],
+                ],
+                [
+                    [17, -1],
+                    [18, -1],
+                    [1, -1],
+                ],
+            ],
+            [
+                [
+                    [9, 1],
+                    [2, 0],
+                    [1, 0],
+                ],
+                [
+                    [10, 1],
+                    [17, 0],
+                    [18, 0],
+                ],
+                [
+                    [0, 0],
+                    [11, 0],
+                    [16, -1],
+                ],
+                [
+                    [19, 0],
+                    [20, 0],
+                    [15, -1],
+                ],
+            ],
+        ],
     },
-    initialTile: ['red','black','blue','white','black','blue'],
+    initialTile: ["red", "black", "blue", "white", "black", "blue"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
-    ]
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
+    ],
 });
 
 // snub square
-lookup.set('snubsquare4', {
-    triangleType : SnubSquareGridTriangle,
-    pattern : {
-        shapes : [
-            [[[10,0],[9,0]],[[7,0],[8,0]],[[5,0]],[[11,0]]],
-            [[[2,0],[1,0]],[[3,0],[4,0]],[[11,-1]],[[18,0]]],
-            [[[19,0],[22,0]],[[20,0],[21,0]],[[0,0]],[[17,0]]],
-            [[[3,0],[2,0]],[[4,0],[1,0]],[[5,0]],[[11,-1]]],
-            [[[20,0],[19,0]],[[21,0],[22,0]],[[18,1]],[[0,0]]],
-            [[[4,0],[3,0]],[[1,0],[2,0]],[[0,0]],[[5,0]]],
-            [[[9,-1],[8,-1]],[[10,-1],[7,-1]],[[11,-1]],[[6,0]]],
-            [[[1,0],[4,0]],[[2,0],[3,0]],[[18,0]],[[0,0]]]
-        ]
+lookup.set("snubsquare4", {
+    triangleType: SnubSquareGridTriangle,
+    pattern: {
+        shapes: [
+            [
+                [
+                    [10, 0],
+                    [9, 0],
+                ],
+                [
+                    [7, 0],
+                    [8, 0],
+                ],
+                [[5, 0]],
+                [[11, 0]],
+            ],
+            [
+                [
+                    [2, 0],
+                    [1, 0],
+                ],
+                [
+                    [3, 0],
+                    [4, 0],
+                ],
+                [[11, -1]],
+                [[18, 0]],
+            ],
+            [
+                [
+                    [19, 0],
+                    [22, 0],
+                ],
+                [
+                    [20, 0],
+                    [21, 0],
+                ],
+                [[0, 0]],
+                [[17, 0]],
+            ],
+            [
+                [
+                    [3, 0],
+                    [2, 0],
+                ],
+                [
+                    [4, 0],
+                    [1, 0],
+                ],
+                [[5, 0]],
+                [[11, -1]],
+            ],
+            [
+                [
+                    [20, 0],
+                    [19, 0],
+                ],
+                [
+                    [21, 0],
+                    [22, 0],
+                ],
+                [[18, 1]],
+                [[0, 0]],
+            ],
+            [
+                [
+                    [4, 0],
+                    [3, 0],
+                ],
+                [
+                    [1, 0],
+                    [2, 0],
+                ],
+                [[0, 0]],
+                [[5, 0]],
+            ],
+            [
+                [
+                    [9, -1],
+                    [8, -1],
+                ],
+                [
+                    [10, -1],
+                    [7, -1],
+                ],
+                [[11, -1]],
+                [[6, 0]],
+            ],
+            [
+                [
+                    [1, 0],
+                    [4, 0],
+                ],
+                [
+                    [2, 0],
+                    [3, 0],
+                ],
+                [[18, 0]],
+                [[0, 0]],
+            ],
+        ],
     },
-    initialTile: ['red','black','blue','white'],
+    initialTile: ["red", "black", "blue", "white"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','black','blue','white']),
-    ]
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
+    ],
 });
 
 // pentagons
-lookup.set('pentagon', {
-    triangleType : PentagonGridTriangle,
-    pattern : {
+lookup.set("pentagon", {
+    triangleType: PentagonGridTriangle,
+    pattern: {
         shapes: [
-            [[[0,0]],[[1,0]],[[2,0]],[[3,0]],[[4,0]]],
-            [[[5,0]],[[6,0]],[[7,0]],[[8,0]],[[9,0]]],
-            [[[10,0]],[[11,0]],[[12,0]],[[13,0]],[[14,0]]],
-            [[[15,0]],[[16,0]],[[17,0]],[[18,0]],[[19,0]]],
-        ]
+            [[[0, 0]], [[1, 0]], [[2, 0]], [[3, 0]], [[4, 0]]],
+            [[[5, 0]], [[6, 0]], [[7, 0]], [[8, 0]], [[9, 0]]],
+            [[[10, 0]], [[11, 0]], [[12, 0]], [[13, 0]], [[14, 0]]],
+            [[[15, 0]], [[16, 0]], [[17, 0]], [[18, 0]], [[19, 0]]],
+        ],
     },
-    initialTile: ['red','blue','white','red','blue'],
+    initialTile: ["red", "blue", "white", "red", "blue"],
     tilesShownOnStack: 3,
-    tileGenerator : [
-        TileGenerators.permutations(['red','blue','white']),
-    ]
+    tileGenerator: [TileGenerators.permutations(["red", "blue", "white"])],
 });
-
-
 
 /*
 

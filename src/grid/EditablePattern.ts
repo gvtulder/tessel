@@ -11,7 +11,7 @@ export class EditablePattern extends Pattern {
      * @param triangleType the triangle / grid type
      * @param shapes a definition of the tiles in this pattern
      */
-    constructor(triangleType : TriangleType, shapes? : TileShape[]) {
+    constructor(triangleType: TriangleType, shapes?: TileShape[]) {
         super(triangleType, [[[[0, 0]]]]);
     }
 
@@ -20,25 +20,25 @@ export class EditablePattern extends Pattern {
      *
      * @param shapes the new pattern
      */
-    updatePattern(shapes : TileShape[]) {
+    updatePattern(shapes: TileShape[]) {
         this.shapes = shapes;
         this.numColorGroups = shapes[0].length;
         this.computeProperties();
     }
 
-    checkIncludesShape(shape : TileShape, grid? : Grid) : boolean {
-        return true
+    checkIncludesShape(shape: TileShape, grid?: Grid): boolean {
+        return true;
     }
 
-    addShape(shape : TileShape) {
+    addShape(shape: TileShape) {
         this.shapes.push(shape);
-        console.log('shape added', this.shapes);
+        console.log("shape added", this.shapes);
         this.computeProperties();
     }
 
-    removeShape(index : number) {
+    removeShape(index: number) {
         this.shapes.splice(index, 1);
-        console.log('shape removed', this.shapes);
+        console.log("shape removed", this.shapes);
         this.computeProperties();
     }
 }

@@ -142,11 +142,11 @@ function appendArc(
     radius: number,
     startVertex: Vector,
     endVertex: Vector,
-    isPaddingBoundary: boolean
+    isPaddingBoundary: boolean,
 ) {
     let startAngle = Math.atan2(
         startVertex.y - center.y,
-        startVertex.x - center.x
+        startVertex.x - center.x,
     );
     let endAngle = Math.atan2(endVertex.y - center.y, endVertex.x - center.x);
 
@@ -197,7 +197,7 @@ function createOffsetEdge(edge: Edge, dx: number, dy: number): OffsetEdge {
 function createMarginPolygon(
     polygon: Polygon,
     offset: number,
-    arcSegments: number
+    arcSegments: number,
 ): Polygon {
     const offsetEdges: OffsetEdge[] = [];
 
@@ -231,7 +231,7 @@ function createMarginPolygon(
                 offset,
                 prevEdge.vertex2,
                 thisEdge.vertex1,
-                false
+                false,
             );
         }
     }
@@ -246,7 +246,7 @@ function createMarginPolygon(
 function createPaddingPolygon(
     polygon: Polygon,
     offset: number,
-    arcSegments: number
+    arcSegments: number,
 ): Polygon {
     const offsetEdges: OffsetEdge[] = [];
 
@@ -279,7 +279,7 @@ function createPaddingPolygon(
                 offset,
                 prevEdge.vertex2,
                 thisEdge.vertex1,
-                true
+                true,
             );
         }
     }
@@ -294,7 +294,7 @@ function createPaddingPolygon(
 export default function offsetPolygon(
     vertices: Vector[],
     offset: number,
-    arcSegments: number = 0
+    arcSegments: number = 0,
 ): Vector[] {
     const polygon = createPolygon(vertices);
 

@@ -1,18 +1,18 @@
 {
-    "name": "Tile Game",
-    "short_name": "Tile Game",
-    "description": "A puzzle game with tiles.",
-    "id": "/",
-    "start_url": "/",
-    "icons": [
-        {
-            "src": "/icon.png",
-            "type": "image/png",
-            "sizes": "180x180 any",
-            "purpose": "maskable any"
-        }
-    ],
-    "display": "standalone",
-    "theme_color": "#000000",
-    "background_color": "#000000"
+  "name": "Tile Game",
+  "short_name": "Tile Game",
+  "description": "A puzzle game with tiles.",
+  "id": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "type": "image/png",
+      "sizes": "180x180 any",
+      "purpose": "maskable any"
+    }
+  ],
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000"
 }

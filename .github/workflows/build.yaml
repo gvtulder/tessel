@@ -47,4 +47,3 @@ jobs:
         run: npm ci
       - name: Run eslint
         run: npx eslint .
-

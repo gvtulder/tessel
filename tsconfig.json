@@ -14,6 +14,6 @@
     "outDir": "build/",
     "sourceMap": true,
     "lib": ["es2022", "dom", "dom.iterable"],
-    "baseUrl": ".",
+    "baseUrl": "."
   }
 }

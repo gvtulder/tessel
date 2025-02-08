@@ -6,6 +6,7 @@
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
     "eslint": "^9.20.0",
+    "eslint-config-prettier": "^10.0.1",
     "html-bundler-webpack-plugin": "^4.18.0",
     "interactjs": "^1.10.27",
     "terser-webpack-plugin": "^5.3.11",

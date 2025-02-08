@@ -1,25 +1,35 @@
 import { Triangle } from "../grid/Triangle.js";
 
-export type Vertex = { id: string, x: number, y: number };
-export type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };
+export type Vertex = { id: string; x: number; y: number };
+export type Edge = { id: string; from: Vertex; to: Vertex; triangle: Triangle };
 
-export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[], edgesPerVertex: Map<string, Edge[]> } {
+export function computeOutline(triangles: Set<Triangle>): {
+    boundary: Vertex[];
+    edgesPerVertex: Map<string, Edge[]>;
+} {
     const edges = new Map<string, Edge[]>();
     const edgesPerVertex = new Map<string, Edge[]>();
-    let leftMostVertex : Vertex;
+    let leftMostVertex: Vertex;
 
     for (const triangle of triangles.values()) {
         // rounding down to make the CoordIds unique
-        const verts : Vertex[] = triangle.points.map((p) => {
-            p = [p[0] + triangle.left, p[1] + triangle.top];
-            return {
-                id: `${Math.round(p[0] * 100)},${Math.round(p[1] * 100)}`,
-                x: p[0], y: p[1]
-            };
-        }).sort((a, b) => (a.x == b.x) ? (a.y - b.y) : (a.x - b.x));
+        const verts: Vertex[] = triangle.points
+            .map((p) => {
+                p = [p[0] + triangle.left, p[1] + triangle.top];
+                return {
+                    id: `${Math.round(p[0] * 100)},${Math.round(p[1] * 100)}`,
+                    x: p[0],
+                    y: p[1],
+                };
+            })
+            .sort((a, b) => (a.x == b.x ? a.y - b.y : a.x - b.x));
 
         // consider each edge of the triangle
-        for (const ab of [[0, 1], [0, 2], [1, 2]]) {
+        for (const ab of [
+            [0, 1],
+            [0, 2],
+            [1, 2],
+        ]) {
             let from = verts[ab[0]];
             let to = verts[ab[1]];
             if (to.id < from.id) {
@@ -27,7 +37,7 @@ export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[]
                 from = verts[ab[1]];
                 to = verts[ab[0]];
             }
-            const edge : Edge = {
+            const edge: Edge = {
                 id: `${from.id} ${to.id}`,
                 from: from,
                 to: to,
@@ -52,25 +62,35 @@ export function computeOutline(triangles : Set<Triangle>) : { boundary: Vertex[]
     }
 
     // follow along edges
-    let boundary : Vertex[] = [];
-    let prev : Vertex = null;
-    let cur : Vertex = leftMostVertex;
+    let boundary: Vertex[] = [];
+    let prev: Vertex = null;
+    let cur: Vertex = leftMostVertex;
     let winding = 0;
     let i = 0;
     while (i < 1000 && (prev == null || cur.id != leftMostVertex.id)) {
         i++;
-        const uniqueEdges = edgesPerVertex.get(cur.id).filter((e) => (
-            (prev == null || (e.from.id != prev.id && e.to.id != prev.id)) && edges.get(e.id).length == 1
-        ));
+        const uniqueEdges = edgesPerVertex
+            .get(cur.id)
+            .filter(
+                (e) =>
+                    (prev == null ||
+                        (e.from.id != prev.id && e.to.id != prev.id)) &&
+                    edges.get(e.id).length == 1
+            );
 
         // should have two unique edges
         const nextEdge = uniqueEdges[0];
         // console.log(i, nextEdge);
-        const nextVertex = (nextEdge.to.id == cur.id) ? nextEdge.from : nextEdge.to;
+        const nextVertex =
+            nextEdge.to.id == cur.id ? nextEdge.from : nextEdge.to;
         if (nextEdge.to.id == cur.id) {
-            winding += (nextEdge.from.x - nextEdge.to.x) * (nextEdge.from.y + nextEdge.to.y);
+            winding +=
+                (nextEdge.from.x - nextEdge.to.x) *
+                (nextEdge.from.y + nextEdge.to.y);
         } else {
-            winding += (nextEdge.to.x - nextEdge.from.x) * (nextEdge.from.y + nextEdge.to.y);
+            winding +=
+                (nextEdge.to.x - nextEdge.from.x) *
+                (nextEdge.from.y + nextEdge.to.y);
         }
         boundary.push(cur);
         prev = cur;

@@ -1,20 +1,18 @@
-
 // https://discourse.threejs.org/t/iphone-how-to-remove-text-selection-magnifier/47812/11
 
 export default () => {
-
     function createHandler(func, timeout) {
-        let timer = null;
+        const timer = null;
         let pressed = false;
 
-        return function() {
+        return function (...args) {
             if (timer) {
                 clearTimeout(timer);
             }
 
             if (pressed) {
                 if (func) {
-                    func.apply(this, arguments);
+                    func.apply(this, args);
                 }
                 clear();
             } else {
@@ -30,5 +28,5 @@ export default () => {
     }
 
     const ignore = createHandler((e) => e.preventDefault(), 500);
-    document.body.addEventListener('touchstart', ignore, { passive: false });
+    document.body.addEventListener("touchstart", ignore, { passive: false });
 };

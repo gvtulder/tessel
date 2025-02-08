@@ -1,10 +1,9 @@
-
 export class TinyQueue<T> {
-    data : T[];
-    length : number;
-    compare : (a : T, b : T) => number;
+    data: T[];
+    length: number;
+    compare: (a: T, b: T) => number;
 
-    constructor(data : T[], compare) {
+    constructor(data: T[], compare) {
         if (!data) data = [];
         if (!compare) compare = this.defaultCompare;
 
@@ -19,14 +18,16 @@ export class TinyQueue<T> {
         }
     }
 
-    push(item : T) {
+    push(item: T) {
         this.data.push(item);
         this.length++;
         this._up(this.length - 1);
     }
 
-    pop() : T | undefined {
-        if (this.length === 0) { return undefined; }
+    pop(): T | undefined {
+        if (this.length === 0) {
+            return undefined;
+        }
 
         const top = this.data[0];
         const bottom = this.data.pop();
@@ -40,11 +41,11 @@ export class TinyQueue<T> {
         return top;
     }
 
-    peek() : T {
+    peek(): T {
         return this.data[0];
     }
 
-    private _up(pos : number) {
+    private _up(pos: number) {
         const data = this.data;
         const compare = this.compare;
         const item = data[pos];
@@ -52,7 +53,9 @@ export class TinyQueue<T> {
         while (pos > 0) {
             const parent = (pos - 1) >> 1;
             const current = data[parent];
-            if (compare(item, current) >= 0) { break; }
+            if (compare(item, current) >= 0) {
+                break;
+            }
             data[pos] = current;
             pos = parent;
         }
@@ -60,7 +63,7 @@ export class TinyQueue<T> {
         data[pos] = item;
     }
 
-    private _down(pos : number) {
+    private _down(pos: number) {
         const data = this.data;
         const compare = this.compare;
         const halfLength = this.length >> 1;
@@ -75,7 +78,9 @@ export class TinyQueue<T> {
                 left = right;
                 best = data[right];
             }
-            if (compare(best, item) >= 0) { break; }
+            if (compare(best, item) >= 0) {
+                break;
+            }
 
             data[pos] = best;
             pos = left;
@@ -84,7 +89,7 @@ export class TinyQueue<T> {
         data[pos] = item;
     }
 
-    defaultCompare(a : T, b : T) : number {
+    defaultCompare(a: T, b: T): number {
         return a < b ? -1 : a > b ? 1 : 0;
     }
 }

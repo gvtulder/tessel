@@ -1,7 +1,7 @@
-import { dist, pointInTriangle, wrapModulo } from 'src/utils.js';
+import { dist, pointInTriangle, wrapModulo } from '../utils.js';
 import { Grid } from './Grid.js';
 import { Tile, TileType } from './Tile.js';
-import { DEBUG } from 'src/settings.js';
+import { DEBUG } from '../settings.js';
 
 export type TriangleType = (new (grid : Grid, x : number, y : number) => Triangle);
 

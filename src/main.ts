@@ -13,6 +13,7 @@ import { GameDisplay } from './ui/GameDisplay.js';
 import { MainGridDisplay } from "./ui/MainGridDisplay.js";
 import { TileStackDisplay } from './ui/TileStackDisplay.js';
 
+declare const VERSION : string;
 
 export function runEditorDebug() {
     const gameSettings = SaveGames.lookup.get(window.location.hash.replace('#', ''));
@@ -41,5 +42,5 @@ export function startMainMenu() {
 
     globalThis.gameController = controller;
 
-    document.getElementById('version').innerHTML = '{version}';
+    document.getElementById('version').innerHTML = `${VERSION}`;
 }

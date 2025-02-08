@@ -1,12 +1,12 @@
 import type { Interactable, DragEvent } from '@interactjs/types';
-import interact from '@interactjs/interact/index';
+import interact from 'interactjs';
 
 import { Grid } from "../grid/Grid.js";
 import { FixedOrderTileStack } from "../game/TileStack.js";
 import { Tile, TileRotation, TileShape, TileType } from "../grid/Tile.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { TileDragController, TileDragSource } from './TileDragController.js';
-import { Pattern } from 'src/grid/Pattern.js';
+import { Pattern } from '../grid/Pattern.js';
 import { MainGridTileDragController } from './MainGridTileDragController.js';
 
 export abstract class BaseTileStackDisplay extends EventTarget {

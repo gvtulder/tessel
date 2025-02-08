@@ -1,14 +1,14 @@
 import type { DragEvent } from '@interactjs/types';
 
 import { Tile, TileType } from "../grid/Tile.js";
-import { SCALE } from 'src/settings.js';
+import { SCALE } from '../settings.js';
 import { GridDisplay } from './GridDisplay.js';
-import { Grid } from "src/grid/Grid.js";
+import { Grid } from "../grid/Grid.js";
 import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
 import { shuffle } from '../utils.js';
 import { GameDisplay } from './GameDisplay.js';
-import { Coord, CoordId, Triangle } from 'src/grid/Triangle.js';
+import { Coord, CoordId, Triangle } from '../grid/Triangle.js';
 import { TileDragSource, TileDropTarget } from './TileDragController.js';
 import { TileDisplay, TriangleOnScreenMatch } from './TileDisplay.js';
 import { PatternEditorDisplay } from './PatternEditorDisplay.js';
@@ -91,6 +91,7 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
         }
         return;
 
+        /*
 
         // fill the screen by adding neighbors until the edge of the viewbox is reached
         const done = new Set<CoordId>();
@@ -269,5 +270,7 @@ export class PatternEditorGridDisplay extends GridDisplay implements TileDropTar
             this.backgroundFillTileDisplays.push(td);
             this.svgBackgroundFillTriangles.appendChild(td.svgTriangles);
         }
+
+        */
     }
 }

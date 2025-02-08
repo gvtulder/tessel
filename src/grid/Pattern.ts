@@ -1,4 +1,4 @@
-import { shiftCoordinates2, wrapModulo } from "src/utils.js";
+import { shiftCoordinates2, wrapModulo } from "../utils.js";
 import { Grid } from "./Grid.js";
 import { Tile, TileShape, TileType, TileVariant } from "./Tile.js";
 import { Coord, CoordId, Triangle, TriangleType } from "./Triangle.js";

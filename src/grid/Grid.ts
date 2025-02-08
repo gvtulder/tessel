@@ -3,7 +3,7 @@ import { Tile, TileRotation, TileShape, TileType, TileVariant } from './Tile.js'
 import { ColorGroup, Coord, CoordId, Edge, Triangle, TriangleType } from './Triangle.js';
 import { DEBUG } from '../settings.js';
 import { Pattern } from './Pattern.js';
-import { flatten, shiftCoordinates2, wrapModulo } from 'src/utils.js';
+import { flatten, shiftCoordinates2, wrapModulo } from '../utils.js';
 
 const COLORS = ['black', 'red', 'blue', 'grey', 'green', 'brown', 'orange', 'purple', 'pink'];
 

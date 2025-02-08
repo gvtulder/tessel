@@ -1,6 +1,6 @@
-import { ScoredRegion } from "src/grid/Scorer.js";
+import { ScoredRegion } from "../grid/Scorer.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
-import { BGCOLOR, SCALE } from "src/settings.js";
+import { BGCOLOR, SCALE } from "../settings.js";
 import { ScoreOverlayDisplay, Vertex, Color } from "./ScoreOverlayDisplay.js";
 
 export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {

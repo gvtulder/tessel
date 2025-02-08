@@ -1,18 +1,18 @@
 import type { Interactable, DragEvent } from '@interactjs/types';
-import interact from '@interactjs/interact/index';
+import interact from 'interactjs';
 
-import { Grid } from "src/grid/Grid.js";
+import { Grid } from "../grid/Grid.js";
 import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
-import { Tile, TileShape, TileType } from "src/grid/Tile.js";
-import { ColorGroup, Coord, Edge, Triangle } from "src/grid/Triangle.js";
-import { shiftCoordinates2, subtractCoordinates, wrapModulo } from "src/utils.js";
-import { DEBUG } from "src/settings.js";
+import { Tile, TileShape, TileType } from "../grid/Tile.js";
+import { ColorGroup, Coord, Edge, Triangle } from "../grid/Triangle.js";
+import { shiftCoordinates2, subtractCoordinates, wrapModulo } from "../utils.js";
+import { DEBUG } from "../settings.js";
 import { EditableTile, COLORS } from "../grid/EditableTile.js";
 import { GridDisplay } from "./GridDisplay.js";
 import { PatternEditorGridDisplay } from "./PatternEditorGridDisplay.js";
 import { TileDragSource } from "./TileDragController.js";
 import { TriangleOnScreenMatch } from "./TileDisplay.js";
-import { EditablePattern } from "src/grid/EditablePattern.js";
+import { EditablePattern } from "../grid/EditablePattern.js";
 
 
 
@@ -118,15 +118,19 @@ export class PatternEditorDisplay extends EventTarget {
         if (triangleCoord) {
             const triangle = this.grid.getTriangle(...triangleCoord);
             if (triangle && triangle.tile) {
+                throw new Error("not implemented x!");
+                /*
                 this.pattern.removeShape(triangle.tile.x);
                 this.grid.removeTile(triangle.tile);
                 this.updateTileDisplays();
+                */
             }
         }
     }
 
     updateTileDisplays() {
         return;
+        /*
         this.grid.removeAllTiles();
         for (let i=0; i<this.pattern.shapes.length; i++) {
             const tile = this.grid.getOrAddTile(i, 0, TileType.PatternEditorTile);
@@ -138,5 +142,6 @@ export class PatternEditorDisplay extends EventTarget {
                 triangle.color = coloredTriangle.color;
             }
         }
+        */
     }
 }

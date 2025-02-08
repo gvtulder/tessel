@@ -6,7 +6,7 @@ import { ConnectorDisplay } from "./ConnectorDisplay.js";
 import { DEBUG, SCALE } from '../settings.js';
 import { TileDragSource } from './TileDragController.js';
 import { TriangleDisplay } from './TriangleDisplay.js';
-import { dist, mean } from 'src/utils.js';
+import { dist, mean } from '../utils.js';
 
 export enum GridDisplayScalingType {
     EqualMargins,

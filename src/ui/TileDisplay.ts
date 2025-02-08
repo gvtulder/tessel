@@ -1,13 +1,13 @@
 import type { Interactable } from '@interactjs/types';
 
-import { Triangle } from 'src/grid/Triangle.js';
-import { shrinkOutline } from 'src/utils.js';
+import { Triangle } from '../grid/Triangle.js';
+import { shrinkOutline } from '../utils.js';
 import { Tile, TileType } from "../grid/Tile.js";
 import { roundPathCorners } from '../lib/svg-rounded-corners.js';
 import { DEBUG, PLACEHOLDER, SCALE } from '../settings.js';
 import { GridDisplay } from './GridDisplay.js';
 import { TriangleDisplay } from './TriangleDisplay.js';
-import offsetPolygon from 'src/lib/offset-polygon.js';
+import offsetPolygon from '../lib/offset-polygon.js';
 
 
 export type TriangleOnScreenMatch = {

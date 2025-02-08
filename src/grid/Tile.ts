@@ -1,5 +1,5 @@
-import { computeOutline } from 'src/lib/compute-outline.js';
-import { angleDist } from 'src/utils.js';
+import { computeOutline } from '../lib/compute-outline.js';
+import { angleDist } from '../utils.js';
 import { Grid } from './Grid.js';
 import { ColorGroup, Coord, CoordId, Edge, TileColors, Triangle } from './Triangle.js';
 

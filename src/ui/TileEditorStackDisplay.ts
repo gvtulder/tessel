@@ -1,14 +1,14 @@
-import interact from '@interactjs/interact/index';
+import interact from 'interactjs';
 import type { DragEvent, Interactable } from '@interactjs/types';
 
 import { Grid } from "../grid/Grid.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileDisplay } from "./TileDisplay.js";
-import { EditablePattern } from 'src/grid/EditablePattern.js';
-import { Tile, TileRotation, TileShape, TileType, TileVariant } from 'src/grid/Tile.js';
-import { Pattern } from 'src/grid/Pattern.js';
-import { EditableTile } from 'src/grid/EditableTile.js';
+import { EditablePattern } from '../grid/EditablePattern.js';
+import { Tile, TileRotation, TileShape, TileType, TileVariant } from '../grid/Tile.js';
+import { Pattern } from '../grid/Pattern.js';
+import { EditableTile } from '../grid/EditableTile.js';
 import { TileDragController, TileDragSource } from './TileDragController.js';
 import { BaseTileStackDisplay, SingleTileOnStackDisplay, TileStackDisplay } from './TileStackDisplay.js';
 

@@ -1,8 +1,8 @@
 import type { Interactable, DragEvent } from '@interactjs/types';
-import interact from '@interactjs/interact/index';
+import interact from 'interactjs';
 
-import { COLORS } from "src/grid/EditableTile.js";
-import { TriangleColor } from "src/grid/Triangle.js";
+import { COLORS } from "../grid/EditableTile.js";
+import { TriangleColor } from "../grid/Triangle.js";
 
 export class ColorStackDisplay {
     colors : TriangleColor[];

@@ -1,12 +1,12 @@
 import type { Interactable, DragEvent } from '@interactjs/types';
 
 import { TriangleOnScreenMatch } from "./TileDisplay.js";
-import { Tile, TileRotation, TileType } from 'src/grid/Tile.js';
+import { Tile, TileRotation, TileType } from '../grid/Tile.js';
 import { GameController } from './GameController.js';
-import { Coord, Triangle } from 'src/grid/Triangle.js';
-import { DEBUG } from 'src/settings.js';
-import { dist } from 'src/utils.js';
-import { Grid } from 'src/grid/Grid.js';
+import { Coord, Triangle } from '../grid/Triangle.js';
+import { DEBUG } from '../settings.js';
+import { dist } from '../utils.js';
+import { Grid } from '../grid/Grid.js';
 import { TileDragController, TileDragSourceContext } from './TileDragController.js';
 import { MainGridDisplay } from './MainGridDisplay.js';
 

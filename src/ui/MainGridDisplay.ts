@@ -1,6 +1,6 @@
 
 
-import { Grid } from "src/grid/Grid.js";
+import { Grid } from "../grid/Grid.js";
 import { shuffle } from '../utils.js';
 import { GameDisplay } from './GameDisplay.js';
 import { GridDisplay } from './GridDisplay.js';
@@ -8,7 +8,7 @@ import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
 import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
 import { TriangleOnScreenMatch } from './TileDisplay.js';
 import { TileDragSource, TileDropTarget } from './TileDragController.js';
-import { TileType } from "src/grid/Tile.js";
+import { TileType } from "../grid/Tile.js";
 
 
 

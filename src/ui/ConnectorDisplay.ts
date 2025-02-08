@@ -1,7 +1,7 @@
 import { SCALE } from '../settings.js';
 import { Triangle } from "../grid/Triangle.js";
-import { Grid, GridEvent } from 'src/grid/Grid.js';
-import { midPoint } from 'src/utils.js';
+import { Grid, GridEvent } from '../grid/Grid.js';
+import { midPoint } from '../utils.js';
 
 
 /**

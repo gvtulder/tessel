@@ -1,7 +1,7 @@
 import type { Interactable, PointerEvent } from '@interactjs/types';
-import interact from '@interactjs/interact/index';
+import interact from 'interactjs';
 
-import { Game, GameEvent } from "src/game/Game.js";
+import { Game, GameEvent } from "../game/Game.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
 import { ScoreDisplay } from "./ScoreDisplay.js";

@@ -6,7 +6,7 @@
     "start_url": "/",
     "icons": [
         {
-            "src": "icon.png",
+            "src": "/icon.png",
             "type": "image/png",
             "sizes": "180x180 any",
             "purpose": "maskable any"

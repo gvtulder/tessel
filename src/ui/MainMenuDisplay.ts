@@ -1,12 +1,12 @@
 import type { Interactable } from '@interactjs/types';
-import interact from '@interactjs/interact/index';
+import interact from 'interactjs';
 
-import { GameSettings } from 'src/game/Game.js';
-import { Grid } from "src/grid/Grid.js";
+import { GameSettings } from '../game/Game.js';
+import { Grid } from "../grid/Grid.js";
 import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay.js";
-import * as SaveGames from 'src/saveGames.js';
-import { Pattern } from 'src/grid/Pattern.js';
-import { TileType } from 'src/grid/Tile.js';
+import * as SaveGames from '../saveGames.js';
+import { Pattern } from '../grid/Pattern.js';
+import { TileType } from '../grid/Tile.js';
 
 export class MenuEvent extends Event {
     gameSettings : GameSettings;

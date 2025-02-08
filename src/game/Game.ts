@@ -1,10 +1,10 @@
-import { Grid } from "src/grid/Grid.js";
-import { ScoredRegion, Scorer } from "src/grid/Scorer.js";
-import { Tile, TileRotation, TileShape, TileType } from "src/grid/Tile.js";
-import { TileColors, Triangle, TriangleType } from "src/grid/Triangle.js";
+import { Grid } from "../grid/Grid.js";
+import { ScoredRegion, Scorer } from "../grid/Scorer.js";
+import { Tile, TileRotation, TileShape, TileType } from "../grid/Tile.js";
+import { TileColors, Triangle, TriangleType } from "../grid/Triangle.js";
 import { TileGenerator } from "./TileGenerator.js";
 import { FixedOrderTileStack, TileStack } from "./TileStack.js";
-import { Pattern } from "src/grid/Pattern.js";
+import { Pattern } from "../grid/Pattern.js";
 
 
 export type GameSettings = {

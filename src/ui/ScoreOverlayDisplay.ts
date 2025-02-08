@@ -1,6 +1,6 @@
-import { ScoredRegion } from "src/grid/Scorer.js";
-import { Triangle } from "src/grid/Triangle.js";
-import { computeOutline } from "src/lib/compute-outline.js";
+import { ScoredRegion } from "../grid/Scorer.js";
+import { Triangle } from "../grid/Triangle.js";
+import { computeOutline } from "../lib/compute-outline.js";
 
 export const Color = {
     main: '#9acd32',

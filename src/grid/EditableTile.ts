@@ -1,5 +1,5 @@
-import { Tile, TileType } from "src/grid/Tile.js";
-import { ColorGroup, TileColors, Triangle, TriangleColor } from "src/grid/Triangle.js";
+import { Tile, TileType } from "../grid/Tile.js";
+import { ColorGroup, TileColors, Triangle, TriangleColor } from "../grid/Triangle.js";
 import { Grid } from "./Grid.js";
 
 

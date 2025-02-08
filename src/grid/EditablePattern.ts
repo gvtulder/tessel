@@ -1,4 +1,4 @@
-import { shiftCoordinates2, subtractCoordinates } from "src/utils.js";
+import { shiftCoordinates2, subtractCoordinates } from "../utils.js";
 import { Grid } from "./Grid.js";
 import { Pattern } from "./Pattern.js";
 import { TileShape } from "./Tile.js";

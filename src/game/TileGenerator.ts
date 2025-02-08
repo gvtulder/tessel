@@ -1,6 +1,6 @@
-import { Pattern } from "src/grid/Pattern.js";
-import { TileColors, TriangleColor } from "src/grid/Triangle.js";
-import { shuffle } from "src/utils.js";
+import { Pattern } from "../grid/Pattern.js";
+import { TileColors, TriangleColor } from "../grid/Triangle.js";
+import { shuffle } from "../utils.js";
 
 export type TileGenerator = (tiles : TileColors[], pattern : Pattern) => TileColors[];
 

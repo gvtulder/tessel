@@ -1,8 +1,8 @@
-import interact from '@interactjs/interact/index';
+import interact from 'interactjs';
 import type { Interactable } from '@interactjs/types';
 
-import { Grid } from "src/grid/Grid.js";
-import { Coord } from 'src/grid/Triangle.js';
+import { Grid } from "../grid/Grid.js";
+import { Coord } from '../grid/Triangle.js';
 import { GridDisplay } from './GridDisplay.js';
 
 

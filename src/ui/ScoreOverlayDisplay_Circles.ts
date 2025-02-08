@@ -1,7 +1,7 @@
-import { ScoredRegion } from "src/grid/Scorer.js";
-import { SCALE } from "src/settings.js";
+import { ScoredRegion } from "../grid/Scorer.js";
+import { SCALE } from "../settings.js";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay.js";
-import { Triangle } from "src/grid/Triangle.js";
+import { Triangle } from "../grid/Triangle.js";
 
 export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
     group : SVGElement;

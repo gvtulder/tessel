@@ -1,14 +1,14 @@
-import { Grid } from "src/grid/Grid.js";
+import { Grid } from "../grid/Grid.js";
 import { PatternEditorGridDisplay } from "./PatternEditorGridDisplay.js";
 import { TileEditorGridDisplay } from "./TileEditorGridDisplay.js";
 import { TileEditorDisplay } from "./TileEditorDisplay.js";
-import { TileStack, FixedOrderTileStack } from "src/game/TileStack.js";
+import { TileStack, FixedOrderTileStack } from "../game/TileStack.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
-import { Pattern } from "src/grid/Pattern.js";
+import { Pattern } from "../grid/Pattern.js";
 import { TileEditorStackDisplay } from "./TileEditorStackDisplay.js";
 import { PatternEditorDisplay } from "./PatternEditorDisplay.js";
-import { EditablePattern } from "src/grid/EditablePattern.js";
-import { TileType } from "src/grid/Tile.js";
+import { EditablePattern } from "../grid/EditablePattern.js";
+import { TileType } from "../grid/Tile.js";
 import { TileDragController } from "./TileDragController.js";
 import { ColorStackDisplay } from "./ColorStackDisplay.js";
 

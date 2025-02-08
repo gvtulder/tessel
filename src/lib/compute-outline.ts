@@ -1,4 +1,4 @@
-import { Triangle } from "src/grid/Triangle.js";
+import { Triangle } from "../grid/Triangle.js";
 
 export type Vertex = { id: string, x: number, y: number };
 export type Edge = { id: string, from: Vertex, to: Vertex, triangle : Triangle };

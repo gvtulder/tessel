@@ -1,9 +1,9 @@
-import { Grid } from "src/grid/Grid.js";
+import { Grid } from "../grid/Grid.js";
 import { TileEditorGridDisplay, TileEditorGridEvent } from "./TileEditorGridDisplay.js";
-import { Tile, TileType } from "src/grid/Tile.js";
-import { Edge, Triangle, TriangleColor } from "src/grid/Triangle.js";
-import { wrapModulo } from "src/utils.js";
-import { DEBUG } from "src/settings.js";
+import { Tile, TileType } from "../grid/Tile.js";
+import { Edge, Triangle, TriangleColor } from "../grid/Triangle.js";
+import { wrapModulo } from "../utils.js";
+import { DEBUG } from "../settings.js";
 import { EditableTile, COLORS } from "../grid/EditableTile.js";
 import { GridDisplay } from "./GridDisplay.js";
 

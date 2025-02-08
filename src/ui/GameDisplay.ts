@@ -112,7 +112,7 @@ export class GameDisplay extends EventTarget {
                 tileDragController.autorotate = this.autorotate.checked;
                 localStorage.setItem(
                     "autorotate",
-                    this.autorotate.checked ? "yes" : null,
+                    this.autorotate.checked ? "yes" : "no",
                 );
             },
             false,
@@ -125,7 +125,7 @@ export class GameDisplay extends EventTarget {
                 tileDragController.hints = this.hints.checked;
                 localStorage.setItem(
                     "hints",
-                    this.hints.checked ? "yes" : null,
+                    this.hints.checked ? "yes" : "no",
                 );
             },
             false,
@@ -136,7 +136,7 @@ export class GameDisplay extends EventTarget {
             "Snap",
             () => {
                 tileDragController.snap = this.snap.checked;
-                localStorage.setItem("snap", this.snap.checked ? "yes" : null);
+                localStorage.setItem("snap", this.snap.checked ? "yes" : "no");
             },
             false,
         );
@@ -153,9 +153,9 @@ export class GameDisplay extends EventTarget {
         this.game.addEventListener("score", this.onGameScore);
         this.game.addEventListener("endgame", this.onGameEndGame);
 
-        this.autorotate.checked = localStorage.getItem("autorotate") == "yes";
-        this.hints.checked = localStorage.getItem("hints") == "yes";
-        this.snap.checked = localStorage.getItem("snap") == "yes";
+        this.autorotate.checked = localStorage.getItem("autorotate") != "no";
+        this.hints.checked = localStorage.getItem("hints") != "no";
+        this.snap.checked = localStorage.getItem("snap") != "no";
 
         this.rescale();
     }

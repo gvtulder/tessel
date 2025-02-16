@@ -1,17 +1,16 @@
-
 export type Point = {
-    x: number,
-    y: number,
+    readonly x: number;
+    readonly y: number;
 };
 export type Edge = {
-    a: Point,
-    b: Point
+    readonly a: Point;
+    readonly b: Point;
 };
 export type BBox = {
-    minX: number,
-    minY: number,
-    maxX: number,
-    maxY: number,
+    readonly minX: number;
+    readonly minY: number;
+    readonly maxX: number;
+    readonly maxY: number;
 };
 
 export const DEG2RAD = Math.PI / 180;
@@ -31,7 +30,7 @@ export function dist(a: Point, b: Point): number {
  * @returns -1 if a is less than b, 1 if a is greater than b, 0 if a == b
  */
 export function comparePoint(a: Point, b: Point): number {
-    return (a.x < b.x) ? -1 : ((a.x > b.x) ? 1 : Math.sign(a.y - b.y));
+    return a.x < b.x ? -1 : a.x > b.x ? 1 : Math.sign(a.y - b.y);
 }
 
 /**
@@ -50,7 +49,7 @@ export function edgeToAngle(edge: Edge): number {
 export function midpoint(edge: Edge): Point {
     return {
         x: (edge.a.x + edge.b.x) / 2,
-        y: (edge.a.y + edge.b.y) / 2
+        y: (edge.a.y + edge.b.y) / 2,
     };
 }
 
@@ -59,7 +58,7 @@ export function midpoint(edge: Edge): Point {
  * @param points a collection of points
  * @returns the centroid
  */
-export function centroid(points: Point[]): Point {
+export function centroid(points: readonly Point[]): Point {
     let x = 0;
     let y = 0;
     for (const point of points) {
@@ -77,7 +76,7 @@ export function centroid(points: Point[]): Point {
  * @param points a collection of points
  * @returns the bounding box
  */
-export function bbox(points: Point[]): BBox {
+export function bbox(points: readonly Point[]): BBox {
     const n = points.length;
     let minX = points[0].x;
     let minY = points[0].y;

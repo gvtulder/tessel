@@ -2,6 +2,7 @@ import { describe, test, expect } from "@jest/globals";
 
 import {
     DEG2RAD,
+    Point,
     bbox,
     centroid,
     comparePoint,
@@ -64,12 +65,18 @@ describe("centroid", () => {
 });
 
 describe("bbox", () => {
-    test("computes a bounding box", () => {
-        const points = [
+    test.each([
+        [
             { x: 4, y: 1 },
             { x: 3, y: 3 },
             { x: -2, y: 7 },
-        ];
+        ],
+        [
+            { x: -3, y: 2 },
+            { x: 3, y: 3 },
+            { x: 5, y: 7 },
+        ],
+    ])("computes a bounding box", (...points: Point[]) => {
         expect(bbox(points)).toStrictEqual({
             minX: Math.min(...points.map((p) => p.x)),
             minY: Math.min(...points.map((p) => p.y)),

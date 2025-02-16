@@ -1,6 +1,16 @@
 import { describe, expect, test } from "@jest/globals";
 import { Shape } from "./Shape";
-import { DEG2RAD } from "./math";
+import { DEG2RAD, Point } from "./math";
+
+function roundPoints(
+    points: readonly Point[],
+    precision: number,
+): readonly Point[] {
+    return points.map((p) => ({
+        x: Math.round(100 * p.x) / precision,
+        y: Math.round(100 * p.y) / precision,
+    }));
+}
 
 describe("Shape", () => {
     test("can be created", () => {
@@ -50,15 +60,21 @@ describe("Shape", () => {
         const angles = [60, 60, 60];
         const shape = new Shape("", angles);
         const edge = { a: { x: 0, y: 0 }, b: { x: 1, y: 0 } };
-        const polygon = shape.constructPolygonAB(edge.a, edge.b, 0);
-        const vertices = polygon.vertices.map((v) => ({
-            x: Math.round(100 * v.x) / 100,
-            y: Math.round(100 * v.y) / 100,
-        }));
-        expect(vertices).toStrictEqual([
+        const expected = [
             { x: 0, y: 0 },
             { x: 1, y: 0 },
             { x: 0.5, y: 0.87 },
-        ]);
+        ];
+
+        const p1 = shape.constructPolygonAB(edge.a, edge.b, 0);
+        expect(roundPoints(p1.vertices, 100)).toStrictEqual(expected);
+        const p2 = shape.constructPolygonEdge(edge, 0);
+        expect(roundPoints(p2.vertices, 100)).toStrictEqual(expected);
+        const p3 = shape.constructPolygonXYR(0, 0, 1);
+        expect(roundPoints(p3.vertices, 100)).toStrictEqual(expected);
+
+        const expectedRotated = [expected[2], expected[0], expected[1]];
+        const p4 = shape.constructPolygonAB(edge.a, edge.b, 1);
+        expect(roundPoints(p4.vertices, 100)).toStrictEqual(expectedRotated);
     });
 });

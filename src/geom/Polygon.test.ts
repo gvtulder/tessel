@@ -15,29 +15,37 @@ describe("Polygon", () => {
 
     test("returns edges", () => {
         const poly = new Polygon(vertices);
-        expect(poly.edges).toStrictEqual([
+        const result = [
             { a: vertices[0], b: vertices[1] },
             { a: vertices[1], b: vertices[2] },
             { a: vertices[2], b: vertices[0] },
-        ]);
+        ];
+        expect(poly.edges).toStrictEqual(result);
+        expect(poly.edges).toStrictEqual(result);
     });
 
     test("returns outside edges", () => {
         const poly = new Polygon(vertices);
-        expect(poly.outsideEdges).toStrictEqual([
+        const result = [
             { a: vertices[1], b: vertices[0] },
             { a: vertices[2], b: vertices[1] },
             { a: vertices[0], b: vertices[2] },
-        ]);
+        ];
+        expect(poly.outsideEdges).toStrictEqual(result);
+        expect(poly.outsideEdges).toStrictEqual(result);
     });
 
     test("computes a bounding box", () => {
         const poly = new Polygon(vertices);
-        expect(poly.bbox).toStrictEqual(bbox(vertices));
+        const result = bbox(vertices);
+        expect(poly.bbox).toStrictEqual(result);
+        expect(poly.bbox).toStrictEqual(result);
     });
 
     test("computes a centroid", () => {
         const poly = new Polygon(vertices);
-        expect(poly.centroid).toStrictEqual(centroid(vertices));
+        const result = centroid(vertices);
+        expect(poly.centroid).toStrictEqual(result);
+        expect(poly.centroid).toStrictEqual(result);
     });
 });

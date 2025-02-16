@@ -105,11 +105,13 @@ export class Shape {
         const angles = this.cornerAngles;
         const r = Math.hypot(b.x - a.x, b.y - a.y);
         let angle = Math.atan2(b.y - a.y, b.x - a.x);
+        const vertices = new Array<Point>(angles.length);
+        vertices[edgeIndex] = a;
+        vertices[(edgeIndex + 1) % angles.length] = b;
         let x = b.x,
             y = b.y;
-        const vertices: Point[] = new Array(angles.length);
-        for (let i = 2; i < angles.length + 2; i++) {
-            angle += angles[(i + edgeIndex) % angles.length];
+        for (let i = 2; i < angles.length; i++) {
+            angle += Math.PI - angles[(i + edgeIndex) % angles.length];
             vertices[(i + edgeIndex) % angles.length] = {
                 x: (x += r * Math.cos(angle)),
                 y: (y += r * Math.sin(angle)),
@@ -127,7 +129,9 @@ export class Shape {
         }
         const sum = this.cornerAngles.reduceRight((a, b) => a + b);
         if (Math.abs(sum - (this.cornerAngles.length - 2) * Math.PI) > 1e-5) {
-            throw new Error("Invalid shape: angles should sum to (n - 2) * 180 degrees.");
+            throw new Error(
+                "Invalid shape: angles should sum to (n - 2) * 180 degrees.",
+            );
         }
     }
 }

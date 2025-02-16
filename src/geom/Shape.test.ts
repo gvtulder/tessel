@@ -47,4 +47,20 @@ describe("Shape", () => {
             0,
         ]);
     });
+
+    test("constructs polygons", () => {
+        const angles = [60, 60, 60];
+        const shape = new Shape("", angles);
+        const edge = { a: { x: 0, y: 0 }, b: { x: 1, y: 0 } };
+        const polygon = shape.constructPolygonAB(edge.a, edge.b, 0);
+        const vertices = polygon.vertices.map((v) => ({
+            x: Math.round(100 * v.x) / 100,
+            y: Math.round(100 * v.y) / 100,
+        }));
+        expect(vertices).toStrictEqual([
+            { x: 0, y: 0 },
+            { x: 1, y: 0 },
+            { x: 0.5, y: 0.87 },
+        ]);
+    });
 });

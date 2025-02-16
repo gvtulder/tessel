@@ -5,7 +5,7 @@ import { DEG2RAD } from "./math";
 describe("Shape", () => {
     test("can be created", () => {
         const name = "test";
-        const angles = [45, 45, 90];
+        const angles = [60, 60, 60];
         const shape = new Shape(name, angles);
         expect(shape.name).toBe(name);
         expect(shape.cornerAngles).toStrictEqual(
@@ -18,10 +18,11 @@ describe("Shape", () => {
         expect(() => new Shape("", [90, 90])).toThrowError();
         expect(() => new Shape("", [-10, 100, 90])).toThrowError();
         expect(() => new Shape("", [43, 34, 43, 35])).toThrowError();
+        expect(() => new Shape("", [45, 45, 90])).toThrowError();
     });
 
     test("converts degrees to radians", () => {
-        const degrees = [45, 45, 90];
+        const degrees = [36, 144, 36, 144];
         const radians = degrees.map((a) => a * DEG2RAD);
         expect(new Shape("", degrees).cornerAngles).toStrictEqual(radians);
         expect(new Shape("", radians).cornerAngles).toStrictEqual(radians);
@@ -31,7 +32,7 @@ describe("Shape", () => {
         expect(new Shape("", [60, 60, 60]).cornerTypes).toStrictEqual([
             0, 0, 0,
         ]);
-        expect(new Shape("", [45, 135, 45, 135]).cornerTypes).toStrictEqual([
+        expect(new Shape("", [72, 108, 72, 108]).cornerTypes).toStrictEqual([
             0, 1, 0, 1,
         ]);
     });
@@ -41,11 +42,8 @@ describe("Shape", () => {
             0, 1, 2,
         ]);
         expect(
-            new Shape("", [45, 135, 45, 135]).rotationalSymmetries,
+            new Shape("", [72, 108, 72, 108]).rotationalSymmetries,
         ).toStrictEqual([0, 2]);
-        expect(new Shape("", [45, 45, 90]).rotationalSymmetries).toStrictEqual([
-            0,
-        ]);
     });
 
     test("constructs polygons", () => {

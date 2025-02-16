@@ -1,5 +1,5 @@
 import { CornerType } from "./Grid";
-import { DEG2RAD, Edge, Point } from "./math";
+import { DEG2RAD, dist, Edge, Point } from "./math";
 import { Polygon } from "./Polygon";
 
 /**
@@ -124,14 +124,22 @@ export class Shape {
         if (this.cornerAngles.length < 3) {
             throw new Error("Invalid shape: need at least three angles.");
         }
+
         if (this.cornerAngles.some((a) => a <= 0)) {
             throw new Error("Invalid shape: all angles should be positive.");
         }
+
         const sum = this.cornerAngles.reduceRight((a, b) => a + b);
         if (Math.abs(sum - (this.cornerAngles.length - 2) * Math.PI) > 1e-5) {
             throw new Error(
                 "Invalid shape: angles should sum to (n - 2) * 180 degrees.",
             );
+        }
+
+        const poly = this.constructPolygonAB({ x: 0, y: 0 }, { x: 1, y: 1 }, 0);
+        const v = poly.vertices;
+        if (Math.abs(dist(v[0], v[1]) - dist(v[0], v[v.length - 1])) > 1e-5) {
+            throw new Error("Invalid shape: expecting equilateral polygon.");
         }
     }
 }

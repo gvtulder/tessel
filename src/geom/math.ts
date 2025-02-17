@@ -54,6 +54,28 @@ export function midpoint(edge: Edge): Point {
 }
 
 /**
+ * Computes the weighted sum of two points.
+ * - x = (wA * a.x + wB * b.x) / total
+ * - y = (wB * a.y + wB * b.y) / total
+ * @param weightA the weight for point A
+ * @param weightB the weight for point B
+ * @param totalWeight the sum of the weights
+ * @returns
+ */
+export function weightedSumPoint(
+    a: Point,
+    b: Point,
+    weightA: number = 0.5,
+    weightB: number = 0.5,
+    totalWeight: number = 1,
+) {
+    return {
+        x: (weightA * a.x + weightB * b.x) / totalWeight,
+        y: (weightA * a.y + weightB * b.y) / totalWeight,
+    };
+}
+
+/**
  * Computes the centroid of a polygon.
  * @param points the vertices in clockwise order
  * @returns the centroid
@@ -132,5 +154,18 @@ export function bbox(points: readonly Point[]): BBox {
         minY: minY,
         maxX: maxX,
         maxY: maxY,
+    };
+}
+
+/**
+ * Merges two bounding boxes.
+ * @returns the combined bounding box
+ */
+export function mergeBBox(a: BBox, b: BBox): BBox {
+    return {
+        minX: a.minX < b.minX ? a.minX : b.minX,
+        minY: a.minY < b.minY ? a.minY : b.minY,
+        maxX: a.maxX > b.maxX ? a.maxX : b.maxX,
+        maxY: a.maxY > b.maxY ? a.maxY : b.maxY,
     };
 }

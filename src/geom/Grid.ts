@@ -5,7 +5,14 @@ import {
 } from "detect-collisions";
 
 import { Atlas } from "./Atlas";
-import { comparePoint, Edge, edgeToAngle, Point } from "./math";
+import {
+    BBox,
+    comparePoint,
+    edgeToAngle,
+    mergeBBox,
+    Point,
+    weightedSumPoint,
+} from "./math";
 import { Shape } from "./Shape";
 import { Tile } from "./Tile";
 import { Polygon } from "./Polygon";
@@ -225,6 +232,19 @@ export class Grid {
     frontier: Set<GridEdge>;
 
     /**
+     * The combined area of all tiles.
+     */
+    area: number;
+    /**
+     * The combined bounding box of all tiles.
+     */
+    bbox: BBox;
+    /**
+     * The combined centroid of all tiles.
+     */
+    centroid: Point;
+
+    /**
      * Creates a new grid.
      * @param atlas an atlas for checking tile patterns (optional)
      */
@@ -235,6 +255,8 @@ export class Grid {
         this.edges = new Map<EdgeKey, GridEdge>();
         this.tiles = new Set<Tile>();
         this.frontier = new Set<GridEdge>();
+
+        this.area = 0;
     }
 
     /**
@@ -303,6 +325,24 @@ export class Grid {
             }
         }
         tile.edges = edges;
+
+        // update statistics
+        const oldArea = this.area;
+        this.area += polygon.area;
+        this.bbox =
+            this.bbox === undefined
+                ? polygon.bbox
+                : mergeBBox(this.bbox, polygon.bbox);
+        this.centroid =
+            this.centroid === undefined
+                ? polygon.centroid
+                : weightedSumPoint(
+                      this.centroid,
+                      polygon.centroid,
+                      oldArea,
+                      polygon.area,
+                      this.area,
+                  );
 
         return tile;
     }

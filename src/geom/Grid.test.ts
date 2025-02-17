@@ -140,6 +140,7 @@ describe("Grid", () => {
         grid.addTile(TRIANGLE, poly1);
         expect(grid.tiles.size).toBe(1);
         expect(grid.frontier.size).toBe(3);
+        expect(grid.bbox).toStrictEqual(poly1.bbox);
 
         grid.addTile(TRIANGLE, poly2);
         expect(grid.tiles.size).toBe(2);
@@ -175,5 +176,47 @@ describe("Grid", () => {
 
         // tile with overlap
         expect(grid.checkFit(TRIANGLE, overlappingPoly)).toBe(false);
+    });
+
+    test("updates area, bbox, centroid", () => {
+        const grid = new Grid();
+
+        expect(grid.area).toBeCloseTo(0);
+        expect(grid.bbox).toBeUndefined();
+        expect(grid.centroid).toBeUndefined();
+
+        grid.addTile(TRIANGLE, poly1);
+
+        expect(grid.area).toBeCloseTo(poly1.area);
+        expect(grid.bbox.minX).toBeCloseTo(poly1.bbox.minX);
+        expect(grid.bbox.minY).toBeCloseTo(poly1.bbox.minY);
+        expect(grid.bbox.maxX).toBeCloseTo(poly1.bbox.maxX);
+        expect(grid.bbox.maxY).toBeCloseTo(poly1.bbox.maxY);
+        expect(grid.centroid.x).toBeCloseTo(poly1.centroid.x);
+        expect(grid.centroid.y).toBeCloseTo(poly1.centroid.y);
+
+        grid.addTile(TRIANGLE, poly2);
+
+        expect(grid.area).toBeCloseTo(poly1.area + poly2.area);
+        expect(grid.bbox.minX).toBeCloseTo(
+            Math.min(poly1.bbox.minX, poly2.bbox.minX),
+        );
+        expect(grid.bbox.minY).toBeCloseTo(
+            Math.min(poly1.bbox.minY, poly2.bbox.minY),
+        );
+        expect(grid.bbox.maxX).toBeCloseTo(
+            Math.max(poly1.bbox.maxX, poly2.bbox.maxX),
+        );
+        expect(grid.bbox.maxY).toBeCloseTo(
+            Math.max(poly1.bbox.maxY, poly2.bbox.maxY),
+        );
+        expect(grid.centroid.x).toBeCloseTo(
+            (poly1.area * poly1.centroid.x + poly2.area * poly2.centroid.x) /
+                (poly1.area + poly2.area),
+        );
+        expect(grid.centroid.y).toBeCloseTo(
+            (poly1.area * poly1.centroid.y + poly2.area * poly2.centroid.y) /
+                (poly1.area + poly2.area),
+        );
     });
 });

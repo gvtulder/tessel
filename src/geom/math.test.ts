@@ -9,8 +9,10 @@ import {
     comparePoint,
     dist,
     edgeToAngle,
+    mergeBBox,
     midpoint,
     orientedArea as orientedArea,
+    weightedSumPoint,
 } from "./math";
 
 describe("dist", () => {
@@ -48,6 +50,23 @@ describe("midpoint", () => {
         expect(midpoint(edge)).toStrictEqual({
             x: 10,
             y: -1,
+        });
+    });
+});
+
+describe("weightedSumPoint", () => {
+    test("computes the weighted sum of two points", () => {
+        const a = { x: 12, y: 3 };
+        const b = { x: 8, y: -5 };
+        expect(weightedSumPoint(a, b)).toStrictEqual({
+            x: (12 + 8) / 2,
+            y: (3 - 5) / 2,
+        });
+        expect(weightedSumPoint(a, b, 1, 0)).toStrictEqual(a);
+        expect(weightedSumPoint(a, b, 0, 1)).toStrictEqual(b);
+        expect(weightedSumPoint(a, b, 1, 2, 3)).toStrictEqual({
+            x: (12 + 8 * 2) / 3,
+            y: (3 - 5 * 2) / 3,
         });
     });
 });
@@ -210,5 +229,31 @@ describe("bbox", () => {
             maxX: Math.max(...points.map((p) => p.x)),
             maxY: Math.max(...points.map((p) => p.y)),
         });
+    });
+});
+
+describe("mergeBBox", () => {
+    test("merges bounding boxes", () => {
+        const a = {
+            minX: 3,
+            minY: 2,
+            maxX: 6,
+            maxY: 7,
+        };
+        const b = {
+            minX: -3,
+            minY: -2,
+            maxX: -6,
+            maxY: -7,
+        };
+        const combined = {
+            minX: -3,
+            minY: -2,
+            maxX: 6,
+            maxY: 7,
+        };
+        expect(mergeBBox(a, b)).toStrictEqual(combined);
+        expect(mergeBBox(b, a)).toStrictEqual(combined);
+        expect(mergeBBox(a, combined)).toStrictEqual(combined);
     });
 });

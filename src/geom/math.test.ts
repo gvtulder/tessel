@@ -46,8 +46,7 @@ describe("midpoint", () => {
     test("computes midpoints", () => {
         const a = { x: 12, y: 3 };
         const b = { x: 8, y: -5 };
-        const edge = { a: a, b: b };
-        expect(midpoint(edge)).toStrictEqual({
+        expect(midpoint(a, b)).toStrictEqual({
             x: 10,
             y: -1,
         });

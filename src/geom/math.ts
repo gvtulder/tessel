@@ -43,13 +43,12 @@ export function edgeToAngle(edge: Edge): number {
 
 /**
  * Computes the midpoint of an edge.
- * @param edge an edge from a to b
  * @returns the point between a and b
  */
-export function midpoint(edge: Edge): Point {
+export function midpoint(a: Point, b: Point): Point {
     return {
-        x: (edge.a.x + edge.b.x) / 2,
-        y: (edge.a.y + edge.b.y) / 2,
+        x: (a.x + b.x) / 2,
+        y: (a.y + b.y) / 2,
     };
 }
 

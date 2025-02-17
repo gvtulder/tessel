@@ -1,7 +1,8 @@
 import { describe, expect, test } from "@jest/globals";
-import { GridEdge, GridVertex, SortedCorners } from "./Grid";
+import { Grid, GridEdge, GridVertex, SortedCorners } from "./Grid";
 import { Tile } from "./Tile";
 import { Shape } from "./Shape";
+import { Polygon } from "./Polygon";
 
 const TRIANGLE = new Shape("triangle", [60, 60, 60]);
 
@@ -109,5 +110,70 @@ describe("GridEdge", () => {
         const edge = new GridEdge(b, a);
         expect(edge.a).toBe(a);
         expect(edge.b).toBe(b);
+    });
+});
+
+describe("Grid", () => {
+    // define three triangles around (0, 0)
+    const poly1 = TRIANGLE.constructPolygonAB(
+        { x: 0, y: 0 },
+        { x: 0, y: 1 },
+        0,
+    );
+    const poly2 = TRIANGLE.constructPolygonEdge(poly1.outsideEdges[0], 0);
+    const poly3 = TRIANGLE.constructPolygonEdge(poly2.outsideEdges[1], 0);
+    const overlappingPoly = new Polygon([
+        { x: 0.2, y: 0 },
+        { x: 0.5, y: -0.5 },
+        { x: 0.5, y: 0.5 },
+    ]);
+
+    test("can be created", () => {
+        const grid = new Grid();
+        expect(grid.tiles.size).toBe(0);
+        expect(grid.frontier.size).toBe(0);
+    });
+
+    test("can add tiles", () => {
+        const grid = new Grid();
+
+        grid.addTile(TRIANGLE, poly1);
+        expect(grid.tiles.size).toBe(1);
+        expect(grid.frontier.size).toBe(3);
+
+        grid.addTile(TRIANGLE, poly2);
+        expect(grid.tiles.size).toBe(2);
+        expect(grid.frontier.size).toBe(4);
+
+        grid.addTile(TRIANGLE, poly3);
+        expect(grid.tiles.size).toBe(3);
+        expect(grid.frontier.size).toBe(5);
+    });
+
+    test("checks for overlapping edges before adding", () => {
+        const grid = new Grid();
+        grid.addTile(TRIANGLE, poly1);
+        grid.addTile(TRIANGLE, poly2);
+        grid.addTile(TRIANGLE, poly3);
+
+        expect(() => grid.addTile(TRIANGLE, poly1)).toThrowError();
+    });
+
+    test("can check if a new tile would fit", () => {
+        const grid = new Grid();
+
+        // add correct tiles
+        expect(grid.checkFit(TRIANGLE, poly1)).toBe(true);
+        grid.addTile(TRIANGLE, poly1);
+        expect(grid.checkFit(TRIANGLE, poly2)).toBe(true);
+        grid.addTile(TRIANGLE, poly2);
+        expect(grid.checkFit(TRIANGLE, poly3)).toBe(true);
+        grid.addTile(TRIANGLE, poly3);
+
+        // tile reusing an existing edge
+        expect(grid.checkFit(TRIANGLE, poly1)).toBe(false);
+
+        // tile with overlap
+        expect(grid.checkFit(TRIANGLE, overlappingPoly)).toBe(false);
     });
 });

@@ -1,9 +1,23 @@
-import { comparePoint, edgeToAngle, Point } from "./math";
+import {
+    System as CollisionSystem,
+    Polygon as CollisionPolygon,
+    PointConstructor,
+} from "detect-collisions";
+
+import { Atlas } from "./Atlas";
+import { comparePoint, Edge, edgeToAngle, Point } from "./math";
 import { Shape } from "./Shape";
 import { Tile } from "./Tile";
+import { Polygon } from "./Polygon";
 
-export class Grid {
-}
+/**
+ * The precision used for vertex and edge keys.
+ */
+const KEY_PRECISION = 1000;
+/**
+ * The proportion of overlap that counts as a collision.
+ */
+const OVERLAP_EPS = 1e-5;
 
 /**
  * An identifier for the type of a corner in a shape.
@@ -78,6 +92,24 @@ export class SortedCorners extends Array<GridVertexCorner> {
     clone(): SortedCorners {
         return new SortedCorners(...this);
     }
+}
+
+type VertexKey = string;
+type EdgeKey = string;
+
+/**
+ * Converts the point to a string-based key.
+ */
+function pointToKey(point: Point): VertexKey {
+    return `${Math.round(point.x * KEY_PRECISION)} ${Math.round(point.y * KEY_PRECISION)}`;
+}
+
+/**
+ * Converts the edge to a direction-invariant string-based key.
+ */
+function edgeToKey(a: Point, b: Point): EdgeKey {
+    const ascending = comparePoint(a, b) < 0;
+    return `${pointToKey(ascending ? a : b)} ${pointToKey(ascending ? b : a)}`;
 }
 
 /**
@@ -159,5 +191,205 @@ export class GridEdge {
             this.a = b;
             this.b = a;
         }
+    }
+}
+
+/**
+ * A Grid maintains a collection of tiles in a plane.
+ * It tracks the vertices and edges.
+ */
+export class Grid {
+    /**
+     * Optional: an atlas used to check patterns.
+     */
+    atlas: Atlas;
+    /**
+     * The system for collision detection.
+     */
+    system: CollisionSystem;
+    /**
+     * A map of the vertices in this grid, by vertex key.
+     */
+    vertices: Map<VertexKey, GridVertex>;
+    /**
+     * A map of the currently used edges in this grid.
+     */
+    edges: Map<EdgeKey, GridEdge>;
+    /**
+     * The tiles currently on the grid.
+     */
+    tiles: Set<Tile>;
+    /**
+     * The edges connected to only one tile.
+     */
+    frontier: Set<GridEdge>;
+
+    /**
+     * Creates a new grid.
+     * @param atlas an atlas for checking tile patterns (optional)
+     */
+    constructor(atlas?: Atlas) {
+        this.atlas = atlas;
+        this.system = new CollisionSystem();
+        this.vertices = new Map<VertexKey, GridVertex>();
+        this.edges = new Map<EdgeKey, GridEdge>();
+        this.tiles = new Set<Tile>();
+        this.frontier = new Set<GridEdge>();
+    }
+
+    /**
+     * Adds a tile to the grid.
+     *
+     * This function links the tile to vertices and edges and updates
+     * the grid frontier if necessary.
+     *
+     * This function does only limited checking to prevent invalid grids.
+     * Use checkFit to check for full checks for tile overlap et cetera.
+     *
+     * @param shape the shape of this tile
+     * @param polygon the polygon of this tile
+     * @returns the new tile
+     */
+    addTile(shape: Shape, polygon: Polygon): Tile {
+        const tile = new Tile(shape, polygon);
+        const points = polygon.vertices;
+        const n = points.length;
+
+        // add tile to grid
+        this.tiles.add(tile);
+        const collisionPolygon = this.system.createPolygon(
+            {},
+            polygon.vertices as Point[],
+        );
+
+        // link to vertices
+        const vertices = new Array<GridVertex>(n);
+        for (let i = 0; i < n; i++) {
+            const point = points[i];
+            const key = pointToKey(point);
+            let vertex = this.vertices.get(key);
+            if (vertex === undefined) {
+                vertex = new GridVertex(point);
+                this.vertices.set(key, vertex);
+            }
+            vertices[i] = vertex;
+            vertex.addTile(tile, i);
+        }
+        tile.vertices = vertices;
+
+        // link to edges
+        const edges = new Array<GridEdge>(n);
+        for (let i = 0; i < n; i++) {
+            const a = vertices[i];
+            const b = vertices[(i + 1) % n];
+            const key = edgeToKey(a.point, b.point);
+            let edge = this.edges.get(key);
+            if (edge === undefined) {
+                edge = new GridEdge(a, b);
+                this.edges.set(key, edge);
+            }
+            edges[i] = edge;
+            if (edge.a === a) {
+                if (edge.tileA) throw new Error("edge already in use");
+                edge.tileA = tile;
+            } else {
+                if (edge.tileB) throw new Error("edge already in use");
+                edge.tileB = tile;
+            }
+            if (edge.tileA && edge.tileB) {
+                this.frontier.delete(edge);
+            } else {
+                this.frontier.add(edge);
+            }
+        }
+        tile.edges = edges;
+
+        return tile;
+    }
+
+    /**
+     * Checks if a tile would fit in the grid.
+     * @param shape the shape of the new tile
+     * @param polygon the polygon of the new tile
+     * @returns true if the new tile would fit
+     */
+    checkFit(shape: Shape, polygon: Polygon): boolean {
+        const tile = new Tile(shape, polygon);
+        const points = polygon.vertices;
+        const n = points.length;
+
+        // find vertices
+        const vertices = new Array<GridVertex>(n);
+        const cornerLists = new Array<SortedCorners>(n);
+        for (let i = 0; i < n; i++) {
+            const point = points[i];
+            const key = pointToKey(point);
+            const vertex = this.vertices.get(key);
+            vertices[i] = vertex;
+            cornerLists[i] = new SortedCorners(
+                ...(vertex ? vertex.corners : []),
+            );
+            cornerLists[i].addTile(tile, i);
+        }
+
+        // check edges
+        const edges = new Array<GridEdge>(points.length);
+        for (let i = 0; i < n; i++) {
+            const a = vertices[i];
+            const b = vertices[(i + 1) % n];
+            // there can only be an edge if both vertices already exist
+            if (a && b) {
+                const key = edgeToKey(a.point, b.point);
+                const edge = this.edges.get(key);
+                if (
+                    edge &&
+                    ((edge.a == a && edge.tileA) || (edge.b == a && edge.tileB))
+                ) {
+                    // edge already in use
+                    return false;
+                }
+            }
+        }
+
+        // check vertices using atlas
+        if (this.atlas) {
+            for (let i = 0; i < n; i++) {
+                if (!this.atlas.checkMatch(cornerLists[i])) {
+                    return false;
+                }
+            }
+        }
+
+        if (this.checkCollision(polygon)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if the given polygon overlaps with any tiles on the grid.
+     * @param polygon the polygon
+     * @returns true if the polygon overlaps
+     */
+    checkCollision(polygon: Polygon): boolean {
+        const collisionPolygon = new CollisionPolygon(
+            {},
+            polygon.vertices as Point[],
+        );
+        // this normally happens on system.insert
+        collisionPolygon.bbox = collisionPolygon.getAABBAsBBox();
+        collisionPolygon.minX =
+            collisionPolygon.bbox.minX - collisionPolygon.padding;
+        collisionPolygon.maxX =
+            collisionPolygon.bbox.maxX - collisionPolygon.padding;
+        collisionPolygon.minY =
+            collisionPolygon.bbox.minY - collisionPolygon.padding;
+        collisionPolygon.maxY =
+            collisionPolygon.bbox.maxY - collisionPolygon.padding;
+        return this.system.checkOne(
+            collisionPolygon,
+            (resp) => resp.overlap > OVERLAP_EPS,
+        );
     }
 }

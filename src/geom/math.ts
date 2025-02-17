@@ -54,21 +54,59 @@ export function midpoint(edge: Edge): Point {
 }
 
 /**
- * Computes the centroid of the given points.
- * @param points a collection of points
+ * Computes the centroid of a polygon.
+ * @param points the vertices in clockwise order
  * @returns the centroid
  */
 export function centroid(points: readonly Point[]): Point {
+    if (points.length == 3) {
+        return {
+            x: (points[0].x + points[1].x + points[2].x) / 3,
+            y: (points[0].y + points[1].y + points[2].y) / 3,
+        };
+    }
+
+    // signed area using the shoelace formula
+    let a = 0;
     let x = 0;
     let y = 0;
-    for (const point of points) {
-        x += point.x;
-        y += point.y;
+    for (let i = 0; i < points.length; i++) {
+        const p1 = points[i];
+        const p2 = points[(i + 1) % points.length];
+        const ai = p1.x * p2.y - p2.x * p1.y;
+        a += ai;
+        x += (p1.x + p2.x) * ai;
+        y += (p1.y + p2.y) * ai;
     }
-    return {
-        x: x / points.length,
-        y: y / points.length,
-    };
+    x /= 3 * a;
+    y /= 3 * a;
+    return { x, y };
+}
+
+/**
+ * Computes the area of a polygon.
+ * @param points the vertices in order
+ * @returns the area of the polygon
+ */
+export function area(points: readonly Point[]): number {
+    return Math.abs(orientedArea(points));
+}
+
+/**
+ * Computes the oriented area of a polygon.
+ * For counter-clockwise polygons this is negative.
+ * @param points the vertices in order
+ * @returns the oriented area
+ */
+export function orientedArea(points: readonly Point[]): number {
+    // using the triangle formula
+    let a = 0;
+    for (let i = 0; i < points.length; i++) {
+        const p1 = points[i];
+        const p2 = points[(i + 1) % points.length];
+        a += p1.x * p2.y - p2.x * p1.y;
+    }
+    return a / 2;
 }
 
 /**

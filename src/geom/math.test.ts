@@ -3,12 +3,14 @@ import { describe, test, expect } from "@jest/globals";
 import {
     DEG2RAD,
     Point,
+    area,
     bbox,
     centroid,
     comparePoint,
     dist,
     edgeToAngle,
     midpoint,
+    orientedArea as orientedArea,
 } from "./math";
 
 describe("dist", () => {
@@ -61,6 +63,131 @@ describe("centroid", () => {
             x: (4 + 3 - 2) / 3,
             y: (1 + 3 + 7) / 3,
         });
+    });
+
+    const shapes = [
+        [
+            [
+                { x: 0, y: 0 },
+                { x: 1, y: 0 },
+                { x: 1, y: 1 },
+                { x: 0, y: 1 },
+            ],
+            { x: 0.5, y: 0.5 },
+        ],
+
+        [
+            [
+                { x: 0, y: 0 },
+                { x: 0, y: 1 },
+                { x: 1, y: 1 },
+                { x: 1, y: 0 },
+            ],
+            { x: 0.5, y: 0.5 },
+        ],
+        [
+            [
+                { x: 3, y: 1 },
+                { x: 7, y: 2 },
+                { x: 4, y: 4 },
+                { x: 8, y: 6 },
+                { x: 1, y: 7 },
+            ],
+            { x: 3.935, y: 4.2846 },
+        ],
+        [
+            [
+                { x: 1, y: 7 },
+                { x: 8, y: 6 },
+                { x: 4, y: 4 },
+                { x: 7, y: 2 },
+                { x: 3, y: 1 },
+            ],
+            { x: 3.935, y: 4.2846 },
+        ],
+        [
+            [
+                { x: 8, y: 6 },
+                { x: 4, y: 4 },
+                { x: 7, y: 2 },
+            ],
+            { x: 6.333, y: 4 },
+        ],
+        [
+            [
+                { x: 8, y: 6 },
+                { x: 4, y: 4 },
+                { x: 7, y: 2 },
+            ],
+            { x: 6.333, y: 4 },
+        ],
+    ];
+    test.each(shapes)(
+        "computes complex centroids",
+        (points: Point[], expected: Point) => {
+            const c = centroid(points);
+            expect(c.x).toBeCloseTo(expected.x);
+            expect(c.y).toBeCloseTo(expected.y);
+        },
+    );
+});
+
+describe("area and orientedArea", () => {
+    const shapes = [
+        [
+            [
+                { x: 0, y: 0 },
+                { x: 1, y: 0 },
+                { x: 1, y: 1 },
+                { x: 0, y: 1 },
+            ],
+            1,
+        ],
+
+        [
+            [
+                { x: 0, y: 0 },
+                { x: 0, y: 1 },
+                { x: 1, y: 1 },
+                { x: 1, y: 0 },
+            ],
+            -1,
+        ],
+        [
+            [
+                { x: 3, y: 1 },
+                { x: 7, y: 2 },
+                { x: 4, y: 4 },
+                { x: 8, y: 6 },
+                { x: 1, y: 7 },
+            ],
+            20.5,
+        ],
+        [
+            [
+                { x: 8, y: 6 },
+                { x: 4, y: 4 },
+                { x: 7, y: 2 },
+            ],
+            7,
+        ],
+        [
+            [
+                { x: 7, y: 2 },
+                { x: 4, y: 4 },
+                { x: 8, y: 6 },
+            ],
+            -7,
+        ],
+    ];
+    test.each(shapes)(
+        "computes oriented areas",
+        (points: Point[], expected: number) => {
+            expect(orientedArea(points)).toBeCloseTo(expected);
+        },
+    );
+    test.each(shapes)("computes areas", (points: Point[], expected: number) => {
+        expect(area(points)).toBeCloseTo(Math.abs(expected));
     });
 });
 

@@ -1,4 +1,4 @@
-import { BBox, bbox, centroid, Edge, Point } from "./math";
+import { BBox, area, bbox, centroid, Edge, Point } from "./math";
 
 /**
  * A polygon consists of a number vertices.
@@ -11,6 +11,7 @@ export class Polygon {
 
     private _outsideEdges: readonly Edge[];
     private _edges: readonly Edge[];
+    private _area: number;
     private _bbox: BBox;
     private _centroid: Point;
 
@@ -53,6 +54,13 @@ export class Polygon {
             };
         }
         return (this._edges = edges);
+    }
+
+    /**
+     * The area of this polygon.
+     */
+    get area(): number {
+        return (this._area ||= area(this.vertices));
     }
 
     /**

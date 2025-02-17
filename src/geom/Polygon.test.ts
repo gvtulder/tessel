@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { Polygon } from "./Polygon";
-import { bbox, centroid, Point } from "./math";
+import { area, bbox, centroid, Point } from "./math";
 
 describe("Polygon", () => {
     const triangle = [
@@ -39,6 +39,13 @@ describe("Polygon", () => {
         ];
         expect(poly.outsideEdges).toStrictEqual(result);
         expect(poly.outsideEdges).toStrictEqual(result);
+    });
+
+    test("computes an area", () => {
+        const poly = new Polygon(triangle);
+        const result = area(triangle);
+        expect(poly.area).toStrictEqual(result);
+        expect(poly.area).toStrictEqual(result);
     });
 
     test("computes a bounding box", () => {

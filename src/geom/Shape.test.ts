@@ -77,4 +77,22 @@ describe("Shape", () => {
         const p4 = shape.constructPolygonAB(edge.a, edge.b, 1);
         expect(roundPoints(p4.vertices, 100)).toStrictEqual(expectedRotated);
     });
+
+    test("maps the angles to the correct vertex", () => {
+        const angles = [90, 90, 150, 60, 150];
+        const shape = new Shape("", angles);
+        const expected = [
+            { x: 0, y: 0 },
+            { x: 1, y: 0 },
+            { x: 1, y: 1 },
+            { x: 0.5, y: 1.87 },
+            { x: 0, y: 1 },
+        ];
+
+        const p1 = shape.constructPolygonAB(expected[0], expected[1], 0);
+        expect(roundPoints(p1.vertices, 100)).toStrictEqual(expected);
+
+        const p2 = shape.constructPolygonAB(expected[1], expected[2], 1);
+        expect(roundPoints(p1.vertices, 100)).toStrictEqual(expected);
+    });
 });

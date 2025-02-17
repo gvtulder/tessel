@@ -111,7 +111,7 @@ export class Shape {
         let x = b.x,
             y = b.y;
         for (let i = 2; i < angles.length; i++) {
-            angle += Math.PI - angles[(i + edgeIndex) % angles.length];
+            angle += Math.PI - angles[(i + edgeIndex - 1) % angles.length];
             vertices[(i + edgeIndex) % angles.length] = {
                 x: (x += r * Math.cos(angle)),
                 y: (y += r * Math.sin(angle)),

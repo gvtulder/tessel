@@ -68,4 +68,17 @@ export class Polygon {
     get centroid(): Point {
         return (this._centroid ||= centroid(this.vertices));
     }
+
+    /**
+     * Returns polygon segments, connecting each edge to the centroid.
+     */
+    segment(): Polygon[] {
+        const c = this.centroid;
+        const edges = this.edges;
+        const segments = new Array<Polygon>(edges.length);
+        for (let i = 0; i < edges.length; i++) {
+            segments[i] = new Polygon([edges[i].a, edges[i].b, c]);
+        }
+        return segments;
+    }
 }

@@ -145,7 +145,7 @@ export class Atlas {
     }
 }
 
-const Penrose0Atlas = Atlas.fromDefinition({
+export const Penrose0Atlas = Atlas.fromDefinition({
     name: "Penrose-3",
     shapes: {
         S: { name: "rhombus-narrow", angles: [36, 144, 36, 144] },
@@ -162,7 +162,7 @@ const Penrose0Atlas = Atlas.fromDefinition({
     ],
 });
 
-const SquaresAtlas = Atlas.fromDefinition({
+export const SquaresAtlas = Atlas.fromDefinition({
     name: "Square",
     shapes: {
         S: { name: "square", angles: [90, 90, 90, 90] },
@@ -170,7 +170,7 @@ const SquaresAtlas = Atlas.fromDefinition({
     vertices: [{ name: "square", vertex: "S0-S0-S0-S0" }],
 });
 
-const TrianglesAtlas = Atlas.fromDefinition({
+export const TrianglesAtlas = Atlas.fromDefinition({
     name: "Triangle",
     shapes: {
         T: { name: "triangle", angles: [60, 60, 60] },
@@ -178,7 +178,7 @@ const TrianglesAtlas = Atlas.fromDefinition({
     vertices: [{ name: "triangle", vertex: "T0-T0-T0-T0-T0-T0" }],
 });
 
-const HexagonsAtlas = Atlas.fromDefinition({
+export const HexagonsAtlas = Atlas.fromDefinition({
     name: "Hexagon",
     shapes: {
         H: { name: "hexagon", angles: [120, 120, 120, 120, 120, 120] },

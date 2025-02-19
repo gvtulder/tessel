@@ -67,6 +67,30 @@ export class Shape {
     }
 
     /**
+     * Checks if the other shape has the same angles (up to rotation).
+     * @param other the other shape
+     * @returns true if the other shape can be matched by rotation
+     */
+    equalAngles(other: Shape): boolean {
+        const a = this.cornerAngles;
+        const b = other.cornerAngles;
+        if (a.length != b.length) {
+            return false;
+        }
+        const n = a.length;
+        for (let r = 0; r < n - 1; r++) {
+            let ok = true;
+            for (let i = 0; ok && i < n; i++) {
+                if (a[i] != b[(i + r) % n]) {
+                    ok = false;
+                }
+            }
+            if (ok) return true;
+        }
+        return false;
+    }
+
+    /**
      * Constructs a polygon from this shape, starting at (x, y)
      * and with sides of length.
      * @param x the x coordinate for the first vertex

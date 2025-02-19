@@ -56,6 +56,14 @@ describe("Shape", () => {
         ).toStrictEqual([0, 2]);
     });
 
+    test("can be compared with equalAngles", () => {
+        const s1 = new Shape("", [36, 144, 36, 144]);
+        expect(s1.equalAngles(new Shape("", [60, 60, 60]))).toBe(false);
+        expect(s1.equalAngles(new Shape("", [36, 144, 36, 144]))).toBe(true);
+        expect(s1.equalAngles(new Shape("", [144, 36, 144, 36]))).toBe(true);
+        expect(s1.equalAngles(new Shape("", [90, 90, 90, 90]))).toBe(false);
+    });
+
     test("constructs polygons", () => {
         const angles = [60, 60, 60];
         const shape = new Shape("", angles);

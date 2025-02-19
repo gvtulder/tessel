@@ -1,5 +1,187 @@
-import { SortedCorners } from "./Grid";
+import { CornerType, SortedCorners } from "./Grid";
+import { Shape } from "./Shape";
 
-export interface Atlas {
-    checkMatch: (corners: SortedCorners) => boolean;
+/**
+ * A short notation format for a vertex atlas, to be used in JSON documents etc.
+ */
+export type AtlasDefinitionDoc = {
+    name?: string;
+    shapes: {
+        [key: string]: {
+            name?: string;
+            angles: number[];
+        };
+    };
+    vertices: {
+        name?: string;
+        vertex: string;
+    }[];
+};
+
+/**
+ * Internal representation of a vertex pattern.
+ * This is an ordered list describing the corners around the vertex.
+ */
+type AtlasVertexDef = {
+    /**
+     * The shape of this corner.
+     */
+    shape: Shape;
+    /**
+     * The vertex index of the corner connected to this vertex.
+     */
+    vertexIndex: number;
+    /**
+     * The corner type as defined in the shape.
+     */
+    cornerType: CornerType;
+    /**
+     * The angle width of this corner.
+     */
+    cornerAngle: number;
+}[];
+
+/**
+ * A pattern describing the corners around one vertex.
+ */
+class VertexPattern {
+    definition: AtlasVertexDef;
+
+    constructor(corners: { shape: Shape; vertexIndex: number }[]) {
+        this.definition = corners.map((c) => ({
+            shape: c.shape,
+            vertexIndex: c.vertexIndex,
+            cornerType: c.shape.cornerTypes[c.vertexIndex],
+            cornerAngle: c.shape.cornerAngles[c.vertexIndex],
+        }));
+    }
+
+    /**
+     * Checks the vertex against this pattern.
+     * @param corners the corner arrangement of this vertex
+     * @returns true if the vertex matches
+     */
+    checkMatch(corners: SortedCorners): boolean {
+        throw new Error("not implemented");
+    }
 }
+
+/**
+ * A 0-atlas that can check vertices for valid combinations.
+ */
+export class Atlas {
+    /**
+     * The patterns recognized in this atlas.
+     */
+    patterns: readonly VertexPattern[];
+    /**
+     * All shapes in this atlas.
+     */
+    shapes: readonly Shape[];
+
+    /**
+     * Initializes the atlas with a number of patterns.
+     * @param shapes the shapes in these patterns
+     * @param patterns one or more patterns
+     */
+    constructor(shapes: Shape[], patterns: VertexPattern[]) {
+        this.patterns = patterns;
+        this.shapes = shapes;
+    }
+
+    /**
+     * Checks the vertex against all patterns in this atlas.
+     * @param corners the corner arrangement this vertex
+     * @returns true if this is valid in this atlas
+     */
+    checkMatch(corners: SortedCorners): boolean {
+        for (const pattern of this.patterns) {
+            if (pattern.checkMatch(corners)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Construct a new atlas by parsing the definition.
+     * @param definition a valid definition object
+     * @returns a new atlas
+     */
+    static fromDefinition(definition: AtlasDefinitionDoc): Atlas {
+        const shapes = new Map<string, Shape>();
+        for (const key in definition.shapes) {
+            const d = definition.shapes[key];
+            const shape = new Shape(d.name || "", d.angles);
+            for (const s of shapes.values()) {
+                if (shape.equalAngles(s)) {
+                    throw new Error("duplicate shape in atlas pattern");
+                }
+            }
+            shapes.set(key, shape);
+        }
+        const vertexPatterns = new Array<VertexPattern>();
+        for (const v of definition.vertices) {
+            const corners = v.vertex.split("-").map((c) => {
+                if (!c.match(/^[A-Za-z][0-9]$/)) {
+                    throw new Error(`invalid component ${c} in atlas pattern`);
+                }
+                const s = c.charAt(0);
+                const v = c.charAt(1);
+                if (!shapes.has(s)) {
+                    throw new Error(`undefined shape ${s} in atlas pattern`);
+                }
+                return {
+                    shape: shapes.get(c.charAt(0)),
+                    vertexIndex: parseInt(c.charAt(1)),
+                };
+            });
+            vertexPatterns.push(new VertexPattern(corners));
+        }
+        if (vertexPatterns.length < 1) {
+            throw new Error("empty atlas pattern");
+        }
+        return new Atlas([...shapes.values()], vertexPatterns);
+    }
+}
+
+const Penrose0Atlas = Atlas.fromDefinition({
+    name: "Penrose-3",
+    shapes: {
+        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144] },
+        L: { name: "rhombus-wide", angles: [72, 108, 72, 108] },
+    },
+    vertices: [
+        { name: "kite", vertex: "L1-S1-L1" },
+        { name: "deuce", vertex: "S1-L0-S1" },
+        { name: "jack", vertex: "L0-L0-L0-S1" },
+        { name: "ace", vertex: "L1-S0-L0-S0-L1" },
+        { name: "king", vertex: "L0-L0-S0-S0-L0-L0" },
+        { name: "queen", vertex: "L0-S0-S0-L0-S0-S0-L0" },
+        { name: "sun/star", vertex: "L0-L0-L0-L0-L0" },
+    ],
+});
+
+const SquaresAtlas = Atlas.fromDefinition({
+    name: "Square",
+    shapes: {
+        S: { name: "square", angles: [90, 90, 90, 90] },
+    },
+    vertices: [{ name: "square", vertex: "S0-S0-S0-S0" }],
+});
+
+const TrianglesAtlas = Atlas.fromDefinition({
+    name: "Triangle",
+    shapes: {
+        T: { name: "triangle", angles: [60, 60, 60] },
+    },
+    vertices: [{ name: "triangle", vertex: "T0-T0-T0-T0-T0-T0" }],
+});
+
+const HexagonsAtlas = Atlas.fromDefinition({
+    name: "Hexagon",
+    shapes: {
+        H: { name: "hexagon", angles: [120, 120, 120, 120, 120, 120] },
+    },
+    vertices: [{ name: "hex", vertex: "H0-H0-H0" }],
+});

@@ -36,4 +36,16 @@ export class Tile {
             this.segments = segments.map((s) => new TileSegment(s));
         }
     }
+
+    get neighbors(): Tile[] {
+        const neighbors = new Set<Tile>();
+        for (const edge of this.edges) {
+            if (edge.tileA === this && edge.tileB) {
+                neighbors.add(edge.tileB);
+            } else if (edge.tileB === this && edge.tileA) {
+                neighbors.add(edge.tileA);
+            }
+        }
+        return [...neighbors];
+    }
 }

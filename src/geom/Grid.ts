@@ -344,7 +344,42 @@ export class Grid {
                       this.area,
                   );
 
+        this.dispatchEvent(new GridEvent(GridEventType.AddTile, this, tile));
+
         return tile;
+    }
+
+    /**
+     * Removes a tile from the grid.
+     * @param tile the tile to be removed
+     */
+    removeTile(tile: Tile): void {
+        if (!this.tiles.has(tile)) return;
+
+        const neighbors = tile.neighbors;
+
+        // remove tile from edges
+        for (const edge of tile.edges) {
+            if (edge.tileA === tile) edge.tileA = null;
+            if (edge.tileB === tile) edge.tileB = null;
+
+            // remove orphaned edges
+            if (!edge.tileA && !edge.tileB) {
+                this.edges.delete(edgeToKey(edge.a.point, edge.b.point));
+                this.frontier.delete(edge);
+            }
+        }
+
+        // update frontier
+        for (const neighbor of neighbors) {
+            for (const edge of neighbor.edges) {
+                if (!edge.tileA || !edge.tileB) {
+                    this.frontier.add(edge);
+                }
+            }
+        }
+
+        this.tiles.delete(tile);
     }
 
     /**

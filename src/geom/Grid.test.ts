@@ -160,6 +160,22 @@ describe("Grid", () => {
         expect(() => grid.addTile(TRIANGLE, poly1)).toThrowError();
     });
 
+    test("can remove tiles", () => {
+        const grid = new Grid();
+        const t1 = grid.addTile(TRIANGLE, poly1);
+        const t2 = grid.addTile(TRIANGLE, poly2);
+        expect(grid.tiles.size).toBe(2);
+        expect(grid.frontier.size).toBe(4);
+        grid.removeTile(t1);
+        expect(grid.tiles.size).toBe(1);
+        expect(grid.frontier.size).toBe(3);
+        grid.removeTile(t2);
+        grid.removeTile(t2);
+        expect(grid.tiles.size).toBe(0);
+        expect(grid.frontier.size).toBe(0);
+        grid.addTile(TRIANGLE, poly1);
+    });
+
     test("can check if a new tile would fit", () => {
         const grid = new Grid();
 

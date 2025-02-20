@@ -36,7 +36,7 @@ function runGrid() {
 
         const poly = shape.constructPolygonAB(
             { x: 0, y: 0 },
-            { x: 1, y: 0 },
+            { x: 1 / shape.sqrtArea, y: 0 },
             0,
         );
         grid.addTile(shape, poly);

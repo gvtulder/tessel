@@ -24,6 +24,11 @@ export class Shape {
      * The steps indicate a rotation from corner i to i + r.
      */
     readonly rotationalSymmetries: readonly number[];
+    /**
+     * Scaling factor based on the square root of the area of a polygon with
+     * sides of length 1.
+     */
+    sqrtArea: number;
 
     /**
      * Creates a new shape.
@@ -160,10 +165,12 @@ export class Shape {
             );
         }
 
-        const poly = this.constructPolygonAB({ x: 0, y: 0 }, { x: 1, y: 1 }, 0);
+        const poly = this.constructPolygonAB({ x: 0, y: 0 }, { x: 1, y: 0 }, 0);
         const v = poly.vertices;
         if (Math.abs(dist(v[0], v[1]) - dist(v[0], v[v.length - 1])) > 1e-5) {
             throw new Error("Invalid shape: expecting equilateral polygon.");
         }
+
+        this.sqrtArea = Math.sqrt(poly.area);
     }
 }

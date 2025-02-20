@@ -1,11 +1,13 @@
-import { centroid, midpoint, Point } from "src/geom/math";
+import {
+    centroid,
+    edgeToAngle,
+    midpoint,
+    Point,
+    weightedSumPoint,
+} from "src/geom/math";
 import { Polygon } from "src/geom/Polygon";
 
 export const SVG_NS = "http://www.w3.org/2000/svg";
-
-function round(x: number, precision: number) {
-    return Math.round((x * precision) / precision);
-}
 
 class PolygonForSvg {
     poly: Polygon;
@@ -16,7 +18,7 @@ class PolygonForSvg {
 
     pointsString(scale: number): string[] {
         return [...this.poly.vertices, this.poly.vertices[0]].map(
-            (p) => `${round(p.x * scale, 100)},${round(p.y * scale, 100)}`,
+            (p) => `${p.x * scale},${p.y * scale}`,
         );
     }
 
@@ -31,12 +33,14 @@ class PolygonForSvg {
 
     toSvgVertexNumbers(scale: number): SVGGElement {
         const g = document.createElementNS(SVG_NS, "g");
+        const c = this.poly.centroid;
         for (let i = 0; i < this.poly.vertices.length; i++) {
             const v = this.poly.vertices[i];
+            const pOffset = weightedSumPoint(c, v, 0.2, 0.8);
             const t = document.createElementNS(SVG_NS, "text");
             t.innerHTML = `${i}`;
-            t.setAttribute("x", `${v.x * scale}`);
-            t.setAttribute("y", `${v.y * scale}`);
+            t.setAttribute("x", `${pOffset.x * scale}`);
+            t.setAttribute("y", `${pOffset.y * scale}`);
             g.appendChild(t);
         }
         return g;
@@ -45,13 +49,17 @@ class PolygonForSvg {
     toSvgEdgeNumbers(scale: number): SVGGElement {
         const g = document.createElementNS(SVG_NS, "g");
         const edges = this.poly.edges;
-        const c = centroid(this.poly.vertices);
         for (let i = 0; i < edges.length; i++) {
             const p = midpoint(edges[i].a, edges[i].b);
+            const angle = edgeToAngle(edges[i]) + 0.5 * Math.PI;
+            const pOffset = {
+                x: p.x + 0.05 * Math.cos(angle),
+                y: p.y + 0.05 * Math.sin(angle),
+            };
             const t = document.createElementNS(SVG_NS, "text");
             t.innerHTML = `${i}`;
-            t.setAttribute("x", `${p.x * scale}`);
-            t.setAttribute("y", `${p.y * scale}`);
+            t.setAttribute("x", `${pOffset.x * scale}`);
+            t.setAttribute("y", `${pOffset.y * scale}`);
             g.appendChild(t);
         }
         return g;
@@ -137,6 +145,7 @@ export class SVGDisplay {
         this.a("edge-numbers", poly.toSvgEdgeNumbers(this.scale));
         if (title) {
             svgPoly.setAttribute("title", title);
+            this.addLabel(centroid(poly.poly.vertices), title);
         }
         this.updateViewBox();
         return poly;

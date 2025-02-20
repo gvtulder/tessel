@@ -9,6 +9,8 @@ svg {
 }
 svg * {
   vector-effect: non-scaling-stroke;
+  text-anchor: middle;
+  alignment-baseline: central;
   font-size: 1px;
 }
 svg polygon {
@@ -45,7 +47,7 @@ svg .edges {
   stroke-width: 1px;
 }
 svg .labels {
-  fill: #f00;
+  fill: #000;
 }
 svg .grid {
   color: #000;
@@ -96,6 +98,8 @@ svg .points {
   padding: 5px 0;
   width: 100vw;
   width: 100dvw;
+}
+.controls .row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

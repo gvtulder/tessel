@@ -16,6 +16,7 @@ import {
 import { Shape } from "./Shape";
 import { Tile } from "./Tile";
 import { Polygon } from "./Polygon";
+import { GridEvent, GridEventType } from "./GridEvent";
 
 /**
  * The precision used for vertex and edge keys.
@@ -205,7 +206,7 @@ export class GridEdge {
  * A Grid maintains a collection of tiles in a plane.
  * It tracks the vertices and edges.
  */
-export class Grid {
+export class Grid extends EventTarget {
     /**
      * Optional: an atlas used to check patterns.
      */
@@ -249,6 +250,8 @@ export class Grid {
      * @param atlas an atlas for checking tile patterns (optional)
      */
     constructor(atlas?: Atlas) {
+        super();
+
         this.atlas = atlas;
         this.system = new CollisionSystem();
         this.vertices = new Map<VertexKey, GridVertex>();
@@ -380,6 +383,7 @@ export class Grid {
         }
 
         this.tiles.delete(tile);
+        this.dispatchEvent(new GridEvent(GridEventType.RemoveTile, this, tile));
     }
 
     /**

@@ -1,8 +1,9 @@
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, jest, test } from "@jest/globals";
 import { Grid, GridEdge, GridVertex, SortedCorners } from "./Grid";
 import { Tile } from "./Tile";
 import { Shape } from "./Shape";
 import { Polygon } from "./Polygon";
+import { GridEventType } from "./GridEvent";
 
 const TRIANGLE = new Shape("triangle", [60, 60, 60]);
 
@@ -234,5 +235,21 @@ describe("Grid", () => {
             (poly1.area * poly1.centroid.y + poly2.area * poly2.centroid.y) /
                 (poly1.area + poly2.area),
         );
+    });
+
+    test("dispatches events", () => {
+        const addHandler = jest.fn();
+        const removeHandler = jest.fn();
+
+        const grid = new Grid();
+        grid.addEventListener(GridEventType.AddTile, addHandler);
+        grid.addEventListener(GridEventType.RemoveTile, removeHandler);
+        const t1 = grid.addTile(TRIANGLE, poly1);
+        grid.addTile(TRIANGLE, poly2);
+        grid.addTile(TRIANGLE, poly3);
+        grid.removeTile(t1);
+
+        expect(addHandler).toHaveBeenCalledTimes(3);
+        expect(removeHandler).toHaveBeenCalledTimes(1);
     });
 });

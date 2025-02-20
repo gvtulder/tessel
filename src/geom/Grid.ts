@@ -259,6 +259,8 @@ export class Grid extends EventTarget {
         this.tiles = new Set<Tile>();
         this.frontier = new Set<GridEdge>();
 
+        this.handleTileColorUpdate = this.handleTileColorUpdate.bind(this);
+
         this.area = 0;
     }
 
@@ -273,10 +275,15 @@ export class Grid extends EventTarget {
      *
      * @param shape the shape of this tile
      * @param polygon the polygon of this tile
+     * @param segments the segment polygons of this tile
      * @returns the new tile
      */
-    addTile(shape: Shape, polygon: Polygon): Tile {
-        const tile = new Tile(shape, polygon);
+    addTile(shape: Shape, polygon: Polygon, segments?: Polygon[]): Tile {
+        const tile = new Tile(shape, polygon, segments);
+        tile.addEventListener(
+            GridEventType.UpdateTileColors,
+            this.handleTileColorUpdate,
+        );
         const points = polygon.vertices;
         const n = points.length;
 
@@ -469,6 +476,12 @@ export class Grid extends EventTarget {
         return this.system.checkOne(
             collisionPolygon,
             (resp) => resp.overlap > OVERLAP_EPS,
+        );
+    }
+
+    handleTileColorUpdate(evt: GridEvent): void {
+        this.dispatchEvent(
+            new GridEvent(GridEventType.UpdateTileColors, this, evt.tile),
         );
     }
 }

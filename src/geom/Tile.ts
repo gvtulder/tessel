@@ -1,9 +1,16 @@
-import { GridEdge, GridVertex } from "./Grid";
+import { Grid, GridEdge, GridVertex } from "./Grid";
+import { GridEvent, GridEventType } from "./GridEvent";
 import { BBox, Point } from "./math";
 import { Polygon } from "./Polygon";
 import { Shape } from "./Shape";
 
-type TileColor = number;
+export const enum TileColor {
+    Red = "red",
+    Blue = "blue",
+    Black = "black",
+    Green = "green",
+    White = "white",
+}
 
 class TileSegment {
     polygon: Polygon;
@@ -11,13 +18,11 @@ class TileSegment {
 
     constructor(polygon: Polygon, color?: TileColor) {
         this.polygon = polygon;
-        if (color !== undefined) {
-            this.color = color;
-        }
+        this.color = color;
     }
 }
 
-export class Tile {
+export class Tile extends EventTarget {
     vertices: GridVertex[];
     edges: GridEdge[];
     shape: Shape;
@@ -27,7 +32,10 @@ export class Tile {
     bbox: BBox;
     data: unknown;
 
+    private _colors: readonly TileColor[];
+
     constructor(shape: Shape, polygon: Polygon, segments?: Polygon[]) {
+        super();
         this.shape = shape;
         this.polygon = polygon;
         this.centroid = polygon.centroid;
@@ -47,5 +55,20 @@ export class Tile {
             }
         }
         return [...neighbors];
+    }
+
+    get colors(): readonly TileColor[] {
+        if (!this.segments || this.segments.length == 0) return undefined;
+        return (this._colors ||= this.segments.map((s) => s.color));
+    }
+
+    set colors(colors: readonly TileColor[]) {
+        this._colors = undefined;
+        for (let i = 0; i < colors.length; i++) {
+            this.segments[i].color = colors[i];
+        }
+        this.dispatchEvent(
+            new GridEvent(GridEventType.UpdateTileColors, null, this),
+        );
     }
 }

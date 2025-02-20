@@ -4,6 +4,7 @@ import { Tile } from "./Tile";
 export enum GridEventType {
     AddTile = "addtile",
     RemoveTile = "removetile",
+    UpdateTileColors = "updatetilecolors",
 }
 
 export class GridEvent extends Event {

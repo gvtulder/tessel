@@ -26,7 +26,7 @@ type Polygon = {
     maxY: number;
     minX: number;
     minY: number;
-    vertices: Vector[];
+    vertices: readonly Vector[];
 };
 
 const TWO_PI = Math.PI * 2;
@@ -53,7 +53,7 @@ function outwardEdgeNormal(vertex1: Vector, vertex2: Vector): Vector {
     };
 }
 
-function createPolygon(vertices: Vector[]): Polygon {
+function createPolygon(vertices: readonly Vector[]): Polygon {
     const edges: Edge[] = [];
     let minX = vertices.length > 0 ? vertices[0].x : undefined;
     let minY = vertices.length > 0 ? vertices[0].y : undefined;
@@ -292,10 +292,10 @@ function createPaddingPolygon(
 }
 
 export default function offsetPolygon(
-    vertices: Vector[],
+    vertices: readonly Vector[],
     offset: number,
     arcSegments: number = 0,
-): Vector[] {
+): readonly Vector[] {
     const polygon = createPolygon(vertices);
 
     if (offset > 0) {

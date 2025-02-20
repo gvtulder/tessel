@@ -56,7 +56,7 @@ export class PatternEditorGridDisplay
         );
         this.svgGrid.insertBefore(
             this.svgBackgroundFillTriangles,
-            this.svgTriangles,
+            this.svgTiles,
         );
     }
 

@@ -1,12 +1,10 @@
-import { TileDisplay, TriangleOnScreenMatch } from "./TileDisplay.js";
-import { Grid, GridEvent } from "../grid/Grid.js";
-import { Tile, TileEvent, TileType } from "../grid/Tile.js";
-import { Coord, CoordId, Triangle, TriangleEvent } from "../grid/Triangle.js";
-import { ConnectorDisplay } from "./ConnectorDisplay.js";
-import { DEBUG, SCALE } from "../settings.js";
-import { TileDragSource } from "./TileDragController.js";
-import { TriangleDisplay } from "./TriangleDisplay.js";
-import { dist, mean } from "../utils.js";
+import { TileDisplay } from "./TileDisplay";
+import { Grid } from "../geom/Grid";
+import { GridEvent, GridEventType } from "../geom/GridEvent";
+import { Tile } from "../geom/Tile";
+import { ConnectorDisplay } from "./ConnectorDisplay";
+import { DEBUG } from "../settings";
+import { BBox, Point, dist } from "../geom/math";
 
 export enum GridDisplayScalingType {
     EqualMargins,
@@ -22,27 +20,21 @@ export class GridDisplay extends EventTarget {
 
     svg: SVGElement;
     svgGrid: SVGElement;
-    svgTriangles: SVGElement;
+    svgTiles: SVGElement;
 
     coordinateMapper: CoordinateMapper;
 
-    triangleDisplays: Map<Triangle, TriangleDisplay>;
     tileDisplays: Map<Tile, TileDisplay>;
     connectorDisplay: ConnectorDisplay;
-    backgroundGrid: BackgroundGrid;
+    // backgroundGrid: BackgroundGrid;
 
     onAddTile: EventListener;
-    onMoveTile: EventListener;
+    onUpdateTileColors: EventListener;
     onRemoveTile: EventListener;
-    onChangeColor: EventListener;
-    onUpdateTriangles: EventListener;
 
     rescaleTimeout: number;
 
-    contentMinX: number;
-    contentMinY: number;
-    contentMaxX: number;
-    contentMaxY: number;
+    // TODO compute
     contentMinXNoPlaceholders: number;
     contentMinYNoPlaceholders: number;
     contentMaxXNoPlaceholders: number;
@@ -59,6 +51,7 @@ export class GridDisplay extends EventTarget {
     visibleBottom: number;
 
     scale: number;
+    // margins in pixels
     margins = { top: 30, right: 30, bottom: 30, left: 30 };
     scalingType = GridDisplayScalingType.EqualMargins;
 
@@ -68,50 +61,27 @@ export class GridDisplay extends EventTarget {
         this.container = container;
 
         this.tileDisplays = new Map<Tile, TileDisplay>();
-        this.triangleDisplays = new Map<Triangle, TriangleDisplay>();
 
         this.build();
 
         this.onAddTile = (evt: GridEvent) => this.addTile(evt.tile);
-        // TODO @deprecated
-        this.onMoveTile = () => this.updateDimensions();
+        this.onUpdateTileColors = (evt: GridEvent) => {
+            const tileDisplay = this.tileDisplays.get(evt.tile);
+            if (tileDisplay) {
+                tileDisplay.updateColors();
+            }
+        };
         this.onRemoveTile = (evt: GridEvent) => this.removeTile(evt.tile);
-        this.onChangeColor = (evt: TriangleEvent) => {
-            const td = this.triangleDisplays.get(evt.triangle);
-            if (td) td.updateColor();
-        };
-        this.onUpdateTriangles = (evt: TileEvent) => {
-            const td = this.tileDisplays.get(evt.tile);
-            if (td) td.redraw();
-            this.updateDimensions();
-        };
 
-        this.grid.addEventListener(Grid.events.AddTile, this.onAddTile);
-        this.grid.addEventListener("movetile", this.onMoveTile);
-        this.grid.addEventListener(Grid.events.RemoveTile, this.onRemoveTile);
+        this.grid.addEventListener(GridEventType.AddTile, this.onAddTile);
         this.grid.addEventListener(
-            Triangle.events.ChangeColor,
-            this.onChangeColor,
+            GridEventType.UpdateTileColors,
+            this.onUpdateTileColors,
         );
-        this.grid.addEventListener(
-            Tile.events.UpdateTriangles,
-            this.onUpdateTriangles,
-        );
+        this.grid.addEventListener(GridEventType.RemoveTile, this.onRemoveTile);
 
         for (const tile of this.grid.tiles) {
             this.addTile(tile);
-        }
-
-        if (DEBUG.PLOT_SINGLE_TRIANGLES) {
-            for (let x = -41; x < 44; x++) {
-                for (let y = -2; y < 4; y++) {
-                    const tile = new Tile(this.grid, TileType.NormalTile, [
-                        [this.grid.getOrAddTriangle(x, y)],
-                    ]);
-                    this.grid.addTile(tile);
-                    this.addTile(tile);
-                }
-            }
         }
 
         this.styleMainElement();
@@ -143,28 +113,12 @@ export class GridDisplay extends EventTarget {
         this.coordinateMapper = new CoordinateMapper();
         this.svgGrid.appendChild(this.coordinateMapper.svgGroup);
 
-        this.svgTriangles = document.createElementNS(
+        this.svgTiles = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "g",
         );
-        this.svgTriangles.setAttribute("class", "svg-tiles");
-        this.svgGrid.appendChild(this.svgTriangles);
-
-        if (DEBUG.CONNECT_TILES) {
-            this.connectorDisplay = new ConnectorDisplay(this.grid);
-            this.svgGrid.appendChild(this.connectorDisplay.svgGroup);
-        }
-    }
-
-    addBackgroundGrid() {
-        if (!this.backgroundGrid) {
-            const backgroundGrid = new BackgroundGrid(this.grid);
-            this.svgGrid.insertBefore(
-                backgroundGrid.element,
-                this.svgTriangles,
-            );
-            this.backgroundGrid = backgroundGrid;
-        }
+        this.svgTiles.setAttribute("class", "svg-tiles");
+        this.svgGrid.appendChild(this.svgTiles);
     }
 
     destroy() {
@@ -175,31 +129,28 @@ export class GridDisplay extends EventTarget {
             this.connectorDisplay.destroy();
             this.connectorDisplay = null;
         }
+        /*
         if (this.backgroundGrid) {
             this.backgroundGrid.destroy();
             this.backgroundGrid = null;
         }
+        */
 
-        this.grid.removeEventListener(Grid.events.AddTile, this.onAddTile);
-        this.grid.removeEventListener("movetile", this.onMoveTile);
+        this.grid.removeEventListener(GridEventType.AddTile, this.onAddTile);
         this.grid.removeEventListener(
-            Grid.events.RemoveTile,
+            GridEventType.UpdateTileColors,
+            this.onUpdateTileColors,
+        );
+        this.grid.removeEventListener(
+            GridEventType.RemoveTile,
             this.onRemoveTile,
-        );
-        this.grid.removeEventListener(
-            Triangle.events.ChangeColor,
-            this.onChangeColor,
-        );
-        this.grid.removeEventListener(
-            Tile.events.UpdateTriangles,
-            this.onUpdateTriangles,
         );
         this.container.remove();
         this.element.remove();
         this.gridElement.remove();
         this.svg.remove();
         this.svgGrid.remove();
-        this.svgTriangles.remove();
+        this.svgTiles.remove();
         this.coordinateMapper.destroy();
     }
 
@@ -207,24 +158,23 @@ export class GridDisplay extends EventTarget {
         if (!this.tileDisplays.has(tile)) {
             const tileDisplay = new TileDisplay(this, tile);
             this.tileDisplays.set(tile, tileDisplay);
-            this.svgTriangles.appendChild(tileDisplay.svgTriangles);
+            this.svgTiles.appendChild(tileDisplay.element);
         }
-        if (tile.type !== TileType.PatternExample) {
-            this.updateDimensions();
-        }
+        this.updateDimensions();
     }
 
     removeTile(tile: Tile) {
         const td = this.tileDisplays.get(tile);
         if (!td) return;
         this.tileDisplays.delete(tile);
-        this.svgTriangles.removeChild(td.svgTriangles);
+        this.svgTiles.removeChild(td.element);
         this.updateDimensions();
     }
 
     updateDimensions() {
-        if (this.grid.tiles.length == 0) return;
+        if (this.grid.tiles.size == 0) return;
 
+        /*
         // compute the extent of the content
         const tiles = [...this.grid.tiles.values()];
         this.contentMinX = Math.min(...tiles.map((t) => t.left));
@@ -245,6 +195,7 @@ export class GridDisplay extends EventTarget {
         this.contentMaxYNoPlaceholders = Math.max(
             ...noPlaceholders.map((t) => t.top + t.height),
         );
+        */
 
         this.triggerRescale();
     }
@@ -254,6 +205,7 @@ export class GridDisplay extends EventTarget {
      * @param triangle the triangle
      * @returns the pixel coordinates
      */
+    /*
     triangleToScreenPosition(triangle: Triangle): Coord {
         const triangleCenter = triangle.center;
         return this.coordinateMapper.gridToScreen([
@@ -261,13 +213,14 @@ export class GridDisplay extends EventTarget {
             triangle.top + triangleCenter[1],
         ]);
     }
+    */
 
     /**
      * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      * @param clientPos the client position
      * @returns the coordinates in the SVG grid space
      */
-    screenPositionToGridPosition(clientPos: Coord): Coord {
+    screenPositionToGridPosition(clientPos: Point): Point {
         return this.coordinateMapper.screenToGrid(clientPos);
     }
 
@@ -276,32 +229,24 @@ export class GridDisplay extends EventTarget {
      * @param clientPos the client position
      * @returns the triangle coordinates
      */
+    /*
     screenPositionToTriangleCoord(clientPos: Coord): Coord {
         const gridCoord = this.coordinateMapper.screenToGrid(clientPos);
         return this.grid.gridPositionToTriangleCoord(gridCoord);
     }
+    */
 
     styleMainElement() {
         return;
     }
 
     /**
-     * Returns the dimensions of the content area (e.g., the display coordinates
+     * Returns the dimensions of the content area (i.e., the display coordinates
      * of the triangles to be shown on screen.)
      * @returns the minimum dimensions
      */
-    protected computeDimensionsForRescale(): {
-        minX: number;
-        minY: number;
-        maxX: number;
-        maxY: number;
-    } {
-        return {
-            minX: this.contentMinX,
-            minY: this.contentMinY,
-            maxX: this.contentMaxX,
-            maxY: this.contentMaxY,
-        };
+    protected computeDimensionsForRescale(): BBox {
+        return this.grid.bbox;
     }
 
     /**
@@ -326,16 +271,12 @@ export class GridDisplay extends EventTarget {
         const dim = this.computeDimensionsForRescale();
         if (availWidth === 0 || availHeight === 0) return;
 
-        // adjust the viewBox to match the grid (0,0) to the container (0,0)
-        const minX = this.contentMinX * SCALE;
-        const minY = this.contentMinY * SCALE;
-        const maxX = this.contentMaxX * SCALE;
-        const maxY = this.contentMaxY * SCALE;
+        const gridBBox = this.grid.bbox;
 
         // compute the width and height of the content
         // TODO margins
-        const contentWidth = (dim.maxX - dim.minX) * SCALE;
-        const contentHeight = (dim.maxY - dim.minY) * SCALE;
+        const contentWidth = dim.maxX - dim.minX;
+        const contentHeight = dim.maxY - dim.minY;
 
         // compute the scale that makes the content fit the container
         const scale = Math.min(
@@ -348,10 +289,10 @@ export class GridDisplay extends EventTarget {
         const finalHeight = contentHeight * scale;
 
         // make sure we can fill the container
-        let viewBoxMinX = minX;
-        let viewBoxMinY = minY;
-        let viewBoxWidth = maxX - minX;
-        let viewBoxHeight = maxY - minY;
+        let viewBoxMinX = gridBBox.minX;
+        let viewBoxMinY = gridBBox.minY;
+        let viewBoxWidth = gridBBox.maxX - gridBBox.minX;
+        let viewBoxHeight = gridBBox.maxY - gridBBox.minY;
         if (viewBoxWidth * scale < availWidth) {
             const adjustX = availWidth / scale - viewBoxWidth;
             viewBoxMinX -= adjustX / 2;
@@ -376,15 +317,15 @@ export class GridDisplay extends EventTarget {
                 containerTop = availHeight / 2;
                 break;
             case GridDisplayScalingType.TopLeft:
-                containerLeft = -dim.minX * SCALE * scale;
-                containerTop = -dim.minY * SCALE * scale;
+                containerLeft = -dim.minX * scale;
+                containerTop = -dim.minY * scale;
                 break;
             case GridDisplayScalingType.EqualMargins:
             default:
                 containerLeft =
-                    (availWidth - finalWidth) / 2 - dim.minX * SCALE * scale;
+                    (availWidth - finalWidth) / 2 - dim.minX * scale;
                 containerTop =
-                    (availHeight - finalHeight) / 2 - dim.minY * SCALE * scale;
+                    (availHeight - finalHeight) / 2 - dim.minY * scale;
         }
 
         // compute the area that is visible on screen
@@ -404,6 +345,7 @@ export class GridDisplay extends EventTarget {
         this.coordinateMapper.resetCoeffCache();
 
         // update the background grid
+        /*
         if (this.backgroundGrid) {
             this.backgroundGrid.redraw(
                 viewBoxMinX,
@@ -412,6 +354,7 @@ export class GridDisplay extends EventTarget {
                 viewBoxHeight,
             );
         }
+        */
 
         if (!this.element.classList.contains("animated")) {
             window.setTimeout(() => {
@@ -441,40 +384,23 @@ export class TileStackGridDisplay extends GridDisplay {
         maxX: number;
         maxY: number;
     } {
-        // diameter of a circle around the triangle points,
+        // diameter of a circle around the tile points,
         // with the mean as the center
-        const trianglePoints: Coord[] = [];
-        for (const tile of this.grid.tiles) {
-            for (const triangle of tile.triangles) {
-                for (const p of triangle.points) {
-                    trianglePoints.push([
-                        p[0] + triangle.left,
-                        p[1] + triangle.top,
-                    ]);
-                }
-            }
-        }
-        const centerX = mean(trianglePoints.map((c) => c[0]));
-        const centerY = mean(trianglePoints.map((c) => c[1]));
+        const bbox = this.grid.bbox;
+        const centroid = this.grid.centroid;
         let maxDist = Math.max(
-            ...trianglePoints.map((c) => dist([centerX, centerY], c)),
+            ...this.grid.tiles
+                .values()
+                .flatMap((t) => t.polygon.vertices)
+                .map((v) => dist(v, centroid)),
         );
         // compensation for almost-circular tiles, which would be too close to the edge otherwise
-        maxDist = Math.max(
-            0.6 * (this.contentMaxX - this.contentMinX),
-            maxDist,
-        );
+        maxDist = Math.max(0.6 * (bbox.maxX - bbox.minX), maxDist);
         return {
-            minX: centerX - maxDist,
-            minY: centerY - maxDist,
-            maxX: centerX + maxDist,
-            maxY: centerY + maxDist,
-        };
-        return {
-            minX: this.contentMinX,
-            minY: this.contentMinY,
-            maxX: this.contentMaxX,
-            maxY: this.contentMaxY,
+            minX: centroid.x - maxDist,
+            minY: centroid.y - maxDist,
+            maxX: centroid.x + maxDist,
+            maxY: centroid.y + maxDist,
         };
     }
 }
@@ -582,28 +508,29 @@ class CoordinateMapper {
         return this._coeffCache;
     }
 
-    gridToScreen(gridPos: Coord): Coord {
+    gridToScreen(gridPos: Point): Point {
         const coeff = this.coeff;
-        const x = gridPos[0] * SCALE;
-        const y = gridPos[1] * SCALE;
-        return [
-            x * coeff.dxdx + y * coeff.dxdy + coeff.x0,
-            x * coeff.dydx + y * coeff.dydy + coeff.y0,
-        ];
+        const x = gridPos.x;
+        const y = gridPos.y;
+        return {
+            x: x * coeff.dxdx + y * coeff.dxdy + coeff.x0,
+            y: x * coeff.dydx + y * coeff.dydy + coeff.y0,
+        };
     }
 
-    screenToGrid(screenPos: Coord): Coord {
+    screenToGrid(screenPos: Point): Point {
         const coeff = this.coeff;
         const s = coeff.dydx * coeff.dxdy - coeff.dxdx * coeff.dydy;
-        const x = (screenPos[0] - coeff.x0) / (SCALE * s);
-        const y = (screenPos[1] - coeff.y0) / (SCALE * s);
-        return [
-            -x * coeff.dydy + y * coeff.dxdy,
-            x * coeff.dydx - y * coeff.dxdx,
-        ];
+        const x = (screenPos[0] - coeff.x0) / s;
+        const y = (screenPos[1] - coeff.y0) / s;
+        return {
+            x: -x * coeff.dydy + y * coeff.dxdy,
+            y: x * coeff.dydx - y * coeff.dxdx,
+        };
     }
 }
 
+/*
 class BackgroundGrid {
     grid: Grid;
     triangle: Triangle;
@@ -742,3 +669,4 @@ class BackgroundGrid {
         this.element.remove();
     }
 }
+*/

@@ -28,7 +28,7 @@ export class TileEditorGridDisplay extends GridDisplay {
 
         this.addBackgroundGrid();
 
-        this.interactable = interact(this.svgTriangles)
+        this.interactable = interact(this.svgTiles)
             .on("tap", (evt: PointerEvent) => {
                 // find the triangle
                 const triangleCoord = this.screenPositionToTriangleCoord([

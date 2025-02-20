@@ -50,17 +50,31 @@ export class Controls {
         document.body.appendChild(div);
     }
 
-    addSelect(
-        callback: (key: string) => void,
-        options: { key: string; text: string }[],
-        title?: string,
-    ) {
+    ensureCustomRow() {
         if (!this.customRow) {
             const row = document.createElement("div");
             row.classList.add("row");
             this.customRow = row;
             this.div.appendChild(this.customRow);
         }
+    }
+
+    addButton(callback: () => void, title: string) {
+        this.ensureCustomRow();
+        const button = document.createElement("button");
+        button.appendChild(document.createTextNode(title));
+        button.addEventListener("click", callback);
+        const label = document.createElement("label");
+        label.appendChild(button);
+        this.customRow.appendChild(label);
+    }
+
+    addSelect(
+        callback: (key: string) => void,
+        options: { key: string; text: string }[],
+        title?: string,
+    ) {
+        this.ensureCustomRow();
 
         const select = document.createElement("select");
         for (const item of options) {

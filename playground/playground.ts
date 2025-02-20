@@ -19,6 +19,8 @@ function runGrid() {
         ["hexagons", HexagonsAtlas],
     ]);
 
+    let addTile: Function = null;
+
     function plotGrid(key: string) {
         if (svg) {
             svg.svg.parentNode.removeChild(svg.svg);
@@ -40,17 +42,23 @@ function runGrid() {
         grid.addTile(shape, poly);
         svg.addPoly(poly, null, "0");
 
-        for (let i = 0; i < 10; i++) {
+        addTile = () => {
             const edge = [...grid.frontier][0];
             const p = shape.constructPolygonAB(
                 (edge.tileA ? edge.b : edge.a).point,
                 (edge.tileA ? edge.a : edge.b).point,
                 0,
             );
+            svg.addPoly(p, null, `${grid.tiles.size}`);
             grid.addTile(shape, p);
-            svg.addPoly(p, null, `${i + 1}`);
+        };
+
+        for (let i = 0; i < 5; i++) {
+            addTile();
         }
     }
+
+    plotGrid("triangles");
 
     controls.addSelect(
         (key: string) => {
@@ -59,7 +67,9 @@ function runGrid() {
         [...atlasTypes.keys().map((k) => ({ key: k, text: k }))],
         "Atlas: ",
     );
-    plotGrid("triangles");
+    controls.addButton(() => {
+        if (addTile) addTile();
+    }, "Add tile");
 }
 
 runGrid();

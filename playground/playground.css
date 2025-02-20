@@ -88,6 +88,11 @@ svg .points {
     display: none;
   }
 }
+.hide-labels {
+  svg .labels {
+    display: none;
+  }
+}
 
 .controls {
   position: fixed;

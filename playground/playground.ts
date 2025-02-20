@@ -72,4 +72,6 @@ function runGrid() {
     }, "Add tile");
 }
 
-runGrid();
+if (document.location.hash == "#grid") {
+    runGrid();
+}

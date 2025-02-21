@@ -58,7 +58,7 @@ export function midpoint(a: Point, b: Point): Point {
  * - y = (wB * a.y + wB * b.y) / total
  * @param weightA the weight for point A
  * @param weightB the weight for point B
- * @param totalWeight the sum of the weights
+ * @param totalWeight the sum of the weights, default: weightA + weightB
  * @returns
  */
 export function weightedSumPoint(
@@ -66,8 +66,9 @@ export function weightedSumPoint(
     b: Point,
     weightA: number = 0.5,
     weightB: number = 0.5,
-    totalWeight: number = 1,
+    totalWeight?: number,
 ) {
+    if (totalWeight === undefined) totalWeight = weightA + weightB;
     return {
         x: (weightA * a.x + weightB * b.x) / totalWeight,
         y: (weightA * a.y + weightB * b.y) / totalWeight,

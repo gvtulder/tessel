@@ -68,6 +68,10 @@ describe("weightedSumPoint", () => {
             x: (12 + 8 * 2) / 3,
             y: (3 - 5 * 2) / 3,
         });
+        expect(weightedSumPoint(a, b, 1, 2)).toStrictEqual({
+            x: (12 + 8 * 2) / 3,
+            y: (3 - 5 * 2) / 3,
+        });
     });
 });
 

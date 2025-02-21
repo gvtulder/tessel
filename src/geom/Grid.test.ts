@@ -5,6 +5,7 @@ import { Shape } from "./Shape";
 import { Polygon } from "./Polygon";
 import { GridEventType } from "./GridEvent";
 import { mergeBBox, weightedSumPoint } from "./math";
+import { SquaresAtlas } from "./Atlas";
 
 const TRIANGLE = new Shape("triangle", [60, 60, 60]);
 
@@ -302,5 +303,30 @@ describe("Grid", () => {
                 poly2.area,
             ),
         );
+    });
+
+    test("can suggest possible tiles", () => {
+        const atlas = SquaresAtlas;
+        const shape = atlas.shapes[0];
+        const grid = new Grid(atlas);
+        const poly1 = shape.constructPolygonXYR(0, 0, 1);
+        const tile1 = grid.addTile(shape, poly1);
+
+        for (const edge of tile1.edges) {
+            const possibleTiles = grid.computePossibilities(edge);
+            console.log(possibleTiles);
+            expect(possibleTiles.length).toBe(1);
+        }
+
+        const poly2 = shape.constructPolygonEdge(poly1.outsideEdges[0], 0);
+        grid.addTile(shape, poly2);
+        const poly3 = shape.constructPolygonEdge(poly1.outsideEdges[1], 0);
+        grid.addTile(shape, poly3);
+
+        for (const edge of grid.frontier) {
+            const possibleTiles = grid.computePossibilities(edge);
+            console.log(possibleTiles);
+            expect(possibleTiles.length).toBe(1);
+        }
     });
 });

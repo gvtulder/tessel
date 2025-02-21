@@ -25,6 +25,11 @@ export class Shape {
      */
     readonly rotationalSymmetries: readonly number[];
     /**
+     * The rotation steps that make a different shape.
+     * The steps indicate a rotation from corner i to i + r.
+     */
+    readonly uniqueRotations: readonly number[];
+    /**
      * Scaling factor based on the square root of the area of a polygon with
      * sides of length 1.
      */
@@ -69,6 +74,14 @@ export class Shape {
             }
         }
         this.rotationalSymmetries = rotations;
+
+        // compute list of unique rotations
+        const numUnique = rotations.length > 1 ? rotations[1] : 1;
+        const uniqueRotations = [];
+        for (let r = 0; r < numUnique; r++) {
+            uniqueRotations.push(r);
+        }
+        this.uniqueRotations = uniqueRotations;
     }
 
     /**

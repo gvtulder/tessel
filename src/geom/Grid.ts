@@ -1,7 +1,6 @@
 import {
     System as CollisionSystem,
     Polygon as CollisionPolygon,
-    PointConstructor,
     Body,
 } from "detect-collisions";
 
@@ -106,6 +105,14 @@ export class SortedCorners extends Array<GridVertexCorner> {
 
 type VertexKey = string;
 type EdgeKey = string;
+
+/**
+ * A tile placement.
+ */
+type TileSuggestion = {
+    shape: Shape;
+    polygon: Polygon;
+};
 
 /**
  * Converts the point to a string-based key.
@@ -521,6 +528,39 @@ export class Grid extends EventTarget {
                 return false;
             return true;
         });
+    }
+
+    generatePlaceholders(): void {
+        const newPlaceholders = new Array<TileSuggestion>();
+        for (const edge of this.frontier) {
+            for (const suggestion of this.computePossibilities(edge)) {
+                const p = this.addPlaceholder(
+                    suggestion.shape,
+                    suggestion.polygon,
+                );
+                newPlaceholders.push(p);
+            }
+        }
+    }
+
+    computePossibilities(edge: GridEdge): TileSuggestion[] {
+        if (edge.tileA && edge.tileB) return [];
+        const ab = !edge.tileA
+            ? { a: edge.a.point, b: edge.b.point }
+            : { a: edge.b.point, b: edge.a.point };
+        const possibilities = new Array<TileSuggestion>();
+        for (const shape of this.atlas.shapes) {
+            for (const r of shape.uniqueRotations) {
+                const poly = shape.constructPolygonEdge(ab, r);
+                if (this.checkFit(shape, poly)) {
+                    possibilities.push({
+                        shape: shape,
+                        polygon: poly,
+                    });
+                }
+            }
+        }
+        return possibilities;
     }
 
     handleTileColorUpdate(evt: GridEvent): void {

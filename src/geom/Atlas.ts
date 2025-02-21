@@ -41,6 +41,8 @@ type AtlasVertexDef = {
     cornerAngle: number;
 }[];
 
+const EPSILON = 1e-5;
+
 /**
  * A pattern describing the corners around one vertex.
  */
@@ -62,7 +64,43 @@ class VertexPattern {
      * @returns true if the vertex matches
      */
     checkMatch(corners: SortedCorners): boolean {
-        throw new Error("not implemented");
+        const def = this.definition;
+        // try each starting point on the vertex
+        for (let start = 0; start < def.length; start++) {
+            let curAngle = corners[0].edgeAngle;
+            let defIdx = 0;
+            let ok = true;
+            for (let i = 0; i < corners.length; i++) {
+                const corner = corners[i];
+                // skip over unused corners
+                while (
+                    curAngle < corner.edgeAngle - EPSILON &&
+                    defIdx < def.length
+                ) {
+                    curAngle +=
+                        Math.PI -
+                        def[(defIdx + start) % def.length].cornerAngle;
+                    defIdx++;
+                }
+                if (
+                    defIdx >= def.length ||
+                    Math.abs(curAngle - corner.edgeAngle) > EPSILON ||
+                    corner.shape != def[(defIdx + start) % def.length].shape ||
+                    corner.cornerType !=
+                        def[(defIdx + start) % def.length].cornerType
+                ) {
+                    ok = false;
+                    break;
+                }
+                curAngle +=
+                    Math.PI - def[(defIdx + start) % def.length].cornerAngle;
+                defIdx++;
+            }
+            if (ok) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

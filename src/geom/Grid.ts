@@ -2,6 +2,7 @@ import {
     System as CollisionSystem,
     Polygon as CollisionPolygon,
     PointConstructor,
+    Body,
 } from "detect-collisions";
 
 import { Atlas } from "./Atlas";
@@ -14,9 +15,10 @@ import {
     weightedSumPoint,
 } from "./math";
 import { Shape } from "./Shape";
-import { Tile } from "./Tile";
+import { PlaceholderTile, Tile, TileType } from "./Tile";
 import { Polygon } from "./Polygon";
 import { GridEvent, GridEventType } from "./GridEvent";
+import { TileSet } from "./TileSet";
 
 /**
  * The precision used for vertex and edge keys.
@@ -214,7 +216,7 @@ export class Grid extends EventTarget {
     /**
      * The system for collision detection.
      */
-    system: CollisionSystem;
+    system: CollisionSystem<Body<Tile>>;
     /**
      * A map of the vertices in this grid, by vertex key.
      */
@@ -226,24 +228,15 @@ export class Grid extends EventTarget {
     /**
      * The tiles currently on the grid.
      */
-    tiles: Set<Tile>;
+    tiles: TileSet;
+    /**
+     * The placeholders currently on the grid.
+     */
+    placeholders: TileSet;
     /**
      * The edges connected to only one tile.
      */
     frontier: Set<GridEdge>;
-
-    /**
-     * The combined area of all tiles.
-     */
-    area: number;
-    /**
-     * The combined bounding box of all tiles.
-     */
-    bbox: BBox;
-    /**
-     * The combined centroid of all tiles.
-     */
-    centroid: Point;
 
     /**
      * Creates a new grid.
@@ -256,12 +249,48 @@ export class Grid extends EventTarget {
         this.system = new CollisionSystem();
         this.vertices = new Map<VertexKey, GridVertex>();
         this.edges = new Map<EdgeKey, GridEdge>();
-        this.tiles = new Set<Tile>();
+        this.tiles = new TileSet();
+        this.placeholders = new TileSet();
         this.frontier = new Set<GridEdge>();
 
         this.handleTileColorUpdate = this.handleTileColorUpdate.bind(this);
+    }
 
-        this.area = 0;
+    /**
+     * The combined area of all tiles.
+     */
+    get area(): number {
+        return (this.tiles.area || 0) + (this.placeholders.area || 0);
+    }
+
+    /**
+     * The combined bounding box of all tiles and placeholders.
+     */
+    get bbox(): BBox {
+        return mergeBBox(this.tiles.bbox, this.placeholders.bbox);
+    }
+
+    /**
+     * The bounding box for normal tiles only.
+     */
+    get bboxWithoutPlaceholders(): BBox {
+        return this.tiles.bbox;
+    }
+
+    /**
+     * The combined centroid of all tiles.
+     */
+    get centroid(): Point {
+        if (this.tiles.size == 0 && this.placeholders.size == 0)
+            return undefined;
+        if (this.placeholders.size == 0) return this.tiles.centroid;
+        if (this.tiles.size == 0) return this.placeholders.centroid;
+        return weightedSumPoint(
+            this.tiles.centroid,
+            this.placeholders.centroid,
+            this.tiles.area,
+            this.placeholders.area,
+        );
     }
 
     /**
@@ -292,6 +321,7 @@ export class Grid extends EventTarget {
         const collisionPolygon = this.system.createPolygon(
             {},
             polygon.vertices as Point[],
+            { userData: tile },
         );
 
         // link to vertices
@@ -336,24 +366,6 @@ export class Grid extends EventTarget {
         }
         tile.edges = edges;
 
-        // update statistics
-        const oldArea = this.area;
-        this.area += polygon.area;
-        this.bbox =
-            this.bbox === undefined
-                ? polygon.bbox
-                : mergeBBox(this.bbox, polygon.bbox);
-        this.centroid =
-            this.centroid === undefined
-                ? polygon.centroid
-                : weightedSumPoint(
-                      this.centroid,
-                      polygon.centroid,
-                      oldArea,
-                      polygon.area,
-                      this.area,
-                  );
-
         this.dispatchEvent(new GridEvent(GridEventType.AddTile, this, tile));
 
         return tile;
@@ -392,21 +404,27 @@ export class Grid extends EventTarget {
         // delete from grid
         this.tiles.delete(tile);
 
-        // update statistics
-        const oldArea = this.area;
-        this.area -= tile.polygon.area;
-        this.centroid = weightedSumPoint(
-            this.centroid,
-            tile.centroid,
-            oldArea,
-            -tile.polygon.area,
-            this.area,
+        this.dispatchEvent(new GridEvent(GridEventType.RemoveTile, this, tile));
+    }
+
+    addPlaceholder(shape: Shape, polygon: Polygon): PlaceholderTile {
+        const placeholder = new PlaceholderTile(shape, polygon);
+        const points = polygon.vertices;
+        const n = points.length;
+
+        // add placeholder to grid
+        this.placeholders.add(placeholder);
+        const collisionPolygon = this.system.createPolygon(
+            {},
+            polygon.vertices as Point[],
+            { userData: placeholder },
         );
 
-        // recompute bbox
-        this.bbox = computeBBox(this.tiles);
+        this.dispatchEvent(
+            new GridEvent(GridEventType.AddTile, this, placeholder),
+        );
 
-        this.dispatchEvent(new GridEvent(GridEventType.RemoveTile, this, tile));
+        return placeholder;
     }
 
     /**
@@ -489,10 +507,20 @@ export class Grid extends EventTarget {
             collisionPolygon.bbox.minY - collisionPolygon.padding;
         collisionPolygon.maxY =
             collisionPolygon.bbox.maxY - collisionPolygon.padding;
-        return this.system.checkOne(
-            collisionPolygon,
-            (resp) => resp.overlap > OVERLAP_EPS,
-        );
+        return this.system.checkOne(collisionPolygon, (resp) => {
+            if (resp.overlap < OVERLAP_EPS) return false;
+            if (
+                resp.a instanceof Tile &&
+                resp.a.tileType == TileType.Placeholder
+            )
+                return false;
+            if (
+                resp.b instanceof Tile &&
+                resp.b.tileType == TileType.Placeholder
+            )
+                return false;
+            return true;
+        });
     }
 
     handleTileColorUpdate(evt: GridEvent): void {
@@ -500,21 +528,4 @@ export class Grid extends EventTarget {
             new GridEvent(GridEventType.UpdateTileColors, this, evt.tile),
         );
     }
-}
-
-function computeBBox(tiles: Iterable<Tile>) {
-    const bbox = {
-        minX: 0,
-        minY: 0,
-        maxX: 0,
-        maxY: 0,
-    };
-    for (const tile of tiles) {
-        const b = tile.bbox;
-        bbox.minX = bbox.minX < b.minX ? bbox.minX : b.minX;
-        bbox.minY = bbox.minY < b.minY ? bbox.minY : b.minY;
-        bbox.maxX = bbox.maxX > b.maxX ? bbox.maxX : b.maxX;
-        bbox.maxY = bbox.maxY > b.maxY ? bbox.maxY : b.maxY;
-    }
-    return bbox;
 }

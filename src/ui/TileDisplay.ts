@@ -1,13 +1,11 @@
 import type { Interactable } from "@interactjs/types";
 
-import { shrinkOutline } from "../utils.js";
-import { roundPathCorners } from "../lib/svg-rounded-corners.js";
-import { Tile } from "src/geom/Tile";
-import { DEBUG, PLACEHOLDER, SCALE } from "../settings.js";
-import { GridDisplay } from "./GridDisplay.js";
-import offsetPolygon from "../lib/offset-polygon.js";
-import { Polygon } from "src/geom/Polygon.js";
-import { Point } from "src/geom/math.js";
+import { roundPathCorners } from "../lib/svg-rounded-corners";
+import { Tile, TileType } from "src/geom/Tile";
+import { DEBUG, PLACEHOLDER, SCALE } from "../settings";
+import { GridDisplay } from "./GridDisplay";
+import offsetPolygon from "../lib/offset-polygon";
+import { Point } from "../geom/math";
 
 function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);
@@ -16,6 +14,11 @@ function polygonToPath(vertices: readonly Point[]): string {
     }
     return "M ".concat(points.join(" L ")).concat(" Z");
 }
+
+export type TileOnScreenMatch = {
+    moving: Tile;
+    fixed: Tile;
+};
 
 export class TileDisplay {
     tile: Tile;
@@ -133,7 +136,11 @@ export class TileDisplay {
         path = polygonToPath(outline);
         const roundPath = roundPathCorners(path, 0.08, false);
 
-        if (!this.tile.segments || this.tile.segments.length == 0) {
+        if (
+            this.tile.tileType == TileType.Placeholder ||
+            !this.tile.segments ||
+            this.tile.segments.length == 0
+        ) {
             // placeholder
             const outline = document.createElementNS(
                 "http://www.w3.org/2000/svg",

@@ -4,6 +4,7 @@ import { Tile } from "./Tile";
 import { Shape } from "./Shape";
 import { Polygon } from "./Polygon";
 import { GridEventType } from "./GridEvent";
+import { mergeBBox, weightedSumPoint } from "./math";
 
 const TRIANGLE = new Shape("triangle", [60, 60, 60]);
 
@@ -261,5 +262,45 @@ describe("Grid", () => {
 
         expect(addHandler).toHaveBeenCalledTimes(3);
         expect(removeHandler).toHaveBeenCalledTimes(1);
+    });
+
+    test("adds placeholders", () => {
+        const grid = new Grid();
+
+        grid.addPlaceholder(TRIANGLE, poly1);
+        expect(grid.placeholders.size).toBe(1);
+        expect(grid.bbox).toStrictEqual(poly1.bbox);
+
+        grid.addPlaceholder(TRIANGLE, poly2);
+        expect(grid.placeholders.size).toBe(2);
+        expect(grid.bbox).toStrictEqual(mergeBBox(poly1.bbox, poly2.bbox));
+
+        grid.addPlaceholder(TRIANGLE, poly3);
+        expect(grid.placeholders.size).toBe(3);
+    });
+
+    test("computes combined bbox", () => {
+        const grid = new Grid();
+
+        grid.addPlaceholder(TRIANGLE, poly1);
+        expect(grid.placeholders.size).toBe(1);
+        expect(grid.area).toBe(poly1.area);
+        expect(grid.bbox).toStrictEqual(poly1.bbox);
+        expect(grid.centroid).toStrictEqual(poly1.centroid);
+        expect(grid.bboxWithoutPlaceholders).toBeUndefined();
+
+        grid.addTile(TRIANGLE, poly2);
+        expect(grid.tiles.size).toBe(1);
+        expect(grid.placeholders.size).toBe(1);
+        expect(grid.area).toBe(poly1.area + poly2.area);
+        expect(grid.bbox).toStrictEqual(mergeBBox(poly1.bbox, poly2.bbox));
+        expect(grid.centroid).toStrictEqual(
+            weightedSumPoint(
+                poly1.centroid,
+                poly2.centroid,
+                poly1.area,
+                poly2.area,
+            ),
+        );
     });
 });

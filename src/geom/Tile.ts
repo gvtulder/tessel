@@ -12,6 +12,11 @@ export const enum TileColor {
     White = "white",
 }
 
+export const enum TileType {
+    Normal,
+    Placeholder,
+}
+
 class TileSegment {
     polygon: Polygon;
     color: TileColor;
@@ -23,23 +28,32 @@ class TileSegment {
 }
 
 export class Tile extends EventTarget {
+    tileType: TileType;
     vertices: GridVertex[];
     edges: GridEdge[];
     shape: Shape;
     polygon: Polygon;
     segments: TileSegment[];
-    centroid: Point;
+    area: number;
     bbox: BBox;
+    centroid: Point;
     data: unknown;
 
     private _colors: readonly TileColor[];
 
-    constructor(shape: Shape, polygon: Polygon, segments?: Polygon[]) {
+    constructor(
+        shape: Shape,
+        polygon: Polygon,
+        segments?: Polygon[],
+        tileType = TileType.Normal,
+    ) {
         super();
+        this.tileType = tileType;
         this.shape = shape;
         this.polygon = polygon;
-        this.centroid = polygon.centroid;
+        this.area = polygon.area;
         this.bbox = polygon.bbox;
+        this.centroid = polygon.centroid;
         if (segments) {
             this.segments = segments.map((s) => new TileSegment(s));
         }
@@ -70,5 +84,11 @@ export class Tile extends EventTarget {
         this.dispatchEvent(
             new GridEvent(GridEventType.UpdateTileColors, null, this),
         );
+    }
+}
+
+export class PlaceholderTile extends Tile {
+    constructor(shape: Shape, polygon: Polygon) {
+        super(shape, polygon, null, TileType.Placeholder);
     }
 }

@@ -80,7 +80,7 @@ function runGridDisplay() {
     const container = document.createElement("div");
     container.classList.add("container");
 
-    const grid = new Grid();
+    const grid = new Grid(SquaresAtlas);
     const gridDisplay = new GridDisplay(grid, container);
     container.appendChild(gridDisplay.element);
     document.body.appendChild(container);
@@ -138,6 +138,10 @@ function runGridDisplay() {
     controls.addButton(() => {
         if (addPlaceholder) addPlaceholder();
     }, "Add placeholder");
+
+    controls.addButton(() => {
+        grid.generatePlaceholders();
+    }, "Generate placeholders");
 }
 
 if (document.location.hash == "#grid") {

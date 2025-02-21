@@ -10,6 +10,7 @@ import {
     dist,
     edgeToAngle,
     mergeBBox,
+    mergeBBoxItems,
     midpoint,
     orientedArea as orientedArea,
     weightedSumPoint,
@@ -254,5 +255,41 @@ describe("mergeBBox", () => {
         expect(mergeBBox(a, b)).toStrictEqual(combined);
         expect(mergeBBox(b, a)).toStrictEqual(combined);
         expect(mergeBBox(a, combined)).toStrictEqual(combined);
+        expect(mergeBBox(a, null)).toStrictEqual(a);
+        expect(mergeBBox(null, b)).toStrictEqual(b);
+    });
+});
+
+describe("mergeBBoxItems", () => {
+    test("merges bounding boxes for multiple items", () => {
+        const a = {
+            bbox: {
+                minX: 3,
+                minY: 2,
+                maxX: 6,
+                maxY: 7,
+            },
+        };
+        const b = {
+            bbox: {
+                minX: -3,
+                minY: -2,
+                maxX: -6,
+                maxY: -7,
+            },
+        };
+        const combined = {
+            bbox: {
+                minX: -3,
+                minY: -2,
+                maxX: 6,
+                maxY: 7,
+            },
+        };
+        expect(mergeBBoxItems([a, b])).toStrictEqual(combined.bbox);
+        expect(mergeBBoxItems([b, a])).toStrictEqual(combined.bbox);
+        expect(mergeBBoxItems([a, combined])).toStrictEqual(combined.bbox);
+        expect(mergeBBoxItems([a])).toStrictEqual(a.bbox);
+        expect(mergeBBoxItems([])).toBeUndefined();
     });
 });

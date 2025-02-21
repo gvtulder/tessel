@@ -158,13 +158,33 @@ export function bbox(points: readonly Point[]): BBox {
 
 /**
  * Merges two bounding boxes.
- * @returns the combined bounding box
  */
 export function mergeBBox(a: BBox, b: BBox): BBox {
+    if (!a) return b;
+    if (!b) return a;
     return {
         minX: a.minX < b.minX ? a.minX : b.minX,
         minY: a.minY < b.minY ? a.minY : b.minY,
         maxX: a.maxX > b.maxX ? a.maxX : b.maxX,
         maxY: a.maxY > b.maxY ? a.maxY : b.maxY,
     };
+}
+
+/**
+ * Merges the bounding boxes for multiple items.
+ */
+export function mergeBBoxItems(items: Iterable<{ bbox: BBox }>) {
+    let bbox = undefined;
+    for (const item of items) {
+        if (bbox == undefined) {
+            bbox = { ...item.bbox };
+        } else {
+            const b = item.bbox;
+            bbox.minX = bbox.minX < b.minX ? bbox.minX : b.minX;
+            bbox.minY = bbox.minY < b.minY ? bbox.minY : b.minY;
+            bbox.maxX = bbox.maxX > b.maxX ? bbox.maxX : b.maxX;
+            bbox.maxY = bbox.maxY > b.maxY ? bbox.maxY : b.maxY;
+        }
+    }
+    return bbox;
 }

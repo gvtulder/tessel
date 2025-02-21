@@ -202,7 +202,7 @@ describe("Grid", () => {
         expect(grid.bbox).toBeUndefined();
         expect(grid.centroid).toBeUndefined();
 
-        grid.addTile(TRIANGLE, poly1);
+        const tile1 = grid.addTile(TRIANGLE, poly1);
 
         expect(grid.area).toBeCloseTo(poly1.area);
         expect(grid.bbox.minX).toBeCloseTo(poly1.bbox.minX);
@@ -212,7 +212,7 @@ describe("Grid", () => {
         expect(grid.centroid.x).toBeCloseTo(poly1.centroid.x);
         expect(grid.centroid.y).toBeCloseTo(poly1.centroid.y);
 
-        grid.addTile(TRIANGLE, poly2);
+        const tile2 = grid.addTile(TRIANGLE, poly2);
 
         expect(grid.area).toBeCloseTo(poly1.area + poly2.area);
         expect(grid.bbox.minX).toBeCloseTo(
@@ -234,6 +234,16 @@ describe("Grid", () => {
         expect(grid.centroid.y).toBeCloseTo(
             (poly1.area * poly1.centroid.y + poly2.area * poly2.centroid.y) /
                 (poly1.area + poly2.area),
+        );
+
+        grid.removeTile(tile1);
+
+        expect(grid.area).toBeCloseTo(poly2.area);
+        expect(grid.centroid.x).toBeCloseTo(
+            (poly2.area * poly2.centroid.x) / poly2.area,
+        );
+        expect(grid.centroid.y).toBeCloseTo(
+            (poly2.area * poly2.centroid.y) / poly2.area,
         );
     });
 

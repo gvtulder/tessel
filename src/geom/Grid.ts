@@ -389,7 +389,23 @@ export class Grid extends EventTarget {
             }
         }
 
+        // delete from grid
         this.tiles.delete(tile);
+
+        // update statistics
+        const oldArea = this.area;
+        this.area -= tile.polygon.area;
+        this.centroid = weightedSumPoint(
+            this.centroid,
+            tile.centroid,
+            oldArea,
+            -tile.polygon.area,
+            this.area,
+        );
+
+        // recompute bbox
+        this.bbox = computeBBox(this.tiles);
+
         this.dispatchEvent(new GridEvent(GridEventType.RemoveTile, this, tile));
     }
 
@@ -484,4 +500,21 @@ export class Grid extends EventTarget {
             new GridEvent(GridEventType.UpdateTileColors, this, evt.tile),
         );
     }
+}
+
+function computeBBox(tiles: Iterable<Tile>) {
+    const bbox = {
+        minX: 0,
+        minY: 0,
+        maxX: 0,
+        maxY: 0,
+    };
+    for (const tile of tiles) {
+        const b = tile.bbox;
+        bbox.minX = bbox.minX < b.minX ? bbox.minX : b.minX;
+        bbox.minY = bbox.minY < b.minY ? bbox.minY : b.minY;
+        bbox.maxX = bbox.maxX > b.maxX ? bbox.maxX : b.maxX;
+        bbox.maxY = bbox.maxY > b.maxY ? bbox.maxY : b.maxY;
+    }
+    return bbox;
 }

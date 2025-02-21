@@ -34,12 +34,6 @@ export class GridDisplay extends EventTarget {
 
     rescaleTimeout: number;
 
-    // TODO compute
-    contentMinXNoPlaceholders: number;
-    contentMinYNoPlaceholders: number;
-    contentMaxXNoPlaceholders: number;
-    contentMaxYNoPlaceholders: number;
-
     viewBoxMinX: number;
     viewBoxMinY: number;
     viewBoxWidth: number;
@@ -173,30 +167,6 @@ export class GridDisplay extends EventTarget {
 
     updateDimensions() {
         if (this.grid.tiles.size == 0) return;
-
-        /*
-        // compute the extent of the content
-        const tiles = [...this.grid.tiles.values()];
-        this.contentMinX = Math.min(...tiles.map((t) => t.left));
-        this.contentMinY = Math.min(...tiles.map((t) => t.top));
-        this.contentMaxX = Math.max(...tiles.map((t) => t.left + t.width));
-        this.contentMaxY = Math.max(...tiles.map((t) => t.top + t.height));
-
-        const noPlaceholders = this.grid.getTilesWithType(TileType.NormalTile);
-        this.contentMinXNoPlaceholders = Math.min(
-            ...noPlaceholders.map((t) => t.left),
-        );
-        this.contentMinYNoPlaceholders = Math.min(
-            ...noPlaceholders.map((t) => t.top),
-        );
-        this.contentMaxXNoPlaceholders = Math.max(
-            ...noPlaceholders.map((t) => t.left + t.width),
-        );
-        this.contentMaxYNoPlaceholders = Math.max(
-            ...noPlaceholders.map((t) => t.top + t.height),
-        );
-        */
-
         this.triggerRescale();
     }
 

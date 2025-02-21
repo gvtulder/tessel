@@ -75,6 +75,8 @@ function runGrid() {
 }
 
 function runGridDisplay() {
+    const controls = new Controls();
+
     const container = document.createElement("div");
     container.classList.add("container");
 
@@ -115,11 +117,27 @@ function runGridDisplay() {
         ];
     };
 
+    const addPlaceholder = () => {
+        const edge = [...grid.frontier][0];
+        const poly = shape.constructPolygonAB(
+            (edge.tileA ? edge.b : edge.a).point,
+            (edge.tileA ? edge.a : edge.b).point,
+            0,
+        );
+        const tile = grid.addPlaceholder(shape, poly);
+    };
+
     for (let i = 0; i < 5; i++) {
         addTile();
     }
 
-    grid.removeTile(tile);
+    controls.addButton(() => {
+        if (addTile) addTile();
+    }, "Add tile");
+
+    controls.addButton(() => {
+        if (addPlaceholder) addPlaceholder();
+    }, "Add placeholder");
 }
 
 if (document.location.hash == "#grid") {

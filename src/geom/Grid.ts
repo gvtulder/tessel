@@ -78,7 +78,7 @@ export class SortedCorners extends Array<GridVertexCorner> {
      * @param tile the tile
      * @param vertexIdx the vertex of the tile to connect to this vertex
      */
-    addTile(tile: Tile, vertexIdx: number) {
+    addTile(tile: Tile, vertexIdx: number): void {
         const startEdgeAngle = edgeToAngle(tile.polygon.edges[vertexIdx]);
         let i = 0;
         while (i < this.length && startEdgeAngle > this[i].edgeAngle) {
@@ -92,6 +92,20 @@ export class SortedCorners extends Array<GridVertexCorner> {
             shape: tile.shape,
             cornerType: tile.shape.cornerTypes[vertexIdx],
         });
+    }
+
+    /**
+     * Removes the tile from the list of corners.
+     * @param tile the tile to remove
+     */
+    removeTile(tile: Tile): void {
+        let index = 0;
+        while (index < this.length && this[index].tile !== tile) {
+            index++;
+        }
+        if (index < this.length) {
+            this.splice(index, 1);
+        }
     }
 
     get tiles(): Tile[] {
@@ -165,6 +179,14 @@ export class GridVertex {
      */
     addTile(tile: Tile, vertexIdx: number) {
         this.corners.addTile(tile, vertexIdx);
+    }
+
+    /**
+     * Removes the tile from this vertex.
+     * @param tile the tile to remove
+     */
+    removeTile(tile: Tile) {
+        this.corners.removeTile(tile);
     }
 }
 
@@ -245,6 +267,8 @@ export class Grid extends EventTarget {
      */
     frontier: Set<GridEdge>;
 
+    private tileBodies: Map<Tile, Body<Tile>>;
+
     /**
      * Creates a new grid.
      * @param atlas an atlas for checking tile patterns (optional)
@@ -254,6 +278,7 @@ export class Grid extends EventTarget {
 
         this.atlas = atlas;
         this.system = new CollisionSystem();
+        this.tileBodies = new Map<Tile, Body<Tile>>();
         this.vertices = new Map<VertexKey, GridVertex>();
         this.edges = new Map<EdgeKey, GridEdge>();
         this.tiles = new TileSet();
@@ -323,6 +348,16 @@ export class Grid extends EventTarget {
         const points = polygon.vertices;
         const n = points.length;
 
+        // check for collisions with placeholders
+        const placeholders = this.checkCollision(polygon, true, true);
+        if (placeholders) {
+            for (const placeholder of placeholders) {
+                if (placeholder instanceof PlaceholderTile) {
+                    this.removePlaceholder(placeholder);
+                }
+            }
+        }
+
         // add tile to grid
         this.tiles.add(tile);
         const collisionPolygon = this.system.createPolygon(
@@ -330,6 +365,7 @@ export class Grid extends EventTarget {
             polygon.vertices as Point[],
             { userData: tile },
         );
+        this.tileBodies.set(tile, collisionPolygon);
 
         // link to vertices
         const vertices = new Array<GridVertex>(n);
@@ -387,6 +423,14 @@ export class Grid extends EventTarget {
 
         const neighbors = tile.neighbors;
 
+        // remove tile from vertices
+        for (const vertex of tile.vertices) {
+            vertex.removeTile(tile);
+            if (vertex.corners.length == 0) {
+                this.vertices.delete(pointToKey(vertex.point));
+            }
+        }
+
         // remove tile from edges
         for (const edge of tile.edges) {
             if (edge.tileA === tile) edge.tileA = null;
@@ -410,10 +454,18 @@ export class Grid extends EventTarget {
 
         // delete from grid
         this.tiles.delete(tile);
+        this.system.remove(this.tileBodies.get(tile));
+        this.tileBodies.delete(tile);
 
         this.dispatchEvent(new GridEvent(GridEventType.RemoveTile, this, tile));
     }
 
+    /**
+     * Adds a placeholder tile to the grid.
+     * @param shape the shape of the tile
+     * @param polygon the polygon of the tile
+     * @returns the new tile
+     */
     addPlaceholder(shape: Shape, polygon: Polygon): PlaceholderTile {
         const placeholder = new PlaceholderTile(shape, polygon);
         const points = polygon.vertices;
@@ -426,6 +478,7 @@ export class Grid extends EventTarget {
             polygon.vertices as Point[],
             { userData: placeholder },
         );
+        this.tileBodies.set(placeholder, collisionPolygon);
 
         this.dispatchEvent(
             new GridEvent(GridEventType.AddTile, this, placeholder),
@@ -435,12 +488,29 @@ export class Grid extends EventTarget {
     }
 
     /**
+     * Removes a placeholder from the grid.
+     */
+    removePlaceholder(tile: PlaceholderTile): void {
+        if (!this.placeholders.has(tile)) return;
+        // delete from grid
+        this.placeholders.delete(tile);
+        this.system.remove(this.tileBodies.get(tile));
+        this.tileBodies.delete(tile);
+        this.dispatchEvent(new GridEvent(GridEventType.RemoveTile, this, tile));
+    }
+
+    /**
      * Checks if a tile would fit in the grid.
      * @param shape the shape of the new tile
      * @param polygon the polygon of the new tile
+     * @param includePlaceholders collide with identical placeholders
      * @returns true if the new tile would fit
      */
-    checkFit(shape: Shape, polygon: Polygon): boolean {
+    checkFit(
+        shape: Shape,
+        polygon: Polygon,
+        includePlaceholders?: boolean,
+    ): boolean {
         const tile = new Tile(shape, polygon);
         const points = polygon.vertices;
         const n = points.length;
@@ -487,7 +557,7 @@ export class Grid extends EventTarget {
             }
         }
 
-        if (this.checkCollision(polygon)) {
+        if (this.checkCollision(polygon, includePlaceholders)) {
             return false;
         }
 
@@ -497,9 +567,14 @@ export class Grid extends EventTarget {
     /**
      * Checks if the given polygon overlaps with any tiles on the grid.
      * @param polygon the polygon
-     * @returns true if the polygon overlaps
+     * @param includePlaceholders collide with identical placeholders
+     * @returns the overlapping tiles if the polygon overlaps, or null
      */
-    checkCollision(polygon: Polygon): boolean {
+    checkCollision(
+        polygon: Polygon,
+        includePlaceholders?: boolean,
+        findAll?: boolean,
+    ): Tile[] {
         const collisionPolygon = new CollisionPolygon(
             {},
             polygon.vertices as Point[],
@@ -514,36 +589,67 @@ export class Grid extends EventTarget {
             collisionPolygon.bbox.minY - collisionPolygon.padding;
         collisionPolygon.maxY =
             collisionPolygon.bbox.maxY - collisionPolygon.padding;
-        return this.system.checkOne(collisionPolygon, (resp) => {
+        const overlappingTiles = new Array<Tile>();
+        this.system.checkOne(collisionPolygon, (resp) => {
             if (resp.overlap < OVERLAP_EPS) return false;
-            if (
-                resp.a instanceof Tile &&
-                resp.a.tileType == TileType.Placeholder
-            )
-                return false;
-            if (
-                resp.b instanceof Tile &&
-                resp.b.tileType == TileType.Placeholder
-            )
-                return false;
-            return true;
-        });
-    }
-
-    generatePlaceholders(): void {
-        const newPlaceholders = new Array<TileSuggestion>();
-        for (const edge of this.frontier) {
-            for (const suggestion of this.computePossibilities(edge)) {
-                const p = this.addPlaceholder(
-                    suggestion.shape,
-                    suggestion.polygon,
-                );
-                newPlaceholders.push(p);
+            if (resp.b.userData instanceof PlaceholderTile) {
+                if (!includePlaceholders) return false;
+                if (resp.overlap < 1 - OVERLAP_EPS) return false;
             }
+            overlappingTiles.push(resp.b.userData);
+            return !findAll;
+        });
+        if (overlappingTiles.length > 0) {
+            return overlappingTiles;
+        } else {
+            return null;
         }
     }
 
-    computePossibilities(edge: GridEdge): TileSuggestion[] {
+    /**
+     * Creates placeholder tiles for all frontier edges,
+     * using the atlas to check for valid possibilities.
+     */
+    generatePlaceholders(): void {
+        const newPlaceholders = new Set<TileSuggestion>();
+        for (const edge of this.frontier) {
+            for (const suggestion of this.computePossibilities(edge)) {
+                const colliding = this.checkCollision(suggestion.polygon, true);
+                if (colliding && colliding[0] instanceof PlaceholderTile) {
+                    // this placeholder already exists
+                    newPlaceholders.add(colliding[0]);
+                } else {
+                    newPlaceholders.add(
+                        this.addPlaceholder(
+                            suggestion.shape,
+                            suggestion.polygon,
+                        ),
+                    );
+                }
+            }
+        }
+        const stale = new Array<PlaceholderTile>();
+        for (const placeholder of this.placeholders) {
+            if (!newPlaceholders.has(placeholder)) {
+                stale.push(placeholder);
+            }
+        }
+        for (const placeholder of stale) {
+            this.removePlaceholder(placeholder);
+        }
+    }
+
+    /**
+     * Generates a list of valid possible placeholders to place at the
+     * given edge. Uses the atlas to check for valid possibilities.
+     * @param edge the undirected edge to connect the placeholder to
+     * @param includePlaceholders if true, will avoid collisions with existing placeholders
+     * @returns a list of new placement possibilities
+     */
+    computePossibilities(
+        edge: GridEdge,
+        includePlaceholders?: boolean,
+    ): TileSuggestion[] {
         if (edge.tileA && edge.tileB) return [];
         const ab = !edge.tileA
             ? { a: edge.a.point, b: edge.b.point }

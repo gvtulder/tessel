@@ -45,7 +45,7 @@ describe("SortedCorners", () => {
             ],
             [tile3, tile2, tile1],
         ],
-    ])("can add tile", (input, output) => {
+    ])("can add and remove tiles", (input, output) => {
         const sortedCorners = new SortedCorners();
         expect(sortedCorners.length).toBe(0);
         sortedCorners.addTile(input[0][0] as Tile, input[0][1] as number);
@@ -57,6 +57,12 @@ describe("SortedCorners", () => {
         expect([...sortedCorners.map((c) => c.tile.centroid)]).toStrictEqual(
             output.map((c) => c.centroid),
         );
+        sortedCorners.removeTile(tile2);
+        expect(sortedCorners.length).toBe(2);
+        expect([...sortedCorners.map((c) => c.tile.centroid)]).toStrictEqual([
+            tile3.centroid,
+            tile1.centroid,
+        ]);
     });
 
     test("can get tiles", () => {
@@ -86,7 +92,7 @@ describe("GridVertex", () => {
         expect(vertex.tiles.length).toBe(0);
     });
 
-    test("can add a tile", () => {
+    test("can add and remove a tile", () => {
         const tile = new Tile(
             TRIANGLE,
             TRIANGLE.constructPolygonAB({ x: 0, y: 0 }, { x: 0, y: 1 }, 0),
@@ -96,6 +102,9 @@ describe("GridVertex", () => {
         vertex.addTile(tile, 1);
         expect(vertex.tiles).toStrictEqual([tile]);
         expect(vertex.corners[0].tile).toBe(tile);
+
+        vertex.removeTile(tile);
+        expect(vertex.tiles).toStrictEqual([]);
     });
 });
 
@@ -169,9 +178,14 @@ describe("Grid", () => {
         const t2 = grid.addTile(TRIANGLE, poly2);
         expect(grid.tiles.size).toBe(2);
         expect(grid.frontier.size).toBe(4);
+        expect(grid.vertices.size).toBe(4);
         grid.removeTile(t1);
         expect(grid.tiles.size).toBe(1);
         expect(grid.frontier.size).toBe(3);
+        expect(grid.vertices.size).toBe(3);
+        for (const vertex of grid.vertices.values()) {
+            expect(vertex.tiles.indexOf(t1)).toBe(-1);
+        }
         grid.removeTile(t2);
         grid.removeTile(t2);
         expect(grid.tiles.size).toBe(0);
@@ -265,7 +279,7 @@ describe("Grid", () => {
         expect(removeHandler).toHaveBeenCalledTimes(1);
     });
 
-    test("adds placeholders", () => {
+    test("adds and removes placeholders", () => {
         const grid = new Grid();
 
         grid.addPlaceholder(TRIANGLE, poly1);
@@ -276,8 +290,13 @@ describe("Grid", () => {
         expect(grid.placeholders.size).toBe(2);
         expect(grid.bbox).toStrictEqual(mergeBBox(poly1.bbox, poly2.bbox));
 
-        grid.addPlaceholder(TRIANGLE, poly3);
+        const p3 = grid.addPlaceholder(TRIANGLE, poly3);
         expect(grid.placeholders.size).toBe(3);
+
+        grid.removePlaceholder(p3);
+        expect(grid.placeholders.size).toBe(2);
+        grid.removePlaceholder(p3);
+        expect(grid.placeholders.size).toBe(2);
     });
 
     test("computes combined bbox", () => {
@@ -328,5 +347,38 @@ describe("Grid", () => {
             console.log(possibleTiles);
             expect(possibleTiles.length).toBe(1);
         }
+    });
+
+    test("can generate placeholders", () => {
+        const atlas = SquaresAtlas;
+        const shape = atlas.shapes[0];
+        const grid = new Grid(atlas);
+        const poly1 = shape.constructPolygonXYR(0, 0, 1);
+
+        // place initial tile
+        const tile1 = grid.addTile(shape, poly1);
+
+        // generate placeholders
+        grid.generatePlaceholders();
+        expect(grid.placeholders.size).toBe(4);
+
+        // add tile: placeholder should be removed
+        const placeholder = [...grid.placeholders][0];
+        grid.addTile(placeholder.shape, placeholder.polygon);
+        expect(grid.placeholders.size).toBe(3);
+        expect(grid.placeholders.has(placeholder)).toBe(false);
+
+        // generate placeholders to connect to new tile
+        grid.generatePlaceholders();
+        expect(grid.placeholders.size).toBe(6);
+
+        // repeating is a no-op
+        grid.generatePlaceholders();
+        expect(grid.placeholders.size).toBe(6);
+
+        // clean up placeholders
+        grid.removeTile(tile1);
+        grid.generatePlaceholders();
+        expect(grid.placeholders.size).toBe(4);
     });
 });

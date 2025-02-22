@@ -17,6 +17,20 @@ export const DEG2RAD = Math.PI / 180;
 export const RAD2DEG = 180 / Math.PI;
 
 /**
+ * Converts a list of angles from degrees to radians.
+ */
+export function deg2rad(angles: readonly number[]): number[] {
+    return angles.map((a) => a * DEG2RAD);
+}
+
+/**
+ * Converts a list of angles from radians to degrees.
+ */
+export function rad2deg(angles: readonly number[]): number[] {
+    return angles.map((a) => a * RAD2DEG);
+}
+
+/**
  * Computes the distance between two points.
  */
 export function dist(a: Point, b: Point): number {
@@ -188,4 +202,14 @@ export function mergeBBoxItems(items: Iterable<{ bbox: BBox }>) {
         }
     }
     return bbox;
+}
+
+/**
+ * Rounds the number with the given precision.
+ * @param x the number
+ * @param precision multiplication factor (e.g., 1000)
+ * @returns round(x * precision) / precision
+ */
+export function round(x: number, precision: number): number {
+    return Math.round(x * precision) / precision;
 }

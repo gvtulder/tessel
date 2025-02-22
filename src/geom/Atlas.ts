@@ -1,4 +1,5 @@
 import { CornerType, SortedCorners } from "./Grid";
+import { DEG2RAD, RAD2DEG } from "./math";
 import { Shape } from "./Shape";
 
 /**
@@ -139,6 +140,37 @@ export class Atlas {
             }
         }
         return false;
+    }
+
+    private _orientations: readonly number[];
+
+    /**
+     * Computes the full set of rotation angles for tiles
+     * in this atlas.
+     */
+    get orientations(): readonly number[] {
+        if (this._orientations) return this._orientations;
+        const angles = new Map<number, number>();
+        angles.set(0, 0);
+        let angleCount = 0;
+        while (angles.size < 100) {
+            for (const [startAngle, _] of angles.entries()) {
+                for (const shape of this.shapes) {
+                    let angle = startAngle;
+                    for (const a of shape.cornerAngles) {
+                        angle = Math.round(angle) % 360;
+                        if (!angles.has(angle)) {
+                            angles.set(angle, angle * DEG2RAD);
+                        }
+                        angle += a * RAD2DEG;
+                    }
+                }
+                if (angles.size > 100) break;
+            }
+            if (angleCount == angles.size) break;
+            angleCount = angles.size;
+        }
+        return (this._orientations = [...angles.values()].toSorted());
     }
 
     /**

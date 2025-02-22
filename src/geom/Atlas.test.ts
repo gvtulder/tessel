@@ -1,5 +1,10 @@
 import { describe, expect, test } from "@jest/globals";
-import { Atlas, AtlasDefinitionDoc } from "./Atlas";
+import { Atlas, AtlasDefinitionDoc, Penrose0Atlas } from "./Atlas";
+import { deg2rad, rad2deg } from "./math";
+
+function toFixed(xs: readonly number[], fractionDigits: number) {
+    return xs.map((x) => x.toFixed(fractionDigits));
+}
 
 describe("Atlas", () => {
     test("can be created from a definition", () => {
@@ -60,5 +65,34 @@ describe("Atlas", () => {
                 vertices: [],
             });
         }).toThrowError();
+    });
+
+    test("can compute rotation angles", () => {
+        const squares = Atlas.fromDefinition({
+            name: "Squares",
+            shapes: {
+                S: { name: "square", angles: [90, 90, 90, 90] },
+            },
+            vertices: [{ vertex: "S0-S0-S0-S0" }],
+        });
+        expect(toFixed(squares.orientations, 4)).toStrictEqual(
+            toFixed(deg2rad([0, 90, 180, 270]), 4),
+        );
+
+        const triangles = Atlas.fromDefinition({
+            name: "Triangles",
+            shapes: {
+                T: { name: "triangle", angles: [60, 60, 60] },
+            },
+            vertices: [{ vertex: "T0-T0-T0" }],
+        });
+        expect(toFixed(triangles.orientations, 4)).toStrictEqual(
+            toFixed(deg2rad([0, 60, 120, 180, 240, 300]), 4),
+        );
+
+        const penrose = Penrose0Atlas;
+        expect(rad2deg(penrose.orientations)).toStrictEqual([
+            0, 36, 72, 108, 144, 180, 216, 252, 288, 324,
+        ]);
     });
 });

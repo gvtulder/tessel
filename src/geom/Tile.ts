@@ -4,6 +4,7 @@ import { BBox, Point } from "./math";
 import { Polygon } from "./Polygon";
 import { Shape } from "./Shape";
 
+/*
 export const enum TileColor {
     Red = "red",
     Blue = "blue",
@@ -11,6 +12,10 @@ export const enum TileColor {
     Green = "green",
     White = "white",
 }
+*/
+
+export type TileColor = string;
+export type TileColors = TileColor[];
 
 export const enum TileType {
     Normal,

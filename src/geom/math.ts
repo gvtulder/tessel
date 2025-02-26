@@ -13,6 +13,8 @@ export type BBox = {
     readonly maxY: number;
 };
 
+export const TWOPI = 2 * Math.PI;
+
 export const DEG2RAD = Math.PI / 180;
 export const RAD2DEG = 180 / Math.PI;
 

@@ -74,4 +74,21 @@ describe("Polygon", () => {
             }
         },
     );
+
+    test("computes overlap", () => {
+        const poly = new Polygon(triangle);
+        expect(poly.overlapArea(poly)).toBe(poly.area);
+        const sq = new Polygon(square);
+        const tr = new Polygon(square.slice(0, 3));
+        expect(sq.overlapArea(sq)).toBe(sq.area);
+        expect(sq.overlapArea(tr)).toBe(tr.area);
+        expect(tr.overlapArea(sq)).toBe(tr.area);
+        expect(
+            sq.overlapArea([
+                { x: 2, y: 2 },
+                { x: 3, y: 2 },
+                { x: 2.5, y: 3 },
+            ]),
+        ).toBe(0);
+    });
 });

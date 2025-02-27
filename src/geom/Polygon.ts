@@ -138,22 +138,23 @@ export class Polygon {
         let minDist = -1;
         let bestOffset = null;
         for (let offset = 0; offset < points.length; offset++) {
-            let sumDist = 0;
+            let maxDist = 0;
             for (
                 let i = 0;
-                i < points.length && (minDist == -1 || sumDist < minDist);
+                i < points.length && (minDist == -1 || maxDist < minDist);
                 i++
             ) {
-                sumDist += dist(
+                const d = dist(
                     points[(i + offset) % points.length],
                     ourPoints[i],
                 );
+                maxDist = maxDist < d ? d : maxDist;
             }
-            if (minDist == -1 || sumDist < minDist) {
-                minDist = sumDist;
+            if (minDist == -1 || maxDist < minDist) {
+                minDist = maxDist;
                 bestOffset = offset;
             }
         }
-        return { offset: bestOffset, dist: minDist / points.length };
+        return { offset: bestOffset, dist: minDist };
     }
 }

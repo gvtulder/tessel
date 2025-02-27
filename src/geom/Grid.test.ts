@@ -5,7 +5,7 @@ import { Shape } from "./Shape";
 import { Polygon } from "./Polygon";
 import { GridEventType } from "./GridEvent";
 import { mergeBBox, weightedSumPoint } from "./math";
-import { SquaresAtlas } from "./Atlas";
+import { SquaresAtlas, TrianglesAtlas } from "./Atlas";
 
 const TRIANGLE = new Shape("triangle", [60, 60, 60]);
 
@@ -380,5 +380,26 @@ describe("Grid", () => {
         grid.removeTile(tile1);
         grid.generatePlaceholders();
         expect(grid.placeholders.size).toBe(4);
+    });
+
+    test("finds matching tiles", () => {
+        const atlas = TrianglesAtlas;
+        const grid = new Grid(atlas);
+
+        const tile1 = grid.addTile(TRIANGLE, poly1);
+        const tile2 = grid.addTile(TRIANGLE, poly2);
+
+        expect(grid.findMatchingTile(poly1.vertices, 0.2, true).tile).toBe(
+            tile1,
+        );
+        expect(grid.findMatchingTile(poly2.vertices, 0.2, true).tile).toBe(
+            tile2,
+        );
+        expect(grid.findMatchingTile(poly3.vertices, 0.2, true)).toBeNull();
+
+        grid.generatePlaceholders();
+
+        expect(grid.findMatchingTile(poly3.vertices, 0.2, false)).toBeNull();
+        expect(grid.findMatchingTile(poly3.vertices, 0.2, true)).toBeDefined();
     });
 });

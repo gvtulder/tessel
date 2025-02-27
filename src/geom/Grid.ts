@@ -11,10 +11,11 @@ import {
     edgeToAngle,
     mergeBBox,
     Point,
+    rotateArray,
     weightedSumPoint,
 } from "./math";
 import { Shape } from "./Shape";
-import { PlaceholderTile, Tile, TileType } from "./Tile";
+import { PlaceholderTile, Tile, TileColor, TileColors, TileType } from "./Tile";
 import { Polygon } from "./Polygon";
 import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
@@ -480,6 +481,7 @@ export class Grid extends EventTarget {
         );
         this.tileBodies.set(placeholder, collisionPolygon);
 
+        console.log("adding placeholder");
         this.dispatchEvent(
             new GridEvent(GridEventType.AddTile, this, placeholder),
         );
@@ -604,6 +606,61 @@ export class Grid extends EventTarget {
         } else {
             return null;
         }
+    }
+
+    matchColors(
+        movingTile: Tile,
+        fixedTile: Tile,
+        movingOffset: number,
+    ): TileColors {
+        const colors = rotateArray(movingTile.colors, movingOffset);
+        console.log("TODO matchColors", colors);
+        return colors;
+    }
+
+    /**
+     * Finds the best overlapping tile for the given polygon points.
+     * @param points the vertices of a polygon
+     * @param maxDist the maximum distance between matching points
+     * @param includePlaceholders set to true to match placeholder tiles
+     * @returns the best matching tile and offset, or null
+     */
+    findMatchingTile(
+        points: readonly Point[],
+        maxDist: number,
+        includePlaceholders?: boolean,
+    ): { tile: Tile; offset: number; dist: number } {
+        const collisionPolygon = new CollisionPolygon({}, points as Point[]);
+        // this normally happens on system.insert
+        collisionPolygon.bbox = collisionPolygon.getAABBAsBBox();
+        collisionPolygon.minX =
+            collisionPolygon.bbox.minX - collisionPolygon.padding;
+        collisionPolygon.maxX =
+            collisionPolygon.bbox.maxX - collisionPolygon.padding;
+        collisionPolygon.minY =
+            collisionPolygon.bbox.minY - collisionPolygon.padding;
+        collisionPolygon.maxY =
+            collisionPolygon.bbox.maxY - collisionPolygon.padding;
+        const bestCandidate = { tile: null as Tile, offset: 0, dist: 0 };
+        this.system.checkOne(collisionPolygon, (resp) => {
+            if (!includePlaceholders) {
+                if (resp.b.userData instanceof PlaceholderTile) return false;
+            }
+            const poly = (resp.b.userData as Tile).polygon;
+            const match = poly.matchPoints(points);
+            if (match === null) return false;
+            if (match.dist > maxDist) return false;
+            // const overlap = poly.overlapArea(points) / poly.area;
+            // if (overlap < minOverlap) return false;
+            if (!bestCandidate.tile || bestCandidate.dist > match.dist) {
+                bestCandidate.tile = resp.b.userData as Tile;
+                bestCandidate.dist = match.dist;
+                bestCandidate.offset = match.offset;
+            }
+            return false;
+        });
+        console.log("bestCandidate", bestCandidate);
+        return bestCandidate.tile ? bestCandidate : null;
     }
 
     /**

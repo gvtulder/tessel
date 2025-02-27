@@ -1,5 +1,5 @@
 import polygonClipping from "polygon-clipping";
-import { BBox, area, bbox, centroid, Edge, Point } from "./math";
+import { BBox, area, bbox, centroid, Edge, Point, dist } from "./math";
 
 /**
  * A polygon consists of a number vertices.
@@ -116,5 +116,44 @@ export class Polygon {
             sumArea += polyA;
         }
         return sumArea;
+    }
+
+    /**
+     * Find the best match between the two point series.
+     * Returns the smallest distance and the offset
+     * such that this.vertices[i] = points[i + offset].
+     */
+    matchPoints(points: readonly Point[] | Polygon): {
+        offset: number;
+        dist: number;
+    } {
+        if (points instanceof Polygon) {
+            points = points.vertices;
+        }
+        const ourPoints = this.vertices;
+        if (points.length != ourPoints.length) {
+            return null;
+        }
+        // attempt all starting points for a match
+        let minDist = -1;
+        let bestOffset = null;
+        for (let offset = 0; offset < points.length; offset++) {
+            let sumDist = 0;
+            for (
+                let i = 0;
+                i < points.length && (minDist == -1 || sumDist < minDist);
+                i++
+            ) {
+                sumDist += dist(
+                    points[(i + offset) % points.length],
+                    ourPoints[i],
+                );
+            }
+            if (minDist == -1 || sumDist < minDist) {
+                minDist = sumDist;
+                bestOffset = offset;
+            }
+        }
+        return { offset: bestOffset, dist: minDist / points.length };
     }
 }

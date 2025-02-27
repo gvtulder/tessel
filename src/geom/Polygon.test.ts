@@ -91,4 +91,30 @@ describe("Polygon", () => {
             ]),
         ).toBe(0);
     });
+
+    test.each([
+        [triangle, triangle, 0, 0],
+        [triangle, square, null, null],
+        [triangle, [triangle[2], triangle[0], triangle[1]], 1, 0],
+        [triangle, [triangle[1], triangle[2], triangle[0]], 2, 0],
+        [
+            triangle,
+            [
+                { x: 0.2, y: 0 },
+                { x: 1.2, y: -1 },
+                { x: 2.2, y: 1 },
+            ],
+            0,
+            0.2,
+        ],
+    ])("matches points", (a: Point[], b: Point[], offset: number, dist: 0) => {
+        const poly = new Polygon(a);
+        const m = poly.matchPoints(b);
+        if (offset === null) {
+            expect(m).toBeNull();
+        } else {
+            expect(m.dist).toBeCloseTo(dist);
+            expect(m.offset).toBe(offset);
+        }
+    });
 });

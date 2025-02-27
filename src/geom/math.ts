@@ -215,3 +215,16 @@ export function mergeBBoxItems(items: Iterable<{ bbox: BBox }>) {
 export function round(x: number, precision: number): number {
     return Math.round(x * precision) / precision;
 }
+
+/**
+ * Shifts the array elements.
+ * result[i + offset] = result[i]
+ */
+export function rotateArray<T>(arr: readonly T[], offset: number): T[] {
+    const n = arr.length;
+    const result = new Array<T>(n);
+    for (let i = 0; i < n; i++) {
+        result[i] = arr[(i + n + offset) % n];
+    }
+    return result;
+}

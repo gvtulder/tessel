@@ -13,6 +13,7 @@ import {
     mergeBBoxItems,
     midpoint,
     orientedArea as orientedArea,
+    rotateArray,
     weightedSumPoint,
 } from "./math";
 
@@ -295,5 +296,20 @@ describe("mergeBBoxItems", () => {
         expect(mergeBBoxItems([a, combined])).toStrictEqual(combined.bbox);
         expect(mergeBBoxItems([a])).toStrictEqual(a.bbox);
         expect(mergeBBoxItems([])).toBeUndefined();
+    });
+});
+
+describe("rotateArray", () => {
+    test.each([
+        [[0, 1, 2, 3], 0, [0, 1, 2, 3]],
+        [[0, 1, 2, 3], 1, [1, 2, 3, 0]],
+        [[0, 1, 2, 3], 2, [2, 3, 0, 1]],
+        [[0, 1, 2, 3], 3, [3, 0, 1, 2]],
+        [[0, 1, 2, 3], -3, [1, 2, 3, 0]],
+        [[0, 1, 2, 3], -2, [2, 3, 0, 1]],
+        [[0, 1, 2, 3], -1, [3, 0, 1, 2]],
+        [[], 0, []],
+    ])("rotates arrays", (input: [], offset: number, output: []) => {
+        expect(rotateArray(input, offset)).toStrictEqual(output);
     });
 });

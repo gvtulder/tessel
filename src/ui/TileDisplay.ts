@@ -5,7 +5,7 @@ import { Tile, TileType } from "src/geom/Tile";
 import { DEBUG, PLACEHOLDER, SCALE } from "../settings";
 import { GridDisplay } from "./GridDisplay";
 import offsetPolygon from "../lib/offset-polygon";
-import { Point } from "../geom/math";
+import { addPointToPolygon, dist, Point } from "../geom/math";
 
 function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);
@@ -75,15 +75,27 @@ export class TileDisplay {
         const segmentElements = (this.segmentElements =
             new Array<SVGPathElement>(segments.length));
         for (let i = 0; i < segments.length; i++) {
+            let poly = segments[i].polygon.vertices;
+            if (i < segments.length - 1) {
+                // overlap with next segment, which is drawn on top of this segment
+                poly = addPointToPolygon(
+                    poly,
+                    segments[(i + 1) % segments.length].polygon.centroid,
+                );
+            }
+            if (i == 0) {
+                // for the first segment, also overlap with the final segment
+                poly = addPointToPolygon(
+                    poly,
+                    segments[segments.length - 1].polygon.centroid,
+                );
+            }
             const polyElement = document.createElementNS(
                 "http://www.w3.org/2000/svg",
                 "path",
             );
             polyElement.setAttribute("fill", segments[i].color || PLACEHOLDER);
-            polyElement.setAttribute(
-                "d",
-                polygonToPath(segments[i].polygon.vertices),
-            );
+            polyElement.setAttribute("d", polygonToPath(poly));
             this.element.appendChild(polyElement);
             segmentElements[i] = polyElement;
         }

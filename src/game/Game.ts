@@ -1,12 +1,6 @@
 import { Grid } from "../geom/Grid";
-import { ScoredRegion, Scorer } from "../grid/Scorer";
-import {
-    Tile,
-    TileColors,
-    TileRotation,
-    TileShape,
-    TileType,
-} from "../geom/Tile";
+import { ScoredRegion, Scorer } from "./Scorer";
+import { Tile, TileColors } from "../geom/Tile";
 import { TileGenerator } from "./TileGenerator";
 import { FixedOrderTileStack, TileStack } from "./TileStack";
 import { Atlas } from "../geom/Atlas";
@@ -86,8 +80,6 @@ export class Game extends EventTarget {
     }
 
     placeTile(
-        sourceTile: Tile,
-        sourceRotation: TileRotation,
         movingTile: Tile,
         fixedTile: Tile,
         offset: number,
@@ -108,7 +100,6 @@ export class Game extends EventTarget {
             // remove from stack
             this.tileStack.take(indexOnStack);
 
-            return true;
             // compute scores
             this.computeScores(tile);
 

@@ -22,13 +22,40 @@ export const enum TileType {
     Placeholder,
 }
 
-class TileSegment {
+export class TileSegment {
+    tile: Tile;
+    index: number;
     polygon: Polygon;
     color: TileColor;
 
-    constructor(polygon: Polygon, color?: TileColor) {
+    constructor(
+        tile: Tile,
+        index: number,
+        polygon: Polygon,
+        color?: TileColor,
+    ) {
+        this.tile = tile;
+        this.index = index;
         this.polygon = polygon;
         this.color = color;
+    }
+
+    getNeighbors(includeMissing?: boolean): TileSegment[] {
+        const tile = this.tile;
+        const n = tile.segments.length;
+        const neighbors = [
+            tile.segments[(this.index + n - 1) % n],
+            tile.segments[(this.index + 1) % n],
+        ];
+        const edge = tile.edges[this.index];
+        if (edge.tileA == tile && edge.tileB && edge.tileB.segments) {
+            neighbors.push(edge.tileB.segments[edge.edgeIdxB]);
+        } else if (edge.tileB == tile && edge.tileA && edge.tileA.segments) {
+            neighbors.push(edge.tileA.segments[edge.edgeIdxA]);
+        } else if (includeMissing) {
+            neighbors.push(null);
+        }
+        return neighbors;
     }
 }
 
@@ -60,7 +87,7 @@ export class Tile extends EventTarget {
         this.bbox = polygon.bbox;
         this.centroid = polygon.centroid;
         if (segments) {
-            this.segments = segments.map((s) => new TileSegment(s));
+            this.segments = segments.map((s, i) => new TileSegment(this, i, s));
         }
     }
 

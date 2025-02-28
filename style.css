@@ -356,8 +356,8 @@ svg {
   opacity: 1;
 }
 .svg-scoreOverlay.enabled .scoreOverlay-outlineFG g {
-  stroke-dasharray: 6000 6000;
-  stroke-dashoffset: -6000;
+  stroke-dasharray: 60 60;
+  stroke-dashoffset: -60;
 
   animation-name: scoreOverlay-outlineFG-anim;
   animation-duration: 2s;
@@ -367,15 +367,15 @@ svg {
 }
 @keyframes scoreOverlay-outlineFG-anim {
   0% {
-    stroke-dashoffset: -6000;
+    stroke-dashoffset: -60;
   }
   100% {
-    stroke-dashoffset: -12000;
+    stroke-dashoffset: -120;
   }
 }
 .svg-scoreOverlay.hiding .scoreOverlay-outlineFG g {
-  stroke-dasharray: 6000 6000;
-  stroke-dasharray: -12000;
+  stroke-dasharray: 60 60;
+  stroke-dasharray: -120;
 
   animation-name: scoreOverlay-outlineFG-anim-reverse;
   animation-duration: 1s;
@@ -384,10 +384,10 @@ svg {
 }
 @keyframes scoreOverlay-outlineFG-anim-reverse {
   0% {
-    stroke-dashoffset: -12000;
+    stroke-dashoffset: -120;
   }
   100% {
-    stroke-dashoffset: -18000;
+    stroke-dashoffset: -180;
   }
 }
 .svg-scoreOverlay.enabled .points {
@@ -397,7 +397,7 @@ svg {
   opacity: 0;
 }
 .svg-scoreOverlay circle.points {
-  stroke-dasharray: 600 600;
+  stroke-dasharray: 6 6;
 }
 .svg-scoreOverlay.enabled circle.points {
   animation-delay: 500ms;
@@ -419,33 +419,33 @@ svg {
 @keyframes scoreOverlay-points-opacity-anim {
   0% {
     opacity: 0;
-    stroke-dashoffset: -600;
+    stroke-dashoffset: -6;
   }
   25% {
-    stroke-dashoffset: -600;
+    stroke-dashoffset: -6;
   }
   75% {
     opacity: 100;
   }
   100% {
     opacity: 100;
-    stroke-dashoffset: -1200;
+    stroke-dashoffset: -12;
   }
 }
 @keyframes scoreOverlay-points-opacity-anim-reverse {
   0% {
     opacity: 100;
-    stroke-dashoffset: -400;
+    stroke-dashoffset: -4;
   }
   25% {
     opacity: 100;
   }
   75% {
-    stroke-dashoffset: -600;
+    stroke-dashoffset: -6;
   }
   100% {
     opacity: 0;
-    stroke-dashoffset: -600;
+    stroke-dashoffset: -6;
   }
 }
 
@@ -461,22 +461,22 @@ svg {
   animation-duration: 300ms;
   animation-delay: 500ms;
   animation-fill-mode: forwards;
-  stroke-width: 10px;
+  stroke-width: 0.1px;
 }
 @keyframes scoreOverlay-stroke-width {
   0% {
-    stroke-width: 1px;
+    stroke-width: 0.01px;
   }
   100% {
-    stroke-width: 10px;
+    stroke-width: 0.1px;
   }
 }
 @keyframes scoreOverlay-stroke-width-reverse {
   0% {
-    stroke-width: 10px;
+    stroke-width: 0.1px;
   }
   100% {
-    stroke-width: 1px;
+    stroke-width: 0.01px;
   }
 }
 

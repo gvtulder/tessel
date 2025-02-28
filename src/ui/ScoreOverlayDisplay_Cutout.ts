@@ -1,7 +1,7 @@
-import { ScoredRegion } from "../grid/Scorer.js";
+import { ScoredRegion } from "../game/Scorer.js";
 import { roundPathCorners } from "../lib/svg-rounded-corners.js";
-import { BGCOLOR, SCALE } from "../settings.js";
-import { ScoreOverlayDisplay, Vertex, Color } from "./ScoreOverlayDisplay.js";
+import { BGCOLOR } from "../settings.js";
+import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay.js";
 import { dist, mean, midPoint } from "../utils.js";
 import { polylabel } from "../lib/polylabel.js";
 
@@ -73,10 +73,10 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             "rect",
         );
         shadow.setAttribute("mask", "url(#scoreOverlay-mask");
-        shadow.setAttribute("x", "-1000");
-        shadow.setAttribute("y", "-1000");
-        shadow.setAttribute("width", "2000");
-        shadow.setAttribute("height", "2000");
+        shadow.setAttribute("x", "-10");
+        shadow.setAttribute("y", "-10");
+        shadow.setAttribute("width", "20");
+        shadow.setAttribute("height", "20");
         shadow.setAttribute("fill", "black");
         this.element.appendChild(shadow);
 
@@ -92,10 +92,10 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             "http://www.w3.org/2000/svg",
             "g",
         );
-        shadowMaskG.setAttribute("filter", "drop-shadow(0px 0px 10px white)");
+        shadowMaskG.setAttribute("filter", "drop-shadow(0px 0px 0.1px white)");
         shadowMaskG.setAttribute("fill", "black");
         shadowMaskG.setAttribute("stroke", "black");
-        shadowMaskG.setAttribute("stroke-width", "10px");
+        shadowMaskG.setAttribute("stroke-width", "0.1px");
         shadowMask.append(shadowMaskG);
         this.shadowMask = shadowMaskG;
         this.shadowMaskGroup = new ReplacableGroup(shadowMaskG);
@@ -107,7 +107,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         );
         outlineBG.setAttribute("class", "scoreOverlay-outlineBG");
         outlineBG.setAttribute("stroke", BGCOLOR);
-        outlineBG.setAttribute("stroke-width", "10px");
+        outlineBG.setAttribute("stroke-width", "0.1px");
         outlineBG.setAttribute("fill", "transparent");
         this.element.append(outlineBG);
         this.outlineBG = outlineBG;
@@ -120,7 +120,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         );
         outlineFG.setAttribute("class", "scoreOverlay-outlineFG");
         outlineFG.setAttribute("stroke", Color.main);
-        outlineFG.setAttribute("stroke-width", "5px");
+        outlineFG.setAttribute("stroke-width", "0.05px");
         outlineFG.setAttribute("fill", "transparent");
         this.element.append(outlineFG);
         this.outlineFG = outlineFG;
@@ -150,13 +150,10 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             const boundary = outlineResult.boundary;
             const pathComponents = boundary
                 .reverse()
-                .map(
-                    (v) =>
-                        `${(v.x * SCALE).toFixed(5)},${(v.y * SCALE).toFixed(5)}`,
-                );
+                .map((v) => `${v.x.toFixed(5)},${v.y.toFixed(5)}`);
             const roundPathString = roundPathCorners(
                 "M " + pathComponents.join(" L ") + " Z",
-                10,
+                0.1,
                 false,
             );
 
@@ -173,7 +170,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             const polygon = [boundary.map((v) => [v.x, v.y])];
             const polylabelPoint = polylabel(
                 polygon as [number, number][][],
-                0.1,
+                0.01,
             );
 
             /*
@@ -229,7 +226,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             }
             */
 
-            const bestPoint = [polylabelPoint.x, polylabelPoint.y];
+            const bestPoint = polylabelPoint;
             const pointsScale = polylabelPoint.distance;
 
             // circle with scores
@@ -241,13 +238,13 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             circle.setAttribute("cx", "0"); // `${bestPoint[0] * SCALE}`);
             circle.setAttribute("cy", "0"); // `${bestPoint[1] * SCALE}`);
             // circle.setAttribute('r', shape.triangles.size < 3 ? '20' : '25');
-            circle.setAttribute("r", `${SCALE * 0.7}`);
+            circle.setAttribute("r", "0.7");
             circle.setAttribute("fill", Color.light);
             circle.setAttribute("stroke", Color.dark);
-            circle.setAttribute("stroke-width", "16");
+            circle.setAttribute("stroke-width", "0.16");
             circle.setAttribute(
                 "style",
-                `filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2)); transform: translate(${bestPoint[0] * SCALE}px, ${bestPoint[1] * SCALE}px) scale(${pointsScale});`,
+                `filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2)); transform: translate(${bestPoint.x}px, ${bestPoint.y}px) scale(${pointsScale});`,
             );
             points.push(circle);
 
@@ -261,10 +258,10 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             text.setAttribute("alignment-baseline", "middle");
             text.setAttribute("dominant-baseline", "middle");
             text.setAttribute("text-anchor", "middle");
-            text.setAttribute("font-size", "75");
+            text.setAttribute("font-size", "0.75");
             text.setAttribute(
                 "style",
-                `transform: translate(${bestPoint[0] * SCALE}px, ${bestPoint[1] * SCALE + 1}px) scale(${pointsScale});`,
+                `transform: translate(${bestPoint.x}px, ${bestPoint.y + 0.01}px) scale(${pointsScale});`,
             );
             text.appendChild(document.createTextNode(`${shape.points}`));
             points.push(text);

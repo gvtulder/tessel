@@ -15,6 +15,10 @@ export const DEBUG = {
     LOG_MOUSE_POSITION: false,
 };
 
+// TODO remove
+/**
+ * @deprecated
+ */
 export const SCALE = 100;
 
 export const O = DEBUG.OVERLAP ? 0.1 : 0.05;

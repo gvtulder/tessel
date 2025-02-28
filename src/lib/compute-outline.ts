@@ -1,9 +1,14 @@
-import { Triangle } from "../grid/Triangle.js";
+import { TileSegment } from "src/geom/Tile";
 
 export type Vertex = { id: string; x: number; y: number };
-export type Edge = { id: string; from: Vertex; to: Vertex; triangle: Triangle };
+export type Edge = {
+    id: string;
+    from: Vertex;
+    to: Vertex;
+    segment: TileSegment;
+};
 
-export function computeOutline(triangles: Set<Triangle>): {
+export function computeOutline(triangles: Set<TileSegment>): {
     boundary: Vertex[];
     edgesPerVertex: Map<string, Edge[]>;
 } {
@@ -13,15 +18,12 @@ export function computeOutline(triangles: Set<Triangle>): {
 
     for (const triangle of triangles.values()) {
         // rounding down to make the CoordIds unique
-        const verts: Vertex[] = triangle.points
-            .map((p) => {
-                p = [p[0] + triangle.left, p[1] + triangle.top];
-                return {
-                    id: `${Math.round(p[0] * 100)},${Math.round(p[1] * 100)}`,
-                    x: p[0],
-                    y: p[1],
-                };
-            })
+        const verts: Vertex[] = triangle.polygon.vertices
+            .map((p) => ({
+                id: `${Math.round(p.x * 100)},${Math.round(p.y * 100)}`,
+                x: p.x,
+                y: p.y,
+            }))
             .sort((a, b) => (a.x == b.x ? a.y - b.y : a.x - b.x));
 
         // consider each edge of the triangle
@@ -41,7 +43,7 @@ export function computeOutline(triangles: Set<Triangle>): {
                 id: `${from.id} ${to.id}`,
                 from: from,
                 to: to,
-                triangle: triangle,
+                segment: triangle,
             };
             if (!edges.has(edge.id)) {
                 edges.set(edge.id, []);

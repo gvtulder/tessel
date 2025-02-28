@@ -41,8 +41,6 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
             //          const targetTile = pair.fixed.tile;
             //          if (targetTile && targetTile.type === TileType.Placeholder) {
             return this.gameDisplay.game.placeTile(
-                source.tile,
-                source.rotation,
                 pair.moving,
                 pair.fixed,
                 pair.offset,

@@ -13,7 +13,7 @@ import {
     mergeBBox,
     mergeBBoxItems,
     midpoint,
-    orientedArea as orientedArea,
+    orientedArea,
     rotateArray,
     weightedSumPoint,
 } from "./math";

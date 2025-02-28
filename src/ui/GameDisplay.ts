@@ -78,7 +78,7 @@ export class GameDisplay extends EventTarget {
         this.tileDragController = tileDragController;
 
         this.tileStackDisplay = new TileStackDisplay(
-            this.game.pattern,
+            this.game.settings.atlas,
             this.game.tileStack,
             tileDragController,
         );

@@ -394,4 +394,14 @@ describe("Grid", () => {
         expect(grid.findMatchingTile(poly3.vertices, 0.2, false)).toBeNull();
         expect(grid.findMatchingTile(poly3.vertices, 0.2, true)).toBeDefined();
     });
+
+    test("checks tile colors", () => {
+        const atlas = TrianglesAtlas;
+        const grid = new Grid(atlas);
+        const tile1 = grid.addTile(TRIANGLE, poly1, poly1.segment());
+        const tile2 = grid.addPlaceholder(TRIANGLE, poly2);
+        tile1.colors = ["red", "white", "blue"];
+        expect(grid.checkColors(tile2, ["red", "white", "blue"])).toBe(true);
+        expect(grid.checkColors(tile2, ["white", "red", "blue"])).toBe(false);
+    });
 });

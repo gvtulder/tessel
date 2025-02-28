@@ -1,7 +1,7 @@
-import { Game, GameSettings } from "../game/Game.js";
-import { GameDisplay } from "./GameDisplay.js";
-import { MainMenuDisplay, MenuEvent } from "./MainMenuDisplay.js";
-import * as SaveGames from "../saveGames.js";
+import { Game, GameSettings } from "../game/Game";
+import { GameDisplay } from "./GameDisplay";
+import { MainMenuDisplay, MenuEvent } from "./MainMenuDisplay";
+import * as SaveGames from "../saveGames";
 
 export class GameController {
     container: HTMLElement;

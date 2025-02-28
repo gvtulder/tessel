@@ -1,17 +1,16 @@
 import type { Interactable, DragEvent } from "@interactjs/types";
 
-import { TriangleOnScreenMatch } from "./TileDisplay.js";
-import { Tile, TileRotation, TileType } from "../grid/Tile.js";
-import { GameController } from "./GameController.js";
-import { Coord, Triangle } from "../grid/Triangle.js";
-import { DEBUG } from "../settings.js";
-import { dist } from "../utils.js";
-import { Grid } from "../grid/Grid.js";
+import { TileOnScreenMatch } from "./TileDisplay";
+import { Tile, TileType } from "../geom/Tile";
+import { GameController } from "./GameController";
+import { DEBUG } from "../settings";
+import { dist } from "../utils";
+import { Grid } from "../geom/Grid";
 import {
     TileDragController,
     TileDragSourceContext,
-} from "./TileDragController.js";
-import { MainGridDisplay } from "./MainGridDisplay.js";
+} from "./TileDragController";
+import { MainGridDisplay } from "./MainGridDisplay";
 
 export class MainGridTileDragController extends TileDragController {
     dropTarget: MainGridDisplay;
@@ -25,6 +24,8 @@ export class MainGridTileDragController extends TileDragController {
     onDragStart(context: TileDragSourceContext, evt: DragEvent) {
         super.onDragStart(context, evt);
 
+        // TODO implement autorotate
+        /*
         // precompute the placeholder tiles where this tile would fit
         if (this.autorotate || this.hints || this.snap) {
             context.autorotateCache.clear();
@@ -51,11 +52,14 @@ export class MainGridTileDragController extends TileDragController {
             }
             console.log(context.autorotateCache);
         }
+        */
     }
 
     onDragMove(context: TileDragSourceContext, evt: DragEvent) {
         super.onDragMove(context, evt);
 
+        // implement autorotate
+        /*
         if (this.autorotate) {
             // figure out where we are
             const movingTriangle = context.source.tile.triangles[0];
@@ -128,19 +132,20 @@ export class MainGridTileDragController extends TileDragController {
             }
             // console.log('MOVE', 'closestPair', closestPair);
         }
+        */
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {
-        const succesful = super.onDragEnd(context, evt);
+        const successful = super.onDragEnd(context, evt);
 
         // reset
         context.autorotateCache.clear();
-        context.source.resetAutorotate(succesful);
+        context.source.resetAutorotate(successful);
 
         for (const tsd of this.dropTarget.tileDisplays.values()) {
             tsd.removeHighlightHint();
         }
 
-        return succesful;
+        return successful;
     }
 }

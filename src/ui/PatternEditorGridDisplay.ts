@@ -10,7 +10,7 @@ import { shuffle } from "../utils.js";
 import { GameDisplay } from "./GameDisplay.js";
 import { Coord, CoordId, Triangle } from "../grid/Triangle.js";
 import { TileDragSource, TileDropTarget } from "./TileDragController.js";
-import { TileDisplay, TriangleOnScreenMatch } from "./TileDisplay.js";
+import { TileDisplay, TileOnScreenMatch } from "./TileDisplay.js";
 import { PatternEditorDisplay } from "./PatternEditorDisplay.js";
 import { TriangleDisplay } from "./TriangleDisplay.js";
 
@@ -70,7 +70,7 @@ export class PatternEditorGridDisplay
         this.fillBackgroundPattern();
     }
 
-    dropTile(source: TileDragSource, pair: TriangleOnScreenMatch): boolean {
+    dropTile(source: TileDragSource, pair: TileOnScreenMatch): boolean {
         return this.patternEditorDisplay.dropTile(source, pair);
     }
 

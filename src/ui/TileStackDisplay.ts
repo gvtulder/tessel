@@ -1,29 +1,29 @@
 import type { Interactable, DragEvent } from "@interactjs/types";
 import interact from "interactjs";
 
-import { Grid } from "../grid/Grid.js";
-import { FixedOrderTileStack } from "../game/TileStack.js";
-import { Tile, TileRotation, TileShape, TileType } from "../grid/Tile.js";
-import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
-import { TileDragController, TileDragSource } from "./TileDragController.js";
-import { Pattern } from "../grid/Pattern.js";
-import { MainGridTileDragController } from "./MainGridTileDragController.js";
+import { Grid } from "../geom/Grid";
+import { FixedOrderTileStack } from "../game/TileStack";
+import { Tile, TileType } from "../geom/Tile";
+import { GridDisplay, TileStackGridDisplay } from "./GridDisplay";
+import { TileDragController, TileDragSource } from "./TileDragController";
+import { MainGridTileDragController } from "./MainGridTileDragController";
+import { Atlas } from "../geom/Atlas";
+import { RAD2DEG, TWOPI } from "../geom/math";
 
 export abstract class BaseTileStackDisplay extends EventTarget {
     static events = {
         TapTile: "taptile",
     };
 
-    pattern: Pattern;
+    atlas: Atlas;
     tileDragController: TileDragController;
 
     tileDisplays: SingleTileOnStackDisplay[];
     element: HTMLDivElement;
 
-    constructor(pattern: Pattern, tileDragController: TileDragController) {
+    constructor(atlas: Atlas, tileDragController: TileDragController) {
         super();
-
-        this.pattern = pattern;
+        this.atlas = atlas;
         this.tileDragController = tileDragController;
         this.tileDisplays = [];
         this.build();
@@ -61,11 +61,11 @@ export class TileStackDisplay extends BaseTileStackDisplay {
     counter: HTMLElement;
 
     constructor(
-        pattern: Pattern,
+        atlas: Atlas,
         tileStack: FixedOrderTileStack,
         tileDragController: TileDragController,
     ) {
-        super(pattern, tileDragController);
+        super(atlas, tileDragController);
 
         this.tileStack = tileStack;
 
@@ -86,7 +86,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
                 const tileDisplay = new SingleTileOnStackDisplay(
                     this,
                     i,
-                    this.pattern,
+                    this.atlas,
                     true,
                 );
                 this.element.insertBefore(tileDisplay.element, this.counterDiv);
@@ -155,7 +155,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     constructor(
         tileStackDisplay: BaseTileStackDisplay,
         indexOnStack: number,
-        pattern: Pattern,
+        atlas: Atlas,
         makeRotatable: boolean,
     ) {
         this.rotationIdx = 0;
@@ -164,15 +164,12 @@ export class SingleTileOnStackDisplay implements TileDragSource {
 
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
-        this.grid = new Grid(pattern.triangleType, pattern);
-        this.tile = this.grid.pattern.constructTile(
-            this.grid,
-            0,
-            0,
-            0,
-            TileType.TileOnStack,
-        );
-        this.grid.addTile(this.tile);
+        this.grid = new Grid(atlas);
+        if (atlas.shapes.length > 1)
+            throw new Error("atlas with more than one shape not implemented");
+        const shape = atlas.shapes[0];
+        const poly = shape.constructPolygonXYR(0, 0, 1);
+        this.tile = this.grid.addTile(shape, poly, poly.segment());
 
         this.element = document.createElement("div");
         this.element.className = "tileOnStack";
@@ -230,7 +227,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     get rotation(): TileRotation {
-        return this.tile.rotations[this.rotationIdx];
+        return this.grid.atlas.orientations[this.rotationIdx];
     }
 
     rotateTile() {
@@ -238,24 +235,26 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     rotateTileTo(newRotation: number, reverse?: boolean, closest?: boolean) {
-        const angles = this.tile.rotations.map((r) => r.angle);
+        const angles = this.grid.atlas.orientations;
         const oldAngle = angles[this.rotationIdx];
         this.rotationIdx = newRotation % angles.length;
-        const reverseDiff = (360 + oldAngle - angles[this.rotationIdx]) % 360;
-        const forwardDiff = (360 + angles[this.rotationIdx] - oldAngle) % 360;
+        const reverseDiff =
+            (TWOPI + oldAngle - angles[this.rotationIdx]) % TWOPI;
+        const forwardDiff =
+            (TWOPI + angles[this.rotationIdx] - oldAngle) % TWOPI;
         if (reverse || (closest && reverseDiff < forwardDiff)) {
             this.angle -= reverseDiff;
         } else {
             this.angle += forwardDiff;
         }
-        this.rotatable.style.transform = `rotate(${this.angle}deg)`;
+        this.rotatable.style.transform = `rotate(${this.angle * RAD2DEG}deg)`;
         this.rotatable.classList.add("animated");
     }
 
     normalizeRotation() {
-        if ((360 + this.angle) % 360 != this.angle) {
-            this.angle = (360 + this.angle) % 360;
-            this.rotatable.style.transform = `rotate(${this.angle}deg)`;
+        if ((TWOPI + this.angle) % TWOPI != this.angle) {
+            this.angle = (TWOPI + this.angle) % TWOPI;
+            this.rotatable.style.transform = `rotate(${this.angle * RAD2DEG}deg)`;
         }
     }
 

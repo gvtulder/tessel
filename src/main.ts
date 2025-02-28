@@ -1,17 +1,17 @@
-import { Game } from "./game/Game.js";
-import { FixedOrderTileStack, TileStack } from "./game/TileStack.js";
-import { EditablePattern } from "./grid/EditablePattern.js";
-import { Grid } from "./grid/Grid.js";
-import { Pattern } from "./grid/Pattern.js";
-import { Tile } from "./grid/Tile.js";
-import disableIosZoom from "./lib/disable-ios-zoom.js";
-import * as SaveGames from "./saveGames.js";
-import { DEBUG } from "./settings.js";
-import { EditorDisplay } from "./ui/EditorDisplay.js";
-import { GameController } from "./ui/GameController.js";
-import { GameDisplay } from "./ui/GameDisplay.js";
-import { MainGridDisplay } from "./ui/MainGridDisplay.js";
-import { TileStackDisplay } from "./ui/TileStackDisplay.js";
+import { Game } from "./game/Game";
+import { FixedOrderTileStack, TileStack } from "./game/TileStack";
+import { EditablePattern } from "./grid/EditablePattern";
+import { Grid } from "./grid/Grid";
+import { Pattern } from "./grid/Pattern";
+import { Tile } from "./grid/Tile";
+import disableIosZoom from "./lib/disable-ios-zoom";
+import * as SaveGames from "./saveGames";
+import { DEBUG } from "./settings";
+import { EditorDisplay } from "./ui/EditorDisplay";
+import { GameController } from "./ui/GameController";
+import { GameDisplay } from "./ui/GameDisplay";
+import { MainGridDisplay } from "./ui/MainGridDisplay";
+import { TileStackDisplay } from "./ui/TileStackDisplay";
 
 declare const VERSION: string;
 
@@ -46,3 +46,5 @@ export function startMainMenu() {
 
     document.getElementById("version").innerHTML = `${VERSION}`;
 }
+
+startMainMenu();

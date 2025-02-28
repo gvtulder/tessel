@@ -78,6 +78,10 @@ export class GridDisplay extends EventTarget {
             this.addTile(tile);
         }
 
+        for (const tile of this.grid.placeholders) {
+            this.addTile(tile);
+        }
+
         this.styleMainElement();
     }
 
@@ -171,40 +175,54 @@ export class GridDisplay extends EventTarget {
     }
 
     /**
-     * Returns the screen coordinates of the triangle center.
-     * @param triangle the triangle
-     * @returns the pixel coordinates
+     * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      */
-    /*
-    triangleToScreenPosition(triangle: Triangle): Coord {
-        const triangleCenter = triangle.center;
-        return this.coordinateMapper.gridToScreen([
-            triangle.left + triangleCenter[0],
-            triangle.top + triangleCenter[1],
-        ]);
+    gridToScreenPosition(gridPos: Point): Point {
+        return this.coordinateMapper.gridToScreen(gridPos);
     }
-    */
 
     /**
      * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
-     * @param clientPos the client position
-     * @returns the coordinates in the SVG grid space
      */
-    screenPositionToGridPosition(clientPos: Point): Point {
+    gridToScreenPositions(gridPos: readonly Point[]): Point[] {
+        const clientPos = new Array<Point>(gridPos.length);
+        for (let i = 0; i < clientPos.length; i++) {
+            clientPos[i] = this.coordinateMapper.gridToScreen(gridPos[i]);
+        }
+        return clientPos;
+    }
+
+    /**
+     * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
+     */
+    screenToGridPosition(clientPos: Point): Point {
         return this.coordinateMapper.screenToGrid(clientPos);
     }
 
     /**
-     * Maps the client position (from getBoundingClient rect) to a triangle.
-     * @param clientPos the client position
-     * @returns the triangle coordinates
+     * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      */
-    /*
-    screenPositionToTriangleCoord(clientPos: Coord): Coord {
-        const gridCoord = this.coordinateMapper.screenToGrid(clientPos);
-        return this.grid.gridPositionToTriangleCoord(gridCoord);
+    screenToGridPositions(clientPos: readonly Point[]): Point[] {
+        const gridPos = new Array<Point>(clientPos.length);
+        for (let i = 0; i < gridPos.length; i++) {
+            gridPos[i] = this.coordinateMapper.screenToGrid(clientPos[i]);
+        }
+        return gridPos;
     }
-    */
+    /**
+     * Finds the best overlapping tile for the given polygon points.
+     * @param points the vertices of a polygon
+     * @param minOverlap the minimal overlap proportion
+     * @param includePlaceholders set to true to match placeholder tiles
+     * @returns the best matching tile and offset, or null
+     */
+    findMatchingTile(
+        points: readonly Point[],
+        minOverlap: number,
+        includePlaceholders?: boolean,
+    ): { tile: Tile; offset: number; dist: number } {
+        return this.grid.findMatchingTile(points, minOverlap, true);
+    }
 
     styleMainElement() {
         return;
@@ -491,8 +509,8 @@ class CoordinateMapper {
     screenToGrid(screenPos: Point): Point {
         const coeff = this.coeff;
         const s = coeff.dydx * coeff.dxdy - coeff.dxdx * coeff.dydy;
-        const x = (screenPos[0] - coeff.x0) / s;
-        const y = (screenPos[1] - coeff.y0) / s;
+        const x = (screenPos.x - coeff.x0) / s;
+        const y = (screenPos.y - coeff.y0) / s;
         return {
             x: -x * coeff.dydy + y * coeff.dxdy,
             y: x * coeff.dydx - y * coeff.dxdx,

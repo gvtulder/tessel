@@ -18,7 +18,7 @@ import { EditableTile, COLORS } from "../grid/EditableTile.js";
 import { GridDisplay } from "./GridDisplay.js";
 import { PatternEditorGridDisplay } from "./PatternEditorGridDisplay.js";
 import { TileDragSource } from "./TileDragController.js";
-import { TriangleOnScreenMatch } from "./TileDisplay.js";
+import { TileOnScreenMatch } from "./TileDisplay.js";
 import { EditablePattern } from "../grid/EditablePattern.js";
 
 export class PatternEditorDisplay extends EventTarget {
@@ -70,7 +70,7 @@ export class PatternEditorDisplay extends EventTarget {
         this.gridDisplay.rescale();
     }
 
-    dropTile(source: TileDragSource, pair: TriangleOnScreenMatch): boolean {
+    dropTile(source: TileDragSource, pair: TileOnScreenMatch): boolean {
         console.log("dropped", pair);
 
         const map = source.tile.mapShape(

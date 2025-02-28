@@ -1,12 +1,11 @@
 import type { Interactable } from "@interactjs/types";
 import interact from "interactjs";
 
-import { GameSettings } from "../game/Game.js";
-import { Grid } from "../grid/Grid.js";
-import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay.js";
-import * as SaveGames from "../saveGames.js";
-import { Pattern } from "../grid/Pattern.js";
-import { TileType } from "../grid/Tile.js";
+import { GameSettings } from "../game/Game";
+import { Grid } from "../geom/Grid";
+import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay";
+import * as SaveGames from "../saveGames";
+import { TileType } from "../geom/Tile";
 
 export class MenuEvent extends Event {
     gameSettings: GameSettings;
@@ -42,26 +41,18 @@ export class MainMenuDisplay extends EventTarget {
         this.gridDisplays = [];
         this.interactables = [];
 
-        for (const saveGameId of ["triangle", "square", "isometric", "hex"]) {
+        for (const saveGameId of SaveGames.defaultGameList) {
             const gameSettings = SaveGames.lookup.get(saveGameId);
             const exampleTile = document.createElement("div");
             exampleTile.className = "gameList-exampleTile";
             gameList.appendChild(exampleTile);
 
-            const pattern = new Pattern(
-                gameSettings.triangleType,
-                gameSettings.pattern.shapes,
-            );
-            const grid = new Grid(gameSettings.triangleType, pattern);
-            const tile = pattern.constructTile(
-                grid,
-                0,
-                0,
-                0,
-                TileType.MenuExampleTile,
-            );
-            grid.addTile(tile);
+            const grid = new Grid(gameSettings.atlas);
+            const shape = grid.atlas.shapes[0];
+            const poly = shape.constructPolygonXYR(0, 0, 1);
+            const tile = grid.addTile(shape, poly, poly.segment());
             tile.colors = gameSettings.initialTile;
+
             this.grids.push(grid);
 
             const gridDisplay = new MainMenuGridDisplay(grid, exampleTile);

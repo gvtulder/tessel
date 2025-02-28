@@ -1,23 +1,21 @@
-import { Grid } from "../grid/Grid.js";
-import { ScoredRegion, Scorer } from "../grid/Scorer.js";
-import { Tile, TileRotation, TileShape, TileType } from "../grid/Tile.js";
-import { TileColors, Triangle, TriangleType } from "../grid/Triangle.js";
-import { TileGenerator } from "./TileGenerator.js";
-import { FixedOrderTileStack, TileStack } from "./TileStack.js";
-import { Pattern } from "../grid/Pattern.js";
+import { Grid } from "../geom/Grid";
+import { ScoredRegion, Scorer } from "../grid/Scorer";
+import {
+    Tile,
+    TileColors,
+    TileRotation,
+    TileShape,
+    TileType,
+} from "../geom/Tile";
+import { TileGenerator } from "./TileGenerator";
+import { FixedOrderTileStack, TileStack } from "./TileStack";
+import { Atlas } from "../geom/Atlas";
+import { rotateArray } from "../geom/math";
 
 export type GameSettings = {
-    triangleType: TriangleType;
-    pattern: {
-        shapes: TileShape[];
-    };
+    atlas: Atlas;
     tilesShownOnStack: number;
-    initialTile?: TileColors;
-    initialTiles?: {
-        colors: TileColors;
-        x: number;
-        y: number;
-    }[];
+    initialTile: TileColors;
     tileGenerator: TileGenerator[];
 };
 
@@ -35,7 +33,6 @@ export class GameEvent extends Event {
 export class Game extends EventTarget {
     settings: GameSettings;
 
-    pattern: Pattern;
     grid: Grid;
     tileStack: FixedOrderTileStack;
 
@@ -54,16 +51,16 @@ export class Game extends EventTarget {
     setup() {
         this.points = 0;
 
-        this.pattern = new Pattern(
-            this.settings.triangleType,
-            this.settings.pattern.shapes,
-        );
-        this.grid = new Grid(this.settings.triangleType, this.pattern);
+        this.grid = new Grid(this.settings.atlas);
+
+        if (this.settings.atlas.shapes.length > 1) {
+            throw new Error("multi-shape atlas not implemented");
+        }
 
         // generate tiles
         let tiles: TileColors[] = [];
         for (const tileGenerator of this.settings.tileGenerator) {
-            tiles = tileGenerator(tiles, this.pattern);
+            tiles = tileGenerator(tiles, this.settings.atlas.shapes[0]);
         }
 
         // construct the tile stack
@@ -73,33 +70,14 @@ export class Game extends EventTarget {
             this.settings.tilesShownOnStack,
         );
 
-        const initialTiles: GameSettings["initialTiles"] = [];
-        if (this.settings.initialTile) {
-            initialTiles.push({
-                x: 0,
-                y: 0,
-                colors: this.settings.initialTile,
-            });
-        }
-        if (this.settings.initialTiles) {
-            initialTiles.push(...this.settings.initialTiles);
-        }
+        const initialTileColors = this.settings.initialTile;
+        const shape = this.grid.atlas.shapes[0];
+        const poly = shape.constructPolygonXYR(0, 0, 1);
+        const tile = this.grid.addTile(shape, poly, poly.segment());
+        tile.colors = initialTileColors;
+        this.tileStack.removeColors(tile.colors);
 
-        for (const t of initialTiles) {
-            // TODO only works for the first initial tile
-            const tile = this.pattern.constructTile(
-                this.grid,
-                0,
-                0,
-                0,
-                TileType.NormalTile,
-            );
-            this.grid.addTile(tile);
-            tile.colors = t.colors;
-            this.tileStack.removeColors(t.colors);
-        }
-
-        this.grid.updateFrontier();
+        this.grid.generatePlaceholders();
     }
 
     finish() {
@@ -110,43 +88,27 @@ export class Game extends EventTarget {
     placeTile(
         sourceTile: Tile,
         sourceRotation: TileRotation,
-        sourceTriangle: Triangle,
-        targetTriangle: Triangle,
+        movingTile: Tile,
+        fixedTile: Tile,
+        offset: number,
         indexOnStack: number,
     ) {
-        // attempt to map triangles and check fit
-        const map = this.grid.mapShapeCheckFit(
-            sourceTile,
-            sourceRotation,
-            sourceTriangle,
-            targetTriangle,
-        );
-        if (map) {
-            // everything OK
-            const targetTriangles: Triangle[][] = [];
-            for (const triangle of sourceTile.triangles) {
-                const targetTriangle = map.get(triangle);
-                targetTriangle.colorGroup = triangle.colorGroup;
-                if (!targetTriangles[triangle.colorGroup]) {
-                    targetTriangles[triangle.colorGroup] = [];
-                }
-                if (targetTriangle.tile) {
-                    this.grid.removeTile(targetTriangle.tile);
-                }
-                targetTriangles[triangle.colorGroup].push(targetTriangle);
-            }
-            const tile = new Tile(
-                this.grid,
-                TileType.NormalTile,
-                targetTriangles,
+        const colors = rotateArray(movingTile.colors, offset);
+        const matchColors = this.grid.checkColors(fixedTile, colors);
+        if (matchColors) {
+            const tile = this.grid.addTile(
+                fixedTile.shape,
+                fixedTile.polygon,
+                fixedTile.polygon.segment(),
             );
-            tile.colors = sourceTile.colors;
-            this.grid.addTile(tile);
-            this.grid.updateFrontier();
+            tile.colors = colors;
+
+            this.grid.generatePlaceholders();
 
             // remove from stack
             this.tileStack.take(indexOnStack);
 
+            return true;
             // compute scores
             this.computeScores(tile);
 

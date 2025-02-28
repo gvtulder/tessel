@@ -19,6 +19,7 @@ import { PlaceholderTile, Tile, TileColor, TileColors, TileType } from "./Tile";
 import { Polygon } from "./Polygon";
 import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
+import { MatchEdgeColorsRuleSet, RuleSet as RuleSet } from "./RuleSet";
 
 /**
  * The precision used for vertex and edge keys.
@@ -208,9 +209,17 @@ export class GridEdge {
      */
     tileA: Tile;
     /**
+     * The edge index for tile A.
+     */
+    edgeIdxA: number;
+    /**
      * The tile with edge B-A.
      */
     tileB: Tile;
+    /**
+     * The edge index for tile B.
+     */
+    edgeIdxB: number;
 
     /**
      * Creates a new edge connecting vertices A and B.
@@ -244,6 +253,10 @@ export class Grid extends EventTarget {
      */
     atlas: Atlas;
     /**
+     * The rules for checking tile colors.
+     */
+    rules: RuleSet;
+    /**
      * The system for collision detection.
      */
     system: CollisionSystem<Body<Tile>>;
@@ -273,11 +286,13 @@ export class Grid extends EventTarget {
     /**
      * Creates a new grid.
      * @param atlas an atlas for checking tile patterns (optional)
+     * @param rules rules for matching colors (default: MatchEdgeColorsRuleSet)
      */
-    constructor(atlas?: Atlas) {
+    constructor(atlas?: Atlas, rules?: RuleSet) {
         super();
 
         this.atlas = atlas;
+        this.rules = rules || new MatchEdgeColorsRuleSet();
         this.system = new CollisionSystem();
         this.tileBodies = new Map<Tile, Body<Tile>>();
         this.vertices = new Map<VertexKey, GridVertex>();
@@ -398,9 +413,11 @@ export class Grid extends EventTarget {
             if (edge.a === a) {
                 if (edge.tileA) throw new Error("edge already in use");
                 edge.tileA = tile;
+                edge.edgeIdxA = i;
             } else {
                 if (edge.tileB) throw new Error("edge already in use");
                 edge.tileB = tile;
+                edge.edgeIdxB = i;
             }
             if (edge.tileA && edge.tileB) {
                 this.frontier.delete(edge);
@@ -471,6 +488,17 @@ export class Grid extends EventTarget {
         const placeholder = new PlaceholderTile(shape, polygon);
         const points = polygon.vertices;
         const n = points.length;
+
+        // find edges
+        const edges = new Array<GridEdge>(n);
+        for (let i = 0; i < n; i++) {
+            const key = edgeToKey(points[i], points[(i + 1) % n]);
+            const edge = this.edges.get(key);
+            if (edge !== undefined) {
+                edges[i] = edge;
+            }
+        }
+        placeholder.edges = edges;
 
         // add placeholder to grid
         this.placeholders.add(placeholder);
@@ -608,14 +636,8 @@ export class Grid extends EventTarget {
         }
     }
 
-    matchColors(
-        movingTile: Tile,
-        fixedTile: Tile,
-        movingOffset: number,
-    ): TileColors {
-        const colors = rotateArray(movingTile.colors, movingOffset);
-        console.log("TODO matchColors", colors);
-        return colors;
+    checkColors(tile: Tile, colors: TileColors): boolean {
+        return this.rules.checkColors(tile, colors);
     }
 
     /**

@@ -1,11 +1,8 @@
-import { Pattern } from "../grid/Pattern.js";
-import { TileColors, TriangleColor } from "../grid/Triangle.js";
-import { shuffle } from "../utils.js";
+import { Shape } from "../geom/Shape";
+import { TileColors, TileColor } from "../geom/Tile";
+import { shuffle } from "../utils";
 
-export type TileGenerator = (
-    tiles: TileColors[],
-    pattern: Pattern,
-) => TileColors[];
+export type TileGenerator = (tiles: TileColors[], shape: Shape) => TileColors[];
 
 export class TileGenerators {
     static fromList(tiles: TileColors[]): TileGenerator {
@@ -15,9 +12,9 @@ export class TileGenerators {
     }
 
     static permutations(colors: TileColors): TileGenerator {
-        return (tiles: TileColors[], pattern: Pattern) => {
+        return (tiles: TileColors[], shape: Shape) => {
             const numColors = colors.length;
-            const numColorGroups = pattern.numColorGroups;
+            const numColorGroups = shape.cornerAngles.length;
 
             const cToComponents = (c: number) => {
                 const s = c.toString(numColors).split("");
@@ -57,7 +54,7 @@ export class TileGenerators {
     static repeatColors(repeats: number): TileGenerator {
         return (tiles: TileColors[]) => {
             return tiles.map((t: TileColors) => {
-                const tt: TriangleColor[] = [];
+                const tt: TileColor[] = [];
                 for (const c of t) {
                     for (let i = 0; i < repeats; i++) {
                         tt.push(c);

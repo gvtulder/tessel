@@ -18,6 +18,7 @@ function polygonToPath(vertices: readonly Point[]): string {
 export type TileOnScreenMatch = {
     moving: Tile;
     fixed: Tile;
+    offset: number;
 };
 
 export class TileDisplay {
@@ -166,6 +167,7 @@ export class TileDisplay {
                 outline.setAttribute("fill-opacity", "0.5");
             }
             outline.setAttribute("stroke", PLACEHOLDER);
+            outline.setAttribute("stroke-width", "0.01");
             this.element.appendChild(outline);
         } else {
             if (DEBUG.HIDE_TILE_OUTLINE) return;

@@ -1,12 +1,12 @@
-import { Grid } from "../grid/Grid.js";
-import { shuffle } from "../utils.js";
-import { GameDisplay } from "./GameDisplay.js";
-import { GridDisplay } from "./GridDisplay.js";
-import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay.js";
-import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout.js";
-import { TriangleOnScreenMatch } from "./TileDisplay.js";
-import { TileDragSource, TileDropTarget } from "./TileDragController.js";
-import { TileType } from "../grid/Tile.js";
+import { Grid } from "../geom/Grid";
+import { shuffle } from "../utils";
+import { GameDisplay } from "./GameDisplay";
+import { GridDisplay } from "./GridDisplay";
+import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay";
+import { ScoreOverlayDisplay_Cutout } from "./ScoreOverlayDisplay_Cutout";
+import { TileDragSource, TileDropTarget } from "./TileDragController";
+import { TileType } from "../geom/Tile";
+import { TileOnScreenMatch } from "./TileDisplay";
 
 export class MainGridDisplay extends GridDisplay implements TileDropTarget {
     gameDisplay: GameDisplay;
@@ -29,23 +29,13 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
 
     protected computeDimensionsForRescale() {
         if (this.ignorePlaceholders) {
-            return {
-                minX: this.contentMinXNoPlaceholders,
-                minY: this.contentMinYNoPlaceholders,
-                maxX: this.contentMaxXNoPlaceholders,
-                maxY: this.contentMaxYNoPlaceholders,
-            };
+            return this.grid.bboxWithoutPlaceholders;
         } else {
-            return {
-                minX: this.contentMinX,
-                minY: this.contentMinY,
-                maxX: this.contentMaxX,
-                maxY: this.contentMaxY,
-            };
+            return this.grid.bbox;
         }
     }
 
-    dropTile(source: TileDragSource, pair: TriangleOnScreenMatch): boolean {
+    dropTile(source: TileDragSource, pair: TileOnScreenMatch): boolean {
         if (pair.fixed) {
             // && pair.fixed.tile && pair.fixed.tile.type === TileType.Placeholder) {
             //          const targetTile = pair.fixed.tile;
@@ -55,6 +45,7 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
                 source.rotation,
                 pair.moving,
                 pair.fixed,
+                pair.offset,
                 source.indexOnStack,
             );
             //          }
@@ -64,7 +55,7 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
 
     gameFinished() {
         const placeholders = [...this.tileDisplays.values()].filter(
-            (d) => d.tile.type === TileType.Placeholder,
+            (d) => d.tile.tileType === TileType.Placeholder,
         );
         shuffle(placeholders);
         let delay = 100;

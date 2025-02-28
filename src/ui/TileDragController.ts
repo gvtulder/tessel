@@ -1,13 +1,19 @@
 import type { Interactable, DragEvent } from "@interactjs/types";
 
-import { TriangleOnScreenMatch } from "./TileDisplay.js";
-import { Tile, TileRotation, TileType } from "../grid/Tile.js";
-import { GameController } from "./GameController.js";
-import { Coord, Triangle } from "../grid/Triangle.js";
-import { DEBUG } from "../settings.js";
-import { dist } from "../utils.js";
-import { Grid } from "../grid/Grid.js";
-import { GridDisplay } from "./GridDisplay.js";
+import { TileOnScreenMatch } from "./TileDisplay";
+import { Tile, TileType } from "../geom/Tile";
+import { GameController } from "./GameController";
+import { DEBUG } from "../settings";
+import { dist } from "../utils";
+import { Grid } from "../geom/Grid";
+import { GridDisplay } from "./GridDisplay";
+import { Point } from "../geom/math";
+
+const MAX_TILE_DROP_DIST = 0.3;
+
+export type TileRotation = {
+    readonly angle: number;
+};
 
 export class TileDragEvent extends Event {
     tileDragSource: TileDragSource;
@@ -62,16 +68,12 @@ export class TileDragController extends EventTarget {
             this.dropTarget.element.addEventListener(
                 "mouseover",
                 (evt: PointerEvent) => {
-                    const cursorPos: Coord = [evt.clientX, evt.clientY];
+                    const cursorPos: Point = { x: evt.clientX, y: evt.clientY };
                     console.log(
                         "Mouse cursor:",
                         cursorPos,
                         "Grid coordinates:",
-                        this.dropTarget.screenPositionToGridPosition(cursorPos),
-                        "Triangle on grid:",
-                        this.dropTarget.screenPositionToTriangleCoord(
-                            cursorPos,
-                        ),
+                        this.dropTarget.screenToGridPosition(cursorPos),
                     );
                 },
             );
@@ -101,6 +103,8 @@ export class TileDragController extends EventTarget {
         evt.target.style.scale = `${this.dropTarget.scale / context.source.gridDisplay.scale}`;
         context.source.resetCoordinateMapperCache();
 
+        // TODO snap
+        /*
         if (this.snap) {
             // snapping?
             const movingTriangle = context.source.tile.triangles[0];
@@ -163,33 +167,37 @@ export class TileDragController extends EventTarget {
                 }
             }
         }
+        */
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {
         context.source.resetCoordinateMapperCache();
 
         // figure out where we are
-        const movingTriangle = context.source.tile.triangles[0];
-        const movingPos =
-            context.source.gridDisplay.triangleToScreenPosition(movingTriangle);
+        const movingTile = context.source.tile;
+        const movingPoly = context.source.gridDisplay.gridToScreenPositions(
+            movingTile.polygon.vertices,
+        );
         // match moving to fixed
-        const fixedTriangleCoord =
-            this.dropTarget.screenPositionToTriangleCoord(movingPos);
-        const fixedTriangle = this.dropTarget.grid.getOrAddTriangle(
-            ...fixedTriangleCoord,
+        const fixedPoly = this.dropTarget.screenToGridPositions(movingPoly);
+        const match = this.dropTarget.findMatchingTile(
+            fixedPoly,
+            MAX_TILE_DROP_DIST,
+            true,
         );
 
         let successful = false;
-        if (fixedTriangle) {
+        if (match) {
             successful = this.dropTarget.dropTile(context.source, {
-                fixed: fixedTriangle,
-                moving: movingTriangle,
+                fixed: match.tile,
+                moving: movingTile,
+                offset: match.offset,
             });
         }
         console.log(
             "DROPPED",
-            movingTriangle,
-            fixedTriangle,
+            match,
+            movingTile,
             successful ? "success" : "no success",
         );
 
@@ -221,7 +229,7 @@ export type TileDragSourceContext = {
     autorotateTimeout: number;
     autorotateCache: Map<Tile, TileRotation>;
     draggable: Interactable;
-    position: { x: number; y: number };
+    position: { x: 0; y: 0 };
 };
 
 export interface TileDragSource {
@@ -242,8 +250,35 @@ export interface TileDropTarget {
     element: HTMLElement;
     grid: Grid;
     scale: number;
-    triangleToScreenPosition(triangle: Triangle): Coord;
-    screenPositionToGridPosition(clientPos: Coord): Coord;
-    screenPositionToTriangleCoord(clientPos: Coord): Coord;
-    dropTile(source: TileDragSource, pair: TriangleOnScreenMatch): boolean;
+
+    /**
+     * Maps the grid coordinates to screen coordinates.
+     */
+    gridToScreenPosition(point: Point): Point;
+    /**
+     * Maps the grid coordinates to screen coordinates.
+     */
+    gridToScreenPositions(point: readonly Point[]): Point[];
+    /**
+     * Maps the screen coordinates to grid coordinates.
+     */
+    screenToGridPosition(point: Point): Point;
+    /**
+     * Maps the screen coordinates to grid coordinates.
+     */
+    screenToGridPositions(point: readonly Point[]): Point[];
+    /**
+     * Finds the best overlapping tile for the given polygon points.
+     * @param points the vertices of a polygon
+     * @param minOverlap the minimal overlap proportion
+     * @param includePlaceholders set to true to match placeholder tiles
+     * @returns the best matching tile and offset, or null
+     */
+    findMatchingTile(
+        points: readonly Point[],
+        minOverlap: number,
+        includePlaceholders?: boolean,
+    ): { tile: Tile; offset: number; dist: number };
+
+    dropTile(source: TileDragSource, pair: TileOnScreenMatch): boolean;
 }

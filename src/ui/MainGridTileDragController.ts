@@ -1,4 +1,4 @@
-import type { Interactable, DragEvent } from "@interactjs/types";
+import type { DragEvent } from "@interactjs/types";
 
 import { TileOnScreenMatch } from "./TileDisplay";
 import { Tile, TileType } from "../geom/Tile";

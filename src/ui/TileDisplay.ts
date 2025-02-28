@@ -1,11 +1,10 @@
-import type { Interactable } from "@interactjs/types";
-
 import { roundPathCorners } from "../lib/svg-rounded-corners";
 import { Tile, TileType } from "src/geom/Tile";
 import { DEBUG, PLACEHOLDER, SCALE } from "../settings";
 import { GridDisplay } from "./GridDisplay";
 import offsetPolygon from "../lib/offset-polygon";
-import { addPointToPolygon, dist, Point } from "../geom/math";
+import { dist, Point } from "../geom/math";
+import { addPointToPolygon } from "../geom/polygon/addPointToPolygon";
 
 function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);

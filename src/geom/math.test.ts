@@ -10,6 +10,8 @@ import {
     centroid,
     comparePoint,
     dist,
+    distToLine,
+    distToLineSegment,
     edgeToAngle,
     mergeBBox,
     mergeBBoxItems,
@@ -43,6 +45,31 @@ describe("dist", () => {
         expect(dist(a, b)).toBeCloseTo(
             Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)),
         );
+    });
+});
+
+describe("distToLine", () => {
+    test.each([
+        [P(0, 0), P(1, 0), P(0.5, 1), 1],
+        [P(0, 0), P(1, 0), P(0, 1), 1],
+        [P(0, 0), P(1, 0), P(1, 1), 1],
+        [P(0, 0), P(1, 0), P(0, 0), 0],
+        [P(0, 0), P(1, 0), P(2, 0), 0],
+    ])("computes distances to line", (a, b, p, expected) => {
+        expect(distToLine(a, b, p)).toBeCloseTo(expected);
+    });
+});
+
+describe("distToLineSegment", () => {
+    test.each([
+        [P(0, 0), P(1, 0), P(0.5, 1), 1],
+        [P(0, 0), P(1, 0), P(0, 1), 1],
+        [P(0, 0), P(1, 0), P(1, 1), 1],
+        [P(0, 0), P(1, 0), P(-1, 0), 1],
+        [P(0, 0), P(1, 0), P(2, 0), 1],
+        [P(0, 0), P(0, 0), P(2, 0), 2],
+    ])("computes distances to line segment", (a, b, p, expected) => {
+        expect(distToLineSegment(a, b, p)).toBeCloseTo(expected);
     });
 });
 
@@ -232,6 +259,13 @@ describe("addPointToPolygon", () => {
         ],
     ])("adds point to nearest edge", (points, newPoint, expected) => {
         expect(addPointToPolygon(points, newPoint)).toStrictEqual(expected);
+    });
+
+    test("adds two points", () => {
+        const a = addPointToPolygon(P([0, 0], [1, 0], [0.5, 0.5]), P(0.6, 0.5));
+        expect(a).toStrictEqual(P([0, 0], [1, 0], [0.6, 0.5], [0.5, 0.5]));
+        const b = addPointToPolygon(a, P(0.4, 0.5));
+        expect(b).toStrictEqual(P([0, 0], [1, 0], [0.6, 0.5], [0.5, 0.5], [0.4, 0.5]));
     });
 });
 

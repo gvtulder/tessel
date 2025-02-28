@@ -1,6 +1,3 @@
-import interact from "interactjs";
-import type { DragEvent, Interactable } from "@interactjs/types";
-
 import { Grid } from "../grid/Grid.js";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";

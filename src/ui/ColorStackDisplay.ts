@@ -1,5 +1,6 @@
-import type { Interactable, DragEvent } from "@interactjs/types";
-import interact from "interactjs";
+import type { Interactable } from "@interactjs/types";
+import "@interactjs/pointer-events";
+import interact from "@interactjs/interact";
 
 import { COLORS } from "../grid/EditableTile.js";
 import { TriangleColor } from "../grid/Triangle.js";

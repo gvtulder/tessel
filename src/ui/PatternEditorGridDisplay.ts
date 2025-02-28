@@ -1,5 +1,3 @@
-import type { DragEvent } from "@interactjs/types";
-
 import { Tile, TileType } from "../grid/Tile.js";
 import { SCALE } from "../settings.js";
 import { GridDisplay } from "./GridDisplay.js";

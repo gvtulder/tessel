@@ -5,6 +5,10 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
+    "@interactjs/actions": "^1.10.27",
+    "@interactjs/auto-start": "^1.10.27",
+    "@interactjs/interact": "^1.10.27",
+    "@interactjs/pointer-events": "^1.10.27",
     "@jest/globals": "^29.7.0",
     "@swc/jest": "^0.2.37",
     "css-loader": "^7.1.2",

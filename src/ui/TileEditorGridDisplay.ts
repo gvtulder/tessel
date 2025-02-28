@@ -1,5 +1,6 @@
-import interact from "interactjs";
 import type { Interactable } from "@interactjs/types";
+import "@interactjs/pointer-events";
+import interact from "@interactjs/interact";
 
 import { Grid } from "../grid/Grid.js";
 import { Coord } from "../grid/Triangle.js";

@@ -1,5 +1,5 @@
-import type { Interactable, DragEvent } from "@interactjs/types";
-import interact from "interactjs";
+import type { Interactable } from "@interactjs/types";
+import interact from "@interactjs/interact";
 
 import { Grid } from "../grid/Grid.js";
 import {

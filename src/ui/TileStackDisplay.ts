@@ -1,5 +1,7 @@
 import type { Interactable, DragEvent } from "@interactjs/types";
-import interact from "interactjs";
+import "@interactjs/auto-start";
+import "@interactjs/pointer-events";
+import interact from "@interactjs/interact";
 
 import { Grid } from "../geom/Grid";
 import { FixedOrderTileStack } from "../game/TileStack";

@@ -60,6 +60,46 @@ export function dist(a: Point, b: Point): number {
 }
 
 /**
+ * Computes the distance between point p and the line through a and b.
+ */
+export function distToLine(a: Point, b: Point, p: Point): number {
+    return (
+        Math.abs(
+            (b.y - a.y) * p.x - (b.x - a.x) * p.y + b.x * a.y - b.y * a.x,
+        ) / Math.hypot(b.y - a.y, b.x - a.x)
+    );
+}
+
+/**
+ * Computes the distance between point p and the line segment a -- b.
+ */
+export function distToLineSegment(a: Point, b: Point, p: Point): number {
+    // https://stackoverflow.com/a/6853926
+    const A = p.x - a.x;
+    const B = p.y - a.y;
+    const C = b.x - a.x;
+    const D = b.y - a.y;
+
+    const dot = A * C + B * D;
+    const lenSquared = C * C + D * D;
+    const param = lenSquared == 0 ? -1 : dot / lenSquared;
+
+    let xx, yy;
+    if (param < 0) {
+        xx = a.x;
+        yy = a.y;
+    } else if (param > 1) {
+        xx = b.x;
+        yy = b.y;
+    } else {
+        xx = a.x + param * C;
+        yy = a.y + param * D;
+    }
+
+    return Math.hypot(p.x - xx, p.y - yy);
+}
+
+/**
  * Compares two points.
  * First compares a.x and b.x, then a.y and b.y.
  * @returns -1 if a is less than b, 1 if a is greater than b, 0 if a == b
@@ -232,15 +272,15 @@ export function addPointToPolygon(
     points: readonly Point[],
     newPoint: Point,
 ): Point[] {
-    const pointDists = new Array<number>(points.length);
+    let nearestEdgeDist = 0;
+    let nearestEdge = null;
     for (let i = 0; i < points.length; i++) {
-        pointDists[i] = dist(points[i], newPoint);
-    }
-    let nearestEdgeDist = pointDists[0] + pointDists[1];
-    let nearestEdge = 0;
-    for (let i = 1; i < points.length; i++) {
-        const d = pointDists[i] + pointDists[(i + 1) % points.length];
-        if (d < nearestEdgeDist) {
+        const d = distToLineSegment(
+            points[i],
+            points[(i + 1) % points.length],
+            newPoint,
+        );
+        if (nearestEdge === null || d < nearestEdgeDist) {
             nearestEdgeDist = d;
             nearestEdge = i;
         }

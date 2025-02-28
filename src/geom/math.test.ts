@@ -4,6 +4,7 @@ import {
     DEG2RAD,
     P,
     Point,
+    addPointToPolygon,
     area,
     bbox,
     centroid,
@@ -214,6 +215,23 @@ describe("mergeBBoxItems", () => {
         expect(mergeBBoxItems([a, combined])).toStrictEqual(combined.bbox);
         expect(mergeBBoxItems([a])).toStrictEqual(a.bbox);
         expect(mergeBBoxItems([])).toBeUndefined();
+    });
+});
+
+describe("addPointToPolygon", () => {
+    test.each([
+        [
+            P([0, 0], [1, 0], [0.5, 0.5]),
+            P(0.5, -0.5),
+            P([0, 0], [0.5, -0.5], [1, 0], [0.5, 0.5]),
+        ],
+        [
+            P([0, 0], [1, 0], [0.5, 0.5]),
+            P(0, 0.3),
+            P([0, 0], [1, 0], [0.5, 0.5], [0, 0.3]),
+        ],
+    ])("adds point to nearest edge", (points, newPoint, expected) => {
+        expect(addPointToPolygon(points, newPoint)).toStrictEqual(expected);
     });
 });
 

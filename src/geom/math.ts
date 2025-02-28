@@ -226,6 +226,29 @@ export function mergeBBoxItems(items: Iterable<{ bbox: BBox }>) {
 }
 
 /**
+ * Adds a point to the polygon, splitting the nearest edge.
+ */
+export function addPointToPolygon(
+    points: readonly Point[],
+    newPoint: Point,
+): Point[] {
+    const pointDists = new Array<number>(points.length);
+    for (let i = 0; i < points.length; i++) {
+        pointDists[i] = dist(points[i], newPoint);
+    }
+    let nearestEdgeDist = pointDists[0] + pointDists[1];
+    let nearestEdge = 0;
+    for (let i = 1; i < points.length; i++) {
+        const d = pointDists[i] + pointDists[(i + 1) % points.length];
+        if (d < nearestEdgeDist) {
+            nearestEdgeDist = d;
+            nearestEdge = i;
+        }
+    }
+    return points.toSpliced(nearestEdge + 1, 0, newPoint);
+}
+
+/**
  * Rounds the number with the given precision.
  * @param x the number
  * @param precision multiplication factor (e.g., 1000)

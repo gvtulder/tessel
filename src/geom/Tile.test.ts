@@ -2,15 +2,12 @@ import { describe, expect, jest, test } from "@jest/globals";
 import { Shape } from "./Shape";
 import { Tile, TileColor } from "./Tile";
 import { GridEventType } from "./GridEvent";
+import { P } from "./math";
 
 const TRIANGLE = new Shape("triangle", [60, 60, 60]);
 
 describe("Tile", () => {
-    const polygon = TRIANGLE.constructPolygonAB(
-        { x: 0, y: 0 },
-        { x: 0, y: 1 },
-        0,
-    );
+    const polygon = TRIANGLE.constructPolygonAB(P(0, 0), P(0, 1), 0);
 
     test("can be constructed", () => {
         const tile = new Tile(TRIANGLE, polygon);

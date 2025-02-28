@@ -1,19 +1,10 @@
 import { describe, expect, test } from "@jest/globals";
 import { Polygon } from "./Polygon";
-import { area, bbox, centroid, Point } from "./math";
+import { area, bbox, centroid, P, Point } from "./math";
 
 describe("Polygon", () => {
-    const triangle = [
-        { x: 0, y: 0 },
-        { x: 1, y: -1 },
-        { x: 2, y: 1 },
-    ];
-    const square = [
-        { x: 0, y: 0 },
-        { x: 0, y: 1 },
-        { x: 1, y: 1 },
-        { x: 1, y: 0 },
-    ];
+    const triangle = P([0, 0], [1, -1], [2, 1]);
+    const square = P([0, 0], [0, 1], [1, 1], [1, 0]);
 
     test("can be created", () => {
         const poly = new Polygon(triangle);
@@ -83,13 +74,7 @@ describe("Polygon", () => {
         expect(sq.overlapArea(sq)).toBe(sq.area);
         expect(sq.overlapArea(tr)).toBe(tr.area);
         expect(tr.overlapArea(sq)).toBe(tr.area);
-        expect(
-            sq.overlapArea([
-                { x: 2, y: 2 },
-                { x: 3, y: 2 },
-                { x: 2.5, y: 3 },
-            ]),
-        ).toBe(0);
+        expect(sq.overlapArea(P([2, 2], [3, 2], [2.5, 3]))).toBe(0);
     });
 
     test.each([
@@ -97,16 +82,7 @@ describe("Polygon", () => {
         [triangle, square, null, null],
         [triangle, [triangle[2], triangle[0], triangle[1]], 1, 0],
         [triangle, [triangle[1], triangle[2], triangle[0]], 2, 0],
-        [
-            triangle,
-            [
-                { x: 0.2, y: 0 },
-                { x: 1.2, y: -1 },
-                { x: 2.2, y: 1 },
-            ],
-            0,
-            0.2,
-        ],
+        [triangle, P([0.2, 0], [1.2, -1], [2.2, 1]), 0, 0.2],
     ])("matches points", (a: Point[], b: Point[], offset: number, dist: 0) => {
         const poly = new Polygon(a);
         const m = poly.matchPoints(b);

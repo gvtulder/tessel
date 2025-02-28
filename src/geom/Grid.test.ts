@@ -4,7 +4,7 @@ import { Tile } from "./Tile";
 import { Shape } from "./Shape";
 import { Polygon } from "./Polygon";
 import { GridEventType } from "./GridEvent";
-import { mergeBBox, weightedSumPoint } from "./math";
+import { mergeBBox, P, weightedSumPoint } from "./math";
 import { SquaresAtlas, TrianglesAtlas } from "./Atlas";
 
 const TRIANGLE = new Shape("triangle", [60, 60, 60]);
@@ -18,7 +18,7 @@ describe("SortedCorners", () => {
     // define three triangles around (0, 0)
     const tile1 = new Tile(
         TRIANGLE,
-        TRIANGLE.constructPolygonAB({ x: 0, y: 0 }, { x: 0, y: 1 }, 0),
+        TRIANGLE.constructPolygonAB(P(0, 0), P(0, 1), 0),
     );
     const tile2 = new Tile(
         TRIANGLE,
@@ -85,7 +85,7 @@ describe("SortedCorners", () => {
 
 describe("GridVertex", () => {
     test("can be constructed", () => {
-        const point = { x: 0, y: 2 };
+        const point = P(0, 2);
         const vertex = new GridVertex(point);
         expect(vertex.point).toBe(point);
         expect(vertex.corners.length).toBe(0);
@@ -95,9 +95,9 @@ describe("GridVertex", () => {
     test("can add and remove a tile", () => {
         const tile = new Tile(
             TRIANGLE,
-            TRIANGLE.constructPolygonAB({ x: 0, y: 0 }, { x: 0, y: 1 }, 0),
+            TRIANGLE.constructPolygonAB(P(0, 0), P(0, 1), 0),
         );
-        const point = { x: 0, y: 1 };
+        const point = P(0, 1);
         const vertex = new GridVertex(point);
         vertex.addTile(tile, 1);
         expect(vertex.tiles).toStrictEqual([tile]);
@@ -109,8 +109,8 @@ describe("GridVertex", () => {
 });
 
 describe("GridEdge", () => {
-    const a = new GridVertex({ x: 0, y: 0 });
-    const b = new GridVertex({ x: 0, y: 1 });
+    const a = new GridVertex(P(0, 0));
+    const b = new GridVertex(P(0, 1));
 
     test("can be constructed", () => {
         const edge = new GridEdge(a, b);
@@ -127,18 +127,10 @@ describe("GridEdge", () => {
 
 describe("Grid", () => {
     // define three triangles around (0, 0)
-    const poly1 = TRIANGLE.constructPolygonAB(
-        { x: 0, y: 0 },
-        { x: 0, y: 1 },
-        0,
-    );
+    const poly1 = TRIANGLE.constructPolygonAB(P(0, 0), P(0, 1), 0);
     const poly2 = TRIANGLE.constructPolygonEdge(poly1.outsideEdges[0], 0);
     const poly3 = TRIANGLE.constructPolygonEdge(poly2.outsideEdges[1], 0);
-    const overlappingPoly = new Polygon([
-        { x: 0.2, y: 0 },
-        { x: 0.5, y: -0.5 },
-        { x: 0.5, y: 0.5 },
-    ]);
+    const overlappingPoly = new Polygon(P([0.2, 0], [0.5, -0.5], [0.5, 0.5]));
 
     test("can be created", () => {
         const grid = new Grid();

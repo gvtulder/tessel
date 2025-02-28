@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { Shape } from "./Shape";
-import { DEG2RAD, Point } from "./math";
+import { DEG2RAD, P, Point } from "./math";
 
 function roundPoints(
     points: readonly Point[],
@@ -71,12 +71,8 @@ describe("Shape", () => {
     test("constructs polygons", () => {
         const angles = [60, 60, 60];
         const shape = new Shape("", angles);
-        const edge = { a: { x: 0, y: 0 }, b: { x: 1, y: 0 } };
-        const expected = [
-            { x: 0, y: 0 },
-            { x: 1, y: 0 },
-            { x: 0.5, y: 0.87 },
-        ];
+        const edge = { a: P(0, 0), b: P(1, 0) };
+        const expected = P([0, 0], [1, 0], [0.5, 0.87]);
 
         const p1 = shape.constructPolygonAB(edge.a, edge.b, 0);
         expect(roundPoints(p1.vertices, 100)).toStrictEqual(expected);
@@ -93,13 +89,7 @@ describe("Shape", () => {
     test("maps the angles to the correct vertex", () => {
         const angles = [90, 90, 150, 60, 150];
         const shape = new Shape("", angles);
-        const expected = [
-            { x: 0, y: 0 },
-            { x: 1, y: 0 },
-            { x: 1, y: 1 },
-            { x: 0.5, y: 1.87 },
-            { x: 0, y: 1 },
-        ];
+        const expected = P([0, 0], [1, 0], [1, 1], [0.5, 1.87], [0, 1]);
 
         const p1 = shape.constructPolygonAB(expected[0], expected[1], 0);
         expect(roundPoints(p1.vertices, 100)).toStrictEqual(expected);

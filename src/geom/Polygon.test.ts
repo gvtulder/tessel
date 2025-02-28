@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
-import { Polygon } from "./Polygon";
 import { area, bbox, centroid, P, Point } from "./math";
+import { Polygon } from "./Polygon";
 
 describe("Polygon", () => {
     const triangle = P([0, 0], [1, -1], [2, 1]);
@@ -65,32 +65,4 @@ describe("Polygon", () => {
             }
         },
     );
-
-    test("computes overlap", () => {
-        const poly = new Polygon(triangle);
-        expect(poly.overlapArea(poly)).toBe(poly.area);
-        const sq = new Polygon(square);
-        const tr = new Polygon(square.slice(0, 3));
-        expect(sq.overlapArea(sq)).toBe(sq.area);
-        expect(sq.overlapArea(tr)).toBe(tr.area);
-        expect(tr.overlapArea(sq)).toBe(tr.area);
-        expect(sq.overlapArea(P([2, 2], [3, 2], [2.5, 3]))).toBe(0);
-    });
-
-    test.each([
-        [triangle, triangle, 0, 0],
-        [triangle, square, null, null],
-        [triangle, [triangle[2], triangle[0], triangle[1]], 1, 0],
-        [triangle, [triangle[1], triangle[2], triangle[0]], 2, 0],
-        [triangle, P([0.2, 0], [1.2, -1], [2.2, 1]), 0, 0.2],
-    ])("matches points", (a: Point[], b: Point[], offset: number, dist: 0) => {
-        const poly = new Polygon(a);
-        const m = poly.matchPoints(b);
-        if (offset === null) {
-            expect(m).toBeNull();
-        } else {
-            expect(m.dist).toBeCloseTo(dist);
-            expect(m.offset).toBe(offset);
-        }
-    });
 });

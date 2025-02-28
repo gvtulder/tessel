@@ -17,6 +17,7 @@ import {
 import { Shape } from "./Shape";
 import { PlaceholderTile, Tile, TileColor, TileColors, TileType } from "./Tile";
 import { Polygon } from "./Polygon";
+import { matchPoints } from "./polygon/matchPoints";
 import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
 import { MatchEdgeColorsRuleSet, RuleSet as RuleSet } from "./RuleSet";
@@ -670,7 +671,7 @@ export class Grid extends EventTarget {
                 if (resp.b.userData instanceof PlaceholderTile) return false;
             }
             const poly = (resp.b.userData as Tile).polygon;
-            const match = poly.matchPoints(points);
+            const match = matchPoints(poly.vertices, points);
             if (match === null) return false;
             if (match.dist > maxDist) return false;
             // const overlap = poly.overlapArea(points) / poly.area;

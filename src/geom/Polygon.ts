@@ -1,5 +1,4 @@
-import polygonClipping from "polygon-clipping";
-import { BBox, area, bbox, centroid, Edge, Point, dist } from "./math";
+import { BBox, area, bbox, centroid, Edge, Point } from "./math";
 
 /**
  * A polygon consists of a number vertices.
@@ -89,72 +88,5 @@ export class Polygon {
             segments[i] = new Polygon([edges[i].a, edges[i].b, c]);
         }
         return segments;
-    }
-
-    /**
-     * Return the overlap area between this polygon and the other polygon.
-     * @param points a polygon, or series of points
-     * @returns the area of overlap (ignoring holes, if any)
-     */
-    overlapArea(points: readonly Point[] | Polygon): number {
-        if (points instanceof Polygon) {
-            points = points.vertices;
-        }
-        const intersect = polygonClipping.intersection(
-            [[this.vertices.map((p) => [p.x, p.y])]],
-            [[points.map((p) => [p.x, p.y])]],
-        );
-        let sumArea = 0;
-        // sum over all polygons
-        for (const poly of intersect) {
-            let polyA = 0;
-            // take the area of the largest ring (ignore holes)
-            for (const ring of poly) {
-                const ringA = area(ring.map(([x, y]) => ({ x, y })));
-                if (ringA > polyA) polyA = ringA;
-            }
-            sumArea += polyA;
-        }
-        return sumArea;
-    }
-
-    /**
-     * Find the best match between the two point series.
-     * Returns the smallest distance and the offset
-     * such that this.vertices[i] = points[i + offset].
-     */
-    matchPoints(points: readonly Point[] | Polygon): {
-        offset: number;
-        dist: number;
-    } {
-        if (points instanceof Polygon) {
-            points = points.vertices;
-        }
-        const ourPoints = this.vertices;
-        if (points.length != ourPoints.length) {
-            return null;
-        }
-        // attempt all starting points for a match
-        let minDist = -1;
-        let bestOffset = null;
-        for (let offset = 0; offset < points.length; offset++) {
-            let maxDist = 0;
-            for (
-                let i = 0;
-                i < points.length && (minDist == -1 || maxDist < minDist);
-                i++
-            ) {
-                const d = dist(
-                    points[(i + offset) % points.length],
-                    ourPoints[i],
-                );
-                maxDist = maxDist < d ? d : maxDist;
-            }
-            if (minDist == -1 || maxDist < minDist) {
-                minDist = maxDist;
-                bestOffset = offset;
-            }
-        }
-        return { offset: bestOffset, dist: minDist };
     }
 }

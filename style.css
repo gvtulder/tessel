@@ -222,9 +222,10 @@ svg {
 }
 .tileStackDisplay .tileOnStack {
   z-index: 0;
-  transition: none;
   position: relative;
   aspect-ratio: 1/1;
+  transition-property: scale;
+  transition-duration: 100ms;
 }
 .tileStackDisplay .tileOnStack svg {
   width: 100%;
@@ -237,11 +238,10 @@ svg {
 }
 .tileStackDisplay .tileOnStack.dragging {
   z-index: 100;
-  transition: none;
 }
 .tileStackDisplay .tileOnStack.drag-return {
   z-index: 100;
-  transition-property: transform;
+  transition-property: translate, scale;
   transition-duration: 150ms;
 }
 .tileStackDisplay .tileOnStack.drag-success {

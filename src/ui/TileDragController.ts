@@ -83,7 +83,8 @@ export class TileDragController extends EventTarget {
             if (s !== context.source) s.resetDragStatus();
         }
         context.source.startDrag();
-        evt.target.style.transform = `translate(0px, 0px) scale(${this.dropTarget.scale / context.source.gridDisplay.scale})`;
+        evt.target.style.translate = `0px 0px`;
+        evt.target.style.scale = `${this.dropTarget.scale / context.source.gridDisplay.scale}`;
         context.source.resetCoordinateMapperCache();
         this.dispatchEvent(
             new TileDragEvent(
@@ -96,7 +97,8 @@ export class TileDragController extends EventTarget {
     onDragMove(context: TileDragSourceContext, evt: DragEvent) {
         context.position.x += evt.dx;
         context.position.y += evt.dy;
-        evt.target.style.transform = `translate(${context.position.x}px, ${context.position.y}px) scale(${this.dropTarget.scale / context.source.gridDisplay.scale})`;
+        evt.target.style.translate = `${context.position.x}px ${context.position.y}px`;
+        evt.target.style.scale = `${this.dropTarget.scale / context.source.gridDisplay.scale}`;
         context.source.resetCoordinateMapperCache();
 
         if (this.snap) {
@@ -195,7 +197,8 @@ export class TileDragController extends EventTarget {
         context.source.endDrag(successful);
         context.position.x = 0;
         context.position.y = 0;
-        evt.target.style.transform = `translate(${context.position.x}px, ${context.position.y}px)`;
+        evt.target.style.translate = `${context.position.x}px ${context.position.y}px`;
+        evt.target.style.scale = "";
         this.dispatchEvent(
             new TileDragEvent(
                 TileDragController.events.EndDrag,

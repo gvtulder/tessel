@@ -1,6 +1,6 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { Grid, GridEdge, GridVertex, SortedCorners } from "./Grid";
-import { Tile } from "./Tile";
+import { PlaceholderTile, Tile } from "./Tile";
 import { Shape } from "./Shape";
 import { Polygon } from "./Polygon";
 import { GridEventType } from "./GridEvent";
@@ -105,6 +105,20 @@ describe("GridVertex", () => {
 
         vertex.removeTile(tile);
         expect(vertex.tiles).toStrictEqual([]);
+    });
+
+    test("can add and remove a placeholder", () => {
+        const placeholder = new PlaceholderTile(
+            TRIANGLE,
+            TRIANGLE.constructPolygonAB(P(0, 0), P(0, 1), 0),
+        );
+        const point = P(0, 1);
+        const vertex = new GridVertex(point);
+        vertex.addTile(placeholder, 1);
+        expect([...vertex.placeholders]).toStrictEqual([placeholder]);
+
+        vertex.removeTile(placeholder);
+        expect(vertex.placeholders.size).toBe(0);
     });
 });
 
@@ -274,18 +288,36 @@ describe("Grid", () => {
     test("adds and removes placeholders", () => {
         const grid = new Grid();
 
-        grid.addPlaceholder(TRIANGLE, poly1);
+        const placeholder = grid.addPlaceholder(TRIANGLE, poly1);
         expect(grid.placeholders.size).toBe(1);
         expect(grid.bbox).toStrictEqual(poly1.bbox);
+        expect(grid.vertices.size).toBe(3);
+        expect(grid.edges.size).toBe(3);
+        expect(
+            [...grid.edges.values()].map((e) =>
+                e.placeholders.has(placeholder),
+            ),
+        ).toStrictEqual([true, true, true]);
 
         grid.addPlaceholder(TRIANGLE, poly2);
         expect(grid.placeholders.size).toBe(2);
         expect(grid.bbox).toStrictEqual(mergeBBox(poly1.bbox, poly2.bbox));
+        expect(grid.vertices.size).toBe(4);
+        expect(grid.edges.size).toBe(5);
+        expect(
+            [...grid.edges.values()].map((e) =>
+                e.placeholders.has(placeholder),
+            ),
+        ).toStrictEqual([true, true, true, false, false]);
 
         const p3 = grid.addPlaceholder(TRIANGLE, poly3);
+        expect(grid.vertices.size).toBe(5);
+        expect(grid.edges.size).toBe(7);
         expect(grid.placeholders.size).toBe(3);
 
         grid.removePlaceholder(p3);
+        expect(grid.vertices.size).toBe(4);
+        expect(grid.edges.size).toBe(5);
         expect(grid.placeholders.size).toBe(2);
         grid.removePlaceholder(p3);
         expect(grid.placeholders.size).toBe(2);

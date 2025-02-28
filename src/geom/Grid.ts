@@ -158,6 +158,10 @@ export class GridVertex {
      * The corners/tiles connected to this vertex in clockwise order.
      */
     corners: SortedCorners;
+    /**
+     * The placeholders connected to this edge.
+     */
+    placeholders: Set<PlaceholderTile>;
 
     /**
      * Creates a new vertex at the given point.
@@ -165,6 +169,7 @@ export class GridVertex {
     constructor(point: Point) {
         this.point = point;
         this.corners = new SortedCorners();
+        this.placeholders = new Set<PlaceholderTile>();
     }
 
     /**
@@ -180,7 +185,11 @@ export class GridVertex {
      * @param vertexIdx the vertex of the tile to connect to this vertex
      */
     addTile(tile: Tile, vertexIdx: number) {
-        this.corners.addTile(tile, vertexIdx);
+        if (tile instanceof PlaceholderTile) {
+            this.placeholders.add(tile);
+        } else {
+            this.corners.addTile(tile, vertexIdx);
+        }
     }
 
     /**
@@ -188,7 +197,11 @@ export class GridVertex {
      * @param tile the tile to remove
      */
     removeTile(tile: Tile) {
-        this.corners.removeTile(tile);
+        if (tile instanceof PlaceholderTile) {
+            this.placeholders.delete(tile);
+        } else {
+            this.corners.removeTile(tile);
+        }
     }
 }
 
@@ -220,6 +233,10 @@ export class GridEdge {
      * The edge index for tile B.
      */
     edgeIdxB: number;
+    /**
+     * The placeholders using this edge.
+     */
+    placeholders: Set<PlaceholderTile>;
 
     /**
      * Creates a new edge connecting vertices A and B.
@@ -233,6 +250,7 @@ export class GridEdge {
      * @param b the second vertex
      */
     constructor(a: GridVertex, b: GridVertex) {
+        this.placeholders = new Set<PlaceholderTile>();
         if (comparePoint(a.point, b.point) < 0) {
             this.a = a;
             this.b = b;
@@ -355,8 +373,15 @@ export class Grid extends EventTarget {
      * @param segments the segment polygons of this tile
      * @returns the new tile
      */
-    addTile(shape: Shape, polygon: Polygon, segments?: Polygon[]): Tile {
-        const tile = new Tile(shape, polygon, segments);
+    addTile(
+        shape: Shape,
+        polygon: Polygon,
+        segments?: Polygon[],
+        placeholder?: boolean,
+    ): Tile {
+        const tile = placeholder
+            ? new PlaceholderTile(shape, polygon)
+            : new Tile(shape, polygon, segments);
         tile.addEventListener(
             GridEventType.UpdateTileColors,
             this.handleTileColorUpdate,
@@ -365,17 +390,23 @@ export class Grid extends EventTarget {
         const n = points.length;
 
         // check for collisions with placeholders
-        const placeholders = this.checkCollision(polygon, true, true);
-        if (placeholders) {
-            for (const placeholder of placeholders) {
-                if (placeholder instanceof PlaceholderTile) {
-                    this.removePlaceholder(placeholder);
+        if (!placeholder) {
+            const placeholders = this.checkCollision(polygon, true, true);
+            if (placeholders) {
+                for (const placeholder of placeholders) {
+                    if (placeholder instanceof PlaceholderTile) {
+                        this.removePlaceholder(placeholder);
+                    }
                 }
             }
         }
 
         // add tile to grid
-        this.tiles.add(tile);
+        if (placeholder) {
+            this.placeholders.add(tile);
+        } else {
+            this.tiles.add(tile);
+        }
         const collisionPolygon = this.system.createPolygon(
             {},
             polygon.vertices as Point[],
@@ -410,19 +441,23 @@ export class Grid extends EventTarget {
                 this.edges.set(key, edge);
             }
             edges[i] = edge;
-            if (edge.a === a) {
-                if (edge.tileA) throw new Error("edge already in use");
-                edge.tileA = tile;
-                edge.edgeIdxA = i;
+            if (placeholder) {
+                edge.placeholders.add(tile);
             } else {
-                if (edge.tileB) throw new Error("edge already in use");
-                edge.tileB = tile;
-                edge.edgeIdxB = i;
-            }
-            if (edge.tileA && edge.tileB) {
-                this.frontier.delete(edge);
-            } else {
-                this.frontier.add(edge);
+                if (edge.a === a) {
+                    if (edge.tileA) throw new Error("edge already in use");
+                    edge.tileA = tile;
+                    edge.edgeIdxA = i;
+                } else {
+                    if (edge.tileB) throw new Error("edge already in use");
+                    edge.tileB = tile;
+                    edge.edgeIdxB = i;
+                }
+                if (edge.tileA && edge.tileB) {
+                    this.frontier.delete(edge);
+                } else {
+                    this.frontier.add(edge);
+                }
             }
         }
         tile.edges = edges;
@@ -437,14 +472,14 @@ export class Grid extends EventTarget {
      * @param tile the tile to be removed
      */
     removeTile(tile: Tile): void {
-        if (!this.tiles.has(tile)) return;
+        if (!this.tiles.delete(tile) && !this.placeholders.delete(tile)) return;
 
         const neighbors = tile.neighbors;
 
         // remove tile from vertices
         for (const vertex of tile.vertices) {
             vertex.removeTile(tile);
-            if (vertex.corners.length == 0) {
+            if (vertex.corners.length == 0 && vertex.placeholders.size == 0) {
                 this.vertices.delete(pointToKey(vertex.point));
             }
         }
@@ -453,9 +488,10 @@ export class Grid extends EventTarget {
         for (const edge of tile.edges) {
             if (edge.tileA === tile) edge.tileA = null;
             if (edge.tileB === tile) edge.tileB = null;
+            edge.placeholders.delete(tile);
 
             // remove orphaned edges
-            if (!edge.tileA && !edge.tileB) {
+            if (!edge.tileA && !edge.tileB && edge.placeholders.size == 0) {
                 this.edges.delete(edgeToKey(edge.a.point, edge.b.point));
                 this.frontier.delete(edge);
             }
@@ -464,14 +500,13 @@ export class Grid extends EventTarget {
         // update frontier
         for (const neighbor of neighbors) {
             for (const edge of neighbor.edges) {
-                if (!edge.tileA || !edge.tileB) {
+                if (!!edge.tileA != !!edge.tileB) {
                     this.frontier.add(edge);
                 }
             }
         }
 
         // delete from grid
-        this.tiles.delete(tile);
         this.system.remove(this.tileBodies.get(tile));
         this.tileBodies.delete(tile);
 
@@ -485,48 +520,14 @@ export class Grid extends EventTarget {
      * @returns the new tile
      */
     addPlaceholder(shape: Shape, polygon: Polygon): PlaceholderTile {
-        const placeholder = new PlaceholderTile(shape, polygon);
-        const points = polygon.vertices;
-        const n = points.length;
-
-        // find edges
-        const edges = new Array<GridEdge>(n);
-        for (let i = 0; i < n; i++) {
-            const key = edgeToKey(points[i], points[(i + 1) % n]);
-            const edge = this.edges.get(key);
-            if (edge !== undefined) {
-                edges[i] = edge;
-            }
-        }
-        placeholder.edges = edges;
-
-        // add placeholder to grid
-        this.placeholders.add(placeholder);
-        const collisionPolygon = this.system.createPolygon(
-            {},
-            polygon.vertices as Point[],
-            { userData: placeholder },
-        );
-        this.tileBodies.set(placeholder, collisionPolygon);
-
-        console.log("adding placeholder");
-        this.dispatchEvent(
-            new GridEvent(GridEventType.AddTile, this, placeholder),
-        );
-
-        return placeholder;
+        return this.addTile(shape, polygon, null, true);
     }
 
     /**
      * Removes a placeholder from the grid.
      */
     removePlaceholder(tile: PlaceholderTile): void {
-        if (!this.placeholders.has(tile)) return;
-        // delete from grid
-        this.placeholders.delete(tile);
-        this.system.remove(this.tileBodies.get(tile));
-        this.tileBodies.delete(tile);
-        this.dispatchEvent(new GridEvent(GridEventType.RemoveTile, this, tile));
+        this.removeTile(tile);
     }
 
     /**
@@ -729,7 +730,7 @@ export class Grid extends EventTarget {
         edge: GridEdge,
         includePlaceholders?: boolean,
     ): TileSuggestion[] {
-        if (edge.tileA && edge.tileB) return [];
+        if (!!edge.tileA == !!edge.tileB) return [];
         const ab = !edge.tileA
             ? { a: edge.a.point, b: edge.b.point }
             : { a: edge.b.point, b: edge.a.point };

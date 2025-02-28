@@ -13,6 +13,25 @@ export type BBox = {
     readonly maxY: number;
 };
 
+/**
+ * Shorthand function to define points.
+ * (Mostly for use in tests.)
+ *
+ * P(0, 1) => { x: 0, y: 1 }
+ * P([0, 1], [2, 3]) => [{ x: 0, y: 1 }, { x: 2, y: 3 }]
+ */
+export function P(x: number, y: number): Point;
+export function P(...points: [number, number][]): Point[];
+export function P(
+    ...points: [number, number] | [number, number][]
+): Point | Point[] {
+    if (points[0] instanceof Array) {
+        return points.map((p) => ({ x: p[0] as number, y: p[1] as number }));
+    } else {
+        return { x: points[0] as number, y: points[1] as number };
+    }
+}
+
 export const TWOPI = 2 * Math.PI;
 
 export const DEG2RAD = Math.PI / 180;

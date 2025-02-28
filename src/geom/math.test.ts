@@ -2,6 +2,7 @@ import { describe, test, expect } from "@jest/globals";
 
 import {
     DEG2RAD,
+    P,
     Point,
     area,
     bbox,
@@ -17,10 +18,27 @@ import {
     weightedSumPoint,
 } from "./math";
 
+describe("P", () => {
+    test.each([
+        [{ x: 0, y: 1 }, 0, 1],
+        [[{ x: 0, y: 1 }], [0, 1]],
+        [
+            [
+                { x: 0, y: 1 },
+                { x: 2, y: 3 },
+            ],
+            [0, 1],
+            [2, 3],
+        ],
+    ])("creates points from shorthand", (output, ...input) => {
+        expect(P(...(input as [number, number]))).toStrictEqual(output);
+    });
+});
+
 describe("dist", () => {
     test("computes distances", () => {
-        const a = { x: 12, y: 3 };
-        const b = { x: 8, y: -5 };
+        const a = P(12, 3);
+        const b = P(8, -5);
         expect(dist(a, b)).toBeCloseTo(
             Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)),
         );
@@ -29,25 +47,26 @@ describe("dist", () => {
 
 describe("comparePoint", () => {
     test("compares points", () => {
-        expect(comparePoint({ x: 0, y: 3 }, { x: 1, y: 3 })).toBe(-1);
-        expect(comparePoint({ x: 3, y: 3 }, { x: 1, y: 3 })).toBe(1);
-        expect(comparePoint({ x: 3, y: 3 }, { x: 3, y: 5 })).toBe(-1);
-        expect(comparePoint({ x: 3, y: 3 }, { x: 3, y: 1 })).toBe(1);
-        expect(comparePoint({ x: 3, y: 3 }, { x: 3, y: 3 })).toBe(0);
+        expect(comparePoint(P(0, 3), P(1, 3))).toBe(-1);
+        expect(comparePoint(P(0, 3), P(1, 3))).toBe(-1);
+        expect(comparePoint(P(3, 3), P(1, 3))).toBe(1);
+        expect(comparePoint(P(3, 3), P(3, 5))).toBe(-1);
+        expect(comparePoint(P(3, 3), P(3, 1))).toBe(1);
+        expect(comparePoint(P(3, 3), P(3, 3))).toBe(0);
     });
 });
 
 describe("edgeToAngle", () => {
     test("computes angles", () => {
-        const edge = { a: { x: 2, y: 1 }, b: { x: 3, y: 2 } };
+        const edge = { a: P(2, 1), b: P(3, 2) };
         expect(edgeToAngle(edge)).toBe(45 * DEG2RAD);
     });
 });
 
 describe("midpoint", () => {
     test("computes midpoints", () => {
-        const a = { x: 12, y: 3 };
-        const b = { x: 8, y: -5 };
+        const a = P(12, 3);
+        const b = P(8, -5);
         expect(midpoint(a, b)).toStrictEqual({
             x: 10,
             y: -1,
@@ -57,8 +76,8 @@ describe("midpoint", () => {
 
 describe("weightedSumPoint", () => {
     test("computes the weighted sum of two points", () => {
-        const a = { x: 12, y: 3 };
-        const b = { x: 8, y: -5 };
+        const a = P(12, 3);
+        const b = P(8, -5);
         expect(weightedSumPoint(a, b)).toStrictEqual({
             x: (12 + 8) / 2,
             y: (3 - 5) / 2,
@@ -78,11 +97,7 @@ describe("weightedSumPoint", () => {
 
 describe("centroid", () => {
     test("computes centroids", () => {
-        const points = [
-            { x: 4, y: 1 },
-            { x: 3, y: 3 },
-            { x: -2, y: 7 },
-        ];
+        const points = [P(4, 1), P(3, 3), P(-2, 7)];
         expect(centroid(points)).toStrictEqual({
             x: (4 + 3 - 2) / 3,
             y: (1 + 3 + 7) / 3,
@@ -90,61 +105,12 @@ describe("centroid", () => {
     });
 
     const shapes = [
-        [
-            [
-                { x: 0, y: 0 },
-                { x: 1, y: 0 },
-                { x: 1, y: 1 },
-                { x: 0, y: 1 },
-            ],
-            { x: 0.5, y: 0.5 },
-        ],
-
-        [
-            [
-                { x: 0, y: 0 },
-                { x: 0, y: 1 },
-                { x: 1, y: 1 },
-                { x: 1, y: 0 },
-            ],
-            { x: 0.5, y: 0.5 },
-        ],
-        [
-            [
-                { x: 3, y: 1 },
-                { x: 7, y: 2 },
-                { x: 4, y: 4 },
-                { x: 8, y: 6 },
-                { x: 1, y: 7 },
-            ],
-            { x: 3.935, y: 4.2846 },
-        ],
-        [
-            [
-                { x: 1, y: 7 },
-                { x: 8, y: 6 },
-                { x: 4, y: 4 },
-                { x: 7, y: 2 },
-                { x: 3, y: 1 },
-            ],
-            { x: 3.935, y: 4.2846 },
-        ],
-        [
-            [
-                { x: 8, y: 6 },
-                { x: 4, y: 4 },
-                { x: 7, y: 2 },
-            ],
-            { x: 6.333, y: 4 },
-        ],
-        [
-            [
-                { x: 8, y: 6 },
-                { x: 4, y: 4 },
-                { x: 7, y: 2 },
-            ],
-            { x: 6.333, y: 4 },
-        ],
+        [P([0, 0], [1, 0], [1, 1], [0, 1]), P(0.5, 0.5)],
+        [P([0, 0], [0, 1], [1, 1], [1, 0]), P(0.5, 0.5)],
+        [P([3, 1], [7, 2], [4, 4], [8, 6], [1, 7]), P(3.935, 4.2846)],
+        [P([1, 7], [8, 6], [4, 4], [7, 2], [3, 1]), P(3.935, 4.2846)],
+        [P([8, 6], [4, 4], [7, 2]), P(6.333, 4)],
+        [P([8, 6], [4, 4], [7, 2]), P(6.333, 4)],
     ];
     test.each(shapes)(
         "computes complex centroids",
@@ -158,51 +124,11 @@ describe("centroid", () => {
 
 describe("area and orientedArea", () => {
     const shapes = [
-        [
-            [
-                { x: 0, y: 0 },
-                { x: 1, y: 0 },
-                { x: 1, y: 1 },
-                { x: 0, y: 1 },
-            ],
-            1,
-        ],
-
-        [
-            [
-                { x: 0, y: 0 },
-                { x: 0, y: 1 },
-                { x: 1, y: 1 },
-                { x: 1, y: 0 },
-            ],
-            -1,
-        ],
-        [
-            [
-                { x: 3, y: 1 },
-                { x: 7, y: 2 },
-                { x: 4, y: 4 },
-                { x: 8, y: 6 },
-                { x: 1, y: 7 },
-            ],
-            20.5,
-        ],
-        [
-            [
-                { x: 8, y: 6 },
-                { x: 4, y: 4 },
-                { x: 7, y: 2 },
-            ],
-            7,
-        ],
-        [
-            [
-                { x: 7, y: 2 },
-                { x: 4, y: 4 },
-                { x: 8, y: 6 },
-            ],
-            -7,
-        ],
+        [P([0, 0], [1, 0], [1, 1], [0, 1]), 1],
+        [P([0, 0], [0, 1], [1, 1], [1, 0]), -1],
+        [P([3, 1], [7, 2], [4, 4], [8, 6], [1, 7]), 20.5],
+        [P([8, 6], [4, 4], [7, 2]), 7],
+        [P([7, 2], [4, 4], [8, 6]), -7],
     ];
     test.each(shapes)(
         "computes oriented areas",
@@ -216,25 +142,17 @@ describe("area and orientedArea", () => {
 });
 
 describe("bbox", () => {
-    test.each([
-        [
-            { x: 4, y: 1 },
-            { x: 3, y: 3 },
-            { x: -2, y: 7 },
-        ],
-        [
-            { x: -3, y: 2 },
-            { x: 3, y: 3 },
-            { x: 5, y: 7 },
-        ],
-    ])("computes a bounding box", (...points: Point[]) => {
-        expect(bbox(points)).toStrictEqual({
-            minX: Math.min(...points.map((p) => p.x)),
-            minY: Math.min(...points.map((p) => p.y)),
-            maxX: Math.max(...points.map((p) => p.x)),
-            maxY: Math.max(...points.map((p) => p.y)),
-        });
-    });
+    test.each([P([4, 1], [3, 3], [-2, 7]), P([-3, 2], [3, 3], [5, 7])])(
+        "computes a bounding box",
+        (...points: Point[]) => {
+            expect(bbox(points)).toStrictEqual({
+                minX: Math.min(...points.map((p) => p.x)),
+                minY: Math.min(...points.map((p) => p.y)),
+                maxX: Math.max(...points.map((p) => p.x)),
+                maxY: Math.max(...points.map((p) => p.y)),
+            });
+        },
+    );
 });
 
 describe("mergeBBox", () => {

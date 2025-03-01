@@ -167,11 +167,9 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(atlas);
-        if (atlas.shapes.length > 1)
+        if (atlas.shapes.length > 1) {
             throw new Error("atlas with more than one shape not implemented");
-        const shape = atlas.shapes[0];
-        const poly = shape.constructPolygonXYR(0, 0, 1);
-        this.tile = this.grid.addTile(shape, poly, poly.segment());
+        }
 
         this.element = document.createElement("div");
         this.element.className = "tileOnStack";
@@ -183,8 +181,6 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.gridDisplay = new TileStackGridDisplay(this.grid, this.rotatable);
 
         this.rotatable.appendChild(this.gridDisplay.element);
-
-        this.rescale();
 
         /*
         // TODO : this doesn't work for the hexagons
@@ -214,10 +210,21 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     showTile(colors: TileColors) {
-        if (colors && colors[0]) {
-            this.tile.colors = colors;
-        } else {
+        if (this.tile) {
             this.grid.removeTile(this.tile);
+            this.tile = null;
+        }
+        if (colors && colors[0]) {
+            if (this.grid.atlas.shapes.length > 1) {
+                throw new Error(
+                    "atlas with more than one shape not implemented",
+                );
+            }
+            const shape = this.grid.atlas.shapes[0];
+            const poly = shape.constructPolygonXYR(0, 0, 1);
+            this.tile = this.grid.addTile(shape, poly, poly.segment());
+            this.tile.colors = colors;
+            this.rescale();
         }
     }
 

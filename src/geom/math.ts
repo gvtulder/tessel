@@ -113,7 +113,9 @@ export function comparePoint(a: Point, b: Point): number {
  * @returns the angle in radians
  */
 export function edgeToAngle(edge: Edge): number {
-    return Math.atan2(edge.b.y - edge.a.y, edge.b.x - edge.a.x);
+    return (
+        (Math.atan2(edge.b.y - edge.a.y, edge.b.x - edge.a.x) + TWOPI) % TWOPI
+    );
 }
 
 /**

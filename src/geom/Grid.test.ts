@@ -406,6 +406,28 @@ describe("Grid", () => {
         expect(grid.placeholders.size).toBe(4);
     });
 
+    test("can generate triangle placeholders", () => {
+        const atlas = TrianglesAtlas;
+        const shape = atlas.shapes[0];
+        const grid = new Grid(atlas);
+        const poly1 = shape.constructPolygonXYR(0, 0, 1);
+
+        // place initial tile
+        const tile1 = grid.addTile(shape, poly1);
+
+        // generate placeholders
+        grid.generatePlaceholders();
+        expect(grid.placeholders.size).toBe(3);
+
+        grid.addTile(
+            shape,
+            shape.constructPolygonEdge(tile1.polygon.outsideEdges[0], 0),
+        );
+        grid.generatePlaceholders();
+        expect(grid.frontier.size).toBe(4);
+        expect(grid.placeholders.size).toBe(4);
+    });
+
     test("finds matching tiles", () => {
         const atlas = TrianglesAtlas;
         const grid = new Grid(atlas);

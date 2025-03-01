@@ -65,6 +65,7 @@ class VertexPattern {
      * @returns true if the vertex matches
      */
     checkMatch(corners: SortedCorners): boolean {
+        if (corners.length == 0) return true;
         const def = this.definition;
         // try each starting point on the vertex
         for (let start = 0; start < def.length; start++) {
@@ -78,9 +79,7 @@ class VertexPattern {
                     curAngle < corner.edgeAngle - EPSILON &&
                     defIdx < def.length
                 ) {
-                    curAngle +=
-                        Math.PI -
-                        def[(defIdx + start) % def.length].cornerAngle;
+                    curAngle += def[(defIdx + start) % def.length].cornerAngle;
                     defIdx++;
                 }
                 if (
@@ -93,8 +92,7 @@ class VertexPattern {
                     ok = false;
                     break;
                 }
-                curAngle +=
-                    Math.PI - def[(defIdx + start) % def.length].cornerAngle;
+                curAngle += def[(defIdx + start) % def.length].cornerAngle;
                 defIdx++;
             }
             if (ok) {

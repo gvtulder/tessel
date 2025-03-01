@@ -1,12 +1,30 @@
 import { describe, expect, test } from "@jest/globals";
 import { Atlas, AtlasDefinitionDoc, Penrose0Atlas } from "./Atlas";
 import { deg2rad, rad2deg } from "./math";
+import { Grid, SortedCorners } from "./Grid";
+import { Tile } from "./Tile";
 
 function toFixed(xs: readonly number[], fractionDigits: number) {
     return xs.map((x) => x.toFixed(fractionDigits));
 }
 
 describe("Atlas", () => {
+    const squaresDef = {
+        name: "Squares",
+        shapes: {
+            S: { name: "square", angles: [90, 90, 90, 90] },
+        },
+        vertices: [{ vertex: "S0-S0-S0-S0" }],
+    };
+
+    const trianglesDef = {
+        name: "Triangles",
+        shapes: {
+            T: { name: "triangle", angles: [60, 60, 60] },
+        },
+        vertices: [{ vertex: "T0-T0-T0-T0-T0-T0" }],
+    };
+
     test("can be created from a definition", () => {
         const def: AtlasDefinitionDoc = {
             name: "Square",
@@ -68,24 +86,12 @@ describe("Atlas", () => {
     });
 
     test("can compute rotation angles", () => {
-        const squares = Atlas.fromDefinition({
-            name: "Squares",
-            shapes: {
-                S: { name: "square", angles: [90, 90, 90, 90] },
-            },
-            vertices: [{ vertex: "S0-S0-S0-S0" }],
-        });
+        const squares = Atlas.fromDefinition(squaresDef);
         expect(toFixed(squares.orientations, 4)).toStrictEqual(
             toFixed(deg2rad([0, 90, 180, 270]), 4),
         );
 
-        const triangles = Atlas.fromDefinition({
-            name: "Triangles",
-            shapes: {
-                T: { name: "triangle", angles: [60, 60, 60] },
-            },
-            vertices: [{ vertex: "T0-T0-T0" }],
-        });
+        const triangles = Atlas.fromDefinition(trianglesDef);
         expect(toFixed(triangles.orientations, 4)).toStrictEqual(
             toFixed(deg2rad([0, 60, 120, 180, 240, 300]), 4),
         );
@@ -94,5 +100,71 @@ describe("Atlas", () => {
         expect(rad2deg(penrose.orientations)).toStrictEqual([
             0, 36, 72, 108, 144, 180, 216, 252, 288, 324,
         ]);
+    });
+
+    test("can check for matching vertex with squares", () => {
+        const squares = Atlas.fromDefinition(squaresDef);
+        const grid = new Grid(squares);
+        const shape = squares.shapes[0];
+
+        // empty vertex
+        expect(squares.checkMatch(new SortedCorners())).toBe(true);
+
+        const tile1 = grid.addTile(shape, shape.constructPolygonXYR(0, 0, 1));
+        expect(tile1.vertices[0].corners.length).toBe(1);
+        expect(squares.checkMatch(tile1.vertices[0].corners)).toBe(true);
+        const tile2 = grid.addTile(
+            shape,
+            shape.constructPolygonEdge(tile1.polygon.outsideEdges[3], 0),
+        );
+        expect(tile1.vertices[0].corners.length).toBe(2);
+        expect(squares.checkMatch(tile1.vertices[0].corners)).toBe(true);
+        const tile3 = grid.addTile(
+            shape,
+            shape.constructPolygonEdge(tile2.polygon.outsideEdges[3], 0),
+        );
+        expect(tile1.vertices[0].corners.length).toBe(3);
+        expect(squares.checkMatch(tile1.vertices[0].corners)).toBe(true);
+        const tile4 = grid.addTile(
+            shape,
+            shape.constructPolygonEdge(tile3.polygon.outsideEdges[3], 0),
+        );
+        expect(tile1.vertices[0].corners.length).toBe(4);
+        expect(squares.checkMatch(tile1.vertices[0].corners)).toBe(true);
+    });
+
+    test("can check for matching vertex with triangles", () => {
+        const triangles = Atlas.fromDefinition(trianglesDef);
+        const grid = new Grid(triangles);
+        const shape = triangles.shapes[0];
+
+        // empty vertex
+        expect(triangles.checkMatch(new SortedCorners())).toBe(true);
+
+        const tiles = [grid.addTile(shape, shape.constructPolygonXYR(0, 0, 1))];
+        const vertex = tiles[0].vertices[0];
+        expect(vertex.corners.length).toBe(1);
+        expect(triangles.checkMatch(vertex.corners)).toBe(true);
+        for (let i = 1; i < 6; i++) {
+            tiles.push(
+                grid.addTile(
+                    shape,
+                    shape.constructPolygonEdge(
+                        tiles[i - 1].polygon.outsideEdges[2],
+                        0,
+                    ),
+                ),
+            );
+            expect(vertex.corners.length).toBe(tiles.length);
+            expect(triangles.checkMatch(vertex.corners)).toBe(true);
+        }
+
+        grid.removeTile(tiles[2]);
+        expect(vertex.corners.length).toBe(5);
+        expect(triangles.checkMatch(vertex.corners)).toBe(true);
+
+        grid.removeTile(tiles[3]);
+        expect(vertex.corners.length).toBe(4);
+        expect(triangles.checkMatch(vertex.corners)).toBe(true);
     });
 });

@@ -230,6 +230,14 @@ export function roundPathCorners(
     }
 
     return resultCommands.reduce(function (str, c) {
-        return str + c.join(" ") + " ";
+        return (
+            str +
+            c
+                .map((x) =>
+                    (x as number).toFixed ? (x as number).toFixed(10) : x,
+                )
+                .join(" ") +
+            " "
+        );
     }, "");
 }

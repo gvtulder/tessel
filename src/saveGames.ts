@@ -25,6 +25,16 @@ lookup.set("square", {
     ],
 });
 
+lookup.set("square5", {
+    atlas: SquaresAtlas,
+    initialTile: ["red", "black", "blue", "white"],
+    tilesShownOnStack: 3,
+    tileGenerator: [
+        TileGenerators.permutations(["red", "black", "blue", "white"]),
+        TileGenerators.randomSubset(5),
+    ],
+});
+
 lookup.set("triangle", {
     atlas: TrianglesAtlas,
     initialTile: ["red", "black", "blue"],

@@ -5,7 +5,7 @@ import interact from "@interactjs/interact";
 
 import { Grid } from "../geom/Grid";
 import { FixedOrderTileStack } from "../game/TileStack";
-import { Tile, TileType } from "../geom/Tile";
+import { Tile, TileColors, TileType } from "../geom/Tile";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay";
 import { TileDragController, TileDragSource } from "./TileDragController";
 import { MainGridTileDragController } from "./MainGridTileDragController";
@@ -97,7 +97,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
             }
 
             const color = this.tileStack.slots[i];
-            this.tileDisplays[i].tile.colors = color ? color : null;
+            this.tileDisplays[i].showTile(color);
             if (!color) this.tileDisplays[i].removeDraggable();
         }
         const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
@@ -211,6 +211,14 @@ export class SingleTileOnStackDisplay implements TileDragSource {
 
     rescale() {
         this.gridDisplay.rescale();
+    }
+
+    showTile(colors: TileColors) {
+        if (colors && colors[0]) {
+            this.tile.colors = colors;
+        } else {
+            this.grid.removeTile(this.tile);
+        }
     }
 
     /**

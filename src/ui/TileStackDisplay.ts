@@ -219,6 +219,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
             this.tile = null;
         }
         if (colors && colors[0]) {
+            this.rotatable.classList.remove("animated");
             if (this.grid.atlas.shapes.length > 1) {
                 throw new Error(
                     "atlas with more than one shape not implemented",

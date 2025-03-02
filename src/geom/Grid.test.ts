@@ -35,7 +35,7 @@ describe("SortedCorners", () => {
                 [tile2, 1],
                 [tile3, 1],
             ],
-            [tile3, tile2, tile1],
+            [tile2, tile1, tile3],
         ],
         [
             [
@@ -43,7 +43,7 @@ describe("SortedCorners", () => {
                 [tile3, 1],
                 [tile1, 0],
             ],
-            [tile3, tile2, tile1],
+            [tile2, tile1, tile3],
         ],
     ])("can add and remove tiles", (input, output) => {
         const sortedCorners = new SortedCorners();
@@ -60,8 +60,8 @@ describe("SortedCorners", () => {
         sortedCorners.removeTile(tile2);
         expect(sortedCorners.length).toBe(2);
         expect([...sortedCorners.map((c) => c.tile.centroid)]).toStrictEqual([
-            tile3.centroid,
             tile1.centroid,
+            tile3.centroid,
         ]);
     });
 

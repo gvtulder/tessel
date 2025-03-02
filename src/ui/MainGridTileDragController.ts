@@ -1,7 +1,7 @@
 import type { DragEvent } from "@interactjs/types";
 
 import { TileOnScreenMatch } from "./TileDisplay";
-import { Tile, TileType } from "../geom/Tile";
+import { PlaceholderTile, Tile, TileType } from "../geom/Tile";
 import { GameController } from "./GameController";
 import { DEBUG } from "../settings";
 import { dist } from "../utils";
@@ -11,6 +11,7 @@ import {
     TileDragSourceContext,
 } from "./TileDragController";
 import { MainGridDisplay } from "./MainGridDisplay";
+import { edgeToAngle, TWOPI } from "../geom/math";
 
 export class MainGridTileDragController extends TileDragController {
     dropTarget: MainGridDisplay;
@@ -43,42 +44,55 @@ export class MainGridTileDragController extends TileDragController {
     onDragStart(context: TileDragSourceContext, evt: DragEvent) {
         super.onDragStart(context, evt);
 
-        // TODO implement autorotate
-        /*
         // precompute the placeholder tiles where this tile would fit
         if (this.autorotate || this.hints || this.snap) {
             context.autorotateCache.clear();
             // find possible locations where this tile would fit
-            for (const placeholder of this.dropTarget.grid.placeholderTiles) {
-                const rotation = placeholder.computeRotationToFit(
-                    context.source.tile,
-                    context.source.rotation,
-                );
-                if (rotation) {
-                    // this tile would fit
-                    context.autorotateCache.set(placeholder, rotation);
+            const sourceTile = context.source.tile;
+            for (const placeholder of this.dropTarget.grid.placeholders) {
+                if (sourceTile.shape === placeholder.shape) {
+                    const rotations =
+                        this.dropTarget.grid.checkColorsWithRotation(
+                            placeholder,
+                            sourceTile.colors,
+                        );
+                    if (rotations.length > 0) {
+                        // this tile would fit
+                        const sourceEdges = sourceTile.polygon.edges;
+                        const targetEdges = placeholder.polygon.edges;
+                        context.autorotateCache.set(placeholder, {
+                            targetRotations: rotations,
+                            relativeRotationAngles: rotations.map(
+                                (r, i) =>
+                                    edgeToAngle(targetEdges[i]) -
+                                    edgeToAngle(
+                                        sourceEdges[
+                                            (i + r) % targetEdges.length
+                                        ],
+                                    ),
+                            ),
+                        });
+                    }
                 }
             }
             // if hints are enabled, highlight possible/impossible tiles
             if (this.hints) {
                 for (const tsd of this.dropTarget.tileDisplays.values()) {
-                    if (tsd.tile.type === TileType.Placeholder) {
+                    if (tsd.tile.tileType === TileType.Placeholder) {
                         tsd.highlightHint(
                             context.autorotateCache.has(tsd.tile),
                         );
                     }
                 }
             }
-            console.log(context.autorotateCache);
+            console.log("autorotate map", [...context.autorotateCache]);
         }
-        */
     }
 
     onDragMove(context: TileDragSourceContext, evt: DragEvent) {
         super.onDragMove(context, evt);
 
         if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
-            // TODO debugging
             // figure out where we are
             const movingTile = context.source.tile;
             const movingPoly = context.source.gridDisplay.gridToScreenPositions(
@@ -98,57 +112,19 @@ export class MainGridTileDragController extends TileDragController {
         }
 
         // implement autorotate
-        /*
         if (this.autorotate) {
-            // figure out where we are
-            const movingTriangle = context.source.tile.triangles[0];
-            const movingPos =
-                context.source.gridDisplay.triangleToScreenPosition(
-                    movingTriangle,
-                );
-            // match moving to fixed
-            const fixedTriangleCoord =
-                this.dropTarget.screenPositionToTriangleCoord(movingPos);
-            if (!fixedTriangleCoord) return;
-            const fixedTriangle = this.dropTarget.grid.getTriangle(
-                ...fixedTriangleCoord,
-            );
+            const match = this.mapToFixedTile(context, true);
 
-            // triangle matched?
-            if (fixedTriangle && fixedTriangle.placeholders) {
-                // find the best placeholder
-                // compute the screen center of each placeholder tile
-                const placeholdersWithCenterDist =
-                    fixedTriangle.placeholders.map(
-                        (placeholder) =>
-                            [
-                                placeholder,
-                                dist(
-                                    this.dropTarget.coordinateMapper.gridToScreen(
-                                        [
-                                            (placeholder.right +
-                                                placeholder.left) /
-                                                2,
-                                            (placeholder.bottom +
-                                                placeholder.top) /
-                                                2,
-                                        ],
-                                    ),
-                                    [evt.clientX, evt.clientY],
-                                ),
-                            ] as [Tile, number],
-                    );
-                // sort by distance to the mouse cursor
-                placeholdersWithCenterDist.sort((a, b) => a[1] - b[1]);
-                // use the closest placeholder
-                const placeholder = placeholdersWithCenterDist[0][0];
-
+            if (match && match.tile instanceof PlaceholderTile) {
+                const placeholder = match.tile;
                 if (context.autorotateCurrentTarget !== placeholder) {
+                    console.log("matched", match);
                     // autorotate after a small delay
                     context.autorotateCurrentTarget = placeholder;
                     const rotation = context.autorotateCache.get(
                         context.autorotateCurrentTarget,
                     );
+                    console.log("rotation:", rotation);
                     if (rotation) {
                         // this tile would fit
                         if (context.autorotateTimeout)
@@ -169,9 +145,7 @@ export class MainGridTileDragController extends TileDragController {
                     // source.resetAutorotate();
                 }, 100);
             }
-            // console.log('MOVE', 'closestPair', closestPair);
         }
-        */
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {

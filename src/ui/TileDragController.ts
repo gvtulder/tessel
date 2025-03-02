@@ -10,11 +10,13 @@ import { dist } from "../utils";
 import { Grid } from "../geom/Grid";
 import { GridDisplay } from "./GridDisplay";
 import { Point } from "../geom/math";
+import { Shape } from "../geom/Shape";
 
-const MAX_TILE_DROP_DIST = 0.3;
+export const MAX_TILE_DROP_POINT_DIST = 0.2;
 
-export type TileRotation = {
-    readonly angle: number;
+export type TileRotationSet = {
+    readonly targetRotations: readonly number[];
+    readonly relativeRotationAngles: readonly number[];
 };
 
 export class TileDragEvent extends Event {
@@ -53,7 +55,7 @@ export class TileDragController extends EventTarget {
             source: source,
             autorotateCurrentTarget: null,
             autorotateTimeout: null,
-            autorotateCache: new Map<Tile, TileRotation>(),
+            autorotateCache: new Map<Tile, TileRotationSet>(),
             draggable: source.getDraggable(),
             position: { x: 0, y: 0 },
         };
@@ -175,31 +177,20 @@ export class TileDragController extends EventTarget {
     onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {
         context.source.resetCoordinateMapperCache();
 
-        // figure out where we are
-        const movingTile = context.source.tile;
-        const movingPoly = context.source.gridDisplay.gridToScreenPositions(
-            movingTile.polygon.vertices,
-        );
-        // match moving to fixed
-        const fixedPoly = this.dropTarget.screenToGridPositions(movingPoly);
-        const match = this.dropTarget.findMatchingTile(
-            fixedPoly,
-            MAX_TILE_DROP_DIST,
-            true,
-        );
+        const match = this.mapToFixedTile(context);
 
         let successful = false;
         if (match) {
             successful = this.dropTarget.dropTile(context.source, {
                 fixed: match.tile,
-                moving: movingTile,
+                moving: context.source.tile,
                 offset: match.offset,
             });
         }
         console.log(
             "DROPPED",
             match,
-            movingTile,
+            context.source.tile,
             successful ? "success" : "no success",
         );
 
@@ -223,13 +214,32 @@ export class TileDragController extends EventTarget {
 
         return successful;
     }
+
+    protected mapToFixedTile(
+        context: TileDragSourceContext,
+        matchCentroidOnly?: boolean,
+    ) {
+        const movingTile = context.source.tile;
+        const movingPoly = context.source.gridDisplay.gridToScreenPositions(
+            movingTile.polygon.vertices,
+        );
+        // match moving to fixed
+        const fixedPoly = this.dropTarget.screenToGridPositions(movingPoly);
+        return this.dropTarget.findMatchingTile(
+            fixedPoly,
+            MAX_TILE_DROP_POINT_DIST,
+            true,
+            movingTile.shape,
+            matchCentroidOnly,
+        );
+    }
 }
 
 export type TileDragSourceContext = {
     source: TileDragSource;
     autorotateCurrentTarget: Tile;
     autorotateTimeout: number;
-    autorotateCache: Map<Tile, TileRotation>;
+    autorotateCache: Map<Tile, TileRotationSet>;
     draggable: Interactable;
     position: { x: 0; y: 0 };
 };
@@ -237,13 +247,13 @@ export type TileDragSourceContext = {
 export interface TileDragSource {
     gridDisplay: GridDisplay;
     tile: Tile;
-    rotation: TileRotation;
+    rotation: TileRotationSet;
     indexOnStack?: number;
     getDraggable(): Interactable;
     startDrag();
     endDrag(successful: boolean);
     resetDragStatus();
-    startAutorotate(rotation: TileRotation);
+    startAutorotate(rotation: TileRotationSet);
     resetAutorotate(keepRotation: boolean);
     resetCoordinateMapperCache();
 }
@@ -274,12 +284,16 @@ export interface TileDropTarget {
      * @param points the vertices of a polygon
      * @param minOverlap the minimal overlap proportion
      * @param includePlaceholders set to true to match placeholder tiles
+     * @param shape only match tiles with this shape
+     * @param matchCentroidOnly set to true match on centroid, not all points
      * @returns the best matching tile and offset, or null
      */
     findMatchingTile(
         points: readonly Point[],
         minOverlap: number,
         includePlaceholders?: boolean,
+        shape?: Shape,
+        matchCentroidOnly?: boolean,
     ): { tile: Tile; offset: number; dist: number };
 
     dropTile(source: TileDragSource, pair: TileOnScreenMatch): boolean;

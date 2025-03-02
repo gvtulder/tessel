@@ -7,7 +7,9 @@ import {
 import { Atlas } from "./Atlas";
 import {
     BBox,
+    centroid,
     comparePoint,
+    dist,
     edgeToAngle,
     mergeBBox,
     Point,
@@ -638,8 +640,27 @@ export class Grid extends EventTarget {
         }
     }
 
+    /**
+     * Checks if the color sequence would fit for this tile.
+     */
     checkColors(tile: Tile, colors: TileColors): boolean {
         return this.rules.checkColors(tile, colors);
+    }
+
+    /**
+     * Checks if the color sequence would fit this tile,
+     * allowing for possible rotations.
+     * Returns offset r if colors[i] = colors[i + r] fits.
+     * @returns the valid rotation offsets
+     */
+    checkColorsWithRotation(tile: Tile, colors: TileColors): number[] {
+        const rotations: number[] = [];
+        for (const r of tile.shape.rotationalSymmetries) {
+            if (this.rules.checkColors(tile, colors, r)) {
+                rotations.push(r);
+            }
+        }
+        return rotations;
     }
 
     /**
@@ -647,13 +668,18 @@ export class Grid extends EventTarget {
      * @param points the vertices of a polygon
      * @param maxDist the maximum distance between matching points
      * @param includePlaceholders set to true to match placeholder tiles
+     * @param shape only match tiles with this shape
+     * @param matchCentroidOnly set to true match on centroid, not all points
      * @returns the best matching tile and offset, or null
      */
     findMatchingTile(
         points: readonly Point[],
         maxDist: number,
         includePlaceholders?: boolean,
+        shape?: Shape,
+        matchCentroidOnly?: boolean,
     ): { tile: Tile; offset: number; dist: number } {
+        // TODO check also for shape?
         const collisionPolygon = new CollisionPolygon({}, points as Point[]);
         // this normally happens on system.insert
         collisionPolygon.bbox = collisionPolygon.getAABBAsBBox();
@@ -666,24 +692,37 @@ export class Grid extends EventTarget {
         collisionPolygon.maxY =
             collisionPolygon.bbox.maxY - collisionPolygon.padding;
         const bestCandidate = { tile: null as Tile, offset: 0, dist: 0 };
+        const pointsCentroid = centroid(points);
         this.system.checkOne(collisionPolygon, (resp) => {
-            if (!includePlaceholders) {
-                if (resp.b.userData instanceof PlaceholderTile) return false;
+            const other = resp.b.userData as Tile;
+            if (!includePlaceholders && other instanceof PlaceholderTile) {
+                return false;
             }
-            const poly = (resp.b.userData as Tile).polygon;
-            const match = matchPoints(poly.vertices, points);
-            if (match === null) return false;
-            if (match.dist > maxDist) return false;
+            if (shape && other.shape !== shape) {
+                return false;
+            }
+            const poly = other.polygon;
+            let distance: number;
+            let offset: number = undefined;
+            if (matchCentroidOnly) {
+                distance = dist(pointsCentroid, other.centroid);
+            } else {
+                const match = matchPoints(poly.vertices, points);
+                if (match === null) return false;
+                distance = match.dist;
+                offset = match.offset;
+            }
+            if (distance > maxDist) return false;
             // const overlap = poly.overlapArea(points) / poly.area;
             // if (overlap < minOverlap) return false;
-            if (!bestCandidate.tile || bestCandidate.dist > match.dist) {
-                bestCandidate.tile = resp.b.userData as Tile;
-                bestCandidate.dist = match.dist;
-                bestCandidate.offset = match.offset;
+            if (!bestCandidate.tile || bestCandidate.dist > distance) {
+                bestCandidate.tile = other;
+                bestCandidate.dist = distance;
+                bestCandidate.offset = offset;
             }
             return false;
         });
-        console.log("bestCandidate", bestCandidate);
+        // console.log("bestCandidate", bestCandidate);
         return bestCandidate.tile ? bestCandidate : null;
     }
 

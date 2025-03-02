@@ -2,6 +2,7 @@ import { TileDisplay } from "./TileDisplay";
 import { Grid } from "../geom/Grid";
 import { GridEvent, GridEventType } from "../geom/GridEvent";
 import { Tile } from "../geom/Tile";
+import { Shape } from "../geom/Shape";
 import { ConnectorDisplay } from "./ConnectorDisplay";
 import { DEBUG } from "../settings";
 import { BBox, Point, dist } from "../geom/math";
@@ -214,14 +215,24 @@ export class GridDisplay extends EventTarget {
      * @param points the vertices of a polygon
      * @param minOverlap the minimal overlap proportion
      * @param includePlaceholders set to true to match placeholder tiles
+     * @param shape only match tiles with this shape
+     * @param matchCentroidOnly set to true match on centroid, not all points
      * @returns the best matching tile and offset, or null
      */
     findMatchingTile(
         points: readonly Point[],
         minOverlap: number,
         includePlaceholders?: boolean,
+        shape?: Shape,
+        matchCentroidOnly?: boolean,
     ): { tile: Tile; offset: number; dist: number } {
-        return this.grid.findMatchingTile(points, minOverlap, true);
+        return this.grid.findMatchingTile(
+            points,
+            minOverlap,
+            includePlaceholders,
+            shape,
+            matchCentroidOnly,
+        );
     }
 
     styleMainElement() {

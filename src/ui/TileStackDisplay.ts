@@ -7,10 +7,14 @@ import { Grid } from "../geom/Grid";
 import { FixedOrderTileStack } from "../game/TileStack";
 import { Tile, TileColors, TileType } from "../geom/Tile";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay";
-import { TileDragController, TileDragSource } from "./TileDragController";
+import {
+    TileDragController,
+    TileDragSource,
+    TileRotationSet,
+} from "./TileDragController";
 import { MainGridTileDragController } from "./MainGridTileDragController";
 import { Atlas } from "../geom/Atlas";
-import { RAD2DEG, TWOPI } from "../geom/math";
+import { angleDist, RAD2DEG, TWOPI } from "../geom/math";
 
 export abstract class BaseTileStackDisplay extends EventTarget {
     static events = {
@@ -244,28 +248,50 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     get rotation(): TileRotation {
+        // TODO
+        throw new Error("Not implemented");
         return this.grid.atlas.orientations[this.rotationIdx];
     }
 
     rotateTile() {
-        this.rotateTileTo(this.rotationIdx + 1, false, true);
+        this.rotateTileTo(this.rotationIdx + 1, false, true, true);
     }
 
-    rotateTileTo(newRotation: number, reverse?: boolean, closest?: boolean) {
+    rotateTileTo(
+        newRotationIdx: number,
+        reverse?: boolean,
+        closest?: boolean,
+        animated?: boolean,
+    ) {
         const angles = this.grid.atlas.orientations;
-        const oldAngle = angles[this.rotationIdx];
-        this.rotationIdx = newRotation % angles.length;
-        const reverseDiff =
-            (TWOPI + oldAngle - angles[this.rotationIdx]) % TWOPI;
-        const forwardDiff =
-            (TWOPI + angles[this.rotationIdx] - oldAngle) % TWOPI;
+        this.rotationIdx = newRotationIdx % angles.length;
+        this.rotateTileToAngle(
+            angles[this.rotationIdx],
+            reverse,
+            closest,
+            animated,
+        );
+    }
+
+    rotateTileToAngle(
+        newAngle: number,
+        reverse?: boolean,
+        closest?: boolean,
+        animated?: boolean,
+    ) {
+        newAngle = (newAngle + TWOPI) % TWOPI;
+        const oldAngle = this.angle;
+        const reverseDiff = (TWOPI + oldAngle - newAngle) % TWOPI;
+        const forwardDiff = (TWOPI + newAngle - oldAngle) % TWOPI;
         if (reverse || (closest && reverseDiff < forwardDiff)) {
             this.angle -= reverseDiff;
         } else {
             this.angle += forwardDiff;
         }
         this.rotatable.style.transform = `rotate(${this.angle * RAD2DEG}deg)`;
-        this.rotatable.classList.add("animated");
+        if (animated) {
+            this.rotatable.classList.add("animated");
+        }
     }
 
     normalizeRotation() {
@@ -341,15 +367,26 @@ export class SingleTileOnStackDisplay implements TileDragSource {
      * Rotates the tile to fit the target tile.
      * @param targetTile the correct rotation
      */
-    startAutorotate(rotation: TileRotation) {
-        if (rotation) {
-            if (this.beforeAutorotationIdx === null) {
-                this.beforeAutorotationIdx = this.rotationIdx;
+    startAutorotate(rotationSet: TileRotationSet) {
+        if (rotationSet) {
+            let newAngle = 0;
+            let bestAngleDist = -1;
+            for (const angle of rotationSet.relativeRotationAngles) {
+                const d = angleDist(this.angle, angle);
+                console.log(
+                    "curAngle",
+                    this.angle,
+                    "newAngle",
+                    angle,
+                    "dist",
+                    d,
+                );
+                if (bestAngleDist == -1 || d < bestAngleDist) {
+                    newAngle = angle;
+                    bestAngleDist = d;
+                }
             }
-            const rotationIdx = this.tile.rotations.findIndex(
-                (r) => r.steps == rotation.steps,
-            );
-            this.rotateTileTo(rotationIdx, false, true);
+            this.rotateTileToAngle(newAngle, false, true, true);
         } else {
             this.resetAutorotate();
         }
@@ -357,15 +394,8 @@ export class SingleTileOnStackDisplay implements TileDragSource {
 
     /**
      * Resets the rotation to the state before autorotation.
-     * @param keepRotation if true, does not rotate back
      */
-    resetAutorotate(keepRotation?: boolean) {
-        if (this.beforeAutorotationIdx !== null) {
-            const oldRotationIdx = this.beforeAutorotationIdx;
-            this.beforeAutorotationIdx = null;
-            if (!keepRotation) {
-                this.rotateTileTo(oldRotationIdx, false, true);
-            }
-        }
+    resetAutorotate(notAnimated?: boolean) {
+        this.rotateTileTo(this.rotationIdx, false, true, !notAnimated);
     }
 }

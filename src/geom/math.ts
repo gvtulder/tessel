@@ -119,6 +119,16 @@ export function edgeToAngle(edge: Edge): number {
 }
 
 /**
+ * Computes the absolute rotation difference between two angles.
+ * @returns the distance ([0, Math.PI])
+ */
+export function angleDist(a: number, b: number): number {
+    const ab = (Math.round((TWOPI + TWOPI + a - b) * RAD2DEG) % 360) * DEG2RAD;
+    const ba = (Math.round((TWOPI + TWOPI + b - a) * RAD2DEG) % 360) * DEG2RAD;
+    return ab < ba ? ab : ba;
+}
+
+/**
  * Computes the midpoint of an edge.
  * @returns the point between a and b
  */

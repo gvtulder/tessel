@@ -5,7 +5,7 @@ import { Polygon } from "./Polygon";
 import { Shape } from "./Shape";
 
 export type TileColor = string;
-export type TileColors = TileColor[];
+export type TileColors = readonly TileColor[];
 
 export const enum TileType {
     /**

@@ -4,7 +4,7 @@ import { PlaceholderTile, Tile } from "./Tile";
 import { Shape } from "./Shape";
 import { Polygon } from "./Polygon";
 import { GridEventType } from "./GridEvent";
-import { mergeBBox, P, weightedSumPoint } from "./math";
+import { mergeBBox, P, rotateArray, weightedSumPoint } from "./math";
 import { SquaresAtlas, TrianglesAtlas } from "./Atlas";
 
 const TRIANGLE = new Shape("triangle", [60, 60, 60]);
@@ -449,6 +449,46 @@ describe("Grid", () => {
         expect(grid.findMatchingTile(poly3.vertices, 0.2, true)).toBeDefined();
     });
 
+    test("finds matching tiles by centroid", () => {
+        const atlas = SquaresAtlas;
+        const grid = new Grid(atlas);
+        const shape = atlas.shapes[0];
+        const unknownShape = TRIANGLE;
+
+        // two squares with centroid (0, 0)
+        const poly1 = new Polygon(P([-1, -1], [1, -1], [1, 1], [-1, 1]));
+        const poly2 = new Polygon(
+            P(
+                [0, -Math.SQRT2],
+                [Math.SQRT2, 0],
+                [0, Math.SQRT2],
+                [-Math.SQRT2, 0],
+            ),
+        );
+
+        const tile1 = grid.addTile(shape, poly1);
+
+        expect(grid.findMatchingTile(poly1.vertices, 0.1, true).tile).toBe(
+            tile1,
+        );
+        expect(
+            grid.findMatchingTile(poly1.vertices, 0.1, true, unknownShape),
+        ).toBeNull();
+        expect(grid.findMatchingTile(poly2.vertices, 0.1, true)).toBeNull();
+        expect(
+            grid.findMatchingTile(poly2.vertices, 0.1, true, null, true).tile,
+        ).toBe(tile1);
+        expect(
+            grid.findMatchingTile(
+                poly2.vertices,
+                0.1,
+                true,
+                unknownShape,
+                true,
+            ),
+        ).toBeNull();
+    });
+
     test("checks tile colors", () => {
         const atlas = TrianglesAtlas;
         const grid = new Grid(atlas);
@@ -457,5 +497,27 @@ describe("Grid", () => {
         tile1.colors = ["red", "white", "blue"];
         expect(grid.checkColors(tile2, ["red", "white", "blue"])).toBe(true);
         expect(grid.checkColors(tile2, ["white", "red", "blue"])).toBe(false);
+
+        for (let r = 0; r < 3; r++) {
+            expect(
+                grid.checkColorsWithRotation(
+                    tile2,
+                    rotateArray(["red", "white", "blue"], -r),
+                ),
+            ).toStrictEqual([r]);
+        }
+
+        expect(
+            grid.checkColorsWithRotation(tile2, ["red", "blue", "white"]),
+        ).toStrictEqual([0]);
+        expect(
+            grid.checkColorsWithRotation(tile2, ["blue", "white", "red"]),
+        ).toStrictEqual([2]);
+        expect(
+            grid.checkColorsWithRotation(tile2, ["blue", "blue", "white"]),
+        ).toStrictEqual([]);
+        expect(
+            grid.checkColorsWithRotation(tile2, ["red", "red", "white"]),
+        ).toStrictEqual([0, 1]);
     });
 });

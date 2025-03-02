@@ -4,30 +4,52 @@ import { BBox, Point } from "./math";
 import { Polygon } from "./Polygon";
 import { Shape } from "./Shape";
 
-/*
-export const enum TileColor {
-    Red = "red",
-    Blue = "blue",
-    Black = "black",
-    Green = "green",
-    White = "white",
-}
-*/
-
 export type TileColor = string;
 export type TileColors = TileColor[];
 
 export const enum TileType {
+    /**
+     * A standard Tile with segments and colors.
+     */
     Normal,
+    /**
+     * A PlaceholderTile without segments or colors,
+     * can overlap other placeholder tiles.
+     */
     Placeholder,
 }
 
+/**
+ * A TileSegment represents a segment of a tile
+ * (usually a triangle) and has a color.
+ */
 export class TileSegment {
+    /**
+     * The tile of this segment.
+     */
     tile: Tile;
+    /**
+     * The edge index of the edge connected to this segment.
+     * See tile.edge[index].
+     */
     index: number;
+    /**
+     * The polygon of this segment.
+     */
     polygon: Polygon;
+    /**
+     * The color of this segment.
+     */
     color: TileColor;
 
+    /**
+     * Creates a new tile segment.
+     * @param tile the tile this segment is part of
+     * @param index the edge index of the edge that
+     *              connects this segment (tile.edge[index])
+     * @param polygon the polygon shape of this segment
+     * @param color the color of the new segment
+     */
     constructor(
         tile: Tile,
         index: number,
@@ -40,6 +62,17 @@ export class TileSegment {
         this.color = color;
     }
 
+    /**
+     * Returns the neighboring tile segments of this segment.
+     *
+     * This includes both segments internal to this tile,
+     * and the segment on the other side of the outside edge.
+     *
+     * If includeMissing is true, the list will include null
+     * values for any edges of the segment without a neighbor.
+     * If includeMissing is false, the list will only include
+     * existing segments.
+     */
     getNeighbors(includeMissing?: boolean): TileSegment[] {
         const tile = this.tile;
         const n = tile.segments.length;
@@ -59,20 +92,58 @@ export class TileSegment {
     }
 }
 
+/**
+ * A Tile represents a tile or placeholder on the grid.
+ */
 export class Tile extends EventTarget {
+    /**
+     * The type of this tile.
+     */
     tileType: TileType;
+    /**
+     * The vertices forming the outline of this tile,
+     * in clockwise order.
+     */
     vertices: GridVertex[];
+    /**
+     * The edges of this tile: clockwise order, with
+     * edges[i] = vertices[i] -- vertices[i + 1].
+     */
     edges: GridEdge[];
+    /**
+     * The shape of this tile.
+     */
     shape: Shape;
+    /**
+     * The polygon in grid coordinates of this tile.
+     */
     polygon: Polygon;
+    /**
+     * The segments of this tile, or null.
+     * segments[i] is connected to edge[i].
+     */
     segments: TileSegment[];
+    /**
+     * The area of the tile.
+     */
     area: number;
+    /**
+     * The bounding box of the tile.
+     */
     bbox: BBox;
+    /**
+     * The centroid coordinates of the tile.
+     */
     centroid: Point;
-    data: unknown;
 
+    /**
+     * Cache of the segment colors.
+     */
     private _colors: readonly TileColor[];
 
+    /**
+     * Constructs a new tile of the given shape and polygon.
+     */
     constructor(
         shape: Shape,
         polygon: Polygon,
@@ -80,18 +151,25 @@ export class Tile extends EventTarget {
         tileType = TileType.Normal,
     ) {
         super();
+        // basic properties
         this.tileType = tileType;
         this.shape = shape;
         this.polygon = polygon;
+        // precompute statistics
         this.area = polygon.area;
         this.bbox = polygon.bbox;
         this.centroid = polygon.centroid;
+        // generate segments
         if (segments) {
             this.segments = segments.map((s, i) => new TileSegment(this, i, s));
         }
     }
 
-    get neighbors(): Tile[] {
+    /**
+     * Returns the neighbor tiles of this tile.
+     * (This does not return placeholders.)
+     */
+    get neighbors(): ReadonlySet<Tile> {
         const neighbors = new Set<Tile>();
         for (const edge of this.edges) {
             if (edge.tileA === this && edge.tileB) {
@@ -100,14 +178,22 @@ export class Tile extends EventTarget {
                 neighbors.add(edge.tileA);
             }
         }
-        return [...neighbors];
+        return neighbors;
     }
 
+    /**
+     * Returns the colors of the tile segments,
+     * or undefined if no segments are defined.
+     */
     get colors(): readonly TileColor[] {
         if (!this.segments || this.segments.length == 0) return undefined;
         return (this._colors ||= this.segments.map((s) => s.color));
     }
 
+    /**
+     * Updates the colors of the tile segments.
+     * Triggers a GridEventType.UpdateTileColors event.
+     */
     set colors(colors: readonly TileColor[]) {
         this._colors = undefined;
         for (let i = 0; i < colors.length; i++) {
@@ -119,6 +205,10 @@ export class Tile extends EventTarget {
     }
 }
 
+/**
+ * A placeholder tile is a special tile that does not have colors
+ * and can overlap other placeholders.
+ */
 export class PlaceholderTile extends Tile {
     constructor(shape: Shape, polygon: Polygon) {
         super(shape, polygon, null, TileType.Placeholder);

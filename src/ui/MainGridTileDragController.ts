@@ -17,8 +17,27 @@ export class MainGridTileDragController extends TileDragController {
     autorotate: boolean;
     hints: boolean;
 
+    debugPoints: SVGCircleElement[];
+
     constructor(dropTarget: MainGridDisplay) {
         super(dropTarget);
+
+        if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
+            // debug
+            this.debugPoints = [];
+            for (let i = 0; i < 4; i++) {
+                const p = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "circle",
+                );
+                p.setAttribute("cx", "0");
+                p.setAttribute("cy", "0");
+                p.setAttribute("r", "0.05");
+                p.setAttribute("fill", "transparent");
+                this.dropTarget.svgGrid.appendChild(p);
+                this.debugPoints.push(p);
+            }
+        }
     }
 
     onDragStart(context: TileDragSourceContext, evt: DragEvent) {
@@ -57,6 +76,26 @@ export class MainGridTileDragController extends TileDragController {
 
     onDragMove(context: TileDragSourceContext, evt: DragEvent) {
         super.onDragMove(context, evt);
+
+        if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
+            // TODO debugging
+            // figure out where we are
+            const movingTile = context.source.tile;
+            const movingPoly = context.source.gridDisplay.gridToScreenPositions(
+                movingTile.polygon.vertices,
+            );
+            // match moving to fixed
+            const fixedPoly = this.dropTarget.screenToGridPositions(movingPoly);
+            for (
+                let i = 0;
+                i < Math.min(this.debugPoints.length, fixedPoly.length);
+                i++
+            ) {
+                this.debugPoints[i].setAttribute("cx", `${fixedPoly[i].x}`);
+                this.debugPoints[i].setAttribute("cy", `${fixedPoly[i].y}`);
+                this.debugPoints[i].setAttribute("fill", "black");
+            }
+        }
 
         // implement autorotate
         /*

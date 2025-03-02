@@ -13,6 +13,7 @@ export const DEBUG = {
     TILE_EDITOR_COPY_TILE: false,
     TILE_EDITOR_ROTATE_COPY: false,
     LOG_MOUSE_POSITION: false,
+    SHOW_DEBUG_POINTS_WHILE_DRAGGING: false,
 };
 
 // TODO remove

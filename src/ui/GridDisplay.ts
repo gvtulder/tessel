@@ -435,7 +435,7 @@ class CoordinateMapper {
         );
         unitCircle00.setAttribute("cx", "0");
         unitCircle00.setAttribute("cy", "0");
-        unitCircle00.setAttribute("r", "1");
+        unitCircle00.setAttribute("r", "0.0001");
         unitCircle00.setAttribute("fill", "transparent");
         group.appendChild(unitCircle00);
         this.svgUnitCircle00 = unitCircle00;
@@ -446,7 +446,7 @@ class CoordinateMapper {
         );
         unitCircle01.setAttribute("cx", "0");
         unitCircle01.setAttribute("cy", "1");
-        unitCircle01.setAttribute("r", "1");
+        unitCircle01.setAttribute("r", "0.0001");
         unitCircle01.setAttribute("fill", "transparent");
         group.appendChild(unitCircle01);
         this.svgUnitCircle01 = unitCircle01;
@@ -457,7 +457,7 @@ class CoordinateMapper {
         );
         unitCircle10.setAttribute("cx", "1");
         unitCircle10.setAttribute("cy", "0");
-        unitCircle10.setAttribute("r", "1");
+        unitCircle10.setAttribute("r", "0.0001");
         unitCircle10.setAttribute("fill", "transparent");
         group.appendChild(unitCircle10);
         this.svgUnitCircle10 = unitCircle10;

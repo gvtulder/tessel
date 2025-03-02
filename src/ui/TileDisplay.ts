@@ -9,7 +9,7 @@ import { addPointToPolygon } from "../geom/polygon/addPointToPolygon";
 function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);
     for (let i = 0; i < points.length; i++) {
-        points[i] = `${vertices[i].x} ${vertices[i].y}`;
+        points[i] = `${vertices[i].x.toFixed(6)} ${vertices[i].y.toFixed(6)}`;
     }
     return "M ".concat(points.join(" L ")).concat(" Z");
 }
@@ -143,9 +143,7 @@ export class TileDisplay {
         const outline = offsetPolygon(this.tile.polygon.vertices, -0.03);
         // outline = shrinkOutline(outline, 0.95);
 
-        let path = outline.map((p) => `${p.x} ${p.y}`).join(" L ");
-        path = `M ${path} Z`;
-        path = polygonToPath(outline);
+        const path = polygonToPath(outline);
         const roundPath = roundPathCorners(path, 0.08, false);
 
         if (

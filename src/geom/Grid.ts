@@ -443,7 +443,7 @@ export class Grid extends EventTarget {
             }
             edges[i] = edge;
             if (placeholder) {
-                edge.placeholders.add(tile);
+                edge.placeholders.add(tile as PlaceholderTile);
             } else {
                 if (edge.a === a) {
                     if (edge.tileA) throw new Error("edge already in use");
@@ -489,7 +489,7 @@ export class Grid extends EventTarget {
         for (const edge of tile.edges) {
             if (edge.tileA === tile) edge.tileA = null;
             if (edge.tileB === tile) edge.tileB = null;
-            edge.placeholders.delete(tile);
+            edge.placeholders.delete(tile as PlaceholderTile);
 
             // remove orphaned edges
             if (!edge.tileA && !edge.tileB && edge.placeholders.size == 0) {
@@ -521,7 +521,7 @@ export class Grid extends EventTarget {
      * @returns the new tile
      */
     addPlaceholder(shape: Shape, polygon: Polygon): PlaceholderTile {
-        return this.addTile(shape, polygon, null, true);
+        return this.addTile(shape, polygon, null, true) as PlaceholderTile;
     }
 
     /**
@@ -712,7 +712,7 @@ export class Grid extends EventTarget {
         const stale = new Array<PlaceholderTile>();
         for (const placeholder of this.placeholders) {
             if (!newPlaceholders.has(placeholder)) {
-                stale.push(placeholder);
+                stale.push(placeholder as PlaceholderTile);
             }
         }
         for (const placeholder of stale) {

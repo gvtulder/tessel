@@ -18,10 +18,16 @@ export const lookup = new Map<string, GameSettings>();
 
 lookup.set("square", {
     atlas: SquaresAtlas,
-    initialTile: ["red", "black", "blue", "white"],
+    initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
     tilesShownOnStack: 3,
     tileGenerator: [
-        TileGenerators.permutations(["red", "black", "blue", "white"]),
+        // TileGenerators.permutations(["red", "black", "blue", "white"]),
+        TileGenerators.permutations([
+            "#00c0ef",
+            "#dd4b39",
+            "#f39c12",
+            "#00a65a",
+        ]),
     ],
 });
 

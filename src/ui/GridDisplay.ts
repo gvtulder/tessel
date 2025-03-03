@@ -3,7 +3,6 @@ import { Grid } from "../geom/Grid";
 import { GridEvent, GridEventType } from "../geom/GridEvent";
 import { Tile } from "../geom/Tile";
 import { Shape } from "../geom/Shape";
-import { ConnectorDisplay } from "./ConnectorDisplay";
 import { DEBUG } from "../settings";
 import { BBox, Point, dist } from "../geom/math";
 

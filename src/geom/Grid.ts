@@ -13,11 +13,10 @@ import {
     edgeToAngle,
     mergeBBox,
     Point,
-    rotateArray,
     weightedSumPoint,
 } from "./math";
 import { Shape } from "./Shape";
-import { PlaceholderTile, Tile, TileColor, TileColors, TileType } from "./Tile";
+import { PlaceholderTile, Tile, TileColors } from "./Tile";
 import { Polygon } from "./Polygon";
 import { matchPoints } from "./polygon/matchPoints";
 import { GridEvent, GridEventType } from "./GridEvent";

@@ -1,6 +1,6 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { Shape } from "./Shape";
-import { PlaceholderTile, Tile, TileColor } from "./Tile";
+import { PlaceholderTile, Tile } from "./Tile";
 import { GridEventType } from "./GridEvent";
 import { P } from "./math";
 import { Grid } from "./Grid";

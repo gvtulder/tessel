@@ -1,6 +1,6 @@
 // from node polylabel package
 
-import { TinyQueue } from "./tinyqueue.js";
+import { TinyQueue } from "./tinyqueue";
 
 type Pole = { x: number; y: number; distance: number };
 type Polygon = [number, number][][];

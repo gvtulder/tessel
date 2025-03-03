@@ -3,10 +3,8 @@ import "@interactjs/auto-start";
 import "@interactjs/actions/drag";
 
 import { TileOnScreenMatch } from "./TileDisplay";
-import { PlaceholderTile, Tile, TileType } from "../geom/Tile";
-import { GameController } from "./GameController";
+import { Tile } from "../geom/Tile";
 import { DEBUG } from "../settings";
-import { dist } from "../utils";
 import { Grid } from "../geom/Grid";
 import { GridDisplay } from "./GridDisplay";
 import { Point } from "../geom/math";

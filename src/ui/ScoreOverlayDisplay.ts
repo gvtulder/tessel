@@ -1,5 +1,4 @@
 import { ScoredRegion } from "../game/Scorer.js";
-import { TileSegment } from "../geom/Tile.js";
 import { computeOutline, Vertex, Edge } from "../lib/compute-outline.js";
 
 export const Color = {

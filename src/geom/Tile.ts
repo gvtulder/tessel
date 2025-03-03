@@ -1,4 +1,4 @@
-import { Grid, GridEdge, GridVertex } from "./Grid";
+import { GridEdge, GridVertex } from "./Grid";
 import { GridEvent, GridEventType } from "./GridEvent";
 import { BBox, Point } from "./math";
 import { Polygon } from "./Polygon";

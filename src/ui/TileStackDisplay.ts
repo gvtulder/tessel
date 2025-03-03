@@ -1,18 +1,17 @@
-import type { Interactable, DragEvent } from "@interactjs/types";
+import type { Interactable } from "@interactjs/types";
 import "@interactjs/auto-start";
 import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
 
 import { Grid } from "../geom/Grid";
 import { FixedOrderTileStack } from "../game/TileStack";
-import { Tile, TileColors, TileType } from "../geom/Tile";
+import { Tile, TileColors } from "../geom/Tile";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay";
 import {
     TileDragController,
     TileDragSource,
     TileRotationSet,
 } from "./TileDragController";
-import { MainGridTileDragController } from "./MainGridTileDragController";
 import { Atlas } from "../geom/Atlas";
 import { angleDist, RAD2DEG, TWOPI } from "../geom/math";
 

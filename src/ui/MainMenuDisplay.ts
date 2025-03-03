@@ -6,7 +6,6 @@ import { GameSettings } from "../game/Game";
 import { Grid } from "../geom/Grid";
 import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay";
 import * as SaveGames from "../saveGames";
-import { TileType } from "../geom/Tile";
 
 export class MenuEvent extends Event {
     gameSettings: GameSettings;

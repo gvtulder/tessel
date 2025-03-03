@@ -2,7 +2,6 @@ import { describe, expect, test } from "@jest/globals";
 import { Atlas, AtlasDefinitionDoc, Penrose0Atlas } from "./Atlas";
 import { deg2rad, rad2deg } from "./math";
 import { Grid, SortedCorners } from "./Grid";
-import { Tile } from "./Tile";
 
 function toFixed(xs: readonly number[], fractionDigits: number) {
     return xs.map((x) => x.toFixed(fractionDigits));

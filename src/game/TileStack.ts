@@ -1,5 +1,5 @@
-import { TileColors } from "../grid/Triangle.js";
-import { shuffle } from "../utils.js";
+import { TileColors } from "../geom/Tile";
+import { shuffle } from "../utils";
 
 export class TileStack {
     tiles: TileColors[];

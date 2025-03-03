@@ -1,4 +1,4 @@
-import { TileSegment } from "src/geom/Tile";
+import { TileSegment } from "../geom/Tile";
 
 export type Vertex = { id: string; x: number; y: number };
 export type Edge = {

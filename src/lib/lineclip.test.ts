@@ -3,7 +3,7 @@
 // ISC License
 // Copyright (c) 2015, Mapbox
 
-import { describe, expect, test } from "@jest/globals";
+import { expect, test } from "@jest/globals";
 import { lineclip, polygonclip } from "./lineclip";
 
 test("clips line", () => {

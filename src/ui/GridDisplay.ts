@@ -25,7 +25,7 @@ export class GridDisplay extends EventTarget {
     coordinateMapper: CoordinateMapper;
 
     tileDisplays: Map<Tile, TileDisplay>;
-    connectorDisplay: ConnectorDisplay;
+    // connectorDisplay: ConnectorDisplay;
     // backgroundGrid: BackgroundGrid;
 
     onAddTile: EventListener;
@@ -123,11 +123,11 @@ export class GridDisplay extends EventTarget {
         for (const td of this.tileDisplays.values()) {
             td.destroy();
         }
+        /*
         if (this.connectorDisplay) {
             this.connectorDisplay.destroy();
             this.connectorDisplay = null;
         }
-        /*
         if (this.backgroundGrid) {
             this.backgroundGrid.destroy();
             this.backgroundGrid = null;

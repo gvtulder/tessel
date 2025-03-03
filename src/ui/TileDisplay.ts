@@ -1,9 +1,9 @@
 import { roundPathCorners } from "../lib/svg-rounded-corners";
-import { Tile, TileType } from "src/geom/Tile";
-import { DEBUG, PLACEHOLDER, SCALE } from "../settings";
+import { Tile, TileType } from "../geom/Tile";
+import { DEBUG, PLACEHOLDER } from "../settings";
 import { GridDisplay } from "./GridDisplay";
 import offsetPolygon from "../lib/offset-polygon";
-import { dist, Point } from "../geom/math";
+import { Point } from "../geom/math";
 import { addPointToPolygon } from "../geom/polygon/addPointToPolygon";
 
 function polygonToPath(vertices: readonly Point[]): string {

@@ -1,20 +1,40 @@
 import { Shape } from "../geom/Shape";
 import { TileColors, TileColor } from "../geom/Tile";
 import { shuffle } from "../utils";
+import { TileShapeColors } from "./TileStack";
 
-export type TileGenerator = (tiles: TileColors[], shape: Shape) => TileColors[];
+export type TileGenerator = (
+    tiles: TileShapeColors[],
+    defaultShape: Shape,
+) => TileShapeColors[];
 
 export class TileGenerators {
-    static fromList(tiles: TileColors[]): TileGenerator {
+    static fromList(colors: TileColors[], shape?: Shape): TileGenerator {
+        return (_, defaultShape: Shape) =>
+            colors.map((c) => ({
+                shape: shape || defaultShape,
+                colors: c,
+            }));
+    }
+
+    static forShapes(
+        shapes: readonly Shape[],
+        generator: TileGenerator,
+    ): TileGenerator {
         return () => {
-            return [...tiles];
+            const tiles: TileShapeColors[] = [];
+            for (const shape of shapes) {
+                tiles.push(...generator(null, shape));
+            }
+            return tiles;
         };
     }
 
-    static permutations(colors: TileColors): TileGenerator {
-        return (tiles: TileColors[], shape: Shape) => {
+    static permutations(colors: TileColors, shape?: Shape): TileGenerator {
+        return (_, defaultShape: Shape) => {
+            const sh = shape || defaultShape;
             const numColors = colors.length;
-            const numColorGroups = shape.cornerAngles.length;
+            const numColorGroups = sh.cornerAngles.length;
 
             const cToComponents = (c: number) => {
                 const s = c.toString(numColors).split("");
@@ -43,31 +63,32 @@ export class TileGenerators {
 
             console.log(`Generated ${uniqueCs.size} tiles`);
 
-            return [...uniqueCs.values()].map((c) => {
-                return cToComponents(c).map(
+            return [...uniqueCs.values()].map((c) => ({
+                shape: sh,
+                colors: cToComponents(c).map(
                     (s) => colors[parseInt(s, numColors)],
-                );
-            });
+                ),
+            }));
         };
     }
 
     static repeatColors(repeats: number): TileGenerator {
-        return (tiles: TileColors[]) => {
-            return tiles.map((t: TileColors) => {
+        return (tiles: TileShapeColors[]) => {
+            return tiles.map((t: TileShapeColors) => {
                 const tt: TileColor[] = [];
-                for (const c of t) {
+                for (const c of t.colors) {
                     for (let i = 0; i < repeats; i++) {
                         tt.push(c);
                     }
                 }
-                return tt;
+                return { shape: t.shape, colors: tt };
             });
         };
     }
 
     static repeat(repeats: number): TileGenerator {
-        return (tiles: TileColors[]) => {
-            const repeatedTiles: TileColors[] = [];
+        return (tiles: TileShapeColors[]) => {
+            const repeatedTiles: TileShapeColors[] = [];
             for (let i = 0; i < repeats; i++) {
                 repeatedTiles.push(...tiles);
             }
@@ -76,7 +97,7 @@ export class TileGenerators {
     }
 
     static randomSubset(n: number): TileGenerator {
-        return (tiles: TileColors[]) => {
+        return (tiles: TileShapeColors[]) => {
             shuffle(tiles);
             return tiles.slice(0, n);
         };

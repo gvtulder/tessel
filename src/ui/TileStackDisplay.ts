@@ -4,8 +4,9 @@ import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
 
 import { Grid } from "../geom/Grid";
-import { FixedOrderTileStack } from "../game/TileStack";
+import { FixedOrderTileStack, TileShapeColors } from "../game/TileStack";
 import { Tile, TileColors } from "../geom/Tile";
+import { Shape } from "../geom/Shape";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay";
 import {
     TileDragController,
@@ -99,9 +100,9 @@ export class TileStackDisplay extends BaseTileStackDisplay {
                 this.tileDragController.addSource(tileDisplay);
             }
 
-            const color = this.tileStack.slots[i];
-            this.tileDisplays[i].showTile(color);
-            if (!color) this.tileDisplays[i].removeDraggable();
+            const slot = this.tileStack.slots[i];
+            this.tileDisplays[i].showTile(slot);
+            if (!slot) this.tileDisplays[i].removeDraggable();
         }
         const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
         if (n > 0) {
@@ -170,9 +171,6 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.tileStackDisplay = tileStackDisplay;
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(atlas);
-        if (atlas.shapes.length > 1) {
-            throw new Error("atlas with more than one shape not implemented");
-        }
 
         this.element = document.createElement("div");
         this.element.className = "tileOnStack";
@@ -212,45 +210,22 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.gridDisplay.rescale();
     }
 
-    showTile(colors: TileColors) {
+    showTile(slot: TileShapeColors) {
         if (this.tile) {
             this.grid.removeTile(this.tile);
             this.tile = null;
         }
-        if (colors && colors[0]) {
+        if (slot) {
             this.rotatable.classList.remove("animated");
-            if (this.grid.atlas.shapes.length > 1) {
-                throw new Error(
-                    "atlas with more than one shape not implemented",
-                );
-            }
-            const shape = this.grid.atlas.shapes[0];
-            const poly = shape.constructPolygonXYR(0, 0, 1);
-            this.tile = this.grid.addTile(shape, poly, poly.segment());
-            this.tile.colors = colors;
+            const poly = slot.shape.constructPolygonXYR(0, 0, 1);
+            this.tile = this.grid.addTile(slot.shape, poly, poly.segment());
+            this.tile.colors = slot.colors;
             this.rescale();
         }
     }
 
-    /**
-     * Updates the tile shape and rotates to the given rotation.
-     * @param shape the new tile shape
-     * @param rotationIdx the required rotation
-     */
-    updateTileFromShape(shape: TileShape, rotationIdx: number) {
-        this.tile.updateTrianglesFromShape(shape);
-        this.rotateTileTo(rotationIdx);
-        this.element.style.display = "";
-    }
-
     disable() {
         this.element.style.display = "none";
-    }
-
-    get rotation(): TileRotation {
-        // TODO
-        throw new Error("Not implemented");
-        return this.grid.atlas.orientations[this.rotationIdx];
     }
 
     rotateTile() {

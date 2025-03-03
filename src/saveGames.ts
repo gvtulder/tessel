@@ -2,6 +2,7 @@ import { GameSettings } from "./game/Game";
 import { TileGenerators } from "./game/TileGenerator";
 import {
     HexagonsAtlas,
+    Penrose0Atlas,
     RhombusAtlas,
     SquaresAtlas,
     TrianglesAtlas,
@@ -98,6 +99,25 @@ lookup.set("rhombus", {
             "#f39c12",
             "#00a65a",
         ]),
+    ],
+});
+
+lookup.set("penrose3", {
+    atlas: Penrose0Atlas,
+    //  initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
+    initialTile: ["#00c0ef", "#dd4b39", "#00c0ef", "#dd4b39"],
+    tilesShownOnStack: 3,
+    tileGenerator: [
+        TileGenerators.forShapes(
+            Penrose0Atlas.shapes,
+            TileGenerators.permutations([
+                "#00c0ef",
+                "#dd4b39",
+                //              "#f39c12",
+                //              "#00a65a",
+            ]),
+        ),
+        TileGenerators.repeat(6),
     ],
 });
 

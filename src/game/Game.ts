@@ -2,7 +2,7 @@ import { Grid } from "../geom/Grid";
 import { ScoredRegion, Scorer } from "./Scorer";
 import { Tile, TileColors } from "../geom/Tile";
 import { TileGenerator } from "./TileGenerator";
-import { FixedOrderTileStack, TileStack } from "./TileStack";
+import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
 import { Atlas } from "../geom/Atlas";
 import { rotateArray } from "../geom/math";
 
@@ -47,12 +47,8 @@ export class Game extends EventTarget {
 
         this.grid = new Grid(this.settings.atlas);
 
-        if (this.settings.atlas.shapes.length > 1) {
-            throw new Error("multi-shape atlas not implemented");
-        }
-
         // generate tiles
-        let tiles: TileColors[] = [];
+        let tiles: TileShapeColors[] = [];
         for (const tileGenerator of this.settings.tileGenerator) {
             tiles = tileGenerator(tiles, this.settings.atlas.shapes[0]);
         }
@@ -69,7 +65,7 @@ export class Game extends EventTarget {
         const poly = shape.constructPolygonXYR(0, 0, 1);
         const tile = this.grid.addTile(shape, poly, poly.segment());
         tile.colors = initialTileColors;
-        this.tileStack.removeColors(tile.colors);
+        this.tileStack.removeColors({ shape: shape, colors: tile.colors });
 
         this.grid.generatePlaceholders();
     }

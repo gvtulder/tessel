@@ -1,17 +1,23 @@
 import { TileColors } from "../geom/Tile";
+import { Shape } from "../geom/Shape";
 import { shuffle } from "../utils";
 
-export class TileStack {
-    tiles: TileColors[];
+export type TileShapeColors = {
+    shape: Shape;
+    colors: TileColors;
+};
 
-    constructor(tileSet: TileColors[]) {
+export class TileStack {
+    tiles: TileShapeColors[];
+
+    constructor(tileSet: TileShapeColors[]) {
         this.tiles = [...tileSet];
         shuffle(this.tiles);
     }
-    peek(n: number): TileColors[] {
+    peek(n: number): TileShapeColors[] {
         return this.tiles.slice(0, n);
     }
-    pop(): TileColors | undefined {
+    pop(): TileShapeColors | undefined {
         if (this.tiles.length == 0) {
             return undefined;
         }
@@ -22,9 +28,9 @@ export class TileStack {
             this.tiles.splice(idx, 1);
         }
     }
-    removeColors(colors: TileColors): boolean {
+    removeColors(slot: TileShapeColors): boolean {
         for (let i = 0; i < this.tiles.length; i++) {
-            if (tileColorsEqualWithRotation(this.tiles[i], colors)) {
+            if (tileColorsEqualWithRotation(this.tiles[i], slot)) {
                 console.log("removing duplicate!");
                 this.removeWithIndex(i);
                 return true;
@@ -42,7 +48,7 @@ export class TileStack {
 
 export class FixedOrderTileStack extends EventTarget {
     numberShown: number;
-    slots: TileColors[];
+    slots: { shape: Shape; colors: TileColors }[];
     tileStack: TileStack;
 
     constructor(tileStack: TileStack, numberShown: number) {
@@ -71,18 +77,18 @@ export class FixedOrderTileStack extends EventTarget {
         this.updateSlots();
     }
 
-    removeColors(colors: TileColors): boolean {
+    removeColors(slot: TileShapeColors): boolean {
         for (let i = 0; i < this.numberShown; i++) {
             if (
                 this.slots[i] &&
-                tileColorsEqualWithRotation(this.slots[i], colors)
+                tileColorsEqualWithRotation(this.slots[i], slot)
             ) {
                 this.slots[i] = null;
                 this.updateSlots();
                 return true;
             }
         }
-        return this.tileStack.removeColors(colors);
+        return this.tileStack.removeColors(slot);
     }
 
     get tilesLeft(): number {
@@ -101,13 +107,17 @@ export class FixedOrderTileStack extends EventTarget {
     }
 }
 
-function tileColorsEqualWithRotation(a: TileColors, b: TileColors): boolean {
-    const aS = a.join("-");
-    for (let i = 0; i < b.length; i++) {
-        b = [...b.slice(1), b[0]];
-        if (aS == b.join("-")) {
-            return true;
+function tileColorsEqualWithRotation(
+    a: TileShapeColors,
+    b: TileShapeColors,
+): boolean {
+    if (a.shape !== b.shape) return false;
+    for (let i = 0; i < a.colors.length; i++) {
+        let ok = true;
+        for (let j = 0; j < b.colors.length && ok; j++) {
+            if (a.colors[i] != b.colors[j]) ok = false;
         }
+        if (ok) return true;
     }
     return false;
 }

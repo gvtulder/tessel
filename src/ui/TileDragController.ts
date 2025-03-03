@@ -193,7 +193,6 @@ export type TileDragSourceContext = {
 export interface TileDragSource {
     gridDisplay: GridDisplay;
     tile: Tile;
-    rotation: TileRotationSet;
     indexOnStack?: number;
     getDraggable(): Interactable;
     startDrag();

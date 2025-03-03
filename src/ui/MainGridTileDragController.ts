@@ -13,7 +13,7 @@ import {
     TileDragSourceContext,
 } from "./TileDragController";
 import { MainGridDisplay } from "./MainGridDisplay";
-import { edgeToAngle, TWOPI } from "../geom/math";
+import { angleDist, edgeToAngle, TWOPI } from "../geom/math";
 
 export class MainGridTileDragController extends TileDragController {
     dropTarget: MainGridDisplay;
@@ -62,7 +62,7 @@ export class MainGridTileDragController extends TileDragController {
                         // this tile would fit
                         const sourceEdges = sourceTile.polygon.edges;
                         const targetEdges = placeholder.polygon.edges;
-                        context.autorotateCache.set(placeholder, {
+                        const tileRotationSet = {
                             targetRotations: rotations,
                             relativeRotationAngles: rotations.map(
                                 (r, i) =>
@@ -73,7 +73,11 @@ export class MainGridTileDragController extends TileDragController {
                                         ],
                                     ),
                             ),
-                        });
+                        };
+                        context.autorotateCache.set(
+                            placeholder,
+                            tileRotationSet,
+                        );
                     }
                 }
             }
@@ -168,19 +172,26 @@ export class MainGridTileDragController extends TileDragController {
                 match.tile instanceof PlaceholderTile &&
                 context.autorotateCache.has(match.tile)
             ) {
-                const centerSnapTo = this.dropTarget.gridToScreenPosition(
-                    match.tile.centroid,
-                );
-                const centerSnapFrom =
-                    context.source.gridDisplay.gridToScreenPosition(
-                        context.source.tile.centroid,
+                if (this.autorotate || match.matchesPoints) {
+                    const centerSnapTo = this.dropTarget.gridToScreenPosition(
+                        match.tile.centroid,
                     );
-                console.log("attempt snap", centerSnapTo, centerSnapFrom);
-                const snap = {
-                    x: context.position.x + centerSnapTo.x - centerSnapFrom.x,
-                    y: context.position.y + centerSnapTo.y - centerSnapFrom.y,
-                };
-                evt.target.style.translate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
+                    const centerSnapFrom =
+                        context.source.gridDisplay.gridToScreenPosition(
+                            context.source.tile.centroid,
+                        );
+                    const snap = {
+                        x:
+                            context.position.x +
+                            centerSnapTo.x -
+                            centerSnapFrom.x,
+                        y:
+                            context.position.y +
+                            centerSnapTo.y -
+                            centerSnapFrom.y,
+                    };
+                    evt.target.style.translate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
+                }
             }
         }
     }

@@ -678,7 +678,7 @@ export class Grid extends EventTarget {
         includePlaceholders?: boolean,
         shape?: Shape,
         matchCentroidOnly?: boolean,
-    ): { tile: Tile; offset: number; dist: number } {
+    ): { tile: Tile; offset: number; dist: number; matchesPoints: boolean } {
         // TODO check also for shape?
         const collisionPolygon = new CollisionPolygon({}, points as Point[]);
         // this normally happens on system.insert
@@ -691,7 +691,12 @@ export class Grid extends EventTarget {
             collisionPolygon.bbox.minY - collisionPolygon.padding;
         collisionPolygon.maxY =
             collisionPolygon.bbox.maxY - collisionPolygon.padding;
-        const bestCandidate = { tile: null as Tile, offset: 0, dist: 0 };
+        const bestCandidate = {
+            tile: null as Tile,
+            offset: 0,
+            dist: 0,
+            matchesPoints: false,
+        };
         const pointsCentroid = centroid(points);
         this.system.checkOne(collisionPolygon, (resp) => {
             const other = resp.b.userData as Tile;
@@ -702,12 +707,12 @@ export class Grid extends EventTarget {
                 return false;
             }
             const poly = other.polygon;
-            let distance: number;
+            const centroidDistance = dist(pointsCentroid, other.centroid);
+            if (centroidDistance > maxDist) return false;
+            let distance = centroidDistance;
             let offset: number = undefined;
-            if (matchCentroidOnly) {
-                distance = dist(pointsCentroid, other.centroid);
-            } else {
-                const match = matchPoints(poly.vertices, points);
+            const match = matchPoints(poly.vertices, points);
+            if (!matchCentroidOnly) {
                 if (match === null) return false;
                 distance = match.dist;
                 offset = match.offset;
@@ -719,6 +724,7 @@ export class Grid extends EventTarget {
                 bestCandidate.tile = other;
                 bestCandidate.dist = distance;
                 bestCandidate.offset = offset;
+                bestCandidate.matchesPoints = match && match.dist < maxDist;
             }
             return false;
         });

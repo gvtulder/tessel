@@ -242,7 +242,7 @@ export interface TileDropTarget {
         includePlaceholders?: boolean,
         shape?: Shape,
         matchCentroidOnly?: boolean,
-    ): { tile: Tile; offset: number; dist: number };
+    ): { tile: Tile; offset: number; dist: number; matchesPoints: boolean };
 
     dropTile(source: TileDragSource, pair: TileOnScreenMatch): boolean;
 }

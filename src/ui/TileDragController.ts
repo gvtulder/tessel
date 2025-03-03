@@ -13,6 +13,8 @@ import { Point } from "../geom/math";
 import { Shape } from "../geom/Shape";
 
 export const MAX_TILE_DROP_POINT_DIST = 0.2;
+export const MAX_TILE_AUTOROTATE_POINT_DIST = 0.5;
+export const MAX_TILE_SNAP_POINT_DIST = 0.2;
 
 export type TileRotationSet = {
     readonly targetRotations: readonly number[];
@@ -117,27 +119,6 @@ export class TileDragController extends EventTarget {
         if (moved) {
             context.source.resetCoordinateMapperCache();
         }
-
-        if (this.snap) {
-            // snapping?
-            const match = this.mapToFixedTile(context);
-
-            if (match && match.tile instanceof PlaceholderTile) {
-                const centerSnapTo = this.dropTarget.gridToScreenPosition(
-                    match.tile.centroid,
-                );
-                const centerSnapFrom =
-                    context.source.gridDisplay.gridToScreenPosition(
-                        context.source.tile.centroid,
-                    );
-                console.log("attempt snap", centerSnapTo, centerSnapFrom);
-                const snap = {
-                    x: context.position.x + centerSnapTo.x - centerSnapFrom.x,
-                    y: context.position.y + centerSnapTo.y - centerSnapFrom.y,
-                };
-                evt.target.style.translate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
-            }
-        }
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {
@@ -184,6 +165,7 @@ export class TileDragController extends EventTarget {
     protected mapToFixedTile(
         context: TileDragSourceContext,
         matchCentroidOnly?: boolean,
+        distance?: number,
     ) {
         const movingTile = context.source.tile;
         const movingPoly = context.source.gridDisplay.gridToScreenPositions(
@@ -193,7 +175,7 @@ export class TileDragController extends EventTarget {
         const fixedPoly = this.dropTarget.screenToGridPositions(movingPoly);
         return this.dropTarget.findMatchingTile(
             fixedPoly,
-            MAX_TILE_DROP_POINT_DIST,
+            distance || MAX_TILE_DROP_POINT_DIST,
             true,
             movingTile.shape,
             matchCentroidOnly,

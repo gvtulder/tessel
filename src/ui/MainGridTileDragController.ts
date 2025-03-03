@@ -7,6 +7,8 @@ import { DEBUG } from "../settings";
 import { dist } from "../utils";
 import { Grid } from "../geom/Grid";
 import {
+    MAX_TILE_AUTOROTATE_POINT_DIST,
+    MAX_TILE_SNAP_POINT_DIST,
     TileDragController,
     TileDragSourceContext,
 } from "./TileDragController";
@@ -111,11 +113,22 @@ export class MainGridTileDragController extends TileDragController {
             }
         }
 
+        const match =
+            this.autorotate || this.snap
+                ? this.mapToFixedTile(
+                      context,
+                      true,
+                      MAX_TILE_AUTOROTATE_POINT_DIST,
+                  )
+                : null;
+
         // implement autorotate
         if (this.autorotate) {
-            const match = this.mapToFixedTile(context, true);
-
-            if (match && match.tile instanceof PlaceholderTile) {
+            if (
+                match &&
+                match.dist < MAX_TILE_AUTOROTATE_POINT_DIST &&
+                match.tile instanceof PlaceholderTile
+            ) {
                 const placeholder = match.tile;
                 if (context.autorotateCurrentTarget !== placeholder) {
                     console.log("matched", match);
@@ -144,6 +157,30 @@ export class MainGridTileDragController extends TileDragController {
                 context.autorotateTimeout = window.setTimeout(() => {
                     // source.resetAutorotate();
                 }, 100);
+            }
+        }
+
+        // snapping?
+        if (this.snap) {
+            if (
+                match &&
+                match.dist < MAX_TILE_SNAP_POINT_DIST &&
+                match.tile instanceof PlaceholderTile &&
+                context.autorotateCache.has(match.tile)
+            ) {
+                const centerSnapTo = this.dropTarget.gridToScreenPosition(
+                    match.tile.centroid,
+                );
+                const centerSnapFrom =
+                    context.source.gridDisplay.gridToScreenPosition(
+                        context.source.tile.centroid,
+                    );
+                console.log("attempt snap", centerSnapTo, centerSnapFrom);
+                const snap = {
+                    x: context.position.x + centerSnapTo.x - centerSnapFrom.x,
+                    y: context.position.y + centerSnapTo.y - centerSnapFrom.y,
+                };
+                evt.target.style.translate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
             }
         }
     }

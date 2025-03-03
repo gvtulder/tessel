@@ -103,9 +103,20 @@ export class TileDragController extends EventTarget {
     onDragMove(context: TileDragSourceContext, evt: DragEvent) {
         context.position.x += evt.dx;
         context.position.y += evt.dy;
-        evt.target.style.translate = `${context.position.x}px ${context.position.y}px`;
-        evt.target.style.scale = `${this.dropTarget.scale / context.source.gridDisplay.scale}`;
-        context.source.resetCoordinateMapperCache();
+        let moved = false;
+        const newTranslate = `${Math.round(context.position.x)}px ${Math.round(context.position.y)}px`;
+        if (evt.target.style.translate != newTranslate) {
+            evt.target.style.translate = newTranslate;
+            moved = true;
+        }
+        const newScale = `${(this.dropTarget.scale / context.source.gridDisplay.scale).toFixed(3)}`;
+        if (evt.target.style.scale != newScale) {
+            evt.target.style.scale = newScale;
+            moved = true;
+        }
+        if (moved) {
+            context.source.resetCoordinateMapperCache();
+        }
 
         // TODO snap
         /*

@@ -3,7 +3,7 @@ import "@interactjs/auto-start";
 import "@interactjs/actions/drag";
 
 import { TileOnScreenMatch } from "./TileDisplay";
-import { Tile, TileType } from "../geom/Tile";
+import { PlaceholderTile, Tile, TileType } from "../geom/Tile";
 import { GameController } from "./GameController";
 import { DEBUG } from "../settings";
 import { dist } from "../utils";
@@ -118,71 +118,26 @@ export class TileDragController extends EventTarget {
             context.source.resetCoordinateMapperCache();
         }
 
-        // TODO snap
-        /*
         if (this.snap) {
             // snapping?
-            const movingTriangle = context.source.tile.triangles[0];
-            const movingPos =
-                context.source.gridDisplay.triangleToScreenPosition(
-                    movingTriangle,
-                );
-            const fixedTriangleCoord =
-                this.dropTarget.screenPositionToTriangleCoord(movingPos);
+            const match = this.mapToFixedTile(context);
 
-            if (fixedTriangleCoord) {
-                const rotatedMovingTriangle = movingTriangle.getRotationEdge(
-                    context.source.rotation.steps,
-                ).to;
-                const centerSnapFrom =
-                    context.source.gridDisplay.triangleToScreenPosition(
-                        movingTriangle,
-                    );
-                const fixedTriangle = this.dropTarget.grid.getOrAddTriangle(
-                    ...fixedTriangleCoord,
+            if (match && match.tile instanceof PlaceholderTile) {
+                const centerSnapTo = this.dropTarget.gridToScreenPosition(
+                    match.tile.centroid,
                 );
-                const centerSnapTo =
-                    this.dropTarget.triangleToScreenPosition(fixedTriangle);
-                if (
-                    fixedTriangle &&
-                    fixedTriangle.placeholders &&
-                    fixedTriangle.shape == rotatedMovingTriangle.shape &&
-                    dist(centerSnapFrom, centerSnapFrom) < 30
-                ) {
-                    // find the best placeholder
-                    const placeholders = fixedTriangle.placeholders.filter(
-                        // must have a rotation that fits
-                        (placeholder) => {
-                            const rot =
-                                context.autorotateCache.get(placeholder);
-                            return (
-                                rot &&
-                                rot.steps == context.source.rotation.steps
-                            );
-                        },
+                const centerSnapFrom =
+                    context.source.gridDisplay.gridToScreenPosition(
+                        context.source.tile.centroid,
                     );
-                    if (placeholders.length > 0) {
-                        // found a good placeholder
-                        const placeholder = placeholders[0];
-                        const rot = context.autorotateCache.get(placeholder);
-                        if (rot && rot.steps == context.source.rotation.steps) {
-                            const snap = {
-                                x:
-                                    context.position.x +
-                                    centerSnapTo[0] -
-                                    centerSnapFrom[0],
-                                y:
-                                    context.position.y +
-                                    centerSnapTo[1] -
-                                    centerSnapFrom[1],
-                            };
-                            evt.target.style.transform = `translate(${snap.x}px, ${snap.y}px) scale(${this.dropTarget.scale / context.source.gridDisplay.scale})`;
-                        }
-                    }
-                }
+                console.log("attempt snap", centerSnapTo, centerSnapFrom);
+                const snap = {
+                    x: context.position.x + centerSnapTo.x - centerSnapFrom.x,
+                    y: context.position.y + centerSnapTo.y - centerSnapFrom.y,
+                };
+                evt.target.style.translate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
             }
         }
-        */
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {

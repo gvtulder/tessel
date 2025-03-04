@@ -3,6 +3,7 @@ import { TileGenerators } from "./game/TileGenerator";
 import {
     HexagonsAtlas,
     Penrose0Atlas,
+    PenroseFreeAtlas,
     RhombusAtlas,
     SquaresAtlas,
     TrianglesAtlas,
@@ -47,6 +48,22 @@ lookup.set("square5", {
     ],
 });
 
+lookup.set("squareUnique", {
+    atlas: SquaresAtlas,
+    initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
+    tilesShownOnStack: 3,
+    tileGenerator: [
+        TileGenerators.permutations([
+            "#00c0ef",
+            "#dd4b39",
+            "#f39c12",
+            "#00a65a",
+        ]),
+        TileGenerators.onlyUniqueColors(),
+        TileGenerators.repeat(10),
+    ],
+});
+
 lookup.set("triangle", {
     atlas: TrianglesAtlas,
     initialTile: ["#00c0ef", "#dd4b39", "#f39c12"],
@@ -69,8 +86,8 @@ lookup.set("hexagons", {
         "#dd4b39",
         "#f39c12",
         "#00a65a",
-        "#bf7e16",
-        "#3c8dbc",
+        "#7554e0",
+        "#a1c725",
     ],
     tilesShownOnStack: 3,
     tileGenerator: [
@@ -80,8 +97,8 @@ lookup.set("hexagons", {
             "#dd4b39",
             "#f39c12",
             "#00a65a",
-            "#bf7e16",
-            "#3c8dbc",
+            "#7554e0",
+            "#a1c725",
         ]),
         TileGenerators.randomSubset(70),
     ],
@@ -103,13 +120,13 @@ lookup.set("rhombus", {
 });
 
 lookup.set("penrose3", {
-    atlas: Penrose0Atlas,
+    atlas: PenroseFreeAtlas,
     //  initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
     initialTile: ["#00c0ef", "#dd4b39", "#00c0ef", "#dd4b39"],
-    tilesShownOnStack: 3,
+    tilesShownOnStack: 5,
     tileGenerator: [
         TileGenerators.forShapes(
-            Penrose0Atlas.shapes,
+            PenroseFreeAtlas.shapes,
             TileGenerators.permutations([
                 "#00c0ef",
                 "#dd4b39",

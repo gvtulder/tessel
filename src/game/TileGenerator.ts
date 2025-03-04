@@ -86,6 +86,14 @@ export class TileGenerators {
         };
     }
 
+    static onlyUniqueColors(): TileGenerator {
+        return (tiles: TileShapeColors[]) =>
+            tiles.filter(
+                (t: TileShapeColors) =>
+                    new Set(t.colors).size == t.colors.length,
+            );
+    }
+
     static repeat(repeats: number): TileGenerator {
         return (tiles: TileShapeColors[]) => {
             const repeatedTiles: TileShapeColors[] = [];

@@ -1,5 +1,5 @@
 import { CornerType, SortedCorners } from "./Grid";
-import { DEG2RAD, RAD2DEG } from "./math";
+import { DEG2RAD, RAD2DEG, rotateArray } from "./math";
 import { Shape } from "./Shape";
 
 /**
@@ -13,7 +13,7 @@ export type AtlasDefinitionDoc = {
             angles: number[];
         };
     };
-    vertices: {
+    vertices?: {
         name?: string;
         vertex: string;
     }[];
@@ -189,28 +189,89 @@ export class Atlas {
             shapes.set(key, shape);
         }
         const vertexPatterns = new Array<VertexPattern>();
-        for (const v of definition.vertices) {
-            const corners = v.vertex.split("-").map((c) => {
-                if (!c.match(/^[A-Za-z][0-9]$/)) {
-                    throw new Error(`invalid component ${c} in atlas pattern`);
-                }
-                const s = c.charAt(0);
-                const v = c.charAt(1);
-                if (!shapes.has(s)) {
-                    throw new Error(`undefined shape ${s} in atlas pattern`);
-                }
-                return {
-                    shape: shapes.get(c.charAt(0)),
-                    vertexIndex: parseInt(c.charAt(1)),
-                };
-            });
-            vertexPatterns.push(new VertexPattern(corners));
+        if (definition.vertices) {
+            for (const v of definition.vertices) {
+                const corners = v.vertex.split("-").map((c) => {
+                    if (!c.match(/^[A-Za-z][0-9]$/)) {
+                        throw new Error(
+                            `invalid component ${c} in atlas pattern`,
+                        );
+                    }
+                    const s = c.charAt(0);
+                    const v = c.charAt(1);
+                    if (!shapes.has(s)) {
+                        throw new Error(
+                            `undefined shape ${s} in atlas pattern`,
+                        );
+                    }
+                    return {
+                        shape: shapes.get(c.charAt(0)),
+                        vertexIndex: parseInt(c.charAt(1)),
+                    };
+                });
+                vertexPatterns.push(new VertexPattern(corners));
+            }
+        } else {
+            vertexPatterns.push(...computeVertexPatterns([...shapes.values()]));
         }
         if (vertexPatterns.length < 1) {
             throw new Error("empty atlas pattern");
         }
         return new Atlas([...shapes.values()], vertexPatterns);
     }
+}
+
+class UniqueNumberCycleSet extends Map<string, number[]> {
+    add(seq: number[]): this {
+        let key: string;
+        for (let r = 0; r < seq.length; r++) {
+            seq.push(seq.shift());
+            key = seq.join("-");
+            if (super.has(key)) return this;
+        }
+        return super.set(key, seq);
+    }
+}
+
+function computeVertexPatterns(shapes: Shape[]): VertexPattern[] {
+    // collect unique corner types
+    const angles: { shape: Shape; cornerType: number; cornerAngle: number }[] =
+        [];
+    for (const shape of shapes) {
+        const uniqueCornerTypes = new Set<number>();
+        for (let i = 0; i < shape.cornerTypes.length; i++) {
+            if (uniqueCornerTypes.has(shape.cornerTypes[i])) continue;
+            uniqueCornerTypes.add(shape.cornerTypes[i]);
+            angles.push({
+                shape: shape,
+                cornerType: shape.cornerTypes[i],
+                cornerAngle: Math.round(shape.cornerAngles[i] * RAD2DEG),
+            });
+        }
+    }
+    // make combinations that sum to 360 degrees
+    const combinations = new UniqueNumberCycleSet();
+    const walk = (seq: readonly number[], cumSum: number) => {
+        for (let i = 0; i < angles.length; i++) {
+            const a = cumSum + angles[i].cornerAngle;
+            if (a == 360) {
+                combinations.add(seq.concat(i));
+            } else if (a < 360) {
+                walk(seq.concat(i), a);
+            }
+        }
+    };
+    walk([], 0);
+    // collect patterns
+    return [...combinations.values()].map(
+        (c) =>
+            new VertexPattern(
+                c.map((i) => ({
+                    shape: angles[i].shape,
+                    vertexIndex: angles[i].cornerType,
+                })),
+            ),
+    );
 }
 
 export const Penrose0Atlas = Atlas.fromDefinition({
@@ -228,6 +289,14 @@ export const Penrose0Atlas = Atlas.fromDefinition({
         { name: "queen", vertex: "L0-S0-S0-L0-S0-S0-L0" },
         { name: "sun/star", vertex: "L0-L0-L0-L0-L0" },
     ],
+});
+
+export const PenroseFreeAtlas = Atlas.fromDefinition({
+    name: "Penrose-3-free",
+    shapes: {
+        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144] },
+        L: { name: "rhombus-wide", angles: [72, 108, 72, 108] },
+    },
 });
 
 export const SquaresAtlas = Atlas.fromDefinition({
@@ -265,5 +334,4 @@ export const HexagonsAtlas = Atlas.fromDefinition({
     shapes: {
         H: { name: "hexagon", angles: [120, 120, 120, 120, 120, 120] },
     },
-    vertices: [{ name: "hex", vertex: "H0-H0-H0" }],
 });

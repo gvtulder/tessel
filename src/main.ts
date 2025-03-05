@@ -17,9 +17,11 @@ export function startMainMenu() {
     document.getElementById("version").innerHTML = `${VERSION}`;
 }
 
-navigator.serviceWorker.register(
-    new URL("../service-worker.ts", import.meta.url),
-    { type: "module" },
-);
-
 startMainMenu();
+
+if (navigator && navigator.serviceWorker && navigator.serviceWorker.register) {
+    navigator.serviceWorker.register(
+        new URL("../service-worker.ts", import.meta.url),
+        { type: "module" },
+    );
+}

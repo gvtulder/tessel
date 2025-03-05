@@ -470,8 +470,7 @@ export class TileStackGridDisplay extends GridDisplay {
         const bbox = this.grid.bbox;
         const centroid = this.grid.centroid;
         let maxDist = Math.max(
-            ...this.grid.tiles
-                .values()
+            ...[...this.grid.tiles.values()]
                 .flatMap((t) => t.polygon.vertices)
                 .map((v) => dist(v, centroid)),
         );

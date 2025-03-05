@@ -2,6 +2,7 @@ import { ScoredRegion } from "../grid/Scorer.js";
 import { SCALE } from "../settings.js";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay.js";
 import { Triangle } from "../grid/Triangle.js";
+import { SVG } from "./svg.js";
 
 export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
     group: SVGElement;
@@ -9,10 +10,7 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
     build: () => void;
 
     showScores(shapes: ScoredRegion[]) {
-        const group = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const group = SVG("g");
 
         for (const shape of shapes) {
             /*
@@ -148,10 +146,7 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             }
 
             for (const pathString of pathStrings) {
-                const path = document.createElementNS(
-                    "http://www.w3.org/2000/svg",
-                    "path",
-                );
+                const path = SVG("path");
                 path.setAttribute("d", pathString);
                 path.setAttribute("fill", "transparent");
                 path.setAttribute("stroke", Color.main);
@@ -161,10 +156,7 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             }
 
             for (const circle of circles) {
-                const path = document.createElementNS(
-                    "http://www.w3.org/2000/svg",
-                    "circle",
-                );
+                const path = SVG("circle");
                 path.setAttribute("cx", `${circle[0]}`);
                 path.setAttribute("cy", `${circle[1]}`);
                 path.setAttribute("r", "11");
@@ -191,10 +183,7 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             };
             */
 
-            const circle = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "circle",
-            );
+            const circle = SVG("circle");
             circle.setAttribute("cx", `${scorePos[0]}`);
             circle.setAttribute("cy", `${scorePos[1]}`);
             circle.setAttribute("r", "20");
@@ -207,10 +196,7 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             );
             group.appendChild(circle);
 
-            const text = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "text",
-            );
+            const text = SVG("text");
             text.setAttribute("x", `${scorePos[0]}`);
             text.setAttribute("y", `${scorePos[1] + 1}`);
             text.setAttribute("alignment-baseline", "middle");

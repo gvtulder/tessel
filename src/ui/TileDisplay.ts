@@ -5,6 +5,7 @@ import { GridDisplay } from "./GridDisplay";
 import offsetPolygon from "../lib/offset-polygon";
 import { Point } from "../geom/math";
 import { addPointToPolygon } from "../geom/polygon/addPointToPolygon";
+import { SVG } from "./svg";
 
 function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);
@@ -35,10 +36,7 @@ export class TileDisplay {
     }
 
     build() {
-        const group = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const group = SVG("g");
         const className = "svg-tile";
         /*
         if (this.tile.type === TileType.PatternExample) {
@@ -90,10 +88,7 @@ export class TileDisplay {
                     segments[segments.length - 1].polygon.centroid,
                 );
             }
-            const polyElement = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "path",
-            );
+            const polyElement = SVG("path");
             polyElement.setAttribute("fill", segments[i].color || PLACEHOLDER);
             polyElement.setAttribute("d", polygonToPath(poly));
             this.element.appendChild(polyElement);
@@ -152,10 +147,7 @@ export class TileDisplay {
             this.tile.segments.length == 0
         ) {
             // placeholder
-            const outline = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "path",
-            );
+            const outline = SVG("path");
             outline.setAttribute("d", roundPath);
             outline.setAttribute("fill", PLACEHOLDER);
             if (DEBUG.HIDE_TILE_OUTLINE) {

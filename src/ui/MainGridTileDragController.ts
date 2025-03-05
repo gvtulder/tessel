@@ -14,6 +14,7 @@ import {
 } from "./TileDragController";
 import { MainGridDisplay } from "./MainGridDisplay";
 import { angleDist, edgeToAngle, TWOPI } from "../geom/math";
+import { SVG } from "./svg";
 
 export class MainGridTileDragController extends TileDragController {
     dropTarget: MainGridDisplay;
@@ -29,10 +30,7 @@ export class MainGridTileDragController extends TileDragController {
             // debug
             this.debugPoints = [];
             for (let i = 0; i < 4; i++) {
-                const p = document.createElementNS(
-                    "http://www.w3.org/2000/svg",
-                    "circle",
-                );
+                const p = SVG("circle");
                 p.setAttribute("cx", "0");
                 p.setAttribute("cy", "0");
                 p.setAttribute("r", "0.05");

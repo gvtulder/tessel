@@ -3,6 +3,7 @@ import { roundPathCorners } from "../lib/svg-rounded-corners";
 import { BGCOLOR } from "../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
 import { polylabel } from "../lib/polylabel";
+import { SVG } from "./svg";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     bgMask: SVGElement;
@@ -26,10 +27,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         });
 
         // background (everything not select gray)
-        const bg = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "rect",
-        );
+        const bg = SVG("rect");
         bg.setAttribute("mask", "url(#scoreOverlay-bgmask");
         bg.setAttribute("x", "-1000");
         bg.setAttribute("y", "-1000");
@@ -39,17 +37,11 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         bg.setAttribute("opacity", "0.2");
         // this.element.appendChild(bg);
 
-        const bgMask = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "mask",
-        );
+        const bgMask = SVG("mask");
         bgMask.setAttribute("id", "scoreOverlay-bgmask");
         // this.element.append(bgMask);
 
-        const bgBlack = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "rect",
-        );
+        const bgBlack = SVG("rect");
         bgBlack.setAttribute("x", "-1000");
         bgBlack.setAttribute("y", "-1000");
         bgBlack.setAttribute("width", "2000");
@@ -57,20 +49,14 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         bgBlack.setAttribute("fill", "white");
         bgMask.appendChild(bgBlack);
 
-        const bgMaskG = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const bgMaskG = SVG("g");
         bgMaskG.setAttribute("fill", "black");
         bgMask.append(bgMaskG);
         this.bgMask = bgMaskG;
         this.bgMaskGroup = new ReplacableGroup(bgMaskG);
 
         // drop shadow around the shape
-        const shadow = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "rect",
-        );
+        const shadow = SVG("rect");
         shadow.setAttribute("mask", "url(#scoreOverlay-mask");
         shadow.setAttribute("x", "-10");
         shadow.setAttribute("y", "-10");
@@ -79,18 +65,12 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         shadow.setAttribute("fill", "black");
         this.element.appendChild(shadow);
 
-        const shadowMask = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "mask",
-        );
+        const shadowMask = SVG("mask");
         shadowMask.setAttribute("class", "scoreOverlay-mask");
         shadowMask.setAttribute("id", "scoreOverlay-mask");
         this.element.append(shadowMask);
 
-        const shadowMaskG = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const shadowMaskG = SVG("g");
         shadowMaskG.setAttribute("filter", "drop-shadow(0px 0px 0.1px white)");
         shadowMaskG.setAttribute("fill", "black");
         shadowMaskG.setAttribute("stroke", "black");
@@ -100,10 +80,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         this.shadowMaskGroup = new ReplacableGroup(shadowMaskG);
 
         // white outline around the shape
-        const outlineBG = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const outlineBG = SVG("g");
         outlineBG.setAttribute("class", "scoreOverlay-outlineBG");
         outlineBG.setAttribute("stroke", BGCOLOR);
         outlineBG.setAttribute("stroke-width", "0.1px");
@@ -113,10 +90,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         this.outlineBGGroup = new ReplacableGroup(outlineBG);
 
         // green outline around the shape
-        const outlineFG = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const outlineFG = SVG("g");
         outlineFG.setAttribute("class", "scoreOverlay-outlineFG");
         outlineFG.setAttribute("stroke", Color.main);
         outlineFG.setAttribute("stroke-width", "0.05px");
@@ -126,10 +100,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         this.outlineFGGroup = new ReplacableGroup(outlineFG);
 
         // circles with points on top
-        const points = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const points = SVG("g");
         this.element.append(points);
         this.points = points;
         this.pointsGroup = new ReplacableGroup(points);
@@ -158,10 +129,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
             // paths
             for (const g of groups) {
-                const path = document.createElementNS(
-                    "http://www.w3.org/2000/svg",
-                    "path",
-                );
+                const path = SVG("path");
                 path.setAttribute("d", roundPathString);
                 g.elements.push(path);
             }
@@ -229,10 +197,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             const pointsScale = polylabelPoint.distance;
 
             // circle with scores
-            const circle = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "circle",
-            );
+            const circle = SVG("circle");
             circle.setAttribute("class", "points");
             circle.setAttribute("cx", "0"); // `${bestPoint[0] * SCALE}`);
             circle.setAttribute("cy", "0"); // `${bestPoint[1] * SCALE}`);
@@ -247,10 +212,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             );
             points.push(circle);
 
-            const text = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "text",
-            );
+            const text = SVG("text");
             text.setAttribute("class", "points");
             text.setAttribute("x", "0"); // `${bestPoint[0] * SCALE}`);
             text.setAttribute("y", "0"); // `${bestPoint[1] * SCALE + 1}`);
@@ -302,10 +264,7 @@ class ReplacableGroup {
     }
 
     set contents(elements: SVGElement[]) {
-        const group = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const group = SVG("g");
         for (const element of elements) {
             group.appendChild(element);
         }

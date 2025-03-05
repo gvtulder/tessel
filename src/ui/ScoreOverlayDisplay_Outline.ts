@@ -2,6 +2,7 @@ import { ScoredRegion } from "../grid/Scorer.js";
 import { roundPathCorners } from "../lib/svg-rounded-corners.js";
 import { BGCOLOR, SCALE } from "../settings.js";
 import { ScoreOverlayDisplay, Vertex, Color } from "./ScoreOverlayDisplay.js";
+import { SVG } from "./svg.js";
 
 export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
     fg: SVGElement;
@@ -10,17 +11,11 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
     maskPathGroup: SVGElement;
 
     build() {
-        const group = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const group = SVG("g");
         group.setAttribute("class", "svg-scoreOverlay-mask disabled");
         this.element.append(group);
 
-        const overlayFill = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "rect",
-        );
+        const overlayFill = SVG("rect");
         overlayFill.setAttribute("class", "svg-scoreOverlay-fill");
         overlayFill.setAttribute("x", "-1000");
         overlayFill.setAttribute("y", "-1000");
@@ -30,17 +25,11 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
         overlayFill.setAttribute("mask", "url(#scoreoverlaymask)");
         group.appendChild(overlayFill);
 
-        const mask = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "mask",
-        );
+        const mask = SVG("mask");
         mask.setAttribute("id", "scoreoverlaymask");
         group.appendChild(mask);
 
-        const maskWhite = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "rect",
-        );
+        const maskWhite = SVG("rect");
         maskWhite.setAttribute("class", "svg-scoreOverlay-fill");
         maskWhite.setAttribute("x", "-1000");
         maskWhite.setAttribute("y", "-1000");
@@ -51,20 +40,14 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
 
         this.mask = mask;
 
-        const fg = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const fg = SVG("g");
         this.element.append(fg);
         this.fg = fg;
     }
 
     showScores(shapes: ScoredRegion[]) {
-        const group = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
-        const maskPathGroup = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        const group = SVG("g");
+        const maskPathGroup = SVG("g");
 
         for (const shape of shapes) {
             const boundary: Vertex[] = this.computeOutline(shape).boundary;
@@ -79,10 +62,7 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
             console.log(pathString);
 
             // outline
-            const path = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "path",
-            );
+            const path = SVG("path");
             path.setAttribute("d", pathString);
             path.setAttribute("fill", "transparent");
             path.setAttribute("stroke", Color.main);
@@ -91,10 +71,7 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
             group.appendChild(path);
 
             // add mask
-            const maskPath = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "path",
-            );
+            const maskPath = SVG("path");
             maskPath.setAttribute("d", pathString);
             maskPath.setAttribute("fill", "black");
             maskPathGroup.appendChild(maskPath);

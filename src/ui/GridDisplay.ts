@@ -6,6 +6,7 @@ import { Shape } from "../geom/Shape";
 import { DEBUG } from "../settings";
 import { BBox, Point, dist } from "../geom/math";
 import { TransformComponent, TransformList } from "../geom/Transform";
+import { SVG } from "./svg";
 
 export enum GridDisplayScalingType {
     EqualMargins,
@@ -101,24 +102,15 @@ export class GridDisplay extends EventTarget {
         this.gridElement = gridElement;
         this.element.appendChild(gridElement);
 
-        const svg = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "svg",
-        );
+        const svg = SVG("svg");
         this.gridElement.appendChild(svg);
         this.svg = svg;
 
-        this.svgGrid = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        this.svgGrid = SVG("g");
         this.svgGrid.setAttribute("class", "svg-grid");
         this.svg.appendChild(this.svgGrid);
 
-        this.svgTiles = document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "g",
-        );
+        this.svgTiles = SVG("g");
         this.svgTiles.setAttribute("class", "svg-tiles");
         this.svgGrid.appendChild(this.svgTiles);
     }
@@ -440,7 +432,7 @@ class BackgroundGrid {
 
     build() {
         const group = document.createElementNS(
-            "http://www.w3.org/2000/svg",
+            SVG_NS,
             "g",
         );
         group.setAttribute("class", "svg-backgroungGrid");
@@ -479,7 +471,7 @@ class BackgroundGrid {
 
         // draw the initial pattern
         const outline = document.createElementNS(
-            "http://www.w3.org/2000/svg",
+            SVG_NS,
             "path",
         );
         outline.setAttribute("id", "background-grid-pattern");
@@ -533,7 +525,7 @@ class BackgroundGrid {
                 ) {
                     // yes: draw!
                     const outline2 = document.createElementNS(
-                        "http://www.w3.org/2000/svg",
+                        SVG_NS,
                         "use",
                     );
                     outline2.setAttribute("href", "#background-grid-pattern");

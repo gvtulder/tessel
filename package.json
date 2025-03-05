@@ -12,6 +12,8 @@
     "@jest/globals": "^29.7.0",
     "@parcel/service-worker": "^2.13.3",
     "@swc/jest": "^0.2.37",
+    "babel-plugin-transform-define": "^2.1.4",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
     "detect-collisions": "^9.24.0",

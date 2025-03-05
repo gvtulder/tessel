@@ -1,8 +1,6 @@
 import disableIosZoom from "./lib/disable-ios-zoom";
 import { GameController } from "./ui/GameController";
 
-declare const VERSION: string;
-
 export function startMainMenu() {
     disableIosZoom();
 

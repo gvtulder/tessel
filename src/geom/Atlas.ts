@@ -1,5 +1,5 @@
 import { CornerType, SortedCorners } from "./Grid";
-import { DEG2RAD, RAD2DEG, rotateArray } from "./math";
+import { DEG2RAD, RAD2DEG } from "./math";
 import { Shape } from "./Shape";
 
 /**
@@ -101,6 +101,35 @@ class VertexPattern {
         }
         return false;
     }
+
+    /**
+     * Construct a new VertexPattern by parsing the string definition.
+     * E.g.: S0-S0-S0-S0
+     * @param vertexString a string defining the vertex sequence
+     * @param shapes maps shape identifiers to Shape objects
+     * @returns a new VertexPattern
+     */
+    static fromString(
+        vertexString: string,
+        shapes: Map<string, Shape>,
+    ): VertexPattern {
+        return new VertexPattern(
+            vertexString.split("-").map((c) => {
+                if (!c.match(/^[A-Za-z][0-9]$/)) {
+                    throw new Error(`invalid component ${c} in atlas pattern`);
+                }
+                const s = c.charAt(0);
+                const v = c.charAt(1);
+                if (!shapes.has(s)) {
+                    throw new Error(`undefined shape ${s} in atlas pattern`);
+                }
+                return {
+                    shape: shapes.get(c.charAt(0)),
+                    vertexIndex: parseInt(c.charAt(1)),
+                };
+            }),
+        );
+    }
 }
 
 /**
@@ -191,25 +220,7 @@ export class Atlas {
         const vertexPatterns = new Array<VertexPattern>();
         if (definition.vertices) {
             for (const v of definition.vertices) {
-                const corners = v.vertex.split("-").map((c) => {
-                    if (!c.match(/^[A-Za-z][0-9]$/)) {
-                        throw new Error(
-                            `invalid component ${c} in atlas pattern`,
-                        );
-                    }
-                    const s = c.charAt(0);
-                    const v = c.charAt(1);
-                    if (!shapes.has(s)) {
-                        throw new Error(
-                            `undefined shape ${s} in atlas pattern`,
-                        );
-                    }
-                    return {
-                        shape: shapes.get(c.charAt(0)),
-                        vertexIndex: parseInt(c.charAt(1)),
-                    };
-                });
-                vertexPatterns.push(new VertexPattern(corners));
+                vertexPatterns.push(VertexPattern.fromString(v.vertex, shapes));
             }
         } else {
             vertexPatterns.push(...computeVertexPatterns([...shapes.values()]));
@@ -221,6 +232,9 @@ export class Atlas {
     }
 }
 
+/**
+ * A set (map) of cycle-unique arrays.
+ */
 class UniqueNumberCycleSet extends Map<string, number[]> {
     add(seq: number[]): this {
         let key: string;
@@ -233,6 +247,10 @@ class UniqueNumberCycleSet extends Map<string, number[]> {
     }
 }
 
+/**
+ * Generates all possible vertex patterns from the giving shapes.
+ * A valid pattern is a sequence of corners with angles that sum to 360.
+ */
 function computeVertexPatterns(shapes: Shape[]): VertexPattern[] {
     // collect unique corner types
     const angles: { shape: Shape; cornerType: number; cornerAngle: number }[] =

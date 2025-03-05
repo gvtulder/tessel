@@ -30,10 +30,11 @@ export class Polygon {
      */
     get outsideEdges(): readonly Edge[] {
         if (this._outsideEdges !== undefined) return this._outsideEdges;
-        const edges = new Array<Edge>(this.vertices.length);
-        for (let i = 0; i < this.vertices.length; i++) {
+        const n = this.vertices.length;
+        const edges = new Array<Edge>(n);
+        for (let i = 0; i < n; i++) {
             edges[i] = {
-                a: this.vertices[(i + 1) % this.vertices.length],
+                a: this.vertices[(i + 1) % n],
                 b: this.vertices[i],
             };
         }
@@ -46,11 +47,12 @@ export class Polygon {
      */
     get edges(): readonly Edge[] {
         if (this._edges !== undefined) return this._edges;
-        const edges = new Array<Edge>(this.vertices.length);
-        for (let i = 0; i < this.vertices.length; i++) {
+        const n = this.vertices.length;
+        const edges = new Array<Edge>(n);
+        for (let i = 0; i < n; i++) {
             edges[i] = {
                 a: this.vertices[i],
-                b: this.vertices[(i + 1) % this.vertices.length],
+                b: this.vertices[(i + 1) % n],
             };
         }
         return (this._edges = edges);
@@ -82,11 +84,6 @@ export class Polygon {
      */
     segment(): Polygon[] {
         const c = this.centroid;
-        const edges = this.edges;
-        const segments = new Array<Polygon>(edges.length);
-        for (let i = 0; i < edges.length; i++) {
-            segments[i] = new Polygon([edges[i].a, edges[i].b, c]);
-        }
-        return segments;
+        return this.edges.map((e) => new Polygon([e.a, e.b, c]));
     }
 }

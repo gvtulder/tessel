@@ -181,7 +181,7 @@ export class Atlas {
         angles.set(0, 0);
         let angleCount = 0;
         while (angles.size < 100) {
-            for (const [startAngle, _] of angles.entries()) {
+            for (const startAngle of angles.keys()) {
                 for (const shape of this.shapes) {
                     let angle = startAngle;
                     for (const a of shape.cornerAngles) {

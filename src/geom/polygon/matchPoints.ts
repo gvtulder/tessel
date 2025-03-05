@@ -12,20 +12,17 @@ export function matchPoints(
     offset: number;
     dist: number;
 } {
-    if (other.length != points.length) {
+    const n = other.length;
+    if (n != points.length) {
         return null;
     }
     // attempt all starting points for a match
     let minDist = -1;
     let bestOffset = null;
-    for (let offset = 0; offset < other.length; offset++) {
+    for (let offset = 0; offset < n; offset++) {
         let maxDist = 0;
-        for (
-            let i = 0;
-            i < other.length && (minDist == -1 || maxDist < minDist);
-            i++
-        ) {
-            const d = dist(other[(i + offset) % other.length], points[i]);
+        for (let i = 0; i < n && (minDist == -1 || maxDist < minDist); i++) {
+            const d = dist(other[(i + offset) % n], points[i]);
             maxDist = maxDist < d ? d : maxDist;
         }
         if (minDist == -1 || maxDist < minDist) {

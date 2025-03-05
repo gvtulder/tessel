@@ -7,14 +7,11 @@ export function addPointToPolygon(
     points: readonly Point[],
     newPoint: Point,
 ): Point[] {
+    const n = points.length;
     let nearestEdgeDist = 0;
     let nearestEdge = null;
-    for (let i = 0; i < points.length; i++) {
-        const d = distToLineSegment(
-            points[i],
-            points[(i + 1) % points.length],
-            newPoint,
-        );
+    for (let i = 0; i < n; i++) {
+        const d = distToLineSegment(points[i], points[(i + 1) % n], newPoint);
         if (nearestEdge === null || d < nearestEdgeDist) {
             nearestEdgeDist = d;
             nearestEdge = i;

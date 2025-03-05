@@ -1,9 +1,22 @@
 import { Tile, TileColors } from "./Tile";
 
+/**
+ * A RuleSet can check if the new colors would fit on the given tile.
+ */
 export interface RuleSet {
+    /**
+     * Checks if the colors would fit on this tile.
+     * @param tile a tile on the grid
+     * @param colors the new color sequence
+     * @param offset the offset of the colors in the tile
+     */
     checkColors(tile: Tile, colors: TileColors, offset?: number): boolean;
 }
 
+/**
+ * RuleSet that requires segments connected to the same outside edge
+ * of a tile share the same color.
+ */
 export class MatchEdgeColorsRuleSet implements RuleSet {
     checkColors(tile: Tile, colors: TileColors, offset?: number): boolean {
         const edges = tile.edges;

@@ -583,8 +583,8 @@ export class Grid extends EventTarget {
 
         // check vertices using atlas
         if (this.atlas) {
-            for (let i = 0; i < n; i++) {
-                if (!this.atlas.checkMatch(cornerLists[i])) {
+            for (const cornerList of cornerLists) {
+                if (!this.atlas.checkMatch(cornerList)) {
                     return false;
                 }
             }
@@ -647,13 +647,9 @@ export class Grid extends EventTarget {
      * @returns the valid rotation offsets
      */
     checkColorsWithRotation(tile: Tile, colors: TileColors): number[] {
-        const rotations: number[] = [];
-        for (const r of tile.shape.rotationalSymmetries) {
-            if (this.rules.checkColors(tile, colors, r)) {
-                rotations.push(r);
-            }
-        }
-        return rotations;
+        return tile.shape.rotationalSymmetries.filter((r) =>
+            this.rules.checkColors(tile, colors, r),
+        );
     }
 
     /**
@@ -746,12 +742,7 @@ export class Grid extends EventTarget {
         }
         // remove placeholders that are on the grid
         // but are no longer required
-        const stale = new Array<PlaceholderTile>();
-        for (const placeholder of this.placeholders) {
-            if (!newPlaceholders.has(placeholder)) {
-                stale.push(placeholder as PlaceholderTile);
-            }
-        }
+        const stale = this.placeholders.difference(newPlaceholders);
         for (const placeholder of stale) {
             this.removePlaceholder(placeholder);
         }

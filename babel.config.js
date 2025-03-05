@@ -6,7 +6,9 @@ function git(command) {
 
 export default {
   plugins: [
-    "transform-remove-console",
+    ...(process.env["NODE_ENV"] != "production"
+      ? []
+      : ["transform-remove-console"]),
     ["transform-define", { VERSION: git("rev-parse --short HEAD") }],
   ],
 };

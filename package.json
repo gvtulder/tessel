@@ -3,7 +3,8 @@
     "build": "NODE_ENV=production parcel build index.html",
     "serve": "NODE_ENV=development parcel serve index.html --no-cache",
     "test": "jest",
-    "check": "tsc --noEmit"
+    "check": "tsc --noEmit",
+    "update-icon": "rsvg-convert icon.svg -w 180 -h 180 -o icon.png"
   },
   "browserslist": "defaults",
   "dependencies": {

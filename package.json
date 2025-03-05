@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "webpack",
+    "build": "parcel build index.html",
     "test": "jest",
     "check": "tsc --noEmit"
   },
@@ -10,6 +10,7 @@
     "@interactjs/interact": "^1.10.27",
     "@interactjs/pointer-events": "^1.10.27",
     "@jest/globals": "^29.7.0",
+    "@parcel/service-worker": "^2.13.3",
     "@swc/jest": "^0.2.37",
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",

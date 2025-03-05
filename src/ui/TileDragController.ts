@@ -6,7 +6,7 @@ import { TileOnScreenMatch } from "./TileDisplay";
 import { Tile } from "../geom/Tile";
 import { DEBUG } from "../settings";
 import { Grid } from "../geom/Grid";
-import { GridDisplay } from "./GridDisplay";
+import { GridDisplay, TransformComponent } from "./GridDisplay";
 import { Point } from "../geom/math";
 import { Shape } from "../geom/Shape";
 
@@ -91,6 +91,10 @@ export class TileDragController extends EventTarget {
         context.source.startDrag();
         evt.target.style.translate = `0px 0px`;
         evt.target.style.scale = `${this.dropTarget.scale / context.source.gridDisplay.scale}`;
+        context.source.dragTransform.dx = 0;
+        context.source.dragTransform.dy = 0;
+        context.source.dragTransform.scale =
+            this.dropTarget.scale / context.source.gridDisplay.scale;
         context.source.resetCoordinateMapperCache();
         this.dispatchEvent(
             new TileDragEvent(
@@ -114,9 +118,15 @@ export class TileDragController extends EventTarget {
             evt.target.style.scale = newScale;
             moved = true;
         }
+        context.source.dragTransform.dx = context.position.x;
+        context.source.dragTransform.dy = context.position.y;
+        context.source.dragTransform.scale =
+            this.dropTarget.scale / context.source.gridDisplay.scale;
         if (moved) {
             context.source.resetCoordinateMapperCache();
         }
+        // TODO debug
+        context.source.gridDisplay.gridToScreenPosition({ x: 0, y: 0 });
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {
@@ -145,6 +155,9 @@ export class TileDragController extends EventTarget {
         context.position.y = 0;
         evt.target.style.translate = `${context.position.x}px ${context.position.y}px`;
         evt.target.style.scale = "";
+        context.source.dragTransform.dx = 0;
+        context.source.dragTransform.dy = 0;
+        context.source.dragTransform.scale = 0;
         this.dispatchEvent(
             new TileDragEvent(
                 TileDragController.events.EndDrag,
@@ -192,6 +205,7 @@ export type TileDragSourceContext = {
 
 export interface TileDragSource {
     gridDisplay: GridDisplay;
+    dragTransform: TransformComponent;
     tile: Tile;
     indexOnStack?: number;
     getDraggable(): Interactable;

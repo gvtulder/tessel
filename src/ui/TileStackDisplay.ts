@@ -7,7 +7,11 @@ import { Grid } from "../geom/Grid";
 import { FixedOrderTileStack, TileShapeColors } from "../game/TileStack";
 import { Tile, TileColors } from "../geom/Tile";
 import { Shape } from "../geom/Shape";
-import { GridDisplay, TileStackGridDisplay } from "./GridDisplay";
+import {
+    GridDisplay,
+    TileStackGridDisplay,
+    TransformComponent,
+} from "./GridDisplay";
 import {
     TileDragController,
     TileDragSource,
@@ -158,6 +162,10 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     angle: number;
     beforeAutorotationIdx: number;
 
+    baseTransform: TransformComponent;
+    dragTransform: TransformComponent;
+    rotateTransform: TransformComponent;
+
     constructor(
         tileStackDisplay: BaseTileStackDisplay,
         indexOnStack: number,
@@ -180,6 +188,13 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.element.appendChild(this.rotatable);
 
         this.gridDisplay = new TileStackGridDisplay(this.grid, this.rotatable);
+
+        this.baseTransform = {};
+        this.dragTransform = {};
+        this.rotateTransform = {};
+        this.gridDisplay.parentTransforms.push(this.baseTransform);
+        this.gridDisplay.parentTransforms.push(this.dragTransform);
+        this.gridDisplay.parentTransforms.push(this.rotateTransform);
 
         this.rotatable.appendChild(this.gridDisplay.element);
 
@@ -264,6 +279,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
             this.angle += forwardDiff;
         }
         this.rotatable.style.transform = `rotate(${this.angle * RAD2DEG}deg)`;
+        this.rotateTransform.rotation = this.angle;
         if (animated) {
             this.rotatable.classList.add("animated");
         }
@@ -304,6 +320,13 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     startDrag() {
+        const rect = this.element.getBoundingClientRect();
+        this.baseTransform.dx = rect.left;
+        this.baseTransform.dy = rect.top;
+        this.dragTransform.originX = rect.width / 2;
+        this.dragTransform.originY = rect.height / 2;
+        this.rotateTransform.originX = rect.width / 2;
+        this.rotateTransform.originY = rect.height / 2;
         this.element.classList.remove("drag-return", "drag-success");
         this.element.classList.add("dragging");
     }

@@ -45,14 +45,20 @@ export class GridDisplay extends EventTarget {
     visibleBottom: number;
 
     scale: number;
+    containerLeft: number;
+    containerTop: number;
     // margins in pixels
     margins = { top: 30, right: 30, bottom: 30, left: 30 };
     scalingType = GridDisplayScalingType.EqualMargins;
+
+    parentTransforms: TransformComponent[];
 
     constructor(grid: Grid, container: HTMLElement) {
         super();
         this.grid = grid;
         this.container = container;
+
+        this.parentTransforms = [];
 
         this.tileDisplays = new Map<Tile, TileDisplay>();
 
@@ -178,7 +184,43 @@ export class GridDisplay extends EventTarget {
      * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      */
     gridToScreenPosition(gridPos: Point): Point {
-        return this.coordinateMapper.gridToScreen(gridPos);
+        // const screenPos = this.coordinateMapper.gridToScreen({ x: gridPos.x, y: gridPos.y, });
+        let computedX = gridPos.x * this.scale + this.containerLeft;
+        let computedY = gridPos.y * this.scale + this.containerTop;
+        for (let i = this.parentTransforms.length - 1; i >= 0; i--) {
+            const t = this.parentTransforms[i];
+            // console.log(t);
+            computedX -= t.originX || 0;
+            computedY -= t.originY || 0;
+            if (t.scale) {
+                computedX *= t.scale;
+                computedY *= t.scale;
+            }
+            if (t.rotation) {
+                const origX = computedX;
+                computedX =
+                    Math.cos(t.rotation) * computedX -
+                    Math.sin(t.rotation) * computedY;
+                computedY =
+                    Math.sin(t.rotation) * origX +
+                    Math.cos(t.rotation) * computedY;
+            }
+            computedX += (t.dx || 0) + (t.originX || 0);
+            computedY += (t.dy || 0) + (t.originY || 0);
+        }
+        /*
+        console.log(
+            "gridToScreenPosition",
+            this,
+            "grid",
+            gridPos,
+            "err",
+            screenPos.x - computedX,
+            screenPos.y - computedY,
+        );
+        */
+        return { x: computedX, y: computedY };
+        // return this.coordinateMapper.gridToScreen(gridPos);
     }
 
     /**
@@ -187,7 +229,7 @@ export class GridDisplay extends EventTarget {
     gridToScreenPositions(gridPos: readonly Point[]): Point[] {
         const clientPos = new Array<Point>(gridPos.length);
         for (let i = 0; i < clientPos.length; i++) {
-            clientPos[i] = this.coordinateMapper.gridToScreen(gridPos[i]);
+            clientPos[i] = this.gridToScreenPosition(gridPos[i]);
         }
         return clientPos;
     }
@@ -196,7 +238,46 @@ export class GridDisplay extends EventTarget {
      * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      */
     screenToGridPosition(clientPos: Point): Point {
-        return this.coordinateMapper.screenToGrid(clientPos);
+        // const gridPos = this.coordinateMapper.screenToGrid({ x: clientPos.x, y: clientPos.y, });
+        let computedX = clientPos.x;
+        let computedY = clientPos.y;
+        for (const t of this.parentTransforms) {
+            // console.log(t);
+            computedX -= (t.dx || 0) + (t.originX || 0);
+            computedY -= (t.dy || 0) + (t.originY || 0);
+            if (t.rotation) {
+                const origX = computedX;
+                computedX =
+                    Math.cos(-t.rotation) * computedX -
+                    Math.sin(-t.rotation) * computedY;
+                computedY =
+                    Math.sin(-t.rotation) * origX +
+                    Math.cos(-t.rotation) * computedY;
+                computedX -= t.originX || 0;
+                computedY -= t.originY || 0;
+            }
+            if (t.scale) {
+                computedX /= t.scale;
+                computedY /= t.scale;
+            }
+            computedX += t.originX || 0;
+            computedY += t.originY || 0;
+        }
+        computedX = (computedX - this.containerLeft) / this.scale;
+        computedY = (computedY - this.containerTop) / this.scale;
+        /*
+        console.log(
+            "screenToGridPositions",
+            this,
+            "screen",
+            clientPos,
+            "err",
+            gridPos.x - computedX,
+            gridPos.y - computedY,
+        );
+        */
+        return { x: computedX, y: computedY };
+        // return this.coordinateMapper.screenToGrid(clientPos);
     }
 
     /**
@@ -205,7 +286,7 @@ export class GridDisplay extends EventTarget {
     screenToGridPositions(clientPos: readonly Point[]): Point[] {
         const gridPos = new Array<Point>(clientPos.length);
         for (let i = 0; i < gridPos.length; i++) {
-            gridPos[i] = this.coordinateMapper.screenToGrid(clientPos[i]);
+            gridPos[i] = this.screenToGridPosition(clientPos[i]);
         }
         return gridPos;
     }
@@ -338,6 +419,8 @@ export class GridDisplay extends EventTarget {
             this.svgGrid.style.transform,
         );
 
+        this.containerLeft = containerLeft;
+        this.containerTop = containerTop;
         this.scale = scale;
 
         this.coordinateMapper.resetCoeffCache();
@@ -411,6 +494,15 @@ export class MainMenuGridDisplay extends GridDisplay {
         div.className = "mainMenu-gridDisplay gridDisplay";
     }
 }
+
+export type TransformComponent = {
+    dx?: number;
+    dy?: number;
+    scale?: number;
+    rotation?: number;
+    originX?: number;
+    originY?: number;
+};
 
 type ScreenToGridCoeff = {
     x0: number;

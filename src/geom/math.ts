@@ -168,7 +168,9 @@ export function weightedSumPoint(
  * @returns the centroid
  */
 export function centroid(points: readonly Point[]): Point {
-    if (points.length == 3) {
+    const n = points.length;
+
+    if (n == 3) {
         return {
             x: (points[0].x + points[1].x + points[2].x) / 3,
             y: (points[0].y + points[1].y + points[2].y) / 3,
@@ -179,9 +181,9 @@ export function centroid(points: readonly Point[]): Point {
     let a = 0;
     let x = 0;
     let y = 0;
-    for (let i = 0; i < points.length; i++) {
+    for (let i = 0; i < n; i++) {
         const p1 = points[i];
-        const p2 = points[(i + 1) % points.length];
+        const p2 = points[(i + 1) % n];
         const ai = p1.x * p2.y - p2.x * p1.y;
         a += ai;
         x += (p1.x + p2.x) * ai;
@@ -209,10 +211,11 @@ export function area(points: readonly Point[]): number {
  */
 export function orientedArea(points: readonly Point[]): number {
     // using the triangle formula
+    const n = points.length;
     let a = 0;
-    for (let i = 0; i < points.length; i++) {
+    for (let i = 0; i < n; i++) {
         const p1 = points[i];
-        const p2 = points[(i + 1) % points.length];
+        const p2 = points[(i + 1) % n];
         a += p1.x * p2.y - p2.x * p1.y;
     }
     return a / 2;
@@ -237,10 +240,10 @@ export function bbox(points: readonly Point[]): BBox {
         maxY = maxY < p.y ? p.y : maxY;
     }
     return {
-        minX: minX,
-        minY: minY,
-        maxX: maxX,
-        maxY: maxY,
+        minX,
+        minY,
+        maxX,
+        maxY,
     };
 }
 

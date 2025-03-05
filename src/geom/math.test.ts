@@ -4,6 +4,7 @@ import {
     DEG2RAD,
     P,
     Point,
+    angleDist,
     area,
     bbox,
     centroid,
@@ -87,6 +88,19 @@ describe("edgeToAngle", () => {
     test("computes angles", () => {
         const edge = { a: P(2, 1), b: P(3, 2) };
         expect(edgeToAngle(edge)).toBe(45 * DEG2RAD);
+    });
+});
+
+describe("angleDist", () => {
+    test.each([
+        [30, 60, 30],
+        [-30, 60, 90],
+        [10, 350, 20],
+        [350, 10, 20],
+        [160, 180, 20],
+        [-180, 180, 0],
+    ])("computes angle distances", (a, b, d) => {
+        expect(angleDist(a * DEG2RAD, b * DEG2RAD)).toBeCloseTo(d * DEG2RAD);
     });
 });
 

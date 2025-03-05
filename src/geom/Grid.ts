@@ -601,6 +601,7 @@ export class Grid extends EventTarget {
      * Checks if the given polygon overlaps with any tiles on the grid.
      * @param polygon the polygon
      * @param includePlaceholders collide with identical placeholders
+     * @param findAll if not set of false, the function returns only the first match
      * @returns the overlapping tiles if the polygon overlaps, or null
      */
     checkCollision(
@@ -608,22 +609,15 @@ export class Grid extends EventTarget {
         includePlaceholders?: boolean,
         findAll?: boolean,
     ): Tile[] {
-        const collisionPolygon = new CollisionPolygon(
-            {},
-            polygon.vertices as Point[],
-        );
+        const cp = new CollisionPolygon({}, polygon.vertices as Point[]);
         // this normally happens on system.insert
-        collisionPolygon.bbox = collisionPolygon.getAABBAsBBox();
-        collisionPolygon.minX =
-            collisionPolygon.bbox.minX - collisionPolygon.padding;
-        collisionPolygon.maxX =
-            collisionPolygon.bbox.maxX - collisionPolygon.padding;
-        collisionPolygon.minY =
-            collisionPolygon.bbox.minY - collisionPolygon.padding;
-        collisionPolygon.maxY =
-            collisionPolygon.bbox.maxY - collisionPolygon.padding;
+        cp.bbox = cp.getAABBAsBBox();
+        cp.minX = cp.bbox.minX - cp.padding;
+        cp.maxX = cp.bbox.maxX - cp.padding;
+        cp.minY = cp.bbox.minY - cp.padding;
+        cp.maxY = cp.bbox.maxY - cp.padding;
         const overlappingTiles = new Array<Tile>();
-        this.system.checkOne(collisionPolygon, (resp) => {
+        this.system.checkOne(cp, (resp) => {
             if (resp.overlap < OVERLAP_EPS) return false;
             if (resp.b.userData instanceof PlaceholderTile) {
                 if (!includePlaceholders) return false;
@@ -678,18 +672,13 @@ export class Grid extends EventTarget {
         shape?: Shape,
         matchCentroidOnly?: boolean,
     ): { tile: Tile; offset: number; dist: number; matchesPoints: boolean } {
-        // TODO check also for shape?
-        const collisionPolygon = new CollisionPolygon({}, points as Point[]);
+        const cp = new CollisionPolygon({}, points as Point[]);
         // this normally happens on system.insert
-        collisionPolygon.bbox = collisionPolygon.getAABBAsBBox();
-        collisionPolygon.minX =
-            collisionPolygon.bbox.minX - collisionPolygon.padding;
-        collisionPolygon.maxX =
-            collisionPolygon.bbox.maxX - collisionPolygon.padding;
-        collisionPolygon.minY =
-            collisionPolygon.bbox.minY - collisionPolygon.padding;
-        collisionPolygon.maxY =
-            collisionPolygon.bbox.maxY - collisionPolygon.padding;
+        cp.bbox = cp.getAABBAsBBox();
+        cp.minX = cp.bbox.minX - cp.padding;
+        cp.maxX = cp.bbox.maxX - cp.padding;
+        cp.minY = cp.bbox.minY - cp.padding;
+        cp.maxY = cp.bbox.maxY - cp.padding;
         const bestCandidate = {
             tile: null as Tile,
             offset: 0,
@@ -697,28 +686,30 @@ export class Grid extends EventTarget {
             matchesPoints: false,
         };
         const pointsCentroid = centroid(points);
-        this.system.checkOne(collisionPolygon, (resp) => {
+        this.system.checkOne(cp, (resp) => {
             const other = resp.b.userData as Tile;
+            // check for type
             if (!includePlaceholders && other instanceof PlaceholderTile) {
                 return false;
             }
+            // check for shape
             if (shape && other.shape !== shape) {
                 return false;
             }
-            const poly = other.polygon;
+            // check for maximum distance of centroids
             const centroidDistance = dist(pointsCentroid, other.centroid);
             if (centroidDistance > maxDist) return false;
+            // attempt to match points
+            const match = matchPoints(other.polygon.vertices, points);
+            // use distance to centroid as distance to object ...
             let distance = centroidDistance;
             let offset: number = undefined;
-            const match = matchPoints(poly.vertices, points);
+            // ... unless we require a point-to-point match
             if (!matchCentroidOnly) {
-                if (match === null) return false;
+                if (!match || match.dist > maxDist) return false;
                 distance = match.dist;
                 offset = match.offset;
             }
-            if (distance > maxDist) return false;
-            // const overlap = poly.overlapArea(points) / poly.area;
-            // if (overlap < minOverlap) return false;
             if (!bestCandidate.tile || bestCandidate.dist > distance) {
                 bestCandidate.tile = other;
                 bestCandidate.dist = distance;
@@ -727,7 +718,6 @@ export class Grid extends EventTarget {
             }
             return false;
         });
-        // console.log("bestCandidate", bestCandidate);
         return bestCandidate.tile ? bestCandidate : null;
     }
 
@@ -736,6 +726,7 @@ export class Grid extends EventTarget {
      * using the atlas to check for valid possibilities.
      */
     generatePlaceholders(): void {
+        // collect all placeholders given the current tiles
         const newPlaceholders = new Set<TileSuggestion>();
         for (const edge of this.frontier) {
             for (const suggestion of this.computePossibilities(edge)) {
@@ -753,6 +744,8 @@ export class Grid extends EventTarget {
                 }
             }
         }
+        // remove placeholders that are on the grid
+        // but are no longer required
         const stale = new Array<PlaceholderTile>();
         for (const placeholder of this.placeholders) {
             if (!newPlaceholders.has(placeholder)) {
@@ -768,13 +761,9 @@ export class Grid extends EventTarget {
      * Generates a list of valid possible placeholders to place at the
      * given edge. Uses the atlas to check for valid possibilities.
      * @param edge the undirected edge to connect the placeholder to
-     * @param includePlaceholders if true, will avoid collisions with existing placeholders
      * @returns a list of new placement possibilities
      */
-    computePossibilities(
-        edge: GridEdge,
-        includePlaceholders?: boolean,
-    ): TileSuggestion[] {
+    computePossibilities(edge: GridEdge): TileSuggestion[] {
         if (!!edge.tileA == !!edge.tileB) return [];
         const ab = !edge.tileA
             ? { a: edge.a.point, b: edge.b.point }
@@ -794,7 +783,10 @@ export class Grid extends EventTarget {
         return possibilities;
     }
 
-    handleTileColorUpdate(evt: GridEvent): void {
+    /**
+     * Broadcast the tile color update.
+     */
+    private handleTileColorUpdate(evt: GridEvent): void {
         this.dispatchEvent(
             new GridEvent(GridEventType.UpdateTileColors, this, evt.tile),
         );

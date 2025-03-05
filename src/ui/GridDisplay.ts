@@ -5,6 +5,7 @@ import { Tile } from "../geom/Tile";
 import { Shape } from "../geom/Shape";
 import { DEBUG } from "../settings";
 import { BBox, Point, dist } from "../geom/math";
+import { TransformComponent, TransformList } from "../geom/Transform";
 
 export enum GridDisplayScalingType {
     EqualMargins,
@@ -51,14 +52,16 @@ export class GridDisplay extends EventTarget {
     margins = { top: 30, right: 30, bottom: 30, left: 30 };
     scalingType = GridDisplayScalingType.EqualMargins;
 
-    parentTransforms: TransformComponent[];
+    containerTransform: TransformComponent;
+    parentTransforms: TransformList;
 
     constructor(grid: Grid, container: HTMLElement) {
         super();
         this.grid = grid;
         this.container = container;
 
-        this.parentTransforms = [];
+        this.containerTransform = {};
+        this.parentTransforms = new TransformList(this.containerTransform);
 
         this.tileDisplays = new Map<Tile, TileDisplay>();
 
@@ -184,112 +187,30 @@ export class GridDisplay extends EventTarget {
      * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      */
     gridToScreenPosition(gridPos: Point): Point {
-        // const screenPos = this.coordinateMapper.gridToScreen({ x: gridPos.x, y: gridPos.y, });
-        let computedX = gridPos.x * this.scale + this.containerLeft;
-        let computedY = gridPos.y * this.scale + this.containerTop;
-        for (let i = this.parentTransforms.length - 1; i >= 0; i--) {
-            const t = this.parentTransforms[i];
-            // console.log(t);
-            computedX -= t.originX || 0;
-            computedY -= t.originY || 0;
-            if (t.scale) {
-                computedX *= t.scale;
-                computedY *= t.scale;
-            }
-            if (t.rotation) {
-                const origX = computedX;
-                computedX =
-                    Math.cos(t.rotation) * computedX -
-                    Math.sin(t.rotation) * computedY;
-                computedY =
-                    Math.sin(t.rotation) * origX +
-                    Math.cos(t.rotation) * computedY;
-            }
-            computedX += (t.dx || 0) + (t.originX || 0);
-            computedY += (t.dy || 0) + (t.originY || 0);
-        }
-        /*
-        console.log(
-            "gridToScreenPosition",
-            this,
-            "grid",
-            gridPos,
-            "err",
-            screenPos.x - computedX,
-            screenPos.y - computedY,
-        );
-        */
-        return { x: computedX, y: computedY };
-        // return this.coordinateMapper.gridToScreen(gridPos);
+        return this.parentTransforms.applyForward(gridPos);
     }
 
     /**
      * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      */
     gridToScreenPositions(gridPos: readonly Point[]): Point[] {
-        const clientPos = new Array<Point>(gridPos.length);
-        for (let i = 0; i < clientPos.length; i++) {
-            clientPos[i] = this.gridToScreenPosition(gridPos[i]);
-        }
-        return clientPos;
+        return gridPos.map((p) => this.parentTransforms.applyForward(p));
     }
 
     /**
      * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      */
     screenToGridPosition(clientPos: Point): Point {
-        // const gridPos = this.coordinateMapper.screenToGrid({ x: clientPos.x, y: clientPos.y, });
-        let computedX = clientPos.x;
-        let computedY = clientPos.y;
-        for (const t of this.parentTransforms) {
-            // console.log(t);
-            computedX -= (t.dx || 0) + (t.originX || 0);
-            computedY -= (t.dy || 0) + (t.originY || 0);
-            if (t.rotation) {
-                const origX = computedX;
-                computedX =
-                    Math.cos(-t.rotation) * computedX -
-                    Math.sin(-t.rotation) * computedY;
-                computedY =
-                    Math.sin(-t.rotation) * origX +
-                    Math.cos(-t.rotation) * computedY;
-                computedX -= t.originX || 0;
-                computedY -= t.originY || 0;
-            }
-            if (t.scale) {
-                computedX /= t.scale;
-                computedY /= t.scale;
-            }
-            computedX += t.originX || 0;
-            computedY += t.originY || 0;
-        }
-        computedX = (computedX - this.containerLeft) / this.scale;
-        computedY = (computedY - this.containerTop) / this.scale;
-        /*
-        console.log(
-            "screenToGridPositions",
-            this,
-            "screen",
-            clientPos,
-            "err",
-            gridPos.x - computedX,
-            gridPos.y - computedY,
-        );
-        */
-        return { x: computedX, y: computedY };
-        // return this.coordinateMapper.screenToGrid(clientPos);
+        return this.parentTransforms.applyBackward(clientPos);
     }
 
     /**
      * Maps the client position (from getBoundingClient rect) to the SVG grid coordinates.
      */
     screenToGridPositions(clientPos: readonly Point[]): Point[] {
-        const gridPos = new Array<Point>(clientPos.length);
-        for (let i = 0; i < gridPos.length; i++) {
-            gridPos[i] = this.screenToGridPosition(clientPos[i]);
-        }
-        return gridPos;
+        return clientPos.map((p) => this.parentTransforms.applyBackward(p));
     }
+
     /**
      * Finds the best overlapping tile for the given polygon points.
      * @param points the vertices of a polygon
@@ -423,6 +344,10 @@ export class GridDisplay extends EventTarget {
         this.containerTop = containerTop;
         this.scale = scale;
 
+        this.containerTransform.dx = containerLeft;
+        this.containerTransform.dy = containerTop;
+        this.containerTransform.scale = scale;
+
         this.coordinateMapper.resetCoeffCache();
 
         // update the background grid
@@ -493,15 +418,6 @@ export class MainMenuGridDisplay extends GridDisplay {
         div.className = "mainMenu-gridDisplay gridDisplay";
     }
 }
-
-export type TransformComponent = {
-    dx?: number;
-    dy?: number;
-    scale?: number;
-    rotation?: number;
-    originX?: number;
-    originY?: number;
-};
 
 type ScreenToGridCoeff = {
     x0: number;

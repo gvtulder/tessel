@@ -6,7 +6,8 @@ import { TileOnScreenMatch } from "./TileDisplay";
 import { Tile } from "../geom/Tile";
 import { DEBUG } from "../settings";
 import { Grid } from "../geom/Grid";
-import { GridDisplay, TransformComponent } from "./GridDisplay";
+import { GridDisplay } from "./GridDisplay";
+import { TransformComponent } from "../geom/Transform";
 import { Point } from "../geom/math";
 import { Shape } from "../geom/Shape";
 

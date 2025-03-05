@@ -7,11 +7,8 @@ import { Grid } from "../geom/Grid";
 import { FixedOrderTileStack, TileShapeColors } from "../game/TileStack";
 import { Tile, TileColors } from "../geom/Tile";
 import { Shape } from "../geom/Shape";
-import {
-    GridDisplay,
-    TileStackGridDisplay,
-    TransformComponent,
-} from "./GridDisplay";
+import { GridDisplay, TileStackGridDisplay } from "./GridDisplay";
+import { TransformComponent } from "../geom/Transform";
 import {
     TileDragController,
     TileDragSource,
@@ -192,9 +189,11 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.baseTransform = {};
         this.dragTransform = {};
         this.rotateTransform = {};
-        this.gridDisplay.parentTransforms.push(this.baseTransform);
-        this.gridDisplay.parentTransforms.push(this.dragTransform);
-        this.gridDisplay.parentTransforms.push(this.rotateTransform);
+        this.gridDisplay.parentTransforms.push(
+            this.rotateTransform,
+            this.dragTransform,
+            this.baseTransform,
+        );
 
         this.rotatable.appendChild(this.gridDisplay.element);
 

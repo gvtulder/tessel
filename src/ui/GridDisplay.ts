@@ -212,7 +212,7 @@ export class GridDisplay extends EventTarget {
         includePlaceholders?: boolean,
         shape?: Shape,
         matchCentroidOnly?: boolean,
-    ): { tile: Tile; offset: number; dist: number } {
+    ): { tile: Tile; offset: number; dist: number; matchesPoints: boolean } {
         return this.grid.findMatchingTile(
             points,
             minOverlap,

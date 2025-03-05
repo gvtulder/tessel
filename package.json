@@ -4,6 +4,7 @@
     "test": "jest",
     "check": "tsc --noEmit"
   },
+  "browserslist": "defaults",
   "dependencies": {
     "@interactjs/actions": "^1.10.27",
     "@interactjs/auto-start": "^1.10.27",

@@ -96,7 +96,6 @@ export class TileDragController extends EventTarget {
         context.source.dragTransform.dy = 0;
         context.source.dragTransform.scale =
             this.dropTarget.scale / context.source.gridDisplay.scale;
-        context.source.resetCoordinateMapperCache();
         this.dispatchEvent(
             new TileDragEvent(
                 TileDragController.events.StartDrag,
@@ -123,16 +122,9 @@ export class TileDragController extends EventTarget {
         context.source.dragTransform.dy = context.position.y;
         context.source.dragTransform.scale =
             this.dropTarget.scale / context.source.gridDisplay.scale;
-        if (moved) {
-            context.source.resetCoordinateMapperCache();
-        }
-        // TODO debug
-        context.source.gridDisplay.gridToScreenPosition({ x: 0, y: 0 });
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {
-        context.source.resetCoordinateMapperCache();
-
         const match = this.mapToFixedTile(context);
 
         let successful = false;
@@ -215,7 +207,6 @@ export interface TileDragSource {
     resetDragStatus();
     startAutorotate(rotation: TileRotationSet);
     resetAutorotate(keepRotation: boolean);
-    resetCoordinateMapperCache();
 }
 
 export interface TileDropTarget {

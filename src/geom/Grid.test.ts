@@ -7,7 +7,7 @@ import { GridEventType } from "./GridEvent";
 import { mergeBBox, P, rotateArray, weightedSumPoint } from "./math";
 import { SquaresAtlas, TrianglesAtlas } from "./Atlas";
 
-const TRIANGLE = new Shape("triangle", [60, 60, 60]);
+const TRIANGLE = TrianglesAtlas.shapes[0];
 
 describe("SortedCorners", () => {
     test("can be created", () => {
@@ -141,19 +141,20 @@ describe("GridEdge", () => {
 
 describe("Grid", () => {
     // define three triangles around (0, 0)
+    const atlas = TrianglesAtlas;
     const poly1 = TRIANGLE.constructPolygonAB(P(0, 0), P(0, 1), 0);
     const poly2 = TRIANGLE.constructPolygonEdge(poly1.outsideEdges[0], 0);
     const poly3 = TRIANGLE.constructPolygonEdge(poly2.outsideEdges[1], 0);
     const overlappingPoly = new Polygon(P([0.2, 0], [0.5, -0.5], [0.5, 0.5]));
 
     test("can be created", () => {
-        const grid = new Grid();
+        const grid = new Grid(atlas);
         expect(grid.tiles.size).toBe(0);
         expect(grid.frontier.size).toBe(0);
     });
 
     test("can add tiles", () => {
-        const grid = new Grid();
+        const grid = new Grid(atlas);
 
         grid.addTile(TRIANGLE, poly1);
         expect(grid.tiles.size).toBe(1);
@@ -170,7 +171,7 @@ describe("Grid", () => {
     });
 
     test("checks for overlapping edges before adding", () => {
-        const grid = new Grid();
+        const grid = new Grid(atlas);
         grid.addTile(TRIANGLE, poly1);
         grid.addTile(TRIANGLE, poly2);
         grid.addTile(TRIANGLE, poly3);
@@ -179,7 +180,7 @@ describe("Grid", () => {
     });
 
     test("can remove tiles", () => {
-        const grid = new Grid();
+        const grid = new Grid(atlas);
         const t1 = grid.addTile(TRIANGLE, poly1);
         const t2 = grid.addTile(TRIANGLE, poly2);
         expect(grid.tiles.size).toBe(2);
@@ -200,7 +201,7 @@ describe("Grid", () => {
     });
 
     test("can check if a new tile would fit", () => {
-        const grid = new Grid();
+        const grid = new Grid(atlas);
 
         // add correct tiles
         expect(grid.checkFit(TRIANGLE, poly1)).toBe(true);
@@ -218,7 +219,7 @@ describe("Grid", () => {
     });
 
     test("updates area, bbox, centroid", () => {
-        const grid = new Grid();
+        const grid = new Grid(atlas);
 
         expect(grid.area).toBeCloseTo(0);
         expect(grid.bbox).toBeUndefined();
@@ -231,6 +232,9 @@ describe("Grid", () => {
         expect(grid.bbox.minY).toBeCloseTo(poly1.bbox.minY);
         expect(grid.bbox.maxX).toBeCloseTo(poly1.bbox.maxX);
         expect(grid.bbox.maxY).toBeCloseTo(poly1.bbox.maxY);
+        if (!grid.centroid) {
+            throw new Error("centroid undefined");
+        }
         expect(grid.centroid.x).toBeCloseTo(poly1.centroid.x);
         expect(grid.centroid.y).toBeCloseTo(poly1.centroid.y);
 
@@ -273,7 +277,7 @@ describe("Grid", () => {
         const addHandler = jest.fn();
         const removeHandler = jest.fn();
 
-        const grid = new Grid();
+        const grid = new Grid(atlas);
         grid.addEventListener(GridEventType.AddTile, addHandler);
         grid.addEventListener(GridEventType.RemoveTile, removeHandler);
         const t1 = grid.addTile(TRIANGLE, poly1);
@@ -286,7 +290,7 @@ describe("Grid", () => {
     });
 
     test("adds and removes placeholders", () => {
-        const grid = new Grid();
+        const grid = new Grid(atlas);
 
         const placeholder = grid.addPlaceholder(TRIANGLE, poly1);
         expect(grid.placeholders.size).toBe(1);
@@ -324,7 +328,7 @@ describe("Grid", () => {
     });
 
     test("computes combined bbox", () => {
-        const grid = new Grid();
+        const grid = new Grid(atlas);
 
         grid.addPlaceholder(TRIANGLE, poly1);
         expect(grid.placeholders.size).toBe(1);
@@ -435,10 +439,10 @@ describe("Grid", () => {
         const tile1 = grid.addTile(TRIANGLE, poly1);
         const tile2 = grid.addTile(TRIANGLE, poly2);
 
-        expect(grid.findMatchingTile(poly1.vertices, 0.2, true).tile).toBe(
+        expect(grid.findMatchingTile(poly1.vertices, 0.2, true)!.tile).toBe(
             tile1,
         );
-        expect(grid.findMatchingTile(poly2.vertices, 0.2, true).tile).toBe(
+        expect(grid.findMatchingTile(poly2.vertices, 0.2, true)!.tile).toBe(
             tile2,
         );
         expect(grid.findMatchingTile(poly3.vertices, 0.2, true)).toBeNull();
@@ -468,7 +472,7 @@ describe("Grid", () => {
 
         const tile1 = grid.addTile(shape, poly1);
 
-        expect(grid.findMatchingTile(poly1.vertices, 0.1, true).tile).toBe(
+        expect(grid.findMatchingTile(poly1.vertices, 0.1, true)!.tile).toBe(
             tile1,
         );
         expect(
@@ -476,7 +480,8 @@ describe("Grid", () => {
         ).toBeNull();
         expect(grid.findMatchingTile(poly2.vertices, 0.1, true)).toBeNull();
         expect(
-            grid.findMatchingTile(poly2.vertices, 0.1, true, null, true).tile,
+            grid.findMatchingTile(poly2.vertices, 0.1, true, undefined, true)!
+                .tile,
         ).toBe(tile1);
         expect(
             grid.findMatchingTile(

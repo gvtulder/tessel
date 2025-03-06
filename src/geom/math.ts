@@ -26,7 +26,10 @@ export function P(
     ...points: [number, number] | [number, number][]
 ): Point | Point[] {
     if (points[0] instanceof Array) {
-        return points.map((p) => ({ x: p[0] as number, y: p[1] as number }));
+        return (points as [number, number][]).map((p) => ({
+            x: p[0] as number,
+            y: p[1] as number,
+        }));
     } else {
         return { x: points[0] as number, y: points[1] as number };
     }
@@ -250,9 +253,9 @@ export function bbox(points: readonly Point[]): BBox {
 /**
  * Merges two bounding boxes.
  */
-export function mergeBBox(a: BBox, b: BBox): BBox {
-    if (!a) return b;
-    if (!b) return a;
+export function mergeBBox(a?: BBox | null, b?: BBox | null): BBox {
+    if (!a) return b!;
+    if (!b) return a!;
     return {
         minX: a.minX < b.minX ? a.minX : b.minX,
         minY: a.minY < b.minY ? a.minY : b.minY,

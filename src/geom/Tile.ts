@@ -147,7 +147,7 @@ export class Tile extends EventTarget {
     constructor(
         shape: Shape,
         polygon: Polygon,
-        segments?: Polygon[],
+        segments?: Polygon[] | null,
         tileType = TileType.Normal,
     ) {
         super();

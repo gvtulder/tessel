@@ -121,11 +121,12 @@ class VertexPattern {
                 }
                 const s = c.charAt(0);
                 const v = c.charAt(1);
-                if (!shapes.has(s)) {
+                const shape = shapes.get(s);
+                if (!shape) {
                     throw new Error(`undefined shape ${s} in atlas pattern`);
                 }
                 return {
-                    shape: shapes.get(c.charAt(0)),
+                    shape: shape,
                     vertexIndex: parseInt(c.charAt(1)),
                 };
             }),
@@ -170,7 +171,7 @@ export class Atlas {
         return false;
     }
 
-    private _orientations: readonly number[];
+    private _orientations: readonly number[] | undefined;
 
     /**
      * Computes the full set of rotation angles for tiles
@@ -238,13 +239,14 @@ export class Atlas {
  */
 class UniqueNumberCycleSet extends Map<string, number[]> {
     add(seq: number[]): this {
+        if (seq.length == 0) return this;
         let key: string;
         for (let r = 0; r < seq.length; r++) {
-            seq.push(seq.shift());
+            seq.push(seq.shift() as number);
             key = seq.join("-");
             if (super.has(key)) return this;
         }
-        return super.set(key, seq);
+        return super.set(key!, seq);
     }
 }
 

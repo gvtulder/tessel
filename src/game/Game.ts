@@ -39,10 +39,6 @@ export class Game extends EventTarget {
         this.settings = settings;
         this.finished = false;
 
-        this.setup();
-    }
-
-    setup() {
         this.points = 0;
 
         this.grid = new Grid(this.settings.atlas);

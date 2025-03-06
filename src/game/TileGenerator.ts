@@ -24,7 +24,7 @@ export class TileGenerators {
         return () => {
             const tiles: TileShapeColors[] = [];
             for (const shape of shapes) {
-                tiles.push(...generator(null, shape));
+                tiles.push(...generator([], shape));
             }
             return tiles;
         };
@@ -49,7 +49,7 @@ export class TileGenerators {
                 const s = cToComponents(c);
                 for (let i = 0; i < s.length; i++) {
                     equalSet.push(componentsToC(s));
-                    s.unshift(s.pop());
+                    s.unshift(s.pop()!);
                 }
                 equalSet.sort();
                 return equalSet;

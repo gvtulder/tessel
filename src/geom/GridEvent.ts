@@ -8,10 +8,10 @@ export enum GridEventType {
 }
 
 export class GridEvent extends Event {
-    grid: Grid;
+    grid?: Grid;
     tile?: Tile;
 
-    constructor(type: GridEventType, grid: Grid, tile: Tile) {
+    constructor(type: GridEventType, grid: Grid, tile?: Tile) {
         super(type);
         this.grid = grid;
         this.tile = tile;

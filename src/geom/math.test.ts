@@ -152,7 +152,7 @@ describe("centroid", () => {
         [P([1, 7], [8, 6], [4, 4], [7, 2], [3, 1]), P(3.935, 4.2846)],
         [P([8, 6], [4, 4], [7, 2]), P(6.333, 4)],
         [P([8, 6], [4, 4], [7, 2]), P(6.333, 4)],
-    ];
+    ] as [Point[], Point][];
     test.each(shapes)(
         "computes complex centroids",
         (points: Point[], expected: Point) => {
@@ -170,7 +170,7 @@ describe("area and orientedArea", () => {
         [P([3, 1], [7, 2], [4, 4], [8, 6], [1, 7]), 20.5],
         [P([8, 6], [4, 4], [7, 2]), 7],
         [P([7, 2], [4, 4], [8, 6]), -7],
-    ];
+    ] as [Point[], number][];
     test.each(shapes)(
         "computes oriented areas",
         (points: Point[], expected: number) => {
@@ -268,7 +268,10 @@ describe("rotateArray", () => {
         [[0, 1, 2, 3], -2, [2, 3, 0, 1]],
         [[0, 1, 2, 3], -1, [3, 0, 1, 2]],
         [[], 0, []],
-    ])("rotates arrays", (input: [], offset: number, output: []) => {
-        expect(rotateArray(input, offset)).toStrictEqual(output);
-    });
+    ] as [number[], number, number[]][])(
+        "rotates arrays",
+        (input: number[], offset: number, output: number[]) => {
+            expect(rotateArray(input, offset)).toStrictEqual(output);
+        },
+    );
 });

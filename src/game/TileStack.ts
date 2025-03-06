@@ -48,7 +48,7 @@ export class TileStack {
 
 export class FixedOrderTileStack extends EventTarget {
     numberShown: number;
-    slots: { shape: Shape; colors: TileColors }[];
+    slots: (TileShapeColors | null | undefined)[];
     tileStack: TileStack;
 
     constructor(tileStack: TileStack, numberShown: number) {
@@ -81,7 +81,7 @@ export class FixedOrderTileStack extends EventTarget {
         for (let i = 0; i < this.numberShown; i++) {
             if (
                 this.slots[i] &&
-                tileColorsEqualWithRotation(this.slots[i], slot)
+                tileColorsEqualWithRotation(this.slots[i]!, slot)
             ) {
                 this.slots[i] = null;
                 this.updateSlots();

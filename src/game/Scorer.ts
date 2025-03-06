@@ -51,7 +51,7 @@ export class Scorer {
 
                 while (queue.length > 0) {
                     // process segment from queue
-                    const segment = queue.pop();
+                    const segment = queue.pop()!;
                     tilesInShape.add(segment.tile);
                     segmentsInShape.add(segment);
 

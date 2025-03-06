@@ -222,19 +222,19 @@ export class GridEdge {
     /**
      * The tile with edge A-B.
      */
-    tileA: Tile;
+    tileA?: Tile | null;
     /**
      * The edge index for tile A.
      */
-    edgeIdxA: number;
+    edgeIdxA?: number | null;
     /**
      * The tile with edge B-A.
      */
-    tileB: Tile;
+    tileB?: Tile | null;
     /**
      * The edge index for tile B.
      */
-    edgeIdxB: number;
+    edgeIdxB?: number | null;
     /**
      * The placeholders using this edge.
      */
@@ -308,7 +308,7 @@ export class Grid extends EventTarget {
      * @param atlas an atlas for checking tile patterns (optional)
      * @param rules rules for matching colors (default: MatchEdgeColorsRuleSet)
      */
-    constructor(atlas?: Atlas, rules?: RuleSet) {
+    constructor(atlas: Atlas, rules?: RuleSet) {
         super();
 
         this.atlas = atlas;
@@ -348,7 +348,7 @@ export class Grid extends EventTarget {
     /**
      * The combined centroid of all tiles.
      */
-    get centroid(): Point {
+    get centroid(): Point | undefined {
         if (this.tiles.size == 0 && this.placeholders.size == 0)
             return undefined;
         if (this.placeholders.size == 0) return this.tiles.centroid;
@@ -378,7 +378,7 @@ export class Grid extends EventTarget {
     addTile(
         shape: Shape,
         polygon: Polygon,
-        segments?: Polygon[],
+        segments?: Polygon[] | null,
         placeholder?: boolean,
     ): Tile {
         const tile = placeholder
@@ -509,7 +509,7 @@ export class Grid extends EventTarget {
         }
 
         // delete from grid
-        this.system.remove(this.tileBodies.get(tile));
+        this.system.remove(this.tileBodies.get(tile) as Body);
         this.tileBodies.delete(tile);
 
         this.dispatchEvent(new GridEvent(GridEventType.RemoveTile, this, tile));
@@ -554,7 +554,7 @@ export class Grid extends EventTarget {
         for (let i = 0; i < n; i++) {
             const point = points[i];
             const key = pointToKey(point);
-            const vertex = this.vertices.get(key);
+            const vertex = this.vertices.get(key) as GridVertex;
             vertices[i] = vertex;
             cornerLists[i] = new SortedCorners(
                 ...(vertex ? vertex.corners : []),
@@ -608,7 +608,7 @@ export class Grid extends EventTarget {
         polygon: Polygon,
         includePlaceholders?: boolean,
         findAll?: boolean,
-    ): Tile[] {
+    ): Tile[] | null {
         const cp = new CollisionPolygon({}, polygon.vertices as Point[]);
         // this normally happens on system.insert
         cp.bbox = cp.getAABBAsBBox();
@@ -667,7 +667,12 @@ export class Grid extends EventTarget {
         includePlaceholders?: boolean,
         shape?: Shape,
         matchCentroidOnly?: boolean,
-    ): { tile: Tile; offset: number; dist: number; matchesPoints: boolean } {
+    ): {
+        tile: Tile;
+        offset?: number;
+        dist: number;
+        matchesPoints: boolean;
+    } | null {
         const cp = new CollisionPolygon({}, points as Point[]);
         // this normally happens on system.insert
         cp.bbox = cp.getAABBAsBBox();
@@ -676,8 +681,8 @@ export class Grid extends EventTarget {
         cp.minY = cp.bbox.minY - cp.padding;
         cp.maxY = cp.bbox.maxY - cp.padding;
         const bestCandidate = {
-            tile: null as Tile,
-            offset: 0,
+            tile: null! as Tile,
+            offset: 0 as number | undefined,
             dist: 0,
             matchesPoints: false,
         };
@@ -699,7 +704,7 @@ export class Grid extends EventTarget {
             const match = matchPoints(other.polygon.vertices, points);
             // use distance to centroid as distance to object ...
             let distance = centroidDistance;
-            let offset: number = undefined;
+            let offset: number | undefined = undefined;
             // ... unless we require a point-to-point match
             if (!matchCentroidOnly) {
                 if (!match || match.dist > maxDist) return false;
@@ -710,7 +715,7 @@ export class Grid extends EventTarget {
                 bestCandidate.tile = other;
                 bestCandidate.dist = distance;
                 bestCandidate.offset = offset;
-                bestCandidate.matchesPoints = match && match.dist < maxDist;
+                bestCandidate.matchesPoints = !!match && match.dist < maxDist;
             }
             return false;
         });

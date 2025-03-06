@@ -11,7 +11,7 @@ export function matchPoints(
 ): {
     offset: number;
     dist: number;
-} {
+} | null {
     const n = other.length;
     if (n != points.length) {
         return null;
@@ -30,5 +30,5 @@ export function matchPoints(
             bestOffset = offset;
         }
     }
-    return { offset: bestOffset, dist: minDist };
+    return { offset: bestOffset as number, dist: minDist };
 }

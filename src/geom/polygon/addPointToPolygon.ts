@@ -17,5 +17,7 @@ export function addPointToPolygon(
             nearestEdge = i;
         }
     }
-    return points.toSpliced(nearestEdge + 1, 0, newPoint);
+    const newPoints = [...points];
+    newPoints.splice((nearestEdge as number) + 1, 0, newPoint);
+    return newPoints;
 }

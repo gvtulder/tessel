@@ -8,3 +8,4 @@ public/
 build/
 .parcel-cache/
 coverage/
+parcel-bundle-reports/

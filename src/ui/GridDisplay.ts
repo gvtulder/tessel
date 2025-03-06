@@ -51,6 +51,7 @@ export class GridDisplay extends EventTarget {
     margins = { top: 30, right: 30, bottom: 30, left: 30 };
     scalingType = GridDisplayScalingType.EqualMargins;
 
+    baseTransform: TransformComponent;
     containerTransform: TransformComponent;
     parentTransforms: TransformList;
 
@@ -60,7 +61,11 @@ export class GridDisplay extends EventTarget {
         this.container = container;
 
         this.containerTransform = {};
-        this.parentTransforms = new TransformList(this.containerTransform);
+        this.baseTransform = {};
+        this.parentTransforms = new TransformList(
+            this.containerTransform,
+            this.baseTransform,
+        );
 
         this.tileDisplays = new Map<Tile, TileDisplay>();
 

@@ -44,6 +44,12 @@ export class MainGridTileDragController extends TileDragController {
     onDragStart(context: TileDragSourceContext, evt: DragEvent) {
         super.onDragStart(context, evt);
 
+        // measure the current top-left coordinate of the grid
+        // this may be non-zero if the buttons are on the top part of the screen
+        const rect = this.dropTarget.element.getBoundingClientRect();
+        this.dropTarget.baseTransform.dx = rect.left;
+        this.dropTarget.baseTransform.dy = rect.top;
+
         // precompute the placeholder tiles where this tile would fit
         if (this.autorotate || this.hints || this.snap) {
             context.autorotateCache.clear();

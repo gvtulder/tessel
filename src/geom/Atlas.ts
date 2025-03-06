@@ -198,7 +198,7 @@ export class Atlas {
             if (angleCount == angles.size) break;
             angleCount = angles.size;
         }
-        return (this._orientations = [...angles.values()].toSorted());
+        return (this._orientations = [...angles.values()].sort());
     }
 
     /**

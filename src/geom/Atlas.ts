@@ -11,6 +11,7 @@ export type AtlasDefinitionDoc = {
         [key: string]: {
             name?: string;
             angles: number[];
+            sides?: number[];
         };
     };
     vertices?: {
@@ -353,3 +354,17 @@ export const HexagonsAtlas = Atlas.fromDefinition({
         H: { name: "hexagon", angles: [120, 120, 120, 120, 120, 120] },
     },
 });
+
+/*
+export const CairoAtlas = Atlas.fromDefinition({
+    name: "Cairo5",
+    shapes: {
+        P: {
+            name: "pentagon",
+            angles: [120, 120, 90, 120, 90],
+            // first side: 2 * sqrt(2) * cos(75deg)
+            sides: [Math.sqrt(3) - 1, 1, 1, 1, 1],
+        },
+    },
+});
+*/

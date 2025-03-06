@@ -104,6 +104,30 @@ lookup.set("hexagons", {
     ],
 });
 
+/*
+lookup.set("cairo5", {
+    atlas: CairoAtlas,
+    initialTile: [
+        "#00c0ef",
+        "#dd4b39",
+        "#f39c12",
+        "#00a65a",
+        "#7554e0",
+    ],
+    tilesShownOnStack: 3,
+    tileGenerator: [
+        TileGenerators.permutations([
+            "#00c0ef",
+            "#dd4b39",
+            "#f39c12",
+            "#00a65a",
+            "#7554e0",
+        ]),
+        TileGenerators.randomSubset(70),
+    ],
+});
+*/
+
 lookup.set("rhombus", {
     atlas: RhombusAtlas,
     initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],

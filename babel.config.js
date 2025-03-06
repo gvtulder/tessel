@@ -9,6 +9,12 @@ export default {
     ...(process.env["NODE_ENV"] != "production"
       ? []
       : ["transform-remove-console"]),
-    ["transform-define", { VERSION: git("rev-parse --short HEAD") }],
+    [
+      "transform-define",
+      {
+        ENV_VERSION: git("rev-parse --short HEAD"),
+        ENV_INCLUDE_SERVICE_WORKER: process.env["NODE_ENV"] == "production",
+      },
+    ],
   ],
 };

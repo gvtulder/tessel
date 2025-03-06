@@ -1,3 +1,4 @@
+import { INCLUDE_SERVICE_WORKER, VERSION } from "./constants";
 import disableIosZoom from "./lib/disable-ios-zoom";
 import { GameController } from "./ui/GameController";
 
@@ -24,7 +25,7 @@ if (splash) {
 
 startMainMenu();
 
-if ("serviceWorker" in navigator) {
+if (INCLUDE_SERVICE_WORKER && "serviceWorker" in navigator) {
     navigator.serviceWorker.register(
         new URL("../service-worker.ts", import.meta.url),
         { type: "module" },

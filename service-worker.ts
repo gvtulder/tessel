@@ -1,8 +1,9 @@
 import { manifest, version } from "@parcel/service-worker";
-import { clientsClaim, setCacheNameDetails } from "workbox-core";
+import { clientsClaim, setCacheNameDetails, skipWaiting } from "workbox-core";
 import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
 
 clientsClaim();
+skipWaiting();
 
 setCacheNameDetails({
     prefix: "tilegame",

@@ -742,7 +742,12 @@ export class Grid extends EventTarget {
         }
         // remove placeholders that are on the grid
         // but are no longer required
-        const stale = this.placeholders.difference(newPlaceholders);
+        const stale = new Array<PlaceholderTile>();
+        for (const placeholder of this.placeholders) {
+            if (!newPlaceholders.has(placeholder)) {
+                stale.push(placeholder);
+            }
+        }
         for (const placeholder of stale) {
             this.removePlaceholder(placeholder);
         }

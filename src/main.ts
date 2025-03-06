@@ -24,7 +24,7 @@ if (splash) {
 
 startMainMenu();
 
-if (navigator && navigator.serviceWorker && navigator.serviceWorker.register) {
+if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register(
         new URL("../service-worker.ts", import.meta.url),
         { type: "module" },

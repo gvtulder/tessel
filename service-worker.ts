@@ -1,13 +1,19 @@
 import { manifest, version } from "@parcel/service-worker";
+import { clientsClaim, setCacheNameDetails } from "workbox-core";
+import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
 
-async function install() {
-    const cache = await caches.open(version);
-    await cache.addAll(manifest);
-}
-addEventListener("install", (e) => e.waitUntil(install()));
+clientsClaim();
 
-async function activate() {
-    const keys = await caches.keys();
-    await Promise.all(keys.map((key) => key !== version && caches.delete(key)));
-}
-addEventListener("activate", (e) => e.waitUntil(activate()));
+setCacheNameDetails({
+    prefix: "tilegame",
+    suffix: version,
+});
+
+precacheAndRoute(
+    manifest.map((url) => ({
+        url: url,
+        revision: version,
+    })),
+);
+
+cleanupOutdatedCaches();

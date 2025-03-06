@@ -1,7 +1,6 @@
 <!doctype html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="style.css" />
     <link rel="icon" href="icon.png" />
     <link rel="manifest" href="manifest.json" />
     <meta
@@ -13,8 +12,57 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="robots" content="noindex, follow" />
     <title>Tile Game</title>
+    <style type="text/css">
+      /* minimum css for splash screen */
+      body {
+        background: #ddd;
+        margin: 0;
+        padding: 0;
+      }
+      #splash {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #splash svg {
+        width: 100px;
+        height: 100px;
+      }
+    </style>
+    <link
+      rel="preload"
+      href="style.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      href="fonts/barlow-latin-400.woff"
+      as="font"
+      type="font/woff"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
+    <div id="splash">
+      <svg width="100" height="100" viewBox="0 0 1 1">
+        <g
+          clip-path="path('M.11.03h.78c.04 0 .08.04.08.08v.78C.97.93.93.97.89.97H.11C.07.97.03.93.03.89V.11C.03.07.07.03.11.03Z') view-box"
+        >
+          <path fill="#00c0ef" d="M0 0h1L.833.5H.167Z" />
+          <path fill="#dd4b39" d="M1 0v1L.5.833V.5Z" />
+          <path fill="#f39c12" d="M1 1H0L.167.5H.5Z" />
+          <path fill="#00a65a" d="M0 1V0l.5.5Z" />
+        </g>
+      </svg>
+    </div>
     <div class="version" id="version"></div>
     <script type="module" src="src/main.ts"></script>
   </body>

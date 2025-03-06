@@ -17,6 +17,11 @@ export function startMainMenu() {
     document.getElementById("version").innerHTML = `${VERSION}`;
 }
 
+const splash = document.getElementById("splash");
+if (splash) {
+    splash.remove();
+}
+
 startMainMenu();
 
 if (navigator && navigator.serviceWorker && navigator.serviceWorker.register) {

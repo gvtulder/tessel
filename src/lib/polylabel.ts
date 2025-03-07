@@ -3,6 +3,7 @@
 import { TinyQueue } from "./tinyqueue";
 
 type Pole = { x: number; y: number; distance: number };
+// TODO switch to Point { x, y }
 type Polygon = [number, number][][];
 
 export function polylabel(
@@ -16,13 +17,22 @@ export function polylabel(
     let minX, minY, maxX, maxY;
     for (let i = 0; i < polygon[0].length; i++) {
         const p = polygon[0][i];
-        if (!i || p[0] < minX) minX = p[0];
-        if (!i || p[1] < minY) minY = p[1];
-        if (!i || p[0] > maxX) maxX = p[0];
-        if (!i || p[1] > maxY) maxY = p[1];
+        if (!i || p[0] < minX!) minX = p[0];
+        if (!i || p[1] < minY!) minY = p[1];
+        if (!i || p[0] > maxX!) maxX = p[0];
+        if (!i || p[1] > maxY!) maxY = p[1];
     }
 
-    const width = maxX - minX;
+    if (
+        minX === undefined ||
+        minY === undefined ||
+        maxX === undefined ||
+        maxY === undefined
+    ) {
+        throw new Error("no polygons found");
+    }
+
+    const width = maxX - minX!;
     const height = maxY - minY;
     const cellSize = Math.min(width, height);
     let h = cellSize / 2;

@@ -14,15 +14,15 @@ export class TileSet extends Set<Tile> {
     /**
      * The sum of the area of the tiles in the set.
      */
-    area: number;
+    area: number = 0;
     /**
      * The bounding box containing the tiles in the set.
      */
-    bbox: BBox;
+    bbox?: BBox;
     /**
      * The centroid of the tiles in the set.
      */
-    centroid: Point;
+    centroid?: Point;
 
     /**
      * Adds a tile to the set.
@@ -42,7 +42,7 @@ export class TileSet extends Set<Tile> {
             this.area += tile.polygon.area;
             this.bbox = mergeBBox(this.bbox, tile.bbox);
             this.centroid = weightedSumPoint(
-                this.centroid,
+                this.centroid || { x: 0, y: 0 },
                 tile.polygon.centroid,
                 oldArea,
                 tile.polygon.area,
@@ -58,14 +58,14 @@ export class TileSet extends Set<Tile> {
     delete(tile: Tile): boolean {
         if (super.delete(tile)) {
             if (this.size == 0) {
-                this.area = undefined;
+                this.area = 0;
                 this.bbox = undefined;
                 this.centroid = undefined;
             } else {
                 const oldArea = this.area;
                 this.area -= tile.polygon.area;
                 this.centroid = weightedSumPoint(
-                    this.centroid,
+                    this.centroid || { x: 0, y: 0 },
                     tile.centroid,
                     oldArea,
                     -tile.polygon.area,
@@ -83,7 +83,7 @@ export class TileSet extends Set<Tile> {
      */
     clear(): void {
         super.clear();
-        this.area = undefined;
+        this.area = 0;
         this.bbox = undefined;
         this.centroid = undefined;
     }

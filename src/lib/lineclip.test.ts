@@ -5,6 +5,7 @@
 
 import { expect, test } from "@jest/globals";
 import { lineclip, polygonclip } from "./lineclip";
+import { Point } from "../geom/math";
 
 test("clips line", () => {
     const result = lineclip(
@@ -117,7 +118,7 @@ test("clips polygon", () => {
 });
 
 test("appends result if passed third argument", () => {
-    const arr = [];
+    const arr: Point[][] = [];
     const result = lineclip(
         [
             { x: -10, y: 10 },

@@ -3,7 +3,7 @@ export class TinyQueue<T> {
     length: number;
     compare: (a: T, b: T) => number;
 
-    constructor(data: T[], compare) {
+    constructor(data: T[], compare: (a: T, b: T) => number) {
         if (!data) data = [];
         if (!compare) compare = this.defaultCompare;
 

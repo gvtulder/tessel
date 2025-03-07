@@ -48,14 +48,14 @@ export function computeOutline(triangles: Set<TileSegment>): {
             if (!edges.has(edge.id)) {
                 edges.set(edge.id, []);
             }
-            edges.get(edge.id).push(edge);
+            edges.get(edge.id)!.push(edge);
 
             // add the vertices
             [edge.from, edge.to].forEach((v) => {
                 if (!edgesPerVertex.has(v.id)) {
                     edgesPerVertex.set(v.id, []);
                 }
-                edgesPerVertex.get(v.id).push(edge);
+                edgesPerVertex.get(v.id)!.push(edge);
                 if (!leftMostVertex || leftMostVertex.x > v.x) {
                     leftMostVertex = v;
                 }
@@ -65,19 +65,19 @@ export function computeOutline(triangles: Set<TileSegment>): {
 
     // follow along edges
     let boundary: Vertex[] = [];
-    let prev: Vertex = null;
-    let cur: Vertex = leftMostVertex;
+    let prev: Vertex = null!;
+    let cur: Vertex = leftMostVertex!;
     let winding = 0;
     let i = 0;
-    while (i < 1000 && (prev == null || cur.id != leftMostVertex.id)) {
+    while (i < 1000 && (prev == null || cur.id != leftMostVertex!.id)) {
         i++;
-        const uniqueEdges = edgesPerVertex
-            .get(cur.id)
+        const uniqueEdges = edgesPerVertex!
+            .get(cur.id)!
             .filter(
                 (e) =>
                     (prev == null ||
                         (e.from.id != prev.id && e.to.id != prev.id)) &&
-                    edges.get(e.id).length == 1,
+                    edges.get(e.id)!.length == 1,
             );
 
         // should have two unique edges

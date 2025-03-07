@@ -80,13 +80,13 @@ function createPolygon(vertices: readonly Vector[]): Polygon {
 
         const x = vertices[i].x;
         const y = vertices[i].y;
-        minX = Math.min(x, minX);
-        minY = Math.min(y, minY);
-        maxX = Math.max(x, maxX);
-        maxY = Math.max(y, maxY);
+        minX = Math.min(x, minX!);
+        minY = Math.min(y, minY!);
+        maxX = Math.max(x, maxX!);
+        maxY = Math.max(y, maxY!);
     }
 
-    const polygon: Polygon = {
+    const polygon = {
         vertices,
         edges,
         minX,
@@ -95,7 +95,7 @@ function createPolygon(vertices: readonly Vector[]): Polygon {
         maxY,
     };
 
-    return polygon;
+    return polygon as Polygon;
 }
 
 // based on http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/, edgeA => "line a", edgeB => "line b"

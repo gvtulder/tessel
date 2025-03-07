@@ -26,9 +26,9 @@ export class MatchEdgeColorsRuleSet implements RuleSet {
         for (let i = 0; i < n; i++) {
             const edge = edges[(i + n - offset) % n];
             if (!edge) continue;
-            if (edge.tileA && edge.tileA.colors[edge.edgeIdxA] != colors[i])
+            if (edge.tileA && edge.tileA.colors![edge.edgeIdxA!] != colors[i])
                 return false;
-            if (edge.tileB && edge.tileB.colors[edge.edgeIdxB] != colors[i])
+            if (edge.tileB && edge.tileB.colors![edge.edgeIdxB!] != colors[i])
                 return false;
         }
         return true;

@@ -109,7 +109,7 @@ export function polygonclip(points: readonly Point[], bbox: BBox): Point[] {
         if (!points.length) break;
     }
 
-    return result;
+    return result!;
 }
 
 /**
@@ -136,7 +136,7 @@ function intersect(a: Point, b: Point, edge: BitCode, bbox: BBox): Point {
                     x: bbox.minX,
                     y: a.y + ((b.y - a.y) * (bbox.minX - a.x)) / (b.x - a.x),
                 }
-              : null; // left
+              : null!; // left
 }
 
 /**

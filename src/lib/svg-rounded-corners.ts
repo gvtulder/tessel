@@ -73,7 +73,7 @@ export function roundPathCorners(
     }
 
     // Adjusts the ending position of a command
-    function adjustCommand(cmd: Command, newPoint): void {
+    function adjustCommand(cmd: Command, newPoint: Point): void {
         if (cmd.length > 2) {
             cmd[cmd.length - 2] = newPoint.x;
             cmd[cmd.length - 1] = newPoint.y;
@@ -127,7 +127,7 @@ export function roundPathCorners(
         const startPoint = pointForCommand(commands[0]);
 
         // Handle the close path case with a "virtual" closing line
-        let virtualCloseLine: Command = null;
+        let virtualCloseLine: Command = null!;
         if (commands[commands.length - 1][0] == "Z" && commands[0].length > 2) {
             virtualCloseLine = ["L", startPoint.x, startPoint.y];
             commands[commands.length - 1] = virtualCloseLine;

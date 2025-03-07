@@ -21,7 +21,7 @@ describe("Tile", () => {
     test("has segments", () => {
         const segments = polygon.segment();
         const tile = new Tile(TRIANGLE, polygon, segments);
-        expect(tile.segments.map((s) => s.polygon)).toStrictEqual(segments);
+        expect(tile.segments!.map((s) => s.polygon)).toStrictEqual(segments);
     });
 
     test("has colors", () => {
@@ -57,6 +57,12 @@ describe("Tile", () => {
         expect(tile4.neighbors.size).toBe(1);
 
         // tile segment neighbors
+        if (!tile1.segments) {
+            throw new Error("no tile segments found");
+        }
+        if (!tile2.segments) {
+            throw new Error("no tile segments found");
+        }
         expect(tile1.segments[0].getNeighbors()).toStrictEqual([
             tile1.segments[2],
             tile1.segments[1],

@@ -9,11 +9,11 @@ export class Polygon {
      */
     readonly vertices: readonly Point[];
 
-    private _outsideEdges: readonly Edge[];
-    private _edges: readonly Edge[];
-    private _area: number;
-    private _bbox: BBox;
-    private _centroid: Point;
+    private _outsideEdges?: readonly Edge[];
+    private _edges?: readonly Edge[];
+    private _area?: number;
+    private _bbox?: BBox;
+    private _centroid?: Point;
 
     /**
      * Creates a new polygon with the given vertices.

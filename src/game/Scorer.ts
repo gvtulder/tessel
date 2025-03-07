@@ -26,6 +26,10 @@ export class Scorer {
 
         const shapes: ScoredRegion[] = [];
 
+        if (!tile.segments) {
+            throw new Error("tile has no segments");
+        }
+
         // visit each segment of the shape in turn
         for (const origin of tile.segments) {
             if (!visited.has(origin)) {
@@ -36,7 +40,7 @@ export class Scorer {
 
                 const shape: ScoredRegion = {
                     origin: origin,
-                    color: origin.color,
+                    color: origin.color!,
                     tiles: tilesInShape,
                     segments: segmentsInShape,
                     edges: edgesInShape,

@@ -341,7 +341,7 @@ export class Grid extends EventTarget {
     /**
      * The bounding box for normal tiles only.
      */
-    get bboxWithoutPlaceholders(): BBox {
+    get bboxWithoutPlaceholders(): BBox | undefined {
         return this.tiles.bbox;
     }
 
@@ -354,8 +354,8 @@ export class Grid extends EventTarget {
         if (this.placeholders.size == 0) return this.tiles.centroid;
         if (this.tiles.size == 0) return this.placeholders.centroid;
         return weightedSumPoint(
-            this.tiles.centroid,
-            this.placeholders.centroid,
+            this.tiles.centroid || { x: 0, y: 0 },
+            this.placeholders.centroid || { x: 0, y: 0 },
             this.tiles.area,
             this.placeholders.area,
         );

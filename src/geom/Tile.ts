@@ -40,7 +40,7 @@ export class TileSegment {
     /**
      * The color of this segment.
      */
-    color: TileColor;
+    color?: TileColor;
 
     /**
      * Creates a new tile segment.
@@ -73,18 +73,19 @@ export class TileSegment {
      * If includeMissing is false, the list will only include
      * existing segments.
      */
-    getNeighbors(includeMissing?: boolean): TileSegment[] {
+    getNeighbors(includeMissing?: boolean): (TileSegment | null)[] {
         const tile = this.tile;
+        if (!tile.segments) return [];
         const n = tile.segments.length;
         const neighbors = [
             tile.segments[(this.index + n - 1) % n],
             tile.segments[(this.index + 1) % n],
-        ];
+        ] as (TileSegment | null)[];
         const edge = tile.edges[this.index];
         if (edge.tileA == tile && edge.tileB && edge.tileB.segments) {
-            neighbors.push(edge.tileB.segments[edge.edgeIdxB]);
+            neighbors.push(edge.tileB.segments[edge.edgeIdxB!]);
         } else if (edge.tileB == tile && edge.tileA && edge.tileA.segments) {
-            neighbors.push(edge.tileA.segments[edge.edgeIdxA]);
+            neighbors.push(edge.tileA.segments[edge.edgeIdxA!]);
         } else if (includeMissing) {
             neighbors.push(null);
         }
@@ -104,12 +105,12 @@ export class Tile extends EventTarget {
      * The vertices forming the outline of this tile,
      * in clockwise order.
      */
-    vertices: GridVertex[];
+    vertices!: GridVertex[];
     /**
      * The edges of this tile: clockwise order, with
      * edges[i] = vertices[i] -- vertices[i + 1].
      */
-    edges: GridEdge[];
+    edges!: GridEdge[];
     /**
      * The shape of this tile.
      */
@@ -122,7 +123,7 @@ export class Tile extends EventTarget {
      * The segments of this tile, or null.
      * segments[i] is connected to edge[i].
      */
-    segments: TileSegment[];
+    segments?: TileSegment[];
     /**
      * The area of the tile.
      */
@@ -139,7 +140,7 @@ export class Tile extends EventTarget {
     /**
      * Cache of the segment colors.
      */
-    private _colors: readonly TileColor[];
+    private _colors?: readonly TileColor[];
 
     /**
      * Constructs a new tile of the given shape and polygon.
@@ -185,9 +186,9 @@ export class Tile extends EventTarget {
      * Returns the colors of the tile segments,
      * or undefined if no segments are defined.
      */
-    get colors(): readonly TileColor[] {
+    get colors(): readonly TileColor[] | undefined {
         if (!this.segments || this.segments.length == 0) return undefined;
-        return (this._colors ||= this.segments.map((s) => s.color));
+        return (this._colors ||= this.segments.map((s) => s.color!));
     }
 
     /**
@@ -197,10 +198,10 @@ export class Tile extends EventTarget {
     set colors(colors: readonly TileColor[]) {
         this._colors = undefined;
         for (let i = 0; i < colors.length; i++) {
-            this.segments[i].color = colors[i];
+            this.segments![i].color = colors[i];
         }
         this.dispatchEvent(
-            new GridEvent(GridEventType.UpdateTileColors, null, this),
+            new GridEvent(GridEventType.UpdateTileColors, undefined, this),
         );
     }
 }

@@ -134,11 +134,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                 g.elements.push(path);
             }
 
-            const polygon = [boundary.map((v) => [v.x, v.y])];
-            const polylabelPoint = polylabel(
-                polygon as [number, number][][],
-                0.01,
-            );
+            const polylabelPoint = polylabel([boundary], 0.01);
 
             /*
             // find a good location for the points

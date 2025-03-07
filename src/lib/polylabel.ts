@@ -1,10 +1,11 @@
 // from node polylabel package
 
+import { Point } from "../geom/math";
 import { TinyQueue } from "./tinyqueue";
 
 type Pole = { x: number; y: number; distance: number };
 // TODO switch to Point { x, y }
-type Polygon = [number, number][][];
+type Polygon = Point[][];
 
 export function polylabel(
     polygon: Polygon,
@@ -17,10 +18,10 @@ export function polylabel(
     let minX, minY, maxX, maxY;
     for (let i = 0; i < polygon[0].length; i++) {
         const p = polygon[0][i];
-        if (!i || p[0] < minX!) minX = p[0];
-        if (!i || p[1] < minY!) minY = p[1];
-        if (!i || p[0] > maxX!) maxX = p[0];
-        if (!i || p[1] > maxY!) maxY = p[1];
+        if (!i || p.x < minX!) minX = p.x;
+        if (!i || p.y < minY!) minY = p.y;
+        if (!i || p.x > maxX!) maxX = p.x;
+        if (!i || p.y > maxY!) maxY = p.y;
     }
 
     if (
@@ -128,8 +129,8 @@ function pointToPolygonDist(x: number, y: number, polygon: Polygon): number {
             const b = ring[j];
 
             if (
-                a[1] > y !== b[1] > y &&
-                x < ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1]) + a[0]
+                a.y > y !== b.y > y &&
+                x < ((b.x - a.x) * (y - a.y)) / (b.y - a.y) + a.x
             )
                 inside = !inside;
 
@@ -150,33 +151,28 @@ function getCentroidCell(polygon: Polygon): Cell {
     for (let i = 0, len = points.length, j = len - 1; i < len; j = i++) {
         const a = points[i];
         const b = points[j];
-        const f = a[0] * b[1] - b[0] * a[1];
-        x += (a[0] + b[0]) * f;
-        y += (a[1] + b[1]) * f;
+        const f = a.x * b.y - b.x * a.y;
+        x += (a.x + b.x) * f;
+        y += (a.y + b.y) * f;
         area += f * 3;
     }
-    if (area === 0) return new Cell(points[0][0], points[0][1], 0, polygon);
+    if (area === 0) return new Cell(points[0].x, points[0].y, 0, polygon);
     return new Cell(x / area, y / area, 0, polygon);
 }
 
 // get squared distance from a point to a segment
-function getSegDistSq(
-    px: number,
-    py: number,
-    a: [number, number],
-    b: [number, number],
-): number {
-    let x = a[0];
-    let y = a[1];
-    let dx = b[0] - x;
-    let dy = b[1] - y;
+function getSegDistSq(px: number, py: number, a: Point, b: Point): number {
+    let x = a.x;
+    let y = a.y;
+    let dx = b.x - x;
+    let dy = b.y - y;
 
     if (dx !== 0 || dy !== 0) {
         const t = ((px - x) * dx + (py - y) * dy) / (dx * dx + dy * dy);
 
         if (t > 1) {
-            x = b[0];
-            y = b[1];
+            x = b.x;
+            y = b.y;
         } else if (t > 0) {
             x += dx * t;
             y += dy * t;

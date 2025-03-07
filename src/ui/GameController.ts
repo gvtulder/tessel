@@ -5,9 +5,9 @@ import * as SaveGames from "../saveGames";
 
 export class GameController {
     container: HTMLElement;
-    game: Game;
-    gameDisplay: GameDisplay;
-    menuDisplay: MainMenuDisplay;
+    game?: Game;
+    gameDisplay?: GameDisplay;
+    menuDisplay?: MainMenuDisplay;
 
     constructor(container: HTMLElement) {
         this.container = container;
@@ -34,7 +34,7 @@ export class GameController {
 
         menuDisplay.addEventListener("startgame", (evt: MenuEvent) => {
             this.container.removeChild(menuDisplay.element);
-            this.menuDisplay = null;
+            this.menuDisplay = undefined;
             if (evt.gameId) {
                 window.history.pushState({}, "", `/${evt.gameId}`);
             }
@@ -53,14 +53,14 @@ export class GameController {
         gameDisplay.rescale();
 
         gameDisplay.addEventListener("clickbacktomenu", () => {
-            if (this.game.finished || window.confirm("Stop the game?")) {
+            if (this.game!.finished || window.confirm("Stop the game?")) {
                 window.history.pushState({}, "", "/");
                 this.showMainMenu();
             }
         });
 
         gameDisplay.addEventListener("clickrestartgame", () => {
-            if (this.game.finished || window.confirm("Restart the game?")) {
+            if (this.game!.finished || window.confirm("Restart the game?")) {
                 window.history.pushState({}, "", window.location.href);
                 this.startGame(gameSettings);
             }
@@ -70,7 +70,7 @@ export class GameController {
     resetState() {
         if (this.menuDisplay) {
             const menuDisplay = this.menuDisplay;
-            this.menuDisplay = null;
+            this.menuDisplay = undefined;
             menuDisplay.element.classList.add("disappear");
             window.setTimeout(() => {
                 this.container.removeChild(menuDisplay.element);
@@ -79,8 +79,8 @@ export class GameController {
         }
         if (this.gameDisplay) {
             const gameDisplay = this.gameDisplay;
-            this.gameDisplay = null;
-            this.game = null;
+            this.gameDisplay = undefined;
+            this.game = undefined;
             gameDisplay.element.classList.add("disappear");
             window.setTimeout(() => {
                 this.container.removeChild(gameDisplay.element);

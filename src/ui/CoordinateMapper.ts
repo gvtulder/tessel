@@ -17,7 +17,7 @@ export class CoordinateMapper {
     svgUnitCircle01: SVGElement;
     svgUnitCircle10: SVGElement;
 
-    private _coeffCache: ScreenToGridCoeff;
+    private _coeffCache?: ScreenToGridCoeff;
 
     constructor() {
         const group = SVG("g");
@@ -55,7 +55,7 @@ export class CoordinateMapper {
     }
 
     resetCoeffCache() {
-        this._coeffCache = null;
+        this._coeffCache = undefined;
     }
 
     updateCoeffCache(dx: number, dy: number) {

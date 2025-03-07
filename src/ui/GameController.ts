@@ -2,6 +2,7 @@ import { Game, GameSettings } from "../game/Game";
 import { GameDisplay } from "./GameDisplay";
 import { MainMenuDisplay } from "./MainMenuDisplay";
 import * as SaveGames from "../saveGames";
+import { GameSetupDisplay } from "./GameSetupDisplay";
 import { ScreenDisplay } from "./ScreenDisplay";
 
 export const enum UserEventType {
@@ -39,6 +40,8 @@ export class GameController {
         const gameSettings = SaveGames.lookup.get(saveGameId);
         if (gameSettings) {
             this.startGame(gameSettings);
+        } else if (saveGameId == "setup") {
+            this.showGameSetupDisplay();
         } else {
             this.showMainMenu();
         }
@@ -63,6 +66,15 @@ export class GameController {
                 this.startGame(evt.gameSettings!);
             },
         );
+    }
+
+    showGameSetupDisplay() {
+        this.resetState();
+
+        const setupDisplay = new GameSetupDisplay();
+        this.currentScreen = setupDisplay;
+        this.container.appendChild(setupDisplay.element);
+        setupDisplay.rescale();
     }
 
     startGame(gameSettings: GameSettings) {

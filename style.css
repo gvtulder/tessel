@@ -444,7 +444,8 @@ svg {
   opacity: 0.1;
 }
 
-.mainMenuDisplay {
+.mainMenuDisplay,
+.gameSetupDisplay {
   position: absolute;
   top: 0;
   left: 0;
@@ -479,7 +480,51 @@ svg {
   transform: scale(1.1);
 }
 
+.gameSetupDisplay .exampleGrid {
+  flex-grow: 1;
+  width: 50%;
+  height: 100%;
+}
+.gameSetup-gridDisplay {
+  width: 100%;
+  height: 100%;
+}
+.gameSetupDisplay .settings {
+  flex-grow: 1;
+  width: 50%;
+  height: 100%;
+  background: #bbb;
+}
+.gameSetupDisplay .setting-row {
+  display: flex;
+  margin: 20px;
+  flex-wrap: wrap;
+}
+.gameSetupDisplay .setting-row-option {
+  margin: 5px;
+  width: 100px;
+  height: 100px;
+  background: #cacaca;
+  border: 3px solid #aaa;
+  border-radius: 10px;
+  box-sizing: border-box;
+  aspect-ratio: 1;
+  cursor: pointer;
+}
+.gameSetupDisplay .setting-row-option.selected,
+.gameSetupDisplay .setting-row-option.selected:hover {
+  border: 3px solid #66f;
+  background: #eee;
+}
+.gameSetupDisplay .setting-row-option:hover {
+  background: #ddd;
+}
+.gameSetupDisplay .settings .palette {
+  padding: 10px;
+}
+
 .mainMenuDisplay,
+.gameSetupDisplay,
 .gameDisplay {
   animation-name: animate-appear;
   animation-delay: 100ms;
@@ -487,6 +532,7 @@ svg {
   animation-fill-mode: backwards;
 }
 .mainMenuDisplay.disappear,
+.gameSetupDisplay.disappear,
 .gameDisplay.disappear {
   animation-name: animate-disappear;
   animation-delay: 100ms;

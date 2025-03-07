@@ -25,6 +25,8 @@ export class GridDisplay extends EventTarget {
     svgGrid: SVGElement;
     svgTiles: SVGElement;
 
+    animated = true;
+
     tileDisplays: Map<Tile, TileDisplay>;
     // connectorDisplay: ConnectorDisplay;
     // backgroundGrid: BackgroundGrid;
@@ -129,7 +131,6 @@ export class GridDisplay extends EventTarget {
             GridEventType.RemoveTile,
             this.onRemoveTile,
         );
-        this.container.remove();
         this.element.remove();
         this.gridElement.remove();
         this.svg.remove();
@@ -342,7 +343,7 @@ export class GridDisplay extends EventTarget {
         }
         */
 
-        if (!this.element.classList.contains("animated")) {
+        if (this.animated && !this.element.classList.contains("animated")) {
             window.setTimeout(() => {
                 this.element.classList.add("animated");
             }, 1000);
@@ -394,6 +395,7 @@ export class TileStackGridDisplay extends GridDisplay {
 }
 
 export class MainMenuGridDisplay extends GridDisplay {
+    animated = false;
     margins = { top: 0, right: 0, bottom: 0, left: 0 };
 
     styleMainElement() {

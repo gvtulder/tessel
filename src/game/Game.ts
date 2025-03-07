@@ -14,7 +14,7 @@ export type GameSettings = {
 };
 
 export class GameEvent extends Event {
-    game: Game;
+    game?: Game;
     scoreShapes?: ScoredRegion[];
 
     constructor(type: string, game: Game, scoreShapes?: ScoredRegion[]) {
@@ -75,8 +75,11 @@ export class Game extends EventTarget {
         movingTile: Tile,
         fixedTile: Tile,
         offset: number,
-        indexOnStack: number,
+        indexOnStack?: number,
     ) {
+        if (!movingTile.colors) {
+            throw new Error("no colors defined on moving tile");
+        }
         const colors = rotateArray(movingTile.colors, offset);
         const matchColors = this.grid.checkColors(fixedTile, colors);
         if (matchColors) {
@@ -89,8 +92,10 @@ export class Game extends EventTarget {
 
             this.grid.generatePlaceholders();
 
-            // remove from stack
-            this.tileStack.take(indexOnStack);
+            if (indexOnStack !== undefined) {
+                // remove from stack
+                this.tileStack.take(indexOnStack);
+            }
 
             // compute scores
             this.computeScores(tile);

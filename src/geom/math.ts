@@ -253,9 +253,9 @@ export function bbox(points: readonly Point[]): BBox {
 /**
  * Merges two bounding boxes.
  */
-export function mergeBBox(a?: BBox | null, b?: BBox | null): BBox {
-    if (!a) return b!;
-    if (!b) return a!;
+export function mergeBBox(a?: BBox | null, b?: BBox | null): BBox | undefined {
+    if (!a) return b || undefined;
+    if (!b) return a || undefined;
     return {
         minX: a.minX < b.minX ? a.minX : b.minX,
         minY: a.minY < b.minY ? a.minY : b.minY,

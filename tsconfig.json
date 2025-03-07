@@ -2,6 +2,7 @@
   // "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
+    "strict": true,
     "skipLibCheck": true,
     "target": "es6",
     "module": "esnext",
@@ -15,5 +16,6 @@
     "sourceMap": true,
     "lib": ["es2022", "dom", "dom.iterable"],
     "baseUrl": "."
-  }
+  },
+  "include": ["src/**/*"]
 }

@@ -15,7 +15,10 @@ export function startMainMenu() {
 
     globalThis.gameController = controller;
 
-    document.getElementById("version").innerHTML = `${VERSION}`;
+    const versionEl = document.getElementById("version");
+    if (versionEl) {
+        versionEl.innerHTML = `${VERSION}`;
+    }
 }
 
 const splash = document.getElementById("splash");

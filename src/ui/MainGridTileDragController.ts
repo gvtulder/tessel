@@ -17,14 +17,18 @@ import { angleDist, edgeToAngle, TWOPI } from "../geom/math";
 import { SVG } from "./svg";
 
 export class MainGridTileDragController extends TileDragController {
-    dropTarget: MainGridDisplay;
     autorotate: boolean;
     hints: boolean;
+    snap: boolean;
 
-    debugPoints: SVGCircleElement[];
+    debugPoints?: SVGCircleElement[];
 
     constructor(dropTarget: MainGridDisplay) {
         super(dropTarget);
+
+        this.autorotate = false;
+        this.hints = false;
+        this.snap = false;
 
         if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
             // debug
@@ -35,7 +39,7 @@ export class MainGridTileDragController extends TileDragController {
                 p.setAttribute("cy", "0");
                 p.setAttribute("r", "0.05");
                 p.setAttribute("fill", "transparent");
-                this.dropTarget.svgGrid.appendChild(p);
+                dropTarget.svgGrid.appendChild(p);
                 this.debugPoints.push(p);
             }
         }
@@ -44,23 +48,25 @@ export class MainGridTileDragController extends TileDragController {
     onDragStart(context: TileDragSourceContext, evt: DragEvent) {
         super.onDragStart(context, evt);
 
+        const dropTarget = this.dropTarget as MainGridDisplay;
+
         // measure the current top-left coordinate of the grid
         // this may be non-zero if the buttons are on the top part of the screen
-        const rect = this.dropTarget.element.getBoundingClientRect();
-        this.dropTarget.baseTransform.dx = rect.left;
-        this.dropTarget.baseTransform.dy = rect.top;
+        const rect = dropTarget.element.getBoundingClientRect();
+        dropTarget.baseTransform.dx = rect.left;
+        dropTarget.baseTransform.dy = rect.top;
 
         // precompute the placeholder tiles where this tile would fit
         if (this.autorotate || this.hints || this.snap) {
             context.autorotateCache.clear();
             // find possible locations where this tile would fit
-            const sourceTile = context.source.tile;
-            for (const placeholder of this.dropTarget.grid.placeholders) {
+            const sourceTile = context.source.tile!;
+            for (const placeholder of dropTarget.grid.placeholders) {
                 if (sourceTile.shape === placeholder.shape) {
                     const rotations =
                         this.dropTarget.grid.checkColorsWithRotation(
                             placeholder,
-                            sourceTile.colors,
+                            sourceTile.colors!,
                         );
                     if (rotations.length > 0) {
                         // this tile would fit
@@ -87,7 +93,7 @@ export class MainGridTileDragController extends TileDragController {
             }
             // if hints are enabled, highlight possible/impossible tiles
             if (this.hints) {
-                for (const tsd of this.dropTarget.tileDisplays.values()) {
+                for (const tsd of dropTarget.tileDisplays.values()) {
                     if (tsd.tile.tileType === TileType.Placeholder) {
                         tsd.highlightHint(
                             context.autorotateCache.has(tsd.tile),
@@ -104,7 +110,7 @@ export class MainGridTileDragController extends TileDragController {
 
         if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
             // figure out where we are
-            const movingTile = context.source.tile;
+            const movingTile = context.source.tile!;
             const movingPoly = context.source.gridDisplay.gridToScreenPositions(
                 movingTile.polygon.vertices,
             );
@@ -112,12 +118,12 @@ export class MainGridTileDragController extends TileDragController {
             const fixedPoly = this.dropTarget.screenToGridPositions(movingPoly);
             for (
                 let i = 0;
-                i < Math.min(this.debugPoints.length, fixedPoly.length);
+                i < Math.min(this.debugPoints!.length, fixedPoly.length);
                 i++
             ) {
-                this.debugPoints[i].setAttribute("cx", `${fixedPoly[i].x}`);
-                this.debugPoints[i].setAttribute("cy", `${fixedPoly[i].y}`);
-                this.debugPoints[i].setAttribute("fill", "black");
+                this.debugPoints![i].setAttribute("cx", `${fixedPoly[i].x}`);
+                this.debugPoints![i].setAttribute("cy", `${fixedPoly[i].y}`);
+                this.debugPoints![i].setAttribute("fill", "black");
             }
         }
 
@@ -182,7 +188,7 @@ export class MainGridTileDragController extends TileDragController {
                     );
                     const centerSnapFrom =
                         context.source.gridDisplay.gridToScreenPosition(
-                            context.source.tile.centroid,
+                            context.source.tile!.centroid,
                         );
                     const snap = {
                         x:
@@ -207,7 +213,9 @@ export class MainGridTileDragController extends TileDragController {
         context.autorotateCache.clear();
         context.source.resetAutorotate(successful);
 
-        for (const tsd of this.dropTarget.tileDisplays.values()) {
+        for (const tsd of (
+            this.dropTarget as MainGridDisplay
+        ).tileDisplays.values()) {
             tsd.removeHighlightHint();
         }
 

@@ -38,7 +38,7 @@ export class GameController {
             if (evt.gameId) {
                 window.history.pushState({}, "", `/${evt.gameId}`);
             }
-            this.startGame(evt.gameSettings);
+            this.startGame(evt.gameSettings!);
         });
     }
 

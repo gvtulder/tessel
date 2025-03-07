@@ -1,13 +1,12 @@
-import { ScoredRegion } from "../grid/Scorer.js";
-import { SCALE } from "../settings.js";
-import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay.js";
-import { Triangle } from "../grid/Triangle.js";
-import { SVG } from "./svg.js";
+import { ScoredRegion } from "../game/Scorer";
+import { SCALE } from "../settings";
+import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
+import { TileSegment } from "../geom/Tile";
+import { SVG } from "./svg";
+import { Point, weightedSumPoint } from "../geom/math";
 
 export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
-    group: SVGElement;
-
-    build: () => void;
+    group?: SVGElement;
 
     showScores(shapes: ScoredRegion[]) {
         const group = SVG("g");
@@ -45,39 +44,33 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             }
             */
 
-            const edgesPerTriangle = new Map<Triangle, ScoredRegion["edges"]>();
+            const edgesPerTriangle = new Map<
+                TileSegment,
+                ScoredRegion["edges"]
+            >();
             for (const edge of shape.edges) {
-                if (!edgesPerTriangle.has(edge.from))
-                    edgesPerTriangle.set(edge.from, []);
-                edgesPerTriangle.get(edge.from).push(edge);
+                let other = edgesPerTriangle.get(edge.from);
+                if (!other) {
+                    edgesPerTriangle.set(edge.from, (other = []));
+                }
+                other.push(edge);
             }
 
             const pathStrings: string[] = [];
-            const circles: [number, number][] = [];
+            const circles: Point[] = [];
 
-            for (const triangle of edgesPerTriangle.keys()) {
-                const edges = edgesPerTriangle.get(triangle);
-
+            for (const edges of edgesPerTriangle.values()) {
                 const f = 0.5;
                 const fc = 0.0;
 
                 const tO = edges[0].from;
-                const cO: [number, number] = [
-                    (tO.left + tO.center[0]) * SCALE,
-                    (tO.top + tO.center[1]) * SCALE,
-                ];
+                const cO = tO.polygon.centroid;
 
                 if (edges.length == 1) {
                     const tA = edges[0].to;
-                    const cA = [
-                        (tA.left + tA.center[0]) * SCALE,
-                        (tA.top + tA.center[1]) * SCALE,
-                    ];
+                    const cA = tA.polygon.centroid;
 
-                    const midAO: [number, number] = [
-                        f * cA[0] + (1 - f) * cO[0],
-                        f * cA[1] + (1 - f) * cO[1],
-                    ];
+                    const midAO = weightedSumPoint(cA, cO, f, 1 - f);
 
                     // non-quadratic curves
                     pathStrings
@@ -97,52 +90,51 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
                                 const tA = edgeA.to;
                                 const tB = edgeB.to;
 
-                                const cA = [
-                                    (tA.left + tA.center[0]) * SCALE,
-                                    (tA.top + tA.center[1]) * SCALE,
-                                ];
-                                const cB = [
-                                    (tB.left + tB.center[0]) * SCALE,
-                                    (tB.top + tB.center[1]) * SCALE,
-                                ];
+                                const cA = tA.polygon.centroid;
+                                const cB = tB.polygon.centroid;
 
-                                const midAO = [
-                                    f * cA[0] + (1 - f) * cO[0],
-                                    f * cA[1] + (1 - f) * cO[1],
-                                ];
-                                const midBO = [
-                                    f * cB[0] + (1 - f) * cO[0],
-                                    f * cB[1] + (1 - f) * cO[1],
-                                ];
+                                const midAO = weightedSumPoint(
+                                    cA,
+                                    cO,
+                                    f,
+                                    1 - f,
+                                );
+                                const midBO = weightedSumPoint(
+                                    cB,
+                                    cO,
+                                    f,
+                                    1 - f,
+                                );
 
-                                const cpAO = [
-                                    fc * midAO[0] + (1 - fc) * cO[0],
-                                    fc * midAO[1] + (1 - fc) * cO[1],
-                                ];
-                                const cpBO = [
-                                    fc * midBO[0] + (1 - fc) * cO[0],
-                                    fc * midBO[1] + (1 - fc) * cO[1],
-                                ];
+                                const cpAO = weightedSumPoint(
+                                    midAO,
+                                    cO,
+                                    fc,
+                                    1 - fc,
+                                );
+                                const cpBO = weightedSumPoint(
+                                    midBO,
+                                    cO,
+                                    fc,
+                                    1 - fc,
+                                );
 
                                 // non-quadratic curves
                                 pathStrings.push(
-                                    //  `M ${midAO[0]},${midAO[1]} C ${cO[0]},${cO[1]} ${cO[0]},${cO[1]} ${midBO[0]},${midBO[1]}`
-                                    `M ${midAO[0]},${midAO[1]} C ${cpAO[0]},${cpAO[1]} ${cpBO[0]},${cpBO[1]} ${midBO[0]},${midBO[1]}`,
+                                    `M ${midAO.x},${midAO.y} C ${cpAO.x},${cpAO.y} ${cpBO.x},${cpBO.y} ${midBO.x},${midBO.y}`,
                                 );
 
                                 if (edgeA.to.tile !== edgeA.from.tile) {
-                                    circles.push(midAO as [number, number]);
+                                    circles.push(midAO);
                                 }
                                 if (edgeB.to.tile !== edgeB.from.tile) {
-                                    circles.push(midBO as [number, number]);
+                                    circles.push(midBO);
                                 }
                                 // circles.push(cO);
                             }
                         }
                     }
                 }
-
-                console.log(edgesPerTriangle.get(triangle));
             }
 
             for (const pathString of pathStrings) {
@@ -157,8 +149,8 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
 
             for (const circle of circles) {
                 const path = SVG("circle");
-                path.setAttribute("cx", `${circle[0]}`);
-                path.setAttribute("cy", `${circle[1]}`);
+                path.setAttribute("cx", `${circle.x}`);
+                path.setAttribute("cy", `${circle.y}`);
                 path.setAttribute("r", "11");
                 path.setAttribute("r", "10");
                 path.setAttribute("r", "7");
@@ -184,8 +176,8 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             */
 
             const circle = SVG("circle");
-            circle.setAttribute("cx", `${scorePos[0]}`);
-            circle.setAttribute("cy", `${scorePos[1]}`);
+            circle.setAttribute("cx", `${scorePos.x}`);
+            circle.setAttribute("cy", `${scorePos.y}`);
             circle.setAttribute("r", "20");
             circle.setAttribute("fill", Color.light);
             circle.setAttribute("stroke", Color.dark);
@@ -197,8 +189,8 @@ export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
             group.appendChild(circle);
 
             const text = SVG("text");
-            text.setAttribute("x", `${scorePos[0]}`);
-            text.setAttribute("y", `${scorePos[1] + 1}`);
+            text.setAttribute("x", `${scorePos.x}`);
+            text.setAttribute("y", `${scorePos.y + 1}`);
             text.setAttribute("alignment-baseline", "middle");
             text.setAttribute("dominant-baseline", "middle");
             text.setAttribute("text-anchor", "middle");

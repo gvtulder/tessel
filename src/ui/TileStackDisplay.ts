@@ -33,18 +33,15 @@ export abstract class BaseTileStackDisplay extends EventTarget {
         this.atlas = atlas;
         this.tileDragController = tileDragController;
         this.tileDisplays = [];
-        this.build();
+
+        const div = document.createElement("div");
+        div.className = "tileStackDisplay";
+        this.element = div;
     }
 
     /** @deprecated */
     destroy() {
         return;
-    }
-
-    build() {
-        const div = document.createElement("div");
-        div.className = "tileStackDisplay";
-        this.element = div;
     }
 
     resetDragStatus() {
@@ -63,7 +60,6 @@ export abstract class BaseTileStackDisplay extends EventTarget {
 
 export class TileStackDisplay extends BaseTileStackDisplay {
     tileStack: FixedOrderTileStack;
-    element: HTMLDivElement;
     counterDiv: HTMLElement;
     counter: HTMLElement;
 
@@ -75,6 +71,15 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         super(atlas, tileDragController);
 
         this.tileStack = tileStack;
+
+        const counterDiv = document.createElement("div");
+        this.element.appendChild(counterDiv);
+        counterDiv.className = "tileStackDisplay-counter";
+        this.counterDiv = counterDiv;
+
+        const counter = document.createElement("span");
+        counterDiv.appendChild(counter);
+        this.counter = counterDiv;
 
         this.updateTiles();
         this.tileStack.addEventListener("updateSlots", () => {
@@ -126,19 +131,6 @@ export class TileStackDisplay extends BaseTileStackDisplay {
             this.updateTiles();
         }
     }
-
-    build() {
-        super.build();
-
-        const counterDiv = document.createElement("div");
-        this.element.appendChild(counterDiv);
-        counterDiv.className = "tileStackDisplay-counter";
-        this.counterDiv = counterDiv;
-
-        const counter = document.createElement("span");
-        counterDiv.appendChild(counter);
-        this.counter = counterDiv;
-    }
 }
 
 export interface DraggableTileHTMLDivElement extends HTMLDivElement {
@@ -151,13 +143,13 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     indexOnStack: number;
     grid: Grid;
     gridDisplay: GridDisplay;
-    tile: Tile;
+    tile: Tile | null;
     element: HTMLDivElement;
     rotatable: HTMLDivElement;
-    draggable: Interactable;
+    draggable?: Interactable;
     rotationIdx: number;
     angle: number;
-    beforeAutorotationIdx: number;
+    beforeAutorotationIdx: number | null;
 
     baseTransform: TransformComponent;
     dragTransform: TransformComponent;
@@ -169,6 +161,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         atlas: Atlas,
         makeRotatable: boolean,
     ) {
+        this.tile = null;
         this.rotationIdx = 0;
         this.angle = 0;
         this.beforeAutorotationIdx = null;
@@ -224,7 +217,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.gridDisplay.rescale();
     }
 
-    showTile(slot: TileShapeColors) {
+    showTile(slot: TileShapeColors | null | undefined) {
         if (this.tile) {
             this.grid.removeTile(this.tile);
             this.tile = null;
@@ -352,7 +345,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     removeDraggable() {
         if (this.draggable) {
             this.draggable.unset();
-            this.draggable = null;
+            this.draggable = undefined;
         }
     }
 

@@ -228,6 +228,9 @@ describe("Grid", () => {
         const tile1 = grid.addTile(TRIANGLE, poly1);
 
         expect(grid.area).toBeCloseTo(poly1.area);
+        if (!grid.bbox) {
+            throw new Error("bboxundefined");
+        }
         expect(grid.bbox.minX).toBeCloseTo(poly1.bbox.minX);
         expect(grid.bbox.minY).toBeCloseTo(poly1.bbox.minY);
         expect(grid.bbox.maxX).toBeCloseTo(poly1.bbox.maxX);

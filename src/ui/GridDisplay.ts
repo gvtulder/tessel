@@ -32,21 +32,21 @@ export class GridDisplay extends EventTarget {
     onUpdateTileColors: EventListener;
     onRemoveTile: EventListener;
 
-    rescaleTimeout: number;
+    rescaleTimeout?: number;
 
-    viewBoxMinX: number;
-    viewBoxMinY: number;
-    viewBoxWidth: number;
-    viewBoxHeight: number;
+    viewBoxMinX?: number;
+    viewBoxMinY?: number;
+    viewBoxWidth?: number;
+    viewBoxHeight?: number;
 
-    visibleLeft: number;
-    visibleRight: number;
-    visibleTop: number;
-    visibleBottom: number;
+    visibleLeft?: number;
+    visibleRight?: number;
+    visibleTop?: number;
+    visibleBottom?: number;
 
-    scale: number;
-    containerLeft: number;
-    containerTop: number;
+    scale: number = 1;
+    containerLeft: number = 0;
+    containerTop: number = 0;
     // margins in pixels
     margins = { top: 30, right: 30, bottom: 30, left: 30 };
     scalingType = GridDisplayScalingType.EqualMargins;
@@ -69,36 +69,6 @@ export class GridDisplay extends EventTarget {
 
         this.tileDisplays = new Map<Tile, TileDisplay>();
 
-        this.build();
-
-        this.onAddTile = (evt: GridEvent) => this.addTile(evt.tile);
-        this.onUpdateTileColors = (evt: GridEvent) => {
-            const tileDisplay = this.tileDisplays.get(evt.tile);
-            if (tileDisplay) {
-                tileDisplay.updateColors();
-            }
-        };
-        this.onRemoveTile = (evt: GridEvent) => this.removeTile(evt.tile);
-
-        this.grid.addEventListener(GridEventType.AddTile, this.onAddTile);
-        this.grid.addEventListener(
-            GridEventType.UpdateTileColors,
-            this.onUpdateTileColors,
-        );
-        this.grid.addEventListener(GridEventType.RemoveTile, this.onRemoveTile);
-
-        for (const tile of this.grid.tiles) {
-            this.addTile(tile);
-        }
-
-        for (const tile of this.grid.placeholders) {
-            this.addTile(tile);
-        }
-
-        this.styleMainElement();
-    }
-
-    build() {
         const div = document.createElement("div");
         this.element = div;
 
@@ -118,6 +88,32 @@ export class GridDisplay extends EventTarget {
         this.svgTiles = SVG("g");
         this.svgTiles.setAttribute("class", "svg-tiles");
         this.svgGrid.appendChild(this.svgTiles);
+
+        this.onAddTile = (evt: GridEvent) => this.addTile(evt.tile!);
+        this.onUpdateTileColors = (evt: GridEvent) => {
+            const tileDisplay = this.tileDisplays.get(evt.tile!);
+            if (tileDisplay) {
+                tileDisplay.updateColors();
+            }
+        };
+        this.onRemoveTile = (evt: GridEvent) => this.removeTile(evt.tile!);
+
+        this.grid.addEventListener(GridEventType.AddTile, this.onAddTile);
+        this.grid.addEventListener(
+            GridEventType.UpdateTileColors,
+            this.onUpdateTileColors,
+        );
+        this.grid.addEventListener(GridEventType.RemoveTile, this.onRemoveTile);
+
+        for (const tile of this.grid.tiles) {
+            this.addTile(tile);
+        }
+
+        for (const tile of this.grid.placeholders) {
+            this.addTile(tile);
+        }
+
+        this.styleMainElement();
     }
 
     destroy() {
@@ -217,7 +213,12 @@ export class GridDisplay extends EventTarget {
         includePlaceholders?: boolean,
         shape?: Shape,
         matchCentroidOnly?: boolean,
-    ): { tile: Tile; offset: number; dist: number; matchesPoints: boolean } {
+    ): {
+        tile: Tile;
+        offset?: number;
+        dist: number;
+        matchesPoints: boolean;
+    } | null {
         return this.grid.findMatchingTile(
             points,
             minOverlap,
@@ -236,7 +237,7 @@ export class GridDisplay extends EventTarget {
      * of the triangles to be shown on screen.)
      * @returns the minimum dimensions
      */
-    protected computeDimensionsForRescale(): BBox {
+    protected computeDimensionsForRescale(): BBox | undefined | null {
         return this.grid.bbox;
     }
 
@@ -260,9 +261,10 @@ export class GridDisplay extends EventTarget {
         const availHeight = (this.container || document.documentElement)
             .clientHeight;
         const dim = this.computeDimensionsForRescale();
-        if (availWidth === 0 || availHeight === 0) return;
+        if (!dim || availWidth === 0 || availHeight === 0) return;
 
         const gridBBox = this.grid.bbox;
+        if (!gridBBox) return;
 
         // compute the width and height of the content
         // TODO margins
@@ -378,11 +380,14 @@ export class TileStackGridDisplay extends GridDisplay {
         minY: number;
         maxX: number;
         maxY: number;
-    } {
+    } | null {
         // diameter of a circle around the tile points,
         // with the mean as the center
         const bbox = this.grid.bbox;
         const centroid = this.grid.centroid;
+        if (!bbox || !centroid) {
+            return null;
+        }
         let maxDist = Math.max(
             ...[...this.grid.tiles.values()]
                 .flatMap((t) => t.polygon.vertices)

@@ -38,15 +38,11 @@ export class GameDisplay extends EventTarget {
         this.onTapTile = () => this.gridDisplay.scoreOverlayDisplay.hide();
         this.onStartDrag = () => this.gridDisplay.scoreOverlayDisplay.hide();
         this.onGameScore = (evt: GameEvent) => {
-            this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes);
+            this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes!);
             this.scoreDisplay.points = this.game.points;
         };
         this.onGameEndGame = () => this.gridDisplay.gameFinished();
 
-        this.build();
-    }
-
-    build() {
         const div = document.createElement("div");
         div.className = "gameDisplay";
         this.element = div;
@@ -219,7 +215,7 @@ class Toggle {
         Change: "change",
     };
     element: HTMLElement;
-    private _checked: boolean;
+    private _checked!: boolean;
 
     private onchange: () => void;
     private interactable: Interactable;

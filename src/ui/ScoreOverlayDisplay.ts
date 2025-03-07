@@ -1,6 +1,6 @@
-import { ScoredRegion } from "../game/Scorer.js";
-import { computeOutline, Vertex, Edge } from "../lib/compute-outline.js";
-import { SVG } from "./svg.js";
+import { ScoredRegion } from "../game/Scorer";
+import { computeOutline, Vertex, Edge } from "../lib/compute-outline";
+import { SVG } from "./svg";
 
 export const Color = {
     main: "#9acd32",
@@ -14,12 +14,9 @@ export abstract class ScoreOverlayDisplay {
     constructor() {
         this.element = SVG("g");
         this.element.setAttribute("class", "svg-scoreOverlay");
-
-        this.build();
     }
 
-    abstract build();
-    abstract showScores(shapes: ScoredRegion[]);
+    abstract showScores(shapes: ScoredRegion[]): void;
 
     hide() {
         return;

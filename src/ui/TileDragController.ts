@@ -22,7 +22,7 @@ export type TileRotationSet = {
 
 export class TileDragEvent extends Event {
     tileDragSource: TileDragSource;
-    constructor(type: string, tileDragSource?: TileDragSource) {
+    constructor(type: string, tileDragSource: TileDragSource) {
         super(type);
         this.tileDragSource = tileDragSource;
     }
@@ -36,8 +36,6 @@ export class TileDragController extends EventTarget {
 
     dropTarget: TileDropTarget;
     sources: TileDragSource[];
-
-    snap: boolean;
 
     constructor(dropTarget: TileDropTarget) {
         super();
@@ -72,7 +70,7 @@ export class TileDragController extends EventTarget {
         if (DEBUG.LOG_MOUSE_POSITION) {
             this.dropTarget.element.addEventListener(
                 "mouseover",
-                (evt: PointerEvent) => {
+                (evt: MouseEvent) => {
                     const cursorPos: Point = { x: evt.clientX, y: evt.clientY };
                     console.log(
                         "Mouse cursor:",
@@ -128,11 +126,11 @@ export class TileDragController extends EventTarget {
         const match = this.mapToFixedTile(context);
 
         let successful = false;
-        if (match) {
+        if (match && context.source.tile) {
             successful = this.dropTarget.dropTile(context.source, {
                 fixed: match.tile,
                 moving: context.source.tile,
-                offset: match.offset,
+                offset: match.offset!,
             });
         }
         console.log(
@@ -172,6 +170,7 @@ export class TileDragController extends EventTarget {
         distance?: number,
     ) {
         const movingTile = context.source.tile;
+        if (!movingTile) return null;
         const movingPoly = context.source.gridDisplay.gridToScreenPositions(
             movingTile.polygon.vertices,
         );
@@ -189,8 +188,8 @@ export class TileDragController extends EventTarget {
 
 export type TileDragSourceContext = {
     source: TileDragSource;
-    autorotateCurrentTarget: Tile;
-    autorotateTimeout: number;
+    autorotateCurrentTarget: Tile | null;
+    autorotateTimeout: number | null;
     autorotateCache: Map<Tile, TileRotationSet>;
     draggable: Interactable;
     position: { x: 0; y: 0 };
@@ -199,14 +198,14 @@ export type TileDragSourceContext = {
 export interface TileDragSource {
     gridDisplay: GridDisplay;
     dragTransform: TransformComponent;
-    tile: Tile;
+    tile: Tile | null;
     indexOnStack?: number;
     getDraggable(): Interactable;
-    startDrag();
-    endDrag(successful: boolean);
-    resetDragStatus();
-    startAutorotate(rotation: TileRotationSet);
-    resetAutorotate(keepRotation: boolean);
+    startDrag(): void;
+    endDrag(successful: boolean): void;
+    resetDragStatus(): void;
+    startAutorotate(rotation: TileRotationSet): void;
+    resetAutorotate(keepRotation: boolean): void;
 }
 
 export interface TileDropTarget {
@@ -245,7 +244,12 @@ export interface TileDropTarget {
         includePlaceholders?: boolean,
         shape?: Shape,
         matchCentroidOnly?: boolean,
-    ): { tile: Tile; offset: number; dist: number; matchesPoints: boolean };
+    ): {
+        tile: Tile;
+        offset?: number;
+        dist: number;
+        matchesPoints: boolean;
+    } | null;
 
     dropTile(source: TileDragSource, pair: TileOnScreenMatch): boolean;
 }

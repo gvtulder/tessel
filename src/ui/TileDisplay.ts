@@ -25,17 +25,14 @@ export class TileDisplay {
     tile: Tile;
 
     gridDisplay: GridDisplay;
-    segmentElements: SVGPathElement[];
+    segmentElements?: SVGPathElement[];
 
     element: SVGElement;
 
     constructor(gridDisplay: GridDisplay, tile: Tile) {
         this.gridDisplay = gridDisplay;
         this.tile = tile;
-        this.build();
-    }
 
-    build() {
         const group = SVG("g");
         const className = "svg-tile";
         /*
@@ -59,7 +56,7 @@ export class TileDisplay {
     }
 
     updateColors() {
-        if (!this.tile.segments) return;
+        if (!this.tile.segments || !this.segmentElements) return;
         const segments = this.tile.segments;
         const elements = this.segmentElements;
         for (let i = 0; i < segments.length; i++) {

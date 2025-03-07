@@ -9,11 +9,8 @@ export class ScoreDisplay {
             this.element.classList.remove("animate");
         };
 
-        this.build();
         this._points = 0;
-    }
 
-    build() {
         const div = document.createElement("div");
         div.className = "scoreDisplay";
         this.element = div;

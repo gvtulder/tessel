@@ -1,16 +1,19 @@
-import { ScoredRegion } from "../grid/Scorer.js";
-import { roundPathCorners } from "../lib/svg-rounded-corners.js";
-import { BGCOLOR, SCALE } from "../settings.js";
-import { ScoreOverlayDisplay, Vertex, Color } from "./ScoreOverlayDisplay.js";
-import { SVG } from "./svg.js";
+import { ScoredRegion } from "../game/Scorer";
+import { roundPathCorners } from "../lib/svg-rounded-corners";
+import { Vertex } from "../lib/compute-outline";
+import { BGCOLOR, SCALE } from "../settings";
+import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
+import { SVG } from "./svg";
 
 export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
     fg: SVGElement;
-    group: SVGElement;
+    group?: SVGElement;
     mask: SVGElement;
-    maskPathGroup: SVGElement;
+    maskPathGroup?: SVGElement;
 
-    build() {
+    constructor() {
+        super();
+
         const group = SVG("g");
         group.setAttribute("class", "svg-scoreOverlay-mask disabled");
         this.element.append(group);

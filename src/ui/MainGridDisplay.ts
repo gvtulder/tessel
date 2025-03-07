@@ -58,8 +58,9 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
         shuffle(placeholders);
         let delay = 100;
         const cleanUp = () => {
-            if (placeholders.length > 0) {
-                placeholders.pop().hide();
+            const placeholder = placeholders.pop();
+            if (placeholder) {
+                placeholder.hide();
                 delay = Math.max(20, delay * 0.9);
                 window.setTimeout(
                     cleanUp,

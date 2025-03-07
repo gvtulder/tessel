@@ -17,9 +17,11 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     points: SVGElement;
     pointsGroup: ReplacableGroup;
 
-    hideTimeout: number;
+    hideTimeout?: number;
 
-    build() {
+    constructor() {
+        super();
+
         this.element.classList.add("disabled");
 
         this.element.addEventListener("transitionend", (evt) => {
@@ -253,7 +255,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
 class ReplacableGroup {
     parentNode: SVGElement;
-    group: SVGElement;
+    group?: SVGElement;
 
     constructor(parentNode: SVGElement) {
         this.parentNode = parentNode;

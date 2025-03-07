@@ -8,8 +8,8 @@ import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay";
 import * as SaveGames from "../saveGames";
 
 export class MenuEvent extends Event {
-    gameSettings: GameSettings;
-    gameId: string;
+    gameSettings?: GameSettings;
+    gameId?: string;
     constructor(type: string, gameSettings?: GameSettings, gameId?: string) {
         super(type);
         this.gameSettings = gameSettings;
@@ -25,10 +25,7 @@ export class MainMenuDisplay extends EventTarget {
 
     constructor() {
         super();
-        this.build();
-    }
 
-    build() {
         const div = document.createElement("div");
         div.className = "mainMenuDisplay";
         this.element = div;
@@ -43,6 +40,8 @@ export class MainMenuDisplay extends EventTarget {
 
         for (const saveGameId of SaveGames.defaultGameList) {
             const gameSettings = SaveGames.lookup.get(saveGameId);
+            if (!gameSettings) continue;
+
             const exampleTile = document.createElement("div");
             exampleTile.className = "gameList-exampleTile";
             gameList.appendChild(exampleTile);
@@ -86,9 +85,6 @@ export class MainMenuDisplay extends EventTarget {
         }
         for (const gd of this.gridDisplays) {
             gd.destroy();
-        }
-        for (const grid of this.grids) {
-            grid.destroy();
         }
         this.interactables = [];
         this.gridDisplays = [];

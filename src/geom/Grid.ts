@@ -334,7 +334,7 @@ export class Grid extends EventTarget {
     /**
      * The combined bounding box of all tiles and placeholders.
      */
-    get bbox(): BBox {
+    get bbox(): BBox | undefined {
         return mergeBBox(this.tiles.bbox, this.placeholders.bbox);
     }
 

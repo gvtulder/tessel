@@ -7,8 +7,9 @@ import { Grid } from "../geom/Grid";
 import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay";
 import * as SaveGames from "../saveGames";
 import { UserEvent, UserEventType } from "./GameController";
+import { ScreenDisplay } from "./ScreenDisplay";
 
-export class MainMenuDisplay extends EventTarget {
+export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
     grids: Grid[];
     gridDisplays: GridDisplay[];

@@ -2,6 +2,7 @@ import { Game, GameSettings } from "../game/Game";
 import { GameDisplay } from "./GameDisplay";
 import { MainMenuDisplay } from "./MainMenuDisplay";
 import * as SaveGames from "../saveGames";
+import { ScreenDisplay } from "./ScreenDisplay";
 
 export const enum UserEventType {
     StartGame = "startgame",
@@ -26,8 +27,7 @@ export class UserEvent extends Event {
 export class GameController {
     container: HTMLElement;
     game?: Game;
-    gameDisplay?: GameDisplay;
-    menuDisplay?: MainMenuDisplay;
+    currentScreen?: ScreenDisplay;
 
     constructor(container: HTMLElement) {
         this.container = container;
@@ -48,7 +48,7 @@ export class GameController {
         this.resetState();
 
         const menuDisplay = new MainMenuDisplay();
-        this.menuDisplay = menuDisplay;
+        this.currentScreen = menuDisplay;
         this.container.appendChild(menuDisplay.element);
         menuDisplay.rescale();
 
@@ -56,7 +56,7 @@ export class GameController {
             UserEventType.StartGame,
             (evt: UserEvent) => {
                 this.container.removeChild(menuDisplay.element);
-                this.menuDisplay = undefined;
+                this.currentScreen = undefined;
                 if (evt.gameId) {
                     window.history.pushState({}, "", `/${evt.gameId}`);
                 }
@@ -71,7 +71,7 @@ export class GameController {
         const game = new Game(gameSettings);
         this.game = game;
         const gameDisplay = new GameDisplay(game);
-        this.gameDisplay = gameDisplay;
+        this.currentScreen = gameDisplay;
         this.container.appendChild(gameDisplay.element);
         gameDisplay.rescale();
 
@@ -91,33 +91,20 @@ export class GameController {
     }
 
     resetState() {
-        if (this.menuDisplay) {
-            const menuDisplay = this.menuDisplay;
-            this.menuDisplay = undefined;
-            menuDisplay.element.classList.add("disappear");
+        if (this.currentScreen) {
+            const screen = this.currentScreen;
+            this.currentScreen = undefined;
+            screen.element.classList.add("disappear");
             window.setTimeout(() => {
-                this.container.removeChild(menuDisplay.element);
-                menuDisplay.destroy();
-            }, 1000);
-        }
-        if (this.gameDisplay) {
-            const gameDisplay = this.gameDisplay;
-            this.gameDisplay = undefined;
-            this.game = undefined;
-            gameDisplay.element.classList.add("disappear");
-            window.setTimeout(() => {
-                this.container.removeChild(gameDisplay.element);
-                gameDisplay.destroy();
+                this.container.removeChild(screen.element);
+                screen.destroy();
             }, 1000);
         }
     }
 
     rescale() {
-        if (this.gameDisplay) {
-            this.gameDisplay.rescale();
-        }
-        if (this.menuDisplay) {
-            this.menuDisplay.rescale();
+        if (this.currentScreen) {
+            this.currentScreen.rescale();
         }
     }
 }

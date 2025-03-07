@@ -10,9 +10,10 @@ import icons from "./icons.js";
 import { TileDragController } from "./TileDragController.js";
 import { MainGridTileDragController } from "./MainGridTileDragController.js";
 import { UserEventType } from "./GameController.js";
+import { ScreenDisplay } from "./ScreenDisplay.js";
 import { createElement } from "./html.js";
 
-export class GameDisplay extends EventTarget {
+export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;
 
     gridDisplay: MainGridDisplay;

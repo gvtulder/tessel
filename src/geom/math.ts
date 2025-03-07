@@ -253,6 +253,9 @@ export function bbox(points: readonly Point[]): BBox {
 /**
  * Merges two bounding boxes.
  */
+export function mergeBBox(a: BBox, b?: BBox | null): BBox;
+export function mergeBBox(a: BBox | undefined | null, b: BBox): BBox;
+export function mergeBBox(a?: BBox | null, b?: BBox | null): BBox | undefined;
 export function mergeBBox(a?: BBox | null, b?: BBox | null): BBox | undefined {
     if (!a) return b || undefined;
     if (!b) return a || undefined;

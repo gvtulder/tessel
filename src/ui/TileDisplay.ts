@@ -33,15 +33,7 @@ export class TileDisplay {
         this.gridDisplay = gridDisplay;
         this.tile = tile;
 
-        const group = SVG("g");
-        const className = "svg-tile";
-        /*
-        if (this.tile.type === TileType.PatternExample) {
-            className = `${className} svg-tile-PatternExample`;
-        }
-        */
-        group.setAttribute("class", className);
-        this.element = group;
+        this.element = SVG("g", "svg-tile");
 
         this.redraw();
     }

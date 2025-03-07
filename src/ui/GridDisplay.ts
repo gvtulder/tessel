@@ -7,6 +7,7 @@ import { DEBUG } from "../settings";
 import { BBox, Point, dist } from "../geom/math";
 import { TransformComponent, TransformList } from "../geom/Transform";
 import { SVG } from "./svg";
+import { createElement } from "./html";
 
 export const enum GridDisplayScalingType {
     EqualMargins,
@@ -72,22 +73,10 @@ export class GridDisplay extends EventTarget {
         const div = document.createElement("div");
         this.element = div;
 
-        const gridElement = document.createElement("div");
-        gridElement.className = "grid";
-        this.gridElement = gridElement;
-        this.element.appendChild(gridElement);
-
-        const svg = SVG("svg");
-        this.gridElement.appendChild(svg);
-        this.svg = svg;
-
-        this.svgGrid = SVG("g");
-        this.svgGrid.setAttribute("class", "svg-grid");
-        this.svg.appendChild(this.svgGrid);
-
-        this.svgTiles = SVG("g");
-        this.svgTiles.setAttribute("class", "svg-tiles");
-        this.svgGrid.appendChild(this.svgTiles);
+        const gridEl = (this.gridElement = createElement("div", "grid", div));
+        const svg = (this.svg = SVG("svg", null, gridEl));
+        const svgGrid = (this.svgGrid = SVG("g", "svg-grid", svg));
+        this.svgTiles = SVG("g", "svg-tiles", svgGrid);
 
         this.onAddTile = (evt: GridEvent) => this.addTile(evt.tile!);
         this.onUpdateTileColors = (evt: GridEvent) => {

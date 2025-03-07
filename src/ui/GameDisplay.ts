@@ -10,6 +10,7 @@ import icons from "./icons.js";
 import { TileDragController } from "./TileDragController.js";
 import { MainGridTileDragController } from "./MainGridTileDragController.js";
 import { UserEventType } from "./GameController.js";
+import { createElement } from "./html.js";
 
 export class GameDisplay extends EventTarget {
     game: Game;
@@ -44,14 +45,9 @@ export class GameDisplay extends EventTarget {
         };
         this.onGameEndGame = () => this.gridDisplay.gameFinished();
 
-        const div = document.createElement("div");
-        div.className = "gameDisplay";
-        this.element = div;
+        const div = (this.element = createElement("div", "gameDisplay"));
 
-        const divGridContainer = document.createElement("div");
-        divGridContainer.className = "mainGridContainer";
-        div.appendChild(divGridContainer);
-
+        const divGridContainer = createElement("div", "mainGridContainer", div);
         this.gridDisplay = new MainGridDisplay(
             this.game.grid,
             divGridContainer,
@@ -59,14 +55,14 @@ export class GameDisplay extends EventTarget {
         );
         divGridContainer.appendChild(this.gridDisplay.element);
 
-        const controlbar = document.createElement("div");
-        controlbar.className = "controlbar";
-        div.appendChild(controlbar);
+        const controlbar = createElement("div", "controlbar", div);
 
-        const scoreDisplayContainer = document.createElement("div");
-        scoreDisplayContainer.className = "scoreDisplayContainer";
+        const scoreDisplayContainer = createElement(
+            "div",
+            "scoreDisplayContainer",
+            div,
+        );
         this.scoreDisplay = new ScoreDisplay();
-        div.appendChild(scoreDisplayContainer);
         scoreDisplayContainer.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
 
@@ -82,9 +78,7 @@ export class GameDisplay extends EventTarget {
         );
         div.appendChild(this.tileStackDisplay.element);
 
-        const buttons = document.createElement("div");
-        buttons.className = "gameDisplay-buttons";
-        controlbar.appendChild(buttons);
+        const buttons = createElement("div", "gameDisplay-buttons", controlbar);
 
         this.backtomenubutton = new Button(
             icons.houseIcon,
@@ -100,9 +94,7 @@ export class GameDisplay extends EventTarget {
         );
         buttons.appendChild(this.restartgamebutton.element);
 
-        const toggles = document.createElement("div");
-        toggles.className = "gameDisplay-toggles";
-        controlbar.appendChild(toggles);
+        const toggles = createElement("div", "gameDisplay-toggles", controlbar);
         this.autorotate = new Toggle(
             icons.arrowsSpinIcon,
             "Autorotate",

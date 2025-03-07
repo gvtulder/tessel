@@ -20,9 +20,7 @@ export class CoordinateMapper {
     private _coeffCache?: ScreenToGridCoeff;
 
     constructor() {
-        const group = SVG("g");
-        group.setAttribute("name", "svg-CoordinateMapper");
-        this.svgGroup = group;
+        const group = (this.svgGroup = SVG("g", "svg-CoordinateMapper"));
 
         // measurement circles
         const unitCircle00 = SVG("circle");

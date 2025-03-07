@@ -1,6 +1,7 @@
 import { TileColors } from "../geom/Tile";
 import { Shape } from "../geom/Shape";
 import { shuffle } from "../utils";
+import { GameEvent, GameEventType } from "./Game";
 
 export type TileShapeColors = {
     shape: Shape;
@@ -68,7 +69,7 @@ export class FixedOrderTileStack extends EventTarget {
             }
         }
         if (updated) {
-            this.dispatchEvent(new Event("updateSlots"));
+            this.dispatchEvent(new GameEvent(GameEventType.UpdateSlots));
         }
     }
 

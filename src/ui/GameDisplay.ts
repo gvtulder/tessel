@@ -2,13 +2,14 @@ import type { Interactable, PointerEvent } from "@interactjs/types";
 import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
 
-import { Game, GameEvent } from "../game/Game.js";
+import { Game, GameEvent, GameEventType } from "../game/Game.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
 import { ScoreDisplay } from "./ScoreDisplay.js";
 import icons from "./icons.js";
 import { TileDragController } from "./TileDragController.js";
 import { MainGridTileDragController } from "./MainGridTileDragController.js";
+import { UserEventType } from "./GameController.js";
 
 export class GameDisplay extends EventTarget {
     game: Game;
@@ -88,14 +89,14 @@ export class GameDisplay extends EventTarget {
         this.backtomenubutton = new Button(
             icons.houseIcon,
             "Back to menu",
-            () => this.dispatchEvent(new Event("clickbacktomenu")),
+            () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
         );
         buttons.appendChild(this.backtomenubutton.element);
 
         this.restartgamebutton = new Button(
             icons.rotateLeftIcon,
             "Restart game",
-            () => this.dispatchEvent(new Event("clickrestartgame")),
+            () => this.dispatchEvent(new Event(UserEventType.RestartGame)),
         );
         buttons.appendChild(this.restartgamebutton.element);
 
@@ -147,8 +148,8 @@ export class GameDisplay extends EventTarget {
             TileDragController.events.StartDrag,
             this.onTapTile,
         );
-        this.game.addEventListener("score", this.onGameScore);
-        this.game.addEventListener("endgame", this.onGameEndGame);
+        this.game.addEventListener(GameEventType.Score, this.onGameScore);
+        this.game.addEventListener(GameEventType.EndGame, this.onGameEndGame);
 
         this.autorotate.checked = localStorage.getItem("autorotate") != "no";
         this.hints.checked = localStorage.getItem("hints") != "no";
@@ -166,8 +167,11 @@ export class GameDisplay extends EventTarget {
             TileDragController.events.StartDrag,
             this.onTapTile,
         );
-        this.game.removeEventListener("score", this.onGameScore);
-        this.game.removeEventListener("endgame", this.onGameEndGame);
+        this.game.removeEventListener(GameEventType.Score, this.onGameScore);
+        this.game.removeEventListener(
+            GameEventType.EndGame,
+            this.onGameEndGame,
+        );
 
         this.backtomenubutton.destroy();
         this.restartgamebutton.destroy();

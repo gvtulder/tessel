@@ -13,11 +13,21 @@ export type GameSettings = {
     tileGenerator: TileGenerator[];
 };
 
+export const enum GameEventType {
+    EndGame = "endgame",
+    Score = "score",
+    UpdateSlots = "updateslots",
+}
+
 export class GameEvent extends Event {
     game?: Game;
     scoreShapes?: ScoredRegion[];
 
-    constructor(type: string, game: Game, scoreShapes?: ScoredRegion[]) {
+    constructor(
+        type: GameEventType,
+        game?: Game,
+        scoreShapes?: ScoredRegion[],
+    ) {
         super(type);
         this.game = game;
         this.scoreShapes = scoreShapes;
@@ -68,7 +78,7 @@ export class Game extends EventTarget {
 
     finish() {
         this.finished = true;
-        this.dispatchEvent(new GameEvent("endgame", this));
+        this.dispatchEvent(new GameEvent(GameEventType.EndGame, this));
     }
 
     placeTile(
@@ -118,7 +128,9 @@ export class Game extends EventTarget {
             const points = shapes.map((s) => s.points).reduce((a, b) => a + b);
             this.points += points;
 
-            this.dispatchEvent(new GameEvent("score", this, shapes));
+            this.dispatchEvent(
+                new GameEvent(GameEventType.Score, this, shapes),
+            );
         }
     }
 }

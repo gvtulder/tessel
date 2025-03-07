@@ -1,7 +1,7 @@
 import { Grid } from "./Grid";
 import { Tile } from "./Tile";
 
-export enum GridEventType {
+export const enum GridEventType {
     AddTile = "addtile",
     RemoveTile = "removetile",
     UpdateTileColors = "updatetilecolors",

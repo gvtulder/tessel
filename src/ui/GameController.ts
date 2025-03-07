@@ -1,7 +1,27 @@
 import { Game, GameSettings } from "../game/Game";
 import { GameDisplay } from "./GameDisplay";
-import { MainMenuDisplay, MenuEvent } from "./MainMenuDisplay";
+import { MainMenuDisplay } from "./MainMenuDisplay";
 import * as SaveGames from "../saveGames";
+
+export const enum UserEventType {
+    StartGame = "startgame",
+    BackToMenu = "backtomenu",
+    RestartGame = "restartgame",
+}
+
+export class UserEvent extends Event {
+    gameSettings?: GameSettings;
+    gameId?: string;
+    constructor(
+        type: UserEventType,
+        gameSettings?: GameSettings,
+        gameId?: string,
+    ) {
+        super(type);
+        this.gameSettings = gameSettings;
+        this.gameId = gameId;
+    }
+}
 
 export class GameController {
     container: HTMLElement;
@@ -32,14 +52,17 @@ export class GameController {
         this.container.appendChild(menuDisplay.element);
         menuDisplay.rescale();
 
-        menuDisplay.addEventListener("startgame", (evt: MenuEvent) => {
-            this.container.removeChild(menuDisplay.element);
-            this.menuDisplay = undefined;
-            if (evt.gameId) {
-                window.history.pushState({}, "", `/${evt.gameId}`);
-            }
-            this.startGame(evt.gameSettings!);
-        });
+        menuDisplay.addEventListener(
+            UserEventType.StartGame,
+            (evt: UserEvent) => {
+                this.container.removeChild(menuDisplay.element);
+                this.menuDisplay = undefined;
+                if (evt.gameId) {
+                    window.history.pushState({}, "", `/${evt.gameId}`);
+                }
+                this.startGame(evt.gameSettings!);
+            },
+        );
     }
 
     startGame(gameSettings: GameSettings) {
@@ -52,14 +75,14 @@ export class GameController {
         this.container.appendChild(gameDisplay.element);
         gameDisplay.rescale();
 
-        gameDisplay.addEventListener("clickbacktomenu", () => {
+        gameDisplay.addEventListener(UserEventType.BackToMenu, () => {
             if (this.game!.finished || window.confirm("Stop the game?")) {
                 window.history.pushState({}, "", "/");
                 this.showMainMenu();
             }
         });
 
-        gameDisplay.addEventListener("clickrestartgame", () => {
+        gameDisplay.addEventListener(UserEventType.RestartGame, () => {
             if (this.game!.finished || window.confirm("Restart the game?")) {
                 window.history.pushState({}, "", window.location.href);
                 this.startGame(gameSettings);

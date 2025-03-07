@@ -5,6 +5,7 @@ import interact from "@interactjs/interact";
 
 import { Grid } from "../geom/Grid";
 import { FixedOrderTileStack, TileShapeColors } from "../game/TileStack";
+import { GameEventType } from "../game/Game";
 import { Tile, TileColors } from "../geom/Tile";
 import { Shape } from "../geom/Shape";
 import { GridDisplay, TileStackGridDisplay } from "./GridDisplay";
@@ -82,7 +83,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         this.counter = counterDiv;
 
         this.updateTiles();
-        this.tileStack.addEventListener("updateSlots", () => {
+        this.tileStack.addEventListener(GameEventType.UpdateSlots, () => {
             this.updateTiles();
         });
     }

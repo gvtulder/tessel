@@ -6,16 +6,7 @@ import { GameSettings } from "../game/Game";
 import { Grid } from "../geom/Grid";
 import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay";
 import * as SaveGames from "../saveGames";
-
-export class MenuEvent extends Event {
-    gameSettings?: GameSettings;
-    gameId?: string;
-    constructor(type: string, gameSettings?: GameSettings, gameId?: string) {
-        super(type);
-        this.gameSettings = gameSettings;
-        this.gameId = gameId;
-    }
-}
+import { UserEvent, UserEventType } from "./GameController";
 
 export class MainMenuDisplay extends EventTarget {
     element: HTMLDivElement;
@@ -62,8 +53,8 @@ export class MainMenuDisplay extends EventTarget {
                 interact(exampleTile)
                     .on("tap", () => {
                         this.dispatchEvent(
-                            new MenuEvent(
-                                "startgame",
+                            new UserEvent(
+                                UserEventType.StartGame,
                                 gameSettings,
                                 saveGameId,
                             ),

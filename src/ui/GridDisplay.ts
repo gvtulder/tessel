@@ -8,7 +8,7 @@ import { BBox, Point, dist } from "../geom/math";
 import { TransformComponent, TransformList } from "../geom/Transform";
 import { SVG } from "./svg";
 
-export enum GridDisplayScalingType {
+export const enum GridDisplayScalingType {
     EqualMargins,
     TopLeft,
     CenterOrigin,

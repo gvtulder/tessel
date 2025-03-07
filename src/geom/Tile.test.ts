@@ -34,6 +34,8 @@ describe("Tile", () => {
         tile.colors = colors;
         expect(tile.colors).toStrictEqual(colors);
         expect(callback).toBeCalled();
+        tile.colors = "red";
+        expect(tile.colors).toStrictEqual(["red", "red", "red"]);
     });
 
     test("can compute neighbors", () => {

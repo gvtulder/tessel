@@ -195,10 +195,12 @@ export class Tile extends EventTarget {
      * Updates the colors of the tile segments.
      * Triggers a GridEventType.UpdateTileColors event.
      */
-    set colors(colors: readonly TileColor[]) {
+    set colors(colors: readonly TileColor[] | TileColor) {
         this._colors = undefined;
-        for (let i = 0; i < colors.length; i++) {
-            this.segments![i].color = colors[i];
+        const segments = this.segments;
+        if (!segments) return;
+        for (let i = 0; i < segments.length; i++) {
+            segments[i].color = colors instanceof Array ? colors[i] : colors;
         }
         this.dispatchEvent(
             new GridEvent(GridEventType.UpdateTileColors, undefined, this),

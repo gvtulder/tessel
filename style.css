@@ -176,42 +176,6 @@ svg {
   transition-duration: 400ms;
 }
 
-.editorDisplay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  width: 100%;
-}
-.tileEditorGridContainer {
-  order: 2;
-  width: auto;
-  position: relative;
-  flex-grow: 1;
-  overflow: hidden;
-}
-.colorStackDisplay {
-  order: 1;
-  width: 60px;
-  padding: 10px 0;
-  position: relative;
-  overflow: hidden;
-}
-.patternEditorGridContainer {
-  border-left: 1px solid #000;
-  order: 3;
-  width: auto;
-  position: relative;
-  flex-grow: 1;
-  overflow: hidden;
-}
-.editorDisplay .controlbar {
-  order: 4;
-}
-
 .tileStackDisplay .tileStackDisplay-counter {
   margin: 10px;
   color: #555;
@@ -253,27 +217,6 @@ svg {
 }
 .tileOnStack.dragging .tileOnStack-rotatable.animated {
   transition: transform 200ms;
-}
-
-.colorStackDisplay {
-  background: #bbb;
-  text-align: center;
-}
-.colorStackDisplay .colorSwatch {
-  cursor: pointer;
-}
-.colorStackDisplay .svg-colorSwatch {
-  display: inline-block;
-  width: 45px;
-  height: 45px;
-  padding: 5px;
-}
-.colorStackDisplay
-  .colorSwatch.active
-  .svg-colorSwatch
-  circle.svg-colorSwatch-outer {
-  stroke-width: 4px;
-  stroke: #666;
 }
 
 .scoreDisplay {

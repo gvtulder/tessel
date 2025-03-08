@@ -2,9 +2,9 @@ import { describe, expect, jest, test } from "@jest/globals";
 import { Grid, GridEdge, GridVertex, SortedCorners } from "./Grid";
 import { PlaceholderTile, Tile } from "./Tile";
 import { Shape } from "./Shape";
-import { Polygon } from "./Polygon";
+import { Polygon } from "../geom/Polygon";
 import { GridEventType } from "./GridEvent";
-import { mergeBBox, P, rotateArray, weightedSumPoint } from "./math";
+import { mergeBBox, P, rotateArray, weightedSumPoint } from "../geom/math";
 import { SquaresAtlas, TrianglesAtlas } from "./Atlas";
 
 const TRIANGLE = TrianglesAtlas.shapes[0];

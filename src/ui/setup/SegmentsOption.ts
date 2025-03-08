@@ -1,7 +1,7 @@
-import { Atlas } from "../../geom/Atlas";
-import { Grid } from "../../geom/Grid";
-import { ColorPattern } from "../../geom/Shape";
-import { TileColors } from "../../geom/Tile";
+import { Atlas } from "../../grid/Atlas";
+import { Grid } from "../../grid/Grid";
+import { ColorPattern } from "../../grid/Shape";
+import { TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { OptionGridDisplay } from "./OptionGridDisplay";
 import { SettingRowOption } from "./SettingRowOption";

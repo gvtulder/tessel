@@ -1,7 +1,7 @@
 import { Atlas } from "./Atlas";
 import { Grid, GridEdge } from "./Grid";
-import { dist, midpoint } from "./math";
-import { PRNG, RandomSampler, selectRandom } from "./RandomSampler";
+import { dist, midpoint } from "../geom/math";
+import { PRNG, RandomSampler, selectRandom } from "../geom/RandomSampler";
 import { Tile } from "./Tile";
 
 export abstract class GridBuilder {

@@ -5,11 +5,11 @@ import {
     RhombusAtlas,
     SquaresAtlas,
     TrianglesAtlas,
-} from "../../geom/Atlas";
+} from "../../grid/Atlas";
 import {
     DifferentEdgeColorsRuleSet,
     MatchEdgeColorsRuleSet,
-} from "../../geom/RuleSet";
+} from "../../grid/RuleSet";
 import { ExampleDisplay } from "./ExampleDisplay";
 import { SettingRow } from "./SettingRow";
 import { SettingRowOption } from "./SettingRowOption";

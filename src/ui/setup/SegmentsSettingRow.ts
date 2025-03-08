@@ -1,5 +1,5 @@
-import { Atlas } from "../../geom/Atlas";
-import { TileColors } from "../../geom/Tile";
+import { Atlas } from "../../grid/Atlas";
+import { TileColors } from "../../grid/Tile";
 import { SegmentsOption } from "./SegmentsOption";
 import { SettingRow } from "./SettingRow";
 

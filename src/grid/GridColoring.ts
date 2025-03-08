@@ -1,5 +1,10 @@
 import { Grid } from "./Grid";
-import { PRNG, RandomSampler, selectRandom, shuffle } from "./RandomSampler";
+import {
+    PRNG,
+    RandomSampler,
+    selectRandom,
+    shuffle,
+} from "../geom/RandomSampler";
 import { ColorPattern, Shape } from "./Shape";
 import { Tile, TileColor, TileColors, TileSegment } from "./Tile";
 

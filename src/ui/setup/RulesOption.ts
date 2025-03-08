@@ -1,5 +1,5 @@
-import { RuleSet } from "../../geom/RuleSet";
-import { TileColors } from "../../geom/Tile";
+import { RuleSet } from "../../grid/RuleSet";
+import { TileColors } from "../../grid/Tile";
 import { Color } from "../score/ScoreOverlayDisplay";
 import { SVG } from "../svg";
 import { SettingRowOption } from "./SettingRowOption";

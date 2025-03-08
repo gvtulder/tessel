@@ -1,10 +1,10 @@
-import { Atlas } from "../../geom/Atlas";
-import { CentricGridBuilder } from "../../geom/GridBuilder";
-import { GridColoring } from "../../geom/GridColoring";
+import { Atlas } from "../../grid/Atlas";
+import { CentricGridBuilder } from "../../grid/GridBuilder";
+import { GridColoring } from "../../grid/GridColoring";
 import { seedPRNG } from "../../geom/RandomSampler";
-import { RuleSet } from "../../geom/RuleSet";
-import { ColorPattern } from "../../geom/Shape";
-import { TileColors } from "../../geom/Tile";
+import { RuleSet } from "../../grid/RuleSet";
+import { ColorPattern } from "../../grid/Shape";
+import { TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { createElement } from "../html";
 

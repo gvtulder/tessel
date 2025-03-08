@@ -2,7 +2,7 @@ import { describe, expect, jest, test } from "@jest/globals";
 import { CentricGridBuilder } from "./GridBuilder";
 import { SquaresAtlas } from "./Atlas";
 import { GridColoring } from "./GridColoring";
-import { seedPRNG } from "./RandomSampler";
+import { seedPRNG } from "../geom/RandomSampler";
 import { ColorPattern } from "./Shape";
 import { DifferentEdgeColorsRuleSet } from "./RuleSet";
 

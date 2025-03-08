@@ -3,11 +3,11 @@ import "@interactjs/auto-start";
 import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
 
-import { Grid } from "../../geom/Grid";
+import { Grid } from "../../grid/Grid";
 import { FixedOrderTileStack, TileShapeColors } from "../../game/TileStack";
 import { GameEventType } from "../../game/Game";
-import { Tile, TileColors } from "../../geom/Tile";
-import { Shape } from "../../geom/Shape";
+import { Tile, TileColors } from "../../grid/Tile";
+import { Shape } from "../../grid/Shape";
 import { GridDisplay } from "../grid/GridDisplay";
 import { TileStackGridDisplay } from "./TileStackGridDisplay";
 import { TransformComponent } from "../../geom/Transform";
@@ -16,7 +16,7 @@ import {
     TileDragSource,
     TileRotationSet,
 } from "../grid/TileDragController";
-import { Atlas } from "../../geom/Atlas";
+import { Atlas } from "../../grid/Atlas";
 import { angleDist, RAD2DEG, TWOPI } from "../../geom/math";
 
 export abstract class BaseTileStackDisplay extends EventTarget {

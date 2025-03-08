@@ -1,7 +1,7 @@
 import { ScoredRegion } from "../../game/Scorer";
 import { SCALE } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
-import { TileSegment } from "../../geom/Tile";
+import { TileSegment } from "../../grid/Tile";
 import { SVG } from "../svg";
 import { Point, weightedSumPoint } from "../../geom/math";
 

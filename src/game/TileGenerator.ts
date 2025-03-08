@@ -1,5 +1,5 @@
-import { Shape } from "../geom/Shape";
-import { TileColors, TileColor } from "../geom/Tile";
+import { Shape } from "../grid/Shape";
+import { TileColors, TileColor } from "../grid/Tile";
 import { shuffle } from "../utils";
 import { TileShapeColors } from "./TileStack";
 

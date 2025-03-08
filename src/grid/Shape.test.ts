@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { ColorPattern, Shape } from "./Shape";
-import { DEG2RAD, P, Point } from "./math";
+import { DEG2RAD, P, Point } from "../geom/math";
 
 function roundPoints(
     points: readonly Point[],

@@ -1,9 +1,9 @@
-import { Grid } from "../geom/Grid";
+import { Grid } from "../grid/Grid";
 import { ScoredRegion, Scorer } from "./Scorer";
-import { Tile, TileColors } from "../geom/Tile";
+import { Tile, TileColors } from "../grid/Tile";
 import { TileGenerator } from "./TileGenerator";
 import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
-import { Atlas } from "../geom/Atlas";
+import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/math";
 
 export type GameSettings = {

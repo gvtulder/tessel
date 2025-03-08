@@ -1,5 +1,5 @@
 import { roundPathCorners } from "../../lib/svg-rounded-corners";
-import { Tile, TileType } from "../../geom/Tile";
+import { Tile, TileType } from "../../grid/Tile";
 import { DEBUG, PLACEHOLDER } from "../../settings";
 import { GridDisplay } from "./GridDisplay";
 import offsetPolygon from "../../lib/offset-polygon";

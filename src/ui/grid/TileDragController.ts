@@ -3,13 +3,13 @@ import "@interactjs/auto-start";
 import "@interactjs/actions/drag";
 
 import { TileOnScreenMatch } from "./TileDisplay";
-import { Tile } from "../../geom/Tile";
+import { Tile } from "../../grid/Tile";
 import { DEBUG } from "../../settings";
-import { Grid } from "../../geom/Grid";
+import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "./GridDisplay";
 import { TransformComponent } from "../../geom/Transform";
 import { Point } from "../../geom/math";
-import { Shape } from "../../geom/Shape";
+import { Shape } from "../../grid/Shape";
 
 export const MAX_TILE_DROP_POINT_DIST = 0.2;
 export const MAX_TILE_AUTOROTATE_POINT_DIST = 0.5;

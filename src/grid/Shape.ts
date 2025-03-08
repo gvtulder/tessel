@@ -1,4 +1,4 @@
-import { ArraySet } from "./ArraySet";
+import { ArraySet } from "../geom/ArraySet";
 import { CornerType } from "./Grid";
 import {
     DEG2RAD,
@@ -8,8 +8,8 @@ import {
     Point,
     rad2deg,
     rotateArray,
-} from "./math";
-import { Polygon } from "./Polygon";
+} from "../geom/math";
+import { Polygon } from "../geom/Polygon";
 
 export type ColorPattern = {
     readonly numColors: number;

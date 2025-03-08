@@ -1,4 +1,4 @@
-import { Tile, TileColor, TileSegment } from "../geom/Tile";
+import { Tile, TileColor, TileSegment } from "../grid/Tile";
 
 export type ScoredRegion = {
     origin: TileSegment;

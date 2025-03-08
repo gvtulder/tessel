@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { Atlas, AtlasDefinitionDoc, Penrose0Atlas } from "./Atlas";
-import { deg2rad, rad2deg } from "./math";
+import { deg2rad, rad2deg } from "../geom/math";
 import { Grid, SortedCorners } from "./Grid";
 
 function toFixed(xs: readonly number[], fractionDigits: number) {

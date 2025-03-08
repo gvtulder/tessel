@@ -1,8 +1,8 @@
 import { TileDisplay } from "./TileDisplay";
-import { Grid } from "../../geom/Grid";
-import { GridEvent, GridEventType } from "../../geom/GridEvent";
-import { Tile } from "../../geom/Tile";
-import { Shape } from "../../geom/Shape";
+import { Grid } from "../../grid/Grid";
+import { GridEvent, GridEventType } from "../../grid/GridEvent";
+import { Tile } from "../../grid/Tile";
+import { Shape } from "../../grid/Shape";
 import { DEBUG } from "../../settings";
 import { BBox, Point, dist } from "../../geom/math";
 import { TransformComponent, TransformList } from "../../geom/Transform";

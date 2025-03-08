@@ -1,7 +1,7 @@
 import { GridEdge, GridVertex } from "./Grid";
 import { GridEvent, GridEventType } from "./GridEvent";
-import { BBox, Point } from "./math";
-import { Polygon } from "./Polygon";
+import { BBox, Point } from "../geom/math";
+import { Polygon } from "../geom/Polygon";
 import { Shape } from "./Shape";
 
 export type TileColor = string;

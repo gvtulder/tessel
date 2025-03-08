@@ -7,7 +7,7 @@ import {
     RhombusAtlas,
     SquaresAtlas,
     TrianglesAtlas,
-} from "./geom/Atlas";
+} from "./grid/Atlas";
 
 const COLORS = [
     "red",

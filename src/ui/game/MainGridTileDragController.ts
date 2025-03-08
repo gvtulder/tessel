@@ -1,11 +1,11 @@
 import type { DragEvent } from "@interactjs/types";
 
 import { TileOnScreenMatch } from "../grid/TileDisplay";
-import { PlaceholderTile, Tile, TileType } from "../../geom/Tile";
+import { PlaceholderTile, Tile, TileType } from "../../grid/Tile";
 import { GameController } from "../GameController";
 import { DEBUG } from "../../settings";
 import { dist } from "../../utils";
-import { Grid } from "../../geom/Grid";
+import { Grid } from "../../grid/Grid";
 import {
     MAX_TILE_AUTOROTATE_POINT_DIST,
     MAX_TILE_SNAP_POINT_DIST,

@@ -1,5 +1,5 @@
-import { TileColors } from "../geom/Tile";
-import { Shape } from "../geom/Shape";
+import { TileColors } from "../grid/Tile";
+import { Shape } from "../grid/Shape";
 import { shuffle } from "../utils";
 import { GameEvent, GameEventType } from "./Game";
 

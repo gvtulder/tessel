@@ -1,11 +1,11 @@
-import { Grid } from "../../geom/Grid";
+import { Grid } from "../../grid/Grid";
 import { shuffle } from "../../utils";
 import { GameDisplay } from "./GameDisplay";
 import { GridDisplay } from "../grid/GridDisplay";
 import { ScoreOverlayDisplay } from "../score/ScoreOverlayDisplay";
 import { ScoreOverlayDisplay_Cutout } from "../score/ScoreOverlayDisplay_Cutout";
 import { TileDragSource, TileDropTarget } from "../grid/TileDragController";
-import { TileType } from "../../geom/Tile";
+import { TileType } from "../../grid/Tile";
 import { TileOnScreenMatch } from "../grid/TileDisplay";
 
 export class MainGridDisplay extends GridDisplay implements TileDropTarget {

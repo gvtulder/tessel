@@ -1,5 +1,5 @@
 import { CornerType, SortedCorners } from "./Grid";
-import { DEG2RAD, RAD2DEG } from "./math";
+import { DEG2RAD, RAD2DEG } from "../geom/math";
 import { Shape } from "./Shape";
 
 /**

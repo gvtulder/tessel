@@ -1,5 +1,5 @@
 import { BBox, TWOPI, mergeBBox } from "../../geom/math";
-import { TileColors } from "../../geom/Tile";
+import { TileColors } from "../../grid/Tile";
 import { SVG } from "../svg";
 import { SettingRowOption } from "./SettingRowOption";
 

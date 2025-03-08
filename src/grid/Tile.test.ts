@@ -2,7 +2,7 @@ import { describe, expect, jest, test } from "@jest/globals";
 import { Shape } from "./Shape";
 import { PlaceholderTile, Tile } from "./Tile";
 import { GridEventType } from "./GridEvent";
-import { P } from "./math";
+import { P } from "../geom/math";
 import { Grid } from "./Grid";
 import { TrianglesAtlas } from "./Atlas";
 

@@ -14,11 +14,11 @@ import {
     mergeBBox,
     Point,
     weightedSumPoint,
-} from "./math";
+} from "../geom/math";
 import { Shape } from "./Shape";
 import { PlaceholderTile, Tile, TileColors } from "./Tile";
-import { Polygon } from "./Polygon";
-import { matchPoints } from "./polygon/matchPoints";
+import { Polygon } from "../geom/Polygon";
+import { matchPoints } from "../geom/polygon/matchPoints";
 import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
 import { MatchEdgeColorsRuleSet, RuleSet as RuleSet } from "./RuleSet";

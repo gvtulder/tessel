@@ -3,7 +3,7 @@ import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
 
 import { GameSettings } from "../../game/Game";
-import { Grid } from "../../geom/Grid";
+import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
 import { MainMenuGridDisplay } from "./MainMenuGridDisplay";
 import * as SaveGames from "../../saveGames";

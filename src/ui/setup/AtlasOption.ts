@@ -1,5 +1,5 @@
-import { Atlas } from "../../geom/Atlas";
-import { Grid } from "../../geom/Grid";
+import { Atlas } from "../../grid/Atlas";
+import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
 import { OptionGridDisplay } from "./OptionGridDisplay";
 import { SettingRowOption } from "./SettingRowOption";

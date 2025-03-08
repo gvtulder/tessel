@@ -1,4 +1,4 @@
-import { TileColors } from "../../geom/Tile";
+import { TileColors } from "../../grid/Tile";
 import { RulesOption } from "./RulesOption";
 import { SettingRow } from "./SettingRow";
 

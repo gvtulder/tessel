@@ -4,7 +4,7 @@ import {
     mergeBBox,
     weightedSumPoint,
     mergeBBoxItems,
-} from "./math";
+} from "../geom/math";
 import { Tile } from "./Tile";
 
 /**

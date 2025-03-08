@@ -30,11 +30,15 @@ export class RandomSampler<T> {
     private elements: Map<T, number>;
     private totalWeight: number;
 
-    constructor(...elements: T[]) {
+    constructor(elements?: T[]) {
         this.elements = new Map<T, number>();
-        this.totalWeight = elements.length;
-        for (const el of elements) {
-            this.elements.set(el, 1);
+        if (elements) {
+            this.totalWeight = elements.length;
+            for (const el of elements) {
+                this.elements.set(el, 1);
+            }
+        } else {
+            this.totalWeight = 0;
         }
     }
 

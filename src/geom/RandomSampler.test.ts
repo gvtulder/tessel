@@ -64,7 +64,7 @@ describe("RandomSampler", () => {
     });
 
     test("can be initialized with elements", () => {
-        const sampler = new RandomSampler("a", "b", "c");
+        const sampler = new RandomSampler(["a", "b", "c"]);
         expect(sampler.size).toBe(3);
     });
 });

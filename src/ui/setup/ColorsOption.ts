@@ -13,8 +13,8 @@ export class ColorsOption extends SettingRowOption {
         const palette = SVG("svg", "palette", this.element);
         let bbox: BBox = undefined!;
         for (let i = 0; i < colors.length; i++) {
-            const cx = 2 * Math.cos(TWOPI * (i / colors.length + 0.125));
-            const cy = 2 * Math.sin(TWOPI * (i / colors.length + 0.125));
+            const cx = 2 * Math.cos(TWOPI * (i / colors.length + 0.625));
+            const cy = 2 * Math.sin(TWOPI * (i / colors.length + 0.625));
             const r = 1.6 - 0.15 * colors.length;
             const circle = SVG("circle", null, palette, {
                 fill: colors[i],

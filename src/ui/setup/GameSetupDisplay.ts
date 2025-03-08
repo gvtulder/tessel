@@ -45,6 +45,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.settingRows.push(settingAtlas);
 
         const settingColors = new SettingRow<ColorsOption>();
+        /*
         settingColors.addOption(
             new ColorsOption("default4", [
                 "#00c0ef",
@@ -59,24 +60,27 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         settingColors.addOption(
             new ColorsOption("default2", ["#dd4b39", "#f39c12"]),
         );
+        */
         for (const n of [6, 5, 4, 3, 2]) {
             settingColors.addOption(
                 new ColorsOption(
                     `wong${n}`,
                     [
                         "#D55E00",
-                        "#E69F00",
-                        "#009E73",
                         "#0072B2",
+                        "#009E73",
+                        "#E69F00",
                         "#56B4E9",
                         "#CC79A7",
                     ].filter((_, i) => i < n),
                 ),
             );
         }
+        /*
         settingColors.addOption(
             new ColorsOption("rbkw", ["red", "blue", "black", "white"]),
         );
+        */
         settingsDiv.appendChild(settingColors.element);
         this.settingRows.push(settingColors);
 

@@ -1,5 +1,7 @@
+export type PRNG = () => number;
+
 // https://stackoverflow.com/a/47593316
-function splitmix32(a?: number): () => number {
+function splitmix32(a?: number): PRNG {
     if (a === undefined) {
         a = (Math.random() * 2 ** 32) >>> 0;
     }
@@ -13,7 +15,7 @@ function splitmix32(a?: number): () => number {
     };
 }
 
-export const PRNG = splitmix32;
+export const seedPRNG = splitmix32;
 
 export function selectRandom<T>(
     elements: readonly T[],

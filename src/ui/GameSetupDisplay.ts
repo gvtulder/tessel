@@ -9,7 +9,7 @@ import {
     TrianglesAtlas,
 } from "../geom/Atlas";
 import { GridDisplay } from "./GridDisplay";
-import { PRNG, RandomSampler } from "../geom/RandomSampler";
+import { seedPRNG, RandomSampler } from "../geom/RandomSampler";
 import { BBox, dist, mergeBBox, midpoint, P, TWOPI } from "../geom/math";
 import { selectRandom } from "../geom/RandomSampler";
 import { Tile, TileColor, TileColors } from "../geom/Tile";
@@ -150,8 +150,8 @@ class ExampleDisplay {
         }
         initialTile.colors = segmentColors;
 
-        const prngShape = PRNG(123456);
-        const prngColor = PRNG(123456);
+        const prngShape = seedPRNG(123456);
+        const prngColor = seedPRNG(123456);
 
         let attempts = 200;
         const sampler = new RandomSampler<GridEdge>();

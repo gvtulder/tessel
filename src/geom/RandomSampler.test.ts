@@ -1,16 +1,16 @@
 import { describe, expect, test } from "@jest/globals";
-import { PRNG, RandomSampler } from "./RandomSampler";
+import { seedPRNG, RandomSampler } from "./RandomSampler";
 
 describe("PRNG", () => {
     test("can generate random numbers", () => {
-        const prng = PRNG(1234);
+        const prng = seedPRNG(1234);
         for (const i of [72, 61, 9, 15, 7, 26, 50, 33]) {
             Math.floor(prng() * 100);
         }
     });
 
     test("can generate random numbers from a seed", () => {
-        const prng = PRNG(1234);
+        const prng = seedPRNG(1234);
         for (const i of [72, 61, 9, 15, 7, 26, 50, 33]) {
             expect(Math.floor(prng() * 100)).toBe(i);
         }

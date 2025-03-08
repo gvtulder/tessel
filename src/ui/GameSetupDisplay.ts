@@ -15,8 +15,8 @@ import { selectRandom } from "../geom/RandomSampler";
 import { Tile, TileColor, TileColors } from "../geom/Tile";
 import { ColorPattern } from "../geom/Shape";
 import { SVG } from "./svg";
-
-const RANDOM_TILE_CENTER_WEIGHT = 10;
+import { CentricGridBuilder } from "src/geom/GridBuilder";
+import { GridColoring } from "src/geom/GridColoring";
 
 export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -134,80 +134,17 @@ class ExampleDisplay {
 
         console.log("showAtlas", atlas);
 
-        const grid = new Grid(atlas);
-        const shape = grid.atlas.shapes[0];
-        if (grid.atlas.shapes.length != 1)
-            throw new Error("atlas with multiple shapes not yet supported");
-        const poly = shape.constructPolygonXYR(0, 0, 1);
-        const initialTile = grid.addTile(shape, poly, poly.segment());
-        const colorGroups = new Array<TileColor>(colorPattern.numColors);
-        for (let i = 0; i < colorGroups.length; i++) {
-            colorGroups[i] = colors[i % colors.length];
-        }
-        const segmentColors = new Array<TileColor>(initialTile.edges.length);
-        for (let i = 0; i < segmentColors.length; i++) {
-            segmentColors[i] = colorGroups[colorPattern.segmentColors[i]];
-        }
-        initialTile.colors = segmentColors;
+        const prngShape = seedPRNG() || seedPRNG(123456);
+        const prngColorGroup = seedPRNG() || seedPRNG(123456);
+        const prngColor = seedPRNG() || seedPRNG(123456);
 
-        const prngShape = seedPRNG(123456);
-        const prngColor = seedPRNG(123456);
-
-        let attempts = 200;
-        const sampler = new RandomSampler<GridEdge>();
-        while (grid.tiles.size < 30 && attempts > 0) {
-            for (const edge of grid.frontier) {
-                if (!sampler.has(edge)) {
-                    const d = dist(
-                        midpoint(edge.a.point, edge.b.point),
-                        initialTile.centroid,
-                    );
-                    sampler.add(
-                        edge,
-                        Math.pow(1 / d, RANDOM_TILE_CENTER_WEIGHT),
-                    );
-                }
-            }
-            const edge = sampler.deleteRandom(prngShape());
-            if (!edge) break;
-            const possibilities = grid.computePossibilities(edge);
-            if (possibilities.length > 0) {
-                const t = selectRandom(possibilities, prngShape())!;
-                const tile = grid.addTile(
-                    t.shape,
-                    t.polygon,
-                    t.polygon.segment(),
-                );
-                const colorGroups = new Array<TileColor>(
-                    colorPattern.numColors,
-                );
-                const segmentColors = new Array<TileColor>(tile.edges.length);
-                let valid = true;
-                for (let s = 0; s < tile.edges.length; s++) {
-                    let color = colorGroups[colorPattern.segmentColors[s]];
-                    // look for the colors of existing neighbors
-                    for (const n of tile.segments![s].getNeighbors()) {
-                        if (n && n.color) {
-                            // neighbor requires a color
-                            color = color || n.color;
-                            if (color != n.color) {
-                                valid = false;
-                                console.log("invalid coloring");
-                            }
-                        }
-                    }
-                    // pick a random color
-                    color ||= selectRandom(colors, prngColor())!;
-                    segmentColors[s] = color;
-                    colorGroups[colorPattern.segmentColors[s]] = color;
-                }
-                tile.colors = segmentColors;
-                if (!valid) {
-                    grid.removeTile(tile);
-                }
-            }
-            attempts--;
-        }
+        const grid = new CentricGridBuilder().buildGrid(atlas, 30, prngShape);
+        const coloring = new GridColoring(grid);
+        coloring.applyColorPattern(
+            new Map([[grid.atlas.shapes[0], [colorPattern]]]),
+            prngColorGroup,
+        );
+        coloring.assignColors(colors, prngColor);
 
         const gridDisplay = new ExampleGridDisplay(grid, this.element);
         this.gridDisplay = gridDisplay;

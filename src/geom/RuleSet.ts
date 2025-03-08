@@ -1,4 +1,4 @@
-import { Tile, TileColors } from "./Tile";
+import { Tile, TileColors, TileSegment } from "./Tile";
 
 /**
  * A RuleSet can check if the new colors would fit on the given tile.
@@ -11,6 +11,16 @@ export interface RuleSet {
      * @param offset the offset of the colors in the tile
      */
     checkColors(tile: Tile, colors: TileColors, offset?: number): boolean;
+
+    /**
+     * Returns the color constraints for the tile segment,
+     * listing the tile segments that should have the same color
+     * and those that should have a different color.
+     */
+    computeColorConstraints(tileSegment: TileSegment): {
+        same: TileSegment[];
+        different: TileSegment[];
+    };
 }
 
 /**
@@ -32,5 +42,12 @@ export class MatchEdgeColorsRuleSet implements RuleSet {
                 return false;
         }
         return true;
+    }
+
+    computeColorConstraints(tileSegment: TileSegment): {
+        same: TileSegment[];
+        different: TileSegment[];
+    } {
+        return { same: tileSegment.getNeighbors(), different: [] };
     }
 }

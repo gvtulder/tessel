@@ -497,8 +497,10 @@ svg {
 }
 .gameSetupDisplay .setting-row {
   display: flex;
-  margin: 20px;
+  margin: 10px;
+  padding-bottom: 10px;
   flex-wrap: wrap;
+  border-bottom: 1px solid #aaa;
 }
 .gameSetupDisplay .setting-row-option {
   margin: 3px;

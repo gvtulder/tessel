@@ -1,6 +1,6 @@
 import { RuleSet } from "../../geom/RuleSet";
 import { TileColors } from "../../geom/Tile";
-import { Color } from "../ScoreOverlayDisplay";
+import { Color } from "../score/ScoreOverlayDisplay";
 import { SVG } from "../svg";
 import { SettingRowOption } from "./SettingRowOption";
 

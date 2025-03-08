@@ -1,9 +1,9 @@
-import { ScoredRegion } from "../game/Scorer";
-import { roundPathCorners } from "../lib/svg-rounded-corners";
-import { BGCOLOR } from "../settings";
+import { ScoredRegion } from "../../game/Scorer";
+import { roundPathCorners } from "../../lib/svg-rounded-corners";
+import { BGCOLOR } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
-import { polylabel } from "../lib/polylabel";
-import { SVG } from "./svg";
+import { polylabel } from "../../lib/polylabel";
+import { SVG } from "../svg";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     bgMask: SVGElement;

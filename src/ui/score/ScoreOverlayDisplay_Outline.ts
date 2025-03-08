@@ -1,9 +1,9 @@
-import { ScoredRegion } from "../game/Scorer";
-import { roundPathCorners } from "../lib/svg-rounded-corners";
-import { Vertex } from "../lib/compute-outline";
-import { BGCOLOR, SCALE } from "../settings";
+import { ScoredRegion } from "../../game/Scorer";
+import { roundPathCorners } from "../../lib/svg-rounded-corners";
+import { Vertex } from "../../lib/compute-outline";
+import { BGCOLOR, SCALE } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
-import { SVG } from "./svg";
+import { SVG } from "../svg";
 
 export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
     fg: SVGElement;

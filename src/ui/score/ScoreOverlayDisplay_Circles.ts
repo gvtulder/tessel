@@ -1,9 +1,9 @@
-import { ScoredRegion } from "../game/Scorer";
-import { SCALE } from "../settings";
+import { ScoredRegion } from "../../game/Scorer";
+import { SCALE } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
-import { TileSegment } from "../geom/Tile";
-import { SVG } from "./svg";
-import { Point, weightedSumPoint } from "../geom/math";
+import { TileSegment } from "../../geom/Tile";
+import { SVG } from "../svg";
+import { Point, weightedSumPoint } from "../../geom/math";
 
 export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
     group?: SVGElement;

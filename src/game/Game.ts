@@ -4,7 +4,7 @@ import { Tile, TileColors } from "../grid/Tile";
 import { TileGenerator } from "./TileGenerator";
 import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
 import { Atlas } from "../grid/Atlas";
-import { rotateArray } from "../geom/math";
+import { rotateArray } from "/geom/arrays";
 
 export type GameSettings = {
     atlas: Atlas;

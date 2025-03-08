@@ -1,4 +1,4 @@
-import { Point } from "src/geom/math";
+import { Point } from "../../geom/math";
 import { SVG } from "../svg";
 
 type ScreenToGridCoeff = {

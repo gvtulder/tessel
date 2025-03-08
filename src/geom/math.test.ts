@@ -13,14 +13,13 @@ import {
     distToLine,
     distToLineSegment,
     edgeToAngle,
-    mapToIndex,
     mergeBBox,
     mergeBBoxItems,
     midpoint,
     orientedArea,
-    rotateArray,
     weightedSumPoint,
 } from "./math";
+import { mapToIndex, rotateArray } from "./arrays";
 
 describe("P", () => {
     test.each([

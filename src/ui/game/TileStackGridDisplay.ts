@@ -1,4 +1,4 @@
-import { dist } from "src/geom/math";
+import { dist } from "../../geom/math";
 import { GridDisplay } from "../grid/GridDisplay";
 
 export class TileStackGridDisplay extends GridDisplay {

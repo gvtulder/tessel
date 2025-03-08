@@ -4,7 +4,8 @@ import { PlaceholderTile, Tile } from "./Tile";
 import { Shape } from "./Shape";
 import { Polygon } from "../geom/Polygon";
 import { GridEventType } from "./GridEvent";
-import { mergeBBox, P, rotateArray, weightedSumPoint } from "../geom/math";
+import { mergeBBox, P, weightedSumPoint } from "../geom/math";
+import { rotateArray } from "../geom/arrays";
 import { SquaresAtlas, TrianglesAtlas } from "./Atlas";
 
 const TRIANGLE = TrianglesAtlas.shapes[0];

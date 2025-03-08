@@ -1,14 +1,7 @@
 import { ArraySet } from "../geom/ArraySet";
 import { CornerType } from "./Grid";
-import {
-    DEG2RAD,
-    dist,
-    Edge,
-    mapToIndex,
-    Point,
-    rad2deg,
-    rotateArray,
-} from "../geom/math";
+import { DEG2RAD, dist, Edge, Point, rad2deg } from "../geom/math";
+import { mapToIndex, rotateArray } from "../geom/arrays";
 import { Polygon } from "../geom/Polygon";
 
 export type ColorPattern = {

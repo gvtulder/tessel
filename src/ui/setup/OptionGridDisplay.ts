@@ -1,4 +1,4 @@
-import { GridDisplay } from "../GridDisplay";
+import { GridDisplay } from "../grid/GridDisplay";
 
 export class OptionGridDisplay extends GridDisplay {
     // TODO scale based on area

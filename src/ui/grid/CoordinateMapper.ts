@@ -1,5 +1,5 @@
 import { Point } from "src/geom/math";
-import { SVG } from "./svg";
+import { SVG } from "../svg";
 
 type ScreenToGridCoeff = {
     x0: number;

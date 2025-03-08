@@ -2,16 +2,16 @@ import type { Interactable, PointerEvent } from "@interactjs/types";
 import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
 
-import { Game, GameEvent, GameEventType } from "../game/Game.js";
+import { Game, GameEvent, GameEventType } from "../../game/Game.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
 import { ScoreDisplay } from "./ScoreDisplay.js";
-import icons from "./icons.js";
-import { TileDragController } from "./TileDragController.js";
+import icons from "../icons.js";
+import { TileDragController } from "../grid/TileDragController.js";
 import { MainGridTileDragController } from "./MainGridTileDragController.js";
-import { UserEventType } from "./GameController.js";
-import { ScreenDisplay } from "./ScreenDisplay.js";
-import { createElement } from "./html.js";
+import { UserEventType } from "../GameController.js";
+import { ScreenDisplay } from "../ScreenDisplay.js";
+import { createElement } from "../html.js";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;

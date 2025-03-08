@@ -2,12 +2,12 @@ import type { Interactable } from "@interactjs/types";
 import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
 
-import { GameSettings } from "../game/Game";
-import { Grid } from "../geom/Grid";
-import { GridDisplay, MainMenuGridDisplay } from "./GridDisplay";
-import * as SaveGames from "../saveGames";
-import { UserEvent, UserEventType } from "./GameController";
-import { ScreenDisplay } from "./ScreenDisplay";
+import { GameSettings } from "../../game/Game";
+import { Grid } from "../../geom/Grid";
+import { GridDisplay, MainMenuGridDisplay } from "../grid/GridDisplay";
+import * as SaveGames from "../../saveGames";
+import { UserEvent, UserEventType } from "../GameController";
+import { ScreenDisplay } from "../ScreenDisplay";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;

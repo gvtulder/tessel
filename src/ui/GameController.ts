@@ -1,6 +1,6 @@
 import { Game, GameSettings } from "../game/Game";
-import { GameDisplay } from "./GameDisplay";
-import { MainMenuDisplay } from "./MainMenuDisplay";
+import { GameDisplay } from "./game/GameDisplay";
+import { MainMenuDisplay } from "./menu/MainMenuDisplay";
 import * as SaveGames from "../saveGames";
 import { GameSetupDisplay } from "./setup";
 import { ScreenDisplay } from "./ScreenDisplay";

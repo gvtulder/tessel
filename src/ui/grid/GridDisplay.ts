@@ -1,13 +1,13 @@
 import { TileDisplay } from "./TileDisplay";
-import { Grid } from "../geom/Grid";
-import { GridEvent, GridEventType } from "../geom/GridEvent";
-import { Tile } from "../geom/Tile";
-import { Shape } from "../geom/Shape";
-import { DEBUG } from "../settings";
-import { BBox, Point, dist } from "../geom/math";
-import { TransformComponent, TransformList } from "../geom/Transform";
-import { SVG } from "./svg";
-import { createElement } from "./html";
+import { Grid } from "../../geom/Grid";
+import { GridEvent, GridEventType } from "../../geom/GridEvent";
+import { Tile } from "../../geom/Tile";
+import { Shape } from "../../geom/Shape";
+import { DEBUG } from "../../settings";
+import { BBox, Point, dist } from "../../geom/math";
+import { TransformComponent, TransformList } from "../../geom/Transform";
+import { SVG } from "../svg";
+import { createElement } from "../html";
 
 export const enum GridDisplayScalingType {
     EqualMargins,

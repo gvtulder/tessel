@@ -5,7 +5,7 @@ import { seedPRNG } from "../../geom/RandomSampler";
 import { RuleSet } from "../../geom/RuleSet";
 import { ColorPattern } from "../../geom/Shape";
 import { TileColors } from "../../geom/Tile";
-import { GridDisplay } from "../GridDisplay";
+import { GridDisplay } from "../grid/GridDisplay";
 import { createElement } from "../html";
 
 export class ExampleDisplay {

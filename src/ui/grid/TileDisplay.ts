@@ -1,11 +1,11 @@
-import { roundPathCorners } from "../lib/svg-rounded-corners";
-import { Tile, TileType } from "../geom/Tile";
-import { DEBUG, PLACEHOLDER } from "../settings";
+import { roundPathCorners } from "../../lib/svg-rounded-corners";
+import { Tile, TileType } from "../../geom/Tile";
+import { DEBUG, PLACEHOLDER } from "../../settings";
 import { GridDisplay } from "./GridDisplay";
-import offsetPolygon from "../lib/offset-polygon";
-import { Point } from "../geom/math";
-import { addPointToPolygon } from "../geom/polygon/addPointToPolygon";
-import { SVG } from "./svg";
+import offsetPolygon from "../../lib/offset-polygon";
+import { Point } from "../../geom/math";
+import { addPointToPolygon } from "../../geom/polygon/addPointToPolygon";
+import { SVG } from "../svg";
 
 function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);

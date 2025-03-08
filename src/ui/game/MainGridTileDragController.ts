@@ -1,20 +1,20 @@
 import type { DragEvent } from "@interactjs/types";
 
-import { TileOnScreenMatch } from "./TileDisplay";
-import { PlaceholderTile, Tile, TileType } from "../geom/Tile";
-import { GameController } from "./GameController";
-import { DEBUG } from "../settings";
-import { dist } from "../utils";
-import { Grid } from "../geom/Grid";
+import { TileOnScreenMatch } from "../grid/TileDisplay";
+import { PlaceholderTile, Tile, TileType } from "../../geom/Tile";
+import { GameController } from "../GameController";
+import { DEBUG } from "../../settings";
+import { dist } from "../../utils";
+import { Grid } from "../../geom/Grid";
 import {
     MAX_TILE_AUTOROTATE_POINT_DIST,
     MAX_TILE_SNAP_POINT_DIST,
     TileDragController,
     TileDragSourceContext,
-} from "./TileDragController";
+} from "../grid/TileDragController";
 import { MainGridDisplay } from "./MainGridDisplay";
-import { angleDist, edgeToAngle, TWOPI } from "../geom/math";
-import { SVG } from "./svg";
+import { angleDist, edgeToAngle, TWOPI } from "../../geom/math";
+import { SVG } from "../svg";
 
 export class MainGridTileDragController extends TileDragController {
     autorotate: boolean;

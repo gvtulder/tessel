@@ -3,20 +3,20 @@ import "@interactjs/auto-start";
 import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
 
-import { Grid } from "../geom/Grid";
-import { FixedOrderTileStack, TileShapeColors } from "../game/TileStack";
-import { GameEventType } from "../game/Game";
-import { Tile, TileColors } from "../geom/Tile";
-import { Shape } from "../geom/Shape";
-import { GridDisplay, TileStackGridDisplay } from "./GridDisplay";
-import { TransformComponent } from "../geom/Transform";
+import { Grid } from "../../geom/Grid";
+import { FixedOrderTileStack, TileShapeColors } from "../../game/TileStack";
+import { GameEventType } from "../../game/Game";
+import { Tile, TileColors } from "../../geom/Tile";
+import { Shape } from "../../geom/Shape";
+import { GridDisplay, TileStackGridDisplay } from "../grid/GridDisplay";
+import { TransformComponent } from "../../geom/Transform";
 import {
     TileDragController,
     TileDragSource,
     TileRotationSet,
-} from "./TileDragController";
-import { Atlas } from "../geom/Atlas";
-import { angleDist, RAD2DEG, TWOPI } from "../geom/math";
+} from "../grid/TileDragController";
+import { Atlas } from "../../geom/Atlas";
+import { angleDist, RAD2DEG, TWOPI } from "../../geom/math";
 
 export abstract class BaseTileStackDisplay extends EventTarget {
     static events = {

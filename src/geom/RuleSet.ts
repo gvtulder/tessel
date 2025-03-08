@@ -51,3 +51,20 @@ export class MatchEdgeColorsRuleSet implements RuleSet {
         return { same: tileSegment.getNeighbors(), different: [] };
     }
 }
+
+/**
+ * RuleSet that requires segments connected to the same outside edge
+ * of a tile have different colors.
+ */
+export class DifferentEdgeColorsRuleSet implements RuleSet {
+    checkColors(tile: Tile, colors: TileColors, offset?: number): boolean {
+        throw new Error("not implemented");
+    }
+
+    computeColorConstraints(tileSegment: TileSegment): {
+        same: TileSegment[];
+        different: TileSegment[];
+    } {
+        return { same: [], different: tileSegment.getNeighbors() };
+    }
+}

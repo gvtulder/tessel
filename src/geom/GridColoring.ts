@@ -1,5 +1,5 @@
 import { Grid } from "./Grid";
-import { PRNG, RandomSampler, selectRandom } from "./RandomSampler";
+import { PRNG, RandomSampler, selectRandom, shuffle } from "./RandomSampler";
 import { ColorPattern, Shape } from "./Shape";
 import { Tile, TileColor, TileColors, TileSegment } from "./Tile";
 
@@ -9,11 +9,13 @@ export class GridColoring {
     grid: Grid;
     groups: Set<ColorGroup>;
     segmentToGroup: Map<TileSegment, ColorGroup>;
+    conflicts: Map<ColorGroup, Set<ColorGroup>>;
 
     constructor(grid: Grid) {
         this.grid = grid;
         this.groups = new Set<ColorGroup>();
         this.segmentToGroup = new Map<TileSegment, ColorGroup>();
+        this.conflicts = new Map<ColorGroup, Set<ColorGroup>>();
 
         this.computeColorGroups();
     }
@@ -28,11 +30,7 @@ export class GridColoring {
             if (tile.segments) {
                 for (const segment of tile.segments) {
                     const constraint = rules.computeColorConstraints(segment);
-                    if (constraint.different.length != 0) {
-                        throw new Error(
-                            "different colors constraint not yet supported",
-                        );
-                    }
+
                     // find the group for this segment, if any
                     let mainGroup = segmentToGroup.get(segment);
                     // find the groups for linked segments
@@ -62,6 +60,19 @@ export class GridColoring {
                     for (const s of newSegments) {
                         mainGroup.add(s);
                         segmentToGroup.set(s, mainGroup);
+                    }
+
+                    // update conflicts
+                    for (const other of constraint.different) {
+                        let group = segmentToGroup.get(other);
+                        if (!group) {
+                            group = new Set<TileSegment>();
+                            groups.add(group);
+                            group.add(other);
+                            segmentToGroup.set(other, group);
+                        }
+                        this.addConflict(mainGroup, group);
+                        this.addConflict(group, mainGroup);
                     }
                 }
             }
@@ -107,29 +118,80 @@ export class GridColoring {
     assignColors(
         colors: TileColors,
         prng: PRNG = Math.random,
-    ): Map<ColorGroup, TileColor> {
+    ): Map<ColorGroup, TileColor> | null {
         const segmentToGroup = this.segmentToGroup;
         const groupToColor = new Map<ColorGroup, TileColor>();
+        const colorsCopy = [...colors];
+
+        // assign a color to each group
         for (const group of this.groups) {
-            groupToColor.set(group, selectRandom(colors, prng())!);
+            shuffle(colorsCopy, prng);
+            let assignedColor = false;
+            for (let i = 0; !assignedColor && i < colorsCopy.length; i++) {
+                // check conflicts
+                let conflict = false;
+                for (const g of this.conflicts.get(group) || []) {
+                    const c = groupToColor.get(g);
+                    if (c == colorsCopy[i]) {
+                        conflict = true;
+                        break;
+                    }
+                }
+                if (!conflict) {
+                    groupToColor.set(group, colorsCopy[i]);
+                    assignedColor = true;
+                }
+            }
+            if (!assignedColor) {
+                return null;
+            }
         }
+
+        // apply colors to tiles
         for (const tile of this.grid.tiles) {
             tile.colors = tile.segments!.map(
                 (s) => groupToColor.get(segmentToGroup.get(s)!)!,
             );
         }
+
         return groupToColor;
     }
 
     private mergeGroup(target: ColorGroup, ...otherGroups: ColorGroup[]) {
         const segmentToGroup = this.segmentToGroup;
         const groups = this.groups;
+        const conflicts = this.conflicts;
         for (const group of otherGroups) {
+            // add segments to target group
             for (const s of group) {
                 target.add(s);
                 segmentToGroup.set(s, target);
             }
+            // merge conflicts
+            for (const conflictGroup of conflicts.get(group) || []) {
+                this.addConflict(target, conflictGroup);
+                this.addConflict(conflictGroup, target);
+                conflicts.get(conflictGroup)!.delete(group);
+            }
+            // cleanup
+            conflicts.delete(group);
             groups.delete(group);
         }
+    }
+
+    private addConflict(a: ColorGroup, b: ColorGroup) {
+        const conflicts = this.conflicts;
+        let conflictSetA = conflicts.get(a);
+        if (!conflictSetA) {
+            conflictSetA = new Set<ColorGroup>();
+            conflicts.set(a, conflictSetA);
+        }
+        conflictSetA.add(b);
+        let conflictSetB = conflicts.get(b);
+        if (!conflictSetB) {
+            conflictSetB = new Set<ColorGroup>();
+            conflicts.set(b, conflictSetB);
+        }
+        conflictSetB.add(a);
     }
 }

@@ -26,6 +26,19 @@ export function selectRandom<T>(
     return elements[Math.floor(r * elements.length)];
 }
 
+export function shuffle<T>(array: T[], prng: PRNG = Math.random): void {
+    // Fisher-Yates shuffle
+    let i = array.length;
+    if (i == 0) return;
+    while (--i) {
+        const j = Math.floor(prng() * (i + 1));
+        const tempi = array[i];
+        const tempj = array[j];
+        array[i] = tempj;
+        array[j] = tempi;
+    }
+}
+
 export class RandomSampler<T> {
     private elements: Map<T, number>;
     private totalWeight: number;

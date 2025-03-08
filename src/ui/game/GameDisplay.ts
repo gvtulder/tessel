@@ -12,6 +12,7 @@ import { MainGridTileDragController } from "./MainGridTileDragController.js";
 import { UserEventType } from "../GameController.js";
 import { ScreenDisplay } from "../ScreenDisplay.js";
 import { createElement } from "../html.js";
+import { Button } from "../Button.js";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;
@@ -181,29 +182,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     rescale() {
         this.gridDisplay.rescale();
         this.tileStackDisplay.rescale();
-    }
-}
-
-class Button {
-    element: HTMLElement;
-    interactable: Interactable;
-
-    constructor(
-        icon: string,
-        title: string,
-        ontap: (evt: PointerEvent) => void,
-    ) {
-        const button = document.createElement("div");
-        button.className = "game-button";
-        button.title = title;
-        button.innerHTML = icon;
-        this.element = button;
-        this.interactable = interact(button).on("tap", ontap);
-    }
-
-    destroy() {
-        this.interactable.unset();
-        this.element.remove();
     }
 }
 

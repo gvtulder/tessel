@@ -379,12 +379,7 @@ class BackgroundGrid {
     }
 
     build() {
-        const group = document.createElementNS(
-            SVG_NS,
-            "g",
-        );
-        group.setAttribute("class", "svg-backgroungGrid");
-        this.element = group;
+        const group = SVG("g", "svg-backgroundGrid", this.element);
 
         // make the tile a bit larger than the minimum period
         const repeatX = 3;
@@ -418,19 +413,16 @@ class BackgroundGrid {
         this.bboxMaxY = Math.max(...allPoints.map((c) => c[1]));
 
         // draw the initial pattern
-        const outline = document.createElementNS(
-            SVG_NS,
-            "path",
-        );
-        outline.setAttribute("id", "background-grid-pattern");
-        outline.setAttribute("d", pathComponents.join(" "));
-        outline.setAttribute("fill", "transparent");
-        outline.setAttribute("stroke", "#ccc");
-        outline.setAttribute("stroke-width", "1px");
-        outline.setAttribute("stroke-linejoin", "round");
-        outline.setAttribute("stroke-linecap", "round");
-        outline.setAttribute("vector-effect", "non-scaling-stroke");
-        this.element.append(outline);
+        const outline = SVG("path", null, this.element, {
+            id: "background-grid-pattern",
+            d: pathComponents.join(" "),
+            fill: "transparent",
+            stroke: "#ccc",
+            "stroke-width": "1px",
+            "stroke-linejoin": "round",
+            "stroke-linecap": "round",
+            "vector-effect": "non-scaling-stroke",
+        });
         this.drawn.add(CoordId(0, 0));
 
         // find out where to repeat it
@@ -472,14 +464,11 @@ class BackgroundGrid {
                     !this.drawn.has(CoordId(x, y))
                 ) {
                     // yes: draw!
-                    const outline2 = document.createElementNS(
-                        SVG_NS,
-                        "use",
-                    );
-                    outline2.setAttribute("href", "#background-grid-pattern");
-                    outline2.setAttribute("x", `${posX}`);
-                    outline2.setAttribute("y", `${posY}`);
-                    this.element.append(outline2);
+                    const outline2 = SVG("use", null, this.element, {
+                        href: "#background-grid-pattern",
+                        x: `${posX}`,
+                        y: `${posY}`,
+                    });
                     this.drawn.add(CoordId(x, y));
                 }
             }

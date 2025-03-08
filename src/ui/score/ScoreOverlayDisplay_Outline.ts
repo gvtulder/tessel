@@ -16,24 +16,26 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
 
         const group = SVG("g", "svg-scoreOverlay-mask disabled", this.element);
 
-        const overlayFill = SVG("rect", "svg-scoreOverlay-fill", group);
-        overlayFill.setAttribute("x", "-1000");
-        overlayFill.setAttribute("y", "-1000");
-        overlayFill.setAttribute("width", "10000");
-        overlayFill.setAttribute("height", "10000");
-        overlayFill.setAttribute("fill", BGCOLOR);
-        overlayFill.setAttribute("mask", "url(#scoreoverlaymask)");
+        SVG("rect", "svg-scoreOverlay-fill", group, {
+            x: "-1000",
+            y: "-1000",
+            width: "10000",
+            height: "10000",
+            fill: BGCOLOR,
+            mask: "url(#scoreoverlaymask)",
+        });
 
-        const mask = SVG("mask", null, group);
-        mask.setAttribute("id", "scoreoverlaymask");
+        const mask = SVG("mask", null, group, {
+            id: "scoreoverlaymask",
+        });
 
-        const maskWhite = SVG("rect", "svg-scoreOverlay-fill", mask);
-        maskWhite.setAttribute("x", "-1000");
-        maskWhite.setAttribute("y", "-1000");
-        maskWhite.setAttribute("width", "10000");
-        maskWhite.setAttribute("height", "10000");
-        maskWhite.setAttribute("fill", "white");
-        mask.appendChild(maskWhite);
+        SVG("rect", "svg-scoreOverlay-fill", mask, {
+            x: "-1000",
+            y: "-1000",
+            width: "10000",
+            height: "10000",
+            fill: "white",
+        });
 
         this.mask = mask;
 
@@ -59,19 +61,20 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
             console.log(pathString);
 
             // outline
-            const path = SVG("path");
-            path.setAttribute("d", pathString);
-            path.setAttribute("fill", "transparent");
-            path.setAttribute("stroke", Color.main);
-            path.setAttribute("stroke-width", "20");
-            path.setAttribute("stroke-linecap", "round");
+            const path = SVG("path", null, group, {
+                d: pathString,
+                fill: "transparent",
+                stroke: Color.main,
+                "stroke-width": "20",
+                "stroke-linecap": "round",
+            });
             group.appendChild(path);
 
             // add mask
-            const maskPath = SVG("path");
-            maskPath.setAttribute("d", pathString);
-            maskPath.setAttribute("fill", "black");
-            maskPathGroup.appendChild(maskPath);
+            const maskPath = SVG("path", null, maskPathGroup, {
+                d: pathString,
+                fill: "black",
+            });
 
             // animate path
             const pathComponents = boundary

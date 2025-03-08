@@ -4,6 +4,7 @@ export function SVG<K extends keyof SVGElementTagNameMap>(
     qualifiedName: K,
     className?: string | null,
     parentNode?: SVGElement | HTMLElement | null,
+    attributes?: { [name: string]: string },
 ): SVGElementTagNameMap[K] {
     const element = document.createElementNS(SVG_NS, qualifiedName);
     if (className) {
@@ -11,6 +12,11 @@ export function SVG<K extends keyof SVGElementTagNameMap>(
     }
     if (parentNode) {
         parentNode.appendChild(element);
+    }
+    if (attributes) {
+        for (const name in attributes) {
+            element.setAttribute(name, attributes[name]);
+        }
     }
     return element;
 }

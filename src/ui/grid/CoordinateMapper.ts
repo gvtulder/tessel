@@ -23,29 +23,26 @@ export class CoordinateMapper {
         const group = (this.svgGroup = SVG("g", "svg-CoordinateMapper"));
 
         // measurement circles
-        const unitCircle00 = SVG("circle");
-        unitCircle00.setAttribute("cx", "0");
-        unitCircle00.setAttribute("cy", "0");
-        unitCircle00.setAttribute("r", "0.0001");
-        unitCircle00.setAttribute("fill", "transparent");
-        group.appendChild(unitCircle00);
-        this.svgUnitCircle00 = unitCircle00;
+        this.svgUnitCircle00 = SVG("circle", null, group, {
+            cx: "0",
+            cy: "0",
+            r: "0.0001",
+            fill: "transparent",
+        });
 
-        const unitCircle01 = SVG("circle");
-        unitCircle01.setAttribute("cx", "0");
-        unitCircle01.setAttribute("cy", "1");
-        unitCircle01.setAttribute("r", "0.0001");
-        unitCircle01.setAttribute("fill", "transparent");
-        group.appendChild(unitCircle01);
-        this.svgUnitCircle01 = unitCircle01;
+        this.svgUnitCircle01 = SVG("circle", null, group, {
+            cx: "0",
+            cy: "1",
+            r: "0.0001",
+            fill: "transparent",
+        });
 
-        const unitCircle10 = SVG("circle");
-        unitCircle10.setAttribute("cx", "1");
-        unitCircle10.setAttribute("cy", "0");
-        unitCircle10.setAttribute("r", "0.0001");
-        unitCircle10.setAttribute("fill", "transparent");
-        group.appendChild(unitCircle10);
-        this.svgUnitCircle10 = unitCircle10;
+        this.svgUnitCircle10 = SVG("circle", null, group, {
+            cx: "1",
+            cy: "0",
+            r: "0.0001",
+            fill: "transparent",
+        });
     }
 
     destroy() {

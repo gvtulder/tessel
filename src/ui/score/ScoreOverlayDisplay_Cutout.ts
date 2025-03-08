@@ -29,81 +29,82 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         });
 
         // background (everything not select gray)
-        const bg = SVG("rect");
-        bg.setAttribute("mask", "url(#scoreOverlay-bgmask");
-        bg.setAttribute("x", "-1000");
-        bg.setAttribute("y", "-1000");
-        bg.setAttribute("width", "2000");
-        bg.setAttribute("height", "2000");
-        bg.setAttribute("fill", BGCOLOR);
-        bg.setAttribute("opacity", "0.2");
+        const bg = SVG("rect", null, null, {
+            mask: "url(#scoreOverlay-bgmask",
+            x: "-1000",
+            y: "-1000",
+            width: "2000",
+            height: "2000",
+            fill: BGCOLOR,
+            opacity: "0.2",
+        });
         // this.element.appendChild(bg);
 
-        const bgMask = SVG("mask");
-        bgMask.setAttribute("id", "scoreOverlay-bgmask");
+        const bgMask = SVG("mask", null, null, {
+            id: "scoreOverlay-bgmask",
+        });
         // this.element.append(bgMask);
 
-        const bgBlack = SVG("rect");
-        bgBlack.setAttribute("x", "-1000");
-        bgBlack.setAttribute("y", "-1000");
-        bgBlack.setAttribute("width", "2000");
-        bgBlack.setAttribute("height", "2000");
-        bgBlack.setAttribute("fill", "white");
-        bgMask.appendChild(bgBlack);
+        const bgBlack = SVG("rect", null, bgMask, {
+            x: "-1000",
+            y: "-1000",
+            width: "2000",
+            height: "2000",
+            fill: "white",
+        });
 
-        const bgMaskG = SVG("g");
-        bgMaskG.setAttribute("fill", "black");
-        bgMask.append(bgMaskG);
+        const bgMaskG = SVG("g", null, bgMask, {
+            fill: "black",
+        });
         this.bgMask = bgMaskG;
         this.bgMaskGroup = new ReplacableGroup(bgMaskG);
 
         // drop shadow around the shape
-        const shadow = SVG("rect");
-        shadow.setAttribute("mask", "url(#scoreOverlay-mask");
-        shadow.setAttribute("x", "-10");
-        shadow.setAttribute("y", "-10");
-        shadow.setAttribute("width", "20");
-        shadow.setAttribute("height", "20");
-        shadow.setAttribute("fill", "black");
-        this.element.appendChild(shadow);
+        SVG("rect", null, this.element, {
+            mask: "url(#scoreOverlay-mask",
+            x: "-10",
+            y: "-10",
+            width: "20",
+            height: "20",
+            fill: "black",
+        });
 
-        const shadowMask = SVG("mask");
-        shadowMask.setAttribute("class", "scoreOverlay-mask");
-        shadowMask.setAttribute("id", "scoreOverlay-mask");
-        this.element.append(shadowMask);
+        const shadowMask = SVG("mask", null, this.element, {
+            class: "scoreOverlay-mask",
+            id: "scoreOverlay-mask",
+        });
 
-        const shadowMaskG = SVG("g");
-        shadowMaskG.setAttribute("filter", "drop-shadow(0px 0px 0.1px white)");
-        shadowMaskG.setAttribute("fill", "black");
-        shadowMaskG.setAttribute("stroke", "black");
-        shadowMaskG.setAttribute("stroke-width", "0.1px");
-        shadowMask.append(shadowMaskG);
+        const shadowMaskG = SVG("g", null, shadowMask, {
+            filter: "drop-shadow(0px 0px 0.1px white)",
+            fill: "black",
+            stroke: "black",
+            "stroke-width": "0.1px",
+        });
         this.shadowMask = shadowMaskG;
         this.shadowMaskGroup = new ReplacableGroup(shadowMaskG);
 
         // white outline around the shape
-        const outlineBG = SVG("g");
-        outlineBG.setAttribute("class", "scoreOverlay-outlineBG");
-        outlineBG.setAttribute("stroke", BGCOLOR);
-        outlineBG.setAttribute("stroke-width", "0.1px");
-        outlineBG.setAttribute("fill", "transparent");
-        this.element.append(outlineBG);
+        const outlineBG = SVG("g", null, this.element, {
+            class: "scoreOverlay-outlineBG",
+            stroke: BGCOLOR,
+            "stroke-width": "0.1px",
+            fill: "transparent",
+        });
         this.outlineBG = outlineBG;
         this.outlineBGGroup = new ReplacableGroup(outlineBG);
 
         // green outline around the shape
-        const outlineFG = SVG("g");
-        outlineFG.setAttribute("class", "scoreOverlay-outlineFG");
-        outlineFG.setAttribute("stroke", Color.main);
-        outlineFG.setAttribute("stroke-width", "0.05px");
-        outlineFG.setAttribute("fill", "transparent");
-        this.element.append(outlineFG);
+        const outlineFG = SVG("g", null, this.element, {
+            class: "scoreOverlay-outlineFG",
+            stroke: Color.main,
+            "stroke-width": "0.05px",
+            fill: "transparent",
+        });
         this.outlineFG = outlineFG;
         this.outlineFGGroup = new ReplacableGroup(outlineFG);
 
         // circles with points on top
-        const points = SVG("g");
-        this.element.append(points);
+        const points = SVG("g", null, this.element);
         this.points = points;
         this.pointsGroup = new ReplacableGroup(points);
     }
@@ -195,33 +196,27 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             const pointsScale = polylabelPoint.distance;
 
             // circle with scores
-            const circle = SVG("circle");
-            circle.setAttribute("class", "points");
-            circle.setAttribute("cx", "0"); // `${bestPoint[0] * SCALE}`);
-            circle.setAttribute("cy", "0"); // `${bestPoint[1] * SCALE}`);
-            // circle.setAttribute('r', shape.triangles.size < 3 ? '20' : '25');
-            circle.setAttribute("r", "0.7");
-            circle.setAttribute("fill", Color.light);
-            circle.setAttribute("stroke", Color.dark);
-            circle.setAttribute("stroke-width", "0.16");
-            circle.setAttribute(
-                "style",
-                `filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2)); transform: translate(${bestPoint.x}px, ${bestPoint.y}px) scale(${pointsScale});`,
-            );
+            const circle = SVG("circle", "points", null, {
+                cx: "0", // `${bestPoint[0] * SCALE}`,
+                cy: "0", // `${bestPoint[1] * SCALE}`,
+                // r: shape.triangles.size < 3 ? "20" : "25",
+                r: "0.7",
+                fill: Color.light,
+                stroke: Color.dark,
+                "stroke-width": "0.16",
+                style: `filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2)); transform: translate(${bestPoint.x}px, ${bestPoint.y}px) scale(${pointsScale});`,
+            });
             points.push(circle);
 
-            const text = SVG("text");
-            text.setAttribute("class", "points");
-            text.setAttribute("x", "0"); // `${bestPoint[0] * SCALE}`);
-            text.setAttribute("y", "0"); // `${bestPoint[1] * SCALE + 1}`);
-            text.setAttribute("alignment-baseline", "middle");
-            text.setAttribute("dominant-baseline", "middle");
-            text.setAttribute("text-anchor", "middle");
-            text.setAttribute("font-size", "0.75");
-            text.setAttribute(
-                "style",
-                `transform: translate(${bestPoint.x}px, ${bestPoint.y + 0.01}px) scale(${pointsScale});`,
-            );
+            const text = SVG("text", "points", null, {
+                x: "0", // `${bestPoint[0] * SCALE}`,
+                y: "0", // `${bestPoint[1] * SCALE + 1}`,
+                "alignment-baseline": "middle",
+                "dominant-baseline": "middle",
+                "text-anchor": "middle",
+                "font-size": "0.75",
+                style: `transform: translate(${bestPoint.x}px, ${bestPoint.y + 0.01}px) scale(${pointsScale});`,
+            });
             text.appendChild(document.createTextNode(`${shape.points}`));
             points.push(text);
         }

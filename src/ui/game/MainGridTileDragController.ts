@@ -33,12 +33,12 @@ export class MainGridTileDragController extends TileDragController {
             // debug
             this.debugPoints = [];
             for (let i = 0; i < 4; i++) {
-                const p = SVG("circle");
-                p.setAttribute("cx", "0");
-                p.setAttribute("cy", "0");
-                p.setAttribute("r", "0.05");
-                p.setAttribute("fill", "transparent");
-                dropTarget.svgGrid.appendChild(p);
+                const p = SVG("circle", null, dropTarget.svgGrid, {
+                    cx: "0",
+                    cy: "0",
+                    r: "0.05",
+                    fill: "transparent",
+                });
                 this.debugPoints.push(p);
             }
         }

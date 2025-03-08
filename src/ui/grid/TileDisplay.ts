@@ -136,17 +136,13 @@ export class TileDisplay {
             this.tile.segments.length == 0
         ) {
             // placeholder
-            const outline = SVG("path");
-            outline.setAttribute("d", roundPath);
-            outline.setAttribute("fill", PLACEHOLDER);
-            if (DEBUG.HIDE_TILE_OUTLINE) {
-                outline.setAttribute("fill-opacity", "0.0");
-            } else {
-                outline.setAttribute("fill-opacity", "0.5");
-            }
-            outline.setAttribute("stroke", PLACEHOLDER);
-            outline.setAttribute("stroke-width", "0.01");
-            this.element.appendChild(outline);
+            const outline = SVG("path", null, this.element, {
+                d: roundPath,
+                fill: PLACEHOLDER,
+                stroke: PLACEHOLDER,
+                "stroke-width": "0.01",
+                "fill-opacity": DEBUG.HIDE_TILE_OUTLINE ? "0.0" : "0.5",
+            });
         } else {
             if (DEBUG.HIDE_TILE_OUTLINE) return;
             this.element.setAttribute(

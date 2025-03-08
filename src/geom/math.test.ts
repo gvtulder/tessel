@@ -13,6 +13,7 @@ import {
     distToLine,
     distToLineSegment,
     edgeToAngle,
+    mapToIndex,
     mergeBBox,
     mergeBBoxItems,
     midpoint,
@@ -274,4 +275,28 @@ describe("rotateArray", () => {
             expect(rotateArray(input, offset)).toStrictEqual(output);
         },
     );
+});
+
+describe("mapToIndex", () => {
+    test.each([
+        [
+            [0, 1, 2, 3],
+            [0, 1, 2, 3],
+        ],
+        [
+            [1, 2, 3, 0],
+            [0, 1, 2, 3],
+        ],
+        [[], []],
+        [
+            [0, 0, 1, 1],
+            [0, 0, 1, 1],
+        ],
+        [
+            [3, 2, 3, 1],
+            [0, 1, 0, 2],
+        ],
+    ])("maps to indices", (arr, expected) => {
+        expect(mapToIndex(arr)).toStrictEqual(expected);
+    });
 });

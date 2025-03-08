@@ -101,31 +101,51 @@ describe("Shape", () => {
     test("computes coloring patterns", () => {
         const square = new Shape("square", [90, 90, 90, 90]);
         expect(square.colorPatterns).toStrictEqual([
-            { numColors: 4, segmentColors: [0, 1, 2, 3] },
-            { numColors: 2, segmentColors: [0, 0, 1, 1] },
-            { numColors: 1, segmentColors: [0, 0, 0, 0] },
+            { numColors: 4, segmentColors: [[0, 1, 2, 3]] },
+            {
+                numColors: 2,
+                segmentColors: [
+                    [0, 0, 1, 1],
+                    [0, 1, 1, 0],
+                ],
+            },
+            { numColors: 1, segmentColors: [[0, 0, 0, 0]] },
         ] as ColorPattern[]);
 
         const triangle = new Shape("triangle", [60, 60, 60]);
         expect(triangle.colorPatterns).toStrictEqual([
-            { numColors: 3, segmentColors: [0, 1, 2] },
-            { numColors: 1, segmentColors: [0, 0, 0] },
+            { numColors: 3, segmentColors: [[0, 1, 2]] },
+            { numColors: 1, segmentColors: [[0, 0, 0]] },
         ] as ColorPattern[]);
 
         const rhombus = new Shape("rhombus", [72, 108, 72, 108]);
+        console.log(JSON.stringify(rhombus.colorPatterns));
         expect(rhombus.colorPatterns).toStrictEqual([
-            { numColors: 4, segmentColors: [0, 1, 2, 3] },
-            { numColors: 2, segmentColors: [0, 0, 1, 1] },
-            { numColors: 2, segmentColors: [0, 1, 1, 0] },
-            { numColors: 1, segmentColors: [0, 0, 0, 0] },
+            { numColors: 4, segmentColors: [[0, 1, 2, 3]] },
+            { numColors: 2, segmentColors: [[0, 0, 1, 1]] },
+            { numColors: 2, segmentColors: [[0, 1, 1, 0]] },
+            { numColors: 1, segmentColors: [[0, 0, 0, 0]] },
         ]);
 
         const hexagon = new Shape("hexagon", [120, 120, 120, 120, 120, 120]);
         expect(hexagon.colorPatterns).toStrictEqual([
-            { numColors: 6, segmentColors: [0, 1, 2, 3, 4, 5] },
-            { numColors: 3, segmentColors: [0, 0, 1, 1, 2, 2] },
-            { numColors: 2, segmentColors: [0, 0, 0, 1, 1, 1] },
-            { numColors: 1, segmentColors: [0, 0, 0, 0, 0, 0] },
+            { numColors: 6, segmentColors: [[0, 1, 2, 3, 4, 5]] },
+            {
+                numColors: 3,
+                segmentColors: [
+                    [0, 0, 1, 1, 2, 2],
+                    [0, 1, 1, 2, 2, 0],
+                ],
+            },
+            {
+                numColors: 2,
+                segmentColors: [
+                    [0, 0, 0, 1, 1, 1],
+                    [0, 0, 1, 1, 1, 0],
+                    [0, 1, 1, 1, 0, 0],
+                ],
+            },
+            { numColors: 1, segmentColors: [[0, 0, 0, 0, 0, 0]] },
         ]);
     });
 });

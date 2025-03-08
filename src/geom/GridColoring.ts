@@ -75,19 +75,22 @@ export class GridColoring {
         const segmentToGroup = this.segmentToGroup;
 
         for (const tile of this.grid.tiles) {
-            // pick a random pattern for this tile
+            // find the available color patterns for this tile shape
             const patterns = colorPatterns.get(tile.shape);
             if (!patterns || patterns.length == 0) {
                 throw new Error(`No pattern defined for shape.`);
             }
+            // pick a random pattern
             const pattern = selectRandom(patterns, prng())!;
-            // use this pattern to merge groups,
+            // pick a random rotation of the pattern
+            const segmentColors = selectRandom(pattern.segmentColors, prng())!;
+            // use this pattern to merge groups
             // unless each segment has a unique color
-            if (pattern.numColors < pattern.segmentColors.length) {
+            if (pattern.numColors < segmentColors.length) {
                 for (let c = 0; c < pattern.numColors; c++) {
                     let mainGroup;
-                    for (let s = 0; s < pattern.segmentColors.length; s++) {
-                        if (pattern.segmentColors[s] == c) {
+                    for (let s = 0; s < segmentColors.length; s++) {
+                        if (segmentColors[s] == c) {
                             const segment = tile.segments![s];
                             const group = segmentToGroup.get(segment)!;
                             mainGroup ||= group;

@@ -354,8 +354,8 @@ class SegmentsOption extends SettingRowOption {
         tile.colors = tile.segments!.map(
             (_, i) =>
                 colors[
-                    colorPattern.segmentColors[
-                        i % colorPattern.segmentColors.length
+                    colorPattern.segmentColors[0][
+                        i % colorPattern.segmentColors[0].length
                     ] % colors.length
                 ],
         );

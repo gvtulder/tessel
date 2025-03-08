@@ -31,7 +31,7 @@ describe("GridColoring", () => {
             [
                 {
                     numColors: 4,
-                    segmentColors: [0, 1, 2, 3],
+                    segmentColors: [[0, 1, 2, 3]],
                 },
             ],
             227,
@@ -40,7 +40,10 @@ describe("GridColoring", () => {
             [
                 {
                     numColors: 2,
-                    segmentColors: [0, 0, 1, 1],
+                    segmentColors: [
+                        [0, 0, 1, 1],
+                        [0, 1, 1, 0],
+                    ],
                 },
             ],
             31,
@@ -49,7 +52,7 @@ describe("GridColoring", () => {
             [
                 {
                     numColors: 1,
-                    segmentColors: [0, 0, 0, 0],
+                    segmentColors: [[0, 0, 0, 0]],
                 },
             ],
             1,

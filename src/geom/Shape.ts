@@ -1,10 +1,19 @@
+import { ArraySet } from "./ArraySet";
 import { CornerType } from "./Grid";
-import { DEG2RAD, dist, Edge, Point } from "./math";
+import {
+    DEG2RAD,
+    dist,
+    Edge,
+    mapToIndex,
+    Point,
+    rad2deg,
+    rotateArray,
+} from "./math";
 import { Polygon } from "./Polygon";
 
 export type ColorPattern = {
     readonly numColors: number;
-    readonly segmentColors: readonly number[];
+    readonly segmentColors: readonly (readonly number[])[];
 };
 
 /**
@@ -19,6 +28,10 @@ export class Shape {
      * The interior angles in radians.
      */
     readonly cornerAngles: readonly number[];
+    /**
+     * The interior angles in degrees.
+     */
+    readonly cornerAnglesDeg: readonly number[];
     /**
      * The type of each corner.
      * Corners that are the same after rotating the shape receive the same value.
@@ -49,65 +62,85 @@ export class Shape {
     constructor(name: string, angles: readonly number[]) {
         this.name = name;
         this.cornerAngles = angles.map((a) => (a > 5 ? a * DEG2RAD : a));
+        this.cornerAnglesDeg = rad2deg(this.cornerAngles);
 
         this.checkAngles();
 
-        // analyze unique angles
-        const cornerTypesMap = new Map<number, number>();
-        this.cornerTypes = angles.map((a) => {
-            let idx = cornerTypesMap.get(a);
-            if (idx === undefined) {
-                idx = cornerTypesMap.size;
-                cornerTypesMap.set(a, idx);
-            }
-            return idx;
-        });
+        this.cornerTypes = this.computeCornerTypes();
+        this.rotationalSymmetries = this.computeRotationalSymmetries();
+        this.uniqueRotations = this.computeUniqueRotations();
+        this.colorPatterns = this.computeColorPatterns();
+    }
 
-        // analyze rotational symmetries
-        const rotations = [0];
+    private computeCornerTypes() {
+        return mapToIndex(this.cornerAnglesDeg);
+    }
+
+    private computeRotationalSymmetries() {
+        const rotationalSymmetries = [0];
+        const angles = this.cornerAnglesDeg;
         const n = angles.length;
         for (let r = 1; r < n; r++) {
             let ok = true;
-            for (let i = 0; i < n; i++) {
+            for (let i = 0; ok && i < n; i++) {
                 if (angles[i] != angles[(i + r) % n]) {
                     ok = false;
-                    break;
                 }
             }
             if (ok) {
-                rotations.push(r);
+                rotationalSymmetries.push(r);
             }
         }
-        this.rotationalSymmetries = rotations;
+        return rotationalSymmetries;
+    }
 
-        // compute list of unique rotations
-        const numUnique = rotations.length > 1 ? rotations[1] : 1;
+    private computeUniqueRotations() {
+        const numUnique =
+            this.rotationalSymmetries.length > 1
+                ? this.rotationalSymmetries[1]
+                : 1;
         const uniqueRotations = [];
         for (let r = 0; r < numUnique; r++) {
             uniqueRotations.push(r);
         }
-        this.uniqueRotations = uniqueRotations;
+        return uniqueRotations;
+    }
 
-        // compute coloring patterns
+    private computeColorPatterns() {
+        const n = this.cornerAngles.length;
         const colorPatterns: ColorPattern[] = [];
         for (let linked = 1; linked <= n; linked++) {
             // attempt to link segments
             if (n % linked != 0) continue;
-            for (const r of uniqueRotations) {
+            for (const r of this.uniqueRotations) {
+                // do not check rotations for patterns with a single color,
+                // and patterns with all-unique colors
                 if ((linked == 1 || linked == n) && r != 0) {
                     continue;
                 }
+
+                // generate pattern
                 const segmentColors = new Array<number>(n);
                 for (let i = 0; i < n; i++) {
                     segmentColors[(i + n - r) % n] = Math.floor(i / linked);
                 }
+
+                // compute unique rotation variants
+                const segmentColorsWithRotation = new ArraySet<number>();
+                for (const rot of this.rotationalSymmetries) {
+                    // rotate and renumber colors to start with 0
+                    const variant = mapToIndex(rotateArray(segmentColors, rot));
+                    segmentColorsWithRotation.add(variant);
+                }
+
+                // store pattern
                 colorPatterns.push({
                     numColors: Math.round(n / linked),
-                    segmentColors: segmentColors,
+                    segmentColors: [...segmentColorsWithRotation.values()],
                 });
             }
         }
-        this.colorPatterns = colorPatterns;
+        return colorPatterns;
     }
 
     /**
@@ -116,8 +149,8 @@ export class Shape {
      * @returns true if the other shape can be matched by rotation
      */
     equalAngles(other: Shape): boolean {
-        const a = this.cornerAngles;
-        const b = other.cornerAngles;
+        const a = this.cornerAnglesDeg;
+        const b = other.cornerAnglesDeg;
         if (a.length != b.length) {
             return false;
         }
@@ -197,8 +230,8 @@ export class Shape {
             throw new Error("Invalid shape: all angles should be positive.");
         }
 
-        const sum = this.cornerAngles.reduceRight((a, b) => a + b);
-        if (Math.abs(sum - (this.cornerAngles.length - 2) * Math.PI) > 1e-5) {
+        const sum = this.cornerAnglesDeg.reduceRight((a, b) => a + b);
+        if (Math.abs(sum - (this.cornerAngles.length - 2) * 180) > 1e-5) {
             throw new Error(
                 "Invalid shape: angles should sum to (n - 2) * 180 degrees.",
             );

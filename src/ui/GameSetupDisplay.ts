@@ -459,9 +459,17 @@ class RulesOption extends SettingRowOption {
         maskSquare.setAttribute("fill", "url(#gradient)");
         g.setAttribute("mask", "url(#mask)");
 
-        // checkmar
+        // checkmark
         const checkG = SVG("g", null, svg);
-        checkG.setAttribute("transform", "translate(0.15 0.7) scale(0.15)");
+        checkG.setAttribute("transform", "translate(0.70 0.7) scale(0.15)");
+
+        // checkmark circle
+        const circleBG = SVG("circle", null, mask);
+        circleBG.setAttribute("cx", "0.5");
+        circleBG.setAttribute("cy", "0.45");
+        circleBG.setAttribute("r", "1.2");
+        circleBG.setAttribute("fill", "black");
+        circleBG.setAttribute("transform", "translate(0.70 0.7) scale(0.15)");
 
         // checkmark circle
         const circle = SVG("circle", null, checkG);

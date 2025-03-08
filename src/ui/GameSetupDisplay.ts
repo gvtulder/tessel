@@ -17,6 +17,12 @@ import { ColorPattern } from "../geom/Shape";
 import { SVG } from "./svg";
 import { CentricGridBuilder } from "src/geom/GridBuilder";
 import { GridColoring } from "src/geom/GridColoring";
+import {
+    DifferentEdgeColorsRuleSet,
+    MatchEdgeColorsRuleSet,
+    RuleSet,
+} from "src/geom/RuleSet";
+import { Color } from "./ScoreOverlayDisplay";
 
 export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -34,12 +40,6 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         div.appendChild(this.exampleDisplay.element);
 
         this.settingRows = [];
-
-        const setting1 = new SettingRow();
-        setting1.addOption(new StringOption("squares"));
-        setting1.addOption(new StringOption("triangles"));
-        settingsDiv.appendChild(setting1.element);
-        this.settingRows.push(setting1);
 
         const settingAtlas = new SettingRow<AtlasOption>();
         settingAtlas.addOption(new AtlasOption("squares", SquaresAtlas));
@@ -89,17 +89,38 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         settingsDiv.appendChild(settingSegments.element);
         this.settingRows.push(settingSegments);
 
+        const settingRules = new RulesSettingRow();
+        settingRules.addOption(
+            new RulesOption("same", new MatchEdgeColorsRuleSet(), [0, 0]),
+        );
+        settingRules.addOption(
+            new RulesOption(
+                "different",
+                new DifferentEdgeColorsRuleSet(),
+                [0, 1],
+            ),
+        );
+        settingsDiv.appendChild(settingRules.element);
+        this.settingRows.push(settingRules);
+
         const update = () => {
             const atlas = settingAtlas.selected!.atlas;
             const colors = settingColors.selected!.colors;
             settingSegments.showAtlas(atlas, colors);
+            settingRules.updateColors(colors);
             const colorPattern = settingSegments.selected!.colorPattern!;
-            this.exampleDisplay.showAtlas(atlas, colors, colorPattern);
+            this.exampleDisplay.showAtlas(
+                atlas,
+                colors,
+                colorPattern,
+                settingRules.selected!.rules,
+            );
         };
 
         settingColors.onchange = update;
         settingAtlas.onchange = update;
         settingSegments.onchange = update;
+        settingRules.onchange = update;
 
         update();
     }
@@ -125,20 +146,25 @@ class ExampleDisplay {
         this.element = createElement("div", "exampleGrid");
     }
 
-    showAtlas(atlas: Atlas, colors: TileColors, colorPattern: ColorPattern) {
+    showAtlas(
+        atlas: Atlas,
+        colors: TileColors,
+        colorPattern: ColorPattern,
+        rules: RuleSet,
+    ) {
         if (this.gridDisplay) {
             this.gridDisplay.element.remove();
             this.gridDisplay.destroy();
             this.gridDisplay = undefined;
         }
 
-        console.log("showAtlas", atlas);
-
-        const prngShape = seedPRNG() || seedPRNG(123456);
-        const prngColorGroup = seedPRNG() || seedPRNG(123456);
-        const prngColor = seedPRNG() || seedPRNG(123456);
+        const seed = 123456;
+        const prngShape = seedPRNG(seed);
+        const prngColorGroup = seedPRNG(seed);
+        const prngColor = seedPRNG(seed);
 
         const grid = new CentricGridBuilder().buildGrid(atlas, 30, prngShape);
+        grid.rules = rules;
         const coloring = new GridColoring(grid);
         coloring.applyColorPattern(
             new Map([[grid.atlas.shapes[0], [colorPattern]]]),
@@ -370,6 +396,101 @@ class SegmentsOption extends SettingRowOption {
         if (this.gridDisplay) {
             this.gridDisplay.rescale();
         }
+    }
+}
+class RulesSettingRow extends SettingRow<RulesOption> {
+    constructor() {
+        super();
+    }
+
+    updateColors(colors: TileColors) {
+        for (const option of this.options) {
+            option.updateColors(colors);
+        }
+    }
+}
+
+class RulesOption extends SettingRowOption {
+    rules: RuleSet;
+    colorIndex: [number, number];
+    segmentA: SVGPolygonElement;
+    segmentB: SVGPolygonElement;
+
+    constructor(key: string, rules: RuleSet, colorIndex: [number, number]) {
+        super(key);
+        this.rules = rules;
+        this.colorIndex = colorIndex;
+
+        const svg = SVG("svg", "rules", this.element);
+        svg.setAttribute("viewBox", "0 0 1 1");
+
+        // gradient
+        const defs = SVG("defs", null, svg);
+        const radialGradient = SVG("radialGradient", null, defs);
+        radialGradient.setAttribute("id", "gradient");
+        radialGradient.setAttribute("cx", "0.5");
+        radialGradient.setAttribute("cy", "0.5");
+        radialGradient.setAttribute("r", "0.4");
+        const start = SVG("stop", null, radialGradient);
+        start.setAttribute("offset", "70%");
+        start.setAttribute("stop-color", "white");
+        const stop = SVG("stop", null, radialGradient);
+        stop.setAttribute("offset", "100%");
+        stop.setAttribute("stop-color", "black");
+
+        const g = SVG("g", null, svg);
+
+        // segments
+        const segmentA = SVG("polygon", null, g);
+        segmentA.setAttribute("points", "0.1 0 1 0 1 0.9");
+        this.segmentA = segmentA;
+        const segmentB = SVG("polygon", null, g);
+        segmentB.setAttribute("points", "0 0.1 0.9 1 0 1");
+        this.segmentB = segmentB;
+
+        // mask
+        const mask = SVG("mask", null, svg);
+        mask.setAttribute("id", "mask");
+        const maskSquare = SVG("rect", null, mask);
+        maskSquare.setAttribute("x", "0");
+        maskSquare.setAttribute("y", "0");
+        maskSquare.setAttribute("width", "1");
+        maskSquare.setAttribute("height", "1");
+        maskSquare.setAttribute("fill", "url(#gradient)");
+        g.setAttribute("mask", "url(#mask)");
+
+        // checkmar
+        const checkG = SVG("g", null, svg);
+        checkG.setAttribute("transform", "translate(0.15 0.7) scale(0.15)");
+
+        // checkmark circle
+        const circle = SVG("circle", null, checkG);
+        circle.setAttribute("cx", "0.5");
+        circle.setAttribute("cy", "0.45");
+        circle.setAttribute("r", "1");
+        circle.setAttribute("fill", Color.light);
+        circle.setAttribute("stroke", Color.dark);
+        circle.setAttribute("stroke-width", "0.15");
+
+        // checkmark
+        const checkmark = SVG("path", null, checkG);
+        checkmark.setAttribute(
+            "d",
+            "M 0.87780016,0.02563948 0.35927277,0.65986061 0.12219998,0.36989528 " +
+                "c -0.02795756,-0.0341881 -0.07327848,-0.0341881 -0.10123613,0 " +
+                "-0.0279518,0.0341952 -0.0279518,0.0896274 0,0.12382263 " +
+                "l 0.2876909,0.35187666 c 0.0139788,0.0170905 0.0322984,0.0256428 " +
+                "0.050618,0.0256428 0.0183197,0 0.0366392,-0.008552 0.0506181,-0.0256428" +
+                " L 0.97903606,0.149469 c 0.0279519,-0.0341952 0.0279519,-0.0896275 " +
+                "0,-0.12382256 -0.0279575,-0.03419526 " +
+                "-0.073284,-0.03419526 -0.1012359,0 z",
+        );
+        checkmark.setAttribute("fill", Color.dark);
+    }
+
+    updateColors(colors: TileColors) {
+        this.segmentA.setAttribute("fill", colors[this.colorIndex[0]]);
+        this.segmentB.setAttribute("fill", colors[this.colorIndex[1]]);
     }
 }
 

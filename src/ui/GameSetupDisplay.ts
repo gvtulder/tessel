@@ -10,9 +10,10 @@ import {
 } from "../geom/Atlas";
 import { GridDisplay } from "./GridDisplay";
 import { PRNG, RandomSampler } from "../geom/RandomSampler";
-import { BBox, dist, mergeBBox, midpoint, TWOPI } from "../geom/math";
+import { BBox, dist, mergeBBox, midpoint, P, TWOPI } from "../geom/math";
 import { selectRandom } from "../geom/RandomSampler";
-import { Tile, TileColors } from "src/geom/Tile";
+import { Tile, TileColor, TileColors } from "../geom/Tile";
+import { ColorPattern } from "../geom/Shape";
 import { SVG } from "./svg";
 
 const RANDOM_TILE_CENTER_WEIGHT = 10;
@@ -92,11 +93,13 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
             const atlas = settingAtlas.selected!.atlas;
             const colors = settingColors.selected!.colors;
             settingSegments.showAtlas(atlas, colors);
-            this.exampleDisplay.showAtlas(atlas, colors);
+            const colorPattern = settingSegments.selected!.colorPattern!;
+            this.exampleDisplay.showAtlas(atlas, colors, colorPattern);
         };
 
         settingColors.onchange = update;
         settingAtlas.onchange = update;
+        settingSegments.onchange = update;
 
         update();
     }
@@ -122,7 +125,7 @@ class ExampleDisplay {
         this.element = createElement("div", "exampleGrid");
     }
 
-    showAtlas(atlas: Atlas, colors: TileColors) {
+    showAtlas(atlas: Atlas, colors: TileColors, colorPattern: ColorPattern) {
         if (this.gridDisplay) {
             this.gridDisplay.element.remove();
             this.gridDisplay.destroy();
@@ -137,15 +140,22 @@ class ExampleDisplay {
             throw new Error("atlas with multiple shapes not yet supported");
         const poly = shape.constructPolygonXYR(0, 0, 1);
         const initialTile = grid.addTile(shape, poly, poly.segment());
-        initialTile.colors = initialTile.segments!.map(
-            (_, i) => colors[i % colors.length],
-        );
+        const colorGroups = new Array<TileColor>(colorPattern.numColors);
+        for (let i = 0; i < colorGroups.length; i++) {
+            colorGroups[i] = colors[i % colors.length];
+        }
+        const segmentColors = new Array<TileColor>(initialTile.edges.length);
+        for (let i = 0; i < segmentColors.length; i++) {
+            segmentColors[i] = colorGroups[colorPattern.segmentColors[i]];
+        }
+        initialTile.colors = segmentColors;
 
         const prngShape = PRNG(123456);
         const prngColor = PRNG(123456);
 
+        let attempts = 200;
         const sampler = new RandomSampler<GridEdge>();
-        while (grid.tiles.size < 30) {
+        while (grid.tiles.size < 30 && attempts > 0) {
             for (const edge of grid.frontier) {
                 if (!sampler.has(edge)) {
                     const d = dist(
@@ -168,23 +178,41 @@ class ExampleDisplay {
                     t.polygon,
                     t.polygon.segment(),
                 );
-                const segmentColors = tile.segments!.map((segment) => {
-                    let color = selectRandom(colors, prngColor())!;
-                    for (const n of segment.getNeighbors()) {
+                const colorGroups = new Array<TileColor>(
+                    colorPattern.numColors,
+                );
+                const segmentColors = new Array<TileColor>(tile.edges.length);
+                let valid = true;
+                for (let s = 0; s < tile.edges.length; s++) {
+                    let color = colorGroups[colorPattern.segmentColors[s]];
+                    // look for the colors of existing neighbors
+                    for (const n of tile.segments![s].getNeighbors()) {
                         if (n && n.color) {
-                            color = n.color;
-                            break;
+                            // neighbor requires a color
+                            color = color || n.color;
+                            if (color != n.color) {
+                                valid = false;
+                                console.log("invalid coloring");
+                            }
                         }
                     }
-                    return color;
-                });
+                    // pick a random color
+                    color ||= selectRandom(colors, prngColor())!;
+                    segmentColors[s] = color;
+                    colorGroups[colorPattern.segmentColors[s]] = color;
+                }
                 tile.colors = segmentColors;
+                if (!valid) {
+                    grid.removeTile(tile);
+                }
             }
+            attempts--;
         }
 
         const gridDisplay = new ExampleGridDisplay(grid, this.element);
         this.gridDisplay = gridDisplay;
         this.element.appendChild(gridDisplay.element);
+        this.gridDisplay.rescale();
     }
 
     rescale() {
@@ -196,48 +224,70 @@ class ExampleDisplay {
 
 class SettingRow<T extends SettingRowOption> {
     element: HTMLDivElement;
-    options: Map<string, T>;
+    options: T[];
     onchange?: () => void;
-    _selected?: string;
+    _selected?: number;
 
     constructor() {
         this.element = createElement("div", "setting-row");
-        this.options = new Map<string, T>();
+        this.options = [];
     }
 
     addOption(option: T) {
         this.element.appendChild(option.element);
-        this.options.set(option.key, option);
+        const index = this.options.length;
+        this.options.push(option);
         option.element.addEventListener("click", () => {
-            this.selectedKey = option.key;
+            this.selectedIndex = index;
             if (this.onchange) {
                 this.onchange();
             }
         });
-        if (!this.selectedKey) {
-            this.selectedKey = option.key;
+        if (this.selectedIndex === undefined) {
+            this.selectedIndex = index;
             option.element.classList.add("selected");
         }
     }
 
-    set selectedKey(selectedOption: string) {
-        for (const [key, option] of this.options.entries()) {
-            option.element.classList.toggle("selected", selectedOption == key);
+    popOption() {
+        const option = this.options.pop();
+        if (option) {
+            option.element.remove();
+            if (this.options.length <= (this._selected || 0)) {
+                this._selected = 0;
+            }
         }
-        this._selected = selectedOption;
+        this.updateSelectedState();
     }
 
-    get selectedKey(): string | undefined {
+    set selectedIndex(selectedOption: number) {
+        this._selected = selectedOption;
+        this.updateSelectedState();
+    }
+
+    get selectedIndex(): number | undefined {
         return this._selected;
     }
 
     get selected(): T | undefined {
-        return this._selected ? this.options.get(this._selected) : undefined;
+        return this._selected === undefined
+            ? undefined
+            : this.options[this._selected];
     }
 
     rescale() {
-        for (const option of this.options.values()) {
+        for (const option of this.options) {
             option.rescale();
+        }
+    }
+
+    private updateSelectedState() {
+        const options = this.options;
+        for (let i = 0; i < options.length; i++) {
+            options[i].element.classList.toggle(
+                "selected",
+                i == this._selected,
+            );
         }
     }
 }
@@ -326,37 +376,38 @@ class AtlasOption extends SettingRowOption {
 class SegmentsSettingRow extends SettingRow<SegmentsOption> {
     constructor() {
         super();
-        this.addOption(new SegmentsOption("one-0", 1, [0, 0, 0, 0]));
-        this.addOption(new SegmentsOption("two-0", 2, [0, 0, 1, 1]));
-        this.addOption(new SegmentsOption("two-1", 2, [0, 1, 1, 0]));
-        this.addOption(new SegmentsOption("four-0", 4, [0, 1, 2, 3]));
     }
 
     showAtlas(atlas: Atlas, colors: TileColors) {
-        for (const option of this.options.values()) {
-            option.showAtlas(atlas, colors);
+        if (atlas.shapes.length != 1)
+            throw new Error("atlas with multiple shapes not yet supported");
+        const shape = atlas.shapes[0];
+        for (let i = 0; i < shape.colorPatterns.length; i++) {
+            if (this.options.length <= i) {
+                const option = new SegmentsOption(`${i}`);
+                this.addOption(option);
+            }
+            this.options[i].showAtlas(atlas, colors, shape.colorPatterns[i]);
+        }
+        while (shape.colorPatterns.length < this.options.length) {
+            this.popOption();
         }
     }
 }
 
 class SegmentsOption extends SettingRowOption {
-    numColors: number;
-    segmentColors: number[];
-    atlas?: Atlas;
+    colorPattern?: ColorPattern;
     gridDisplay?: GridDisplay;
 
-    constructor(key: string, numColors: number, segmentColors: number[]) {
+    constructor(key: string) {
         super(key);
-        this.numColors = numColors;
-        this.segmentColors = segmentColors;
     }
 
-    showAtlas(atlas: Atlas, colors: TileColors) {
+    showAtlas(atlas: Atlas, colors: TileColors, colorPattern: ColorPattern) {
         if (this.gridDisplay) {
             this.gridDisplay.element.remove();
             this.gridDisplay.destroy();
         }
-
         const grid = new Grid(atlas);
         if (atlas.shapes.length != 1)
             throw new Error("atlas with multiple shapes not yet supported");
@@ -366,13 +417,16 @@ class SegmentsOption extends SettingRowOption {
         tile.colors = tile.segments!.map(
             (_, i) =>
                 colors[
-                    this.segmentColors[i % this.segmentColors.length] %
-                        colors.length
+                    colorPattern.segmentColors[
+                        i % colorPattern.segmentColors.length
+                    ] % colors.length
                 ],
         );
         const gridDisplay = new OptionGridDisplay(grid, this.element);
         this.element.appendChild(gridDisplay.element);
         this.gridDisplay = gridDisplay;
+        gridDisplay.rescale();
+        this.colorPattern = colorPattern;
     }
 
     rescale() {

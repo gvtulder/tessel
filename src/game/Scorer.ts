@@ -59,8 +59,8 @@ export class Scorer {
                     tilesInShape.add(segment.tile);
                     segmentsInShape.add(segment);
 
-                    // add neighbors
-                    for (const neighbor of segment.getNeighbors(true)) {
+                    // add internal and external neighbors
+                    for (const neighbor of segment.getNeighbors(true, true)) {
                         if (!neighbor || !neighbor.color) {
                             shape.finished = false;
                         } else if (neighbor.color === color) {

@@ -66,22 +66,31 @@ describe("Tile", () => {
             throw new Error("no tile segments found");
         }
         expect(tile1.segments[0].getNeighbors()).toStrictEqual([
+            tile2.segments[0],
+        ]);
+        expect(tile2.segments[0].getNeighbors(false)).toStrictEqual([
+            tile1.segments[0],
+        ]);
+        expect(tile1.segments[0].getNeighbors(true)).toStrictEqual([
             tile1.segments[2],
             tile1.segments[1],
             tile2.segments[0],
         ]);
-        expect(tile2.segments[0].getNeighbors()).toStrictEqual([
+        expect(tile2.segments[0].getNeighbors(true)).toStrictEqual([
             tile2.segments[2],
             tile2.segments[1],
             tile1.segments[0],
         ]);
-        expect(tile2.segments[1].getNeighbors()).toStrictEqual([
-            tile2.segments[0],
-            tile2.segments[2],
-        ]);
         expect(tile2.segments[1].getNeighbors(true)).toStrictEqual([
             tile2.segments[0],
             tile2.segments[2],
+        ]);
+        expect(tile2.segments[1].getNeighbors(true, true)).toStrictEqual([
+            tile2.segments[0],
+            tile2.segments[2],
+            null,
+        ]);
+        expect(tile2.segments[1].getNeighbors(false, true)).toStrictEqual([
             null,
         ]);
     });

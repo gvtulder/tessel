@@ -65,31 +65,39 @@ export class TileSegment {
     /**
      * Returns the neighboring tile segments of this segment.
      *
-     * This includes both segments internal to this tile,
-     * and the segment on the other side of the outside edge.
+     * If internal is true, this includes neighboring segments
+     * inside and outside the tile.
+     * If internal is false, only the neighbor on the external edge
+     * is returned.
      *
-     * If includeMissing is true, the list will include null
+     * If missing is true, the list will include null
      * values for any edges of the segment without a neighbor.
-     * If includeMissing is false, the list will only include
+     * If missing is false, the list will only include
      * existing segments.
      */
-    getNeighbors(): TileSegment[];
-    getNeighbors(includeMissing: false): TileSegment[];
-    getNeighbors(includeMissing: true): (TileSegment | null)[];
-    getNeighbors(includeMissing?: boolean): (TileSegment | null)[] {
+    getNeighbors(internal?: boolean): TileSegment[];
+    getNeighbors(internal: boolean, missing: false): TileSegment[];
+    getNeighbors(internal: boolean, missing: true): (TileSegment | null)[];
+    getNeighbors(
+        internal?: boolean,
+        missing?: boolean,
+    ): (TileSegment | null)[] {
         const tile = this.tile;
         if (!tile.segments) return [];
         const n = tile.segments.length;
-        const neighbors = [
-            tile.segments[(this.index + n - 1) % n],
-            tile.segments[(this.index + 1) % n],
-        ] as (TileSegment | null)[];
+        const neighbors: (TileSegment | null)[] = [];
+        if (internal) {
+            neighbors.push(
+                tile.segments[(this.index + n - 1) % n],
+                tile.segments[(this.index + 1) % n],
+            );
+        }
         const edge = tile.edges[this.index];
         if (edge.tileA == tile && edge.tileB && edge.tileB.segments) {
             neighbors.push(edge.tileB.segments[edge.edgeIdxB!]);
         } else if (edge.tileB == tile && edge.tileA && edge.tileA.segments) {
             neighbors.push(edge.tileA.segments[edge.edgeIdxA!]);
-        } else if (includeMissing) {
+        } else if (missing) {
             neighbors.push(null);
         }
         return neighbors;

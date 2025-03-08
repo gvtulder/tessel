@@ -8,7 +8,8 @@ import { FixedOrderTileStack, TileShapeColors } from "../../game/TileStack";
 import { GameEventType } from "../../game/Game";
 import { Tile, TileColors } from "../../geom/Tile";
 import { Shape } from "../../geom/Shape";
-import { GridDisplay, TileStackGridDisplay } from "../grid/GridDisplay";
+import { GridDisplay } from "../grid/GridDisplay";
+import { TileStackGridDisplay } from "./TileStackGridDisplay";
 import { TransformComponent } from "../../geom/Transform";
 import {
     TileDragController,

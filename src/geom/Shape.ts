@@ -2,6 +2,11 @@ import { CornerType } from "./Grid";
 import { DEG2RAD, dist, Edge, Point } from "./math";
 import { Polygon } from "./Polygon";
 
+export type ColorPattern = {
+    readonly numColors: number;
+    readonly segmentColors: readonly number[];
+};
+
 /**
  * A Shape describes a geometric shape, based on the interior angles.
  */
@@ -29,6 +34,11 @@ export class Shape {
      * The steps indicate a rotation from corner i to i + r.
      */
     readonly uniqueRotations: readonly number[];
+    /**
+     * The unique ways to color adjacent segments,
+     * while maintaining rotation symmetries.
+     */
+    readonly colorPatterns: readonly ColorPattern[];
 
     /**
      * Creates a new shape.
@@ -77,6 +87,27 @@ export class Shape {
             uniqueRotations.push(r);
         }
         this.uniqueRotations = uniqueRotations;
+
+        // compute coloring patterns
+        const colorPatterns: ColorPattern[] = [];
+        for (let linked = 1; linked <= n; linked++) {
+            // attempt to link segments
+            if (n % linked != 0) continue;
+            for (const r of uniqueRotations) {
+                if ((linked == 1 || linked == n) && r != 0) {
+                    continue;
+                }
+                const segmentColors = new Array<number>(n);
+                for (let i = 0; i < n; i++) {
+                    segmentColors[(i + n - r) % n] = Math.floor(i / linked);
+                }
+                colorPatterns.push({
+                    numColors: Math.round(n / linked),
+                    segmentColors: segmentColors,
+                });
+            }
+        }
+        this.colorPatterns = colorPatterns;
     }
 
     /**

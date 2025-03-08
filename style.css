@@ -109,11 +109,11 @@ svg {
   margin: 10px 10px;
 }
 
-.gameDisplay-buttons .game-button {
+.game-button {
   padding: 10px;
   cursor: pointer;
 }
-.gameDisplay-buttons .game-button svg {
+.game-button svg {
   width: 100%;
   aspect-ratio: 1 / 1;
   transform: scale(1);
@@ -122,7 +122,7 @@ svg {
   fill: #777777;
 }
 @media (hover) {
-  .gameDisplay-buttons .game-button:hover svg {
+  .game-button:hover svg {
     transform: scale(1.1);
     fill: #555;
   }
@@ -481,9 +481,24 @@ svg {
 }
 
 .gameSetupDisplay .exampleGrid {
+  position: relative;
   flex-grow: 1;
   width: 50%;
   height: 100%;
+}
+.gameSetupDisplay .game-button {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+}
+.gameSetupDisplay .game-button svg {
+  fill: #aaa;
+}
+.gameSetupDisplay .game-button svg:hover {
+  fill: #777;
 }
 .gameSetup-gridDisplay {
   width: 100%;
@@ -563,7 +578,7 @@ svg {
   .gameDisplay {
     grid-template-columns: 1fr 120px;
   }
-  .gameDisplay-buttons .game-button {
+  .game-button {
     padding: 5px;
   }
   .scoreDisplay {
@@ -577,7 +592,7 @@ svg {
   .gameDisplay {
     grid-template-columns: 1fr 100px;
   }
-  .gameDisplay-buttons .game-button {
+  .game-button {
     padding: 3px;
   }
   .gameDisplay-toggles {
@@ -649,7 +664,7 @@ svg {
   }
 }
 @media screen and (orientation: portrait) and (max-width: 650px) {
-  .gameDisplay-buttons .game-button {
+  .game-button {
     padding: 3px;
   }
   .gameDisplay-toggles {
@@ -669,11 +684,11 @@ svg {
   .gameDisplay-toggles {
     height: 75%;
   }
-  .gameDisplay-buttons .game-button,
+  .game-button,
   .gameDisplay-toggles .game-toggle {
     margin: 0 5px;
   }
-  .gameDisplay-buttons .game-button svg,
+  .game-button svg,
   .gameDisplay-toggles .game-toggle svg {
     height: 100%;
   }

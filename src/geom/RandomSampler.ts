@@ -1,5 +1,9 @@
 export type PRNG = () => number;
 
+export function generateSeed(): number {
+    return (Math.random() * 2 ** 32) >>> 0;
+}
+
 // https://stackoverflow.com/a/47593316
 function splitmix32(a?: number): PRNG {
     if (a === undefined) {

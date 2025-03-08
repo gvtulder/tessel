@@ -21,6 +21,7 @@ export class ExampleDisplay {
         colors: TileColors,
         colorPattern: ColorPattern,
         rules: RuleSet,
+        seed: number = 123456,
     ) {
         if (this.gridDisplay) {
             this.gridDisplay.element.remove();
@@ -28,7 +29,6 @@ export class ExampleDisplay {
             this.gridDisplay = undefined;
         }
 
-        const seed = 123456;
         const prngShape = seedPRNG(seed);
         const prngColorGroup = seedPRNG(seed);
         const prngColor = seedPRNG(seed);
@@ -51,6 +51,12 @@ export class ExampleDisplay {
     rescale() {
         if (this.gridDisplay) {
             this.gridDisplay.rescale();
+        }
+    }
+
+    destroy() {
+        if (this.gridDisplay) {
+            this.gridDisplay.destroy();
         }
     }
 }

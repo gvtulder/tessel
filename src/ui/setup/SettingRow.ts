@@ -60,6 +60,10 @@ export class SettingRow<T extends SettingRowOption> {
         }
     }
 
+    destroy() {
+        // TODO
+    }
+
     private updateSelectedState() {
         const options = this.options;
         for (let i = 0; i < options.length; i++) {

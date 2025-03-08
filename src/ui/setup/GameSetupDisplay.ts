@@ -18,6 +18,9 @@ import { AtlasOption } from "./AtlasOption";
 import { SegmentsSettingRow } from "./SegmentsSettingRow";
 import { RulesSettingRow } from "./RulesSettingRow";
 import { RulesOption } from "./RulesOption";
+import { Button } from "../Button";
+import icons from "../icons";
+import { generateSeed } from "src/geom/RandomSampler";
 
 export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -25,14 +28,32 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     exampleDisplay: ExampleDisplay;
     settingRows: SettingRow<SettingRowOption>[];
 
+    regenerateButton: Button;
+
+    seed: number;
+
     constructor() {
         super();
+
+        this.seed = 123456;
 
         const div = (this.element = createElement("div", "gameSetupDisplay"));
         const settingsDiv = createElement("div", "settings", div);
 
         this.exampleDisplay = new ExampleDisplay();
         div.appendChild(this.exampleDisplay.element);
+
+        const regenerateButton = new Button(
+            icons.rotateRightIcon,
+            "Regenerate",
+            () => {
+                this.seed = generateSeed();
+                console.log(`Regenerate with new seed: ${this.seed}`);
+                update();
+            },
+        );
+        this.exampleDisplay.element.appendChild(regenerateButton.element);
+        this.regenerateButton = regenerateButton;
 
         this.settingRows = [];
 
@@ -113,6 +134,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
                 colors,
                 colorPattern,
                 settingRules.selected!.rules,
+                this.seed,
             );
         };
 
@@ -126,6 +148,11 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
 
     destroy() {
         // TODO
+        this.exampleDisplay.destroy();
+        this.regenerateButton.destroy();
+        for (const row of this.settingRows) {
+            row.destroy();
+        }
     }
 
     rescale() {

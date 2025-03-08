@@ -1,6 +1,6 @@
 import { TileColors } from "../grid/Tile";
 import { Shape } from "../grid/Shape";
-import { shuffle } from "../utils";
+import { shuffle } from "../geom/RandomSampler";
 import { GameEvent, GameEventType } from "./Game";
 
 export type TileShapeColors = {

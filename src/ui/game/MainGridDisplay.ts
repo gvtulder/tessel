@@ -1,5 +1,5 @@
 import { Grid } from "../../grid/Grid";
-import { shuffle } from "../../utils";
+import { shuffle } from "../../geom/RandomSampler";
 import { GameDisplay } from "./GameDisplay";
 import { GridDisplay } from "../grid/GridDisplay";
 import { ScoreOverlayDisplay } from "../score/ScoreOverlayDisplay";

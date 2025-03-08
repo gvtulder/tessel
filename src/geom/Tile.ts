@@ -73,6 +73,9 @@ export class TileSegment {
      * If includeMissing is false, the list will only include
      * existing segments.
      */
+    getNeighbors(): TileSegment[];
+    getNeighbors(includeMissing: false): TileSegment[];
+    getNeighbors(includeMissing: true): (TileSegment | null)[];
     getNeighbors(includeMissing?: boolean): (TileSegment | null)[] {
         const tile = this.tile;
         if (!tile.segments) return [];

@@ -2,7 +2,7 @@ import { Game, GameSettings } from "../game/Game";
 import { GameDisplay } from "./GameDisplay";
 import { MainMenuDisplay } from "./MainMenuDisplay";
 import * as SaveGames from "../saveGames";
-import { GameSetupDisplay } from "./GameSetupDisplay";
+import { GameSetupDisplay } from "./setup";
 import { ScreenDisplay } from "./ScreenDisplay";
 
 export const enum UserEventType {

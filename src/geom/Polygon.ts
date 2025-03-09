@@ -1,4 +1,4 @@
-import { BBox, area, bbox, centroid, Edge, Point } from "./math";
+import { BBox, area, bbox, centroid, Edge, Point, shiftPoints } from "./math";
 
 /**
  * A polygon consists of a number vertices.
@@ -85,5 +85,12 @@ export class Polygon {
     segment(): Polygon[] {
         const c = this.centroid;
         return this.edges.map((e) => new Polygon([e.a, e.b, c]));
+    }
+
+    /**
+     * Returns a new polygon with points shifted in direction dx and dy.
+     */
+    toShifted(dx: number, dy: number): Polygon {
+        return new Polygon(shiftPoints(this.vertices, dx, dy));
     }
 }

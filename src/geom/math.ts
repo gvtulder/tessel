@@ -103,12 +103,62 @@ export function distToLineSegment(a: Point, b: Point, p: Point): number {
 }
 
 /**
+ * Computes the distance between the closest points in a and b.
+ */
+export function distClosestPoints(
+    a: readonly Point[],
+    b: readonly Point[],
+): number {
+    let min: number | null = null;
+    for (const pa of a) {
+        for (const pb of b) {
+            const d = dist(pa, pb);
+            if (min === null || min > d) {
+                min = d;
+            }
+        }
+    }
+    return min || 0;
+}
+
+/**
  * Compares two points.
  * First compares a.x and b.x, then a.y and b.y.
  * @returns -1 if a is less than b, 1 if a is greater than b, 0 if a == b
  */
 export function comparePoint(a: Point, b: Point): number {
     return a.x < b.x ? -1 : a.x > b.x ? 1 : Math.sign(a.y - b.y);
+}
+
+/**
+ * Returns points shifted in direction dx and dy.
+ */
+export function shiftPoints(
+    points: readonly Point[],
+    dx: number,
+    dy: number,
+): Point[] {
+    return points.map((p) => ({ x: p.x + dx, y: p.y + dy }));
+}
+
+/**
+ * Returns points rotated around the origin.
+ */
+export function rotatePoints(
+    points: readonly Point[],
+    angle: number,
+    origin: Point,
+): Point[] {
+    return points.map((p) => {
+        let x = p.x - origin.x;
+        let y = p.y - origin.y;
+        const origX = x;
+        x = Math.cos(angle) * x - Math.sin(angle) * y;
+        y = Math.sin(angle) * origX + Math.cos(angle) * y;
+        x += origin.x;
+        y += origin.y;
+        return { x, y };
+    });
 }
 
 /**

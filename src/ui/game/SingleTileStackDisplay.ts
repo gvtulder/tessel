@@ -17,8 +17,9 @@ import {
     TileRotationSet,
 } from "../grid/TileDragController";
 import { Atlas } from "../../grid/Atlas";
-import { angleDist, RAD2DEG, TWOPI } from "../../geom/math";
+import { angleDist, angleDistDeg, RAD2DEG, TWOPI } from "../../geom/math";
 import { BaseTileStackDisplay, TileStackDisplay } from "./TileStackDisplay";
+import { DEG2RAD } from "detect-collisions";
 
 export class SingleTileOnStackDisplay implements TileDragSource {
     tileStackDisplay: BaseTileStackDisplay;
@@ -30,6 +31,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     rotatable: HTMLDivElement;
     draggable?: Interactable;
     rotationIdx: number;
+    // angle in degrees to prevent rounding errors
     angle: number;
     beforeAutorotationIdx: number | null;
 
@@ -130,7 +132,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         const angles = this.grid.atlas.orientations;
         this.rotationIdx = newRotationIdx % angles.length;
         this.rotateTileToAngle(
-            angles[this.rotationIdx],
+            Math.round(angles[this.rotationIdx] * RAD2DEG),
             reverse,
             closest,
             animated,
@@ -143,26 +145,27 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         closest?: boolean,
         animated?: boolean,
     ) {
-        newAngle = (newAngle + TWOPI) % TWOPI;
-        const oldAngle = this.angle;
-        const reverseDiff = (TWOPI + oldAngle - newAngle) % TWOPI;
-        const forwardDiff = (TWOPI + newAngle - oldAngle) % TWOPI;
+        newAngle = (newAngle + 360) % 360;
+        const oldAngle = this.angle % 360;
+        const reverseDiff = (360 + oldAngle - newAngle) % 360;
+        const forwardDiff = (360 + newAngle - oldAngle) % 360;
         if (reverse || (closest && reverseDiff < forwardDiff)) {
             this.angle -= reverseDiff;
         } else {
             this.angle += forwardDiff;
         }
-        this.rotatable.style.transform = `rotate(${this.angle * RAD2DEG}deg)`;
-        this.rotateTransform.rotation = this.angle;
+        this.rotatable.style.transform = `rotate(${this.angle}deg)`;
+        this.rotateTransform.rotation = this.angle * DEG2RAD;
         if (animated) {
             this.rotatable.classList.add("animated");
         }
     }
 
     normalizeRotation() {
-        if ((TWOPI + this.angle) % TWOPI != this.angle) {
-            this.angle = (TWOPI + this.angle) % TWOPI;
-            this.rotatable.style.transform = `rotate(${this.angle * RAD2DEG}deg)`;
+        if ((360 + this.angle) % 360 != this.angle) {
+            this.angle = (360 + this.angle) % 360;
+            this.rotateTransform.rotation = this.angle * DEG2RAD;
+            this.rotatable.style.transform = `rotate(${this.angle}deg)`;
         }
     }
 
@@ -239,16 +242,9 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         if (rotationSet) {
             let newAngle = 0;
             let bestAngleDist = -1;
-            for (const angle of rotationSet.relativeRotationAngles) {
-                const d = angleDist(this.angle, angle);
-                console.log(
-                    "curAngle",
-                    this.angle,
-                    "newAngle",
-                    angle,
-                    "dist",
-                    d,
-                );
+            for (const angleRad of rotationSet.relativeRotationAngles) {
+                const angle = Math.round(angleRad * RAD2DEG);
+                const d = angleDistDeg(this.angle, angle);
                 if (bestAngleDist == -1 || d < bestAngleDist) {
                     newAngle = angle;
                     bestAngleDist = d;

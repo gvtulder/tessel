@@ -132,6 +132,18 @@ export function angleDist(a: number, b: number): number {
 }
 
 /**
+ * Computes the absolute rotation difference between two angles.
+ * @param a angle in degrees
+ * @param b angle in degrees
+ * @returns the distance ([0, 360])
+ */
+export function angleDistDeg(a: number, b: number): number {
+    const ab = Math.round(360 + 360 + a - b) % 360;
+    const ba = Math.round(360 + 360 + b - a) % 360;
+    return ab < ba ? ab : ba;
+}
+
+/**
  * Computes the midpoint of an edge.
  * @returns the point between a and b
  */

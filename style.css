@@ -541,7 +541,7 @@ svg {
 .gameSetupDisplay .game-button.play svg {
   display: inline-block;
   fill: #ddd;
-  margin: 15% 0 0 10%;
+  margin: 16% 0 0 9%;
   width: 65%;
   height: 65%;
 }

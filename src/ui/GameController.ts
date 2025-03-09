@@ -146,6 +146,7 @@ export class GameController {
             atlas: atlas.atlas,
             colors: colors.colors,
             rules: rules.rules,
+            scorer: rules.scorer,
             colorPatterns: [
                 {
                     shape: shape,

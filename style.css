@@ -509,6 +509,24 @@ svg {
   background: #ddd;
 }
 
+.gameSetupDisplay .game-button.exit {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+}
+.gameSetupDisplay .game-button.exit svg {
+  fill: #999;
+}
+@media (hover) {
+  .gameSetupDisplay .game-button.exit:hover svg {
+    fill: #777;
+    transform: none;
+  }
+}
+
 .gameSetupDisplay .game-button.regenerate {
   position: absolute;
   right: 20px;
@@ -521,19 +539,20 @@ svg {
   fill: #aaa;
 }
 @media (hover) {
-  .gameSetupDisplay .game-button.regenerate svg:hover {
+  .gameSetupDisplay .game-button.regenerate:hover svg {
     fill: #777;
     transform: none;
   }
 }
 
 .gameSetupDisplay .button-row {
+  position: relative;
   grid-area: buttons;
   text-align: center;
   width: 100%;
   background: #bbb;
   display: flex;
-  align-items: top;
+  align-items: flex-start;
   justify-content: center;
 }
 .gameSetupDisplay .game-button.play {

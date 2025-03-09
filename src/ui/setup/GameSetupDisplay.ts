@@ -37,6 +37,8 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     settingSegments: SettingRow<SegmentsOption>;
     settingRules: SettingRow<RulesOption>;
 
+    playButton: Button;
+    exitButton: Button;
     regenerateButton: Button;
 
     seed: number;
@@ -71,7 +73,18 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         });
         playButton.element.classList.add("play");
         buttonRow.appendChild(playButton.element);
-        this.regenerateButton = playButton;
+        this.playButton = playButton;
+
+        const exitButton = new Button(
+            icons.houseIcon,
+            "Return to main menu",
+            () => {
+                this.dispatchEvent(new UserEvent(UserEventType.BackToMenu));
+            },
+        );
+        exitButton.element.classList.add("exit");
+        buttonRow.appendChild(exitButton.element);
+        this.exitButton = exitButton;
 
         const regenerateButton = new Button(
             icons.rotateRightIcon,
@@ -148,6 +161,8 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     destroy() {
         // TODO
         this.exampleDisplay.destroy();
+        this.playButton.destroy();
+        this.exitButton.destroy();
         this.regenerateButton.destroy();
         for (const row of this.settingRows) {
             row.destroy();

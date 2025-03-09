@@ -103,6 +103,17 @@ export class GameController {
         setupDisplay.rescale();
 
         setupDisplay.addEventListener(
+            UserEventType.BackToMenu,
+            (evt: UserEvent) => {
+                this.container.removeChild(setupDisplay.element);
+                this.currentScreen = undefined;
+                setupDisplay.destroy();
+                window.history.pushState({}, "", "/");
+                this.showMainMenu();
+            },
+        );
+
+        setupDisplay.addEventListener(
             UserEventType.StartGameFromSetup,
             (evt: UserEvent) => {
                 const settings = evt.gameSettingsSerialized!;

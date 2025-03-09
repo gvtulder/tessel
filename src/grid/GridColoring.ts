@@ -8,6 +8,8 @@ import {
 import { ColorPattern, Shape } from "./Shape";
 import { Tile, TileColor, TileColors, TileSegment } from "./Tile";
 
+const MAX_GRID_COLORING_TRIES = 100;
+
 type ColorGroup = Set<TileSegment>;
 
 export class GridColoring {
@@ -140,32 +142,41 @@ export class GridColoring {
         colors: TileColors,
         prng: PRNG = Math.random,
     ): Map<ColorGroup, TileColor> | null {
+        const groups = this.groups;
+        const conflicts = this.conflicts;
         const segmentToGroup = this.segmentToGroup;
-        const groupToColor = new Map<ColorGroup, TileColor>();
-        const colorsCopy = [...colors];
 
-        // assign a color to each group
-        for (const group of this.groups) {
-            shuffle(colorsCopy, prng);
-            let assignedColor = false;
-            for (let i = 0; !assignedColor && i < colorsCopy.length; i++) {
-                // check conflicts
-                let conflict = false;
-                for (const g of this.conflicts.get(group) || []) {
-                    const c = groupToColor.get(g);
-                    if (c == colorsCopy[i]) {
-                        conflict = true;
-                        break;
-                    }
-                }
-                if (!conflict) {
-                    groupToColor.set(group, colorsCopy[i]);
-                    assignedColor = true;
-                }
-            }
-            if (!assignedColor) {
-                return null;
-            }
+        let groupToColor: Map<ColorGroup, TileColor> | null = null;
+
+        console.log(
+            `Grid coloring: ${groups.size} groups, ${conflicts.size} conflict sets`,
+        );
+
+        /*
+        if (!groupToColor) {
+            groupToColor = assignColorsWelshPowell(
+                groups,
+                conflicts,
+                [...colors],
+                prng,
+            );
+        }
+        */
+
+        let tries = 0;
+        while (!groupToColor && tries < MAX_GRID_COLORING_TRIES) {
+            groupToColor = assignColorsGreedyRandom(
+                groups,
+                conflicts,
+                [...colors],
+                prng,
+            );
+            tries++;
+        }
+        console.log(`Random greedy coloring: ${tries} attempts`);
+
+        if (groupToColor === null) {
+            return null;
         }
 
         // apply colors to tiles
@@ -215,4 +226,102 @@ export class GridColoring {
         }
         conflictSetB.add(a);
     }
+}
+
+function assignColorsGreedyRandom(
+    groups: ReadonlySet<ColorGroup>,
+    conflicts: ReadonlyMap<ColorGroup, ReadonlySet<ColorGroup>>,
+    tileColors: TileColors,
+    prng: PRNG,
+): Map<ColorGroup, string> | null {
+    const groupToColor = new Map<ColorGroup, string>();
+    const colors = [...tileColors];
+
+    // assign a color to each group
+    for (const group of groups) {
+        shuffle(colors, prng);
+        let assignedColor = false;
+        for (let i = 0; !assignedColor && i < colors.length; i++) {
+            // check conflicts
+            let conflict = false;
+            for (const g of conflicts.get(group) || []) {
+                const c = groupToColor.get(g);
+                if (c == colors[i]) {
+                    conflict = true;
+                    break;
+                }
+            }
+            if (!conflict) {
+                groupToColor.set(group, colors[i]);
+                assignedColor = true;
+            }
+        }
+        if (!assignedColor) {
+            return null;
+        }
+    }
+
+    return groupToColor;
+}
+
+function assignColorsWelshPowell(
+    groups: ReadonlySet<ColorGroup>,
+    conflicts: ReadonlyMap<ColorGroup, ReadonlySet<ColorGroup>>,
+    tileColors: string[],
+    prng: PRNG,
+): Map<ColorGroup, string> | null {
+    const groupToColor = new Map<ColorGroup, string>();
+    const colors = [...tileColors];
+
+    // using the Welsh-Powell graph coloring algorithm
+    // sort groups by number of conflicts, highest first
+    const orderedGroups = [...groups];
+    // ensure random order for ties
+    shuffle(orderedGroups, prng);
+    orderedGroups.sort((a, b) => {
+        const ca = conflicts.get(a);
+        const cb = conflicts.get(b);
+        return (cb ? cb.size : 0) - (ca ? ca.size : 0);
+    });
+
+    // assign a color to each group, starting with the group
+    // with the largest number of conflicts
+    const groupToColorIndex = new Map<ColorGroup, number>();
+    let currentColor = 0;
+    while (groupToColorIndex.size < orderedGroups.length) {
+        for (const group of orderedGroups) {
+            if (groupToColorIndex.has(group)) continue;
+
+            // can we use the current color?
+            let conflict = false;
+            const conflictSet = conflicts.get(group);
+            if (conflictSet) {
+                for (const other of conflictSet) {
+                    if (groupToColorIndex.get(other) === currentColor) {
+                        conflict = true;
+                    }
+                }
+            }
+
+            if (!conflict) {
+                groupToColorIndex.set(group, currentColor);
+            }
+        }
+        // add new color for the uncolored groups
+        currentColor++;
+    }
+
+    console.log(`Welsh-Powell algorithm: need ${currentColor} colors`);
+
+    if (currentColor > tileColors.length) {
+        return null;
+    }
+
+    // assign a color to each group
+    for (const group of groups) {
+        const c = groupToColorIndex.get(group)!;
+        groupToColor.set(group, tileColors[c % tileColors.length]);
+    }
+
+    return groupToColor;
 }

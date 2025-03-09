@@ -22,12 +22,20 @@ import { Button } from "../Button";
 import icons from "../icons";
 import { generateSeed } from "src/geom/RandomSampler";
 import { SetupCatalog } from "src/saveGames";
+import { SegmentsOption } from "./SegmentsOption";
+import { GameSettingsSerialized } from "src/game/Game";
+import { UserEvent, UserEventType } from "../GameController";
 
 export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
 
     exampleDisplay: ExampleDisplay;
     settingRows: SettingRow<SettingRowOption>[];
+
+    settingAtlas: SettingRow<AtlasOption>;
+    settingColors: SettingRow<ColorsOption>;
+    settingSegments: SettingRow<SegmentsOption>;
+    settingRules: SettingRow<RulesOption>;
 
     regenerateButton: Button;
 
@@ -49,7 +57,18 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         div.appendChild(this.exampleDisplay.element);
 
         const buttonRow = createElement("div", "button-row", this.element);
-        const playButton = new Button(icons.playIcon, "Play game", () => {});
+        const playButton = new Button(icons.playIcon, "Play game", () => {
+            if (this.valid) {
+                this.dispatchEvent(
+                    new UserEvent(
+                        UserEventType.StartGameFromSetup,
+                        undefined,
+                        undefined,
+                        this.settings,
+                    ),
+                );
+            }
+        });
         playButton.element.classList.add("play");
         buttonRow.appendChild(playButton.element);
         this.regenerateButton = playButton;
@@ -70,31 +89,35 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.settingRows = [];
 
         const settingAtlas = new SettingRow<AtlasOption>();
-        for (const { key, atlas } of catalog.atlas) {
+        for (const { key, atlas } of catalog.atlas.values()) {
             settingAtlas.addOption(new AtlasOption(key, atlas));
         }
         settingAtlas.select(catalog.defaultAtlas);
         settingsDiv.appendChild(settingAtlas.element);
+        this.settingAtlas = settingAtlas;
         this.settingRows.push(settingAtlas);
 
         const settingColors = new SettingRow<ColorsOption>();
-        for (const { key, colors } of catalog.colors) {
+        for (const { key, colors } of catalog.colors.values()) {
             settingColors.addOption(new ColorsOption(key, colors));
         }
         settingColors.select(catalog.defaultColor);
         settingsDiv.appendChild(settingColors.element);
+        this.settingColors = settingColors;
         this.settingRows.push(settingColors);
 
         const settingSegments = new SegmentsSettingRow();
         settingsDiv.appendChild(settingSegments.element);
+        this.settingSegments = settingSegments;
         this.settingRows.push(settingSegments);
 
         const settingRules = new RulesSettingRow();
-        for (const { key, rules, exampleColors } of catalog.rules) {
+        for (const { key, rules, exampleColors } of catalog.rules.values()) {
             settingRules.addOption(new RulesOption(key, rules, exampleColors));
         }
         settingRules.select(catalog.defaultRules);
         settingsDiv.appendChild(settingRules.element);
+        this.settingRules = settingRules;
         this.settingRows.push(settingRules);
 
         const update = () => {
@@ -137,5 +160,14 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         for (const row of this.settingRows) {
             row.rescale();
         }
+    }
+
+    get settings(): GameSettingsSerialized {
+        return {
+            atlas: this.settingAtlas.selected!.key,
+            colors: this.settingColors.selected!.key,
+            segments: this.settingSegments.selectedIndex!,
+            rules: this.settingRules.selected!.key,
+        };
     }
 }

@@ -170,16 +170,20 @@ export const defaultGameList = ["square", "triangle", "rhombus", "hexagons"];
 
 // ["triangle", "square", "isometric", "hex"]
 
+function options<T extends { key: string }>(...entries: T[]) {
+    return new Map<string, T>(entries.map((e: T) => [e.key, e]));
+}
+
 export const SetupCatalog = {
-    atlas: [
+    atlas: options(
         { key: "squares", atlas: SquaresAtlas },
         { key: "triangles", atlas: TrianglesAtlas },
         { key: "rhombus", atlas: RhombusAtlas },
         { key: "hexagon", atlas: HexagonsAtlas },
-    ],
+    ),
     defaultAtlas: "squares",
 
-    colors: [
+    colors: options(
         /*
         {
             key: "default4",
@@ -200,10 +204,10 @@ export const SetupCatalog = {
                 "#CC79A7",
             ].filter((_, i) => i < n),
         })),
-    ],
+    ),
     defaultColor: "wong4",
 
-    rules: [
+    rules: options(
         {
             key: "same",
             rules: new MatchEdgeColorsRuleSet(),
@@ -214,6 +218,6 @@ export const SetupCatalog = {
             rules: new DifferentEdgeColorsRuleSet(),
             exampleColors: [0, 1] as [number, number],
         },
-    ],
+    ),
     defaultRules: "same",
 };

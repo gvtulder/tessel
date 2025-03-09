@@ -1,11 +1,13 @@
-import { Shape } from "../grid/Shape";
+import { ColorPattern, Shape } from "../grid/Shape";
 import { TileColors, TileColor } from "../grid/Tile";
 import { shuffle } from "../geom/RandomSampler";
 import { TileShapeColors } from "./TileStack";
+import { rotateArray } from "../geom/arrays";
 
 export type TileGenerator = (
     tiles: TileShapeColors[],
     defaultShape: Shape,
+    colorPattern?: ColorPattern,
 ) => TileShapeColors[];
 
 export class TileGenerators {
@@ -20,52 +22,67 @@ export class TileGenerators {
     static forShapes(
         shapes: readonly Shape[],
         generator: TileGenerator,
+        colorPatterns?: ColorPattern[],
     ): TileGenerator {
         return () => {
             const tiles: TileShapeColors[] = [];
-            for (const shape of shapes) {
-                tiles.push(...generator([], shape));
+            for (let i = 0; i < shapes.length; i++) {
+                const shape = shapes[i];
+                const colorPattern = colorPatterns
+                    ? colorPatterns[i]
+                    : undefined;
+                tiles.push(...generator([], shape, colorPattern));
             }
             return tiles;
         };
     }
 
     static permutations(colors: TileColors, shape?: Shape): TileGenerator {
-        return (_, defaultShape: Shape) => {
+        return (_, defaultShape: Shape, colorPattern?: ColorPattern) => {
             const sh = shape || defaultShape;
             const numColors = colors.length;
-            const numColorGroups = sh.cornerAngles.length;
+            const numColorGroups = colorPattern
+                ? colorPattern.numColors
+                : sh.cornerAngles.length;
 
-            const cToComponents = (c: number) => {
+            const cToComponents = (c: number, numGroups: number) => {
                 const s = c.toString(numColors).split("");
-                while (s.length < numColorGroups) s.unshift("0");
+                while (s.length < numGroups) s.unshift("0");
                 return s;
             };
             const componentsToC = (components: string[]) =>
                 parseInt(components.join(""), numColors);
 
-            const computeEqualColors = (c: number) => {
-                const equalSet: number[] = [];
-                const s = cToComponents(c);
-                for (let i = 0; i < s.length; i++) {
-                    equalSet.push(componentsToC(s));
-                    s.unshift(s.pop()!);
+            const uniqueCs = new Set<number>();
+            const addToUniqueCs = (components: string[]) => {
+                // compute rotation variants
+                let minC: number | null = null;
+                for (const r of sh.rotationalSymmetries) {
+                    const rotatedC = componentsToC(rotateArray(components, r));
+                    if (minC == null || rotatedC < minC) minC = rotatedC;
                 }
-                equalSet.sort();
-                return equalSet;
+                uniqueCs.add(minC!);
             };
 
-            const uniqueCs = new Set<number>();
             const maxColor = Math.pow(numColors, numColorGroups);
+            // enumerate all possible permutations
             for (let c = 0; c < maxColor; c++) {
-                uniqueCs.add(computeEqualColors(c)[0]);
+                // map to segment colors
+                const components = cToComponents(c, numColorGroups);
+                if (colorPattern) {
+                    for (const pattern of colorPattern.segmentColors) {
+                        addToUniqueCs(pattern.map((i) => components[i]));
+                    }
+                } else {
+                    addToUniqueCs(components);
+                }
             }
 
             console.log(`Generated ${uniqueCs.size} tiles`);
 
             return [...uniqueCs.values()].map((c) => ({
                 shape: sh,
-                colors: cToComponents(c).map(
+                colors: cToComponents(c, sh.cornerAngles.length).map(
                     (s) => colors[parseInt(s, numColors)],
                 ),
             }));
@@ -108,6 +125,20 @@ export class TileGenerators {
         return (tiles: TileShapeColors[]) => {
             shuffle(tiles);
             return tiles.slice(0, n);
+        };
+    }
+
+    static ensureNumber(min: number, max: number): TileGenerator {
+        return (tiles: TileShapeColors[]) => {
+            shuffle(tiles);
+            if (min <= tiles.length && tiles.length <= max) {
+                return tiles;
+            }
+            const selectedTiles: TileShapeColors[] = [];
+            for (let i = Math.round((max + min) / 2); i >= 0; i--) {
+                selectedTiles.push(tiles[i % tiles.length]);
+            }
+            return selectedTiles;
         };
     }
 }

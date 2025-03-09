@@ -5,12 +5,24 @@ import { TileGenerator } from "./TileGenerator";
 import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
 import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/arrays";
+import { RuleSet } from "src/grid/RuleSet";
+import { ColorPattern, Shape } from "src/grid/Shape";
 
 export type GameSettings = {
     atlas: Atlas;
+    colors?: TileColors;
+    rules?: RuleSet;
+    colorPatterns?: { shape: Shape; colorPatterns: ColorPattern }[];
     tilesShownOnStack: number;
     initialTile: TileColors;
     tileGenerator: TileGenerator[];
+};
+
+export type GameSettingsSerialized = {
+    atlas: string;
+    colors: string;
+    segments: number;
+    rules: string;
 };
 
 export const enum GameEventType {
@@ -52,6 +64,7 @@ export class Game extends EventTarget {
         this.points = 0;
 
         this.grid = new Grid(this.settings.atlas);
+        if (settings.rules) this.grid.rules = settings.rules;
 
         // generate tiles
         let tiles: TileShapeColors[] = [];

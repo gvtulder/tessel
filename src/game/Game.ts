@@ -1,12 +1,13 @@
 import { Grid } from "../grid/Grid";
 import { ConnectedSegmentScorer, ScoredRegion, Scorer } from "./Scorer";
 import { Tile, TileColors } from "../grid/Tile";
-import { TileGenerator } from "./TileGenerator";
+import { TileGenerator, TileGenerators } from "./TileGenerator";
 import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
 import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/arrays";
 import { RuleSet } from "src/grid/RuleSet";
 import { ColorPattern, Shape } from "src/grid/Shape";
+import { SetupCatalog } from "src/saveGames";
 
 export type GameSettings = {
     atlas: Atlas;
@@ -150,4 +151,56 @@ export class Game extends EventTarget {
             );
         }
     }
+}
+
+export function gameFromSerializedSettings(
+    catalog: typeof SetupCatalog,
+    serialized: GameSettingsSerialized,
+): GameSettings | null {
+    const atlas = catalog.atlas.get(serialized.atlas);
+    if (!atlas) return null;
+    const colors = catalog.colors.get(serialized.colors);
+    if (!colors) return null;
+    const rules = catalog.rules.get(serialized.rules);
+    if (!rules) return null;
+    if (atlas.atlas.shapes.length != 1) {
+        throw new Error("multi-shape atlas not yet supported");
+    }
+    const shape = atlas.atlas.shapes[0];
+    const colorPattern = shape.colorPatterns[1 * serialized.segments];
+    if (!colorPattern) return null;
+
+    // TODO add support for multiple tile shapes
+    const initialTile = colorPattern.segmentColors[0].map(
+        (c) => colors.colors[c % colors.colors.length],
+    );
+
+    const settings: GameSettings = {
+        atlas: atlas.atlas,
+        colors: colors.colors,
+        rules: rules.rules,
+        scorer: rules.scorer,
+        colorPatterns: [
+            {
+                shape: shape,
+                colorPatterns: colorPattern,
+            },
+        ],
+        initialTile: initialTile,
+        tilesShownOnStack: 3,
+        tileGenerator: [
+            TileGenerators.forShapes(
+                atlas.atlas.shapes,
+                [
+                    TileGenerators.permutations(colors.colors),
+                    ...(serialized.uniqueTileColors
+                        ? [TileGenerators.onlyUniqueColors()]
+                        : []),
+                ],
+                [colorPattern],
+            ),
+            TileGenerators.ensureNumber(60, 100),
+        ],
+    };
+    return settings;
 }

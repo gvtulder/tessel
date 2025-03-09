@@ -1,4 +1,9 @@
-import { Game, GameSettings, GameSettingsSerialized } from "../game/Game";
+import {
+    Game,
+    gameFromSerializedSettings,
+    GameSettings,
+    GameSettingsSerialized,
+} from "../game/Game";
 import { GameDisplay } from "./game/GameDisplay";
 import { MainMenuDisplay } from "./menu/MainMenuDisplay";
 import * as SaveGames from "../saveGames";
@@ -135,52 +140,7 @@ export class GameController {
     gameFromSerializedSettings(
         serialized: GameSettingsSerialized,
     ): GameSettings | null {
-        const atlas = SaveGames.SetupCatalog.atlas.get(serialized.atlas);
-        if (!atlas) return null;
-        const colors = SaveGames.SetupCatalog.colors.get(serialized.colors);
-        if (!colors) return null;
-        const rules = SaveGames.SetupCatalog.rules.get(serialized.rules);
-        if (!rules) return null;
-        if (atlas.atlas.shapes.length != 1) {
-            throw new Error("multi-shape atlas not yet supported");
-        }
-        const shape = atlas.atlas.shapes[0];
-        const colorPattern = shape.colorPatterns[1 * serialized.segments];
-        if (!colorPattern) return null;
-
-        // TODO add support for multiple tile shapes
-        const initialTile = colorPattern.segmentColors[0].map(
-            (c) => colors.colors[c % colors.colors.length],
-        );
-
-        const settings: GameSettings = {
-            atlas: atlas.atlas,
-            colors: colors.colors,
-            rules: rules.rules,
-            scorer: rules.scorer,
-            colorPatterns: [
-                {
-                    shape: shape,
-                    colorPatterns: colorPattern,
-                },
-            ],
-            initialTile: initialTile,
-            tilesShownOnStack: 3,
-            tileGenerator: [
-                TileGenerators.forShapes(
-                    atlas.atlas.shapes,
-                    [
-                        TileGenerators.permutations(colors.colors),
-                        ...(serialized.uniqueTileColors
-                            ? [TileGenerators.onlyUniqueColors()]
-                            : []),
-                    ],
-                    [colorPattern],
-                ),
-                TileGenerators.ensureNumber(60, 100),
-            ],
-        };
-        return settings;
+        return gameFromSerializedSettings(SaveGames.SetupCatalog, serialized);
     }
 
     startGame(gameSettings: GameSettings) {

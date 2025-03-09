@@ -16,7 +16,7 @@ export class SettingRow<T extends SettingRowOption> {
         this.element.appendChild(option.element);
         const index = this.options.length;
         this.options.push(option);
-        option.element.addEventListener("click", () => {
+        option.interactable.on("tap", () => {
             this.selectedIndex = index;
             if (this.onchange) {
                 this.onchange();
@@ -32,6 +32,7 @@ export class SettingRow<T extends SettingRowOption> {
         const option = this.options.pop();
         if (option) {
             option.element.remove();
+            option.destroy();
             if (this.options.length <= (this._selected || 0)) {
                 this._selected = 0;
             }
@@ -61,7 +62,9 @@ export class SettingRow<T extends SettingRowOption> {
     }
 
     destroy() {
-        // TODO
+        for (const option of this.options) {
+            option.destroy();
+        }
     }
 
     private updateSelectedState() {

@@ -22,7 +22,7 @@ export class ExampleDisplay {
         colorPattern: ColorPattern,
         rules: RuleSet,
         seed: number = 123456,
-    ) {
+    ): boolean {
         if (this.gridDisplay) {
             this.gridDisplay.element.remove();
             this.gridDisplay.destroy();
@@ -40,12 +40,14 @@ export class ExampleDisplay {
             new Map([[grid.atlas.shapes[0], [colorPattern]]]),
             prngColorGroup,
         );
-        coloring.assignColors(colors, prngColor);
+        const valid = coloring.assignColors(colors, prngColor) !== null;
 
         const gridDisplay = new ExampleGridDisplay(grid, this.element);
         this.gridDisplay = gridDisplay;
         this.element.appendChild(gridDisplay.element);
         this.gridDisplay.rescale();
+
+        return valid;
     }
 
     rescale() {

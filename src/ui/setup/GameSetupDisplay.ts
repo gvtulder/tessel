@@ -31,11 +31,13 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     regenerateButton: Button;
 
     seed: number;
+    valid: boolean;
 
     constructor() {
         super();
 
         this.seed = 123456;
+        this.valid = false;
 
         const div = (this.element = createElement("div", "gameSetupDisplay"));
         const settingsDiv = createElement("div", "settings", div);
@@ -136,13 +138,15 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
             settingSegments.showAtlas(atlas, colors);
             settingRules.updateColors(colors);
             const colorPattern = settingSegments.selected!.colorPattern!;
-            this.exampleDisplay.showAtlas(
+            const valid = this.exampleDisplay.showAtlas(
                 atlas,
                 colors,
                 colorPattern,
                 settingRules.selected!.rules,
                 this.seed,
             );
+            playButton.element.classList.toggle("disabled", !valid);
+            this.valid = valid;
         };
 
         settingColors.onchange = update;

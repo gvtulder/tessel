@@ -538,6 +538,12 @@ svg {
   background: #63851d;
   text-align: center;
 }
+.gameSetupDisplay .game-button.play.disabled {
+  background: #999;
+}
+.gameSetupDisplay .game-button.play.disabled svg {
+  fill: #ccc;
+}
 .gameSetupDisplay .game-button.play svg {
   display: inline-block;
   fill: #ddd;
@@ -549,9 +555,16 @@ svg {
   .gameSetupDisplay .game-button.play:hover {
     transform: scale(1.1);
   }
+  .gameSetupDisplay .game-button.play.disabled:hover {
+    transform: none;
+  }
   .gameSetupDisplay .game-button.play:hover svg,
   .gameSetupDisplay .game-button.play svg:hover {
     fill: #fff;
+  }
+  .gameSetupDisplay .game-button.play.disabled:hover svg,
+  .gameSetupDisplay .game-button.play.disabled svg:hover {
+    fill: #ccc;
   }
 }
 

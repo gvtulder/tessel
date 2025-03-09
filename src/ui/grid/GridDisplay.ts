@@ -318,10 +318,6 @@ export class GridDisplay extends EventTarget {
         this.visibleBottom = (availHeight + containerTop) / scale;
 
         this.svgGrid.style.transform = `translate(${containerLeft}px, ${containerTop}px) scale(${scale})`;
-        console.log(
-            "update svgGrid.style.transform",
-            this.svgGrid.style.transform,
-        );
 
         this.containerLeft = containerLeft;
         this.containerTop = containerTop;

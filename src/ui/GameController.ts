@@ -53,7 +53,7 @@ export class GameController {
             let gameSettings: GameSettings | null = null;
             try {
                 const serialized = JSON.parse(atob(saveGameId));
-                gameSettings = this.startFromSerializedSettings(serialized);
+                gameSettings = this.gameFromSerializedSettings(serialized);
             } catch {
                 gameSettings = null;
             }
@@ -102,12 +102,13 @@ export class GameController {
                 this.container.removeChild(setupDisplay.element);
                 setupDisplay.destroy();
                 window.location.hash = `#${btoa(JSON.stringify(settings))}`;
-                this.startFromSerializedSettings(settings);
+                const gameSettings = this.gameFromSerializedSettings(settings);
+                if (gameSettings) this.startGame(gameSettings);
             },
         );
     }
 
-    startFromSerializedSettings(
+    gameFromSerializedSettings(
         serialized: GameSettingsSerialized,
     ): GameSettings | null {
         const atlas = SaveGames.SetupCatalog.atlas.get(serialized.atlas);

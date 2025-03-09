@@ -8,6 +8,10 @@ import {
     SquaresAtlas,
     TrianglesAtlas,
 } from "./grid/Atlas";
+import {
+    DifferentEdgeColorsRuleSet,
+    MatchEdgeColorsRuleSet,
+} from "./grid/RuleSet";
 
 const COLORS = [
     "red",
@@ -165,3 +169,51 @@ lookup.set("penrose3", {
 export const defaultGameList = ["square", "triangle", "rhombus", "hexagons"];
 
 // ["triangle", "square", "isometric", "hex"]
+
+export const SetupCatalog = {
+    atlas: [
+        { key: "squares", atlas: SquaresAtlas },
+        { key: "triangles", atlas: TrianglesAtlas },
+        { key: "rhombus", atlas: RhombusAtlas },
+        { key: "hexagon", atlas: HexagonsAtlas },
+    ],
+    defaultAtlas: "squares",
+
+    colors: [
+        /*
+        {
+            key: "default4",
+            colors: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
+        },
+        { key: "default3", colors: ["#dd4b39", "#f39c12", "#00a65a"] },
+        { key: "default2", colors: ["#dd4b39", "#f39c12"] },
+        { key: "oldrbkw", colors: ["red", "blue", "black", "white"] },
+        */
+        ...[6, 5, 4, 3, 2].map((n) => ({
+            key: `wong${n}`,
+            colors: [
+                "#D55E00",
+                "#0072B2",
+                "#009E73",
+                "#E69F00",
+                "#56B4E9",
+                "#CC79A7",
+            ].filter((_, i) => i < n),
+        })),
+    ],
+    defaultColor: "wong4",
+
+    rules: [
+        {
+            key: "same",
+            rules: new MatchEdgeColorsRuleSet(),
+            exampleColors: [0, 0] as [number, number],
+        },
+        {
+            key: "diff",
+            rules: new DifferentEdgeColorsRuleSet(),
+            exampleColors: [0, 1] as [number, number],
+        },
+    ],
+    defaultRules: "same",
+};

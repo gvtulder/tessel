@@ -55,6 +55,15 @@ export class SettingRow<T extends SettingRowOption> {
             : this.options[this._selected];
     }
 
+    select(key: string) {
+        for (let i = 0; i < this.options.length; i++) {
+            if (this.options[i].key == key) {
+                this.selectedIndex = i;
+                return;
+            }
+        }
+    }
+
     rescale() {
         for (const option of this.options) {
             option.rescale();

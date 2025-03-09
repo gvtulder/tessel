@@ -21,6 +21,7 @@ import { RulesOption } from "./RulesOption";
 import { Button } from "../Button";
 import icons from "../icons";
 import { generateSeed } from "src/geom/RandomSampler";
+import { SetupCatalog } from "src/saveGames";
 
 export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -35,6 +36,8 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
 
     constructor() {
         super();
+
+        const catalog = SetupCatalog;
 
         this.seed = 123456;
         this.valid = false;
@@ -67,50 +70,18 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.settingRows = [];
 
         const settingAtlas = new SettingRow<AtlasOption>();
-        settingAtlas.addOption(new AtlasOption("squares", SquaresAtlas));
-        settingAtlas.addOption(new AtlasOption("triangles", TrianglesAtlas));
-        settingAtlas.addOption(new AtlasOption("rhombus", RhombusAtlas));
-        settingAtlas.addOption(new AtlasOption("hexagon", HexagonsAtlas));
+        for (const { key, atlas } of catalog.atlas) {
+            settingAtlas.addOption(new AtlasOption(key, atlas));
+        }
+        settingAtlas.select(catalog.defaultAtlas);
         settingsDiv.appendChild(settingAtlas.element);
         this.settingRows.push(settingAtlas);
 
         const settingColors = new SettingRow<ColorsOption>();
-        /*
-        settingColors.addOption(
-            new ColorsOption("default4", [
-                "#00c0ef",
-                "#dd4b39",
-                "#f39c12",
-                "#00a65a",
-            ]),
-        );
-        settingColors.addOption(
-            new ColorsOption("default3", ["#dd4b39", "#f39c12", "#00a65a"]),
-        );
-        settingColors.addOption(
-            new ColorsOption("default2", ["#dd4b39", "#f39c12"]),
-        );
-        */
-        for (const n of [6, 5, 4, 3, 2]) {
-            settingColors.addOption(
-                new ColorsOption(
-                    `wong${n}`,
-                    [
-                        "#D55E00",
-                        "#0072B2",
-                        "#009E73",
-                        "#E69F00",
-                        "#56B4E9",
-                        "#CC79A7",
-                    ].filter((_, i) => i < n),
-                ),
-            );
+        for (const { key, colors } of catalog.colors) {
+            settingColors.addOption(new ColorsOption(key, colors));
         }
-        /*
-        settingColors.addOption(
-            new ColorsOption("rbkw", ["red", "blue", "black", "white"]),
-        );
-        */
+        settingColors.select(catalog.defaultColor);
         settingsDiv.appendChild(settingColors.element);
         this.settingRows.push(settingColors);
 
@@ -119,16 +90,10 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.settingRows.push(settingSegments);
 
         const settingRules = new RulesSettingRow();
-        settingRules.addOption(
-            new RulesOption("same", new MatchEdgeColorsRuleSet(), [0, 0]),
-        );
-        settingRules.addOption(
-            new RulesOption(
-                "different",
-                new DifferentEdgeColorsRuleSet(),
-                [0, 1],
-            ),
-        );
+        for (const { key, rules, exampleColors } of catalog.rules) {
+            settingRules.addOption(new RulesOption(key, rules, exampleColors));
+        }
+        settingRules.select(catalog.defaultRules);
         settingsDiv.appendChild(settingRules.element);
         this.settingRows.push(settingRules);
 

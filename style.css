@@ -563,6 +563,7 @@ svg {
   border-radius: 100%;
   background: #63851d;
   text-align: center;
+  transition: transform 0.1s;
 }
 .gameSetupDisplay .game-button.play.disabled {
   background: #999;

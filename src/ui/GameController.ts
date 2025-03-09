@@ -139,7 +139,7 @@ export class GameController {
 
         // TODO add support for multiple tile shapes
         const initialTile = colorPattern.segmentColors[0].map(
-            (c) => colors.colors[c],
+            (c) => colors.colors[c % colors.colors.length],
         );
 
         const settings: GameSettings = {

@@ -86,11 +86,15 @@ export class GridColoring {
 
     applyColorPattern(
         colorPatterns: Map<Shape, ColorPattern[]>,
+        uniqueTileColors: boolean,
         prng: PRNG = Math.random,
     ) {
         const segmentToGroup = this.segmentToGroup;
 
         for (const tile of this.grid.tiles) {
+            if (!tile.segments) {
+                throw new Error("tile has no segments");
+            }
             // find the available color patterns for this tile shape
             const patterns = colorPatterns.get(tile.shape);
             if (!patterns || patterns.length == 0) {
@@ -107,12 +111,24 @@ export class GridColoring {
                     let mainGroup;
                     for (let s = 0; s < segmentColors.length; s++) {
                         if (segmentColors[s] == c) {
-                            const segment = tile.segments![s];
+                            const segment = tile.segments[s];
                             const group = segmentToGroup.get(segment)!;
                             mainGroup ||= group;
                             if (mainGroup !== group) {
                                 this.mergeGroup(mainGroup, group);
                             }
+                        }
+                    }
+                }
+            }
+            if (uniqueTileColors) {
+                // add conflicts between internal segments
+                for (const a of tile.segments) {
+                    const groupA = segmentToGroup.get(a)!;
+                    for (const b of tile.segments) {
+                        const groupB = segmentToGroup.get(b)!;
+                        if (a !== b) {
+                            this.addConflict(groupA, groupB);
                         }
                     }
                 }

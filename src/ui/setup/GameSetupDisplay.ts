@@ -139,10 +139,12 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
             settingSegments.showAtlas(atlas, colors);
             settingRules.updateColors(colors);
             const colorPattern = settingSegments.selected!.colorPattern!;
+            const uniqueColors = settingSegments.selected!.uniqueColors!;
             const valid = this.exampleDisplay.showAtlas(
                 atlas,
                 colors,
                 colorPattern,
+                uniqueColors,
                 settingRules.selected!.rules,
                 this.seed,
             );

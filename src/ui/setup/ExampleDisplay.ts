@@ -20,6 +20,7 @@ export class ExampleDisplay {
         atlas: Atlas,
         colors: TileColors,
         colorPattern: ColorPattern,
+        uniqueTileColors: boolean,
         rules: RuleSet,
         seed: number = 123456,
     ): boolean {
@@ -38,6 +39,7 @@ export class ExampleDisplay {
         const coloring = new GridColoring(grid);
         coloring.applyColorPattern(
             new Map([[grid.atlas.shapes[0], [colorPattern]]]),
+            uniqueTileColors,
             prngColorGroup,
         );
         const valid = coloring.assignColors(colors, prngColor) !== null;

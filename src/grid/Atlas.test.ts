@@ -1,5 +1,10 @@
 import { describe, expect, test } from "@jest/globals";
-import { Atlas, AtlasDefinitionDoc, Penrose0Atlas } from "./Atlas";
+import {
+    Atlas,
+    AtlasDefinitionDoc,
+    HexagonsAtlas,
+    Penrose0Atlas,
+} from "./Atlas";
 import { deg2rad, rad2deg } from "../geom/math";
 import { Grid, SortedCorners } from "./Grid";
 
@@ -86,18 +91,21 @@ describe("Atlas", () => {
 
     test("can compute rotation angles", () => {
         const squares = Atlas.fromDefinition(squaresDef);
-        expect(toFixed(squares.orientations, 4)).toStrictEqual(
-            toFixed(deg2rad([0, 90, 180, 270]), 4),
-        );
+        expect(rad2deg(squares.orientations)).toStrictEqual([0, 90, 180, 270]);
 
         const triangles = Atlas.fromDefinition(trianglesDef);
-        expect(toFixed(triangles.orientations, 4)).toStrictEqual(
-            toFixed(deg2rad([0, 60, 120, 180, 240, 300]), 4),
-        );
+        expect(rad2deg(triangles.orientations)).toStrictEqual([
+            0, 60, 120, 180, 240, 300,
+        ]);
 
         const penrose = Penrose0Atlas;
         expect(rad2deg(penrose.orientations)).toStrictEqual([
             0, 36, 72, 108, 144, 180, 216, 252, 288, 324,
+        ]);
+
+        const hexagons = HexagonsAtlas;
+        expect(rad2deg(hexagons.orientations)).toStrictEqual([
+            0, 60, 120, 180, 240, 300,
         ]);
     });
 

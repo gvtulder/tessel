@@ -1,5 +1,5 @@
 import { CornerType, SortedCorners } from "./Grid";
-import { DEG2RAD, RAD2DEG } from "../geom/math";
+import { deg2rad, DEG2RAD, RAD2DEG } from "../geom/math";
 import { Shape } from "./Shape";
 
 /**
@@ -179,27 +179,27 @@ export class Atlas {
      */
     get orientations(): readonly number[] {
         if (this._orientations) return this._orientations;
-        const angles = new Map<number, number>();
-        angles.set(0, 0);
-        let angleCount = 0;
+        const angles = new Set<number>();
+        angles.add(0);
         while (angles.size < 100) {
-            for (const startAngle of angles.keys()) {
+            const angleCountBefore = angles.size;
+            for (const startAngle of [...angles]) {
                 for (const shape of this.shapes) {
                     let angle = startAngle;
-                    for (const a of shape.cornerAngles) {
+                    for (const a of shape.cornerAnglesDeg) {
                         angle = Math.round(angle) % 360;
-                        if (!angles.has(angle)) {
-                            angles.set(angle, angle * DEG2RAD);
-                        }
-                        angle += a * RAD2DEG;
+                        angles.add(angle);
+                        angles.add((angle + 180) % 360);
+                        angle += a;
                     }
                 }
                 if (angles.size > 100) break;
             }
-            if (angleCount == angles.size) break;
-            angleCount = angles.size;
+            if (angleCountBefore == angles.size) break;
         }
-        return (this._orientations = [...angles.values()].sort());
+        return (this._orientations = deg2rad(
+            [...angles].sort((a, b) => a - b),
+        ));
     }
 
     /**

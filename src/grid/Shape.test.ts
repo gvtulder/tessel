@@ -58,6 +58,9 @@ describe("Shape", () => {
         expect(new Shape("", [72, 108, 72, 108]).uniqueRotations).toStrictEqual(
             [0, 1],
         );
+        expect(
+            new Shape("", [120, 120, 120, 120, 120, 120]).rotationalSymmetries,
+        ).toStrictEqual([0, 1, 2, 3, 4, 5]);
     });
 
     test("can be compared with equalAngles", () => {

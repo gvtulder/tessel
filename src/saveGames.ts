@@ -13,6 +13,7 @@ import {
     DifferentEdgeColorsRuleSet,
     MatchEdgeColorsRuleSet,
 } from "./grid/RuleSet";
+import { Tile, TileColors } from "./grid/Tile";
 
 const COLORS = [
     "red",
@@ -26,20 +27,37 @@ const COLORS = [
     "green",
 ];
 
+const OLD4 = ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"] as TileColors;
+
+const OLD6 = [
+    "#00c0ef",
+    "#dd4b39",
+    "#f39c12",
+    "#00a65a",
+    "#7554e0",
+    "#a1c725",
+] as TileColors;
+
+const WONG4 = ["#D55E00", "#0072B2", "#009E73", "#E69F00"] as TileColors;
+
+const WONG6 = [
+    "#D55E00",
+    "#0072B2",
+    "#009E73",
+    "#E69F00",
+    "#56B4E9",
+    "#CC79A7",
+] as TileColors;
+
 export const lookup = new Map<string, GameSettings>();
 
 lookup.set("square", {
     atlas: SquaresAtlas,
-    initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
+    initialTile: WONG4,
     tilesShownOnStack: 3,
     tileGenerator: [
         // TileGenerators.permutations(["red", "black", "blue", "white"]),
-        TileGenerators.permutations([
-            "#00c0ef",
-            "#dd4b39",
-            "#f39c12",
-            "#00a65a",
-        ]),
+        TileGenerators.permutations(WONG4),
     ],
 });
 
@@ -55,15 +73,10 @@ lookup.set("square5", {
 
 lookup.set("squareUnique", {
     atlas: SquaresAtlas,
-    initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
+    initialTile: WONG4,
     tilesShownOnStack: 3,
     tileGenerator: [
-        TileGenerators.permutations([
-            "#00c0ef",
-            "#dd4b39",
-            "#f39c12",
-            "#00a65a",
-        ]),
+        TileGenerators.permutations(WONG4),
         TileGenerators.onlyUniqueColors(),
         TileGenerators.repeat(10),
     ],
@@ -71,40 +84,21 @@ lookup.set("squareUnique", {
 
 lookup.set("triangle", {
     atlas: TrianglesAtlas,
-    initialTile: ["#00c0ef", "#dd4b39", "#f39c12"],
+    initialTile: [WONG4[0], WONG4[1], WONG4[2]],
     tilesShownOnStack: 3,
     tileGenerator: [
-        TileGenerators.permutations([
-            "#00c0ef",
-            "#dd4b39",
-            "#f39c12",
-            "#00a65a",
-        ]),
+        TileGenerators.permutations(WONG4),
         TileGenerators.repeat(3),
     ],
 });
 
 lookup.set("hexagons", {
     atlas: HexagonsAtlas,
-    initialTile: [
-        "#00c0ef",
-        "#dd4b39",
-        "#f39c12",
-        "#00a65a",
-        "#7554e0",
-        "#a1c725",
-    ],
+    initialTile: WONG6,
     tilesShownOnStack: 3,
     tileGenerator: [
         // TileGenerators.permutations(["red", "black", "blue", "white"]),
-        TileGenerators.permutations([
-            "#00c0ef",
-            "#dd4b39",
-            "#f39c12",
-            "#00a65a",
-            "#7554e0",
-            "#a1c725",
-        ]),
+        TileGenerators.permutations(WONG6),
         TileGenerators.randomSubset(70),
     ],
 });
@@ -135,16 +129,11 @@ lookup.set("cairo5", {
 
 lookup.set("rhombus", {
     atlas: RhombusAtlas,
-    initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
+    initialTile: WONG4,
     tilesShownOnStack: 3,
     tileGenerator: [
         // TileGenerators.permutations(["red", "black", "blue", "white"]),
-        TileGenerators.permutations([
-            "#00c0ef",
-            "#dd4b39",
-            "#f39c12",
-            "#00a65a",
-        ]),
+        TileGenerators.permutations(WONG4),
     ],
 });
 

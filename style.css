@@ -607,6 +607,10 @@ svg {
   box-sizing: border-box;
   aspect-ratio: 1;
   cursor: pointer;
+  transition: transform 0.1s;
+}
+.gameSetupDisplay .setting-row-option.selected {
+  transform: scale(1.05);
 }
 .gameSetupDisplay .setting-row-option.selected,
 .gameSetupDisplay .setting-row-option.selected:hover {

@@ -21,9 +21,12 @@ export class TileGenerators {
 
     static forShapes(
         shapes: readonly Shape[],
-        generator: TileGenerator,
+        generator: TileGenerator | TileGenerator[],
         colorPatterns?: ColorPattern[],
     ): TileGenerator {
+        if (generator instanceof Function) {
+            generator = [generator];
+        }
         return () => {
             const tiles: TileShapeColors[] = [];
             for (let i = 0; i < shapes.length; i++) {
@@ -31,7 +34,15 @@ export class TileGenerators {
                 const colorPattern = colorPatterns
                     ? colorPatterns[i]
                     : undefined;
-                tiles.push(...generator([], shape, colorPattern));
+                let tilesForShape = generator[0]([], shape, colorPattern);
+                for (let j = 1; j < generator.length; j++) {
+                    tilesForShape = generator[j](
+                        tilesForShape,
+                        shape,
+                        colorPattern,
+                    );
+                }
+                tiles.push(...tilesForShape);
             }
             return tiles;
         };

@@ -14,20 +14,18 @@ import { OptionGridDisplay } from "./OptionGridDisplay";
 import { SettingRowOption } from "./SettingRowOption";
 
 export class SegmentsOption extends SettingRowOption {
+    segmentsIndex: number;
+    uniqueTileColors: boolean;
     colorPattern?: ColorPattern;
-    uniqueColors?: boolean;
     gridDisplay?: GridDisplay;
 
-    constructor(key: string) {
+    constructor(key: string, segmentsIndex: number, uniqueTileColors: boolean) {
         super(key);
+        this.segmentsIndex = segmentsIndex;
+        this.uniqueTileColors = uniqueTileColors;
     }
 
-    showAtlas(
-        atlas: Atlas,
-        colors: TileColors,
-        colorPattern: ColorPattern,
-        uniqueColors: boolean,
-    ) {
+    showAtlas(atlas: Atlas, colors: TileColors, colorPattern: ColorPattern) {
         if (this.gridDisplay) {
             this.gridDisplay.element.remove();
             this.gridDisplay.destroy();
@@ -57,7 +55,7 @@ export class SegmentsOption extends SettingRowOption {
         );
         tile1.colors = tile1Colors;
 
-        if (!uniqueColors) {
+        if (!this.uniqueTileColors) {
             const bbox = poly1.bbox;
             const stepX = bbox.maxX - bbox.minX;
             const stepY = bbox.maxY - bbox.minY;
@@ -132,7 +130,6 @@ export class SegmentsOption extends SettingRowOption {
         gridDisplay.rescale();
 
         this.colorPattern = colorPattern;
-        this.uniqueColors = uniqueColors;
     }
 
     rescale() {

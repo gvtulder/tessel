@@ -23,6 +23,7 @@ export type GameSettingsSerialized = {
     atlas: string;
     colors: string;
     segments: number;
+    uniqueTileColors: boolean;
     rules: string;
 };
 

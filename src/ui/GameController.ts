@@ -169,7 +169,12 @@ export class GameController {
             tileGenerator: [
                 TileGenerators.forShapes(
                     atlas.atlas.shapes,
-                    TileGenerators.permutations(colors.colors),
+                    [
+                        TileGenerators.permutations(colors.colors),
+                        ...(serialized.uniqueTileColors
+                            ? [TileGenerators.onlyUniqueColors()]
+                            : []),
+                    ],
                     [colorPattern],
                 ),
                 TileGenerators.ensureNumber(60, 100),

@@ -43,6 +43,12 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.exampleDisplay = new ExampleDisplay();
         div.appendChild(this.exampleDisplay.element);
 
+        const buttonRow = createElement("div", "button-row", this.element);
+        const playButton = new Button(icons.playIcon, "Play game", () => {});
+        playButton.element.classList.add("play");
+        buttonRow.appendChild(playButton.element);
+        this.regenerateButton = playButton;
+
         const regenerateButton = new Button(
             icons.rotateRightIcon,
             "Regenerate",
@@ -52,6 +58,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
                 update();
             },
         );
+        regenerateButton.element.classList.add("regenerate");
         this.exampleDisplay.element.appendChild(regenerateButton.element);
         this.regenerateButton = regenerateButton;
 

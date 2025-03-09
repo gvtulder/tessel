@@ -122,7 +122,7 @@ svg {
   fill: #777777;
 }
 @media (hover) {
-  .game-button:hover svg {
+  .gameDisplay-buttons .game-button:hover svg {
     transform: scale(1.1);
     fill: #555;
   }
@@ -444,8 +444,7 @@ svg {
   opacity: 0.1;
 }
 
-.mainMenuDisplay,
-.gameSetupDisplay {
+.mainMenuDisplay {
   position: absolute;
   top: 0;
   left: 0;
@@ -480,47 +479,108 @@ svg {
   transform: scale(1.1);
 }
 
+.gameSetupDisplay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #bbb;
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
+  display: grid;
+  grid-template-areas:
+    "example settings"
+    "example buttons";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 3fr 1fr;
+}
+
 .gameSetupDisplay .exampleGrid {
   position: relative;
-  flex-grow: 1;
-  width: 50%;
-  height: 100%;
+  grid-area: example;
+  background: #ddd;
 }
-.gameSetupDisplay .game-button {
+
+.gameSetupDisplay .game-button.regenerate {
   position: absolute;
-  left: 10px;
-  bottom: 10px;
+  right: 20px;
+  bottom: 20px;
   width: 30px;
   height: 30px;
   padding: 10px;
 }
-.gameSetupDisplay .game-button svg {
+.gameSetupDisplay .game-button.regenerate svg {
   fill: #aaa;
 }
-.gameSetupDisplay .game-button svg:hover {
-  fill: #777;
+@media (hover) {
+  .gameSetupDisplay .game-button.regenerate svg:hover {
+    fill: #777;
+    transform: none;
+  }
 }
+
+.gameSetupDisplay .button-row {
+  grid-area: buttons;
+  text-align: center;
+  width: 100%;
+  background: #bbb;
+  display: flex;
+  align-items: top;
+  justify-content: center;
+}
+.gameSetupDisplay .game-button.play {
+  width: min(8vw, 13vh);
+  height: min(8vw, 13vh);
+  padding: 10px;
+  margin: min(1vw, 1vh);
+  border-radius: 100%;
+  background: #63851d;
+  text-align: center;
+}
+.gameSetupDisplay .game-button.play svg {
+  display: inline-block;
+  fill: #ddd;
+  margin: 15% 0 0 10%;
+  width: 65%;
+  height: 65%;
+}
+@media (hover) {
+  .gameSetupDisplay .game-button.play:hover {
+    transform: scale(1.1);
+  }
+  .gameSetupDisplay .game-button.play:hover svg,
+  .gameSetupDisplay .game-button.play svg:hover {
+    fill: #fff;
+  }
+}
+
 .gameSetup-gridDisplay {
   width: 100%;
   height: 100%;
 }
 .gameSetupDisplay .settings {
-  flex-grow: 1;
-  width: 50%;
-  height: 100%;
+  position: relative;
+  grid-area: settings;
   background: #bbb;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .gameSetupDisplay .setting-row {
   display: flex;
-  margin: 10px;
-  padding-bottom: 10px;
+  margin: 0 min(10vw, 1vh);
+  padding: min(10vw, 1vh);
   flex-wrap: wrap;
   border-bottom: 1px solid #aaa;
 }
+.gameSetupDisplay .setting-row:last-child {
+  border-bottom: none;
+}
 .gameSetupDisplay .setting-row-option {
-  margin: 3px;
-  width: 100px;
-  height: 100px;
+  margin: 0.5vw;
+  width: min(8vw, 13vh);
+  height: min(8vw, 13vh);
   background: #cacaca;
   border: 3px solid #aaa;
   border-radius: 10px;
@@ -533,8 +593,10 @@ svg {
   border: 3px solid #66f;
   background: #eee;
 }
-.gameSetupDisplay .setting-row-option:hover {
-  background: #ddd;
+@media (hover) {
+  .gameSetupDisplay .setting-row-option:hover {
+    background: #ddd;
+  }
 }
 .gameSetupDisplay .settings .palette {
   padding: 10px;

@@ -12,6 +12,7 @@ import { TileColor, TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { OptionGridDisplay } from "./OptionGridDisplay";
 import { SettingRowOption } from "./SettingRowOption";
+import { createElement } from "../html";
 
 export class SegmentsOption extends SettingRowOption {
     segmentsIndex: number;
@@ -19,10 +20,13 @@ export class SegmentsOption extends SettingRowOption {
     colorPattern?: ColorPattern;
     gridDisplay?: GridDisplay;
 
+    wrapper: HTMLDivElement;
+
     constructor(key: string, segmentsIndex: number, uniqueTileColors: boolean) {
         super(key);
         this.segmentsIndex = segmentsIndex;
         this.uniqueTileColors = uniqueTileColors;
+        this.wrapper = createElement("div", "wrap-grid", this.element);
     }
 
     showAtlas(atlas: Atlas, colors: TileColors, colorPattern: ColorPattern) {
@@ -124,8 +128,8 @@ export class SegmentsOption extends SettingRowOption {
             }
         }
 
-        const gridDisplay = new OptionGridDisplay(grid, this.element);
-        this.element.appendChild(gridDisplay.element);
+        const gridDisplay = new OptionGridDisplay(grid, this.wrapper);
+        this.wrapper.appendChild(gridDisplay.element);
         this.gridDisplay = gridDisplay;
         gridDisplay.rescale();
 

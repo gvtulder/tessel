@@ -629,6 +629,11 @@ svg {
   cursor: pointer;
   transition: transform 0.1s;
 }
+.gameSetupDisplay .wrap-grid {
+  width: 76%;
+  height: 76%;
+  margin: 12%;
+}
 .gameSetupDisplay .setting-row-option.selected {
   transform: scale(1.05);
 }
@@ -643,7 +648,7 @@ svg {
   }
 }
 .gameSetupDisplay .settings .palette {
-  padding: 10px;
+  padding: 13%;
 }
 
 .mainMenuDisplay,

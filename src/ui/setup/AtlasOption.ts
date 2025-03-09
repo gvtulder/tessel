@@ -1,6 +1,7 @@
 import { Atlas } from "../../grid/Atlas";
 import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
+import { createElement } from "../html";
 import { OptionGridDisplay } from "./OptionGridDisplay";
 import { SettingRowOption } from "./SettingRowOption";
 
@@ -21,8 +22,9 @@ export class AtlasOption extends SettingRowOption {
         const poly = shape.constructPolygonXYR(0, 0, 1);
         const tile = grid.addTile(shape, poly, poly.segment());
         tile.colors = PROTO_TILE_COLOR;
-        const gridDisplay = new OptionGridDisplay(grid, this.element);
-        this.element.appendChild(gridDisplay.element);
+        const wrapper = createElement("div", "wrap-grid", this.element);
+        const gridDisplay = new OptionGridDisplay(grid, wrapper);
+        wrapper.appendChild(gridDisplay.element);
         this.gridDisplay = gridDisplay;
     }
 

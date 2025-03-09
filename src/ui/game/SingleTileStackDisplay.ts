@@ -34,6 +34,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     // angle in degrees to prevent rounding errors
     angle: number;
     beforeAutorotationIdx: number | null;
+    normalizeRotationTimeout?: number;
 
     baseTransform: TransformComponent;
     dragTransform: TransformComponent;
@@ -84,12 +85,6 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         */
 
         this.initInteractable(makeRotatable);
-
-        this.rotatable.addEventListener("transitionend", () => {
-            this.rotatable.classList.remove("animated");
-            this.rotatable.classList.remove("drag-return");
-            this.normalizeRotation();
-        });
 
         this.element.addEventListener("transitionend", () => {
             this.element.classList.remove("drag-success");
@@ -158,13 +153,27 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.rotateTransform.rotation = this.angle * DEG2RAD;
         if (animated) {
             this.rotatable.classList.add("animated");
+            this.scheduleNormalizeRotation();
+        } else {
+            this.normalizeRotation();
         }
+    }
+
+    scheduleNormalizeRotation() {
+        if (this.normalizeRotationTimeout) {
+            window.clearTimeout(this.normalizeRotationTimeout);
+        }
+        this.normalizeRotationTimeout = window.setTimeout(
+            () => this.normalizeRotation(),
+            500,
+        );
     }
 
     normalizeRotation() {
         if ((360 + this.angle) % 360 != this.angle) {
             this.angle = (360 + this.angle) % 360;
             this.rotateTransform.rotation = this.angle * DEG2RAD;
+            this.rotatable.classList.remove("animated");
             this.rotatable.style.transform = `rotate(${this.angle}deg)`;
         }
     }

@@ -456,6 +456,13 @@ svg {
   flex-direction: row;
   align-items: center;
 }
+.mainMenuDisplay .button-setup-menu {
+  position: absolute;
+  top: 3vw;
+  right: 3vw;
+  width: 2vw;
+  height: 2vw;
+}
 .gameList {
   display: grid;
   width: 100%;

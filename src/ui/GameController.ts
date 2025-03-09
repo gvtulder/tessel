@@ -11,6 +11,7 @@ export const enum UserEventType {
     StartGame = "startgame",
     BackToMenu = "backtomenu",
     RestartGame = "restartgame",
+    SetupMenu = "setupmenu",
     StartGameFromSetup = "startgamefromsetup",
 }
 
@@ -79,11 +80,18 @@ export class GameController {
                 this.container.removeChild(menuDisplay.element);
                 this.currentScreen = undefined;
                 if (evt.gameId) {
-                    window.history.pushState({}, "", `/${evt.gameId}`);
+                    window.history.pushState({}, "", `#${evt.gameId}`);
                 }
                 this.startGame(evt.gameSettings!);
             },
         );
+
+        menuDisplay.addEventListener(UserEventType.SetupMenu, () => {
+            this.container.removeChild(menuDisplay.element);
+            this.currentScreen = undefined;
+            window.history.pushState({}, "", `#setup`);
+            this.showGameSetupDisplay();
+        });
     }
 
     showGameSetupDisplay() {
@@ -100,8 +108,13 @@ export class GameController {
                 const settings = evt.gameSettingsSerialized!;
                 console.log("Clicked play to start", settings);
                 this.container.removeChild(setupDisplay.element);
+                this.currentScreen = undefined;
                 setupDisplay.destroy();
-                window.location.hash = `#${btoa(JSON.stringify(settings))}`;
+                window.history.pushState(
+                    {},
+                    "",
+                    `#${btoa(JSON.stringify(settings))}`,
+                );
                 const gameSettings = this.gameFromSerializedSettings(settings);
                 if (gameSettings) this.startGame(gameSettings);
             },

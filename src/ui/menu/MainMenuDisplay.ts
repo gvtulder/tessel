@@ -3,15 +3,18 @@ import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
 
 import { GameSettings } from "../../game/Game";
+import icons from "../icons";
 import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
 import { MainMenuGridDisplay } from "./MainMenuGridDisplay";
 import * as SaveGames from "../../saveGames";
 import { UserEvent, UserEventType } from "../GameController";
 import { ScreenDisplay } from "../ScreenDisplay";
+import { Button } from "../Button";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
+    setupButton: Button;
     grids: Grid[];
     gridDisplays: GridDisplay[];
     interactables: Interactable[];
@@ -22,6 +25,17 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         const div = document.createElement("div");
         div.className = "mainMenuDisplay";
         this.element = div;
+
+        const setupButton = new Button(
+            icons.pencilIcon,
+            "Design a game",
+            () => {
+                this.dispatchEvent(new UserEvent(UserEventType.SetupMenu));
+            },
+        );
+        setupButton.element.classList.add("button-setup-menu");
+        this.setupButton = setupButton;
+        this.element.appendChild(setupButton.element);
 
         const gameList = document.createElement("div");
         gameList.className = "gameList";
@@ -79,6 +93,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         for (const gd of this.gridDisplays) {
             gd.destroy();
         }
+        this.setupButton.destroy();
         this.interactables = [];
         this.gridDisplays = [];
         this.grids = [];

@@ -1,10 +1,10 @@
 import { describe, expect, test } from "@jest/globals";
-import { area, bbox, centroid, P, Point } from "./math";
+import { area, bbox, centroid, P, Point, shiftPoints } from "./math";
 import { Polygon } from "./Polygon";
 
 describe("Polygon", () => {
-    const triangle = P([0, 0], [1, -1], [2, 1]);
-    const square = P([0, 0], [0, 1], [1, 1], [1, 0]);
+    const triangle: readonly Point[] = P([0, 0], [1, -1], [2, 1]);
+    const square: readonly Point[] = P([0, 0], [0, 1], [1, 1], [1, 0]);
 
     test("can be created", () => {
         const poly = new Polygon(triangle);
@@ -65,4 +65,12 @@ describe("Polygon", () => {
             }
         },
     );
+
+    test("can be shifted", () => {
+        const poly = new Polygon(triangle);
+        const expected = shiftPoints(poly.vertices, 2, 10);
+        const shifted = poly.toShifted(2, 10);
+        expect(poly.vertices).toStrictEqual(triangle);
+        expect(shifted.vertices).toStrictEqual(expected);
+    });
 });

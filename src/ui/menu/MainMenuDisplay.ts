@@ -11,6 +11,7 @@ import * as SaveGames from "../../saveGames";
 import { UserEvent, UserEventType } from "../GameController";
 import { ScreenDisplay } from "../ScreenDisplay";
 import { Button } from "../Button";
+import { createElement } from "../html";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -19,12 +20,16 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     gridDisplays: GridDisplay[];
     interactables: Interactable[];
 
-    constructor() {
+    constructor(version?: string) {
         super();
 
-        const div = document.createElement("div");
-        div.className = "mainMenuDisplay";
+        const div = createElement("div", "screen main-menu");
         this.element = div;
+
+        if (version) {
+            const versionDiv = createElement("div", "version", div);
+            versionDiv.innerHTML = version;
+        }
 
         const setupButton = new Button(
             icons.pencilIcon,
@@ -38,7 +43,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         this.element.appendChild(setupButton.element);
 
         const gameList = document.createElement("div");
-        gameList.className = "gameList";
+        gameList.className = "game-list";
         div.appendChild(gameList);
 
         this.grids = [];
@@ -50,7 +55,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             if (!gameSettings) continue;
 
             const exampleTile = document.createElement("div");
-            exampleTile.className = "gameList-exampleTile";
+            exampleTile.className = "example-tile";
             gameList.appendChild(exampleTile);
 
             const grid = new Grid(gameSettings.atlas);

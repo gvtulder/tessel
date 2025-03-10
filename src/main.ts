@@ -10,15 +10,10 @@ export function startMainMenu() {
         return;
     }
 
-    const controller = new GameController(document.body);
+    const controller = new GameController(document.body, VERSION);
     controller.run(window.location.hash.replace("#", ""));
 
     globalThis.gameController = controller;
-
-    const versionEl = document.getElementById("version");
-    if (versionEl) {
-        versionEl.innerHTML = `${VERSION}`;
-    }
 }
 
 const splash = document.getElementById("splash");

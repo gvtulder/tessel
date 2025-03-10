@@ -25,6 +25,7 @@
     "@jest/globals": "^29.7.0",
     "@parcel/packager-raw-url": "^2.13.3",
     "@parcel/reporter-bundle-analyzer": "^2.13.3",
+    "@parcel/transformer-sass": "^2.13.3",
     "@parcel/transformer-webmanifest": "^2.13.3",
     "@swc/jest": "^0.2.37",
     "babel-plugin-transform-define": "^2.1.4",

@@ -72,7 +72,7 @@ export class GridDisplay extends EventTarget {
 
         this.tileDisplays = new Map<Tile, TileDisplay>();
 
-        const div = document.createElement("div");
+        const div = createElement("div", "grid-display");
         this.element = div;
 
         const gridEl = (this.gridElement = createElement("div", "grid", div));

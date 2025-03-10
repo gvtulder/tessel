@@ -4,12 +4,6 @@ import { GridDisplay } from "../grid/GridDisplay";
 export class TileStackGridDisplay extends GridDisplay {
     margins = { top: 0, right: 0, bottom: 0, left: 0 };
 
-    styleMainElement() {
-        const div = this.element;
-        div.className = "tileStack-gridDisplay";
-        div.style.zIndex = "1000";
-    }
-
     /**
      * Returns the dimensions of the content area (e.g., the display coordinates
      * of the triangles to be shown on screen.)

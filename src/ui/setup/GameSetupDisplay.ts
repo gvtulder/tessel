@@ -52,7 +52,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.seed = 123456;
         this.valid = false;
 
-        const div = (this.element = createElement("div", "gameSetupDisplay"));
+        const div = (this.element = createElement("div", "screen game-setup"));
         const settingsDiv = createElement("div", "settings", div);
 
         this.exampleDisplay = new ExampleDisplay();

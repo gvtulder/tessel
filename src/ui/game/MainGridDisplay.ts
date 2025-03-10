@@ -22,11 +22,6 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
         this.ignorePlaceholders = false;
     }
 
-    styleMainElement() {
-        const div = this.element;
-        div.className = "gridDisplay";
-    }
-
     protected computeDimensionsForRescale() {
         if (this.ignorePlaceholders) {
             return this.grid.bboxWithoutPlaceholders;

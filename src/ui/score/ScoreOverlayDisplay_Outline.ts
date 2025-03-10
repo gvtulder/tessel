@@ -14,9 +14,9 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
     constructor() {
         super();
 
-        const group = SVG("g", "svg-scoreOverlay-mask disabled", this.element);
+        const group = SVG("g", "svg-score-overlay-mask disabled", this.element);
 
-        SVG("rect", "svg-scoreOverlay-fill", group, {
+        SVG("rect", "svg-score-overlay-fill", group, {
             x: "-1000",
             y: "-1000",
             width: "10000",
@@ -29,7 +29,7 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
             id: "scoreoverlaymask",
         });
 
-        SVG("rect", "svg-scoreOverlay-fill", mask, {
+        SVG("rect", "svg-score-overlay-fill", mask, {
             x: "-1000",
             y: "-1000",
             width: "10000",

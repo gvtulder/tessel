@@ -39,12 +39,14 @@ export class UserEvent extends Event {
 }
 
 export class GameController {
+    version?: string;
     container: HTMLElement;
     game?: Game;
     currentScreen?: ScreenDisplay;
 
-    constructor(container: HTMLElement) {
+    constructor(container: HTMLElement, version?: string) {
         this.container = container;
+        this.version = version;
 
         window.addEventListener("resize", () => this.rescale());
     }
@@ -74,7 +76,7 @@ export class GameController {
     showMainMenu() {
         this.resetState();
 
-        const menuDisplay = new MainMenuDisplay();
+        const menuDisplay = new MainMenuDisplay(this.version);
         this.currentScreen = menuDisplay;
         this.container.appendChild(menuDisplay.element);
         menuDisplay.rescale();

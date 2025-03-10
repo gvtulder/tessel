@@ -1,0 +1,49 @@
+@use "./colors.scss";
+
+.screen.main-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  .button-setup-menu {
+    position: absolute;
+    top: 3vw;
+    right: 3vw;
+    width: 2vw;
+    height: 2vw;
+  }
+
+  .game-list {
+    display: grid;
+    width: 100%;
+    max-height: min(100vh, 100vw);
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    column-gap: min(5vh, 5vw);
+    row-gap: min(5vw, 5vh);
+    padding: 10%;
+    box-sizing: border-box;
+
+    .example-tile {
+      position: relative;
+      cursor: pointer;
+      transform: scale(1);
+      transition-property: transform;
+      transition-duration: 100ms;
+      aspect-ratio: 1 / 1;
+      min-width: 0;
+      min-height: 0;
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    @media screen and (max-aspect-ratio: 4.5/3) {
+      & {
+        max-width: min(100vh, 100vw);
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+    }
+  }
+}

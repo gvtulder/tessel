@@ -56,10 +56,10 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.grid = new Grid(atlas);
 
         this.element = document.createElement("div");
-        this.element.className = "tileOnStack";
+        this.element.className = "tile-on-stack";
 
         this.rotatable = document.createElement("div");
-        this.rotatable.className = "tileOnStack-rotatable";
+        this.rotatable.className = "rotatable";
         this.element.appendChild(this.rotatable);
 
         this.gridDisplay = new TileStackGridDisplay(this.grid, this.rotatable);

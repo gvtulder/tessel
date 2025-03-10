@@ -1,0 +1,135 @@
+.screen.game-display {
+  display: grid;
+  grid-template-columns: 1fr 150px;
+  grid-template-rows: 1fr min-content min-content;
+  grid-template-areas:
+    "main-grid tile-stack"
+    "main-grid score-box"
+    "main-grid controls";
+
+  .main-grid {
+    grid-area: main-grid;
+  }
+
+  .controls {
+    grid-area: controls;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #bbb;
+    text-align: center;
+    z-index: 1000;
+
+    .buttons {
+      order: 1;
+      margin: 0 10px;
+      display: flex;
+      flex-direction: row;
+    }
+    .toggles {
+      order: 2;
+      margin: 10px 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  .score-display {
+    grid-area: score-box;
+    background: #bbb;
+  }
+
+  .tile-stack {
+    grid-area: tile-stack;
+    background: #bbb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.tile-stack {
+  .grid-display {
+    z-index: 1000;
+  }
+  .tile-counter {
+    margin: 10px;
+    color: #555;
+    text-align: center;
+  }
+  .tile-outline {
+    stroke: #ddd;
+  }
+  .tile-on-stack {
+    z-index: 0;
+    position: relative;
+    aspect-ratio: 1/1;
+    transition-property: scale;
+    transition-duration: 100ms;
+    svg {
+      width: 100%;
+      aspect-ratio: 1/1;
+    }
+    .rotatable {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      &.animated {
+        transition: transform 300ms ease;
+      }
+    }
+    &.dragging {
+      z-index: 100;
+      .rotatable.animated {
+        transition: transform 200ms;
+      }
+    }
+    &.drag-return {
+      z-index: 100;
+      transition-property: translate, scale;
+      transition-duration: 150ms;
+    }
+    &.drag-success {
+      transition-property: none;
+    }
+  }
+}
+
+.score-display .score {
+  margin: 15px 15px;
+  box-sizing: border-box;
+  padding: 8px 0 12px 0;
+  border-radius: 20px;
+  border: 6px solid #63851d;
+  background: #e1f0c1;
+  color: #63851d;
+  opacity: 0.5;
+  font-size: 36px;
+  text-align: center;
+
+  &.animate {
+    animation-name: score-display-anim;
+    animation-duration: 1000ms;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+}
+@keyframes score-display-anim {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}

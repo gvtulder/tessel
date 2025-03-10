@@ -12,7 +12,7 @@ export abstract class ScoreOverlayDisplay {
     element: SVGElement;
 
     constructor() {
-        this.element = SVG("g", "svg-scoreOverlay");
+        this.element = SVG("g", "svg-score-overlay");
     }
 
     abstract showScores(shapes: ScoredRegion[]): void;

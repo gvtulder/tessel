@@ -47,9 +47,12 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         };
         this.onGameEndGame = () => this.gridDisplay.gameFinished();
 
-        const div = (this.element = createElement("div", "gameDisplay"));
+        const div = (this.element = createElement(
+            "div",
+            "screen game-display",
+        ));
 
-        const divGridContainer = createElement("div", "mainGridContainer", div);
+        const divGridContainer = createElement("div", "main-grid", div);
         this.gridDisplay = new MainGridDisplay(
             this.game.grid,
             divGridContainer,
@@ -57,11 +60,11 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         divGridContainer.appendChild(this.gridDisplay.element);
 
-        const controlbar = createElement("div", "controlbar", div);
+        const controlbar = createElement("div", "controls", div);
 
         const scoreDisplayContainer = createElement(
             "div",
-            "scoreDisplayContainer",
+            "score-display",
             div,
         );
         this.scoreDisplay = new ScoreDisplay();
@@ -80,7 +83,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         div.appendChild(this.tileStackDisplay.element);
 
-        const buttons = createElement("div", "gameDisplay-buttons", controlbar);
+        const buttons = createElement("div", "buttons", controlbar);
 
         this.backtomenubutton = new Button(
             icons.houseIcon,
@@ -96,7 +99,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         buttons.appendChild(this.restartgamebutton.element);
 
-        const toggles = createElement("div", "gameDisplay-toggles", controlbar);
+        const toggles = createElement("div", "toggles", controlbar);
         this.autorotate = new Toggle(
             icons.arrowsSpinIcon,
             "Autorotate",

@@ -1,0 +1,156 @@
+.screen.game-setup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #bbb;
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
+  display: grid;
+  grid-template-areas:
+    "example settings"
+    "example buttons";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 3fr 1fr;
+}
+
+.screen.game-setup .example-grid {
+  position: relative;
+  grid-area: example;
+  background: #ddd;
+}
+
+.screen.game-setup .game-button.exit {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+  fill: #999;
+  @media (hover) {
+    &:hover {
+      fill: #777;
+      transform: none;
+    }
+  }
+}
+
+.screen.game-setup .game-button.regenerate {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+  fill: #aaa;
+  @media (hover) {
+    &:hover {
+      fill: #777;
+      transform: none;
+    }
+  }
+}
+
+.screen.game-setup .button-row {
+  position: relative;
+  grid-area: buttons;
+  text-align: center;
+  width: 100%;
+  background: #bbb;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.screen.game-setup .game-button.play {
+  width: min(8vw, 13vh);
+  height: min(8vw, 13vh);
+  padding: 10px;
+  margin: min(1vw, 1vh);
+  border-radius: 100%;
+  background: #63851d;
+  text-align: center;
+  transition: transform 0.1s;
+}
+.screen.game-setup .game-button.play.disabled {
+  background: #999;
+  svg {
+    fill: #ccc;
+  }
+}
+.screen.game-setup .game-button.play svg {
+  display: inline-block;
+  fill: #ddd;
+  margin: 16% 0 0 9%;
+  width: 65%;
+  height: 65%;
+}
+@media (hover) {
+  .screen.game-setup .game-button.play:hover {
+    transform: scale(1.1);
+  }
+  .screen.game-setup .game-button.play.disabled:hover {
+    transform: none;
+  }
+  .screen.game-setup .game-button.play:hover svg,
+  .screen.game-setup .game-button.play svg:hover {
+    fill: #fff;
+  }
+  .screen.game-setup .game-button.play.disabled:hover svg,
+  .screen.game-setup .game-button.play.disabled svg:hover {
+    fill: #ccc;
+  }
+}
+
+.screen.game-setup .settings {
+  position: relative;
+  grid-area: settings;
+  background: #bbb;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.screen.game-setup .setting-row {
+  display: flex;
+  margin: 0 min(10vw, 1vh);
+  padding: min(10vw, 1vh);
+  flex-wrap: wrap;
+  border-bottom: 1px solid #aaa;
+}
+.screen.game-setup .setting-row:last-child {
+  border-bottom: none;
+}
+.screen.game-setup .setting-row-option {
+  margin: 0.5vw;
+  width: min(8vw, 13vh);
+  height: min(8vw, 13vh);
+  background: #cacaca;
+  border: 3px solid #aaa;
+  border-radius: 10px;
+  box-sizing: border-box;
+  aspect-ratio: 1;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.screen.game-setup .wrap-grid {
+  width: 76%;
+  height: 76%;
+  margin: 12%;
+}
+.screen.game-setup .setting-row-option.selected {
+  transform: scale(1.05);
+}
+.screen.game-setup .setting-row-option.selected,
+.screen.game-setup .setting-row-option.selected:hover {
+  border: 3px solid #66f;
+  background: #eee;
+}
+@media (hover) {
+  .screen.game-setup .setting-row-option:hover {
+    background: #ddd;
+  }
+}
+.screen.game-setup .settings .palette {
+  padding: 13%;
+}

@@ -38,7 +38,7 @@ export abstract class BaseTileStackDisplay extends EventTarget {
         this.tileDisplays = [];
 
         const div = document.createElement("div");
-        div.className = "tileStackDisplay";
+        div.className = "tile-stack";
         this.element = div;
     }
 
@@ -77,7 +77,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
 
         const counterDiv = document.createElement("div");
         this.element.appendChild(counterDiv);
-        counterDiv.className = "tileStackDisplay-counter";
+        counterDiv.className = "tile-counter";
         this.counterDiv = counterDiv;
 
         const counter = document.createElement("span");

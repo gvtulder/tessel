@@ -1,0 +1,183 @@
+.svg-score-overlay-mask {
+  &.disabled {
+    display: none;
+  }
+  &.enabled {
+    animation-duration: 1s;
+    animation-name: score-overlay-opacity;
+    opacity: 0;
+  }
+}
+@keyframes score-overlay-opacity {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.3;
+  }
+  70% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.svg-score-overlay {
+  transition-property: opacity;
+  transition-duration: 300ms;
+  transition-delay: 200ms;
+  opacity: 0;
+
+  circle.points {
+    stroke-dasharray: 6 6;
+  }
+
+  &.disabled {
+    display: none;
+  }
+  &.enabled {
+    opacity: 1;
+  }
+  &.hiding {
+    opacity: 0;
+    transition-duration: 500ms;
+    transition-delay: 500ms;
+  }
+
+  &.enabled {
+    .outline-fg g {
+      stroke-dasharray: 60 60;
+      stroke-dashoffset: -60;
+
+      animation-name: score-overlay-outline-fg-anim;
+      animation-duration: 2s;
+      animation-delay: 400ms;
+      animation-timing-function: ease-in;
+      animation-fill-mode: forwards;
+    }
+  }
+  &.hiding {
+    .outline-fg g {
+      stroke-dasharray: 60 60;
+      stroke-dasharray: -120;
+
+      animation-name: score-overlay-outline-fg-anim-reverse;
+      animation-duration: 1s;
+      animation-timing-function: ease-in;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  &.enabled {
+    .points {
+      animation-name: score-overlay-points-opacity-anim;
+      animation-duration: 800ms;
+      animation-fill-mode: forwards;
+      opacity: 0;
+    }
+    circle.points {
+      animation-delay: 500ms;
+    }
+    text.points {
+      animation-delay: 600ms;
+    }
+  }
+  &.hiding {
+    .points {
+      animation-name: score-overlay-points-opacity-anim-reverse;
+      animation-duration: 400ms;
+      animation-fill-mode: both;
+    }
+    circle.points {
+      animation-delay: 100ms;
+    }
+    text.points {
+      animation-delay: 0ms;
+    }
+  }
+
+  &.enabled {
+    .score-overlay-mask path,
+    .outline-bg path {
+      animation-name: score-overlay-stroke-width;
+      animation-duration: 300ms;
+      animation-fill-mode: forwards;
+    }
+  }
+  &.hiding {
+    .score-overlay-mask path,
+    .outline-bg path {
+      animation-name: scoreOverlay-stroke-width-reverse;
+      animation-duration: 300ms;
+      animation-delay: 500ms;
+      animation-fill-mode: forwards;
+      stroke-width: 0.1px;
+    }
+  }
+}
+
+@keyframes score-overlay-outline-fg-anim {
+  0% {
+    stroke-dashoffset: -60;
+  }
+  100% {
+    stroke-dashoffset: -120;
+  }
+}
+@keyframes score-overlay-outline-fg-anim-reverse {
+  0% {
+    stroke-dashoffset: -120;
+  }
+  100% {
+    stroke-dashoffset: -180;
+  }
+}
+@keyframes score-overlay-points-opacity-anim {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: -6;
+  }
+  25% {
+    stroke-dashoffset: -6;
+  }
+  75% {
+    opacity: 100;
+  }
+  100% {
+    opacity: 100;
+    stroke-dashoffset: -12;
+  }
+}
+@keyframes score-overlay-points-opacity-anim-reverse {
+  0% {
+    opacity: 100;
+    stroke-dashoffset: -4;
+  }
+  25% {
+    opacity: 100;
+  }
+  75% {
+    stroke-dashoffset: -6;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -6;
+  }
+}
+@keyframes score-overlay-stroke-width {
+  0% {
+    stroke-width: 0.01px;
+  }
+  100% {
+    stroke-width: 0.1px;
+  }
+}
+@keyframes score-overlay-stroke-width-reverse {
+  0% {
+    stroke-width: 0.1px;
+  }
+  100% {
+    stroke-width: 0.01px;
+  }
+}

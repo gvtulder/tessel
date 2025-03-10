@@ -1,0 +1,98 @@
+@use "./colors.scss";
+
+.version {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  color: #aaa;
+  font-size: 12px;
+}
+
+.screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
+  background: colors.$main-bg;
+
+  animation-name: animate-appear;
+  animation-delay: 100ms;
+  animation-duration: 500ms;
+  animation-fill-mode: backwards;
+
+  &.disappear {
+    animation-name: animate-disappear;
+    animation-delay: 100ms;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes animate-appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100;
+  }
+}
+@keyframes animate-disappear {
+  0% {
+    opacity: 100;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.game-button,
+.game-toggle {
+  padding: 10px;
+  cursor: pointer;
+
+  transform: scale(1);
+  transition-property: tranform;
+  transition-duration: 100ms;
+  fill: #777;
+
+  svg {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+  @media (hover) {
+    &:hover {
+      transform: scale(1.1);
+      fill: #555;
+    }
+  }
+}
+
+.game-toggle {
+  padding: 5px;
+  cursor: pointer;
+  background: #aaa;
+  margin: 4px;
+  border-radius: 6px;
+
+  &.enabled {
+    background: #777;
+    fill: #bbb;
+  }
+
+  @media (hover) {
+    &:hover {
+      transform: scale(1.1);
+      background: #aaa;
+      fill: #444;
+    }
+
+    &.enabled:hover {
+      background: #444;
+      fill: #ccc;
+    }
+  }
+}

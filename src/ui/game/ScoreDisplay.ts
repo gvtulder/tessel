@@ -12,7 +12,7 @@ export class ScoreDisplay {
         this._points = 0;
 
         const div = document.createElement("div");
-        div.className = "scoreDisplay";
+        div.className = "score";
         this.element = div;
 
         const p = document.createElement("p");

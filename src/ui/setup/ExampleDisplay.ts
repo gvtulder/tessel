@@ -13,7 +13,7 @@ export class ExampleDisplay {
     gridDisplay?: ExampleGridDisplay;
 
     constructor() {
-        this.element = createElement("div", "exampleGrid");
+        this.element = createElement("div", "example-grid");
     }
 
     showAtlas(
@@ -67,9 +67,4 @@ export class ExampleDisplay {
 
 class ExampleGridDisplay extends GridDisplay {
     animated = false;
-
-    styleMainElement() {
-        const div = this.element;
-        div.className = "gameSetup-gridDisplay gridDisplay";
-    }
 }

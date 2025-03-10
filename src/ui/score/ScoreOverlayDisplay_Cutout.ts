@@ -70,7 +70,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         });
 
         const shadowMask = SVG("mask", null, this.element, {
-            class: "scoreOverlay-mask",
+            class: "score-overlay-mask",
             id: "scoreOverlay-mask",
         });
 
@@ -85,7 +85,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
         // white outline around the shape
         const outlineBG = SVG("g", null, this.element, {
-            class: "scoreOverlay-outlineBG",
+            class: "outline-bg",
             stroke: BGCOLOR,
             "stroke-width": "0.1px",
             fill: "transparent",
@@ -95,7 +95,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
         // green outline around the shape
         const outlineFG = SVG("g", null, this.element, {
-            class: "scoreOverlay-outlineFG",
+            class: "outline-fg",
             stroke: Color.main,
             "stroke-width": "0.05px",
             fill: "transparent",

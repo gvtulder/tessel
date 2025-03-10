@@ -1,6 +1,6 @@
 import { describe, test, expect } from "@jest/globals";
 
-import { mapToIndex, rotateArray } from "./arrays";
+import { mapToIndex, rotateArray, UniqueNumberCycleSet } from "./arrays";
 
 describe("rotateArray", () => {
     test.each([
@@ -41,5 +41,19 @@ describe("mapToIndex", () => {
         ],
     ])("maps to indices", (arr, expected) => {
         expect(mapToIndex(arr)).toStrictEqual(expected);
+    });
+});
+
+describe("UniqueNumberCycleSet", () => {
+    test("maintains a set of unique arrays", () => {
+        const set = new UniqueNumberCycleSet();
+        set.add([0, 1, 2]);
+        set.add([1, 2, 0]);
+        expect(set.size).toBe(1);
+        set.add([4, 2, 1, 3]);
+        expect(set.size).toBe(2);
+        set.add([]);
+        expect(set.size).toBe(3);
+        expect([...set.values()]).toStrictEqual([[0, 1, 2], [4, 2, 1, 3], []]);
     });
 });

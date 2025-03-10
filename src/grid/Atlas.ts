@@ -1,6 +1,7 @@
 import { CornerType, SortedCorners } from "./Grid";
 import { deg2rad, DEG2RAD, RAD2DEG } from "../geom/math";
 import { Shape } from "./Shape";
+import { UniqueNumberCycleSet } from "../geom/arrays";
 
 /**
  * A short notation format for a vertex atlas, to be used in JSON documents etc.
@@ -231,22 +232,6 @@ export class Atlas {
             throw new Error("empty atlas pattern");
         }
         return new Atlas([...shapes.values()], vertexPatterns);
-    }
-}
-
-/**
- * A set (map) of cycle-unique arrays.
- */
-class UniqueNumberCycleSet extends Map<string, number[]> {
-    add(seq: number[]): this {
-        if (seq.length == 0) return this;
-        let key: string;
-        for (let r = 0; r < seq.length; r++) {
-            seq.push(seq.shift() as number);
-            key = seq.join("-");
-            if (super.has(key)) return this;
-        }
-        return super.set(key!, seq);
     }
 }
 

@@ -147,7 +147,7 @@ export function shiftPoints(
 export function rotatePoints(
     points: readonly Point[],
     angle: number,
-    origin: Point,
+    origin: Point = { x: 0, y: 0 },
 ): Point[] {
     return points.map((p) => {
         let x = p.x - origin.x;
@@ -320,7 +320,7 @@ export function mergeBBox(a: BBox | undefined | null, b: BBox): BBox;
 export function mergeBBox(a?: BBox | null, b?: BBox | null): BBox | undefined;
 export function mergeBBox(a?: BBox | null, b?: BBox | null): BBox | undefined {
     if (!a) return b || undefined;
-    if (!b) return a || undefined;
+    if (!b) return a;
     return {
         minX: a.minX < b.minX ? a.minX : b.minX,
         minY: a.minY < b.minY ? a.minY : b.minY,

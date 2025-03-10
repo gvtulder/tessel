@@ -4,12 +4,16 @@ import {
     DEG2RAD,
     P,
     Point,
+    TWOPI,
     angleDist,
+    angleDistDeg,
     area,
     bbox,
     centroid,
     comparePoint,
+    deg2rad,
     dist,
+    distClosestPoints,
     distToLine,
     distToLineSegment,
     edgeToAngle,
@@ -17,6 +21,11 @@ import {
     mergeBBoxItems,
     midpoint,
     orientedArea,
+    rad2deg,
+    rotatePoints,
+    round,
+    roundPoints,
+    shiftPoints,
     weightedSumPoint,
 } from "./math";
 import { mapToIndex, rotateArray } from "./arrays";
@@ -35,6 +44,32 @@ describe("P", () => {
         ],
     ])("creates points from shorthand", (output, ...input) => {
         expect(P(...(input as [number, number]))).toStrictEqual(output);
+    });
+});
+
+describe("deg2rad", () => {
+    test.each([
+        [[], []],
+        [[0], [0]],
+        [
+            [90, 360],
+            [0.5 * Math.PI, TWOPI],
+        ],
+    ])("converts degrees to radians", (input, expected) => {
+        expect(deg2rad(input)).toStrictEqual(expected);
+    });
+});
+
+describe("rad2deg", () => {
+    test.each([
+        [[], []],
+        [[0], [0]],
+        [
+            [0.5 * Math.PI, TWOPI],
+            [90, 360],
+        ],
+    ])("converts radians to degrees", (input, expected) => {
+        expect(rad2deg(input)).toStrictEqual(expected);
     });
 });
 
@@ -73,6 +108,51 @@ describe("distToLineSegment", () => {
     });
 });
 
+describe("distClosestPoints", () => {
+    const a = P([0, 0], [1, 0], [1, 1]);
+    const b = P([1, 1], [0, 1], [1, 0], [2, 3]);
+    test.each([
+        [a, a, 0],
+        [b, b, 0],
+        [a, shiftPoints(a, 1, 1), 0],
+        [a, shiftPoints(a, -1, 0), 0],
+        [a, shiftPoints(a, 10, 0), 9],
+        [a, shiftPoints(a, 0, 10), 9],
+        [[], a, 0],
+        [a, [], 0],
+    ])("computes distances", (a, b, expected) => {
+        expect(distClosestPoints(a, b)).toBeCloseTo(expected);
+        expect(distClosestPoints(a, b)).toBeCloseTo(expected);
+        expect(distClosestPoints(a, b)).toBeCloseTo(expected);
+    });
+});
+
+describe("shiftPoints", () => {
+    const a = P([0, 0], [1, 0], [0, 1]);
+    test.each([
+        [a, 1, 0, P([1, 0], [2, 0], [1, 1])],
+        [a, 0, 1, P([0, 1], [1, 1], [0, 2])],
+        [[], 1, 1, []],
+    ])("shifts points", (points, dx, dy, expected) => {
+        expect(shiftPoints(points, dx, dy)).toStrictEqual(expected);
+    });
+});
+
+describe("rotatePoints", () => {
+    const square = P([0, 0], [1, 0], [1, 1], [0, 1]);
+    test.each([
+        [square, 0, undefined, square],
+        [square, 90, P(0.5, 0.5), P([1, 0], [1, 1], [0, 1], [0, 0])],
+    ])(
+        "rotates points",
+        (points, angle, origin: Point | undefined, expected) => {
+            expect(
+                roundPoints(rotatePoints(square, angle * DEG2RAD, origin), 100),
+            ).toStrictEqual(roundPoints(expected, 100));
+        },
+    );
+});
+
 describe("comparePoint", () => {
     test("compares points", () => {
         expect(comparePoint(P(0, 3), P(1, 3))).toBe(-1);
@@ -101,6 +181,7 @@ describe("angleDist", () => {
         [-180, 180, 0],
     ])("computes angle distances", (a, b, d) => {
         expect(angleDist(a * DEG2RAD, b * DEG2RAD)).toBeCloseTo(d * DEG2RAD);
+        expect(angleDistDeg(a, b)).toBeCloseTo(d);
     });
 });
 
@@ -183,17 +264,17 @@ describe("area and orientedArea", () => {
 });
 
 describe("bbox", () => {
-    test.each([P([4, 1], [3, 3], [-2, 7]), P([-3, 2], [3, 3], [5, 7])])(
-        "computes a bounding box",
-        (...points: Point[]) => {
-            expect(bbox(points)).toStrictEqual({
-                minX: Math.min(...points.map((p) => p.x)),
-                minY: Math.min(...points.map((p) => p.y)),
-                maxX: Math.max(...points.map((p) => p.x)),
-                maxY: Math.max(...points.map((p) => p.y)),
-            });
-        },
-    );
+    test.each([
+        P([4, 1], [3, 3], [-2, 7]),
+        P([-3, 2], [3, 3], [5, 7], [5, -7]),
+    ])("computes a bounding box", (...points: Point[]) => {
+        expect(bbox(points)).toStrictEqual({
+            minX: Math.min(...points.map((p) => p.x)),
+            minY: Math.min(...points.map((p) => p.y)),
+            maxX: Math.max(...points.map((p) => p.x)),
+            maxY: Math.max(...points.map((p) => p.y)),
+        });
+    });
 });
 
 describe("mergeBBox", () => {
@@ -221,6 +302,7 @@ describe("mergeBBox", () => {
         expect(mergeBBox(a, combined)).toStrictEqual(combined);
         expect(mergeBBox(a, null)).toStrictEqual(a);
         expect(mergeBBox(null, b)).toStrictEqual(b);
+        expect(mergeBBox(null, null)).toBeUndefined();
     });
 });
 
@@ -297,5 +379,30 @@ describe("mapToIndex", () => {
         ],
     ])("maps to indices", (arr, expected) => {
         expect(mapToIndex(arr)).toStrictEqual(expected);
+    });
+});
+
+describe("round", () => {
+    test.each([
+        [1, 100, 1],
+        [1.00001, 100, 1],
+        [-1.00001, 100, -1],
+        [1.001, 100, 1],
+        [1.001, 1000, 1.001],
+    ])("rounds to the given precision", (x, precision, expected) => {
+        expect(round(x, precision)).toBe(expected);
+    });
+});
+
+describe("roundPoints", () => {
+    test.each([
+        [[], 100, []],
+        [P([0, 1]), 100, P([0, 1])],
+        [P([1.001, 2]), 100, P([1, 2])],
+        [P([1.001, 2]), 1000, P([1.001, 2])],
+        [P([1, 2.001]), 100, P([1, 2])],
+        [P([1, 2.001]), 1000, P([1, 2.001])],
+    ])("rounds to the given precision", (x, precision, expected) => {
+        expect(roundPoints(x, precision)).toStrictEqual(expected);
     });
 });

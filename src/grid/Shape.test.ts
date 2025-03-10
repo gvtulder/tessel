@@ -1,16 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { ColorPattern, Shape } from "./Shape";
-import { DEG2RAD, P, Point } from "../geom/math";
-
-function roundPoints(
-    points: readonly Point[],
-    precision: number,
-): readonly Point[] {
-    return points.map((p) => ({
-        x: Math.round(100 * p.x) / precision,
-        y: Math.round(100 * p.y) / precision,
-    }));
-}
+import { DEG2RAD, P, roundPoints } from "../geom/math";
 
 describe("Shape", () => {
     test("can be created", () => {

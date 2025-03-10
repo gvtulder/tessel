@@ -357,3 +357,19 @@ export function mergeBBoxItems(items: Iterable<{ bbox: BBox }>) {
 export function round(x: number, precision: number): number {
     return Math.round(x * precision) / precision;
 }
+
+/**
+ * Rounds the point coordinates to the given precision.
+ * @param points a list of points
+ * @param precision multiplication factor (e.g., 1000)
+ * @returns round(x * precision) / precision
+ */
+export function roundPoints(
+    points: readonly Point[],
+    precision: number,
+): Point[] {
+    return points.map((p) => ({
+        x: Math.round(p.x * precision) / precision,
+        y: Math.round(p.y * precision) / precision,
+    }));
+}

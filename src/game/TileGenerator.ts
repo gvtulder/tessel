@@ -48,7 +48,11 @@ export class TileGenerators {
         };
     }
 
-    static permutations(colors: TileColors, shape?: Shape): TileGenerator {
+    static permutations(
+        colors: TileColors,
+        shape?: Shape,
+        onlyUniqueColors?: boolean,
+    ): TileGenerator {
         return (_, defaultShape: Shape, colorPattern?: ColorPattern) => {
             const sh = shape || defaultShape;
             const numColors = colors.length;
@@ -80,6 +84,13 @@ export class TileGenerators {
             for (let c = 0; c < maxColor; c++) {
                 // map to segment colors
                 const components = cToComponents(c, numColorGroups);
+
+                if (onlyUniqueColors) {
+                    if (new Set(components).size != components.length) {
+                        continue;
+                    }
+                }
+
                 if (colorPattern) {
                     for (const pattern of colorPattern.segmentColors) {
                         addToUniqueCs(pattern.map((i) => components[i]));

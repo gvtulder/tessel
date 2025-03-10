@@ -192,10 +192,11 @@ export function gameFromSerializedSettings(
             TileGenerators.forShapes(
                 atlas.atlas.shapes,
                 [
-                    TileGenerators.permutations(colors.colors),
-                    ...(serialized.uniqueTileColors
-                        ? [TileGenerators.onlyUniqueColors()]
-                        : []),
+                    TileGenerators.permutations(
+                        colors.colors,
+                        undefined,
+                        serialized.uniqueTileColors,
+                    ),
                 ],
                 [colorPattern],
             ),

@@ -75,7 +75,7 @@ describe("GridColoring", () => {
             const prng = seedPRNG(12345);
             const colorPattern = new Map();
             colorPattern.set(grid.atlas.shapes[0], patterns);
-            coloring.applyColorPattern(colorPattern, prng);
+            coloring.applyColorPattern(colorPattern, false, prng);
             expect(coloring.groups.size).toBe(numGroups);
             for (const tile of grid.tiles) {
                 const groupsInTile = tile.segments!.map((s) =>
@@ -126,10 +126,28 @@ describe("GridColoring", () => {
             const prng = seedPRNG(12345);
             const colorPattern = new Map();
             colorPattern.set(grid.atlas.shapes[0], patterns);
-            coloring.applyColorPattern(colorPattern, prng);
+            coloring.applyColorPattern(colorPattern, false, prng);
             expect(coloring.groups.size).toBe(numGroups);
         },
     );
+
+    test("applies color patterns with uniqueTileColors", () => {
+        const patterns = [
+            {
+                numColors: 33,
+                segmentColors: [[0, 0, 1, 2]],
+            },
+        ];
+
+        const grid = buildGrid();
+        const coloring = new GridColoring(grid);
+        expect(coloring.groups.size).toBe(227);
+        const prng = seedPRNG(12345);
+        const colorPattern = new Map();
+        colorPattern.set(grid.atlas.shapes[0], patterns);
+        coloring.applyColorPattern(colorPattern, true, prng);
+        expect(coloring.groups.size).toBe(227);
+    });
 
     test("assigns colors", () => {
         const grid = buildGrid();
@@ -143,6 +161,6 @@ describe("GridColoring", () => {
         grid.rules = new DifferentEdgeColorsRuleSet();
         const coloring = new GridColoring(grid);
         expect(coloring.groups.size).toBe(400);
-        coloring.assignColors(["red", "green", "blue"]);
+        expect(coloring.assignColors(["red", "green", "blue"])).not.toBeNull();
     });
 });

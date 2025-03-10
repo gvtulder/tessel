@@ -148,9 +148,11 @@ export class GridColoring {
 
         let groupToColor: Map<ColorGroup, TileColor> | null = null;
 
+        /*
         console.log(
             `Grid coloring: ${groups.size} groups, ${conflicts.size} conflict sets`,
         );
+        */
 
         /*
         if (!groupToColor) {
@@ -173,7 +175,9 @@ export class GridColoring {
             );
             tries++;
         }
+        /*
         console.log(`Random greedy coloring: ${tries} attempts`);
+        */
 
         if (groupToColor === null) {
             return null;
@@ -311,7 +315,9 @@ function assignColorsWelshPowell(
         currentColor++;
     }
 
+    /*
     console.log(`Welsh-Powell algorithm: need ${currentColor} colors`);
+    */
 
     if (currentColor > tileColors.length) {
         return null;

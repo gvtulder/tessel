@@ -1,12 +1,26 @@
 import { describe, expect, test } from "@jest/globals";
-import { seedPRNG, RandomSampler } from "./RandomSampler";
+import {
+    seedPRNG,
+    RandomSampler,
+    generateSeed,
+    selectRandom,
+    shuffle,
+} from "./RandomSampler";
+
+describe("generateSeed", () => {
+    test("can generate seeds", () => {
+        const a = generateSeed();
+        const b = generateSeed();
+        expect(a).not.toBeCloseTo(b);
+    });
+});
 
 describe("PRNG", () => {
     test("can generate random numbers", () => {
-        const prng = seedPRNG(1234);
-        for (const i of [72, 61, 9, 15, 7, 26, 50, 33]) {
-            Math.floor(prng() * 100);
-        }
+        const prng = seedPRNG();
+        const a = prng();
+        const b = prng();
+        expect(a).not.toBeCloseTo(b);
     });
 
     test("can generate random numbers from a seed", () => {
@@ -14,6 +28,41 @@ describe("PRNG", () => {
         for (const i of [72, 61, 9, 15, 7, 26, 50, 33]) {
             expect(Math.floor(prng() * 100)).toBe(i);
         }
+    });
+});
+
+describe("selectRandom", () => {
+    test("can select random items from a list", () => {
+        const array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        expect(selectRandom(array, 0.0)).toBe(0);
+        expect(selectRandom(array, 0.49)).toBe(4);
+        expect(selectRandom(array, 0.99)).toBe(9);
+
+        selectRandom(array);
+        selectRandom(array);
+
+        expect(selectRandom([])).toBeUndefined();
+        expect(selectRandom([], 0.1)).toBeUndefined();
+        expect(selectRandom([1], 0.0)).toBe(1);
+        expect(selectRandom([1], 0.99)).toBe(1);
+    });
+});
+
+describe("shuffle", () => {
+    test("can shuffle elements", () => {
+        const prng = seedPRNG(1234);
+        const array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        shuffle(array, prng);
+        expect(array).toStrictEqual([8, 3, 4, 2, 6, 9, 1, 0, 5, 7]);
+        shuffle(array);
+
+        const empty: number[] = [];
+        shuffle(empty);
+        expect(empty).toStrictEqual([]);
+
+        const one = [1];
+        shuffle(one);
+        expect(one).toStrictEqual([1]);
     });
 });
 

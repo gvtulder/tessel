@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "NODE_ENV=production parcel build index.html",
+    "build": "NODE_ENV=production parcel build index.html --no-source-maps",
     "serve": "NODE_ENV=development parcel serve index.html --no-cache",
     "test": "jest",
     "check": "tsc --noEmit",

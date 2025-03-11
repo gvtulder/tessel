@@ -8,8 +8,10 @@ import interact from "interactjs";
 
 export class DropoutMenu {
     element: HTMLDivElement;
+    container: HTMLDivElement;
     dropoutButton: Button | Toggle;
-    buttons: (Button | Toggle)[];
+    buttons: Button[];
+    toggles: Toggle[];
     backgroundEvent: Interactable;
 
     constructor() {
@@ -26,6 +28,8 @@ export class DropoutMenu {
         this.dropoutButton = dropoutButton;
         this.element.appendChild(dropoutButton.element);
 
+        this.container = createElement("div", "items", this.element);
+
         this.backgroundEvent = interact(document.body);
         this.backgroundEvent.on("down", (evt: PointerEvent) => {
             const target = evt.target as HTMLElement;
@@ -35,16 +39,25 @@ export class DropoutMenu {
         });
 
         this.buttons = [];
+        this.toggles = [];
     }
 
-    addButton(button: Button | Toggle) {
-        this.element.appendChild(button.element);
+    addButton(button: Button) {
+        this.container.appendChild(button.element);
         this.buttons.push(button);
+    }
+
+    addToggle(toggle: Toggle) {
+        this.container.appendChild(toggle.element);
+        this.toggles.push(toggle);
     }
 
     destroy() {
         for (const button of this.buttons) {
             button.destroy();
+        }
+        for (const toggle of this.toggles) {
+            toggle.destroy();
         }
         this.dropoutButton.destroy();
         this.backgroundEvent.unset();

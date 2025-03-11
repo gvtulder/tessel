@@ -65,39 +65,77 @@
   top: 3vw;
   display: flex;
   flex-direction: column;
-  border-radius: max(2.5vw, 20px);
+  align-items: flex-end;
+  border-top-right-radius: max(2.5vw, 20px);
+  border-top-left-radius: max(2.5vw, 20px);
+  border-bottom-left-radius: max(1.25vw, 10px);
+  border-bottom-right-radius: max(1.25vw, 10px);
   z-index: 10000;
 
-  margin: -0.3vw;
-
-  .game-button.dropout {
-    display: inherit;
-  }
+  margin: -0.5vw;
 
   &.expanded {
-    background: #fff;
+    background: #f6f6f6;
 
-    .game-button.dropout {
-      background: rgba(0, 0, 0, 35%);
-      fill: #eee;
-      margin-bottom: 1.5vw;
-      display: inherit;
+    .game-button.dropout svg {
+      rotate: 90deg;
     }
   }
 
-  .game-button,
-  .game-toggle {
+  .game-button.dropout {
+    margin: 0.5vw;
+  }
+
+  .game-button.dropout svg {
+    transition: rotate 0.1s;
+  }
+
+  .items {
     display: none;
-    margin: 0.3vw 0.3vw;
+    margin: 0.5vw 0.5vw 1vw 0.5vw;
+    grid-template-columns: repeat(4, auto);
   }
 
-  &.expanded .game-button,
-  &.expanded .game-toggle {
-    display: block;
+  .items .game-button {
+    grid-row: 1;
+    margin: 0 0 1.5vw 0.5vw;
+
+    transition: scale 0.1s;
+
+    &:hover {
+      scale: 1.05;
+    }
   }
 
+  .items .game-toggle {
+    grid-column: 1 / -1;
+    margin: 0.3vw 0.7vw 0.3vw 0.3vw;
+  }
+
+  .items,
   .game-button + .game-toggle {
-    margin-top: 1.5vw;
+    border-top: 1px solid #ddd;
+    padding-top: 1.5vw;
+  }
+
+  .game-button.backtomenu {
+    background: #e1f0c1;
+    background: #bdcfe6;
+    background: #1d4a85;
+    fill: #fff;
+  }
+
+  /*
+  .game-button.restart {
+    background: #63851d;
+    fill: #fff;
+  }
+  */
+
+  &.expanded {
+    .items {
+      display: grid;
+    }
   }
 }
 

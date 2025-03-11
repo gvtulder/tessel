@@ -48,8 +48,7 @@
   }
 }
 
-.game-button,
-.game-toggle {
+.game-button {
   width: max(2.5vw, 20px);
   height: max(2.5vw, 20px);
   padding: max(1.3vw, 10px);
@@ -75,15 +74,45 @@
 }
 
 .game-toggle {
-  &.enabled {
-    background: rgba(0, 0, 0, 35%);
-    fill: #eee;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 
-    @media (hover) {
-      &:hover {
-        background: rgba(0, 0, 0, 55%);
-        fill: #eee;
-      }
+  .icon {
+    margin-left: 0.7vw;
+    width: max(2.5vw, 20px);
+    height: max(2.5vw, 20px);
+    fill: rgba(0, 0, 0, 35%);
+
+    svg {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  .toggle-box {
+    flex-grow: 1;
+    border-radius: max(2.5vw, 20px);
+    padding: max(0.3vw, 4px);
+    background: #eee;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .toggle-ball {
+    border-radius: 100%;
+    width: max(2.5vw, 20px);
+    height: max(2.5vw, 20px);
+    background: rgba(0, 0, 0, 25%);
+  }
+
+  &.enabled {
+    .toggle-box {
+      justify-content: flex-end;
+      background: #e1f0c1;
+    }
+    .toggle-ball {
+      background: #63851d;
     }
   }
 }

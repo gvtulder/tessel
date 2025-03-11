@@ -95,19 +95,21 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         const buttons = createElement("div", "buttons", controlbar);
 
-        this.backtomenubutton = new Button(
-            icons.houseIcon,
-            "Back to menu",
-            () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
-        );
-        menu.addButton(this.backtomenubutton);
-
         this.restartgamebutton = new Button(
             icons.rotateLeftIcon,
             "Restart game",
             () => this.dispatchEvent(new Event(UserEventType.RestartGame)),
         );
+        this.restartgamebutton.element.classList.add("restart");
         menu.addButton(this.restartgamebutton);
+
+        this.backtomenubutton = new Button(
+            icons.houseIcon,
+            "Back to menu",
+            () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
+        );
+        this.backtomenubutton.element.classList.add("backtomenu");
+        menu.addButton(this.backtomenubutton);
 
         this.autorotate = new Toggle(
             icons.arrowsSpinIcon,
@@ -121,7 +123,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             },
             false,
         );
-        menu.addButton(this.autorotate);
+        menu.addToggle(this.autorotate);
         this.hints = new Toggle(
             icons.squareCheckIcon,
             "Show hints",
@@ -134,7 +136,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             },
             false,
         );
-        menu.addButton(this.hints);
+        menu.addToggle(this.hints);
         this.snap = new Toggle(
             icons.magnetIcon,
             "Snap",
@@ -144,7 +146,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             },
             false,
         );
-        menu.addButton(this.snap);
+        menu.addToggle(this.snap);
 
         this.tileStackDisplay.addEventListener(
             TileStackDisplay.events.TapTile,

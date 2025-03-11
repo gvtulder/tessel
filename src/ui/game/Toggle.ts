@@ -1,6 +1,7 @@
 import type { Interactable, PointerEvent } from "@interactjs/types";
 import "@interactjs/pointer-events";
 import interact from "@interactjs/interact";
+import { createElement } from "../html";
 
 export class Toggle {
     static events = {
@@ -18,11 +19,14 @@ export class Toggle {
         onchange: () => void,
         checked?: boolean,
     ) {
-        const toggle = document.createElement("div");
-        toggle.className = "game-toggle";
-        toggle.title = title;
-        toggle.innerHTML = icon;
+        const toggle = createElement("div", "game-toggle");
         this.element = toggle;
+
+        const box = createElement("div", "toggle-box", toggle);
+        createElement("div", "toggle-ball", box);
+
+        const iconEl = createElement("div", "icon", toggle);
+        iconEl.innerHTML = icon;
 
         this.checked = checked ? true : false;
         this.onchange = onchange;

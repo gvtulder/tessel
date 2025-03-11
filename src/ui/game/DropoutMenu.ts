@@ -1,10 +1,11 @@
 import type { Interactable, PointerEvent } from "@interactjs/types";
+import "@interactjs/pointer-events";
+import interact from "@interactjs/interact";
 
 import { Button } from "../Button";
 import { createElement } from "../html";
 import icons from "../icons";
 import { Toggle } from "./Toggle";
-import interact from "interactjs";
 
 export class DropoutMenu {
     element: HTMLDivElement;

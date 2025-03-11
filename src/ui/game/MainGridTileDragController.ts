@@ -108,7 +108,12 @@ export class MainGridTileDragController extends TileDragController {
         evt: DragHandlerEvent,
         updateTransform: boolean = true,
     ): { newTranslate: string; newScale: string } {
-        let { newTranslate, newScale } = super.onDragMove(context, evt, false);
+        const { newTranslate, newScale } = super.onDragMove(
+            context,
+            evt,
+            false,
+        );
+        let overrideTranslate = newTranslate;
 
         if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
             // figure out where we are
@@ -201,17 +206,19 @@ export class MainGridTileDragController extends TileDragController {
                             centerSnapTo.y -
                             centerSnapFrom.y,
                     };
-                    newTranslate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
+                    overrideTranslate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
                 }
             }
         }
 
-        if (updateTransform && this.currentTranslate != newTranslate) {
-            evt.target.style.translate = this.currentScale = newTranslate;
+        if (updateTransform && this.currentTranslate != overrideTranslate) {
+            evt.target.style.translate = this.currentScale = overrideTranslate;
         }
         if (updateTransform && this.currentScale != newScale) {
             evt.target.style.scale = this.currentScale = newScale;
         }
+
+        return { newTranslate, newScale };
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragHandlerEvent): boolean {

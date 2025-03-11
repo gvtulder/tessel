@@ -81,7 +81,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         */
 
         // TODO disabled interact js
-        this.draggable = new DragHandler(this.element);
+        this.draggable = new DragHandler(this.rotatable);
         this.initInteractable(makeRotatable);
 
         this.element.addEventListener("transitionend", () => {
@@ -147,7 +147,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         } else {
             this.angle += forwardDiff;
         }
-        this.rotatable.style.transform = `rotate(${this.angle}deg)`;
+        this.rotatable.style.rotate = `${this.angle}deg`;
         this.rotateTransform.rotation = this.angle * DEG2RAD;
         if (animated) {
             this.rotatable.classList.add("animated");
@@ -172,7 +172,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
             this.angle = (360 + this.angle) % 360;
             this.rotateTransform.rotation = this.angle * DEG2RAD;
             this.rotatable.classList.remove("animated");
-            this.rotatable.style.transform = `rotate(${this.angle}deg)`;
+            this.rotatable.style.rotate = `${this.angle}deg`;
         }
     }
 

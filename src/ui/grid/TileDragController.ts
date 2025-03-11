@@ -99,7 +99,7 @@ export class TileDragController extends EventTarget {
             if (s !== context.source) s.resetDragStatus();
         }
         context.source.startDrag();
-        evt.target.style.willChange = "transform";
+        evt.target.style.willChange = "rotate scale translate";
         evt.target.style.translate = this.currentTranslate = `0px 0px`;
         evt.target.style.scale =
             this.currentScale = `${this.dropTarget.scale / context.source.gridDisplay.scale}`;

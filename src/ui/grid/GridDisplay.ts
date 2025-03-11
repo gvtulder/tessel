@@ -325,7 +325,7 @@ export class GridDisplay extends EventTarget {
 
         // Firefox doesn't like large scale with animations
         this.svgGrid.style.transform = `translate(${containerLeft}px, ${containerTop}px) scale(${scale / 100})`;
-        this.svgScaleGroup.style.transform = `scale(100)`;
+        this.svgScaleGroup.style.scale = `100`;
 
         this.containerLeft = containerLeft;
         this.containerTop = containerTop;

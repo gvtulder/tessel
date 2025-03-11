@@ -167,13 +167,13 @@
       width: 100%;
       height: 100%;
       &.animated {
-        transition: transform 300ms ease;
+        transition: rotate 300ms ease;
       }
     }
     &.dragging {
       z-index: 100;
       .rotatable.animated {
-        transition: transform 200ms;
+        transition: rotate 200ms;
       }
     }
     &.drag-return {

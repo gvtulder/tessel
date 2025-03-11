@@ -243,12 +243,17 @@ function assignColorsGreedyRandom(
 
     // assign a color to each group
     for (const group of groups) {
+        const conflictGroups = conflicts.get(group);
+        if (conflictGroups && conflictGroups.has(group)) {
+            // self conflict
+            return null;
+        }
         shuffle(colors, prng);
         let assignedColor = false;
         for (let i = 0; !assignedColor && i < colors.length; i++) {
             // check conflicts
             let conflict = false;
-            for (const g of conflicts.get(group) || []) {
+            for (const g of conflictGroups || []) {
                 const c = groupToColor.get(g);
                 if (c == colors[i]) {
                     conflict = true;

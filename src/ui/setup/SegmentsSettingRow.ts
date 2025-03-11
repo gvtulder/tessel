@@ -23,7 +23,7 @@ export class SegmentsSettingRow extends SettingRow<SegmentsOption> {
         // special options: specific segments, unique colors
         for (let i = 0; i < shape.colorPatterns.length; i++) {
             if (this.options.length <= i + 1) {
-                const option = new SegmentsOption(`${i}`, i, true);
+                const option = new SegmentsOption(`${i}`, i, i == 0);
                 this.addOption(option);
             }
             this.options[i + 1].showAtlas(

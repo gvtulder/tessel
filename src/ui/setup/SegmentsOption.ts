@@ -59,7 +59,7 @@ export class SegmentsOption extends SettingRowOption {
         );
         tile1.colors = tile1Colors;
 
-        if (!this.uniqueTileColors) {
+        if (this.key == "all") {
             const bbox = poly1.bbox;
             const stepX = bbox.maxX - bbox.minX;
             const stepY = bbox.maxY - bbox.minY;

@@ -82,6 +82,22 @@ describe("SortedCorners", () => {
         const clone = sortedCorners.clone();
         expect(sortedCorners[0] === clone[0]).toBe(true);
     });
+
+    test("can compute the next corner", () => {
+        const sortedCorners = new SortedCorners();
+        expect(sortedCorners.findNextCorner(tile1)).toBeUndefined();
+        sortedCorners.addTile(tile1, 0);
+        expect(sortedCorners.findNextCorner(tile1)).toBeUndefined();
+        expect(sortedCorners.findNextCorner(tile2)).toBeUndefined();
+        sortedCorners.addTile(tile2, 1);
+        expect(sortedCorners.findNextCorner(tile1)!.tile).toBe(tile2);
+        expect(sortedCorners.findNextCorner(tile2)!.tile).toBe(tile1);
+        expect(sortedCorners.findNextCorner(tile3)).toBeUndefined();
+        sortedCorners.addTile(tile3, 1);
+        expect(sortedCorners.findNextCorner(tile1)!.tile).toBe(tile3);
+        expect(sortedCorners.findNextCorner(tile3)!.tile).toBe(tile2);
+        expect(sortedCorners.findNextCorner(tile2)!.tile).toBe(tile1);
+    });
 });
 
 describe("GridVertex", () => {

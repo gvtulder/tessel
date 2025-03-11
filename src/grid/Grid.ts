@@ -22,6 +22,7 @@ import { matchPoints } from "../geom/polygon/matchPoints";
 import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
 import { MatchEdgeColorsRuleSet, RuleSet as RuleSet } from "./RuleSet";
+import { Rings } from "./Rings";
 
 /**
  * The precision used for vertex and edge keys.
@@ -112,6 +113,21 @@ export class SortedCorners extends Array<GridVertexCorner> {
         }
     }
 
+    /**
+     * Returns the corner that follows the given tile.
+     * @param tile a tile connected to this corner
+     * @returns the next corner in clockwise order
+     */
+    findNextCorner(tile: Tile): GridVertexCorner | undefined {
+        const n = this.length;
+        if (n < 2) return undefined;
+        let index = 0;
+        while (index < n && this[index].tile !== tile) {
+            index++;
+        }
+        return index < n ? this[(index + 1) % n] : undefined;
+    }
+
     get tiles(): Tile[] {
         return this.map((c) => c.tile);
     }
@@ -122,7 +138,7 @@ export class SortedCorners extends Array<GridVertexCorner> {
 }
 
 type VertexKey = string;
-type EdgeKey = string;
+export type EdgeKey = string;
 
 /**
  * A tile placement.
@@ -135,16 +151,23 @@ type TileSuggestion = {
 /**
  * Converts the point to a string-based key.
  */
-function pointToKey(point: Point): VertexKey {
+export function pointToKey(point: Point): VertexKey {
     return `${Math.round(point.x * KEY_PRECISION)} ${Math.round(point.y * KEY_PRECISION)}`;
 }
 
 /**
  * Converts the edge to a direction-invariant string-based key.
  */
-function edgeToKey(a: Point, b: Point): EdgeKey {
+export function edgeToKey(a: Point, b: Point): EdgeKey {
     const ascending = comparePoint(a, b) < 0;
     return `${pointToKey(ascending ? a : b)} ${pointToKey(ascending ? b : a)}`;
+}
+
+/**
+ * Converts the edge to a direction-sensitive string-based key.
+ */
+export function edgeToDirectedKey(a: Point, b: Point): EdgeKey {
+    return `${pointToKey(a)} ${pointToKey(b)}`;
 }
 
 /**
@@ -300,6 +323,10 @@ export class Grid extends EventTarget {
      * The edges connected to only one tile.
      */
     frontier: Set<GridEdge>;
+    /**
+     * The rings in the grid.
+     */
+    rings: Rings;
 
     private tileBodies: Map<Tile, Body<Tile>>;
 
@@ -320,6 +347,7 @@ export class Grid extends EventTarget {
         this.tiles = new TileSet();
         this.placeholders = new TileSet();
         this.frontier = new Set<GridEdge>();
+        this.rings = new Rings();
 
         this.handleTileColorUpdate = this.handleTileColorUpdate.bind(this);
     }
@@ -446,6 +474,7 @@ export class Grid extends EventTarget {
             if (placeholder) {
                 edge.placeholders.add(tile as PlaceholderTile);
             } else {
+                // link to edge
                 if (edge.a === a) {
                     if (edge.tileA) throw new Error("edge already in use");
                     edge.tileA = tile;
@@ -455,6 +484,7 @@ export class Grid extends EventTarget {
                     edge.tileB = tile;
                     edge.edgeIdxB = i;
                 }
+                // update set of frontier edges
                 if (edge.tileA && edge.tileB) {
                     this.frontier.delete(edge);
                 } else {
@@ -463,6 +493,11 @@ export class Grid extends EventTarget {
             }
         }
         tile.edges = edges;
+
+        // update rings
+        if (!placeholder) {
+            this.rings.addRing(tile.polygon.vertices);
+        }
 
         this.dispatchEvent(new GridEvent(GridEventType.AddTile, this, tile));
 
@@ -474,6 +509,8 @@ export class Grid extends EventTarget {
      * @param tile the tile to be removed
      */
     removeTile(tile: Tile): void {
+        const normalTile = this.tiles.has(tile);
+
         if (!this.tiles.delete(tile) && !this.placeholders.delete(tile)) return;
 
         const neighbors = tile.neighbors;
@@ -506,6 +543,11 @@ export class Grid extends EventTarget {
                     this.frontier.add(edge);
                 }
             }
+        }
+
+        // update rings
+        if (normalTile) {
+            this.rings.removeRing(tile.polygon.vertices);
         }
 
         // delete from grid

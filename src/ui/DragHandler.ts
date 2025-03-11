@@ -4,6 +4,7 @@ export class DragHandlerEvent {
     handler: DragHandler;
     dx: number;
     dy: number;
+    dtime: number;
 
     constructor(
         type: string,
@@ -12,12 +13,14 @@ export class DragHandlerEvent {
         handler: DragHandler,
         dx: number = 0,
         dy: number = 0,
+        dtime: number = 0,
     ) {
         this.event = event;
         this.target = target;
         this.handler = handler;
         this.dx = dx;
         this.dy = dy;
+        this.dtime = dtime;
     }
 }
 
@@ -33,6 +36,8 @@ export class DragHandler {
     clientYstart: number = 0;
     clientX: number = 0;
     clientY: number = 0;
+    previousTimestamp = 0;
+    startTimestamp = 0;
 
     onDragStart?: (evt: DragHandlerEvent) => void;
     onDragMove?: (evt: DragHandlerEvent) => void;
@@ -63,10 +68,14 @@ export class DragHandler {
         this.pointerDown = true;
         this.clientXstart = this.clientX = evt.clientX;
         this.clientYstart = this.clientY = evt.clientY;
+        this.startTimestamp = this.previousTimestamp = evt.timeStamp;
         evt.preventDefault();
     }
 
     handlePointerMove(evt: PointerEvent) {
+        if (!this.pointerDown && !this.dragging) return;
+        const dtime = evt.timeStamp - this.previousTimestamp;
+        this.previousTimestamp = evt.timeStamp;
         if (this.pointerDown && !this.dragging) {
             this.element.setPointerCapture(evt.pointerId);
             const dxTotal = evt.clientX - this.clientXstart;
@@ -84,11 +93,15 @@ export class DragHandler {
                             evt,
                             this.element,
                             this,
+                            0,
+                            0,
+                            dtime,
                         ),
                     );
                 }
             }
         }
+        if (!this.dragging) return;
         const dx = evt.clientX - this.clientX;
         const dy = evt.clientY - this.clientY;
         if (
@@ -106,6 +119,7 @@ export class DragHandler {
                         this,
                         dx,
                         dy,
+                        dtime,
                     ),
                 );
             }

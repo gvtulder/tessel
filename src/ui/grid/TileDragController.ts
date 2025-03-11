@@ -34,6 +34,9 @@ export class TileDragController extends EventTarget {
     dropTarget: TileDropTarget;
     sources: TileDragSource[];
 
+    currentTranslate?: string;
+    currentScale?: string;
+
     constructor(dropTarget: TileDropTarget) {
         super();
         this.dropTarget = dropTarget;
@@ -96,8 +99,10 @@ export class TileDragController extends EventTarget {
             if (s !== context.source) s.resetDragStatus();
         }
         context.source.startDrag();
-        evt.target.style.translate = `0px 0px`;
-        evt.target.style.scale = `${this.dropTarget.scale / context.source.gridDisplay.scale}`;
+        evt.target.style.willChange = "transform";
+        evt.target.style.translate = this.currentTranslate = `0px 0px`;
+        evt.target.style.scale =
+            this.currentScale = `${this.dropTarget.scale / context.source.gridDisplay.scale}`;
         context.source.dragTransform.dx = 0;
         context.source.dragTransform.dy = 0;
         context.source.dragTransform.scale =
@@ -114,11 +119,6 @@ export class TileDragController extends EventTarget {
         context.position.y = 0;
         context.position.dx = 0;
         context.position.dy = 0;
-        console.log(
-            "start offset",
-            context.dragCenterOffset.x,
-            context.dragCenterOffset.y,
-        );
         this.dispatchEvent(
             new TileDragEvent(
                 TileDragController.events.StartDrag,
@@ -127,7 +127,11 @@ export class TileDragController extends EventTarget {
         );
     }
 
-    onDragMove(context: TileDragSourceContext, evt: DragHandlerEvent) {
+    onDragMove(
+        context: TileDragSourceContext,
+        evt: DragHandlerEvent,
+        updateTransform: boolean = true,
+    ): { newTranslate: string; newScale: string } {
         context.position.dx += evt.dx;
         context.position.dy += evt.dy;
 
@@ -135,29 +139,28 @@ export class TileDragController extends EventTarget {
         const distance = Math.hypot(context.position.dx, context.position.dy);
         const factor = Math.min(1, distance / 100);
 
-        let moved = false;
         context.position.x =
             context.position.dx + factor * context.dragCenterOffset.x;
         context.position.y =
             context.position.dy + factor * context.dragCenterOffset.y;
         const newTranslate = `${Math.round(context.position.x)}px ${Math.round(context.position.y)}px`;
-        if (evt.target.style.translate != newTranslate) {
-            evt.target.style.translate = newTranslate;
-            moved = true;
+        if (updateTransform && this.currentTranslate != newTranslate) {
+            evt.target.style.translate = this.currentTranslate = newTranslate;
         }
         const scale =
             1 +
             factor *
                 (this.dropTarget.scale / context.source.gridDisplay.scale - 1);
         const newScale = `${scale.toFixed(3)}`;
-        if (evt.target.style.scale != newScale) {
-            evt.target.style.scale = newScale;
-            moved = true;
+        if (updateTransform && this.currentScale != newScale) {
+            evt.target.style.scale = this.currentScale = newScale;
         }
         context.source.dragTransform.dx = context.position.x;
         context.source.dragTransform.dy = context.position.y;
         context.source.dragTransform.scale =
             this.dropTarget.scale / context.source.gridDisplay.scale;
+
+        return { newTranslate, newScale };
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragHandlerEvent): boolean {
@@ -184,8 +187,10 @@ export class TileDragController extends EventTarget {
         context.position.dy = 0;
         context.position.x = 0;
         context.position.y = 0;
-        evt.target.style.translate = `${context.position.x}px ${context.position.y}px`;
-        evt.target.style.scale = "";
+        evt.target.style.willChange = "";
+        evt.target.style.translate =
+            this.currentTranslate = `${context.position.x}px ${context.position.y}px`;
+        evt.target.style.scale = this.currentScale = "";
         context.source.dragTransform.dx = 0;
         context.source.dragTransform.dy = 0;
         context.source.dragTransform.scale = 0;

@@ -156,17 +156,13 @@ export class GameController {
         gameDisplay.rescale();
 
         gameDisplay.addEventListener(UserEventType.BackToMenu, () => {
-            if (this.game!.finished || window.confirm("Stop the game?")) {
-                window.history.pushState({}, "", "/");
-                this.showMainMenu();
-            }
+            window.history.pushState({}, "", "/");
+            this.showMainMenu();
         });
 
         gameDisplay.addEventListener(UserEventType.RestartGame, () => {
-            if (this.game!.finished || window.confirm("Restart the game?")) {
-                window.history.pushState({}, "", window.location.href);
-                this.startGame(gameSettings);
-            }
+            window.history.pushState({}, "", window.location.href);
+            this.startGame(gameSettings);
         });
     }
 

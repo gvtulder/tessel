@@ -4,12 +4,14 @@ import { BGCOLOR } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
 import { polylabel } from "../../lib/polylabel";
 import { SVG } from "../svg";
+import { BBox, bbox, mergeBBox } from "src/geom/math";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     bgMask: SVGElement;
     bgMaskGroup: ReplacableGroup;
     shadowMask: SVGElement;
     shadowMaskGroup: ReplacableGroup;
+    dropShadowBGRect: SVGRectElement;
     outlineFG: SVGElement;
     outlineFGGroup: ReplacableGroup;
     outlineBG: SVGElement;
@@ -60,7 +62,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         this.bgMaskGroup = new ReplacableGroup(bgMaskG);
 
         // drop shadow around the shape
-        SVG("rect", null, this.element, {
+        this.dropShadowBGRect = SVG("rect", null, this.element, {
             mask: "url(#scoreOverlay-mask",
             x: "-10",
             y: "-10",
@@ -118,9 +120,12 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         ].map((g) => ({ group: g, elements: [] as SVGElement[] }));
         const points = [] as SVGElement[];
 
+        let boundaryBBox: BBox | undefined = undefined;
+
         for (const shape of shapes) {
             const outlineResult = this.computeOutline(shape);
             const boundary = outlineResult.boundary;
+            boundaryBBox = mergeBBox(bbox(boundary));
             const pathComponents = boundary
                 .reverse()
                 .map((v) => `${v.x.toFixed(5)},${v.y.toFixed(5)}`);
@@ -204,7 +209,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                 fill: Color.light,
                 stroke: Color.dark,
                 "stroke-width": "0.16",
-                style: `filter: drop-shadow(1px 1px 2px rgb(0 0 0 / 0.2)); transform: translate(${bestPoint.x}px, ${bestPoint.y}px) scale(${pointsScale});`,
+                style: `filter: drop-shadow(0.1px 0.1px 0.2px rgb(0 0 0 / 0.9)); transform: translate(${bestPoint.x.toFixed(4)}px, ${bestPoint.y.toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
             });
             points.push(circle);
 
@@ -215,10 +220,29 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                 "dominant-baseline": "middle",
                 "text-anchor": "middle",
                 "font-size": "0.75",
-                style: `transform: translate(${bestPoint.x}px, ${bestPoint.y + 0.01}px) scale(${pointsScale});`,
+                style: `transform: translate(${bestPoint.x.toFixed(4)}px, ${(bestPoint.y + 0.01).toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
             });
             text.appendChild(document.createTextNode(`${shape.points}`));
             points.push(text);
+        }
+
+        if (boundaryBBox) {
+            this.dropShadowBGRect.setAttribute(
+                "x",
+                `${(boundaryBBox.minX - 0.5).toFixed(3)}`,
+            );
+            this.dropShadowBGRect.setAttribute(
+                "y",
+                `${(boundaryBBox.minY - 0.5).toFixed(3)}`,
+            );
+            this.dropShadowBGRect.setAttribute(
+                "width",
+                `${(boundaryBBox.maxX - boundaryBBox.minX + 1).toFixed(3)}`,
+            );
+            this.dropShadowBGRect.setAttribute(
+                "height",
+                `${(boundaryBBox.maxY - boundaryBBox.minY + 1).toFixed(3)}`,
+            );
         }
 
         for (const g of groups) {

@@ -1,7 +1,3 @@
-import type { Interactable, PointerEvent } from "@interactjs/types";
-import "@interactjs/pointer-events";
-import interact from "@interactjs/interact";
-
 import { Game, GameEvent, GameEventType } from "../../game/Game.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
@@ -13,6 +9,8 @@ import { UserEventType } from "../GameController.js";
 import { ScreenDisplay } from "../ScreenDisplay.js";
 import { createElement } from "../html.js";
 import { Button } from "../Button.js";
+import { DropoutMenu } from "./DropoutMenu.js";
+import { Toggle } from "./Toggle.js";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;
@@ -92,7 +90,8 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         scoreDisplayContainer.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
 
-        const menu = createElement("div", "menu", div);
+        const menu = new DropoutMenu();
+        div.appendChild(menu.element);
 
         const buttons = createElement("div", "buttons", controlbar);
 
@@ -101,16 +100,15 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             "Back to menu",
             () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
         );
-        menu.appendChild(this.backtomenubutton.element);
+        menu.addButton(this.backtomenubutton);
 
         this.restartgamebutton = new Button(
             icons.rotateLeftIcon,
             "Restart game",
             () => this.dispatchEvent(new Event(UserEventType.RestartGame)),
         );
-        buttons.appendChild(this.restartgamebutton.element);
+        menu.addButton(this.restartgamebutton);
 
-        const toggles = createElement("div", "toggles", controlbar);
         this.autorotate = new Toggle(
             icons.arrowsSpinIcon,
             "Autorotate",
@@ -123,7 +121,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             },
             false,
         );
-        toggles.appendChild(this.autorotate.element);
+        menu.addButton(this.autorotate);
         this.hints = new Toggle(
             icons.squareCheckIcon,
             "Show hints",
@@ -136,7 +134,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             },
             false,
         );
-        toggles.appendChild(this.hints.element);
+        menu.addButton(this.hints);
         this.snap = new Toggle(
             icons.magnetIcon,
             "Snap",
@@ -146,7 +144,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             },
             false,
         );
-        toggles.appendChild(this.snap.element);
+        menu.addButton(this.snap);
 
         this.tileStackDisplay.addEventListener(
             TileStackDisplay.events.TapTile,
@@ -196,57 +194,5 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     rescale() {
         this.gridDisplay.rescale();
         this.tileStackDisplay.rescale();
-    }
-}
-
-class Toggle {
-    static events = {
-        Change: "change",
-    };
-    element: HTMLElement;
-    private _checked!: boolean;
-
-    private onchange: () => void;
-    private interactable: Interactable;
-
-    constructor(
-        icon: string,
-        title: string,
-        onchange: () => void,
-        checked?: boolean,
-    ) {
-        const toggle = document.createElement("div");
-        toggle.className = "game-toggle";
-        toggle.title = title;
-        toggle.innerHTML = icon;
-        this.element = toggle;
-
-        this.checked = checked ? true : false;
-        this.onchange = onchange;
-
-        this.interactable = interact(toggle).on("tap", () => {
-            this.toggle();
-        });
-    }
-
-    destroy() {
-        this.interactable.unset();
-        this.element.remove();
-    }
-
-    get checked(): boolean {
-        return this._checked;
-    }
-
-    set checked(state: boolean) {
-        this.element.classList.toggle("enabled", state);
-        if (this._checked != state) {
-            this._checked = state;
-            if (this.onchange) this.onchange();
-        }
-    }
-
-    toggle() {
-        this.checked = !this.checked;
     }
 }

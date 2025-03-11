@@ -74,6 +74,20 @@
   }
 }
 
+.game-toggle {
+  &.enabled {
+    background: rgba(0, 0, 0, 35%);
+    fill: #eee;
+
+    @media (hover) {
+      &:hover {
+        background: rgba(0, 0, 0, 55%);
+        fill: #eee;
+      }
+    }
+  }
+}
+
 /*
 .screen.game-display {
   .game-button,
@@ -99,7 +113,6 @@
     }
   }
 }
-*/
 
 .game-toggle {
   padding: 5px;
@@ -126,3 +139,4 @@
     }
   }
 }
+*/

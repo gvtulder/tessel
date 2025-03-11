@@ -57,11 +57,47 @@
     justify-content: space-between;
     text-align: center;
   }
+}
 
-  .menu {
-    position: absolute;
-    right: 3vw;
-    top: 3vw;
+.dropout-menu {
+  position: absolute;
+  right: 3vw;
+  top: 3vw;
+  display: flex;
+  flex-direction: column;
+  border-radius: max(2.5vw, 20px);
+  z-index: 10000;
+
+  margin: -0.3vw;
+
+  .game-button.dropout {
+    display: inherit;
+  }
+
+  &.expanded {
+    background: #fff;
+
+    .game-button.dropout {
+      background: rgba(0, 0, 0, 35%);
+      fill: #eee;
+      margin-bottom: 1.5vw;
+      display: inherit;
+    }
+  }
+
+  .game-button,
+  .game-toggle {
+    display: none;
+    margin: 0.3vw 0.3vw;
+  }
+
+  &.expanded .game-button,
+  &.expanded .game-toggle {
+    display: block;
+  }
+
+  .game-button + .game-toggle {
+    margin-top: 1.5vw;
   }
 }
 

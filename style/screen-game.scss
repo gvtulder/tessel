@@ -231,7 +231,7 @@
 @media screen and (orientation: portrait) {
   .screen.game-display {
     display: grid;
-    grid-template-columns: 5vw min-content 1fr;
+    grid-template-columns: 5vw 60vw 1fr;
     grid-template-rows: 1fr max(20vw, 40px);
     grid-template-areas:
       "main-grid main-grid main-grid"
@@ -263,7 +263,7 @@
     .score-display .score {
       margin: 0;
       border-radius: 2vw;
-      font-size: 5vh;
+      font-size: 7vw;
       width: 15vw;
     }
   }

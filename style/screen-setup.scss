@@ -38,7 +38,6 @@
   grid-area: buttons;
   text-align: center;
   width: 100%;
-  background: #bbb;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -86,7 +85,6 @@
 .screen.game-setup .settings {
   position: relative;
   grid-area: settings;
-  background: #bbb;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -133,4 +131,35 @@
 }
 .screen.game-setup .settings .palette {
   padding: 13%;
+}
+
+@media screen and (max-aspect-ratio: 0.8) {
+  .screen.game-setup {
+    grid-template-areas:
+      "example example"
+      "settings buttons";
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: 1fr max(min-content, 50vw);
+  }
+  .screen.game-setup .settings {
+    margin: 2vh 1vw;
+  }
+  .screen.game-setup .setting-row {
+    border-bottom: none;
+  }
+  .screen.game-setup .setting-row-option {
+    margin: 0.5vw;
+    width: min(12vw, 13vh);
+    height: min(12vw, 13vh);
+    background: #cacaca;
+    border: 3px solid #aaa;
+    border-radius: 10px;
+    box-sizing: border-box;
+    aspect-ratio: 1;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .screen.game-setup .button-row {
+    align-items: center;
+  }
 }

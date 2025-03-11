@@ -75,8 +75,8 @@ export class TileStackDisplay extends BaseTileStackDisplay {
 
         this.tileStack = tileStack;
 
+        // TODO move this to a separate class
         const counterDiv = document.createElement("div");
-        this.element.appendChild(counterDiv);
         counterDiv.className = "tile-counter";
         this.counterDiv = counterDiv;
 
@@ -104,7 +104,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
                     this.atlas,
                     true,
                 );
-                this.element.insertBefore(tileDisplay.element, this.counterDiv);
+                this.element.appendChild(tileDisplay.element);
                 this.tileDisplays.push(tileDisplay);
                 this.tileDragController.addSource(tileDisplay);
             }

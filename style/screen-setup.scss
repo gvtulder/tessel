@@ -23,34 +23,14 @@
 
 .screen.game-setup .game-button.exit {
   position: absolute;
-  left: 20px;
-  bottom: 20px;
-  width: 30px;
-  height: 30px;
-  padding: 10px;
-  fill: #999;
-  @media (hover) {
-    &:hover {
-      fill: #777;
-      transform: none;
-    }
-  }
+  right: 3vw;
+  top: 3vw;
 }
 
 .screen.game-setup .game-button.regenerate {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
-  width: 30px;
-  height: 30px;
-  padding: 10px;
-  fill: #aaa;
-  @media (hover) {
-    &:hover {
-      fill: #777;
-      transform: none;
-    }
-  }
+  left: 3vw;
+  bottom: 3vw;
 }
 
 .screen.game-setup .button-row {

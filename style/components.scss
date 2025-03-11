@@ -50,13 +50,17 @@
 
 .game-button,
 .game-toggle {
-  padding: 10px;
+  width: max(2.5vw, 20px);
+  height: max(2.5vw, 20px);
+  padding: max(1.3vw, 10px);
   cursor: pointer;
+  border-radius: 100%;
 
   transform: scale(1);
-  transition-property: tranform;
+  transition-property: transform;
   transition-duration: 100ms;
-  fill: #777;
+  fill: rgba(0, 0, 0, 35%);
+  background: rgba(0, 0, 0, 8%);
 
   svg {
     width: 100%;
@@ -65,11 +69,37 @@
 
   @media (hover) {
     &:hover {
-      transform: scale(1.1);
-      fill: #555;
+      background: rgba(0, 0, 0, 15%);
     }
   }
 }
+
+/*
+.screen.game-display {
+  .game-button,
+  .game-toggle {
+    padding: 10px;
+    cursor: pointer;
+
+    transform: scale(1);
+    transition-property: tranform;
+    transition-duration: 100ms;
+    fill: #777;
+
+    svg {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+
+    @media (hover) {
+      &:hover {
+        transform: scale(1.1);
+        fill: #555;
+      }
+    }
+  }
+}
+*/
 
 .game-toggle {
   padding: 5px;

@@ -1,11 +1,11 @@
 .screen.game-display {
   display: grid;
-  grid-template-columns: 1fr 150px;
-  grid-template-rows: 1fr min-content min-content;
+  grid-template-columns: 1fr calc(max(5.1vw, 40px) + 6vw);
+  grid-template-rows: 2fr min-content 2fr;
   grid-template-areas:
+    "main-grid fill"
     "main-grid tile-stack"
-    "main-grid score-box"
-    "main-grid controls";
+    "main-grid counters";
 
   .main-grid {
     grid-area: main-grid;
@@ -36,8 +36,8 @@
     }
   }
 
-  .score-display {
-    grid-area: score-box;
+  .fill {
+    grid-area: fill;
     background: #bbb;
   }
 
@@ -48,16 +48,26 @@
     flex-direction: column;
     justify-content: center;
   }
+
+  .tile-counter-and-score {
+    grid-area: counters;
+    background: #bbb;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+  }
+
+  .menu {
+    position: absolute;
+    right: 3vw;
+    top: 3vw;
+  }
 }
 
 .tile-stack {
   .grid-display {
     z-index: 1000;
-  }
-  .tile-counter {
-    margin: 10px;
-    color: #555;
-    text-align: center;
   }
   .tile-outline {
     stroke: #ddd;
@@ -66,6 +76,9 @@
     z-index: 0;
     position: relative;
     aspect-ratio: 1/1;
+
+    max-height: 18vh;
+
     transition-property: scale;
     transition-duration: 100ms;
     svg {
@@ -97,16 +110,20 @@
   }
 }
 
+.tile-counter {
+  font-size: 1.5vw;
+}
+
 .score-display .score {
-  margin: 15px 15px;
+  margin: 10%;
   box-sizing: border-box;
-  padding: 8px 0 12px 0;
-  border-radius: 20px;
-  border: 6px solid #63851d;
+  padding: 4% 0 7% 0;
+  border-radius: 2vw;
+  border: 3px solid #63851d;
   background: #e1f0c1;
   color: #63851d;
   opacity: 0.5;
-  font-size: 36px;
+  font-size: min(4vw, 5vh);
   text-align: center;
 
   &.animate {
@@ -131,5 +148,46 @@
   100% {
     opacity: 0.5;
     transform: scale(1);
+  }
+}
+
+@media screen and (orientation: portrait) {
+  .screen.game-display {
+    display: grid;
+    grid-template-columns: 5vw min-content 1fr;
+    grid-template-rows: 1fr max(20vw, 40px);
+    grid-template-areas:
+      "main-grid main-grid main-grid"
+      "fill tile-stack counters";
+
+    .tile-stack {
+      flex-direction: row;
+      justify-content: center;
+      .tile-on-stack {
+        max-height: 100%;
+        height: 100%;
+        max-width: 25vw;
+      }
+    }
+
+    .tile-counter-and-score {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .tile-counter {
+      font-size: 2.5vw;
+    }
+
+    .score-display {
+      padding-right: 15%;
+    }
+
+    .score-display .score {
+      margin: none;
+      border-radius: 2vw;
+      font-size: 5vh;
+      width: 15vw;
+    }
   }
 }

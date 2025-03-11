@@ -60,16 +60,14 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         divGridContainer.appendChild(this.gridDisplay.element);
 
-        const controlbar = createElement("div", "controls", div);
+        const controlbar = createElement("div", "controls"); // , div);
 
-        const scoreDisplayContainer = createElement(
+        createElement("div", "fill", div);
+        const tileCounterAndScore = createElement(
             "div",
-            "score-display",
+            "tile-counter-and-score",
             div,
         );
-        this.scoreDisplay = new ScoreDisplay();
-        scoreDisplayContainer.appendChild(this.scoreDisplay.element);
-        this.scoreDisplay.points = this.game.points;
 
         const tileDragController = new MainGridTileDragController(
             this.gridDisplay,
@@ -83,6 +81,19 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         div.appendChild(this.tileStackDisplay.element);
 
+        tileCounterAndScore.appendChild(this.tileStackDisplay.counterDiv);
+
+        const scoreDisplayContainer = createElement(
+            "div",
+            "score-display",
+            tileCounterAndScore,
+        );
+        this.scoreDisplay = new ScoreDisplay();
+        scoreDisplayContainer.appendChild(this.scoreDisplay.element);
+        this.scoreDisplay.points = this.game.points;
+
+        const menu = createElement("div", "menu", div);
+
         const buttons = createElement("div", "buttons", controlbar);
 
         this.backtomenubutton = new Button(
@@ -90,7 +101,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             "Back to menu",
             () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
         );
-        buttons.appendChild(this.backtomenubutton.element);
+        menu.appendChild(this.backtomenubutton.element);
 
         this.restartgamebutton = new Button(
             icons.rotateLeftIcon,

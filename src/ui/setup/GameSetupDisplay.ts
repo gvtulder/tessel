@@ -83,7 +83,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
             },
         );
         exitButton.element.classList.add("exit");
-        buttonRow.appendChild(exitButton.element);
+        div.appendChild(exitButton.element);
         this.exitButton = exitButton;
 
         const regenerateButton = new Button(

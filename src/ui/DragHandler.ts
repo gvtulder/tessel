@@ -1,18 +1,21 @@
 export class DragHandlerEvent {
     event: PointerEvent;
     target: HTMLElement;
+    handler: DragHandler;
     dx: number;
     dy: number;
 
     constructor(
         type: string,
         event: PointerEvent,
-        element: HTMLElement,
+        target: HTMLElement,
+        handler: DragHandler,
         dx: number = 0,
         dy: number = 0,
     ) {
         this.event = event;
-        this.target = element;
+        this.target = target;
+        this.handler = handler;
         this.dx = dx;
         this.dy = dy;
     }
@@ -60,7 +63,6 @@ export class DragHandler {
         this.pointerDown = true;
         this.clientXstart = this.clientX = evt.clientX;
         this.clientYstart = this.clientY = evt.clientY;
-        console.log("pointerdown", this.element);
         evt.preventDefault();
     }
 
@@ -77,7 +79,12 @@ export class DragHandler {
                 this.dragging = true;
                 if (this.onDragStart) {
                     this.onDragStart(
-                        new DragHandlerEvent("dragstart", evt, this.element),
+                        new DragHandlerEvent(
+                            "dragstart",
+                            evt,
+                            this.element,
+                            this,
+                        ),
                     );
                 }
             }
@@ -92,7 +99,14 @@ export class DragHandler {
         ) {
             if (this.onDragMove) {
                 this.onDragMove(
-                    new DragHandlerEvent("dragmove", evt, this.element, dx, dy),
+                    new DragHandlerEvent(
+                        "dragmove",
+                        evt,
+                        this.element,
+                        this,
+                        dx,
+                        dy,
+                    ),
                 );
             }
             this.clientX = evt.clientX;
@@ -111,13 +125,22 @@ export class DragHandler {
             this.dragging = false;
             if (this.onDragEnd) {
                 this.onDragEnd(
-                    new DragHandlerEvent("dragend", evt, this.element, dx, dy),
+                    new DragHandlerEvent(
+                        "dragend",
+                        evt,
+                        this.element,
+                        this,
+                        dx,
+                        dy,
+                    ),
                 );
             }
         }
         if (Math.hypot(dxTotal, dyTotal) < MAX_TAP_THRESHOLD) {
             if (this.onTap) {
-                this.onTap(new DragHandlerEvent("tap", evt, this.element));
+                this.onTap(
+                    new DragHandlerEvent("tap", evt, this.element, this),
+                );
             }
         }
         evt.preventDefault();
@@ -134,6 +157,7 @@ export class DragHandler {
                         "dragend",
                         evt,
                         this.element,
+                        this,
                         evt.clientX - this.clientX,
                         evt.clientY - this.clientY,
                     ),

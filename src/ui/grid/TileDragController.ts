@@ -53,7 +53,8 @@ export class TileDragController extends EventTarget {
             autorotateTimeout: null,
             autorotateCache: new Map<Tile, TileRotationSet>(),
             draggable: source.getDraggable(),
-            position: { x: 0, y: 0 },
+            position: { x: 0, y: 0, dx: 0, dy: 0 },
+            dragCenterOffset: { x: 0, y: 0 },
         };
 
         const dragHandler = source.getDraggable();
@@ -101,6 +102,23 @@ export class TileDragController extends EventTarget {
         context.source.dragTransform.dy = 0;
         context.source.dragTransform.scale =
             this.dropTarget.scale / context.source.gridDisplay.scale;
+        context.dragCenterOffset.x =
+            evt.handler.clientXstart -
+            (context.source.baseTransform.dx || 0) -
+            (context.source.dragTransform.originX || 0);
+        context.dragCenterOffset.y =
+            evt.handler.clientYstart -
+            (context.source.baseTransform.dy || 0) -
+            (context.source.dragTransform.originY || 0);
+        context.position.x = 0;
+        context.position.y = 0;
+        context.position.dx = 0;
+        context.position.dy = 0;
+        console.log(
+            "start offset",
+            context.dragCenterOffset.x,
+            context.dragCenterOffset.y,
+        );
         this.dispatchEvent(
             new TileDragEvent(
                 TileDragController.events.StartDrag,
@@ -110,15 +128,28 @@ export class TileDragController extends EventTarget {
     }
 
     onDragMove(context: TileDragSourceContext, evt: DragHandlerEvent) {
-        context.position.x += evt.dx;
-        context.position.y += evt.dy;
+        context.position.dx += evt.dx;
+        context.position.dy += evt.dy;
+
+        // gradually adjust scale and center while dragging from the stack
+        const distance = Math.hypot(context.position.dx, context.position.dy);
+        const factor = Math.min(1, distance / 100);
+
         let moved = false;
+        context.position.x =
+            context.position.dx + factor * context.dragCenterOffset.x;
+        context.position.y =
+            context.position.dy + factor * context.dragCenterOffset.y;
         const newTranslate = `${Math.round(context.position.x)}px ${Math.round(context.position.y)}px`;
         if (evt.target.style.translate != newTranslate) {
             evt.target.style.translate = newTranslate;
             moved = true;
         }
-        const newScale = `${(this.dropTarget.scale / context.source.gridDisplay.scale).toFixed(3)}`;
+        const scale =
+            1 +
+            factor *
+                (this.dropTarget.scale / context.source.gridDisplay.scale - 1);
+        const newScale = `${scale.toFixed(3)}`;
         if (evt.target.style.scale != newScale) {
             evt.target.style.scale = newScale;
             moved = true;
@@ -149,6 +180,8 @@ export class TileDragController extends EventTarget {
 
         // reset
         context.source.endDrag(successful);
+        context.position.dx = 0;
+        context.position.dy = 0;
         context.position.x = 0;
         context.position.y = 0;
         evt.target.style.translate = `${context.position.x}px ${context.position.y}px`;
@@ -199,11 +232,13 @@ export type TileDragSourceContext = {
     autorotateTimeout: number | null;
     autorotateCache: Map<Tile, TileRotationSet>;
     draggable: DragHandler;
-    position: { x: 0; y: 0 };
+    position: { x: number; y: number; dx: number; dy: number };
+    dragCenterOffset: { x: number; y: number };
 };
 
 export interface TileDragSource {
     gridDisplay: GridDisplay;
+    baseTransform: TransformComponent;
     dragTransform: TransformComponent;
     tile: Tile | null;
     indexOnStack?: number;

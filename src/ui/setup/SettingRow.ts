@@ -16,7 +16,7 @@ export class SettingRow<T extends SettingRowOption> {
         this.element.appendChild(option.element);
         const index = this.options.length;
         this.options.push(option);
-        option.interactable.on("tap", () => {
+        option.interactable.on("up", () => {
             this.selectedIndex = index;
             if (this.onchange) {
                 this.onchange();

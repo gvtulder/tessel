@@ -1,6 +1,8 @@
+@use "./colors.scss";
+
 .screen.game-display {
   display: grid;
-  grid-template-columns: 1fr calc(max(5.1vw, 40px) + 6vw);
+  grid-template-columns: 1fr calc(2 * (colors.$button-scale) + 6vw);
   grid-template-rows: 2fr min-content 2fr;
   grid-template-areas:
     "main-grid fill"
@@ -66,10 +68,10 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  border-radius: max(2.5vw, 20px);
+  border-radius: (colors.$button-scale);
   z-index: 10000;
 
-  margin: -0.5vw;
+  margin: -1vw;
 
   &.expanded {
     background: #f6f6f6;
@@ -80,7 +82,7 @@
   }
 
   .game-button.dropout {
-    margin: 0.5vw;
+    margin: 1vw 1vw 0 0;
   }
 
   .game-button.dropout svg {
@@ -95,7 +97,7 @@
 
   .items .game-button {
     grid-row: 1;
-    margin: 0 1vw 1.3vw 1vw;
+    margin: 0 0.5vw 1vw 1vw;
 
     transition: scale 0.1s;
 
@@ -109,14 +111,14 @@
 
   .items .game-toggle {
     grid-column: 1 / -1;
-    margin: 0.3vw 0 0.3vw 0;
+    margin: 0 0 0.5vw 0;
     padding: 0 1vw 0 1vw;
   }
 
   .items,
   .game-button + .game-toggle {
     border-top: 1px solid #ddd;
-    padding-top: 1.5vw;
+    padding-top: 1vw;
   }
 
   .game-button.backtomenu {

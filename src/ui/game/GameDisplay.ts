@@ -95,14 +95,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         const buttons = createElement("div", "buttons", controlbar);
 
-        this.restartgamebutton = new Button(
-            icons.rotateLeftIcon,
-            "Restart game",
-            () => this.dispatchEvent(new Event(UserEventType.RestartGame)),
-        );
-        this.restartgamebutton.element.classList.add("restart");
-        menu.addButton(this.restartgamebutton);
-
         this.backtomenubutton = new Button(
             icons.houseIcon,
             "Back to menu",
@@ -110,6 +102,14 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         this.backtomenubutton.element.classList.add("backtomenu");
         menu.addButton(this.backtomenubutton);
+
+        this.restartgamebutton = new Button(
+            icons.rotateLeftIcon,
+            "Restart game",
+            () => this.dispatchEvent(new Event(UserEventType.RestartGame)),
+        );
+        this.restartgamebutton.element.classList.add("restart");
+        menu.addButton(this.restartgamebutton);
 
         this.autorotate = new Toggle(
             icons.arrowsSpinIcon,

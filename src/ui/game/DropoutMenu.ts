@@ -1,8 +1,5 @@
-import type { Interactable, PointerEvent } from "@interactjs/types";
-import "@interactjs/pointer-events";
-import interact from "@interactjs/interact";
-
 import { Button } from "../Button";
+import { DragHandler, DragHandlerEvent } from "../DragHandler";
 import { createElement } from "../html";
 import icons from "../icons";
 import { Toggle } from "./Toggle";
@@ -13,7 +10,7 @@ export class DropoutMenu {
     dropoutButton: Button | Toggle;
     buttons: Button[];
     toggles: Toggle[];
-    backgroundEvent: Interactable;
+    backgroundEventHandler: (evt: PointerEvent) => void;
 
     constructor() {
         this.element = createElement("div", "dropout-menu");
@@ -31,13 +28,13 @@ export class DropoutMenu {
 
         this.container = createElement("div", "items", this.element);
 
-        this.backgroundEvent = interact(document.body);
-        this.backgroundEvent.on("down", (evt: PointerEvent) => {
+        this.backgroundEventHandler = (evt: PointerEvent) => {
             const target = evt.target as HTMLElement;
             if (!target.closest || !target.closest(".dropout-menu")) {
                 this.element.classList.remove("expanded");
             }
-        });
+        };
+        window.addEventListener("pointerdown", this.backgroundEventHandler);
 
         this.buttons = [];
         this.toggles = [];
@@ -61,6 +58,6 @@ export class DropoutMenu {
             toggle.destroy();
         }
         this.dropoutButton.destroy();
-        this.backgroundEvent.unset();
+        window.removeEventListener("pointerdown", this.backgroundEventHandler);
     }
 }

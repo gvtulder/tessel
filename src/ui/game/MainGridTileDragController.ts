@@ -1,5 +1,3 @@
-import type { DragEvent } from "@interactjs/types";
-
 import { TileOnScreenMatch } from "../grid/TileDisplay";
 import { PlaceholderTile, Tile, TileType } from "../../grid/Tile";
 import { GameController } from "../GameController";
@@ -14,6 +12,7 @@ import {
 import { MainGridDisplay } from "./MainGridDisplay";
 import { angleDist, edgeToAngle, TWOPI } from "../../geom/math";
 import { SVG } from "../svg";
+import { DragHandlerEvent } from "../DragHandler";
 
 export class MainGridTileDragController extends TileDragController {
     autorotate: boolean;
@@ -44,7 +43,7 @@ export class MainGridTileDragController extends TileDragController {
         }
     }
 
-    onDragStart(context: TileDragSourceContext, evt: DragEvent) {
+    onDragStart(context: TileDragSourceContext, evt: DragHandlerEvent) {
         super.onDragStart(context, evt);
 
         const dropTarget = this.dropTarget as MainGridDisplay;
@@ -104,7 +103,7 @@ export class MainGridTileDragController extends TileDragController {
         }
     }
 
-    onDragMove(context: TileDragSourceContext, evt: DragEvent) {
+    onDragMove(context: TileDragSourceContext, evt: DragHandlerEvent) {
         super.onDragMove(context, evt);
 
         if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
@@ -205,7 +204,7 @@ export class MainGridTileDragController extends TileDragController {
         }
     }
 
-    onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {
+    onDragEnd(context: TileDragSourceContext, evt: DragHandlerEvent): boolean {
         const successful = super.onDragEnd(context, evt);
 
         // reset

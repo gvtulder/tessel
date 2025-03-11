@@ -1,8 +1,3 @@
-import type { Interactable } from "@interactjs/types";
-import "@interactjs/auto-start";
-import "@interactjs/pointer-events";
-import interact from "@interactjs/interact";
-
 import { Grid } from "../../grid/Grid";
 import { FixedOrderTileStack, TileShapeColors } from "../../game/TileStack";
 import { GameEventType } from "../../game/Game";

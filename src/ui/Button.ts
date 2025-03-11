@@ -1,10 +1,8 @@
-import type { Interactable, PointerEvent } from "@interactjs/types";
-import "@interactjs/pointer-events";
-import interact from "@interactjs/interact";
+import { DragHandler, DragHandlerEvent } from "./DragHandler";
 
 export class Button {
     element: HTMLElement;
-    interactable: Interactable;
+    interactable: DragHandler;
 
     constructor(
         icon: string,
@@ -16,11 +14,13 @@ export class Button {
         button.title = title;
         button.innerHTML = icon;
         this.element = button;
-        this.interactable = interact(button).on("up", ontap);
+        this.interactable = new DragHandler(button);
+        this.interactable.onTap = (evt: DragHandlerEvent) => ontap(evt.event);
     }
 
     destroy() {
-        this.interactable.unset();
+        // TODO
+        // this.interactable.unset();
         this.element.remove();
     }
 }

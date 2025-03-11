@@ -16,7 +16,7 @@ export class Button {
         button.title = title;
         button.innerHTML = icon;
         this.element = button;
-        this.interactable = interact(button).on("down", ontap);
+        this.interactable = interact(button).on("tap", ontap);
     }
 
     destroy() {

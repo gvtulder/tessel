@@ -1,5 +1,9 @@
 import { GameSettings } from "./game/Game";
-import { ConnectedSegmentScorer, FullTileScorer } from "./game/Scorer";
+import {
+    ConnectedSegmentScorer,
+    ConvexShapeScorer,
+    FullTileScorer,
+} from "./game/Scorer";
 import { TileGenerators } from "./game/TileGenerator";
 import {
     HexagonsAtlas,
@@ -208,7 +212,8 @@ export const SetupCatalog = {
             key: "diff",
             rules: new DifferentEdgeColorsRuleSet(),
             exampleColors: [0, 1] as [number, number],
-            scorer: new FullTileScorer(),
+            // scorer: new FullTileScorer(),
+            scorer: new ConvexShapeScorer(),
         },
     ),
     defaultRules: "same",

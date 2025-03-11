@@ -141,7 +141,7 @@ export class Game extends EventTarget {
     }
 
     computeScores(target: Tile) {
-        const shapes = this.scorer.computeScores(target);
+        const shapes = this.scorer.computeScores(this.grid, target);
         if (shapes.length > 0) {
             const points = shapes.map((s) => s.points).reduce((a, b) => a + b);
             this.points += points;

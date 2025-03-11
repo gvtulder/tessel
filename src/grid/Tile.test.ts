@@ -29,7 +29,7 @@ describe("Tile", () => {
         const segments = polygon.segment();
         const tile = new Tile(TRIANGLE, polygon, segments);
         expect(tile.colors).toStrictEqual([undefined, undefined, undefined]);
-        tile.addEventListener(GridEventType.UpdateTileColors, callback);
+        tile.onUpdateColor = callback;
         const colors = ["black", "red", "blue"];
         tile.colors = colors;
         expect(tile.colors).toStrictEqual(colors);

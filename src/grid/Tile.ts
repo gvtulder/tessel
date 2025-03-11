@@ -107,7 +107,7 @@ export class TileSegment {
 /**
  * A Tile represents a tile or placeholder on the grid.
  */
-export class Tile extends EventTarget {
+export class Tile {
     /**
      * The type of this tile.
      */
@@ -148,6 +148,8 @@ export class Tile extends EventTarget {
      */
     centroid: Point;
 
+    onUpdateColor?: (tile: Tile) => void;
+
     /**
      * Cache of the segment colors.
      */
@@ -162,7 +164,6 @@ export class Tile extends EventTarget {
         segments?: Polygon[] | null,
         tileType = TileType.Normal,
     ) {
-        super();
         // basic properties
         this.tileType = tileType;
         this.shape = shape;
@@ -213,9 +214,9 @@ export class Tile extends EventTarget {
         for (let i = 0; i < segments.length; i++) {
             segments[i].color = colors instanceof Array ? colors[i] : colors;
         }
-        this.dispatchEvent(
-            new GridEvent(GridEventType.UpdateTileColors, undefined, this),
-        );
+        if (this.onUpdateColor) {
+            this.onUpdateColor(this);
+        }
     }
 }
 

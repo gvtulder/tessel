@@ -412,10 +412,7 @@ export class Grid extends EventTarget {
         const tile = placeholder
             ? new PlaceholderTile(shape, polygon)
             : new Tile(shape, polygon, segments);
-        tile.addEventListener(
-            GridEventType.UpdateTileColors,
-            this.handleTileColorUpdate,
-        );
+        tile.onUpdateColor = this.handleTileColorUpdate;
         const points = polygon.vertices;
         const n = points.length;
 
@@ -829,9 +826,9 @@ export class Grid extends EventTarget {
     /**
      * Broadcast the tile color update.
      */
-    private handleTileColorUpdate(evt: GridEvent): void {
+    private handleTileColorUpdate(tile: Tile): void {
         this.dispatchEvent(
-            new GridEvent(GridEventType.UpdateTileColors, this, evt.tile),
+            new GridEvent(GridEventType.UpdateTileColors, this, tile),
         );
     }
 }

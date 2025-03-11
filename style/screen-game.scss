@@ -186,10 +186,12 @@
 
 .tile-counter {
   font-size: 1.5vw;
+  flex-grow: 2;
 }
 
 .score-display .score {
-  margin: 10%;
+  flex-grow: 1;
+  margin: 10% 10% 3vw 10%;
   box-sizing: border-box;
   padding: 4% 0 7% 0;
   border-radius: 2vw;
@@ -258,7 +260,7 @@
     }
 
     .score-display .score {
-      margin: none;
+      margin: 0;
       border-radius: 2vw;
       font-size: 5vh;
       width: 15vw;

@@ -22,6 +22,7 @@ export class GridDisplay extends EventTarget {
     gridElement: HTMLDivElement;
 
     svg: SVGElement;
+    svgScaleGroup: SVGElement;
     svgGrid: SVGElement;
     svgTiles: SVGElement;
 
@@ -78,7 +79,12 @@ export class GridDisplay extends EventTarget {
         const gridEl = (this.gridElement = createElement("div", "grid", div));
         const svg = (this.svg = SVG("svg", null, gridEl));
         const svgGrid = (this.svgGrid = SVG("g", "svg-grid", svg));
-        this.svgTiles = SVG("g", "svg-tiles", svgGrid);
+        const svgScaleGroup = (this.svgScaleGroup = SVG(
+            "g",
+            "svg-scale-group",
+            svgGrid,
+        ));
+        this.svgTiles = SVG("g", "svg-tiles", svgScaleGroup);
 
         this.onAddTile = (evt: GridEvent) => this.addTile(evt.tile!);
         this.onUpdateTileColors = (evt: GridEvent) => {
@@ -317,7 +323,9 @@ export class GridDisplay extends EventTarget {
         this.visibleTop = -containerTop / scale;
         this.visibleBottom = (availHeight + containerTop) / scale;
 
-        this.svgGrid.style.transform = `translate(${containerLeft}px, ${containerTop}px) scale(${scale})`;
+        // Firefox doesn't like large scale with animations
+        this.svgGrid.style.transform = `translate(${containerLeft}px, ${containerTop}px) scale(${scale / 100})`;
+        this.svgScaleGroup.style.transform = `scale(100)`;
 
         this.containerLeft = containerLeft;
         this.containerTop = containerTop;

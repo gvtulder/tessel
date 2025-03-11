@@ -18,7 +18,7 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
         this.gameDisplay = gameDisplay;
 
         this.scoreOverlayDisplay = new ScoreOverlayDisplay_Cutout();
-        this.svgGrid.appendChild(this.scoreOverlayDisplay.element);
+        this.svgScaleGroup.appendChild(this.scoreOverlayDisplay.element);
         this.ignorePlaceholders = false;
     }
 

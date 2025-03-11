@@ -129,7 +129,7 @@ export class GridColoring {
                     const groupA = segmentToGroup.get(a)!;
                     for (const b of tile.segments) {
                         const groupB = segmentToGroup.get(b)!;
-                        if (a !== b) {
+                        if (groupA !== groupB) {
                             this.addConflict(groupA, groupB);
                         }
                     }

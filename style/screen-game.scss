@@ -92,13 +92,13 @@
 
   .items {
     display: none;
-    margin: 0.5vw 0.5vw 1vw 0.5vw;
+    margin: 1vw 0.5vw 1.5vw 0.5vw;
     grid-template-columns: repeat(4, auto);
   }
 
   .items .game-button {
     grid-row: 1;
-    margin: 0 0 1.5vw 0.5vw;
+    margin: 0 1vw 1.5vw 1vw;
 
     transition: scale 0.1s;
 
@@ -106,10 +106,14 @@
       scale: 1.05;
     }
   }
+  .items .game-button + .game-button {
+    margin-left: 0;
+  }
 
   .items .game-toggle {
     grid-column: 1 / -1;
-    margin: 0.3vw 0.7vw 0.3vw 0.3vw;
+    margin: 0.3vw 0 0.3vw 0;
+    padding: 0 1vw 0 1vw;
   }
 
   .items,

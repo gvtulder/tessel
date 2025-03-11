@@ -1,8 +1,3 @@
-import type { Interactable } from "@interactjs/types";
-import "@interactjs/auto-start";
-import "@interactjs/pointer-events";
-import interact from "@interactjs/interact";
-
 import { Grid } from "../../grid/Grid";
 import { FixedOrderTileStack, TileShapeColors } from "../../game/TileStack";
 import { GameEventType } from "../../game/Game";
@@ -20,6 +15,7 @@ import { Atlas } from "../../grid/Atlas";
 import { angleDist, angleDistDeg, RAD2DEG, TWOPI } from "../../geom/math";
 import { BaseTileStackDisplay, TileStackDisplay } from "./TileStackDisplay";
 import { DEG2RAD } from "detect-collisions";
+import { DragHandler, DragHandlerEvent } from "../DragHandler";
 
 export class SingleTileOnStackDisplay implements TileDragSource {
     tileStackDisplay: BaseTileStackDisplay;
@@ -29,7 +25,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     tile: Tile | null;
     element: HTMLDivElement;
     rotatable: HTMLDivElement;
-    draggable?: Interactable;
+    draggable: DragHandler;
     rotationIdx: number;
     // angle in degrees to prevent rounding errors
     angle: number;
@@ -84,6 +80,8 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.rotatable.style.transformOrigin = `${meanX}px ${meanY}px`;
         */
 
+        // TODO disabled interact js
+        this.draggable = new DragHandler(this.element);
         this.initInteractable(makeRotatable);
 
         this.element.addEventListener("transitionend", () => {
@@ -179,29 +177,30 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     initInteractable(makeRotatable: boolean) {
+        this.draggable.onTap = (evt: DragHandlerEvent) => {
+            if (makeRotatable) {
+                this.rotateTile();
+            }
+            this.tileStackDisplay.dispatchEvent(
+                new Event(TileStackDisplay.events.TapTile),
+            );
+            evt.event.preventDefault();
+        };
+        /*
+        TODO other events?
         const draggable = this.getDraggable();
         draggable
-            .on("tap", (evt: Event) => {
-                if (makeRotatable) {
-                    this.rotateTile();
-                }
-                this.tileStackDisplay.dispatchEvent(
-                    new Event(TileStackDisplay.events.TapTile),
-                );
-                evt.preventDefault();
-            })
+            .on("tap", (evt: Event) => {})
             .on("doubletap", (evt: Event) => {
                 evt.preventDefault();
             })
             .on("hold", (evt: Event) => {
                 evt.preventDefault();
             });
+            */
     }
 
     getDraggable() {
-        if (!this.draggable) {
-            this.draggable = interact(this.element);
-        }
         return this.draggable;
     }
 
@@ -237,10 +236,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     removeDraggable() {
-        if (this.draggable) {
-            this.draggable.unset();
-            this.draggable = undefined;
-        }
+        // TODO remove
     }
 
     /**

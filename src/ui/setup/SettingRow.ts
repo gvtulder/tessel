@@ -16,12 +16,12 @@ export class SettingRow<T extends SettingRowOption> {
         this.element.appendChild(option.element);
         const index = this.options.length;
         this.options.push(option);
-        option.interactable.on("up", () => {
+        option.draggable.onTap = () => {
             this.selectedIndex = index;
             if (this.onchange) {
                 this.onchange();
             }
-        });
+        };
         if (this.selectedIndex === undefined) {
             this.selectedIndex = index;
             option.element.classList.add("selected");

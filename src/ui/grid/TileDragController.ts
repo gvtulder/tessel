@@ -1,7 +1,3 @@
-import type { Interactable, DragEvent } from "@interactjs/types";
-import "@interactjs/auto-start";
-import "@interactjs/actions/drag";
-
 import { TileOnScreenMatch } from "./TileDisplay";
 import { Tile } from "../../grid/Tile";
 import { DEBUG } from "../../settings";
@@ -10,6 +6,7 @@ import { GridDisplay } from "./GridDisplay";
 import { TransformComponent } from "../../geom/Transform";
 import { Point } from "../../geom/math";
 import { Shape } from "../../grid/Shape";
+import { DragHandler, DragHandlerEvent } from "../DragHandler";
 
 export const MAX_TILE_DROP_POINT_DIST = 0.2;
 export const MAX_TILE_AUTOROTATE_POINT_DIST = 0.5;
@@ -59,6 +56,15 @@ export class TileDragController extends EventTarget {
             position: { x: 0, y: 0 },
         };
 
+        const dragHandler = source.getDraggable();
+        dragHandler.onDragStart = (evt: DragHandlerEvent) =>
+            this.onDragStart(context, evt);
+        dragHandler.onDragMove = (evt: DragHandlerEvent) =>
+            this.onDragMove(context, evt);
+        dragHandler.onDragEnd = (evt: DragHandlerEvent) =>
+            this.onDragEnd(context, evt);
+
+        /*
         context.draggable.draggable({
             listeners: {
                 start: (evt: DragEvent) => this.onDragStart(context, evt),
@@ -66,6 +72,7 @@ export class TileDragController extends EventTarget {
                 end: (evt: DragEvent) => this.onDragEnd(context, evt),
             },
         });
+        */
 
         if (DEBUG.LOG_MOUSE_POSITION) {
             this.dropTarget.element.addEventListener(
@@ -83,7 +90,7 @@ export class TileDragController extends EventTarget {
         }
     }
 
-    onDragStart(context: TileDragSourceContext, evt: DragEvent) {
+    onDragStart(context: TileDragSourceContext, evt: DragHandlerEvent) {
         for (const s of this.sources) {
             if (s !== context.source) s.resetDragStatus();
         }
@@ -102,7 +109,7 @@ export class TileDragController extends EventTarget {
         );
     }
 
-    onDragMove(context: TileDragSourceContext, evt: DragEvent) {
+    onDragMove(context: TileDragSourceContext, evt: DragHandlerEvent) {
         context.position.x += evt.dx;
         context.position.y += evt.dy;
         let moved = false;
@@ -122,7 +129,7 @@ export class TileDragController extends EventTarget {
             this.dropTarget.scale / context.source.gridDisplay.scale;
     }
 
-    onDragEnd(context: TileDragSourceContext, evt: DragEvent): boolean {
+    onDragEnd(context: TileDragSourceContext, evt: DragHandlerEvent): boolean {
         const match = this.mapToFixedTile(context);
 
         let successful = false;
@@ -191,7 +198,7 @@ export type TileDragSourceContext = {
     autorotateCurrentTarget: Tile | null;
     autorotateTimeout: number | null;
     autorotateCache: Map<Tile, TileRotationSet>;
-    draggable: Interactable;
+    draggable: DragHandler;
     position: { x: 0; y: 0 };
 };
 
@@ -200,7 +207,7 @@ export interface TileDragSource {
     dragTransform: TransformComponent;
     tile: Tile | null;
     indexOnStack?: number;
-    getDraggable(): Interactable;
+    getDraggable(): DragHandler;
     startDrag(): void;
     endDrag(successful: boolean): void;
     resetDragStatus(): void;

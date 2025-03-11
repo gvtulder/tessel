@@ -1,7 +1,5 @@
-import type { Interactable, PointerEvent } from "@interactjs/types";
-import "@interactjs/pointer-events";
-import interact from "@interactjs/interact";
 import { createElement } from "../html";
+import { DragHandler } from "../DragHandler";
 
 export class Toggle {
     static events = {
@@ -11,7 +9,7 @@ export class Toggle {
     private _checked!: boolean;
 
     private onchange: () => void;
-    private interactable: Interactable;
+    private interactable: DragHandler;
 
     constructor(
         icon: string,
@@ -31,13 +29,15 @@ export class Toggle {
         this.checked = checked ? true : false;
         this.onchange = onchange;
 
-        this.interactable = interact(toggle).on("tap", () => {
+        this.interactable = new DragHandler(toggle);
+        this.interactable.onTap = () => {
             this.toggle();
-        });
+        };
     }
 
     destroy() {
-        this.interactable.unset();
+        // TODO
+        // this.interactable.unset();
         this.element.remove();
     }
 

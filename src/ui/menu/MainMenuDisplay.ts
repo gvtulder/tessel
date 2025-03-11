@@ -1,7 +1,3 @@
-import type { Interactable } from "@interactjs/types";
-import "@interactjs/pointer-events";
-import interact from "@interactjs/interact";
-
 import { GameSettings } from "../../game/Game";
 import icons from "../icons";
 import { Grid } from "../../grid/Grid";
@@ -12,13 +8,14 @@ import { UserEvent, UserEventType } from "../GameController";
 import { ScreenDisplay } from "../ScreenDisplay";
 import { Button } from "../Button";
 import { createElement } from "../html";
+import { DragHandler } from "../DragHandler";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
     setupButton: Button;
     grids: Grid[];
     gridDisplays: GridDisplay[];
-    interactables: Interactable[];
+    draggables: DragHandler[];
 
     constructor(version?: string) {
         super();
@@ -48,7 +45,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
 
         this.grids = [];
         this.gridDisplays = [];
-        this.interactables = [];
+        this.draggables = [];
 
         for (const saveGameId of SaveGames.defaultGameList) {
             const gameSettings = SaveGames.lookup.get(saveGameId);
@@ -70,36 +67,29 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             this.gridDisplays.push(gridDisplay);
             exampleTile.appendChild(gridDisplay.element);
 
-            this.interactables.push(
-                interact(exampleTile)
-                    .on("tap", () => {
-                        this.dispatchEvent(
-                            new UserEvent(
-                                UserEventType.StartGame,
-                                gameSettings,
-                                saveGameId,
-                            ),
-                        );
-                    })
-                    .on("doubletap", (evt: Event) => {
-                        evt.preventDefault();
-                    })
-                    .on("hold", (evt: Event) => {
-                        evt.preventDefault();
-                    }),
-            );
+            const draggable = new DragHandler(exampleTile);
+            draggable.onTap = () => {
+                this.dispatchEvent(
+                    new UserEvent(
+                        UserEventType.StartGame,
+                        gameSettings,
+                        saveGameId,
+                    ),
+                );
+            };
         }
     }
 
     destroy() {
-        for (const i of this.interactables) {
-            i.unset();
-        }
+        // TODO
+        // for (const i of this.draggables) {
+        //   i.unset();
+        // }
         for (const gd of this.gridDisplays) {
             gd.destroy();
         }
         this.setupButton.destroy();
-        this.interactables = [];
+        this.draggables = [];
         this.gridDisplays = [];
         this.grids = [];
         this.element.remove();

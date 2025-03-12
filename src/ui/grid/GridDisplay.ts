@@ -1,7 +1,7 @@
 import { TileDisplay } from "./TileDisplay";
 import { Grid } from "../../grid/Grid";
 import { GridEvent, GridEventType } from "../../grid/GridEvent";
-import { Tile } from "../../grid/Tile";
+import { PlaceholderTile, Tile } from "../../grid/Tile";
 import { Shape } from "../../grid/Shape";
 import { DEBUG } from "../../settings";
 import { BBox, Point, dist } from "../../geom/math";
@@ -25,6 +25,7 @@ export class GridDisplay extends EventTarget {
     svgScaleGroup: SVGElement;
     svgGrid: SVGElement;
     svgTiles: SVGElement;
+    svgPlaceholders: SVGElement;
 
     animated = true;
 
@@ -84,6 +85,7 @@ export class GridDisplay extends EventTarget {
             "svg-scale-group",
             svgGrid,
         ));
+        this.svgPlaceholders = SVG("g", "svg-placeholders", svgScaleGroup);
         this.svgTiles = SVG("g", "svg-tiles", svgScaleGroup);
 
         this.onAddTile = (evt: GridEvent) => this.addTile(evt.tile!);
@@ -142,13 +144,18 @@ export class GridDisplay extends EventTarget {
         this.svg.remove();
         this.svgGrid.remove();
         this.svgTiles.remove();
+        this.svgPlaceholders.remove();
     }
 
     addTile(tile: Tile) {
         if (!this.tileDisplays.has(tile)) {
             const tileDisplay = new TileDisplay(this, tile);
             this.tileDisplays.set(tile, tileDisplay);
-            this.svgTiles.appendChild(tileDisplay.element);
+            if (tile instanceof PlaceholderTile) {
+                this.svgPlaceholders.appendChild(tileDisplay.element);
+            } else {
+                this.svgTiles.appendChild(tileDisplay.element);
+            }
         }
         this.updateDimensions();
     }
@@ -157,7 +164,7 @@ export class GridDisplay extends EventTarget {
         const td = this.tileDisplays.get(tile);
         if (!td) return;
         this.tileDisplays.delete(tile);
-        this.svgTiles.removeChild(td.element);
+        td.element.remove();
         this.updateDimensions();
     }
 

@@ -1,6 +1,6 @@
 import { ColorPattern, Shape } from "../grid/Shape";
 import { TileColors, TileColor } from "../grid/Tile";
-import { shuffle } from "../geom/RandomSampler";
+import { randomRotate, shuffle } from "../geom/RandomSampler";
 import { TileShapeColors } from "./TileStack";
 import { rotateArray } from "../geom/arrays";
 
@@ -104,9 +104,9 @@ export class TileGenerators {
 
             return [...uniqueCs.values()].map((c) => ({
                 shape: sh,
-                colors: cToComponents(c, sh.cornerAngles.length).map(
-                    (s) => colors[parseInt(s, numColors)],
-                ),
+                colors: randomRotate(
+                    cToComponents(c, sh.cornerAngles.length),
+                ).map((s) => colors[parseInt(s, numColors)]),
             }));
         };
     }

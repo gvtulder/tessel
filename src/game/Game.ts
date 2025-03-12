@@ -8,6 +8,7 @@ import { rotateArray } from "../geom/arrays";
 import { RuleSet } from "src/grid/RuleSet";
 import { ColorPattern, Shape } from "src/grid/Shape";
 import { SetupCatalog } from "src/saveGames";
+import { shuffle } from "src/geom/RandomSampler";
 
 export type GameSettings = {
     atlas: Atlas;
@@ -76,6 +77,7 @@ export class Game extends EventTarget {
         for (const tileGenerator of this.settings.tileGenerator) {
             tiles = tileGenerator(tiles, this.settings.atlas.shapes[0]);
         }
+        shuffle(tiles);
 
         // construct the tile stack
         const tileStack = new TileStack(tiles);

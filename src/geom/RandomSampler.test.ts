@@ -5,6 +5,7 @@ import {
     generateSeed,
     selectRandom,
     shuffle,
+    randomRotate,
 } from "./RandomSampler";
 
 describe("generateSeed", () => {
@@ -63,6 +64,23 @@ describe("shuffle", () => {
         const one = [1];
         shuffle(one);
         expect(one).toStrictEqual([1]);
+    });
+});
+
+describe("randomRotate", () => {
+    test("can random-rotate arrays", () => {
+        const prng = seedPRNG(1234);
+        const array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        expect(randomRotate(array, prng)).toStrictEqual([
+            7, 8, 9, 0, 1, 2, 3, 4, 5, 6,
+        ]);
+        expect(randomRotate(array, prng).length).toBe(10);
+
+        const empty: number[] = [];
+        expect(randomRotate(empty)).toStrictEqual([]);
+
+        const one = [1];
+        expect(randomRotate(one)).toStrictEqual([1]);
     });
 });
 

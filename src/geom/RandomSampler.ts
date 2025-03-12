@@ -1,3 +1,5 @@
+import { rotateArray } from "./arrays";
+
 export type PRNG = () => number;
 
 export function generateSeed(): number {
@@ -41,6 +43,15 @@ export function shuffle<T>(array: T[], prng: PRNG = Math.random): void {
         array[i] = tempj;
         array[j] = tempi;
     }
+}
+
+export function randomRotate<T>(
+    array: readonly T[],
+    prng: PRNG = Math.random,
+): T[] {
+    if (array.length < 2) return [...array];
+    const randomOffset = Math.floor(prng() * array.length);
+    return rotateArray(array, randomOffset);
 }
 
 export class RandomSampler<T> {

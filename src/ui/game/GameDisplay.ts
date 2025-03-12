@@ -43,7 +43,10 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes!);
             this.scoreDisplay.points = this.game.points;
         };
-        this.onGameEndGame = () => this.gridDisplay.gameFinished();
+        this.onGameEndGame = () => {
+            this.element.classList.add("game-finished");
+            this.gridDisplay.gameFinished();
+        };
 
         const div = (this.element = createElement(
             "div",

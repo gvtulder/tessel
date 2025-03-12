@@ -140,6 +140,28 @@
       display: grid;
     }
   }
+
+  .game-finished & {
+    .game-toggle {
+      display: none;
+    }
+
+    .game-button.dropout {
+      display: none;
+    }
+
+    .items {
+      display: flex;
+      flex-direction: column;
+      margin: 0.5vw;
+      padding: 0;
+      border-top: none;
+    }
+
+    .game-button {
+      margin: 0 0 1.5vw;
+    }
+  }
 }
 
 .tile-stack {

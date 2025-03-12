@@ -173,7 +173,7 @@ lookup.set("penrose3", {
     ],
 });
 
-export const defaultGameList = ["square", "triangle", "rhombus", "hexagons"];
+export const defaultGameList = ["triangle", "square", "rhombus", "hexagons"];
 
 // ["triangle", "square", "isometric", "hex"]
 

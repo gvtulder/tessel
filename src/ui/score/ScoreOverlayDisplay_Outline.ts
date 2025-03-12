@@ -11,6 +11,8 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
     mask: SVGElement;
     maskPathGroup?: SVGElement;
 
+    animationEndHandler?: EventListener;
+
     constructor() {
         super();
 
@@ -107,14 +109,31 @@ export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
         this.maskPathGroup = maskPathGroup;
         this.mask.classList.remove("disabled");
         this.mask.classList.add("enabled");
-        this.mask.addEventListener("animationend", () => {
+        if (this.animationEndHandler) {
+            this.mask.removeEventListener(
+                "animationend",
+                this.animationEndHandler,
+            );
+        }
+        this.animationEndHandler = () => {
             this.mask.classList.replace("enabled", "disabled");
-        });
+        };
+        this.mask.addEventListener("animationend", this.animationEndHandler);
 
         if (this.group) {
             this.fg.removeChild(this.group);
         }
         this.fg.appendChild(group);
         this.group = group;
+    }
+
+    destroy(): void {
+        super.destroy();
+        if (this.animationEndHandler) {
+            this.mask.removeEventListener(
+                "animationend",
+                this.animationEndHandler,
+            );
+        }
     }
 }

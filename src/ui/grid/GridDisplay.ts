@@ -6,7 +6,7 @@ import { Shape } from "../../grid/Shape";
 import { DEBUG } from "../../settings";
 import { BBox, Point, dist } from "../../geom/math";
 import { TransformComponent, TransformList } from "../../geom/Transform";
-import { SVG } from "../svg";
+import { S, SVG } from "../svg";
 import { createElement } from "../html";
 
 export const enum GridDisplayScalingType {
@@ -22,7 +22,6 @@ export class GridDisplay extends EventTarget {
     gridElement: HTMLDivElement;
 
     svg: SVGElement;
-    svgScaleGroup: SVGElement;
     svgGrid: SVGElement;
     svgTiles: SVGElement;
     svgPlaceholders: SVGElement;
@@ -80,13 +79,8 @@ export class GridDisplay extends EventTarget {
         const gridEl = (this.gridElement = createElement("div", "grid", div));
         const svg = (this.svg = SVG("svg", null, gridEl));
         const svgGrid = (this.svgGrid = SVG("g", "svg-grid", svg));
-        const svgScaleGroup = (this.svgScaleGroup = SVG(
-            "g",
-            "svg-scale-group",
-            svgGrid,
-        ));
-        this.svgPlaceholders = SVG("g", "svg-placeholders", svgScaleGroup);
-        this.svgTiles = SVG("g", "svg-tiles", svgScaleGroup);
+        this.svgPlaceholders = SVG("g", "svg-placeholders", svgGrid);
+        this.svgTiles = SVG("g", "svg-tiles", svgGrid);
 
         this.onAddTile = (evt: GridEvent) => this.addTile(evt.tile!);
         this.onUpdateTileColors = (evt: GridEvent) => {
@@ -285,10 +279,10 @@ export class GridDisplay extends EventTarget {
         const finalHeight = contentHeight * scale;
 
         // make sure we can fill the container
-        let viewBoxMinX = gridBBox.minX;
-        let viewBoxMinY = gridBBox.minY;
-        let viewBoxWidth = gridBBox.maxX - gridBBox.minX;
-        let viewBoxHeight = gridBBox.maxY - gridBBox.minY;
+        let viewBoxMinX = gridBBox.minX * S;
+        let viewBoxMinY = gridBBox.minY * S;
+        let viewBoxWidth = (gridBBox.maxX - gridBBox.minX) * S;
+        let viewBoxHeight = (gridBBox.maxY - gridBBox.minY) * S;
         if (viewBoxWidth * scale < availWidth) {
             const adjustX = availWidth / scale - viewBoxWidth;
             viewBoxMinX -= adjustX / 2;
@@ -331,8 +325,7 @@ export class GridDisplay extends EventTarget {
         this.visibleBottom = (availHeight + containerTop) / scale;
 
         // Firefox doesn't like large scale with animations
-        this.svgGrid.style.transform = `translate(${containerLeft}px, ${containerTop}px) scale(${scale / 100})`;
-        this.svgScaleGroup.style.scale = `100`;
+        this.svgGrid.style.transform = `translate(${containerLeft}px, ${containerTop}px) scale(${scale / S})`;
 
         this.containerLeft = containerLeft;
         this.containerTop = containerTop;

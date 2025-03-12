@@ -3,7 +3,7 @@ import { roundPathCorners } from "../../lib/svg-rounded-corners";
 import { BGCOLOR } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
 import { polylabel } from "../../lib/polylabel";
-import { SVG } from "../svg";
+import { S, SVG } from "../svg";
 import { BBox, bbox, mergeBBox } from "src/geom/math";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
@@ -77,10 +77,10 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         });
 
         const shadowMaskG = SVG("g", null, shadowMask, {
-            filter: "drop-shadow(0px 0px 0.1px white)",
+            filter: `drop-shadow(0px 0px ${0.1 * S}px white)`,
             fill: "black",
             stroke: "black",
-            "stroke-width": "0.1px",
+            "stroke-width": `${0.1 * S}px`,
         });
         this.shadowMask = shadowMaskG;
         this.shadowMaskGroup = new ReplacableGroup(shadowMaskG);
@@ -89,7 +89,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         const outlineBG = SVG("g", null, this.element, {
             class: "outline-bg",
             stroke: BGCOLOR,
-            "stroke-width": "0.1px",
+            "stroke-width": `${0.1 * S}px`,
             fill: "transparent",
         });
         this.outlineBG = outlineBG;
@@ -99,7 +99,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         const outlineFG = SVG("g", null, this.element, {
             class: "outline-fg",
             stroke: Color.main,
-            "stroke-width": "0.05px",
+            "stroke-width": `${0.05 * S}px`,
             fill: "transparent",
         });
         this.outlineFG = outlineFG;
@@ -128,11 +128,11 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             boundaryBBox = mergeBBox(bbox(boundary));
             const pathComponents = boundary
                 .reverse()
-                .map((v) => `${v.x.toFixed(5)},${v.y.toFixed(5)}`);
+                .map((v) => `${(v.x * S).toFixed(5)},${(v.y * S).toFixed(5)}`);
             const roundPathString = roundPathCorners(
                 "M " + pathComponents.join(" L ") + " Z",
                 0.1,
-                false,
+                true,
             );
 
             // paths
@@ -205,11 +205,11 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                 cx: "0", // `${bestPoint[0] * SCALE}`,
                 cy: "0", // `${bestPoint[1] * SCALE}`,
                 // r: shape.triangles.size < 3 ? "20" : "25",
-                r: "0.7",
+                r: `${0.7 * S}`,
                 fill: Color.light,
                 stroke: Color.dark,
-                "stroke-width": "0.16",
-                style: `filter: drop-shadow(0.1px 0.1px 0.2px rgb(0 0 0 / 0.9)); transform: translate(${bestPoint.x.toFixed(4)}px, ${bestPoint.y.toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
+                "stroke-width": `${0.16 * S}`,
+                style: `filter: drop-shadow(${0.1 * S}px ${0.1 * S}px ${0.2 * S}px rgb(0 0 0 / 0.9)); transform: translate(${(bestPoint.x * S).toFixed(4)}px, ${(bestPoint.y * S).toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
             });
             points.push(circle);
 
@@ -219,8 +219,8 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                 "alignment-baseline": "middle",
                 "dominant-baseline": "middle",
                 "text-anchor": "middle",
-                "font-size": "0.75",
-                style: `transform: translate(${bestPoint.x.toFixed(4)}px, ${(bestPoint.y + 0.01).toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
+                "font-size": `${0.75 * S}`,
+                style: `transform: translate(${(bestPoint.x * S).toFixed(4)}px, ${((bestPoint.y + 0.01) * S).toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
             });
             text.appendChild(document.createTextNode(`${shape.points}`));
             points.push(text);
@@ -229,19 +229,19 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         if (boundaryBBox) {
             this.dropShadowBGRect.setAttribute(
                 "x",
-                `${(boundaryBBox.minX - 0.5).toFixed(3)}`,
+                `${(S * (boundaryBBox.minX - 0.5)).toFixed(3)}`,
             );
             this.dropShadowBGRect.setAttribute(
                 "y",
-                `${(boundaryBBox.minY - 0.5).toFixed(3)}`,
+                `${(S * (boundaryBBox.minY - 0.5)).toFixed(3)}`,
             );
             this.dropShadowBGRect.setAttribute(
                 "width",
-                `${(boundaryBBox.maxX - boundaryBBox.minX + 1).toFixed(3)}`,
+                `${(S * (boundaryBBox.maxX - boundaryBBox.minX + 1)).toFixed(3)}`,
             );
             this.dropShadowBGRect.setAttribute(
                 "height",
-                `${(boundaryBBox.maxY - boundaryBBox.minY + 1).toFixed(3)}`,
+                `${(S * (boundaryBBox.maxY - boundaryBBox.minY + 1)).toFixed(3)}`,
             );
         }
 

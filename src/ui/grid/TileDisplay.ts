@@ -5,12 +5,13 @@ import { GridDisplay } from "./GridDisplay";
 import offsetPolygon from "../../lib/offset-polygon";
 import { Point } from "../../geom/math";
 import { addPointToPolygon } from "../../geom/polygon/addPointToPolygon";
-import { SVG } from "../svg";
+import { S, SVG } from "../svg";
 
 function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);
     for (let i = 0; i < points.length; i++) {
-        points[i] = `${vertices[i].x.toFixed(6)} ${vertices[i].y.toFixed(6)}`;
+        points[i] =
+            `${(S * vertices[i].x).toFixed(6)} ${(S * vertices[i].y).toFixed(6)}`;
     }
     return "M ".concat(points.join(" L ")).concat(" Z");
 }
@@ -128,7 +129,7 @@ export class TileDisplay {
         // outline = shrinkOutline(outline, 0.95);
 
         const path = polygonToPath(outline);
-        const roundPath = roundPathCorners(path, 0.08, false);
+        const roundPath = roundPathCorners(path, 0.08, true);
 
         if (
             this.tile.tileType == TileType.Placeholder ||
@@ -140,7 +141,7 @@ export class TileDisplay {
                 d: roundPath,
                 fill: PLACEHOLDER,
                 stroke: PLACEHOLDER,
-                "stroke-width": "0.01",
+                "stroke-width": `${S * 0.01}`,
                 "fill-opacity": DEBUG.HIDE_TILE_OUTLINE ? "0.0" : "0.5",
             });
         } else {

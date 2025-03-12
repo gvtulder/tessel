@@ -11,7 +11,7 @@ import {
 } from "../grid/TileDragController";
 import { MainGridDisplay } from "./MainGridDisplay";
 import { angleDist, edgeToAngle, TWOPI } from "../../geom/math";
-import { SVG } from "../svg";
+import { S, SVG } from "../svg";
 import { DragHandlerEvent } from "../DragHandler";
 
 export class MainGridTileDragController extends TileDragController {
@@ -35,7 +35,7 @@ export class MainGridTileDragController extends TileDragController {
                 const p = SVG("circle", null, dropTarget.svgGrid, {
                     cx: "0",
                     cy: "0",
-                    r: "0.05",
+                    r: `${S * 0.05}`,
                     fill: "transparent",
                 });
                 this.debugPoints.push(p);

@@ -176,12 +176,12 @@
         transition: rotate 200ms;
       }
     }
-    &.drag-return {
+    &.drag-return .rotatable {
       z-index: 100;
       transition-property: translate, scale;
       transition-duration: 150ms;
     }
-    &.drag-success {
+    &.drag-success .rotatable {
       transition-property: none;
     }
   }

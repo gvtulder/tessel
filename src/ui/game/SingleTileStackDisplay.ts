@@ -179,6 +179,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     initInteractable(makeRotatable: boolean) {
         this.draggable.onTap = (evt: DragHandlerEvent) => {
             if (makeRotatable) {
+                this.element.classList.remove("drag-success", "drag-return");
                 this.rotateTile();
             }
             this.tileStackDisplay.dispatchEvent(

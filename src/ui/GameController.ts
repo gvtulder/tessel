@@ -81,24 +81,35 @@ export class GameController {
         this.container.appendChild(menuDisplay.element);
         menuDisplay.rescale();
 
-        menuDisplay.addEventListener(
-            UserEventType.StartGame,
-            (evt: UserEvent) => {
-                this.container.removeChild(menuDisplay.element);
-                this.currentScreen = undefined;
-                if (evt.gameId) {
-                    window.history.pushState({}, "", `#${evt.gameId}`);
-                }
-                this.startGame(evt.gameSettings!);
-            },
-        );
+        const handleStart = (evt: UserEvent) => {
+            destroy();
+            if (evt.gameId) {
+                window.history.pushState({}, "", `#${evt.gameId}`);
+            }
+            this.startGame(evt.gameSettings!);
+        };
 
-        menuDisplay.addEventListener(UserEventType.SetupMenu, () => {
-            this.container.removeChild(menuDisplay.element);
-            this.currentScreen = undefined;
+        const handleSetup = () => {
+            destroy();
             window.history.pushState({}, "", `#setup`);
             this.showGameSetupDisplay();
-        });
+        };
+
+        const destroy = () => {
+            this.container.removeChild(menuDisplay.element);
+            this.currentScreen = undefined;
+            menuDisplay.removeEventListener(
+                UserEventType.StartGame,
+                handleStart,
+            );
+            menuDisplay.removeEventListener(
+                UserEventType.SetupMenu,
+                handleSetup,
+            );
+        };
+
+        menuDisplay.addEventListener(UserEventType.StartGame, handleStart);
+        menuDisplay.addEventListener(UserEventType.SetupMenu, handleSetup);
     }
 
     showGameSetupDisplay() {
@@ -109,33 +120,46 @@ export class GameController {
         this.container.appendChild(setupDisplay.element);
         setupDisplay.rescale();
 
-        setupDisplay.addEventListener(
-            UserEventType.BackToMenu,
-            (evt: UserEvent) => {
-                this.container.removeChild(setupDisplay.element);
-                this.currentScreen = undefined;
-                setupDisplay.destroy();
-                window.history.pushState({}, "", "/");
-                this.showMainMenu();
-            },
-        );
+        const handleBackToMenu = (evt: UserEvent) => {
+            destroy();
+            window.history.pushState({}, "", "/");
+            this.showMainMenu();
+        };
+
+        const handleStart = (evt: UserEvent) => {
+            const settings = evt.gameSettingsSerialized!;
+            console.log("Clicked play to start", settings);
+            destroy();
+            window.history.pushState(
+                {},
+                "",
+                `#${btoa(JSON.stringify(settings))}`,
+            );
+            const gameSettings = this.gameFromSerializedSettings(settings);
+            if (gameSettings) this.startGame(gameSettings);
+        };
+
+        const destroy = () => {
+            this.container.removeChild(setupDisplay.element);
+            this.currentScreen = undefined;
+            setupDisplay.destroy();
+            setupDisplay.removeEventListener(
+                UserEventType.BackToMenu,
+                handleBackToMenu,
+            );
+            setupDisplay.removeEventListener(
+                UserEventType.StartGameFromSetup,
+                handleStart,
+            );
+        };
 
         setupDisplay.addEventListener(
+            UserEventType.BackToMenu,
+            handleBackToMenu,
+        );
+        setupDisplay.addEventListener(
             UserEventType.StartGameFromSetup,
-            (evt: UserEvent) => {
-                const settings = evt.gameSettingsSerialized!;
-                console.log("Clicked play to start", settings);
-                this.container.removeChild(setupDisplay.element);
-                this.currentScreen = undefined;
-                setupDisplay.destroy();
-                window.history.pushState(
-                    {},
-                    "",
-                    `#${btoa(JSON.stringify(settings))}`,
-                );
-                const gameSettings = this.gameFromSerializedSettings(settings);
-                if (gameSettings) this.startGame(gameSettings);
-            },
+            handleStart,
         );
     }
 
@@ -155,15 +179,31 @@ export class GameController {
         this.container.appendChild(gameDisplay.element);
         gameDisplay.rescale();
 
-        gameDisplay.addEventListener(UserEventType.BackToMenu, () => {
+        const handleMenu = () => {
+            destroy();
             window.history.pushState({}, "", "/");
             this.showMainMenu();
-        });
+        };
 
-        gameDisplay.addEventListener(UserEventType.RestartGame, () => {
+        const handleRestart = () => {
+            destroy();
             window.history.pushState({}, "", window.location.href);
             this.startGame(gameSettings);
-        });
+        };
+
+        const destroy = () => {
+            gameDisplay.removeEventListener(
+                UserEventType.BackToMenu,
+                handleMenu,
+            );
+            gameDisplay.removeEventListener(
+                UserEventType.RestartGame,
+                handleRestart,
+            );
+        };
+
+        gameDisplay.addEventListener(UserEventType.BackToMenu, handleMenu);
+        gameDisplay.addEventListener(UserEventType.RestartGame, handleRestart);
     }
 
     resetState() {

@@ -1,6 +1,6 @@
 import { BBox, TWOPI, mergeBBox } from "../../geom/math";
 import { TileColors } from "../../grid/Tile";
-import { SVG } from "../svg";
+import { SVG } from "../shared/svg";
 import { SettingRowOption } from "./SettingRowOption";
 
 export class ColorsOption extends SettingRowOption {

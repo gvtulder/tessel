@@ -12,7 +12,7 @@ import { TileColor, TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { OptionGridDisplay } from "./OptionGridDisplay";
 import { SettingRowOption } from "./SettingRowOption";
-import { createElement } from "../html";
+import { createElement } from "../shared/html";
 
 export class SegmentsOption extends SettingRowOption {
     segmentsIndex: number;

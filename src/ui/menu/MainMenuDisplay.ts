@@ -1,14 +1,14 @@
 import { GameSettings } from "../../game/Game";
-import icons from "../icons";
+import icons from "../shared/icons";
 import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
 import { MainMenuGridDisplay } from "./MainMenuGridDisplay";
 import * as SaveGames from "../../saveGames";
 import { UserEvent, UserEventType } from "../GameController";
-import { ScreenDisplay } from "../ScreenDisplay";
-import { Button } from "../Button";
-import { createElement } from "../html";
-import { DragHandler } from "../DragHandler";
+import { ScreenDisplay } from "../shared/ScreenDisplay";
+import { Button } from "../shared/Button";
+import { createElement } from "../shared/html";
+import { DragHandler } from "../shared/DragHandler";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;

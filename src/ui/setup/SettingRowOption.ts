@@ -1,5 +1,5 @@
-import { createElement } from "../html";
-import { DragHandler } from "../DragHandler";
+import { createElement } from "../shared/html";
+import { DragHandler } from "../shared/DragHandler";
 
 export abstract class SettingRowOption {
     key: string;

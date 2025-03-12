@@ -1,4 +1,4 @@
-import { createElement } from "../html";
+import { createElement } from "../shared/html";
 
 export class ScoreDisplay {
     element: HTMLDivElement;

@@ -5,7 +5,7 @@ import { GridDisplay } from "./GridDisplay";
 import offsetPolygon from "../../lib/offset-polygon";
 import { Point } from "../../geom/math";
 import { addPointToPolygon } from "../../geom/polygon/addPointToPolygon";
-import { S, SVG } from "../svg";
+import { S, SVG } from "../shared/svg";
 
 function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);

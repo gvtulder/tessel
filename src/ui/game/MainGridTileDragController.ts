@@ -11,8 +11,8 @@ import {
 } from "../grid/TileDragController";
 import { MainGridDisplay } from "./MainGridDisplay";
 import { angleDist, edgeToAngle, TWOPI } from "../../geom/math";
-import { S, SVG } from "../svg";
-import { DragHandlerEvent } from "../DragHandler";
+import { S, SVG } from "../shared/svg";
+import { DragHandlerEvent } from "../shared/DragHandler";
 
 export class MainGridTileDragController extends TileDragController {
     autorotate: boolean;

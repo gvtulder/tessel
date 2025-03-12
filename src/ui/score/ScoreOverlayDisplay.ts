@@ -1,6 +1,6 @@
 import { ScoredRegion } from "../../game/Scorer";
 import { computeOutline, Vertex, Edge } from "../../lib/compute-outline";
-import { SVG } from "../svg";
+import { SVG } from "../shared/svg";
 
 export const Color = {
     main: "#9acd32",

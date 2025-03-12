@@ -1,7 +1,7 @@
 import { RuleSet } from "../../grid/RuleSet";
 import { TileColors } from "../../grid/Tile";
 import { Color } from "../score/ScoreOverlayDisplay";
-import { SVG } from "../svg";
+import { SVG } from "../shared/svg";
 import { SettingRowOption } from "./SettingRowOption";
 
 export class RulesOption extends SettingRowOption {

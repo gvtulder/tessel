@@ -1,7 +1,7 @@
-import { Button } from "../Button";
-import { DragHandler, DragHandlerEvent } from "../DragHandler";
-import { createElement } from "../html";
-import icons from "../icons";
+import { Button } from "../shared/Button";
+import { DragHandler, DragHandlerEvent } from "../shared/DragHandler";
+import { createElement } from "../shared/html";
+import icons from "../shared/icons";
 import { Toggle } from "./Toggle";
 
 export class DropoutMenu {

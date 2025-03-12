@@ -15,8 +15,8 @@ import { Atlas } from "../../grid/Atlas";
 import { angleDist, angleDistDeg, RAD2DEG, TWOPI } from "../../geom/math";
 import { BaseTileStackDisplay, TileStackDisplay } from "./TileStackDisplay";
 import { DEG2RAD } from "detect-collisions";
-import { DragHandler, DragHandlerEvent } from "../DragHandler";
-import { createElement } from "../html";
+import { DragHandler, DragHandlerEvent } from "../shared/DragHandler";
+import { createElement } from "../shared/html";
 
 export class SingleTileOnStackDisplay implements TileDragSource {
     tileStackDisplay: BaseTileStackDisplay;

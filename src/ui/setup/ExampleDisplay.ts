@@ -6,7 +6,7 @@ import { RuleSet } from "../../grid/RuleSet";
 import { ColorPattern } from "../../grid/Shape";
 import { TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
-import { createElement } from "../html";
+import { createElement } from "../shared/html";
 
 export class ExampleDisplay {
     element: HTMLDivElement;

@@ -1,5 +1,5 @@
-import { ScreenDisplay } from "../ScreenDisplay";
-import { createElement } from "../html";
+import { ScreenDisplay } from "../shared/ScreenDisplay";
+import { createElement } from "../shared/html";
 import {
     HexagonsAtlas,
     RhombusAtlas,
@@ -18,8 +18,8 @@ import { AtlasOption } from "./AtlasOption";
 import { SegmentsSettingRow } from "./SegmentsSettingRow";
 import { RulesSettingRow } from "./RulesSettingRow";
 import { RulesOption } from "./RulesOption";
-import { Button } from "../Button";
-import icons from "../icons";
+import { Button } from "../shared/Button";
+import icons from "../shared/icons";
 import { generateSeed } from "src/geom/RandomSampler";
 import { SetupCatalog } from "src/saveGames";
 import { SegmentsOption } from "./SegmentsOption";

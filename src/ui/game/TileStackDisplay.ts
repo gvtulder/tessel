@@ -14,7 +14,7 @@ import {
 import { Atlas } from "../../grid/Atlas";
 import { angleDist, RAD2DEG, TWOPI } from "../../geom/math";
 import { SingleTileOnStackDisplay } from "./SingleTileStackDisplay";
-import { createElement } from "../html";
+import { createElement } from "../shared/html";
 
 export abstract class BaseTileStackDisplay extends EventTarget {
     static events = {

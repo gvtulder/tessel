@@ -6,7 +6,7 @@ import { GridDisplay } from "./GridDisplay";
 import { TransformComponent } from "../../geom/Transform";
 import { Point } from "../../geom/math";
 import { Shape } from "../../grid/Shape";
-import { DragHandler, DragHandlerEvent } from "../DragHandler";
+import { DragHandler, DragHandlerEvent } from "../shared/DragHandler";
 
 export const MAX_TILE_DROP_POINT_DIST = 0.2;
 export const MAX_TILE_AUTOROTATE_POINT_DIST = 0.5;

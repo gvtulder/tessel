@@ -2,13 +2,13 @@ import { Game, GameEvent, GameEventType } from "../../game/Game.js";
 import { MainGridDisplay } from "./MainGridDisplay.js";
 import { TileStackDisplay } from "./TileStackDisplay.js";
 import { ScoreDisplay } from "./ScoreDisplay.js";
-import icons from "../icons.js";
+import icons from "../shared/icons.js";
 import { TileDragController } from "../grid/TileDragController.js";
 import { MainGridTileDragController } from "./MainGridTileDragController.js";
 import { UserEventType } from "../GameController.js";
-import { ScreenDisplay } from "../ScreenDisplay.js";
-import { createElement } from "../html.js";
-import { Button } from "../Button.js";
+import { ScreenDisplay } from "../shared/ScreenDisplay.js";
+import { createElement } from "../shared/html.js";
+import { Button } from "../shared/Button.js";
 import { DropoutMenu } from "./DropoutMenu.js";
 import { Toggle } from "./Toggle.js";
 

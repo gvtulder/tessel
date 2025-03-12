@@ -1,7 +1,7 @@
 import { Atlas } from "../../grid/Atlas";
 import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
-import { createElement } from "../html";
+import { createElement } from "../shared/html";
 import { OptionGridDisplay } from "./OptionGridDisplay";
 import { SettingRowOption } from "./SettingRowOption";
 

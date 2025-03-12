@@ -6,8 +6,8 @@ import { Shape } from "../../grid/Shape";
 import { DEBUG } from "../../settings";
 import { BBox, Point, dist } from "../../geom/math";
 import { TransformComponent, TransformList } from "../../geom/Transform";
-import { S, SVG } from "../svg";
-import { createElement } from "../html";
+import { S, SVG } from "../shared/svg";
+import { createElement } from "../shared/html";
 
 export const enum GridDisplayScalingType {
     EqualMargins,

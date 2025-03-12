@@ -1,4 +1,4 @@
-import { createElement } from "../html";
+import { createElement } from "../shared/html";
 import { SettingRowOption } from "./SettingRowOption";
 
 export class SettingRow<T extends SettingRowOption> {

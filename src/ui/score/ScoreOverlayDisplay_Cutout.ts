@@ -3,7 +3,7 @@ import { roundPathCorners } from "../../lib/svg-rounded-corners";
 import { BGCOLOR } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
 import { polylabel } from "../../lib/polylabel";
-import { S, SVG } from "../svg";
+import { S, SVG } from "../shared/svg";
 import { BBox, bbox, mergeBBox } from "src/geom/math";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {

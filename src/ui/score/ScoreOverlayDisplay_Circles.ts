@@ -2,7 +2,7 @@ import { ScoredRegion } from "../../game/Scorer";
 import { SCALE } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
 import { TileSegment } from "../../grid/Tile";
-import { SVG } from "../svg";
+import { SVG } from "../shared/svg";
 import { Point, weightedSumPoint } from "../../geom/math";
 
 export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {

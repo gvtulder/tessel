@@ -343,6 +343,18 @@ export const HexagonsAtlas = Atlas.fromDefinition({
 });
 
 /*
+export const TwoPentagonAtlas = Atlas.fromDefinition({
+    name: "TwoPentagons",
+    shapes: {
+        PP: {
+            name: "double-pentagon",
+            angles: [90, 120, 90, 360 - 120, 90, 120, 90, 360 - 120],
+        },
+    },
+});
+*/
+
+/*
 export const CairoAtlas = Atlas.fromDefinition({
     name: "Cairo5",
     shapes: {

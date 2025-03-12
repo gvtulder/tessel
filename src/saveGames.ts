@@ -108,6 +108,19 @@ lookup.set("hexagons", {
 });
 
 /*
+lookup.set("twopentagons", {
+    atlas: TwoPentagonAtlas,
+    initialTile: [...WONG4, ...WONG4],
+    tilesShownOnStack: 3,
+    tileGenerator: [
+        // TileGenerators.permutations(["red", "black", "blue", "white"]),
+        TileGenerators.permutations(WONG4),
+        TileGenerators.randomSubset(70),
+    ],
+});
+*/
+
+/*
 lookup.set("cairo5", {
     atlas: CairoAtlas,
     initialTile: [

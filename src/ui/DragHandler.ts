@@ -81,8 +81,7 @@ export class DragHandler {
             const dxTotal = evt.clientX - this.clientXstart;
             const dyTotal = evt.clientY - this.clientYstart;
             if (
-                dxTotal !== 0 &&
-                dyTotal !== 0 &&
+                (dxTotal !== 0 || dyTotal !== 0) &&
                 Math.hypot(dxTotal, dyTotal) > DRAG_START_THRESHOLD
             ) {
                 this.dragging = true;
@@ -101,13 +100,14 @@ export class DragHandler {
                 }
             }
         }
-        if (!this.dragging) return;
+        if (!this.dragging) {
+            return;
+        }
         const dx = evt.clientX - this.clientX;
         const dy = evt.clientY - this.clientY;
         if (
             this.dragging &&
-            dx !== 0 &&
-            dy !== 0 &&
+            (dx !== 0 || dy !== 0) &&
             Math.hypot(dx, dy) > DRAG_MOVE_THRESHOLD
         ) {
             if (this.onDragMove) {

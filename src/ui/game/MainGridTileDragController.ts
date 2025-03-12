@@ -108,13 +108,33 @@ export class MainGridTileDragController extends TileDragController {
         evt: DragHandlerEvent,
         updateTransform: boolean = true,
     ): { newTranslate: string; newScale: string } {
-        const { newTranslate, newScale } = super.onDragMove(
-            context,
-            evt,
-            false,
-        );
-        let overrideTranslate = newTranslate;
+        let res = super.onDragMove(context, evt, false);
 
+        if (evt.dx > -10 && evt.dx < 10 && evt.dy > -10 && evt.dy < 10) {
+            res = this.computeDragMove(
+                res.newTranslate,
+                res.newScale,
+                context,
+                evt,
+            );
+        }
+
+        if (updateTransform && this.currentTranslate != res.newTranslate) {
+            evt.target.style.translate = this.currentScale = res.newTranslate;
+        }
+        if (updateTransform && this.currentScale != res.newScale) {
+            evt.target.style.scale = this.currentScale = res.newScale;
+        }
+
+        return res;
+    }
+
+    private computeDragMove(
+        newTranslate: string,
+        newScale: string,
+        context: TileDragSourceContext,
+        evt: DragHandlerEvent,
+    ): { newTranslate: string; newScale: string } {
         if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
             // figure out where we are
             const movingTile = context.source.tile!;
@@ -152,7 +172,6 @@ export class MainGridTileDragController extends TileDragController {
             ) {
                 const placeholder = match.tile;
                 if (context.autorotateCurrentTarget !== placeholder) {
-                    console.log("matched", match);
                     // autorotate after a small delay
                     context.autorotateCurrentTarget = placeholder;
                     const rotation = context.autorotateCache.get(
@@ -206,19 +225,12 @@ export class MainGridTileDragController extends TileDragController {
                             centerSnapTo.y -
                             centerSnapFrom.y,
                     };
-                    overrideTranslate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
+                    newTranslate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
                 }
             }
         }
 
-        if (updateTransform && this.currentTranslate != overrideTranslate) {
-            evt.target.style.translate = this.currentScale = overrideTranslate;
-        }
-        if (updateTransform && this.currentScale != newScale) {
-            evt.target.style.scale = this.currentScale = newScale;
-        }
-
-        return { newTranslate, newScale };
+        return { newTranslate: newTranslate, newScale: newScale };
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragHandlerEvent): boolean {

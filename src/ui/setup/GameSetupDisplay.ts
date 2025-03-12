@@ -161,7 +161,6 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     }
 
     destroy() {
-        // TODO
         this.exampleDisplay.destroy();
         this.playButton.destroy();
         this.exitButton.destroy();
@@ -169,6 +168,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         for (const row of this.settingRows) {
             row.destroy();
         }
+        this.element.remove();
     }
 
     rescale() {

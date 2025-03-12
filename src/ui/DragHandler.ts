@@ -44,23 +44,39 @@ export class DragHandler {
     onDragEnd?: (evt: DragHandlerEvent) => void;
     onTap?: (evt: DragHandlerEvent) => void;
 
+    pointerDownEventListener: (evt: PointerEvent) => void;
+    pointerMoveEventListener: (evt: PointerEvent) => void;
+    pointerUpEventListener: (evt: PointerEvent) => void;
+    pointerCancelEventListener: (evt: PointerEvent) => void;
+    pointerLeaveEventListener: (evt: PointerEvent) => void;
+
     constructor(element: HTMLElement) {
         this.element = element;
 
-        element.addEventListener("pointerdown", (evt: PointerEvent) =>
-            this.handlePointerDown(evt),
+        element.addEventListener(
+            "pointerdown",
+            (this.pointerDownEventListener = (evt: PointerEvent) =>
+                this.handlePointerDown(evt)),
         );
-        element.addEventListener("pointermove", (evt: PointerEvent) =>
-            this.handlePointerMove(evt),
+        element.addEventListener(
+            "pointermove",
+            (this.pointerMoveEventListener = (evt: PointerEvent) =>
+                this.handlePointerMove(evt)),
         );
-        element.addEventListener("pointerup", (evt: PointerEvent) =>
-            this.handlePointerUp(evt),
+        element.addEventListener(
+            "pointerup",
+            (this.pointerUpEventListener = (evt: PointerEvent) =>
+                this.handlePointerUp(evt)),
         );
-        element.addEventListener("pointercancel", (evt: PointerEvent) =>
-            this.handlePointerCancel(evt),
+        element.addEventListener(
+            "pointercancel",
+            (this.pointerCancelEventListener = (evt: PointerEvent) =>
+                this.handlePointerCancel(evt)),
         );
-        element.addEventListener("pointerleave", (evt: PointerEvent) =>
-            this.handlePointerCancel(evt),
+        element.addEventListener(
+            "pointerleave",
+            (this.pointerLeaveEventListener = (evt: PointerEvent) =>
+                this.handlePointerCancel(evt)),
         );
     }
 
@@ -180,5 +196,28 @@ export class DragHandler {
         }
         evt.preventDefault();
         this.element.releasePointerCapture(evt.pointerId);
+    }
+
+    destroy() {
+        this.element.removeEventListener(
+            "pointerdown",
+            this.pointerDownEventListener,
+        );
+        this.element.removeEventListener(
+            "pointermove",
+            this.pointerMoveEventListener,
+        );
+        this.element.removeEventListener(
+            "pointerup",
+            this.pointerUpEventListener,
+        );
+        this.element.removeEventListener(
+            "pointercancel",
+            this.pointerCancelEventListener,
+        );
+        this.element.removeEventListener(
+            "pointerleave",
+            this.pointerLeaveEventListener,
+        );
     }
 }

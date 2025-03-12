@@ -19,6 +19,8 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     points: SVGElement;
     pointsGroup: ReplacableGroup;
 
+    onTransitionEnd: EventListener;
+
     hideTimeout?: number;
 
     constructor() {
@@ -26,9 +28,10 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
         this.element.classList.add("disabled");
 
-        this.element.addEventListener("transitionend", (evt) => {
+        this.onTransitionEnd = (evt) => {
             this.element.classList.replace("hiding", "disabled");
-        });
+        };
+        this.element.addEventListener("transitionend", this.onTransitionEnd);
 
         // background (everything not select gray)
         const bg = SVG("rect", null, null, {
@@ -269,6 +272,11 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             this.element.classList.remove("enabled");
             this.element.classList.add("hiding");
         }
+    }
+
+    destroy() {
+        super.destroy();
+        this.element.removeEventListener("transitionend", this.onTransitionEnd);
     }
 }
 

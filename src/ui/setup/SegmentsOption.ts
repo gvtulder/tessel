@@ -141,4 +141,11 @@ export class SegmentsOption extends SettingRowOption {
             this.gridDisplay.rescale();
         }
     }
+
+    destroy() {
+        super.destroy();
+        if (this.gridDisplay) {
+            this.gridDisplay.destroy();
+        }
+    }
 }

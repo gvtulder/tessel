@@ -9,7 +9,7 @@ export class Toggle {
     private _checked!: boolean;
 
     private onchange: () => void;
-    private interactable: DragHandler;
+    private dragHandler: DragHandler;
 
     constructor(
         icon: string,
@@ -29,16 +29,15 @@ export class Toggle {
         this.checked = checked ? true : false;
         this.onchange = onchange;
 
-        this.interactable = new DragHandler(toggle);
-        this.interactable.onTap = () => {
+        this.dragHandler = new DragHandler(toggle);
+        this.dragHandler.onTap = () => {
             this.toggle();
         };
     }
 
     destroy() {
-        // TODO
-        // this.interactable.unset();
         this.element.remove();
+        this.dragHandler.destroy();
     }
 
     get checked(): boolean {

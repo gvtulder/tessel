@@ -21,6 +21,10 @@ export abstract class ScoreOverlayDisplay {
         return;
     }
 
+    destroy() {
+        this.element.remove();
+    }
+
     protected computeOutline(shape: ScoredRegion): {
         boundary: Vertex[];
         edgesPerVertex: Map<string, Edge[]>;

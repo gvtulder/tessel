@@ -113,16 +113,6 @@ export class GridDisplay extends EventTarget {
         for (const td of this.tileDisplays.values()) {
             td.destroy();
         }
-        /*
-        if (this.connectorDisplay) {
-            this.connectorDisplay.destroy();
-            this.connectorDisplay = null;
-        }
-        if (this.backgroundGrid) {
-            this.backgroundGrid.destroy();
-            this.backgroundGrid = null;
-        }
-        */
 
         this.grid.removeEventListener(GridEventType.AddTile, this.onAddTile);
         this.grid.removeEventListener(
@@ -133,6 +123,7 @@ export class GridDisplay extends EventTarget {
             GridEventType.RemoveTile,
             this.onRemoveTile,
         );
+
         this.element.remove();
         this.gridElement.remove();
         this.svg.remove();
@@ -159,6 +150,7 @@ export class GridDisplay extends EventTarget {
         if (!td) return;
         this.tileDisplays.delete(tile);
         td.element.remove();
+        td.destroy();
         this.updateDimensions();
     }
 

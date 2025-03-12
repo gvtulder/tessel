@@ -44,7 +44,7 @@ export class TileDragController extends EventTarget {
     }
 
     destroy() {
-        // TODO
+        // nothing to do
     }
 
     addSource(source: TileDragSource) {

@@ -13,17 +13,19 @@ export class DropoutMenu {
     backgroundEventHandler: (evt: PointerEvent) => void;
 
     constructor() {
+        this.buttons = [];
+        this.toggles = [];
+
         this.element = createElement("div", "dropout-menu");
 
-        const dropoutButton = new Button(
+        const dropoutButton = (this.dropoutButton = new Button(
             icons.barsIcon,
             "Show menu",
             (evt: PointerEvent) => {
                 this.element.classList.toggle("expanded");
             },
-        );
-        dropoutButton.element.classList.add("dropout");
-        this.dropoutButton = dropoutButton;
+            "dropout",
+        ));
         this.element.appendChild(dropoutButton.element);
 
         this.container = createElement("div", "items", this.element);
@@ -35,9 +37,6 @@ export class DropoutMenu {
             }
         };
         window.addEventListener("pointerdown", this.backgroundEventHandler);
-
-        this.buttons = [];
-        this.toggles = [];
     }
 
     addButton(button: Button) {
@@ -51,12 +50,7 @@ export class DropoutMenu {
     }
 
     destroy() {
-        for (const button of this.buttons) {
-            button.destroy();
-        }
-        for (const toggle of this.toggles) {
-            toggle.destroy();
-        }
+        this.element.remove();
         this.dropoutButton.destroy();
         window.removeEventListener("pointerdown", this.backgroundEventHandler);
     }

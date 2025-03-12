@@ -1,3 +1,5 @@
+import { createElement } from "../html";
+
 export class ScoreDisplay {
     element: HTMLDivElement;
     scoreField: HTMLSpanElement;
@@ -11,19 +13,15 @@ export class ScoreDisplay {
 
         this._points = 0;
 
-        const div = document.createElement("div");
-        div.className = "score";
-        this.element = div;
+        const element = (this.element = document.createElement("div"));
+        element.className = "score";
 
-        const p = document.createElement("p");
-        div.appendChild(p);
+        const p = createElement("p", null, element);
 
-        const scoreField = document.createElement("span");
+        const scoreField = (this.scoreField = createElement("span", null, p));
         scoreField.innerHTML = "0";
-        p.appendChild(scoreField);
-        this.scoreField = scoreField;
 
-        div.addEventListener("animationend", this.onAnimationEnd);
+        element.addEventListener("animationend", this.onAnimationEnd);
     }
 
     destroy() {

@@ -31,4 +31,9 @@ export class AtlasOption extends SettingRowOption {
     rescale() {
         this.gridDisplay.rescale();
     }
+
+    destroy() {
+        super.destroy();
+        this.gridDisplay.destroy();
+    }
 }

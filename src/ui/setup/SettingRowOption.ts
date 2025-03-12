@@ -15,7 +15,7 @@ export abstract class SettingRowOption {
     rescale() {}
 
     destroy() {
-        // TODO
-        // this.draggable.unset();
+        this.element.remove();
+        this.draggable.destroy();
     }
 }

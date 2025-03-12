@@ -74,6 +74,7 @@ export class SettingRow<T extends SettingRowOption> {
         for (const option of this.options) {
             option.destroy();
         }
+        this.element.remove();
     }
 
     private updateSelectedState() {

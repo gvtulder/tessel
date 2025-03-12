@@ -16,6 +16,7 @@ import { angleDist, angleDistDeg, RAD2DEG, TWOPI } from "../../geom/math";
 import { BaseTileStackDisplay, TileStackDisplay } from "./TileStackDisplay";
 import { DEG2RAD } from "detect-collisions";
 import { DragHandler, DragHandlerEvent } from "../DragHandler";
+import { createElement } from "../html";
 
 export class SingleTileOnStackDisplay implements TileDragSource {
     tileStackDisplay: BaseTileStackDisplay;
@@ -36,6 +37,8 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     dragTransform: TransformComponent;
     rotateTransform: TransformComponent;
 
+    onDragTransitionEnd: EventListener;
+
     constructor(
         tileStackDisplay: BaseTileStackDisplay,
         indexOnStack: number,
@@ -51,12 +54,10 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.indexOnStack = indexOnStack;
         this.grid = new Grid(atlas);
 
-        this.element = document.createElement("div");
+        this.element = createElement("div", "tile-on-stack");
         this.element.className = "tile-on-stack";
 
-        this.rotatable = document.createElement("div");
-        this.rotatable.className = "rotatable";
-        this.element.appendChild(this.rotatable);
+        this.rotatable = createElement("div", "rotatable", this.element);
 
         this.gridDisplay = new TileStackGridDisplay(this.grid, this.rotatable);
 
@@ -84,10 +85,14 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.draggable = new DragHandler(this.rotatable);
         this.initInteractable(makeRotatable);
 
-        this.element.addEventListener("transitionend", () => {
+        this.onDragTransitionEnd = () => {
             this.element.classList.remove("drag-success");
             this.element.classList.remove("drag-return");
-        });
+        };
+        this.element.addEventListener(
+            "transitionend",
+            this.onDragTransitionEnd,
+        );
     }
 
     rescale() {
@@ -267,5 +272,18 @@ export class SingleTileOnStackDisplay implements TileDragSource {
      */
     resetAutorotate(notAnimated?: boolean) {
         this.rotateTileTo(this.rotationIdx, false, true, !notAnimated);
+    }
+
+    destroy() {
+        this.gridDisplay.destroy();
+        this.draggable.destroy();
+        this.element.removeEventListener(
+            "transitionend",
+            this.onDragTransitionEnd,
+        );
+        if (this.normalizeRotationTimeout) {
+            window.clearTimeout(this.normalizeRotationTimeout);
+        }
+        this.element.remove();
     }
 }

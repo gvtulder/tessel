@@ -14,6 +14,7 @@ import {
 import { Atlas } from "../../grid/Atlas";
 import { angleDist, RAD2DEG, TWOPI } from "../../geom/math";
 import { SingleTileOnStackDisplay } from "./SingleTileStackDisplay";
+import { createElement } from "../html";
 
 export abstract class BaseTileStackDisplay extends EventTarget {
     static events = {
@@ -32,14 +33,11 @@ export abstract class BaseTileStackDisplay extends EventTarget {
         this.tileDragController = tileDragController;
         this.tileDisplays = [];
 
-        const div = document.createElement("div");
-        div.className = "tile-stack";
-        this.element = div;
+        this.element = createElement("div", "tile-stack");
     }
 
-    /** @deprecated */
     destroy() {
-        return;
+        this.element.remove();
     }
 
     resetDragStatus() {
@@ -61,6 +59,8 @@ export class TileStackDisplay extends BaseTileStackDisplay {
     counterDiv: HTMLElement;
     counter: HTMLElement;
 
+    updateSlotsHandler: EventListener;
+
     constructor(
         atlas: Atlas,
         tileStack: FixedOrderTileStack,
@@ -71,23 +71,26 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         this.tileStack = tileStack;
 
         // TODO move this to a separate class
-        const counterDiv = document.createElement("div");
-        counterDiv.className = "tile-counter";
-        this.counterDiv = counterDiv;
-
-        const counter = document.createElement("span");
-        counterDiv.appendChild(counter);
-        this.counter = counterDiv;
+        this.counterDiv = createElement("div", "tile-counter");
+        this.counter = createElement("span", null, this.counterDiv);
 
         this.updateTiles();
-        this.tileStack.addEventListener(GameEventType.UpdateSlots, () => {
+        this.updateSlotsHandler = () => {
             this.updateTiles();
-        });
+        };
+        this.tileStack.addEventListener(
+            GameEventType.UpdateSlots,
+            this.updateSlotsHandler,
+        );
     }
 
-    /** @deprecated */
     destroy() {
-        return;
+        super.destroy();
+        this.counterDiv.remove();
+        this.tileStack.removeEventListener(
+            GameEventType.UpdateSlots,
+            this.updateSlotsHandler,
+        );
     }
 
     updateTiles() {

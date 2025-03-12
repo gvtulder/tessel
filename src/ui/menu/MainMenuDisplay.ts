@@ -34,8 +34,8 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             () => {
                 this.dispatchEvent(new UserEvent(UserEventType.SetupMenu));
             },
+            "button-setup-menu",
         );
-        setupButton.element.classList.add("button-setup-menu");
         this.setupButton = setupButton;
         this.element.appendChild(setupButton.element);
 
@@ -77,14 +77,14 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
                     ),
                 );
             };
+            this.draggables.push(draggable);
         }
     }
 
     destroy() {
-        // TODO
-        // for (const i of this.draggables) {
-        //   i.unset();
-        // }
+        for (const d of this.draggables) {
+            d.destroy();
+        }
         for (const gd of this.gridDisplays) {
             gd.destroy();
         }

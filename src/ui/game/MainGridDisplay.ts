@@ -68,4 +68,9 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
         };
         window.setTimeout(cleanUp, delay);
     }
+
+    destroy() {
+        super.destroy();
+        this.scoreOverlayDisplay.destroy();
+    }
 }

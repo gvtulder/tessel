@@ -62,6 +62,7 @@ export class ExampleDisplay {
         if (this.gridDisplay) {
             this.gridDisplay.destroy();
         }
+        this.element.remove();
     }
 }
 

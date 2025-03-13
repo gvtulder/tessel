@@ -3,18 +3,26 @@ import { clientsClaim, setCacheNameDetails, skipWaiting } from "workbox-core";
 import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
 
 clientsClaim();
-skipWaiting();
+self.skipWaiting();
+
+self.addEventListener("install", (evt) => {
+  console.log(evt);
+});
+
+self.addEventListener("waiting", (evt) => {
+  console.log(evt);
+});
 
 setCacheNameDetails({
-    prefix: "tilegame",
-    suffix: version,
+  prefix: "tilegame",
+  suffix: version,
 });
 
 precacheAndRoute(
-    manifest.map((url) => ({
-        url: url,
-        revision: version,
-    })),
+  manifest.map((url) => ({
+    url: url,
+    revision: version,
+  })),
 );
 
 cleanupOutdatedCaches();

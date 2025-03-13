@@ -40,6 +40,7 @@ export class UserEvent extends Event {
 
 export class GameController {
     version?: string;
+    updateServiceWorker?: () => void;
     container: HTMLElement;
     game?: Game;
     currentScreen?: ScreenDisplay;
@@ -80,6 +81,10 @@ export class GameController {
 
     showMainMenu() {
         this.resetState();
+
+        if (this.updateServiceWorker) {
+            this.updateServiceWorker();
+        }
 
         const menuDisplay = new MainMenuDisplay(this.version);
         this.currentScreen = menuDisplay;

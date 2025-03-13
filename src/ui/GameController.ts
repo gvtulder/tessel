@@ -7,7 +7,7 @@ import {
 import { GameDisplay } from "./game/GameDisplay";
 import { MainMenuDisplay } from "./menu/MainMenuDisplay";
 import * as SaveGames from "../saveGames";
-import { GameSetupDisplay } from "./setup";
+import { GameSetupDisplay } from "./setup/GameSetupDisplay";
 import { ScreenDisplay } from "./shared/ScreenDisplay";
 import { TileGenerators } from "src/game/TileGenerator";
 import { TileColor, TileColors } from "src/grid/Tile";

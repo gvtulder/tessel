@@ -43,15 +43,20 @@ export class GameController {
     container: HTMLElement;
     game?: Game;
     currentScreen?: ScreenDisplay;
+    currentScreenDestroy?: () => void;
 
     constructor(container: HTMLElement, version?: string) {
         this.container = container;
         this.version = version;
 
         window.addEventListener("resize", () => this.rescale());
+        window.addEventListener("popstate", (evt: PopStateEvent) => {
+            this.run();
+        });
     }
 
-    run(saveGameId: string) {
+    run() {
+        const saveGameId = window.location.hash.replace("#", "");
         const gameSettings = SaveGames.lookup.get(saveGameId);
         if (gameSettings) {
             this.startGame(gameSettings);
@@ -96,8 +101,9 @@ export class GameController {
         };
 
         const destroy = () => {
-            this.container.removeChild(menuDisplay.element);
+            menuDisplay.element.remove();
             this.currentScreen = undefined;
+            this.currentScreenDestroy = undefined;
             menuDisplay.removeEventListener(
                 UserEventType.StartGame,
                 handleStart,
@@ -107,6 +113,7 @@ export class GameController {
                 handleSetup,
             );
         };
+        this.currentScreenDestroy = destroy;
 
         menuDisplay.addEventListener(UserEventType.StartGame, handleStart);
         menuDisplay.addEventListener(UserEventType.SetupMenu, handleSetup);
@@ -122,7 +129,7 @@ export class GameController {
 
         const handleBackToMenu = (evt: UserEvent) => {
             destroy();
-            window.history.pushState({}, "", "/");
+            window.history.pushState({}, "", window.location.pathname);
             this.showMainMenu();
         };
 
@@ -140,8 +147,9 @@ export class GameController {
         };
 
         const destroy = () => {
-            this.container.removeChild(setupDisplay.element);
+            setupDisplay.element.remove();
             this.currentScreen = undefined;
+            this.currentScreenDestroy = undefined;
             setupDisplay.destroy();
             setupDisplay.removeEventListener(
                 UserEventType.BackToMenu,
@@ -152,6 +160,7 @@ export class GameController {
                 handleStart,
             );
         };
+        this.currentScreenDestroy = destroy;
 
         setupDisplay.addEventListener(
             UserEventType.BackToMenu,
@@ -181,17 +190,17 @@ export class GameController {
 
         const handleMenu = () => {
             destroy();
-            window.history.pushState({}, "", "/");
+            window.history.pushState({}, "", window.location.pathname);
             this.showMainMenu();
         };
 
         const handleRestart = () => {
             destroy();
-            window.history.pushState({}, "", window.location.href);
             this.startGame(gameSettings);
         };
 
         const destroy = () => {
+            this.currentScreenDestroy = undefined;
             gameDisplay.removeEventListener(
                 UserEventType.BackToMenu,
                 handleMenu,
@@ -201,6 +210,7 @@ export class GameController {
                 handleRestart,
             );
         };
+        this.currentScreenDestroy = destroy;
 
         gameDisplay.addEventListener(UserEventType.BackToMenu, handleMenu);
         gameDisplay.addEventListener(UserEventType.RestartGame, handleRestart);
@@ -208,12 +218,15 @@ export class GameController {
 
     resetState() {
         if (this.currentScreen) {
+            const oldDestroy = this.currentScreenDestroy;
+            this.currentScreenDestroy = undefined;
             const screen = this.currentScreen;
             this.currentScreen = undefined;
             screen.element.classList.add("disappear");
             window.setTimeout(() => {
-                this.container.removeChild(screen.element);
+                screen.element.remove();
                 screen.destroy();
+                if (oldDestroy) oldDestroy();
             }, 1000);
         }
     }

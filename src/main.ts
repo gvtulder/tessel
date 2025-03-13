@@ -11,7 +11,7 @@ export function startMainMenu() {
     }
 
     const controller = new GameController(document.body, VERSION);
-    controller.run(window.location.hash.replace("#", ""));
+    controller.run();
 
     globalThis.gameController = controller;
 }

@@ -197,6 +197,7 @@ export const SetupCatalog = {
         { key: "squares", atlas: SquaresAtlas },
         { key: "triangles", atlas: TrianglesAtlas },
         { key: "rhombus", atlas: RhombusAtlas },
+        { key: "pentagon", atlas: CairoAtlas },
         { key: "hexagon", atlas: HexagonsAtlas },
     ),
     defaultAtlas: "squares",

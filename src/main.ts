@@ -16,11 +16,17 @@ export function startMainMenu() {
     globalThis.gameController = controller;
 }
 
-const splash = document.getElementById("splash");
-if (splash) {
-    splash.remove();
+function removeSplash() {
+    const splash = document.getElementById("splash");
+    if (splash) {
+        splash.classList.add("disappear");
+        window.setTimeout(() => {
+            splash.remove();
+        }, 1000);
+    }
 }
 
+removeSplash();
 startMainMenu();
 
 if (INCLUDE_SERVICE_WORKER && "serviceWorker" in navigator) {

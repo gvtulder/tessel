@@ -23,16 +23,28 @@
         position: absolute;
         top: 0;
         left: 0;
+        background: #ddd;
+        z-index: 1000;
         width: 100vw;
         height: 100vh;
         overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;
+        opacity: 1;
       }
       #splash svg {
         width: 100px;
         height: 100px;
+        scale: 1;
+      }
+      #splash.disappear {
+        transition: opacity 0.2s 0.2s;
+        opacity: 0;
+      }
+      #splash.disappear svg {
+        transition: scale 0.2s;
+        scale: 0;
       }
     </style>
     <link

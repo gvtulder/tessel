@@ -101,20 +101,20 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
 
         this.settingRows = [];
 
-        const settingAtlas = new SettingRow<AtlasOption>();
+        const settingAtlas = new SettingRow<AtlasOption>("setup-atlas");
         for (const { key, atlas } of catalog.atlas.values()) {
             settingAtlas.addOption(new AtlasOption(key, atlas));
         }
-        settingAtlas.select(catalog.defaultAtlas);
+        settingAtlas.selectStoredOrDefault(catalog.defaultAtlas);
         settingsDiv.appendChild(settingAtlas.element);
         this.settingAtlas = settingAtlas;
         this.settingRows.push(settingAtlas);
 
-        const settingColors = new SettingRow<ColorsOption>();
+        const settingColors = new SettingRow<ColorsOption>("setup-colors");
         for (const { key, colors } of catalog.colors.values()) {
             settingColors.addOption(new ColorsOption(key, colors));
         }
-        settingColors.select(catalog.defaultColor);
+        settingColors.selectStoredOrDefault(catalog.defaultColor);
         settingsDiv.appendChild(settingColors.element);
         this.settingColors = settingColors;
         this.settingRows.push(settingColors);
@@ -128,7 +128,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         for (const { key, rules, exampleColors } of catalog.rules.values()) {
             settingRules.addOption(new RulesOption(key, rules, exampleColors));
         }
-        settingRules.select(catalog.defaultRules);
+        settingRules.selectStoredOrDefault(catalog.defaultRules);
         settingsDiv.appendChild(settingRules.element);
         this.settingRules = settingRules;
         this.settingRows.push(settingRules);
@@ -158,6 +158,8 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         settingRules.onchange = update;
 
         update();
+
+        settingSegments.selectStoredOrDefault();
     }
 
     destroy() {

@@ -6,9 +6,11 @@ export class SettingRow<T extends SettingRowOption> {
     options: T[];
     onchange?: () => void;
     _selected?: number;
+    localStorageKey: string;
 
-    constructor() {
+    constructor(localStorageKey: string) {
         this.element = createElement("div", "setting-row");
+        this.localStorageKey = localStorageKey;
         this.options = [];
     }
 
@@ -18,6 +20,10 @@ export class SettingRow<T extends SettingRowOption> {
         this.options.push(option);
         option.draggable.onTap = () => {
             this.selectedIndex = index;
+            const selectedKey = this.selected && this.selected.key;
+            if (selectedKey) {
+                localStorage.setItem(this.localStorageKey, selectedKey);
+            }
             if (this.onchange) {
                 this.onchange();
             }
@@ -62,6 +68,28 @@ export class SettingRow<T extends SettingRowOption> {
                 return;
             }
         }
+    }
+
+    selectStoredOrDefault(defaultKey?: string) {
+        const storedKey = localStorage.getItem(this.localStorageKey);
+        let storedIndex: number | null = null;
+        let defaultIndex: number | null = null;
+        for (let i = 0; i < this.options.length; i++) {
+            if (this.options[i].key == storedKey) {
+                storedIndex = i + 1;
+            }
+            if (this.options[i].key == defaultKey) {
+                defaultIndex = i + 1;
+            }
+        }
+        console.log(
+            "reset setting",
+            this.localStorageKey,
+            storedKey,
+            storedIndex,
+            defaultIndex,
+        );
+        this.selectedIndex = (storedIndex || defaultIndex || 1) - 1;
     }
 
     rescale() {

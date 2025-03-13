@@ -3,6 +3,7 @@ import { CornerType } from "./Grid";
 import { DEG2RAD, dist, Edge, Point, rad2deg } from "../geom/math";
 import { mapToIndex, rotateArray } from "../geom/arrays";
 import { Polygon } from "../geom/Polygon";
+import { computePolygonSides } from "../geom/polygon/computePolygonSides";
 
 export type ColorPattern = {
     readonly numColors: number;
@@ -25,6 +26,10 @@ export class Shape {
      * The interior angles in degrees.
      */
     readonly cornerAnglesDeg: readonly number[];
+    /**
+     * The length of each side.
+     */
+    readonly sides: readonly number[];
     /**
      * The type of each corner.
      * Corners that are the same after rotating the shape receive the same value.
@@ -49,34 +54,41 @@ export class Shape {
     /**
      * Creates a new shape.
      * Angles > 5 will be converted from degrees to radians.
+     * Sides measures from corner angle[0] to corner angle[1].
+     * The side with length null is computed to close the polygon.
      * @param name a descriptive name
      * @param angles the interior angles of the shape (radians or degrees)
+     * @param sides the length of the sides
      */
-    constructor(name: string, angles: readonly number[]) {
+    constructor(
+        name: string,
+        angles: readonly number[],
+        sides?: readonly (number | null)[],
+    ) {
         this.name = name;
         this.cornerAngles = angles.map((a) => (a > 5 ? a * DEG2RAD : a));
         this.cornerAnglesDeg = rad2deg(this.cornerAngles);
 
-        this.checkAngles();
+        this.sides = this.checkAngles(sides);
 
-        this.cornerTypes = this.computeCornerTypes();
         this.rotationalSymmetries = this.computeRotationalSymmetries();
         this.uniqueRotations = this.computeUniqueRotations();
+        this.cornerTypes = this.computeCornerTypes();
         this.colorPatterns = this.computeColorPatterns();
-    }
-
-    private computeCornerTypes() {
-        return mapToIndex(this.cornerAnglesDeg);
     }
 
     private computeRotationalSymmetries() {
         const rotationalSymmetries = [0];
         const angles = this.cornerAnglesDeg;
+        const sides = this.sides;
         const n = angles.length;
         for (let r = 1; r < n; r++) {
             let ok = true;
             for (let i = 0; ok && i < n; i++) {
-                if (angles[i] != angles[(i + r) % n]) {
+                if (
+                    angles[i] != angles[(i + r) % n] ||
+                    Math.abs(sides[i] - sides[(i + r) % n]) > 1e-5
+                ) {
                     ok = false;
                 }
             }
@@ -91,12 +103,16 @@ export class Shape {
         const numUnique =
             this.rotationalSymmetries.length > 1
                 ? this.rotationalSymmetries[1]
-                : 1;
+                : this.cornerAngles.length;
         const uniqueRotations = [];
         for (let r = 0; r < numUnique; r++) {
             uniqueRotations.push(r);
         }
         return uniqueRotations;
+    }
+
+    private computeCornerTypes() {
+        return this.cornerAngles.map((_, i) => i % this.uniqueRotations.length);
     }
 
     private computeColorPatterns() {
@@ -197,15 +213,16 @@ export class Shape {
      */
     constructPolygonAB(a: Point, b: Point, edgeIndex: number): Polygon {
         const angles = this.cornerAngles;
-        const r = Math.hypot(b.x - a.x, b.y - a.y);
         let angle = Math.atan2(b.y - a.y, b.x - a.x);
         const vertices = new Array<Point>(angles.length);
         vertices[edgeIndex] = a;
         vertices[(edgeIndex + 1) % angles.length] = b;
+        const scale = Math.hypot(b.x - a.x, b.y - a.y) / this.sides[edgeIndex];
         let x = b.x,
             y = b.y;
         for (let i = 2; i < angles.length; i++) {
             angle += Math.PI - angles[(i + edgeIndex - 1) % angles.length];
+            const r = scale * this.sides[(i + edgeIndex - 1) % angles.length];
             vertices[(i + edgeIndex) % angles.length] = {
                 x: (x += r * Math.cos(angle)),
                 y: (y += r * Math.sin(angle)),
@@ -214,7 +231,7 @@ export class Shape {
         return new Polygon(vertices);
     }
 
-    private checkAngles() {
+    private checkAngles(sides?: readonly (number | null)[]): readonly number[] {
         if (this.cornerAngles.length < 3) {
             throw new Error("Invalid shape: need at least three angles.");
         }
@@ -223,17 +240,6 @@ export class Shape {
             throw new Error("Invalid shape: all angles should be positive.");
         }
 
-        const sum = this.cornerAnglesDeg.reduceRight((a, b) => a + b);
-        if (Math.abs(sum - (this.cornerAngles.length - 2) * 180) > 1e-5) {
-            throw new Error(
-                "Invalid shape: angles should sum to (n - 2) * 180 degrees.",
-            );
-        }
-
-        const poly = this.constructPolygonAB({ x: 0, y: 0 }, { x: 1, y: 0 }, 0);
-        const v = poly.vertices;
-        if (Math.abs(dist(v[0], v[1]) - dist(v[0], v[v.length - 1])) > 1e-5) {
-            throw new Error("Invalid shape: expecting equilateral polygon.");
-        }
+        return computePolygonSides(this.cornerAngles, sides);
     }
 }

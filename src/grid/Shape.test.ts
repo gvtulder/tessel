@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import { ColorPattern, Shape } from "./Shape";
-import { DEG2RAD, P, roundPoints } from "../geom/math";
+import { DEG2RAD, dist, P, roundPoints } from "../geom/math";
+import { rotateArray } from "../geom/arrays";
 
 describe("Shape", () => {
     test("can be created", () => {
@@ -140,5 +141,46 @@ describe("Shape", () => {
             },
             { numColors: 1, segmentColors: [[0, 0, 0, 0, 0, 0]] },
         ]);
+    });
+
+    test("handles non-unit sides", () => {
+        const angles = [120, 90, 120, 90, 120];
+        // last side: 2 * sqrt(2) * cos(75deg)
+        const sides = [1, 1, 1, 1, Math.sqrt(3) - 1];
+
+        const shape = new Shape("pentagon", angles, sides);
+        expect(shape.sides.map((x) => x.toFixed(4))).toStrictEqual(
+            sides.map((x) => x.toFixed(4)),
+        );
+        expect(shape.cornerTypes).toStrictEqual([0, 1, 2, 3, 4]);
+
+        const vertices = shape.constructPolygonXYR(0, 0, 1).vertices;
+        for (let i = 0; i < angles.length; i++) {
+            expect(
+                dist(vertices[i], vertices[(i + 1) % angles.length]),
+            ).toBeCloseTo(sides[i]);
+        }
+
+        const shape2 = new Shape(
+            "pentagon2",
+            rotateArray(angles, 1),
+            rotateArray(sides, 1),
+        );
+        const vertices2 = shape2.constructPolygonXYR(0, 0, 1).vertices;
+        for (let i = 0; i < angles.length; i++) {
+            expect(
+                dist(vertices2[i], vertices2[(i + 1) % angles.length]),
+            ).toBeCloseTo(sides[(i + 1) % sides.length]);
+        }
+    });
+
+    test("check Cairo pentagon", () => {
+        const angles = [120, 90, 120, 90, 120];
+        // last side: 2 * sqrt(2) * cos(75deg)
+        const sides = [1, 1, 1, 1, Math.sqrt(3) - 1];
+        const shape = new Shape("pentagon", angles, sides);
+        expect(shape.rotationalSymmetries).toStrictEqual([0]);
+        expect(shape.uniqueRotations).toStrictEqual([0, 1, 2, 3, 4]);
+        expect(shape.cornerTypes).toStrictEqual([0, 1, 2, 3, 4]);
     });
 });

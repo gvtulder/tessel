@@ -6,6 +6,7 @@ import {
 } from "./game/Scorer";
 import { TileGenerators } from "./game/TileGenerator";
 import {
+    CairoAtlas,
     HexagonsAtlas,
     Penrose0Atlas,
     PenroseFreeAtlas,
@@ -147,6 +148,16 @@ lookup.set("cairo5", {
 lookup.set("rhombus", {
     atlas: RhombusAtlas,
     initialTile: WONG4,
+    tilesShownOnStack: 3,
+    tileGenerator: [
+        // TileGenerators.permutations(["red", "black", "blue", "white"]),
+        TileGenerators.permutations(WONG4),
+    ],
+});
+
+lookup.set("cairo5", {
+    atlas: CairoAtlas,
+    initialTile: [...WONG4, WONG4[2]],
     tilesShownOnStack: 3,
     tileGenerator: [
         // TileGenerators.permutations(["red", "black", "blue", "white"]),

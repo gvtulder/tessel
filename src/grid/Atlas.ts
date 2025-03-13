@@ -212,7 +212,7 @@ export class Atlas {
         const shapes = new Map<string, Shape>();
         for (const key in definition.shapes) {
             const d = definition.shapes[key];
-            const shape = new Shape(d.name || "", d.angles);
+            const shape = new Shape(d.name || "", d.angles, d.sides);
             for (const s of shapes.values()) {
                 if (shape.equalAngles(s)) {
                     throw new Error("duplicate shape in atlas pattern");
@@ -354,16 +354,20 @@ export const TwoPentagonAtlas = Atlas.fromDefinition({
 });
 */
 
-/*
 export const CairoAtlas = Atlas.fromDefinition({
     name: "Cairo5",
     shapes: {
         P: {
             name: "pentagon",
             angles: [120, 120, 90, 120, 90],
+            //        P0   P1  P2   P3  P4
             // first side: 2 * sqrt(2) * cos(75deg)
             sides: [Math.sqrt(3) - 1, 1, 1, 1, 1],
         },
     },
+    vertices: [
+        { name: "a", vertex: "P0-P3-P1" },
+        { name: "b", vertex: "P2-P2-P2-P2" },
+        { name: "c", vertex: "P4-P4-P4-P4" },
+    ],
 });
-*/

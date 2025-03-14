@@ -23,6 +23,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     indexOnStack: number;
     grid: Grid;
     gridDisplay: GridDisplay;
+    current: TileShapeColors | null | undefined;
     tile: Tile | null;
     element: HTMLDivElement;
     rotatable: HTMLDivElement;
@@ -100,6 +101,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     }
 
     showTile(slot: TileShapeColors | null | undefined) {
+        if (this.current === slot) return;
         if (this.tile) {
             this.grid.removeTile(this.tile);
             this.tile = null;
@@ -109,8 +111,10 @@ export class SingleTileOnStackDisplay implements TileDragSource {
             const poly = slot.shape.constructPolygonXYR(0, 0, 1);
             this.tile = this.grid.addTile(slot.shape, poly, poly.segment());
             this.tile.colors = slot.colors;
+            this.rotateTileTo(0);
             this.rescale();
         }
+        this.current = slot;
     }
 
     disable() {

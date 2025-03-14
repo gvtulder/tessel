@@ -5,7 +5,7 @@ import {
     selectRandom,
     shuffle,
 } from "../geom/RandomSampler";
-import { ColorPattern, Shape } from "./Shape";
+import { ColorPattern, ColorPatternPerShape, Shape } from "./Shape";
 import { Tile, TileColor, TileColors, TileSegment } from "./Tile";
 
 const MAX_GRID_COLORING_TRIES = 100;
@@ -87,7 +87,7 @@ export class GridColoring {
     }
 
     applyColorPattern(
-        colorPatterns: Map<Shape, ColorPattern[]>,
+        colorPatterns: ColorPatternPerShape,
         uniqueTileColors: boolean,
         prng: PRNG = Math.random,
     ) {
@@ -98,12 +98,10 @@ export class GridColoring {
                 throw new Error("tile has no segments");
             }
             // find the available color patterns for this tile shape
-            const patterns = colorPatterns.get(tile.shape);
-            if (!patterns || patterns.length == 0) {
+            const pattern = colorPatterns.get(tile.shape);
+            if (!pattern) {
                 throw new Error(`No pattern defined for shape.`);
             }
-            // pick a random pattern
-            const pattern = selectRandom(patterns, prng())!;
             // pick a random rotation of the pattern
             const segmentColors = selectRandom(pattern.segmentColors, prng())!;
             // use this pattern to merge groups

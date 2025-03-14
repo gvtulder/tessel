@@ -6,7 +6,7 @@ import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
 import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/arrays";
 import { RuleSet } from "src/grid/RuleSet";
-import { ColorPattern, Shape } from "src/grid/Shape";
+import { ColorPattern, ColorPatternPerShape, Shape } from "src/grid/Shape";
 import { SetupCatalog } from "src/saveGames";
 import { shuffle } from "src/geom/RandomSampler";
 
@@ -15,7 +15,7 @@ export type GameSettings = {
     colors?: TileColors;
     rules?: RuleSet;
     scorer?: Scorer;
-    colorPatterns?: { shape: Shape; colorPatterns: ColorPattern }[];
+    colorPatternPerShape?: ColorPatternPerShape;
     tilesShownOnStack: number;
     initialTile: TileColors;
     tileGenerator: TileGenerator[];
@@ -165,14 +165,16 @@ export function gameFromSerializedSettings(
     if (!colors) return null;
     const rules = catalog.rules.get(serialized.rules);
     if (!rules) return null;
-    if (atlas.atlas.shapes.length != 1) {
-        throw new Error("multi-shape atlas not yet supported");
-    }
-    const shape = atlas.atlas.shapes[0];
-    const colorPattern = shape.colorPatterns[1 * serialized.segments];
-    if (!colorPattern) return null;
 
-    // TODO add support for multiple tile shapes
+    const colorPatternPerShape = new ColorPatternPerShape(
+        atlas.atlas.shapes.map((shape) => [
+            shape,
+            shape.colorPatterns[1 * serialized.segments],
+        ]),
+    );
+
+    const shape = atlas.atlas.shapes[0];
+    const colorPattern = colorPatternPerShape.get(shape)!;
     const initialTile = colorPattern.segmentColors[0].map(
         (c) => colors.colors[c % colors.colors.length],
     );
@@ -182,12 +184,7 @@ export function gameFromSerializedSettings(
         colors: colors.colors,
         rules: rules.rules,
         scorer: rules.scorer,
-        colorPatterns: [
-            {
-                shape: shape,
-                colorPatterns: colorPattern,
-            },
-        ],
+        colorPatternPerShape: colorPatternPerShape,
         initialTile: initialTile,
         tilesShownOnStack: 3,
         tileGenerator: [

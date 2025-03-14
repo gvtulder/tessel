@@ -16,6 +16,7 @@ export abstract class GridBuilder {
         const poly = shape.constructPolygonXYR(0, 0, 1);
         const initialTile = grid.addTile(shape, poly, poly.segment());
 
+        let tries = 10 * numberOfTiles;
         const sampler = new RandomSampler<GridEdge>();
         while (grid.tiles.size < numberOfTiles) {
             for (const edge of grid.frontier) {
@@ -36,6 +37,9 @@ export abstract class GridBuilder {
                     t.polygon,
                     t.polygon.segment(),
                 );
+            } else {
+                tries--;
+                if (tries < 0) break;
             }
         }
 

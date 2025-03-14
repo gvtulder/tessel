@@ -16,12 +16,26 @@ export class AtlasOption extends SettingRowOption {
         this.atlas = atlas;
 
         const grid = new Grid(atlas);
-        if (grid.atlas.shapes.length != 1)
-            throw new Error("atlas with multiple shapes not yet supported");
+
         const shape = grid.atlas.shapes[0];
         const poly = shape.constructPolygonXYR(0, 0, 1);
         const tile = grid.addTile(shape, poly, poly.segment());
         tile.colors = PROTO_TILE_COLOR;
+
+        for (let i = 1; i < grid.atlas.shapes.length; i++) {
+            const otherShape = grid.atlas.shapes[i];
+            const otherPoly = otherShape.constructPolygonEdge(
+                poly.outsideEdges[i],
+                0,
+            );
+            const otherTile = grid.addTile(
+                otherShape,
+                otherPoly,
+                otherPoly.segment(),
+            );
+            otherTile.colors = PROTO_TILE_COLOR;
+        }
+
         const wrapper = createElement("div", "wrap-grid", this.element);
         const gridDisplay = new OptionGridDisplay(grid, wrapper);
         wrapper.appendChild(gridDisplay.element);

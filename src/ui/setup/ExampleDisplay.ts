@@ -3,7 +3,7 @@ import { CentricGridBuilder } from "../../grid/GridBuilder";
 import { GridColoring } from "../../grid/GridColoring";
 import { seedPRNG } from "../../geom/RandomSampler";
 import { RuleSet } from "../../grid/RuleSet";
-import { ColorPattern } from "../../grid/Shape";
+import { ColorPattern, ColorPatternPerShape } from "../../grid/Shape";
 import { TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { createElement } from "../shared/html";
@@ -19,7 +19,7 @@ export class ExampleDisplay {
     showAtlas(
         atlas: Atlas,
         colors: TileColors,
-        colorPattern: ColorPattern,
+        colorPatternPerShape: ColorPatternPerShape,
         uniqueTileColors: boolean,
         rules: RuleSet,
         seed: number = 123456,
@@ -38,7 +38,7 @@ export class ExampleDisplay {
         grid.rules = rules;
         const coloring = new GridColoring(grid);
         coloring.applyColorPattern(
-            new Map([[grid.atlas.shapes[0], [colorPattern]]]),
+            colorPatternPerShape,
             uniqueTileColors,
             prngColorGroup,
         );

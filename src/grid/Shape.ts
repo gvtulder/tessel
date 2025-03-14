@@ -10,6 +10,8 @@ export type ColorPattern = {
     readonly segmentColors: readonly (readonly number[])[];
 };
 
+export class ColorPatternPerShape extends Map<Shape, ColorPattern> {}
+
 /**
  * A Shape describes a geometric shape, based on the interior angles.
  */

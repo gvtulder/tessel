@@ -104,8 +104,8 @@
 }
 .screen.game-setup .setting-row-option {
   margin: 0.5vw;
-  width: calc(0.8 * min(8vw, 13vh));
-  height: calc(0.8 * min(8vw, 13vh));
+  width: calc(0.7 * min(8vw, 13vh));
+  height: calc(0.7 * min(8vw, 13vh));
   background: #cacaca;
   border: 3px solid #aaa;
   border-radius: 10px;
@@ -136,7 +136,7 @@
   padding: 11%;
 }
 
-@media screen and (min-aspect-ratio: 1.4) {
+@media screen and (min-aspect-ratio: 1.7) {
   .screen.game-setup {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr min-content;
@@ -150,6 +150,10 @@
   .screen.game-setup .settings {
     margin-top: 0;
   }
+  .screen.game-setup .setting-row-option {
+    width: calc(40vw / 8);
+    height: calc(40vw / 8);
+  }
 }
 
 @media screen and (max-aspect-ratio: 0.8) {
@@ -161,15 +165,15 @@
     grid-template-rows: 1fr min-content;
   }
   .screen.game-setup .settings {
-    margin: 2vh 1vw;
+    margin: 2vh 0 2vh 1vw;
   }
   .screen.game-setup .setting-row {
     border-bottom: none;
   }
   .screen.game-setup .setting-row-option {
     margin: 0.5vw;
-    width: calc(0.9 * min(12vw, 13vh));
-    height: calc(0.9 * min(12vw, 13vh));
+    width: calc(0.8 * min(12vw, 13vh));
+    height: calc(0.8 * min(12vw, 13vh));
     background: #cacaca;
     border: 3px solid #aaa;
     border-radius: 10px;
@@ -183,5 +187,12 @@
   }
   .screen.game-setup .button-row .game-button {
     margin-right: 5vw;
+  }
+}
+
+@media screen and (max-aspect-ratio: 0.5) {
+  .screen.game-setup .game-button.play {
+    width: min(6vw, 13vh);
+    height: min(6vw, 13vh);
   }
 }

@@ -8,7 +8,7 @@ import {
 } from "../../geom/math";
 import { Atlas } from "../../grid/Atlas";
 import { Grid } from "../../grid/Grid";
-import { ColorPattern } from "../../grid/Shape";
+import { ColorPattern, ColorPatternPerShape } from "../../grid/Shape";
 import { TileColor, TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { OptionGridDisplay } from "./OptionGridDisplay";
@@ -18,7 +18,7 @@ import { createElement } from "../shared/html";
 export class SegmentsOption extends SettingRowOption {
     segmentsIndex: number;
     uniqueTileColors: boolean;
-    colorPattern?: ColorPattern;
+    colorPatternPerShape?: ColorPatternPerShape;
     gridDisplay?: GridDisplay;
 
     wrapper: HTMLDivElement;
@@ -30,15 +30,25 @@ export class SegmentsOption extends SettingRowOption {
         this.wrapper = createElement("div", "wrap-grid", this.element);
     }
 
-    showAtlas(atlas: Atlas, colors: TileColors, colorPattern: ColorPattern) {
+    showAtlas(
+        atlas: Atlas,
+        colors: TileColors,
+        colorPatternPerShape: ColorPatternPerShape,
+    ) {
         if (this.gridDisplay) {
             this.gridDisplay.element.remove();
             this.gridDisplay.destroy();
         }
         const grid = new Grid(atlas);
+        /*
         if (atlas.shapes.length != 1)
             throw new Error("atlas with multiple shapes not yet supported");
+        */
         const shape = atlas.shapes[0];
+        const colorPattern = colorPatternPerShape.get(shape);
+        if (!colorPattern) {
+            throw new Error("no color pattern found for shape");
+        }
 
         const groupColors: TileColor[] = [];
         for (let i = 0; i < colorPattern.numColors; i++) {
@@ -134,7 +144,7 @@ export class SegmentsOption extends SettingRowOption {
         this.gridDisplay = gridDisplay;
         gridDisplay.rescale();
 
-        this.colorPattern = colorPattern;
+        this.colorPatternPerShape = colorPatternPerShape;
     }
 
     rescale() {

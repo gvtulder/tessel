@@ -202,6 +202,7 @@ export const SetupCatalog = {
         { key: "pentagon", atlas: CairoAtlas },
         { key: "hexagon", atlas: HexagonsAtlas },
         { key: "deltotrihex", atlas: DeltoTrihexAtlas },
+        { key: "penrose", atlas: PenroseFreeAtlas },
     ),
     defaultAtlas: "squares",
 

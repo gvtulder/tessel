@@ -332,8 +332,8 @@ function computeVertexPatterns(shapes: Shape[]): VertexPattern[] {
 export const Penrose0Atlas = Atlas.fromDefinition({
     name: "Penrose-3",
     shapes: {
-        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144] },
         L: { name: "rhombus-wide", angles: [72, 108, 72, 108] },
+        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144] },
     },
     vertices: [
         { name: "kite", vertex: "L1-S1-L1" },
@@ -349,8 +349,8 @@ export const Penrose0Atlas = Atlas.fromDefinition({
 export const PenroseFreeAtlas = Atlas.fromDefinition({
     name: "Penrose-3-free",
     shapes: {
-        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144] },
         L: { name: "rhombus-wide", angles: [72, 108, 72, 108] },
+        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144] },
     },
 });
 

@@ -153,13 +153,17 @@
     .items {
       display: flex;
       flex-direction: column;
-      margin: 0.5vw;
+      margin: 1vw;
       padding: 0;
       border-top: none;
     }
 
     .game-button {
       margin: 0 0 1.5vw;
+    }
+
+    .game-button + .game-button {
+      margin-left: 0;
     }
   }
 }

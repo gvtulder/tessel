@@ -17,6 +17,16 @@ describe("Shape properties", () => {
                 sides: [1, 1, 1],
                 rotationalSymmetries: [0, 1, 2],
                 uniqueRotations: [0],
+                colorPatterns: [
+                    {
+                        numColors: 3,
+                        segmentColors: [[0, 1, 2]],
+                    },
+                    {
+                        numColors: 1,
+                        segmentColors: [[0, 0, 0]],
+                    },
+                ],
             },
         ],
         [
@@ -28,6 +38,23 @@ describe("Shape properties", () => {
                 sides: [1, 1, 1, 1],
                 rotationalSymmetries: [0, 1, 2, 3],
                 uniqueRotations: [0],
+                colorPatterns: [
+                    {
+                        numColors: 4,
+                        segmentColors: [[0, 1, 2, 3]],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [
+                            [0, 0, 1, 1],
+                            [0, 1, 1, 0],
+                        ],
+                    },
+                    {
+                        numColors: 1,
+                        segmentColors: [[0, 0, 0, 0]],
+                    },
+                ],
             },
         ],
         [
@@ -39,6 +66,24 @@ describe("Shape properties", () => {
                 sides: [1, 1, 1, 1],
                 rotationalSymmetries: [0, 2],
                 uniqueRotations: [0, 1],
+                colorPatterns: [
+                    {
+                        numColors: 4,
+                        segmentColors: [[0, 1, 2, 3]],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [[0, 0, 1, 1]],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [[0, 1, 1, 0]],
+                    },
+                    {
+                        numColors: 1,
+                        segmentColors: [[0, 0, 0, 0]],
+                    },
+                ],
             },
         ],
         [
@@ -50,6 +95,31 @@ describe("Shape properties", () => {
                 sides: [1, 1, 1, 1, 1, 1],
                 rotationalSymmetries: [0, 1, 2, 3, 4, 5],
                 uniqueRotations: [0],
+                colorPatterns: [
+                    {
+                        numColors: 6,
+                        segmentColors: [[0, 1, 2, 3, 4, 5]],
+                    },
+                    {
+                        numColors: 3,
+                        segmentColors: [
+                            [0, 0, 1, 1, 2, 2],
+                            [0, 1, 1, 2, 2, 0],
+                        ],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [
+                            [0, 0, 0, 1, 1, 1],
+                            [0, 0, 1, 1, 1, 0],
+                            [0, 1, 1, 1, 0, 0],
+                        ],
+                    },
+                    {
+                        numColors: 1,
+                        segmentColors: [[0, 0, 0, 0, 0, 0]],
+                    },
+                ],
             },
         ],
         [
@@ -61,6 +131,24 @@ describe("Shape properties", () => {
                 sides: [1, 1, 1, 1],
                 rotationalSymmetries: [0, 2],
                 uniqueRotations: [0, 1],
+                colorPatterns: [
+                    {
+                        numColors: 4,
+                        segmentColors: [[0, 1, 2, 3]],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [[0, 0, 1, 1]],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [[0, 1, 1, 0]],
+                    },
+                    {
+                        numColors: 1,
+                        segmentColors: [[0, 0, 0, 0]],
+                    },
+                ],
             },
         ],
         [
@@ -72,6 +160,24 @@ describe("Shape properties", () => {
                 sides: [1, 1, 1, 1],
                 rotationalSymmetries: [0, 2],
                 uniqueRotations: [0, 1],
+                colorPatterns: [
+                    {
+                        numColors: 4,
+                        segmentColors: [[0, 1, 2, 3]],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [[0, 0, 1, 1]],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [[0, 1, 1, 0]],
+                    },
+                    {
+                        numColors: 1,
+                        segmentColors: [[0, 0, 0, 0]],
+                    },
+                ],
             },
         ],
         [
@@ -86,6 +192,16 @@ describe("Shape properties", () => {
                 sides: [Math.sqrt(3) - 1, 1, 1, 1, 1],
                 rotationalSymmetries: [0],
                 uniqueRotations: [0, 1, 2, 3, 4],
+                colorPatterns: [
+                    {
+                        numColors: 5,
+                        segmentColors: [[0, 1, 2, 3, 4]],
+                    },
+                    {
+                        numColors: 1,
+                        segmentColors: [[0, 0, 0, 0, 0]],
+                    },
+                ],
             },
         ],
         [
@@ -100,6 +216,24 @@ describe("Shape properties", () => {
                 sides: [1 / Math.sqrt(3), 1, 1, 1 / Math.sqrt(3)],
                 rotationalSymmetries: [0],
                 uniqueRotations: [0, 1, 2, 3],
+                colorPatterns: [
+                    {
+                        numColors: 4,
+                        segmentColors: [[0, 1, 2, 3]],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [[0, 0, 1, 1]],
+                    },
+                    {
+                        numColors: 2,
+                        segmentColors: [[0, 1, 1, 0]],
+                    },
+                    {
+                        numColors: 1,
+                        segmentColors: [[0, 0, 0, 0]],
+                    },
+                ],
             },
         ],
     ])("%s", (name, inputs, expected) => {
@@ -115,5 +249,8 @@ describe("Shape properties", () => {
             expected.rotationalSymmetries,
         );
         expect(shape.uniqueRotations).toStrictEqual(expected.uniqueRotations);
+        if (expected.colorPatterns) {
+            expect(shape.colorPatterns).toStrictEqual(expected.colorPatterns);
+        }
     });
 });

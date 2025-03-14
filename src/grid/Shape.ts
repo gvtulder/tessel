@@ -117,6 +117,7 @@ export class Shape {
 
     private computeColorPatterns() {
         const n = this.cornerAngles.length;
+        const seen = new Set<string>();
         const colorPatterns: ColorPattern[] = [];
         for (let linked = 1; linked <= n; linked++) {
             // attempt to link segments
@@ -143,10 +144,15 @@ export class Shape {
                 }
 
                 // store pattern
-                colorPatterns.push({
+                const pattern = {
                     numColors: Math.round(n / linked),
                     segmentColors: [...segmentColorsWithRotation.values()],
-                });
+                };
+                const patternKey = JSON.stringify(pattern);
+                if (!seen.has(patternKey)) {
+                    seen.add(patternKey);
+                    colorPatterns.push(pattern);
+                }
             }
         }
         return colorPatterns;

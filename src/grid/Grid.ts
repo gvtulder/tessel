@@ -13,6 +13,7 @@ import {
     edgeToAngle,
     mergeBBox,
     Point,
+    TWOPI,
     weightedSumPoint,
 } from "../geom/math";
 import { Shape } from "./Shape";
@@ -130,6 +131,14 @@ export class SortedCorners extends Array<GridVertexCorner> {
 
     get tiles(): Tile[] {
         return this.map((c) => c.tile);
+    }
+
+    get complete(): boolean {
+        let sum = 0;
+        for (const corner of this) {
+            sum += corner.cornerAngle;
+        }
+        return Math.abs(sum - TWOPI) < 1e-5;
     }
 
     clone(): SortedCorners {

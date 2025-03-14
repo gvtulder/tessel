@@ -211,3 +211,53 @@ export class ConvexShapeScorer implements Scorer {
         return shapes;
     }
 }
+
+export class FullVertexScorer implements Scorer {
+    computeScores(
+        grid: Grid,
+        tile: Tile,
+        includeIncomplete?: boolean,
+    ): ScoredRegion[] {
+        const visited = new Set<TileSegment>();
+
+        const shapes: ScoredRegion[] = [];
+
+        if (!tile.segments) {
+            throw new Error("tile has no segments");
+        }
+
+        for (const vertex of tile.vertices) {
+            const corners = vertex.corners;
+            if (corners.complete) {
+                const tiles = new Set<Tile>();
+                const shapeSegments = new Set<TileSegment>();
+
+                for (const corner of corners) {
+                    const segments = corner.tile.segments!;
+                    shapeSegments.add(segments[corner.vertexIdx]);
+                    shapeSegments.add(
+                        segments[
+                            (corner.vertexIdx + segments.length - 1) %
+                                segments.length
+                        ],
+                    );
+                    tiles.add(tile);
+                }
+
+                // TODO origin, color etc. does not really make sense
+                const shape: ScoredRegion = {
+                    origin: tile.segments[0],
+                    color: tile.segments[0].color!,
+                    tiles: tiles,
+                    segments: shapeSegments,
+                    edges: [],
+                    finished: true,
+                    points: shapeSegments.size / 2,
+                };
+                shapes.push(shape);
+            }
+        }
+
+        return shapes;
+    }
+}

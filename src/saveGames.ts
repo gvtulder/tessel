@@ -3,6 +3,7 @@ import {
     ConnectedSegmentScorer,
     ConvexShapeScorer,
     FullTileScorer,
+    FullVertexScorer,
 } from "./game/Scorer";
 import { TileGenerators } from "./game/TileGenerator";
 import {
@@ -242,7 +243,8 @@ export const SetupCatalog = {
             rules: new DifferentEdgeColorsRuleSet(),
             exampleColors: [0, 1] as [number, number],
             // scorer: new FullTileScorer(),
-            scorer: new ConvexShapeScorer(),
+            // scorer: new ConvexShapeScorer(),
+            scorer: new FullVertexScorer(),
         },
     ),
     defaultRules: "same",

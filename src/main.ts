@@ -1,8 +1,9 @@
+import { Workbox } from "workbox-window";
 import { INCLUDE_SERVICE_WORKER, VERSION } from "./constants";
 import disableIosZoom from "./lib/disable-ios-zoom";
 import { GameController } from "./ui/GameController";
 
-export function startMainMenu(updateServiceWorker?: () => void) {
+export function startMainMenu(workbox?: Workbox) {
     disableIosZoom();
 
     if (window.location.pathname != "/") {
@@ -10,8 +11,7 @@ export function startMainMenu(updateServiceWorker?: () => void) {
         return;
     }
 
-    const controller = new GameController(document.body, VERSION);
-    controller.updateServiceWorker = updateServiceWorker;
+    const controller = new GameController(document.body, VERSION, workbox);
     controller.run();
 
     globalThis.gameController = controller;
@@ -27,18 +27,16 @@ function removeSplash() {
     }
 }
 
-let updateServiceWorker;
+let wb: Workbox | undefined = undefined;
+
 if (INCLUDE_SERVICE_WORKER && "serviceWorker" in navigator) {
     navigator.serviceWorker.register(
         new URL("../service-worker.js", import.meta.url),
         { type: "module" },
     );
-    updateServiceWorker = () => {
-        navigator.serviceWorker.ready.then((registration) => {
-            registration.update();
-        });
-    };
+    wb = new Workbox("/service-worker.js");
+    wb.register();
 }
 
 removeSplash();
-startMainMenu(updateServiceWorker);
+startMainMenu(wb);

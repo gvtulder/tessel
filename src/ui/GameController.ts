@@ -11,6 +11,7 @@ import { GameSetupDisplay } from "./setup/GameSetupDisplay";
 import { ScreenDisplay } from "./shared/ScreenDisplay";
 import { TileGenerators } from "src/game/TileGenerator";
 import { TileColor, TileColors } from "src/grid/Tile";
+import { Workbox } from "workbox-window";
 
 export const enum UserEventType {
     StartGame = "startgame",
@@ -40,20 +41,36 @@ export class UserEvent extends Event {
 
 export class GameController {
     version?: string;
-    updateServiceWorker?: () => void;
+    workbox?: Workbox;
     container: HTMLElement;
     game?: Game;
     currentScreen?: ScreenDisplay;
     currentScreenDestroy?: () => void;
+    restartNeeded?: boolean;
 
-    constructor(container: HTMLElement, version?: string) {
+    constructor(container: HTMLElement, version?: string, workbox?: Workbox) {
         this.container = container;
         this.version = version;
+        this.workbox = workbox;
 
         window.addEventListener("resize", () => this.rescale());
         window.addEventListener("popstate", (evt: PopStateEvent) => {
             this.run();
         });
+
+        if (this.workbox) {
+            const wb = this.workbox;
+            wb.addEventListener("waiting", () => {
+                wb.addEventListener("controlling", () => {
+                    console.log(
+                        "New service worker controlling. Scheduling reload.",
+                    );
+                    this.restartNeeded = true;
+                });
+                console.log("A service worker is waiting.");
+                wb.messageSkipWaiting();
+            });
+        }
     }
 
     run() {
@@ -79,12 +96,26 @@ export class GameController {
         }
     }
 
+    checkForUpdate(): boolean {
+        console.log("Checking for updates.");
+
+        if (this.restartNeeded) {
+            console.log("Reloading to install update.");
+            window.location.reload();
+            return true;
+        }
+
+        if (this.workbox) {
+            console.log("Checking for service worker update.");
+            this.workbox.update();
+        }
+        return false;
+    }
+
     showMainMenu() {
         this.resetState();
 
-        if (this.updateServiceWorker) {
-            this.updateServiceWorker();
-        }
+        if (this.checkForUpdate()) return;
 
         const menuDisplay = new MainMenuDisplay(this.version);
         this.currentScreen = menuDisplay;

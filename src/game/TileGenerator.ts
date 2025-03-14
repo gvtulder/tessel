@@ -1,4 +1,4 @@
-import { ColorPattern, Shape } from "../grid/Shape";
+import { ColorPattern, ColorPatternPerShape, Shape } from "../grid/Shape";
 import { TileColors, TileColor } from "../grid/Tile";
 import { randomRotate, shuffle } from "../geom/RandomSampler";
 import { TileShapeColors } from "./TileStack";
@@ -22,17 +22,16 @@ export class TileGenerators {
     static forShapes(
         shapes: readonly Shape[],
         generator: TileGenerator | TileGenerator[],
-        colorPatterns?: ColorPattern[],
+        colorPatternPerShape?: ColorPatternPerShape,
     ): TileGenerator {
         if (generator instanceof Function) {
             generator = [generator];
         }
         return () => {
             const tiles: TileShapeColors[] = [];
-            for (let i = 0; i < shapes.length; i++) {
-                const shape = shapes[i];
-                const colorPattern = colorPatterns
-                    ? colorPatterns[i]
+            for (const shape of shapes) {
+                const colorPattern = colorPatternPerShape
+                    ? colorPatternPerShape.get(shape)
                     : undefined;
                 let tilesForShape = generator[0]([], shape, colorPattern);
                 for (let j = 1; j < generator.length; j++) {

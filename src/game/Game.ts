@@ -197,7 +197,7 @@ export function gameFromSerializedSettings(
                         serialized.uniqueTileColors,
                     ),
                 ],
-                [colorPattern],
+                colorPatternPerShape,
             ),
             TileGenerators.ensureNumber(60, 100),
         ],

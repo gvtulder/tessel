@@ -8,10 +8,19 @@ export class SettingRow<T extends SettingRowOption> {
     _selected?: number;
     localStorageKey: string;
 
-    constructor(localStorageKey: string) {
-        this.element = createElement("div", "setting-row");
+    constructor(className: string, localStorageKey: string) {
+        this.element = createElement("div", `setting-row ${className}`);
         this.localStorageKey = localStorageKey;
         this.options = [];
+    }
+
+    private updateOptionCount() {
+        for (let i = 0; i < 10; i++) {
+            this.element.classList.toggle(
+                `count${i}`,
+                this.options.length == i,
+            );
+        }
     }
 
     addOption(option: T) {
@@ -32,6 +41,7 @@ export class SettingRow<T extends SettingRowOption> {
             this.selectedIndex = index;
             option.element.classList.add("selected");
         }
+        this.updateOptionCount();
     }
 
     popOption() {
@@ -44,6 +54,7 @@ export class SettingRow<T extends SettingRowOption> {
             }
         }
         this.updateSelectedState();
+        this.updateOptionCount();
     }
 
     set selectedIndex(selectedOption: number) {

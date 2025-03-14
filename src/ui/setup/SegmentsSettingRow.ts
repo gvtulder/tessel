@@ -6,7 +6,7 @@ import { SettingRow } from "./SettingRow";
 
 export class SegmentsSettingRow extends SettingRow<SegmentsOption> {
     constructor() {
-        super("setup-segments");
+        super("segments", "setup-segments");
     }
 
     showAtlas(atlas: Atlas, colors: TileColors) {

@@ -58,7 +58,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.exampleDisplay = new ExampleDisplay();
         div.appendChild(this.exampleDisplay.element);
 
-        const buttonRow = createElement("div", "button-row", this.element);
+        const buttonRow = createElement("div", "button-row", settingsDiv);
         const playButton = new Button(icons.playIcon, "Play game", () => {
             if (this.valid) {
                 this.dispatchEvent(
@@ -101,7 +101,10 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
 
         this.settingRows = [];
 
-        const settingAtlas = new SettingRow<AtlasOption>("setup-atlas");
+        const settingAtlas = new SettingRow<AtlasOption>(
+            "atlas",
+            "setup-atlas",
+        );
         for (const { key, atlas } of catalog.atlas.values()) {
             settingAtlas.addOption(new AtlasOption(key, atlas));
         }
@@ -110,7 +113,10 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.settingAtlas = settingAtlas;
         this.settingRows.push(settingAtlas);
 
-        const settingColors = new SettingRow<ColorsOption>("setup-colors");
+        const settingColors = new SettingRow<ColorsOption>(
+            "colors",
+            "setup-colors",
+        );
         for (const { key, colors } of catalog.colors.values()) {
             settingColors.addOption(new ColorsOption(key, colors));
         }

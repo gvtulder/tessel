@@ -4,7 +4,7 @@ import { SettingRow } from "./SettingRow";
 
 export class RulesSettingRow extends SettingRow<RulesOption> {
     constructor() {
-        super("setup-rules");
+        super("rules", "setup-rules");
     }
 
     updateColors(colors: TileColors) {

@@ -11,7 +11,7 @@
   transition-duration: 400ms;
 }
 
-.svg-tile {
+.svg-placeholders .svg-tile {
   transition-property: opacity;
   transition-duration: 100ms;
 
@@ -19,7 +19,28 @@
     opacity: 0;
   }
 
+  &.highlight-hint-ok {
+    display: initial;
+    opacity: 1;
+  }
+
   &.highlight-hint-notok {
+    display: initial;
+    opacity: 0;
+  }
+}
+
+.hide-placeholders .svg-placeholders .svg-tile {
+  display: none;
+  opacity: 0;
+
+  &.highlight-hint-ok {
+    display: initial;
+    opacity: 1;
+  }
+
+  &.highlight-hint-notok {
+    display: initial;
     opacity: 0;
   }
 }

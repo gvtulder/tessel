@@ -26,6 +26,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     backtomenubutton: Button;
     restartgamebutton: Button;
     autorotate: Toggle;
+    placeholders: Toggle;
     hints: Toggle;
     snap: Toggle;
 
@@ -135,6 +136,23 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         menu.addToggle(this.autorotate);
 
+        this.placeholders = new Toggle(
+            icons.boxIcon,
+            "Show placeholders",
+            () => {
+                this.element.classList.toggle(
+                    "hide-placeholders",
+                    !this.placeholders.checked,
+                );
+                localStorage.setItem(
+                    "placeholders",
+                    this.placeholders.checked ? "yes" : "no",
+                );
+            },
+            false,
+        );
+        menu.addToggle(this.placeholders);
+
         this.hints = new Toggle(
             icons.squareCheckIcon,
             "Show hints",
@@ -174,8 +192,14 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         // set default settings
         this.autorotate.checked = localStorage.getItem("autorotate") != "no";
+        this.placeholders.checked =
+            localStorage.getItem("placeholders") != "no";
         this.hints.checked = localStorage.getItem("hints") != "no";
         this.snap.checked = localStorage.getItem("snap") != "no";
+        this.element.classList.toggle(
+            "hide-placeholders",
+            !this.placeholders.checked,
+        );
 
         // initial scaling
         this.rescale();

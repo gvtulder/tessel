@@ -485,3 +485,37 @@ export const DeltoTrihexAtlas = Atlas.fromDefinition({
         { name: "c", vertex: "P2-P2-P2-P2-P2-P2" },
     ],
 });
+
+export const SnubSquareAtlas = Atlas.fromDefinition({
+    name: "Snub-Square",
+    shapes: {
+        S: {
+            name: "square",
+            angles: [90, 90, 90, 90],
+            frequency: 1,
+            colorPatterns: [
+                [[0, 1, 2, 3]],
+                [
+                    [0, 0, 1, 1],
+                    [0, 1, 1, 0],
+                ],
+                [[0, 0, 0, 0]],
+            ],
+        },
+        T: {
+            name: "triangle",
+            angles: [60, 60, 60],
+            frequency: 2,
+            colorPatterns: [
+                [[0, 1, 2]],
+                [
+                    [0, 0, 1],
+                    [0, 1, 0],
+                    [1, 0, 0],
+                ],
+                [[0, 0, 0]],
+            ],
+        },
+    },
+    vertices: [{ name: "a", vertex: "S0-T0-S0-T0-T0" }],
+});

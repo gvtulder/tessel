@@ -13,6 +13,7 @@ import {
     Penrose0Atlas,
     PenroseFreeAtlas,
     RhombusAtlas,
+    SnubSquareAtlas,
     SquaresAtlas,
     TrianglesAtlas,
 } from "./grid/Atlas";
@@ -168,6 +169,20 @@ lookup.set("deltotrihex", {
     tileGenerator: [TileGenerators.permutations(WONG4)],
 });
 
+lookup.set("snubsquare", {
+    atlas: SnubSquareAtlas,
+    initialTile: WONG4,
+    tilesShownOnStack: 3,
+    tileGenerator: [
+        TileGenerators.forShapes(
+            SnubSquareAtlas.shapes,
+            TileGenerators.permutations(WONG4),
+            undefined,
+            SnubSquareAtlas.shapeFrequencies,
+        ),
+    ],
+});
+
 lookup.set("penrose3", {
     atlas: PenroseFreeAtlas,
     //  initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
@@ -206,6 +221,7 @@ export const SetupCatalog = {
         { key: "hexagon", atlas: HexagonsAtlas },
         { key: "deltotrihex", atlas: DeltoTrihexAtlas },
         { key: "penrose", atlas: PenroseFreeAtlas },
+        { key: "snubsquare", atlas: SnubSquareAtlas },
     ),
     defaultAtlas: "square",
 

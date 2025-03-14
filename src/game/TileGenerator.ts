@@ -23,12 +23,14 @@ export class TileGenerators {
         shapes: readonly Shape[],
         generator: TileGenerator | TileGenerator[],
         colorPatternPerShape?: ColorPatternPerShape,
+        shapeFrequencies?: ReadonlyMap<Shape, number>,
     ): TileGenerator {
         if (generator instanceof Function) {
             generator = [generator];
         }
         return () => {
-            const tiles: TileShapeColors[] = [];
+            const tilesPerShape: TileShapeColors[][] = [];
+            const proportion: number[] = [];
             for (const shape of shapes) {
                 const colorPattern = colorPatternPerShape
                     ? colorPatternPerShape.get(shape)
@@ -41,7 +43,19 @@ export class TileGenerators {
                         colorPattern,
                     );
                 }
-                tiles.push(...tilesForShape);
+                tilesPerShape.push(tilesForShape);
+                proportion.push(
+                    shapeFrequencies!.get(shape)! / tilesForShape.length,
+                );
+            }
+            const minProp = Math.min(...proportion);
+            const repetitions = proportion.map((p) => Math.round(p / minProp));
+            console.log("Required tile repetitions per shape:", repetitions);
+            const tiles: TileShapeColors[] = [];
+            for (let i = 0; i < shapes.length; i++) {
+                for (let r = 0; r < repetitions[i]; r++) {
+                    tiles.push(...tilesPerShape[i]);
+                }
             }
             return tiles;
         };

@@ -13,6 +13,7 @@ export type AtlasDefinitionDoc = {
             name?: string;
             angles: number[];
             sides?: number[];
+            frequency?: number;
             colorPatterns?: number[][][];
         };
     };
@@ -148,15 +149,41 @@ export class Atlas {
      * All shapes in this atlas.
      */
     shapes: readonly Shape[];
+    /**
+     * How often the tiles appear in the tiling.
+     * Normalized to have a minimum value of 1.
+     */
+    shapeFrequencies: ReadonlyMap<Shape, number>;
 
     /**
      * Initializes the atlas with a number of patterns.
      * @param shapes the shapes in these patterns
      * @param patterns one or more patterns
+     * @param shapeFrequencies of the shapes
      */
-    constructor(shapes: Shape[], patterns: VertexPattern[]) {
+    constructor(
+        shapes: Shape[],
+        patterns: VertexPattern[],
+        shapeFrequencies?: ReadonlyMap<Shape, number>,
+    ) {
         this.patterns = patterns;
         this.shapes = shapes;
+
+        // compute normalized frequencies
+        const min = Math.min(
+            ...shapes.map(
+                (shape) =>
+                    (shapeFrequencies && shapeFrequencies.get(shape)) || 1,
+            ),
+        );
+        const normalizedFrequencies = new Map<Shape, number>();
+        for (const shape of shapes) {
+            normalizedFrequencies.set(
+                shape,
+                ((shapeFrequencies && shapeFrequencies.get(shape)) || 1) / min,
+            );
+        }
+        this.shapeFrequencies = normalizedFrequencies;
     }
 
     /**
@@ -211,6 +238,7 @@ export class Atlas {
      */
     static fromDefinition(definition: AtlasDefinitionDoc): Atlas {
         const shapes = new Map<string, Shape>();
+        const shapeFrequencies = new Map<Shape, number>();
         for (const key in definition.shapes) {
             const d = definition.shapes[key];
             const colorPatterns = parseColorPatterns(
@@ -229,6 +257,7 @@ export class Atlas {
                 }
             }
             shapes.set(key, shape);
+            shapeFrequencies.set(shape, d.frequency || 1);
         }
         const vertexPatterns = new Array<VertexPattern>();
         if (definition.vertices) {
@@ -241,7 +270,11 @@ export class Atlas {
         if (vertexPatterns.length < 1) {
             throw new Error("empty atlas pattern");
         }
-        return new Atlas([...shapes.values()], vertexPatterns);
+        return new Atlas(
+            [...shapes.values()],
+            vertexPatterns,
+            shapeFrequencies,
+        );
     }
 }
 
@@ -332,8 +365,8 @@ function computeVertexPatterns(shapes: Shape[]): VertexPattern[] {
 export const Penrose0Atlas = Atlas.fromDefinition({
     name: "Penrose-3",
     shapes: {
-        L: { name: "rhombus-wide", angles: [72, 108, 72, 108] },
-        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144] },
+        L: { name: "rhombus-wide", angles: [72, 108, 72, 108], frequency: 5 },
+        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144], frequency: 3 },
     },
     vertices: [
         { name: "kite", vertex: "L1-S1-L1" },
@@ -349,8 +382,8 @@ export const Penrose0Atlas = Atlas.fromDefinition({
 export const PenroseFreeAtlas = Atlas.fromDefinition({
     name: "Penrose-3-free",
     shapes: {
-        L: { name: "rhombus-wide", angles: [72, 108, 72, 108] },
-        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144] },
+        L: { name: "rhombus-wide", angles: [72, 108, 72, 108], frequency: 5 },
+        S: { name: "rhombus-narrow", angles: [36, 144, 36, 144], frequency: 3 },
     },
 });
 

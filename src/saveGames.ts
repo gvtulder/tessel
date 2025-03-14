@@ -182,6 +182,8 @@ lookup.set("penrose3", {
                 //              "#f39c12",
                 //              "#00a65a",
             ]),
+            undefined,
+            PenroseFreeAtlas.shapeFrequencies,
         ),
         TileGenerators.repeat(6),
     ],

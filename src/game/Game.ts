@@ -198,6 +198,7 @@ export function gameFromSerializedSettings(
                     ),
                 ],
                 colorPatternPerShape,
+                atlas.atlas.shapeFrequencies,
             ),
             TileGenerators.ensureNumber(60, 100),
         ],

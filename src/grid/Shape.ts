@@ -64,6 +64,7 @@ export class Shape {
         name: string,
         angles: readonly number[],
         sides?: readonly (number | null)[],
+        colorPatterns?: readonly ColorPattern[],
     ) {
         this.name = name;
         this.cornerAngles = angles.map((a) => (a > 5 ? a * DEG2RAD : a));
@@ -74,7 +75,7 @@ export class Shape {
         this.rotationalSymmetries = this.computeRotationalSymmetries();
         this.uniqueRotations = this.computeUniqueRotations();
         this.cornerTypes = this.computeCornerTypes();
-        this.colorPatterns = this.computeColorPatterns();
+        this.colorPatterns = colorPatterns || this.computeColorPatterns();
     }
 
     private computeRotationalSymmetries() {
@@ -119,6 +120,7 @@ export class Shape {
         const n = this.cornerAngles.length;
         const seen = new Set<string>();
         const colorPatterns: ColorPattern[] = [];
+        // attempt to make subsets of 1, 2, 3, 4 neighboring segments
         for (let linked = 1; linked <= n; linked++) {
             // attempt to link segments
             if (n % linked != 0) continue;

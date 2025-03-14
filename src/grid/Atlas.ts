@@ -1,6 +1,6 @@
 import { CornerType, SortedCorners } from "./Grid";
 import { deg2rad, DEG2RAD, RAD2DEG } from "../geom/math";
-import { Shape } from "./Shape";
+import { ColorPattern, Shape } from "./Shape";
 import { UniqueNumberCycleSet } from "../geom/arrays";
 
 /**
@@ -13,6 +13,7 @@ export type AtlasDefinitionDoc = {
             name?: string;
             angles: number[];
             sides?: number[];
+            colorPatterns?: number[][][];
         };
     };
     vertices?: {
@@ -212,7 +213,16 @@ export class Atlas {
         const shapes = new Map<string, Shape>();
         for (const key in definition.shapes) {
             const d = definition.shapes[key];
-            const shape = new Shape(d.name || "", d.angles, d.sides);
+            const colorPatterns = parseColorPatterns(
+                d.angles.length,
+                d.colorPatterns,
+            );
+            const shape = new Shape(
+                d.name || "",
+                d.angles,
+                d.sides,
+                colorPatterns,
+            );
             for (const s of shapes.values()) {
                 if (shape.equalAngles(s)) {
                     throw new Error("duplicate shape in atlas pattern");
@@ -233,6 +243,45 @@ export class Atlas {
         }
         return new Atlas([...shapes.values()], vertexPatterns);
     }
+}
+
+function parseColorPatterns(
+    numSegments: number,
+    patternDef?: readonly number[][][],
+): ColorPattern[] | undefined {
+    if (!patternDef) return undefined;
+
+    const colorPatterns = patternDef.map((patternSet): ColorPattern => {
+        let setNumColors: number | undefined;
+        const patterns = patternSet.map((pattern) => {
+            if (pattern.length !== numSegments) {
+                throw new Error(
+                    "invalid color pattern: number of colors does not match number of segments",
+                );
+            }
+            const numColors = new Set(pattern).size;
+            if (setNumColors && numColors !== setNumColors) {
+                throw new Error(
+                    "invalid color pattern: all patterns in a set should have the same number of colors",
+                );
+            }
+            setNumColors = numColors;
+            for (const color of pattern) {
+                if (!(color >= 0 && color < numColors)) {
+                    throw new Error(
+                        "invalid color pattern: incorrect color indices",
+                    );
+                }
+            }
+            return pattern;
+        });
+        if (!setNumColors) {
+            throw new Error("invalid color pattern: empty set");
+        }
+        return { numColors: setNumColors, segmentColors: patterns };
+    });
+
+    return colorPatterns;
 }
 
 /**
@@ -316,7 +365,11 @@ export const SquaresAtlas = Atlas.fromDefinition({
 export const TrianglesAtlas = Atlas.fromDefinition({
     name: "Triangle",
     shapes: {
-        T: { name: "triangle", angles: [60, 60, 60] },
+        T: {
+            name: "triangle",
+            angles: [60, 60, 60],
+            colorPatterns: [[[0, 1, 2]], [[0, 1, 1]], [[0, 0, 0]]],
+        },
     },
     vertices: [{ name: "triangle", vertex: "T0-T0-T0-T0-T0-T0" }],
 });
@@ -379,6 +432,13 @@ export const DeltoTrihexAtlas = Atlas.fromDefinition({
             name: "kite",
             angles: [120, 90, 60, 90],
             sides: [1 / Math.sqrt(3), 1, 1, 1 / Math.sqrt(3)],
+            colorPatterns: [
+                [[0, 1, 2, 3]],
+                [[0, 1, 2, 0]],
+                [[0, 0, 1, 1]],
+                [[0, 1, 1, 0]],
+                [[0, 0, 0, 0]],
+            ],
         },
     },
     vertices: [

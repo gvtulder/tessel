@@ -8,14 +8,14 @@ import { UserEvent, UserEventType } from "../GameController";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
-import { DragHandler } from "../shared/DragHandler";
+import { TapHandler } from "../shared/TapHandler";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
     setupButton: Button;
     grids: Grid[];
     gridDisplays: GridDisplay[];
-    draggables: DragHandler[];
+    tappables: TapHandler[];
 
     constructor(version?: string) {
         super();
@@ -45,7 +45,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
 
         this.grids = [];
         this.gridDisplays = [];
-        this.draggables = [];
+        this.tappables = [];
 
         for (const saveGameId of SaveGames.defaultGameList) {
             const gameSettings = SaveGames.lookup.get(saveGameId);
@@ -67,8 +67,8 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             this.gridDisplays.push(gridDisplay);
             exampleTile.appendChild(gridDisplay.element);
 
-            const draggable = new DragHandler(exampleTile);
-            draggable.onTap = () => {
+            const tappable = new TapHandler(exampleTile);
+            tappable.onTap = () => {
                 this.dispatchEvent(
                     new UserEvent(
                         UserEventType.StartGame,
@@ -77,19 +77,19 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
                     ),
                 );
             };
-            this.draggables.push(draggable);
+            this.tappables.push(tappable);
         }
     }
 
     destroy() {
-        for (const d of this.draggables) {
+        for (const d of this.tappables) {
             d.destroy();
         }
         for (const gd of this.gridDisplays) {
             gd.destroy();
         }
         this.setupButton.destroy();
-        this.draggables = [];
+        this.tappables = [];
         this.gridDisplays = [];
         this.grids = [];
         this.element.remove();

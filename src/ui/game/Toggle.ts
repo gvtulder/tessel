@@ -1,5 +1,5 @@
 import { createElement } from "../shared/html";
-import { DragHandler } from "../shared/DragHandler";
+import { TapHandler } from "../shared/TapHandler";
 
 export class Toggle {
     static events = {
@@ -9,7 +9,7 @@ export class Toggle {
     private _checked!: boolean;
 
     private onchange: () => void;
-    private dragHandler: DragHandler;
+    private tapHandler: TapHandler;
 
     constructor(
         icon: string,
@@ -29,15 +29,15 @@ export class Toggle {
         this.checked = checked ? true : false;
         this.onchange = onchange;
 
-        this.dragHandler = new DragHandler(toggle);
-        this.dragHandler.onTap = () => {
+        this.tapHandler = new TapHandler(toggle);
+        this.tapHandler.onTap = () => {
             this.toggle();
         };
     }
 
     destroy() {
         this.element.remove();
-        this.dragHandler.destroy();
+        this.tapHandler.destroy();
     }
 
     get checked(): boolean {

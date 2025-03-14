@@ -1,8 +1,8 @@
-import { DragHandler, DragHandlerEvent } from "./DragHandler";
+import { TapHandler, TapHandlerEvent } from "./TapHandler";
 
 export class Button {
     element: HTMLElement;
-    dragHandler: DragHandler;
+    tapHandler: TapHandler;
 
     constructor(
         icon: string,
@@ -17,12 +17,12 @@ export class Button {
         button.innerHTML = icon;
         this.element = button;
 
-        const dragHandler = (this.dragHandler = new DragHandler(button));
-        dragHandler.onTap = (evt: DragHandlerEvent) => ontap(evt.event);
+        const tapHandler = (this.tapHandler = new TapHandler(button));
+        tapHandler.onTap = (evt: TapHandlerEvent) => ontap(evt.event);
     }
 
     destroy() {
         this.element.remove();
-        this.dragHandler.destroy();
+        this.tapHandler.destroy();
     }
 }

@@ -1,21 +1,21 @@
 import { createElement } from "../shared/html";
-import { DragHandler } from "../shared/DragHandler";
+import { TapHandler } from "../shared/TapHandler";
 
 export abstract class SettingRowOption {
     key: string;
     element: HTMLDivElement;
-    draggable: DragHandler;
+    tappable: TapHandler;
 
     constructor(key: string) {
         this.key = key;
         this.element = createElement("div", "setting-row-option");
-        this.draggable = new DragHandler(this.element);
+        this.tappable = new TapHandler(this.element);
     }
 
     rescale() {}
 
     destroy() {
         this.element.remove();
-        this.draggable.destroy();
+        this.tappable.destroy();
     }
 }

@@ -27,7 +27,7 @@ export class SettingRow<T extends SettingRowOption> {
         this.element.appendChild(option.element);
         const index = this.options.length;
         this.options.push(option);
-        option.draggable.onTap = () => {
+        option.tappable.onTap = () => {
             this.selectedIndex = index;
             const selectedKey = this.selected && this.selected.key;
             if (selectedKey) {

@@ -1,5 +1,4 @@
 import { Button } from "../shared/Button";
-import { DragHandler, DragHandlerEvent } from "../shared/DragHandler";
 import { createElement } from "../shared/html";
 import icons from "../shared/icons";
 import { Toggle } from "./Toggle";

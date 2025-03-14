@@ -1,3 +1,5 @@
+@use "./colors.scss";
+
 .screen.game-setup {
   position: absolute;
   top: 0;
@@ -88,6 +90,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: calc(3 * colors.$button-scale);
 }
 .screen.game-setup .setting-row {
   display: flex;
@@ -133,13 +136,29 @@
   padding: 13%;
 }
 
+@media screen and (min-aspect-ratio: 1.4) {
+  .screen.game-setup {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr min-content;
+  }
+  .screen.game-setup .button-row {
+    position: fixed;
+    bottom: 3vw;
+    right: 3vw;
+    justify-content: flex-end;
+  }
+  .screen.game-setup .settings {
+    margin-top: 0;
+  }
+}
+
 @media screen and (max-aspect-ratio: 0.8) {
   .screen.game-setup {
     grid-template-areas:
       "example example"
       "settings buttons";
-    grid-template-columns: 3fr 1fr;
-    grid-template-rows: 1fr max(min-content, 50vw);
+    grid-template-columns: max-content auto;
+    grid-template-rows: 1fr min-content;
   }
   .screen.game-setup .settings {
     margin: 2vh 1vw;

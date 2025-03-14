@@ -32,7 +32,12 @@ export class ColorsOption extends SettingRowOption {
         // palette.setAttribute("viewBox", "-3.5 -3.5 7 7");
         palette.setAttribute(
             "viewBox",
-            [bbox.minX, bbox.minY, bbox.maxX - bbox.minX, bbox.maxY - bbox.minY]
+            [
+                bbox.minX - 0.1,
+                bbox.minY - 0.1,
+                bbox.maxX - bbox.minX + 0.2,
+                bbox.maxY - bbox.minY + 0.2,
+            ]
                 .map((c) => c.toFixed(4))
                 .join(" "),
         );

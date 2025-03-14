@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="icon" href="icon.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta
+      name="viewport"
+      content="user-scalable=no, maximum-scale=1, minimum-scale=1, viewport-fit=cover, width=device-width"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="robots" content="noindex, follow" />
+    <title>Tile Game</title>
+    <style type="text/css">
+      /* minimum css for splash screen */
+      body {
+        background: #ddd;
+        margin: 0;
+        padding: 0;
+      }
+      iframe {
+      }
+      .iframes {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        margin: 10px;
+        overflow: hidden;
+        max-height: 100vh;
+        align-content: flex-start;
+      }
+      .wrap {
+        margin: 10px;
+        border: 1px solid #000;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+      const sizes = [
+        [375, 667],
+        [414, 896],
+        [390, 844],
+        [430, 932],
+        [412, 915],
+        [360, 740],
+        [412, 915],
+        [768, 1024],
+        [820, 1180],
+        [1024, 1366],
+        [344, 882],
+      ];
+      sizes.sort((a, b) => {
+        return a[0] / a[1] - b[0] / b[1];
+      });
+      const url =
+        document.location.hash.replace(/^#/, "") || "http://127.0.0.1:1234/";
+      document.location.hash = `#${url}`;
+      const iframes = document.createElement("div");
+      iframes.className = "iframes";
+      let SCALE = 240;
+      for (const [a, b] of [
+        [0, 1],
+        [1, 0],
+      ]) {
+        if (a == 1) {
+          sizes.reverse();
+          SCALE *= 1.6;
+        }
+        for (const size of sizes) {
+          const wrap = document.createElement("div");
+          wrap.className = "wrap";
+          wrap.style.aspectRatio = size[b] / size[a];
+          wrap.style.width = `${SCALE}px`;
+          wrap.style.height = `${(SCALE * size[b]) / size[a]}px`;
+          wrap.style.maxWidth = `${SCALE}px`;
+          wrap.style.maxHeight = `${(SCALE * size[b]) / size[a]}px`;
+          const iframe = document.createElement("iframe");
+          iframe.setAttribute("width", `${size[a]}`);
+          iframe.setAttribute("height", `${size[b]}`);
+          iframe.setAttribute("src", url);
+          iframe.style.scale = SCALE / size[a];
+          iframe.style.transformOrigin = "0 0";
+          wrap.appendChild(iframe);
+          iframes.appendChild(wrap);
+        }
+      }
+      document.body.appendChild(iframes);
+    </script>
+  </body>
+</html>

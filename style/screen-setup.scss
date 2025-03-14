@@ -94,8 +94,8 @@
 }
 .screen.game-setup .setting-row {
   display: flex;
-  margin: 0 min(10vw, 1vh);
-  padding: min(10vw, 1vh);
+  margin: 0 min(6vw, 0.6vh);
+  padding: min(6vw, 0.6vh);
   flex-wrap: wrap;
   border-bottom: 1px solid #aaa;
 }
@@ -104,8 +104,8 @@
 }
 .screen.game-setup .setting-row-option {
   margin: 0.5vw;
-  width: min(8vw, 13vh);
-  height: min(8vw, 13vh);
+  width: calc(0.8 * min(8vw, 13vh));
+  height: calc(0.8 * min(8vw, 13vh));
   background: #cacaca;
   border: 3px solid #aaa;
   border-radius: 10px;
@@ -168,8 +168,8 @@
   }
   .screen.game-setup .setting-row-option {
     margin: 0.5vw;
-    width: min(12vw, 13vh);
-    height: min(12vw, 13vh);
+    width: calc(0.9 * min(12vw, 13vh));
+    height: calc(0.9 * min(12vw, 13vh));
     background: #cacaca;
     border: 3px solid #aaa;
     border-radius: 10px;

@@ -122,6 +122,33 @@ export function distClosestPoints(
 }
 
 /**
+ * Computes the distance between polygons a and b.
+ * Returns the smallest distance between any pair of
+ * vertices or edges.
+ */
+export function distPolygons(a: readonly Point[], b: readonly Point[]): number {
+    let min: number | null = null;
+    for (const [points, lines] of [
+        [a, b],
+        [b, a],
+    ]) {
+        for (const p of points) {
+            for (let i = 0; i < lines.length; i++) {
+                const d = distToLineSegment(
+                    lines[i],
+                    lines[(i + 1) % lines.length],
+                    p,
+                );
+                if (min === null || min > d) {
+                    min = d;
+                }
+            }
+        }
+    }
+    return min || 0;
+}
+
+/**
  * Compares two points.
  * First compares a.x and b.x, then a.y and b.y.
  * @returns -1 if a is less than b, 1 if a is greater than b, 0 if a == b

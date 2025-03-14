@@ -2,6 +2,7 @@ import { Polygon } from "src/geom/Polygon";
 import {
     dist,
     distClosestPoints,
+    distPolygons,
     rotatePoints,
     shiftPoints,
 } from "../../geom/math";
@@ -92,20 +93,20 @@ export class SegmentsOption extends SettingRowOption {
                         -0.05,
                     ),
                 );
-                const shapeDistX = distClosestPoints(
+                const shapeDistX = distPolygons(
                     poly1.vertices,
                     shiftPoints(rotatedPoly.vertices, 1.1 * stepX, 0),
                 );
                 variantPolygons = [
-                    rotatedPoly.toShifted(1.3 * stepX - shapeDistX, 0),
+                    rotatedPoly.toShifted(1.2 * stepX - shapeDistX, 0),
                     poly1.toShifted(0, 1.1 * stepY),
                     rotatedPoly.toShifted(
-                        1.3 * stepX - shapeDistX,
+                        1.2 * stepX - shapeDistX,
                         1.1 * stepY,
                     ),
                 ];
             } else {
-                const shapeDistX = distClosestPoints(
+                const shapeDistX = distPolygons(
                     poly1.vertices,
                     shiftPoints(poly1.vertices, 1.1 * stepX, 0),
                 );

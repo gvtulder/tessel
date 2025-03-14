@@ -14,6 +14,7 @@ import {
     deg2rad,
     dist,
     distClosestPoints,
+    distPolygons,
     distToLine,
     distToLineSegment,
     edgeToAngle,
@@ -123,6 +124,27 @@ describe("distClosestPoints", () => {
         expect(distClosestPoints(a, b)).toBeCloseTo(expected);
         expect(distClosestPoints(a, b)).toBeCloseTo(expected);
         expect(distClosestPoints(a, b)).toBeCloseTo(expected);
+    });
+});
+
+describe("distPolygons", () => {
+    const a = P([0, 0], [1, 0], [1, 1]);
+    const b = P([1, 1], [0, 1], [1, 0], [2, 3]);
+    test.each([
+        [a, a, 0],
+        [b, b, 0],
+        [a, shiftPoints(a, 1, 1), 0],
+        [a, shiftPoints(a, 0.5, 1), 0],
+        [a, shiftPoints(a, 0.5, 0.5), 0],
+        [a, shiftPoints(a, -1, 0), 0],
+        [a, shiftPoints(a, 10, 0), 9],
+        [a, shiftPoints(a, 0, 10), 9],
+        [[], a, 0],
+        [a, [], 0],
+    ])("computes distances", (a, b, expected) => {
+        expect(distPolygons(a, b)).toBeCloseTo(expected);
+        expect(distPolygons(a, b)).toBeCloseTo(expected);
+        expect(distPolygons(a, b)).toBeCloseTo(expected);
     });
 });
 

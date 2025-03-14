@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <style type="text/css">
+      /* minimum css for splash screen */
+      body {
+        background: #ddd;
+        margin: 0;
+        padding: 0;
+      }
+      #splash {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #ddd;
+        z-index: 1000;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+      }
+      #splash svg {
+        width: min(20vw, 20vh);
+        height: min(20vw, 20vh);
+        scale: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash">
+      <svg width="100" height="100" viewBox="0 0 1 1">
+        <g
+          clip-path="path('M.11.03h.78c.04 0 .08.04.08.08v.78C.97.93.93.97.89.97H.11C.07.97.03.93.03.89V.11C.03.07.07.03.11.03Z') view-box"
+        >
+          <path fill="#d55e00" d="M0 0h1L.833.5H.167Z" />
+          <path fill="#0072b2" d="M1 0v1L.5.833V.5Z" />
+          <path fill="#009e73" d="M1 1H0L.167.5H.5Z" />
+          <path fill="#e69f00" d="M0 1V0l.5.5Z" />
+        </g>
+      </svg>
+    </div>
+  </body>
+</html>

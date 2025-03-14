@@ -197,15 +197,15 @@ function options<T extends { key: string }>(...entries: T[]) {
 
 export const SetupCatalog = {
     atlas: options(
-        { key: "squares", atlas: SquaresAtlas },
-        { key: "triangles", atlas: TrianglesAtlas },
+        { key: "square", atlas: SquaresAtlas },
+        { key: "triangle", atlas: TrianglesAtlas },
         { key: "rhombus", atlas: RhombusAtlas },
         { key: "pentagon", atlas: CairoAtlas },
         { key: "hexagon", atlas: HexagonsAtlas },
         { key: "deltotrihex", atlas: DeltoTrihexAtlas },
         { key: "penrose", atlas: PenroseFreeAtlas },
     ),
-    defaultAtlas: "squares",
+    defaultAtlas: "square",
 
     colors: options(
         /*

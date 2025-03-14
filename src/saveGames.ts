@@ -7,6 +7,7 @@ import {
 import { TileGenerators } from "./game/TileGenerator";
 import {
     CairoAtlas,
+    DeltoTrihexAtlas,
     HexagonsAtlas,
     Penrose0Atlas,
     PenroseFreeAtlas,
@@ -149,20 +150,21 @@ lookup.set("rhombus", {
     atlas: RhombusAtlas,
     initialTile: WONG4,
     tilesShownOnStack: 3,
-    tileGenerator: [
-        // TileGenerators.permutations(["red", "black", "blue", "white"]),
-        TileGenerators.permutations(WONG4),
-    ],
+    tileGenerator: [TileGenerators.permutations(WONG4)],
 });
 
 lookup.set("cairo5", {
     atlas: CairoAtlas,
     initialTile: [...WONG4, WONG4[2]],
     tilesShownOnStack: 3,
-    tileGenerator: [
-        // TileGenerators.permutations(["red", "black", "blue", "white"]),
-        TileGenerators.permutations(WONG4),
-    ],
+    tileGenerator: [TileGenerators.permutations(WONG4)],
+});
+
+lookup.set("deltotrihex", {
+    atlas: DeltoTrihexAtlas,
+    initialTile: WONG4,
+    tilesShownOnStack: 3,
+    tileGenerator: [TileGenerators.permutations(WONG4)],
 });
 
 lookup.set("penrose3", {
@@ -199,6 +201,7 @@ export const SetupCatalog = {
         { key: "rhombus", atlas: RhombusAtlas },
         { key: "pentagon", atlas: CairoAtlas },
         { key: "hexagon", atlas: HexagonsAtlas },
+        { key: "deltotrihex", atlas: DeltoTrihexAtlas },
     ),
     defaultAtlas: "squares",
 

@@ -88,6 +88,20 @@ describe("Shape properties", () => {
                 uniqueRotations: [0, 1, 2, 3, 4],
             },
         ],
+        [
+            "deltoidal-trihexagonal",
+            [
+                [120, 90, 60, 90],
+                [1 / Math.sqrt(3), 1, 1, 1 / Math.sqrt(3)],
+            ],
+            {
+                cornerAngles: [120, 90, 60, 90],
+                cornerTypes: [0, 1, 2, 3],
+                sides: [1 / Math.sqrt(3), 1, 1, 1 / Math.sqrt(3)],
+                rotationalSymmetries: [0],
+                uniqueRotations: [0, 1, 2, 3],
+            },
+        ],
     ])("%s", (name, inputs, expected) => {
         const shape = new Shape(name, inputs[0], inputs[1]);
         expect(rad2deg(shape.cornerAngles)).toStrictEqual(

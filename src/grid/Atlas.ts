@@ -416,6 +416,11 @@ export const CairoAtlas = Atlas.fromDefinition({
             //        P0   P1  P2   P3  P4
             // first side: 2 * sqrt(2) * cos(75deg)
             sides: [Math.sqrt(3) - 1, 1, 1, 1, 1],
+            colorPatterns: [
+                [[0, 1, 2, 3, 4]],
+                [[0, 1, 1, 2, 2]],
+                [[0, 0, 0, 0, 0]],
+            ],
         },
     },
     vertices: [

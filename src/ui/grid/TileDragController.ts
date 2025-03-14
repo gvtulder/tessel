@@ -8,9 +8,9 @@ import { Point } from "../../geom/math";
 import { Shape } from "../../grid/Shape";
 import { DragHandler, DragHandlerEvent } from "../shared/DragHandler";
 
-export const MAX_TILE_DROP_POINT_DIST = 0.2;
+export const MAX_TILE_DROP_POINT_DIST = 0.31;
 export const MAX_TILE_AUTOROTATE_POINT_DIST = 0.5;
-export const MAX_TILE_SNAP_POINT_DIST = 0.2;
+export const MAX_TILE_SNAP_POINT_DIST = 0.3;
 
 export type TileRotationSet = {
     readonly targetRotations: readonly number[];

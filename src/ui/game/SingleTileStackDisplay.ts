@@ -108,7 +108,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         }
         if (slot) {
             this.rotatable.classList.remove("animated");
-            const poly = slot.shape.constructPolygonXYR(0, 0, 1);
+            const poly = slot.shape.constructPolygonForInitialTile(0, 0, 1);
             this.tile = this.grid.addTile(slot.shape, poly, poly.segment());
             this.tile.colors = slot.colors;
             this.rotateTileTo(0);

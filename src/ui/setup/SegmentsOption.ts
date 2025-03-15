@@ -63,7 +63,7 @@ export class SegmentsOption extends SettingRowOption {
             groupColors[groupColors.length - 1] = colors[colors.length - 1];
         }
 
-        const poly1 = shape.constructPolygonXYR(0, 0, 1);
+        const poly1 = shape.constructPolygonForDisplay(0, 0, 1);
         const tile1 = grid.addTile(shape, poly1, poly1.segment());
         const tile1Colors = tile1.segments!.map(
             (_, i) => groupColors[colorPattern.segmentColors[0][i]],
@@ -108,11 +108,14 @@ export class SegmentsOption extends SettingRowOption {
                     shiftPoints(rotatedPoly.vertices, 1.1 * stepX, 0),
                 );
                 variantPolygons = [
-                    rotatedPoly.toShifted(1.2 * stepX - shapeDistX, 0),
+                    rotatedPoly.toShifted(
+                        1.2 * stepX - shapeDistX,
+                        0.1 * stepY,
+                    ),
                     poly1.toShifted(0, 1.1 * stepY),
                     rotatedPoly.toShifted(
                         1.2 * stepX - shapeDistX,
-                        1.1 * stepY,
+                        1.2 * stepY,
                     ),
                 ];
             } else {
@@ -122,8 +125,8 @@ export class SegmentsOption extends SettingRowOption {
                 );
                 variantPolygons = [
                     poly1.toShifted(1.2 * stepX - shapeDistX, 0),
-                    poly1.toShifted(0, 1.1 * stepY),
-                    poly1.toShifted(1.2 * stepX - shapeDistX, 1.1 * stepY),
+                    poly1.toShifted(0, 1.2 * stepY),
+                    poly1.toShifted(1.2 * stepX - shapeDistX, 1.2 * stepY),
                 ];
             }
 

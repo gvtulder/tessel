@@ -33,6 +33,14 @@ export class Shape {
      */
     readonly sides: readonly number[];
     /**
+     * A nice angle to display the shape.
+     */
+    readonly displayAngle: number;
+    /**
+     * A nice angle to for the initial tile played.
+     */
+    readonly initialAngle: number;
+    /**
      * The type of each corner.
      * Corners that are the same after rotating the shape receive the same value.
      */
@@ -61,16 +69,28 @@ export class Shape {
      * @param name a descriptive name
      * @param angles the interior angles of the shape (radians or degrees)
      * @param sides the length of the sides
+     * @param colorPatterns
+     * @param displayAngle
+     * @param initialAngle
      */
     constructor(
         name: string,
         angles: readonly number[],
         sides?: readonly (number | null)[],
         colorPatterns?: readonly ColorPattern[],
+        displayAngle?: number,
+        initialAngle?: number,
     ) {
         this.name = name;
         this.cornerAngles = angles.map((a) => (a > 5 ? a * DEG2RAD : a));
         this.cornerAnglesDeg = rad2deg(this.cornerAngles);
+
+        displayAngle ||= 0;
+        this.displayAngle =
+            displayAngle > 5 ? displayAngle * DEG2RAD : displayAngle;
+        initialAngle ||= 0;
+        this.initialAngle =
+            initialAngle > 5 ? initialAngle * DEG2RAD : initialAngle;
 
         this.sides = this.checkAngles(sides);
 
@@ -188,16 +208,53 @@ export class Shape {
 
     /**
      * Constructs a polygon from this shape, starting at (x, y)
-     * and with sides of length.
+     * with sides of length, and rotated at the shape's displayAngle.
      * @param x the x coordinate for the first vertex
      * @param y the y coordinate for the first vertex
      * @param length the length of a side
      * @returns a new polygon
      */
-    constructPolygonXYR(x: number, y: number, length: number): Polygon {
+    constructPolygonForDisplay(x: number, y: number, length: number): Polygon {
+        return this.constructPolygonXYR(x, y, length, this.displayAngle);
+    }
+
+    /**
+     * Constructs a polygon from this shape, starting at (x, y)
+     * with sides of length, and rotated at the shape's initialAngle.
+     * @param x the x coordinate for the first vertex
+     * @param y the y coordinate for the first vertex
+     * @param length the length of a side
+     * @returns a new polygon
+     */
+    constructPolygonForInitialTile(
+        x: number,
+        y: number,
+        length: number,
+    ): Polygon {
+        return this.constructPolygonXYR(x, y, length, this.initialAngle);
+    }
+
+    /**
+     * Constructs a polygon from this shape, starting at (x, y)
+     * and with sides of length.
+     * @param x the x coordinate for the first vertex
+     * @param y the y coordinate for the first vertex
+     * @param length the length of a side
+     * @param angle the angle of the initial side
+     * @returns a new polygon
+     */
+    constructPolygonXYR(
+        x: number,
+        y: number,
+        length: number,
+        angle?: number,
+    ): Polygon {
         return this.constructPolygonAB(
             { x: x, y: y },
-            { x: x + length, y: y },
+            {
+                x: x + Math.cos(angle || 0) * length,
+                y: y + Math.sin(angle || 0) * length,
+            },
             0,
         );
     }

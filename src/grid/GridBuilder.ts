@@ -13,7 +13,7 @@ export abstract class GridBuilder {
         const grid = new Grid(atlas);
         const shape = selectRandom(grid.atlas.shapes, prng())!;
 
-        const poly = shape.constructPolygonXYR(0, 0, 1);
+        const poly = shape.constructPolygonForInitialTile(0, 0, 1);
         const initialTile = grid.addTile(shape, poly, poly.segment());
 
         let tries = 10 * numberOfTiles;

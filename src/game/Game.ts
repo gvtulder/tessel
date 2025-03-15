@@ -88,7 +88,7 @@ export class Game extends EventTarget {
 
         const initialTileColors = this.settings.initialTile;
         const shape = this.grid.atlas.shapes[0];
-        const poly = shape.constructPolygonXYR(0, 0, 1);
+        const poly = shape.constructPolygonForInitialTile(0, 0, 1);
         const tile = this.grid.addTile(shape, poly, poly.segment());
         tile.colors = initialTileColors;
         this.tileStack.removeColors({ shape: shape, colors: tile.colors });

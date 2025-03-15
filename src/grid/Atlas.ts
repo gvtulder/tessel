@@ -13,6 +13,8 @@ export type AtlasDefinitionDoc = {
             name?: string;
             angles: number[];
             sides?: number[];
+            displayAngle?: number;
+            initialAngle?: number;
             frequency?: number;
             colorPatterns?: number[][][];
         };
@@ -250,6 +252,8 @@ export class Atlas {
                 d.angles,
                 d.sides,
                 colorPatterns,
+                d.displayAngle,
+                d.initialAngle,
             );
             for (const s of shapes.values()) {
                 if (shape.equalAngles(s)) {
@@ -382,7 +386,12 @@ export const Penrose0Atlas = Atlas.fromDefinition({
 export const PenroseFreeAtlas = Atlas.fromDefinition({
     name: "Penrose-3-free",
     shapes: {
-        L: { name: "rhombus-wide", angles: [72, 108, 72, 108], frequency: 5 },
+        L: {
+            name: "rhombus-wide",
+            angles: [72, 108, 72, 108],
+            frequency: 5,
+            displayAngle: 200,
+        },
         S: { name: "rhombus-narrow", angles: [36, 144, 36, 144], frequency: 3 },
     },
 });
@@ -402,6 +411,8 @@ export const TrianglesAtlas = Atlas.fromDefinition({
             name: "triangle",
             angles: [60, 60, 60],
             colorPatterns: [[[0, 1, 2]], [[0, 1, 1]], [[0, 0, 0]]],
+            displayAngle: 180,
+            initialAngle: 180,
         },
     },
     vertices: [{ name: "triangle", vertex: "T0-T0-T0-T0-T0-T0" }],
@@ -454,6 +465,7 @@ export const CairoAtlas = Atlas.fromDefinition({
                 [[0, 1, 1, 2, 2]],
                 [[0, 0, 0, 0, 0]],
             ],
+            displayAngle: 180,
         },
     },
     vertices: [
@@ -477,6 +489,7 @@ export const DeltoTrihexAtlas = Atlas.fromDefinition({
                 [[0, 1, 1, 0]],
                 [[0, 0, 0, 0]],
             ],
+            displayAngle: 30,
         },
     },
     vertices: [
@@ -501,6 +514,7 @@ export const SnubSquareAtlas = Atlas.fromDefinition({
                 ],
                 [[0, 0, 0, 0]],
             ],
+            displayAngle: 315,
         },
         T: {
             name: "triangle",

@@ -57,7 +57,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
 
             const grid = new Grid(gameSettings.atlas);
             const shape = grid.atlas.shapes[0];
-            const poly = shape.constructPolygonXYR(0, 0, 1);
+            const poly = shape.constructPolygonForDisplay(0, 0, 1);
             const tile = grid.addTile(shape, poly, poly.segment());
             tile.colors = gameSettings.initialTile;
 

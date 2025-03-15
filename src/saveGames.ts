@@ -14,6 +14,7 @@ import {
     PenroseFreeAtlas,
     RhombusAtlas,
     SnubSquareAtlas,
+    SnubSquareFreeAtlas,
     SquaresAtlas,
     TrianglesAtlas,
 } from "./grid/Atlas";
@@ -221,7 +222,7 @@ export const SetupCatalog = {
         { key: "hexagon", atlas: HexagonsAtlas },
         { key: "deltotrihex", atlas: DeltoTrihexAtlas },
         { key: "penrose", atlas: PenroseFreeAtlas },
-        { key: "snubsquare", atlas: SnubSquareAtlas },
+        { key: "snubsquare", atlas: SnubSquareFreeAtlas },
     ),
     defaultAtlas: "square",
 

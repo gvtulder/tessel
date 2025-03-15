@@ -16,7 +16,7 @@ import {
     TWOPI,
     weightedSumPoint,
 } from "../geom/math";
-import { Shape } from "./Shape";
+import { AngleUse, Shape } from "./Shape";
 import { PlaceholderTile, Tile, TileColors } from "./Tile";
 import { Polygon } from "../geom/Polygon";
 import { matchPoints } from "../geom/polygon/matchPoints";
@@ -24,6 +24,7 @@ import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
 import { MatchEdgeColorsRuleSet, RuleSet as RuleSet } from "./RuleSet";
 import { Rings } from "./Rings";
+import { SourcePoint } from "./source/SourceGrid";
 
 /**
  * The precision used for vertex and edge keys.
@@ -155,6 +156,7 @@ export type EdgeKey = string;
 type TileSuggestion = {
     shape: Shape;
     polygon: Polygon;
+    sourcePoint?: SourcePoint;
 };
 
 /**
@@ -398,6 +400,20 @@ export class Grid extends EventTarget {
         );
     }
 
+    // TODO documentation
+    addInitialTile(): Tile {
+        const sourcePoint =
+            this.atlas.sourceGrid && this.atlas.sourceGrid.getOrigin();
+        const shape = sourcePoint ? sourcePoint.shape : this.atlas.shapes[0];
+        const poly = shape.constructPreferredPolygon(
+            0,
+            0,
+            1,
+            AngleUse.InitialTile,
+        );
+        return this.addTile(shape, poly, poly.segment(), sourcePoint);
+    }
+
     /**
      * Adds a tile to the grid.
      *
@@ -410,21 +426,17 @@ export class Grid extends EventTarget {
      * @param shape the shape of this tile
      * @param polygon the polygon of this tile
      * @param segments the segment polygons of this tile
+     * @param sourcePoint TODO
+     * @param placeholder TODO
      * @returns the new tile
      */
     addTile(
         shape: Shape,
         polygon: Polygon,
         segments?: Polygon[] | null,
+        sourcePoint?: SourcePoint,
         placeholder?: boolean,
     ): Tile {
-        const tile = placeholder
-            ? new PlaceholderTile(shape, polygon)
-            : new Tile(shape, polygon, segments);
-        tile.onUpdateColor = this.handleTileColorUpdate;
-        const points = polygon.vertices;
-        const n = points.length;
-
         // check for collisions with placeholders
         if (!placeholder) {
             const placeholders = this.checkCollision(polygon, true, true);
@@ -436,6 +448,13 @@ export class Grid extends EventTarget {
                 }
             }
         }
+
+        const tile = placeholder
+            ? new PlaceholderTile(shape, polygon, sourcePoint)
+            : new Tile(shape, polygon, segments, sourcePoint);
+        tile.onUpdateColor = this.handleTileColorUpdate;
+        const points = polygon.vertices;
+        const n = points.length;
 
         // add tile to grid
         if (placeholder) {
@@ -567,10 +586,21 @@ export class Grid extends EventTarget {
      * Adds a placeholder tile to the grid.
      * @param shape the shape of the tile
      * @param polygon the polygon of the tile
+     * @param sourcePoint TODO
      * @returns the new tile
      */
-    addPlaceholder(shape: Shape, polygon: Polygon): PlaceholderTile {
-        return this.addTile(shape, polygon, null, true) as PlaceholderTile;
+    addPlaceholder(
+        shape: Shape,
+        polygon: Polygon,
+        sourcePoint?: SourcePoint,
+    ): PlaceholderTile {
+        return this.addTile(
+            shape,
+            polygon,
+            null,
+            sourcePoint,
+            true,
+        ) as PlaceholderTile;
     }
 
     /**
@@ -788,6 +818,7 @@ export class Grid extends EventTarget {
                         this.addPlaceholder(
                             suggestion.shape,
                             suggestion.polygon,
+                            suggestion.sourcePoint,
                         ),
                     );
                 }
@@ -814,6 +845,24 @@ export class Grid extends EventTarget {
      */
     computePossibilities(edge: GridEdge): TileSuggestion[] {
         if (!!edge.tileA == !!edge.tileB) return [];
+        const tile = edge.tileA || edge.tileB;
+        if (!tile) return [];
+        if (tile.sourcePoint) {
+            const edgeIdx = edge.tileA ? edge.edgeIdxA : edge.edgeIdxB;
+            const neighbor = tile.sourcePoint.neighbor(edgeIdx!);
+            const shape = neighbor.point.shape;
+            const poly = shape.constructPolygonEdge(
+                tile.polygon.outsideEdges[edgeIdx!],
+                neighbor.side,
+            );
+            return [
+                {
+                    shape: neighbor.point.shape,
+                    polygon: poly,
+                    sourcePoint: neighbor.point,
+                },
+            ];
+        }
         const ab = !edge.tileA
             ? { a: edge.a.point, b: edge.b.point }
             : { a: edge.b.point, b: edge.a.point };

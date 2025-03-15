@@ -12,15 +12,7 @@ export abstract class GridBuilder {
         prng: PRNG = Math.random,
     ): Grid {
         const grid = new Grid(atlas);
-        const shape = selectRandom(grid.atlas.shapes, prng())!;
-
-        const poly = shape.constructPreferredPolygon(
-            0,
-            0,
-            1,
-            AngleUse.InitialTile,
-        );
-        const initialTile = grid.addTile(shape, poly, poly.segment());
+        const initialTile = grid.addInitialTile();
 
         let tries = 10 * numberOfTiles;
         const sampler = new RandomSampler<GridEdge>();
@@ -42,11 +34,15 @@ export abstract class GridBuilder {
                     t.shape,
                     t.polygon,
                     t.polygon.segment(),
+                    t.sourcePoint,
                 );
             } else {
                 tries--;
                 if (tries < 0) break;
             }
+        }
+        if (tries < 0) {
+            console.log("GridBuilder ran out of tries.");
         }
 
         return grid;

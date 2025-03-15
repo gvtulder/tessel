@@ -7,6 +7,7 @@ import {
 } from "./game/Scorer";
 import { TileGenerators } from "./game/TileGenerator";
 import {
+    Atlas,
     CairoAtlas,
     DeltoTrihexAtlas,
     HexagonsAtlas,
@@ -22,6 +23,7 @@ import {
     DifferentEdgeColorsRuleSet,
     MatchEdgeColorsRuleSet,
 } from "./grid/RuleSet";
+import { SnubSquareSourceGrid } from "./grid/source/SnubSquareSourceGrid";
 import { Tile, TileColors } from "./grid/Tile";
 
 const COLORS = [
@@ -184,6 +186,21 @@ lookup.set("snubsquare", {
     ],
 });
 
+const SnubSquareGridAtlas = Atlas.fromSourceGrid(new SnubSquareSourceGrid());
+lookup.set("snubsquaregrid", {
+    atlas: SnubSquareGridAtlas,
+    initialTile: WONG4,
+    tilesShownOnStack: 3,
+    tileGenerator: [
+        TileGenerators.forShapes(
+            SnubSquareGridAtlas.shapes,
+            TileGenerators.permutations(WONG4),
+            undefined,
+            SnubSquareGridAtlas.shapeFrequencies,
+        ),
+    ],
+});
+
 lookup.set("penrose3", {
     atlas: PenroseFreeAtlas,
     //  initialTile: ["#00c0ef", "#dd4b39", "#f39c12", "#00a65a"],
@@ -222,7 +239,7 @@ export const SetupCatalog = {
         { key: "hexagon", atlas: HexagonsAtlas },
         { key: "deltotrihex", atlas: DeltoTrihexAtlas },
         { key: "penrose", atlas: PenroseFreeAtlas },
-        { key: "snubsquare", atlas: SnubSquareFreeAtlas },
+        { key: "snubsquare", atlas: SnubSquareGridAtlas },
     ),
     defaultAtlas: "square",
 

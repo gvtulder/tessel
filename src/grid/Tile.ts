@@ -3,6 +3,7 @@ import { GridEvent, GridEventType } from "./GridEvent";
 import { BBox, Point } from "../geom/math";
 import { Polygon } from "../geom/Polygon";
 import { Shape } from "./Shape";
+import { SourcePoint } from "./source/SourceGrid";
 
 export type TileColor = string;
 export type TileColors = readonly TileColor[];
@@ -112,6 +113,8 @@ export class Tile {
      * The type of this tile.
      */
     tileType: TileType;
+    // TODO
+    sourcePoint?: SourcePoint;
     /**
      * The vertices forming the outline of this tile,
      * in clockwise order.
@@ -162,10 +165,12 @@ export class Tile {
         shape: Shape,
         polygon: Polygon,
         segments?: Polygon[] | null,
+        sourcePoint?: SourcePoint,
         tileType = TileType.Normal,
     ) {
         // basic properties
         this.tileType = tileType;
+        this.sourcePoint = sourcePoint;
         this.shape = shape;
         this.polygon = polygon;
         // precompute statistics
@@ -225,7 +230,7 @@ export class Tile {
  * and can overlap other placeholders.
  */
 export class PlaceholderTile extends Tile {
-    constructor(shape: Shape, polygon: Polygon) {
-        super(shape, polygon, null, TileType.Placeholder);
+    constructor(shape: Shape, polygon: Polygon, sourcePoint?: SourcePoint) {
+        super(shape, polygon, null, sourcePoint, TileType.Placeholder);
     }
 }

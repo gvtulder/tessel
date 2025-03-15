@@ -2,6 +2,21 @@ import { CornerType, SortedCorners } from "./Grid";
 import { deg2rad, DEG2RAD, RAD2DEG } from "../geom/math";
 import { AngleUse, ColorPattern, Shape } from "./Shape";
 import { UniqueNumberCycleSet } from "../geom/arrays";
+import { SourceGrid } from "./source/SourceGrid";
+
+/**
+ * A short notation format for a shape.
+ */
+export type ShapeDefinitionDoc = {
+    name?: string;
+    angles: number[];
+    sides?: number[];
+    preferredAngles?: {
+        [use: string]: number;
+    };
+    frequency?: number;
+    colorPatterns?: number[][][];
+};
 
 /**
  * A short notation format for a vertex atlas, to be used in JSON documents etc.
@@ -9,16 +24,7 @@ import { UniqueNumberCycleSet } from "../geom/arrays";
 export type AtlasDefinitionDoc = {
     name?: string;
     shapes: {
-        [key: string]: {
-            name?: string;
-            angles: number[];
-            sides?: number[];
-            preferredAngles?: {
-                [use: string]: number;
-            };
-            frequency?: number;
-            colorPatterns?: number[][][];
-        };
+        [key: string]: ShapeDefinitionDoc;
     };
     vertices?: {
         name?: string;
@@ -157,6 +163,10 @@ export class Atlas {
      * Normalized to have a minimum value of 1.
      */
     shapeFrequencies: ReadonlyMap<Shape, number>;
+    /**
+     * The source grid, if any.
+     */
+    sourceGrid?: SourceGrid;
 
     /**
      * Initializes the atlas with a number of patterns.
@@ -168,9 +178,11 @@ export class Atlas {
         shapes: Shape[],
         patterns: VertexPattern[],
         shapeFrequencies?: ReadonlyMap<Shape, number>,
+        sourceGrid?: SourceGrid,
     ) {
         this.patterns = patterns;
         this.shapes = shapes;
+        this.sourceGrid = sourceGrid;
 
         // compute normalized frequencies
         const min = Math.min(
@@ -244,26 +256,7 @@ export class Atlas {
         const shapeFrequencies = new Map<Shape, number>();
         for (const key in definition.shapes) {
             const d = definition.shapes[key];
-            const colorPatterns = parseColorPatterns(
-                d.angles.length,
-                d.colorPatterns,
-            );
-            const preferredAngles = new Map<AngleUse, number>();
-            if (d.preferredAngles) {
-                for (const use in d.preferredAngles) {
-                    preferredAngles.set(
-                        use as AngleUse,
-                        d.preferredAngles[use],
-                    );
-                }
-            }
-            const shape = new Shape(
-                d.name || "",
-                d.angles,
-                d.sides,
-                colorPatterns,
-                preferredAngles,
-            );
+            const shape = parseShapeDefinition(d);
             for (const s of shapes.values()) {
                 if (shape.equalAngles(s)) {
                     throw new Error("duplicate shape in atlas pattern");
@@ -289,6 +282,39 @@ export class Atlas {
             shapeFrequencies,
         );
     }
+
+    static fromSourceGrid(sourceGrid: SourceGrid): Atlas {
+        const vertexPatterns = computeVertexPatterns([
+            ...sourceGrid.shapes.values(),
+        ]);
+        return new Atlas(
+            [...sourceGrid.shapes],
+            vertexPatterns,
+            sourceGrid.shapeFrequencies,
+            sourceGrid,
+        );
+    }
+}
+
+/**
+ * Parse the shape definition and return a new Shape.
+ */
+export function parseShapeDefinition(d: ShapeDefinitionDoc): Shape {
+    const colorPatterns = parseColorPatterns(d.angles.length, d.colorPatterns);
+    const preferredAngles = new Map<AngleUse, number>();
+    if (d.preferredAngles) {
+        for (const use in d.preferredAngles) {
+            preferredAngles.set(use as AngleUse, d.preferredAngles[use]);
+        }
+    }
+    const shape = new Shape(
+        d.name || "",
+        d.angles,
+        d.sides,
+        colorPatterns,
+        preferredAngles,
+    );
+    return shape;
 }
 
 function parseColorPatterns(

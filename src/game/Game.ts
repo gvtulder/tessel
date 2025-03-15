@@ -92,16 +92,9 @@ export class Game extends EventTarget {
         );
 
         const initialTileColors = this.settings.initialTile;
-        const shape = this.grid.atlas.shapes[0];
-        const poly = shape.constructPreferredPolygon(
-            0,
-            0,
-            1,
-            AngleUse.InitialTile,
-        );
-        const tile = this.grid.addTile(shape, poly, poly.segment());
+        const tile = this.grid.addInitialTile();
         tile.colors = initialTileColors;
-        this.tileStack.removeColors({ shape: shape, colors: tile.colors });
+        this.tileStack.removeColors({ shape: tile.shape, colors: tile.colors });
 
         this.grid.generatePlaceholders();
     }
@@ -127,6 +120,7 @@ export class Game extends EventTarget {
                 fixedTile.shape,
                 fixedTile.polygon,
                 fixedTile.polygon.segment(),
+                fixedTile.sourcePoint,
             );
             tile.colors = colors;
 

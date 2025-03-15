@@ -113,9 +113,10 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         }
         const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
         if (n > 0) {
-            this.counter.innerHTML = `+ ${n} tile${n == 1 ? "" : "s"}`;
+            this.counter.innerHTML = `+ ${n}`;
         } else {
             this.counter.innerHTML = "";
+            this.counterDiv.style.opacity = "0";
         }
     }
 

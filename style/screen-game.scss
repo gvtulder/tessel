@@ -216,6 +216,20 @@
 .tile-counter {
   font-size: 1.5vw;
   flex-grow: 2;
+
+  @media screen and (max-aspect-ratio: 1.5) {
+    span {
+      display: block;
+      margin: 1em auto;
+      width: 4em;
+      box-sizing: border-box;
+      border: 1px solid #999;
+      color: #777;
+      border-radius: 0.5vw;
+      padding: 1.2em 0;
+      aspect-ratio: 1;
+    }
+  }
 }
 
 .score-display .score {

@@ -8,7 +8,7 @@ import {
 } from "../../geom/math";
 import { Atlas } from "../../grid/Atlas";
 import { Grid } from "../../grid/Grid";
-import { ColorPattern, ColorPatternPerShape } from "../../grid/Shape";
+import { AngleUse, ColorPattern, ColorPatternPerShape } from "../../grid/Shape";
 import { TileColor, TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { OptionGridDisplay } from "./OptionGridDisplay";
@@ -63,7 +63,12 @@ export class SegmentsOption extends SettingRowOption {
             groupColors[groupColors.length - 1] = colors[colors.length - 1];
         }
 
-        const poly1 = shape.constructPolygonForDisplay(0, 0, 1);
+        const poly1 = shape.constructPreferredPolygon(
+            0,
+            0,
+            1,
+            AngleUse.SetupSegments,
+        );
         const tile1 = grid.addTile(shape, poly1, poly1.segment());
         const tile1Colors = tile1.segments!.map(
             (_, i) => groupColors[colorPattern.segmentColors[0][i]],

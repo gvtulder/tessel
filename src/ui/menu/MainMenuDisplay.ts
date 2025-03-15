@@ -9,6 +9,7 @@ import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
+import { AngleUse } from "src/grid/Shape";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -57,7 +58,12 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
 
             const grid = new Grid(gameSettings.atlas);
             const shape = grid.atlas.shapes[0];
-            const poly = shape.constructPolygonForDisplay(0, 0, 1);
+            const poly = shape.constructPreferredPolygon(
+                0,
+                0,
+                1,
+                AngleUse.MainMenu,
+            );
             const tile = grid.addTile(shape, poly, poly.segment());
             tile.colors = gameSettings.initialTile;
 

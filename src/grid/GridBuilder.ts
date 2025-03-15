@@ -3,6 +3,7 @@ import { Grid, GridEdge } from "./Grid";
 import { dist, midpoint } from "../geom/math";
 import { PRNG, RandomSampler, selectRandom } from "../geom/RandomSampler";
 import { Tile } from "./Tile";
+import { AngleUse } from "./Shape";
 
 export abstract class GridBuilder {
     buildGrid(
@@ -13,7 +14,12 @@ export abstract class GridBuilder {
         const grid = new Grid(atlas);
         const shape = selectRandom(grid.atlas.shapes, prng())!;
 
-        const poly = shape.constructPolygonForInitialTile(0, 0, 1);
+        const poly = shape.constructPreferredPolygon(
+            0,
+            0,
+            1,
+            AngleUse.InitialTile,
+        );
         const initialTile = grid.addTile(shape, poly, poly.segment());
 
         let tries = 10 * numberOfTiles;

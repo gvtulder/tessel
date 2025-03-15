@@ -2,7 +2,7 @@ import { Grid } from "../../grid/Grid";
 import { FixedOrderTileStack, TileShapeColors } from "../../game/TileStack";
 import { GameEventType } from "../../game/Game";
 import { Tile, TileColors } from "../../grid/Tile";
-import { Shape } from "../../grid/Shape";
+import { AngleUse, Shape } from "../../grid/Shape";
 import { GridDisplay } from "../grid/GridDisplay";
 import { TileStackGridDisplay } from "./TileStackGridDisplay";
 import { TransformComponent } from "../../geom/Transform";
@@ -108,7 +108,12 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         }
         if (slot) {
             this.rotatable.classList.remove("animated");
-            const poly = slot.shape.constructPolygonForInitialTile(0, 0, 1);
+            const poly = slot.shape.constructPreferredPolygon(
+                0,
+                0,
+                1,
+                AngleUse.StackDisplay,
+            );
             this.tile = this.grid.addTile(slot.shape, poly, poly.segment());
             this.tile.colors = slot.colors;
             this.rotateTileTo(0);

@@ -1,6 +1,6 @@
 import { CornerType, SortedCorners } from "./Grid";
 import { deg2rad, DEG2RAD, RAD2DEG } from "../geom/math";
-import { ColorPattern, Shape } from "./Shape";
+import { AngleUse, ColorPattern, Shape } from "./Shape";
 import { UniqueNumberCycleSet } from "../geom/arrays";
 
 /**
@@ -13,8 +13,9 @@ export type AtlasDefinitionDoc = {
             name?: string;
             angles: number[];
             sides?: number[];
-            displayAngle?: number;
-            initialAngle?: number;
+            preferredAngles?: {
+                [use: string]: number;
+            };
             frequency?: number;
             colorPatterns?: number[][][];
         };
@@ -247,13 +248,21 @@ export class Atlas {
                 d.angles.length,
                 d.colorPatterns,
             );
+            const preferredAngles = new Map<AngleUse, number>();
+            if (d.preferredAngles) {
+                for (const use in d.preferredAngles) {
+                    preferredAngles.set(
+                        use as AngleUse,
+                        d.preferredAngles[use],
+                    );
+                }
+            }
             const shape = new Shape(
                 d.name || "",
                 d.angles,
                 d.sides,
                 colorPatterns,
-                d.displayAngle,
-                d.initialAngle,
+                preferredAngles,
             );
             for (const s of shapes.values()) {
                 if (shape.equalAngles(s)) {
@@ -390,7 +399,10 @@ export const PenroseFreeAtlas = Atlas.fromDefinition({
             name: "rhombus-wide",
             angles: [72, 108, 72, 108],
             frequency: 5,
-            displayAngle: 200,
+            preferredAngles: {
+                display: 200,
+                setupAtlas: 200,
+            },
         },
         S: { name: "rhombus-narrow", angles: [36, 144, 36, 144], frequency: 3 },
     },
@@ -411,8 +423,14 @@ export const TrianglesAtlas = Atlas.fromDefinition({
             name: "triangle",
             angles: [60, 60, 60],
             colorPatterns: [[[0, 1, 2]], [[0, 1, 1]], [[0, 0, 0]]],
-            displayAngle: 180,
-            initialAngle: 180,
+            preferredAngles: {
+                initial: 180,
+                display: 180,
+                mainMenu: 180,
+                stackDisplay: 180,
+                setupAtlas: 180,
+                setupSegments: 180,
+            },
         },
     },
     vertices: [{ name: "triangle", vertex: "T0-T0-T0-T0-T0-T0" }],
@@ -465,7 +483,9 @@ export const CairoAtlas = Atlas.fromDefinition({
                 [[0, 1, 1, 2, 2]],
                 [[0, 0, 0, 0, 0]],
             ],
-            displayAngle: 180,
+            preferredAngles: {
+                setupAtlas: 180,
+            },
         },
     },
     vertices: [
@@ -489,7 +509,9 @@ export const DeltoTrihexAtlas = Atlas.fromDefinition({
                 [[0, 1, 1, 0]],
                 [[0, 0, 0, 0]],
             ],
-            displayAngle: 30,
+            preferredAngles: {
+                setupAtlas: 30,
+            },
         },
     },
     vertices: [
@@ -514,7 +536,9 @@ export const SnubSquareAtlas = Atlas.fromDefinition({
                 ],
                 [[0, 0, 0, 0]],
             ],
-            displayAngle: 315,
+            preferredAngles: {
+                setupAtlas: 315,
+            },
         },
         T: {
             name: "triangle",
@@ -549,7 +573,9 @@ export const SnubSquareFreeAtlas = Atlas.fromDefinition({
                 ],
                 [[0, 0, 0, 0]],
             ],
-            displayAngle: 315,
+            preferredAngles: {
+                setupAtlas: 315,
+            },
         },
         T: {
             name: "triangle",

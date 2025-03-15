@@ -10,6 +10,15 @@ export type ColorPattern = {
     readonly segmentColors: readonly (readonly number[])[];
 };
 
+export const enum AngleUse {
+    InitialTile = "initial",
+    Display = "display",
+    MainMenu = "mainMenu",
+    StackDisplay = "stackDisplay",
+    SetupAtlas = "setupAtlas",
+    SetupSegments = "setupSegments",
+}
+
 export class ColorPatternPerShape extends Map<Shape, ColorPattern> {}
 
 /**
@@ -35,11 +44,7 @@ export class Shape {
     /**
      * A nice angle to display the shape.
      */
-    readonly displayAngle: number;
-    /**
-     * A nice angle to for the initial tile played.
-     */
-    readonly initialAngle: number;
+    readonly preferredAngles: ReadonlyMap<AngleUse, number>;
     /**
      * The type of each corner.
      * Corners that are the same after rotating the shape receive the same value.
@@ -70,27 +75,27 @@ export class Shape {
      * @param angles the interior angles of the shape (radians or degrees)
      * @param sides the length of the sides
      * @param colorPatterns
-     * @param displayAngle
-     * @param initialAngle
+     * @param
      */
     constructor(
         name: string,
         angles: readonly number[],
         sides?: readonly (number | null)[],
         colorPatterns?: readonly ColorPattern[],
-        displayAngle?: number,
-        initialAngle?: number,
+        preferredAngles?: ReadonlyMap<AngleUse, number>,
     ) {
         this.name = name;
         this.cornerAngles = angles.map((a) => (a > 5 ? a * DEG2RAD : a));
         this.cornerAnglesDeg = rad2deg(this.cornerAngles);
 
-        displayAngle ||= 0;
-        this.displayAngle =
-            displayAngle > 5 ? displayAngle * DEG2RAD : displayAngle;
-        initialAngle ||= 0;
-        this.initialAngle =
-            initialAngle > 5 ? initialAngle * DEG2RAD : initialAngle;
+        this.preferredAngles = new Map<AngleUse, number>(
+            preferredAngles
+                ? [...preferredAngles.entries()].map(([use, angle]) => [
+                      use,
+                      angle > 5 ? angle * DEG2RAD : angle,
+                  ])
+                : [],
+        );
 
         this.sides = this.checkAngles(sides);
 
@@ -208,30 +213,24 @@ export class Shape {
 
     /**
      * Constructs a polygon from this shape, starting at (x, y)
-     * with sides of length, and rotated at the shape's displayAngle.
+     * with sides of length, and rotated at the shape's preferred angle.
      * @param x the x coordinate for the first vertex
      * @param y the y coordinate for the first vertex
      * @param length the length of a side
      * @returns a new polygon
      */
-    constructPolygonForDisplay(x: number, y: number, length: number): Polygon {
-        return this.constructPolygonXYR(x, y, length, this.displayAngle);
-    }
-
-    /**
-     * Constructs a polygon from this shape, starting at (x, y)
-     * with sides of length, and rotated at the shape's initialAngle.
-     * @param x the x coordinate for the first vertex
-     * @param y the y coordinate for the first vertex
-     * @param length the length of a side
-     * @returns a new polygon
-     */
-    constructPolygonForInitialTile(
+    constructPreferredPolygon(
         x: number,
         y: number,
         length: number,
+        angleUse: AngleUse,
     ): Polygon {
-        return this.constructPolygonXYR(x, y, length, this.initialAngle);
+        return this.constructPolygonXYR(
+            x,
+            y,
+            length,
+            this.preferredAngles.get(angleUse) || 0,
+        );
     }
 
     /**

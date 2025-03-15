@@ -1,3 +1,4 @@
+import { AngleUse } from "src/grid/Shape";
 import { Atlas } from "../../grid/Atlas";
 import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
@@ -18,7 +19,12 @@ export class AtlasOption extends SettingRowOption {
         const grid = new Grid(atlas);
 
         const shape = grid.atlas.shapes[0];
-        const poly = shape.constructPolygonForDisplay(0, 0, 1);
+        const poly = shape.constructPreferredPolygon(
+            0,
+            0,
+            1,
+            AngleUse.SetupAtlas,
+        );
         const tile = grid.addTile(shape, poly, poly.segment());
         tile.colors = PROTO_TILE_COLOR;
 

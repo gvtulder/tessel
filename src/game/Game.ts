@@ -6,7 +6,12 @@ import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
 import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/arrays";
 import { RuleSet } from "src/grid/RuleSet";
-import { ColorPattern, ColorPatternPerShape, Shape } from "src/grid/Shape";
+import {
+    AngleUse,
+    ColorPattern,
+    ColorPatternPerShape,
+    Shape,
+} from "src/grid/Shape";
 import { SetupCatalog } from "src/saveGames";
 import { shuffle } from "src/geom/RandomSampler";
 
@@ -88,7 +93,12 @@ export class Game extends EventTarget {
 
         const initialTileColors = this.settings.initialTile;
         const shape = this.grid.atlas.shapes[0];
-        const poly = shape.constructPolygonForInitialTile(0, 0, 1);
+        const poly = shape.constructPreferredPolygon(
+            0,
+            0,
+            1,
+            AngleUse.InitialTile,
+        );
         const tile = this.grid.addTile(shape, poly, poly.segment());
         tile.colors = initialTileColors;
         this.tileStack.removeColors({ shape: shape, colors: tile.colors });

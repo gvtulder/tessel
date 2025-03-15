@@ -53,7 +53,11 @@ export class GameController {
         this.version = version;
         this.workbox = workbox;
 
-        window.addEventListener("resize", () => this.rescale());
+        const rescale = () => this.rescale();
+        if (screen && screen.orientation) {
+            screen.orientation.addEventListener("change", rescale);
+        }
+        window.addEventListener("resize", rescale);
         window.addEventListener("popstate", (evt: PopStateEvent) => {
             this.run();
         });

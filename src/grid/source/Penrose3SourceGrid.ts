@@ -1,7 +1,7 @@
 import { PRNG, shuffle } from "../../geom/RandomSampler";
 import { parseShapeDefinition } from "../Atlas";
 import { Shape } from "../Shape";
-import { SourceGrid, SourcePoint } from "./SourceGrid";
+import { SourceGrid, SourcePoint } from "../SourceGrid";
 import { dist, Point, RAD2DEG } from "../../geom/math";
 
 const wide = parseShapeDefinition({

@@ -3,7 +3,7 @@ import { GridEvent, GridEventType } from "./GridEvent";
 import { BBox, Point } from "../geom/math";
 import { Polygon } from "../geom/Polygon";
 import { Shape } from "./Shape";
-import { SourcePoint } from "./source/SourceGrid";
+import { SourcePoint } from "./SourceGrid";
 
 export type TileColor = string;
 export type TileColors = readonly TileColor[];

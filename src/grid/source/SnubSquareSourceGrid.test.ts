@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@jest/globals";
 import { SnubSquareSourceGrid } from "./SnubSquareSourceGrid";
-import { SourcePoint } from "./SourceGrid";
+import { SourcePoint } from "../SourceGrid";
 
 describe("SnubSquareSourceGrid", () => {
     test("can walk the grid", () => {

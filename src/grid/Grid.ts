@@ -24,7 +24,7 @@ import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
 import { MatchEdgeColorsRuleSet, RuleSet as RuleSet } from "./RuleSet";
 import { Rings } from "./Rings";
-import { SourcePoint } from "./source/SourceGrid";
+import { SourcePoint } from "./SourceGrid";
 
 /**
  * The precision used for vertex and edge keys.

@@ -2,7 +2,7 @@ import { CornerType, SortedCorners } from "./Grid";
 import { deg2rad, DEG2RAD, RAD2DEG } from "../geom/math";
 import { AngleUse, ColorPattern, Shape } from "./Shape";
 import { UniqueNumberCycleSet } from "../geom/arrays";
-import { SourceGrid } from "./source/SourceGrid";
+import { SourceGrid } from "./SourceGrid";
 
 /**
  * A short notation format for a shape.

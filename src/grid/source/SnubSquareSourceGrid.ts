@@ -1,6 +1,6 @@
 import { parseShapeDefinition } from "../Atlas";
 import { Shape } from "../Shape";
-import { SourceGrid, SourcePoint } from "./SourceGrid";
+import { SourceGrid, SourcePoint } from "../SourceGrid";
 
 const square = parseShapeDefinition({
     name: "square",

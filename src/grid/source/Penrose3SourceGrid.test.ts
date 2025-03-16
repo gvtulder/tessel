@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { SourcePoint } from "./SourceGrid";
+import { SourcePoint } from "../SourceGrid";
 import { Penrose3SourceGrid } from "./Penrose3SourceGrid";
 
 describe("Penrose3SourceGrid", () => {

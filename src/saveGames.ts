@@ -24,6 +24,7 @@ import {
 import { Penrose3SourceGrid } from "./grid/source/Penrose3SourceGrid";
 import { SnubSquareSourceGrid } from "./grid/source/SnubSquareSourceGrid";
 import { Tile, TileColors } from "./grid/Tile";
+import Color from "color";
 
 const COLORS = [
     "red",
@@ -48,9 +49,8 @@ const OLD6 = [
     "#a1c725",
 ] as TileColors;
 
-const WONG4 = ["#D55E00", "#0072B2", "#009E73", "#E69F00"] as TileColors;
-
-const WONG6 = [
+// default Wong colors
+const WONG6_PUB = [
     "#D55E00",
     "#0072B2",
     "#009E73",
@@ -58,6 +58,29 @@ const WONG6 = [
     "#56B4E9",
     "#CC79A7",
 ] as TileColors;
+
+/*
+// for the icon
+console.log(
+    "WONG6 lighten 0.1",
+    JSON.stringify(WONG6_PUB.map((c) => Color(c).lighten(0.1).hex())),
+);
+
+// for the game colors
+console.log(
+    "WONG6 lighten 0.05",
+    JSON.stringify(WONG6_PUB.map((c) => Color(c).lighten(0.05).hex())),
+);
+*/
+const WONG6 = [
+    "#E06300",
+    "#0078BB",
+    "#00A679",
+    "#F2A700",
+    "#64BAEB",
+    "#D085AF",
+];
+const WONG4 = WONG6.filter((_, i) => i < 4);
 
 export const lookup = new Map<string, GameSettings>();
 
@@ -269,14 +292,7 @@ export const SetupCatalog = {
         */
         ...[6, 5, 4, 3, 2].map((n) => ({
             key: `wong${n}`,
-            colors: [
-                "#D55E00",
-                "#0072B2",
-                "#009E73",
-                "#E69F00",
-                "#56B4E9",
-                "#CC79A7",
-            ].filter((_, i) => i < n),
+            colors: WONG6.filter((_, i) => i < n),
         })),
     ),
     defaultColor: "wong4",

@@ -32,6 +32,7 @@
     "@swc/jest": "^0.2.37",
     "babel-plugin-transform-define": "^2.1.4",
     "babel-plugin-transform-remove-console": "^6.9.4",
+    "color": "^5.0.0",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
     "jest": "^29.7.0",

@@ -4,6 +4,8 @@ import { DEG2RAD, dist, P, roundPoints } from "../geom/math";
 import { rotateArray } from "../geom/arrays";
 
 describe("Shape", () => {
+    // TODO test circle radius
+
     test("can be created", () => {
         const name = "test";
         const angles = [60, 60, 60];

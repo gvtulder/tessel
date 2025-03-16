@@ -66,7 +66,6 @@ export class SegmentsOption extends SettingRowOption {
         const poly1 = shape.constructPreferredPolygon(
             0,
             0,
-            1,
             AngleUse.SetupSegments,
         );
         const tile1 = grid.addTile(shape, poly1, poly1.segment());

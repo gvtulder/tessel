@@ -4,6 +4,7 @@ import { DEG2RAD, dist, Edge, Point, rad2deg } from "../geom/math";
 import { mapToIndex, rotateArray } from "../geom/arrays";
 import { Polygon } from "../geom/Polygon";
 import { computePolygonSides } from "../geom/polygon/computePolygonSides";
+import { smallestCircle } from "../geom/polygon/smallestCircle";
 
 export type ColorPattern = {
     readonly numColors: number;
@@ -41,6 +42,10 @@ export class Shape {
      * The length of each side.
      */
     readonly sides: readonly number[];
+    /**
+     * Radius of the minimum enclosing circle.
+     */
+    readonly smallestCircleRadius: number;
     /**
      * A nice angle to display the shape.
      */
@@ -98,6 +103,7 @@ export class Shape {
         );
 
         this.sides = this.checkAngles(sides);
+        this.smallestCircleRadius = this.computeSmallestCircleRadius();
 
         this.rotationalSymmetries = this.computeRotationalSymmetries();
         this.uniqueRotations = this.computeUniqueRotations();
@@ -216,19 +222,18 @@ export class Shape {
      * with sides of length, and rotated at the shape's preferred angle.
      * @param x the x coordinate for the first vertex
      * @param y the y coordinate for the first vertex
-     * @param length the length of a side
+     * @param angleUse TODO
      * @returns a new polygon
      */
     constructPreferredPolygon(
         x: number,
         y: number,
-        length: number,
         angleUse: AngleUse,
     ): Polygon {
         return this.constructPolygonXYR(
             x,
             y,
-            length,
+            1 / (2 * this.smallestCircleRadius * this.smallestCircleRadius),
             this.preferredAngles.get(angleUse) || 0,
         );
     }
@@ -307,5 +312,11 @@ export class Shape {
         }
 
         return computePolygonSides(this.cornerAngles, sides);
+    }
+
+    private computeSmallestCircleRadius(): number {
+        const poly = this.constructPolygonXYR(0, 0, this.sides[0]);
+        const circle = smallestCircle(poly.vertices);
+        return circle.radius;
     }
 }

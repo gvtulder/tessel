@@ -19,12 +19,7 @@ export class AtlasOption extends SettingRowOption {
         const grid = new Grid(atlas);
 
         const shape = grid.atlas.shapes[0];
-        const poly = shape.constructPreferredPolygon(
-            0,
-            0,
-            1,
-            AngleUse.SetupAtlas,
-        );
+        const poly = shape.constructPreferredPolygon(0, 0, AngleUse.SetupAtlas);
         const tile = grid.addTile(shape, poly, poly.segment());
         tile.colors = PROTO_TILE_COLOR;
 

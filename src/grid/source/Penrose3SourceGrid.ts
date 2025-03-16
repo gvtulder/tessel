@@ -28,13 +28,12 @@ type DeBruijnGridLine = {
 };
 
 export class Penrose3SourceGrid extends SourceGrid {
-    readonly shapes = [wide, narrow] as readonly Shape[];
-    readonly shapeFrequencies = new Map([
+    static readonly shapes = [wide, narrow] as readonly Shape[];
+    static readonly shapeFrequencies = new Map([
         [wide, 5],
         [narrow, 3],
     ]) as ReadonlyMap<Shape, number>;
 
-    prng: PRNG;
     dimensions: number;
     sigma!: number[];
 
@@ -46,9 +45,12 @@ export class Penrose3SourceGrid extends SourceGrid {
 
     shapeForLines!: ({ shape: Shape; startEdge: number } | null)[][];
 
-    constructor(prng: PRNG = Math.random) {
-        super();
-        this.prng = prng;
+    static create(prng?: PRNG) {
+        return new Penrose3SourceGrid(prng);
+    }
+
+    constructor(prng?: PRNG) {
+        super(prng);
         this.dimensions = 5;
         this.generateSigma();
         this.precomputeAngles();
@@ -107,16 +109,18 @@ export class Penrose3SourceGrid extends SourceGrid {
                 }
             }
 
+            /*
             if (!ok) {
                 console.log(ok ? "sigma OK" : "sigma not OK", sigma);
             }
+            */
         } while (!ok);
 
         // since sigma[0] is used to sum to 0,
         // shuffle to remove any bias from the order
         shuffle(sigma, this.prng);
 
-        console.log(ok ? "sigma OK" : "sigma not OK", sigma);
+        // console.log(ok ? "sigma OK" : "sigma not OK", sigma);
         this.sigma = sigma.map(({ num, den }) => num / den);
     }
 
@@ -168,7 +172,7 @@ export class Penrose3SourceGrid extends SourceGrid {
                 // find the shape for this angle
                 let shape: Shape | null = null;
                 let startEdge: number = -1;
-                for (const s of this.shapes) {
+                for (const s of Penrose3SourceGrid.shapes) {
                     if (Math.abs(s.cornerAngles[0] - angle) < 1e-3) {
                         shape = s;
                         startEdge = 0;

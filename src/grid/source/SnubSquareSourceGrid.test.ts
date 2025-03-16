@@ -1,14 +1,18 @@
 import { describe, expect, test } from "@jest/globals";
 import { SnubSquareSourceGrid } from "./SnubSquareSourceGrid";
 import { SourcePoint } from "../SourceGrid";
-import { testSourceGrid } from "../SourceGrid.test";
+import { testSourceGrid } from "../SourceGrid.testhelper";
 
 describe("SnubSquareSourceGrid", () => {
     test("can walk the grid", () => {
         const grid = new SnubSquareSourceGrid();
         const shapeCounts = testSourceGrid(grid);
         expect(shapeCounts.size).toBe(2);
-        expect(shapeCounts.get(grid.shapes[0])).toBeGreaterThanOrEqual(33);
-        expect(shapeCounts.get(grid.shapes[1])).toBeGreaterThanOrEqual(67);
+        expect(
+            shapeCounts.get(SnubSquareSourceGrid.shapes[0]),
+        ).toBeGreaterThanOrEqual(33);
+        expect(
+            shapeCounts.get(SnubSquareSourceGrid.shapes[1]),
+        ).toBeGreaterThanOrEqual(67);
     });
 });

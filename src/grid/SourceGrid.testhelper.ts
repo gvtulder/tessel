@@ -1,4 +1,4 @@
-import { expect } from "@jest/globals";
+import { expect, test } from "@jest/globals";
 import { SourceGrid, SourcePoint } from "./SourceGrid";
 import { Shape } from "./Shape";
 

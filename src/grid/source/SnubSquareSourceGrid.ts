@@ -1,3 +1,4 @@
+import { PRNG } from "src/geom/RandomSampler";
 import { parseShapeDefinition } from "../Atlas";
 import { Shape } from "../Shape";
 import { SourceGrid, SourcePoint } from "../SourceGrid";
@@ -53,11 +54,15 @@ function xyzToKey(x: number, y: number, z: number) {
 //
 
 export class SnubSquareSourceGrid extends SourceGrid {
-    readonly shapes = [square, triangle] as readonly Shape[];
-    readonly shapeFrequencies = new Map([
+    static readonly shapes = [square, triangle] as readonly Shape[];
+    static readonly shapeFrequencies = new Map([
         [square, 1],
         [triangle, 2],
     ]) as ReadonlyMap<Shape, number>;
+
+    static create(prng?: PRNG) {
+        return new SnubSquareSourceGrid(prng);
+    }
 
     getOrigin(): SourcePoint {
         return this.getPoint(0, 0, 0);

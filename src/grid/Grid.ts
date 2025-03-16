@@ -24,7 +24,7 @@ import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
 import { MatchEdgeColorsRuleSet, RuleSet as RuleSet } from "./RuleSet";
 import { Rings } from "./Rings";
-import { SourcePoint } from "./SourceGrid";
+import { SourceGrid, SourcePoint } from "./SourceGrid";
 
 /**
  * The precision used for vertex and edge keys.
@@ -303,9 +303,13 @@ export class GridEdge {
  */
 export class Grid extends EventTarget {
     /**
-     * Optional: an atlas used to check patterns.
+     * An atlas used to check patterns.
      */
     atlas: Atlas;
+    /**
+     * The SourceGrid, if any, that determines tile placement
+     */
+    sourceGrid?: SourceGrid;
     /**
      * The rules for checking tile colors.
      */
@@ -345,11 +349,19 @@ export class Grid extends EventTarget {
      * Creates a new grid.
      * @param atlas an atlas for checking tile patterns (optional)
      * @param rules rules for matching colors (default: MatchEdgeColorsRuleSet)
+     * @param sourceGrid a SourceGrid instance to guide tile placement
      */
-    constructor(atlas: Atlas, rules?: RuleSet) {
+    constructor(atlas: Atlas, rules?: RuleSet, sourceGrid?: SourceGrid) {
+        if (!sourceGrid && atlas.sourceGrid) {
+            console.log("new Grid: sourceGrid=", sourceGrid);
+            sourceGrid = atlas.sourceGrid.create();
+            console.log("new Grid: sourceGrid=", sourceGrid);
+        }
+
         super();
 
         this.atlas = atlas;
+        this.sourceGrid = sourceGrid;
         this.rules = rules || new MatchEdgeColorsRuleSet();
         this.system = new CollisionSystem();
         this.tileBodies = new Map<Tile, Body<Tile>>();
@@ -402,8 +414,7 @@ export class Grid extends EventTarget {
 
     // TODO documentation
     addInitialTile(): Tile {
-        const sourcePoint =
-            this.atlas.sourceGrid && this.atlas.sourceGrid.getOrigin();
+        const sourcePoint = this.sourceGrid && this.sourceGrid.getOrigin();
         const shape = sourcePoint ? sourcePoint.shape : this.atlas.shapes[0];
         const poly = shape.constructPreferredPolygon(
             0,

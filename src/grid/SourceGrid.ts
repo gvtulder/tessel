@@ -1,11 +1,21 @@
+import { PRNG } from "src/geom/RandomSampler";
 import { Shape } from "./Shape";
 
+export type SourceGridType = typeof SourceGrid;
+
 export abstract class SourceGrid {
-    abstract readonly shapes: readonly Shape[];
-    abstract readonly shapeFrequencies: ReadonlyMap<Shape, number>;
+    static readonly shapes: readonly Shape[];
+    static readonly shapeFrequencies: ReadonlyMap<Shape, number>;
+
+    static create(prng?: PRNG): SourceGrid {
+        throw new Error("Must be implemented in a subclass.");
+    }
+
+    protected readonly prng: PRNG;
     protected readonly points: Map<string, SourcePoint>;
 
-    constructor() {
+    constructor(prng: PRNG = Math.random) {
+        this.prng = prng;
         this.points = new Map<string, SourcePoint>();
     }
 

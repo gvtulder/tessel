@@ -187,7 +187,7 @@ lookup.set("snubsquare", {
     ],
 });
 
-const SnubSquareGridAtlas = Atlas.fromSourceGrid(new SnubSquareSourceGrid());
+const SnubSquareGridAtlas = Atlas.fromSourceGrid(SnubSquareSourceGrid);
 lookup.set("snubsquaregrid", {
     atlas: SnubSquareGridAtlas,
     initialTile: WONG4,
@@ -223,7 +223,7 @@ lookup.set("penrose3", {
     ],
 });
 
-const Penrose3GridAtlas = Atlas.fromSourceGrid(new Penrose3SourceGrid());
+export const Penrose3GridAtlas = Atlas.fromSourceGrid(Penrose3SourceGrid);
 lookup.set("penrose3grid", {
     atlas: Penrose3GridAtlas,
     initialTile: WONG4,

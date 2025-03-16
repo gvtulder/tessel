@@ -11,7 +11,11 @@ export abstract class GridBuilder {
         numberOfTiles: number,
         prng: PRNG = Math.random,
     ): Grid {
-        const grid = new Grid(atlas);
+        const grid = new Grid(
+            atlas,
+            undefined,
+            atlas.sourceGrid ? atlas.sourceGrid.create(prng) : undefined,
+        );
         const initialTile = grid.addInitialTile();
 
         let tries = 10 * numberOfTiles;

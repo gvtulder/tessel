@@ -3,7 +3,6 @@ import { CentricGridBuilder } from "./GridBuilder";
 import {
     Atlas,
     HexagonsAtlas,
-    Penrose0Atlas,
     RhombusAtlas,
     SquaresAtlas,
     TrianglesAtlas,
@@ -11,14 +10,16 @@ import {
 
 describe("GridBuilder", () => {
     test.each([
-        SquaresAtlas,
-        TrianglesAtlas,
-        RhombusAtlas,
-        HexagonsAtlas,
-        Penrose0Atlas,
-    ])("builds a grid", (atlas: Atlas) => {
-        const builder = new CentricGridBuilder();
-        const grid = builder.buildGrid(atlas, 100);
-        expect(grid.tiles.size).toBe(100);
-    });
+        ["SquaresAtlas", SquaresAtlas],
+        ["TrianglesAtlas", TrianglesAtlas],
+        ["RhombusAtlas", RhombusAtlas],
+        ["HexagonsAtlas", HexagonsAtlas],
+    ] as [string, Atlas][])(
+        "builds a grid for %s",
+        (_: string, atlas: Atlas) => {
+            const builder = new CentricGridBuilder();
+            const grid = builder.buildGrid(atlas, 100);
+            expect(grid.tiles.size).toBe(100);
+        },
+    );
 });

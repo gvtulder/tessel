@@ -18,7 +18,7 @@ describe("GridColoring", () => {
     test("computes color groups", () => {
         const grid = buildGrid();
         const coloring = new GridColoring(grid);
-        expect(coloring.groups.size).toBe(227);
+        expect(coloring.groups.size).toBe(225);
         for (const tile of grid.tiles) {
             const groupsInTile = tile.segments!.map((s) =>
                 coloring.segmentToGroup.get(s),

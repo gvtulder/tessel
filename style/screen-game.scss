@@ -196,13 +196,8 @@
   }
 }
 
-.rotatable {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  &.animated {
-    transition: rotate 300ms ease;
-  }
+.rotatable.animated {
+  transition: rotate 300ms ease;
 }
 .rotatable-dragging.animated {
   transition: rotate 200ms;

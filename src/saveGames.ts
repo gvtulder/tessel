@@ -23,6 +23,7 @@ import {
     DifferentEdgeColorsRuleSet,
     MatchEdgeColorsRuleSet,
 } from "./grid/RuleSet";
+import { Penrose3SourceGrid } from "./grid/source/Penrose3SourceGrid";
 import { SnubSquareSourceGrid } from "./grid/source/SnubSquareSourceGrid";
 import { Tile, TileColors } from "./grid/Tile";
 
@@ -222,6 +223,21 @@ lookup.set("penrose3", {
     ],
 });
 
+const Penrose3GridAtlas = Atlas.fromSourceGrid(new Penrose3SourceGrid());
+lookup.set("penrose3grid", {
+    atlas: Penrose3GridAtlas,
+    initialTile: WONG4,
+    tilesShownOnStack: 3,
+    tileGenerator: [
+        TileGenerators.forShapes(
+            Penrose3GridAtlas.shapes,
+            TileGenerators.permutations(WONG4),
+            undefined,
+            Penrose3GridAtlas.shapeFrequencies,
+        ),
+    ],
+});
+
 export const defaultGameList = ["triangle", "square", "rhombus", "hexagons"];
 
 // ["triangle", "square", "isometric", "hex"]
@@ -238,7 +254,7 @@ export const SetupCatalog = {
         { key: "pentagon", atlas: CairoAtlas },
         { key: "hexagon", atlas: HexagonsAtlas },
         { key: "deltotrihex", atlas: DeltoTrihexAtlas },
-        { key: "penrose", atlas: PenroseFreeAtlas },
+        { key: "penrose", atlas: Penrose3GridAtlas },
         { key: "snubsquare", atlas: SnubSquareGridAtlas },
     ),
     defaultAtlas: "square",

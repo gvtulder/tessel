@@ -6,19 +6,17 @@ import {
     FullVertexScorer,
 } from "./game/Scorer";
 import { TileGenerators } from "./game/TileGenerator";
-import {
-    Atlas,
-    CairoAtlas,
-    DeltoTrihexAtlas,
-    HexagonsAtlas,
-    Penrose0Atlas,
-    PenroseFreeAtlas,
-    RhombusAtlas,
-    SnubSquareAtlas,
-    SnubSquareFreeAtlas,
-    SquaresAtlas,
-    TrianglesAtlas,
-} from "./grid/Atlas";
+import { Atlas } from "./grid/Atlas";
+import { HexagonsAtlas } from "./grid/atlas/HexagonsAtlas";
+import { Penrose0Atlas } from "./grid/atlas/Penrose0Atlas";
+import { PenroseFreeAtlas } from "./grid/atlas/PenroseFreeAtlas";
+import { SquaresAtlas } from "./grid/atlas/SquaresAtlas";
+import { TrianglesAtlas } from "./grid/atlas/TrianglesAtlas";
+import { RhombusAtlas } from "./grid/atlas/RhombusAtlas";
+import { CairoAtlas } from "./grid/atlas/CairoAtlas";
+import { DeltoTrihexAtlas } from "./grid/atlas/DeltoTrihexAtlas";
+import { SnubSquareAtlas } from "./grid/atlas/SnubSquareAtlas";
+import { SnubSquareFreeAtlas } from "./grid/atlas/SnubSquareFreeAtlas";
 import {
     DifferentEdgeColorsRuleSet,
     MatchEdgeColorsRuleSet,

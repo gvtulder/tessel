@@ -6,7 +6,8 @@ import { Polygon } from "../geom/Polygon";
 import { GridEventType } from "./GridEvent";
 import { mergeBBox, P, weightedSumPoint } from "../geom/math";
 import { rotateArray } from "../geom/arrays";
-import { SquaresAtlas, TrianglesAtlas } from "./Atlas";
+import { SquaresAtlas } from "./atlas/SquaresAtlas";
+import { TrianglesAtlas } from "./atlas/TrianglesAtlas";
 
 const TRIANGLE = TrianglesAtlas.shapes[0];
 

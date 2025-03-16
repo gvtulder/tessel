@@ -1,11 +1,9 @@
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
-import {
-    HexagonsAtlas,
-    RhombusAtlas,
-    SquaresAtlas,
-    TrianglesAtlas,
-} from "../../grid/Atlas";
+import { HexagonsAtlas } from "src/grid/atlas/HexagonsAtlas";
+import { SquaresAtlas } from "src/grid/atlas/SquaresAtlas";
+import { TrianglesAtlas } from "src/grid/TrianglesAtlas";
+import { RhombusAtlas } from "src/grid/atlas/RhombusAtlas";
 import {
     DifferentEdgeColorsRuleSet,
     MatchEdgeColorsRuleSet,

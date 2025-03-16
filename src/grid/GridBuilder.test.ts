@@ -1,12 +1,10 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { CentricGridBuilder } from "./GridBuilder";
-import {
-    Atlas,
-    HexagonsAtlas,
-    RhombusAtlas,
-    SquaresAtlas,
-    TrianglesAtlas,
-} from "./Atlas";
+import { Atlas } from "./Atlas";
+import { HexagonsAtlas } from "./atlas/HexagonsAtlas";
+import { SquaresAtlas } from "./atlas/SquaresAtlas";
+import { TrianglesAtlas } from "./atlas/TrianglesAtlas";
+import { RhombusAtlas } from "./atlas/RhombusAtlas";
 
 describe("GridBuilder", () => {
     test.each([

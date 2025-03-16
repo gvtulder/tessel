@@ -4,7 +4,7 @@ import { PlaceholderTile, Tile } from "./Tile";
 import { GridEventType } from "./GridEvent";
 import { P } from "../geom/math";
 import { Grid } from "./Grid";
-import { TrianglesAtlas } from "./Atlas";
+import { TrianglesAtlas } from "./atlas/TrianglesAtlas";
 
 const TRIANGLE = new Shape("triangle", [60, 60, 60]);
 

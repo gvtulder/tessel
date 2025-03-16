@@ -1,10 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
-import {
-    Atlas,
-    AtlasDefinitionDoc,
-    HexagonsAtlas,
-    Penrose0Atlas,
-} from "./Atlas";
+import { Atlas, AtlasDefinitionDoc } from "./Atlas";
+import { HexagonsAtlas } from "./atlas/HexagonsAtlas";
+import { Penrose0Atlas } from "./atlas/Penrose0Atlas";
 import { deg2rad, rad2deg } from "../geom/math";
 import { Grid, SortedCorners } from "./Grid";
 

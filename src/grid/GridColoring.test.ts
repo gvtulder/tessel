@@ -1,6 +1,6 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { CentricGridBuilder } from "./GridBuilder";
-import { SquaresAtlas } from "./Atlas";
+import { SquaresAtlas } from "./atlas/SquaresAtlas";
 import { GridColoring } from "./GridColoring";
 import { seedPRNG } from "../geom/RandomSampler";
 import { ColorPattern, Shape } from "./Shape";

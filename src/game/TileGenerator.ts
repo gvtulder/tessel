@@ -97,29 +97,35 @@ export class TileGenerators {
             for (let c = 0; c < maxColor; c++) {
                 // map to segment colors
                 const components = cToComponents(c, numColorGroups);
-
                 if (onlyUniqueColors) {
                     if (new Set(components).size != components.length) {
                         continue;
                     }
                 }
+                addToUniqueCs(components);
+            }
 
+            // map groups to segments
+            const mappedColors = [];
+            for (const c of uniqueCs) {
+                let cc = cToComponents(c, numColorGroups);
+                // shuffle the starting point of the colors
+                cc = randomRotate(cc);
                 if (colorPattern) {
-                    for (const pattern of colorPattern.segmentColors) {
-                        addToUniqueCs(pattern.map((i) => components[i]));
-                    }
-                } else {
-                    addToUniqueCs(components);
+                    // use the first segment order of the pattern only,
+                    // because the others should all be rotation variants
+                    cc = colorPattern.segmentColors[0].map((i) => cc[i]);
                 }
+                mappedColors.push(
+                    cc.map((s) => colors[parseInt(s, numColors)]),
+                );
             }
 
             console.log(`Generated ${uniqueCs.size} tiles`);
 
-            return [...uniqueCs.values()].map((c) => ({
+            return mappedColors.map((colors) => ({
                 shape: sh,
-                colors: randomRotate(
-                    cToComponents(c, sh.cornerAngles.length),
-                ).map((s) => colors[parseInt(s, numColors)]),
+                colors: colors,
             }));
         };
     }

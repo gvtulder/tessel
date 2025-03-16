@@ -34,7 +34,12 @@ export class TileDisplay {
         this.gridDisplay = gridDisplay;
         this.tile = tile;
 
-        this.element = SVG("g", "svg-tile");
+        this.element = SVG(
+            "g",
+            tile.tileType === TileType.Placeholder
+                ? "svg-placeholder"
+                : "svg-tile",
+        );
 
         this.redraw();
     }

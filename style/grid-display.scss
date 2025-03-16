@@ -11,7 +11,7 @@
   transition-duration: 400ms;
 }
 
-.svg-placeholders .svg-tile {
+.svg-placeholder {
   transition-property: opacity;
   transition-duration: 100ms;
 
@@ -30,7 +30,7 @@
   }
 }
 
-.hide-placeholders .svg-placeholders .svg-tile {
+.hide-placeholders .svg-placeholder {
   display: none;
   opacity: 0;
 

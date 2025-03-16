@@ -204,7 +204,7 @@
     }
     &.drag-return .rotatable {
       z-index: 100;
-      transition-property: translate, scale;
+      transition-property: translate, scale, rotate;
       transition-duration: 150ms;
     }
     &.drag-success .rotatable {

@@ -87,10 +87,16 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.initInteractable(makeRotatable);
 
         this.onDragTransitionEnd = () => {
-            this.element.classList.remove("drag-success");
-            this.element.classList.remove("drag-return");
+            this.element.classList.remove(
+                "tile-drag-success",
+                "tile-drag-return",
+            );
+            this.rotatable.classList.remove(
+                "rotatable-drag-success",
+                "rotatable-drag-return",
+            );
         };
-        this.element.addEventListener(
+        this.rotatable.addEventListener(
             "transitionend",
             this.onDragTransitionEnd,
         );
@@ -193,7 +199,14 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     initInteractable(makeRotatable: boolean) {
         this.draggable.onTap = (evt: DragHandlerEvent) => {
             if (makeRotatable) {
-                this.element.classList.remove("drag-success", "drag-return");
+                this.element.classList.remove(
+                    "tile-drag-success",
+                    "tile-drag-return",
+                );
+                this.rotatable.classList.remove(
+                    "rotatable-drag-success",
+                    "rotatable-drag-return",
+                );
                 this.rotateTile();
             }
             this.tileStackDisplay.dispatchEvent(
@@ -227,15 +240,23 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.dragTransform.originY = rect.height / 2;
         this.rotateTransform.originX = rect.width / 2;
         this.rotateTransform.originY = rect.height / 2;
-        this.element.classList.remove("drag-return", "drag-success");
-        this.element.classList.add("dragging");
+        this.element.classList.remove("tile-drag-return", "tile-drag-success");
+        this.rotatable.classList.remove(
+            "rotatable-drag-return",
+            "rotatable-drag-success",
+        );
+        this.element.classList.add("tile-dragging");
+        this.rotatable.classList.add("rotatable-dragging");
     }
 
     endDrag(successful: boolean) {
-        this.element.classList.remove("dragging");
-        this.element.classList.add("drag-return");
+        this.element.classList.remove("tile-dragging");
+        this.rotatable.classList.remove("rotatable-dragging");
+        this.element.classList.add("tile-drag-return");
+        this.rotatable.classList.add("rotatable-drag-return");
         if (successful) {
-            this.element.classList.add("drag-success");
+            this.element.classList.add("tile-drag-success");
+            this.rotatable.classList.add("rotatable-drag-success");
             this.resetAutorotate(true);
         } else {
             this.resetAutorotate(false);
@@ -244,9 +265,14 @@ export class SingleTileOnStackDisplay implements TileDragSource {
 
     resetDragStatus() {
         this.element.classList.remove(
-            "dragging",
-            "drag-return",
-            "drag-success",
+            "tile-dragging",
+            "tile-drag-return",
+            "tile-drag-success",
+        );
+        this.rotatable.classList.remove(
+            "rotatable-dragging",
+            "rotatable-drag-return",
+            "rotatable-drag-success",
         );
     }
 
@@ -295,7 +321,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     destroy() {
         this.gridDisplay.destroy();
         this.draggable.destroy();
-        this.element.removeEventListener(
+        this.rotatable.removeEventListener(
             "transitionend",
             this.onDragTransitionEnd,
         );

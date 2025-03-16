@@ -175,42 +175,45 @@
   .tile-outline {
     stroke: #ddd;
   }
-  .tile-on-stack {
-    z-index: 0;
-    position: relative;
+}
+
+.tile-on-stack {
+  z-index: 0;
+  position: relative;
+  aspect-ratio: 1/1;
+
+  max-height: 18vh;
+
+  transition-property: scale;
+  transition-duration: 100ms;
+  svg {
+    width: 100%;
     aspect-ratio: 1/1;
-
-    max-height: 18vh;
-
-    transition-property: scale;
-    transition-duration: 100ms;
-    svg {
-      width: 100%;
-      aspect-ratio: 1/1;
-    }
-    .rotatable {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      &.animated {
-        transition: rotate 300ms ease;
-      }
-    }
-    &.dragging {
-      z-index: 100;
-      .rotatable.animated {
-        transition: rotate 200ms;
-      }
-    }
-    &.drag-return .rotatable {
-      z-index: 100;
-      transition-property: translate, scale, rotate;
-      transition-duration: 150ms;
-    }
-    &.drag-success .rotatable {
-      transition-property: none;
-    }
   }
+  &.tile-dragging,
+  &.tile-drag-return {
+    z-index: 100;
+  }
+}
+
+.rotatable {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  &.animated {
+    transition: rotate 300ms ease;
+  }
+}
+.rotatable-dragging.animated {
+  transition: rotate 200ms;
+}
+.rotatable-drag-return.animated {
+  z-index: 100;
+  transition-property: translate, scale, rotate;
+  transition-duration: 150ms;
+}
+.rotatable-drag-success.animated {
+  transition-property: none;
 }
 
 .tile-counter {

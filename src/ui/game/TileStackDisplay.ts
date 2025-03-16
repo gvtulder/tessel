@@ -44,6 +44,8 @@ export abstract class BaseTileStackDisplay extends EventTarget {
         for (const t of this.tileDisplays) {
             t.element.classList.remove("drag-success");
             t.element.classList.remove("drag-return");
+            t.rotatable.classList.remove("drag-success");
+            t.rotatable.classList.remove("drag-return");
         }
     }
 

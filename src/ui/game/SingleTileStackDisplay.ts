@@ -260,10 +260,19 @@ export class SingleTileOnStackDisplay implements TileDragSource {
      */
     startAutorotate(rotationSet: TileRotationSet) {
         if (rotationSet) {
+            // retrieve the user-selected angle before dragging
+            const preDragAngle = Math.round(
+                this.grid.atlas.orientations[this.rotationIdx] * RAD2DEG,
+            );
             let newAngle = 0;
             let bestAngleDist = -1;
             for (const angleRad of rotationSet.relativeRotationAngles) {
                 const angle = Math.round(angleRad * RAD2DEG);
+                // prefer to return to the user-selected angle
+                if (angleDistDeg(preDragAngle, angle) < 1) {
+                    newAngle = angle;
+                    break;
+                }
                 const d = angleDistDeg(this.angle, angle);
                 if (bestAngleDist == -1 || d < bestAngleDist) {
                     newAngle = angle;

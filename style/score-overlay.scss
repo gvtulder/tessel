@@ -48,32 +48,6 @@
   }
 
   &.enabled {
-    .outline-fg g {
-      stroke-dasharray: calc(60 * colors.$svg-scale)
-        calc(60 * colors.$svg-scale);
-      stroke-dashoffset: calc(-60 * colors.$svg-scale);
-
-      animation-name: score-overlay-outline-fg-anim;
-      animation-duration: 2s;
-      animation-delay: 400ms;
-      animation-timing-function: ease-in;
-      animation-fill-mode: forwards;
-    }
-  }
-  &.hiding {
-    .outline-fg g {
-      stroke-dasharray: calc(60 * colors.$svg-scale)
-        calc(60 * colors.$svg-scale);
-      stroke-dashoffset: calc(-120 * colors.$svg-scale);
-
-      animation-name: score-overlay-outline-fg-anim-reverse;
-      animation-duration: 1s;
-      animation-timing-function: ease-in;
-      animation-fill-mode: forwards;
-    }
-  }
-
-  &.enabled {
     .points {
       animation-name: score-overlay-points-opacity-anim;
       animation-duration: 800ms;
@@ -102,16 +76,37 @@
   }
 
   &.enabled {
-    .score-overlay-mask path,
-    .outline-bg path {
+    .score-outline-outline-fg {
+      stroke-dasharray: calc(60 * colors.$svg-scale)
+        calc(60 * colors.$svg-scale);
+      stroke-dashoffset: calc(-60 * colors.$svg-scale);
+
+      animation-name: score-overlay-outline-fg-anim;
+      animation-duration: 2s;
+      animation-delay: 400ms;
+      animation-timing-function: ease-in;
+      animation-fill-mode: forwards;
+    }
+    .score-outline-shadow-mask,
+    .score-outline-outline-bg {
       animation-name: score-overlay-stroke-width;
       animation-duration: 300ms;
       animation-fill-mode: forwards;
     }
   }
   &.hiding {
-    .score-overlay-mask path,
-    .outline-bg path {
+    .score-outline-outline-fg {
+      stroke-dasharray: calc(60 * colors.$svg-scale)
+        calc(60 * colors.$svg-scale);
+      stroke-dashoffset: calc(-120 * colors.$svg-scale);
+
+      animation-name: score-overlay-outline-fg-anim-reverse;
+      animation-duration: 1s;
+      animation-timing-function: ease-in;
+      animation-fill-mode: forwards;
+    }
+    .score-outline-shadow-mask,
+    .score-outline-outline-bg {
       animation-name: scoreOverlay-stroke-width-reverse;
       animation-duration: 300ms;
       animation-delay: 500ms;

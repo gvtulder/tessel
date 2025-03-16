@@ -7,8 +7,6 @@ import { S, SVG } from "../shared/svg";
 import { BBox, bbox, mergeBBox } from "src/geom/math";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
-    bgMask: SVGElement;
-    bgMaskGroup: ReplacableGroup;
     shadowMask: SVGElement;
     shadowMaskGroup: ReplacableGroup;
     dropShadowBGRect: SVGRectElement;
@@ -33,40 +31,9 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         };
         this.element.addEventListener("transitionend", this.onTransitionEnd);
 
-        // background (everything not select gray)
-        const bg = SVG("rect", null, null, {
-            mask: "url(#scoreOverlay-bgmask",
-            x: "-1000",
-            y: "-1000",
-            width: "2000",
-            height: "2000",
-            fill: BGCOLOR,
-            opacity: "0.2",
-        });
-        // this.element.appendChild(bg);
-
-        const bgMask = SVG("mask", null, null, {
-            id: "scoreOverlay-bgmask",
-        });
-        // this.element.append(bgMask);
-
-        const bgBlack = SVG("rect", null, bgMask, {
-            x: "-1000",
-            y: "-1000",
-            width: "2000",
-            height: "2000",
-            fill: "white",
-        });
-
-        const bgMaskG = SVG("g", null, bgMask, {
-            fill: "black",
-        });
-        this.bgMask = bgMaskG;
-        this.bgMaskGroup = new ReplacableGroup(bgMaskG);
-
         // drop shadow around the shape
         this.dropShadowBGRect = SVG("rect", null, this.element, {
-            mask: "url(#scoreOverlay-mask",
+            mask: "url(#scoreOverlay-mask)",
             x: "-10",
             y: "-10",
             width: "20",
@@ -115,12 +82,17 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     }
 
     showScores(shapes: ScoredRegion[]) {
-        const groups = [
-            this.bgMaskGroup,
-            this.shadowMaskGroup,
-            this.outlineBGGroup,
-            this.outlineFGGroup,
-        ].map((g) => ({ group: g, elements: [] as SVGElement[] }));
+        const groups = (
+            [
+                ["shadow-mask", this.shadowMaskGroup],
+                ["outline-bg", this.outlineBGGroup],
+                ["outline-fg", this.outlineFGGroup],
+            ] as [string, ReplacableGroup][]
+        ).map(([name, g]) => ({
+            name: name,
+            group: g,
+            elements: [] as SVGElement[],
+        }));
         const points = [] as SVGElement[];
 
         let boundaryBBox: BBox | undefined = undefined;
@@ -142,6 +114,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             for (const g of groups) {
                 const path = SVG("path");
                 path.setAttribute("d", roundPathString);
+                path.setAttribute("class", `score-outline-${g.name}`);
                 g.elements.push(path);
             }
 

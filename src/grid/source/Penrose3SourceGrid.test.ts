@@ -1,40 +1,16 @@
 import { describe, expect, test } from "@jest/globals";
 import { SourcePoint } from "../SourceGrid";
 import { Penrose3SourceGrid } from "./Penrose3SourceGrid";
+import { testSourceGrid } from "../SourceGrid.test";
+import { seedPRNG } from "../../geom/RandomSampler";
 
 describe("Penrose3SourceGrid", () => {
     test("can walk the grid", () => {
-        const grid = new Penrose3SourceGrid();
-
-        const initialPoint = grid.getOrigin();
-        expect(initialPoint.numSides).toBe(4);
-
-        let wide = 0;
-        let narrow = 0;
-        const seen = new Set<SourcePoint>([initialPoint]);
-        const queue = [initialPoint];
-        while (wide + narrow < 100) {
-            const point = queue.shift()!;
-            if (point.shape.name == "rhombus-wide") {
-                wide++;
-            } else if (point.shape.name == "rhombus-narrow") {
-                narrow++;
-            } else {
-                console.log("unknown shape", point.shape.name);
-            }
-            for (let i = 0; i < point.numSides; i++) {
-                const neighbor = point.neighbor(i);
-                const reverseNeighbor = neighbor.point.neighbor(neighbor.side);
-                expect(reverseNeighbor.point).toBe(point);
-                if (!seen.has(neighbor.point)) {
-                    queue.push(neighbor.point);
-                    seen.add(neighbor.point);
-                }
-            }
-        }
-        expect(seen.size).toBeGreaterThanOrEqual(100);
-        expect(narrow + wide).toBeGreaterThanOrEqual(100);
-        expect(wide).toBeGreaterThanOrEqual(15);
-        expect(narrow).toBeGreaterThanOrEqual(15);
+        const prng = seedPRNG(1234);
+        const grid = new Penrose3SourceGrid(prng);
+        const shapeCounts = testSourceGrid(grid);
+        expect(shapeCounts.size).toBe(2);
+        expect(shapeCounts.get(grid.shapes[0])).toBeGreaterThanOrEqual(15);
+        expect(shapeCounts.get(grid.shapes[1])).toBeGreaterThanOrEqual(15);
     });
 });

@@ -61,6 +61,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             const poly = shape.constructPreferredPolygon(
                 0,
                 0,
+                grid.atlas.scale,
                 AngleUse.MainMenu,
             );
             const tile = grid.addTile(shape, poly, poly.segment());

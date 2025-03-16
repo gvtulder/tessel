@@ -222,18 +222,20 @@ export class Shape {
      * with sides of length, and rotated at the shape's preferred angle.
      * @param x the x coordinate for the first vertex
      * @param y the y coordinate for the first vertex
+     * @param length TODO
      * @param angleUse TODO
      * @returns a new polygon
      */
     constructPreferredPolygon(
         x: number,
         y: number,
+        length: number,
         angleUse: AngleUse,
     ): Polygon {
         return this.constructPolygonXYR(
             x,
             y,
-            1 / (2 * this.smallestCircleRadius * this.smallestCircleRadius),
+            length,
             this.preferredAngles.get(angleUse) || 0,
         );
     }

@@ -167,6 +167,10 @@ export class Atlas {
      * The source grid, if any.
      */
     sourceGrid?: SourceGridType;
+    /**
+     * The scale factor for the shapes in this factor.
+     */
+    scale: number;
 
     /**
      * Initializes the atlas with a number of patterns.
@@ -199,6 +203,12 @@ export class Atlas {
             );
         }
         this.shapeFrequencies = normalizedFrequencies;
+
+        this.scale =
+            1 /
+            (2 *
+                shapes[0].smallestCircleRadius *
+                shapes[0].smallestCircleRadius);
     }
 
     /**

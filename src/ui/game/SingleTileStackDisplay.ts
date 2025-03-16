@@ -111,6 +111,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
             const poly = slot.shape.constructPreferredPolygon(
                 0,
                 0,
+                this.grid.atlas.scale,
                 AngleUse.StackDisplay,
             );
             this.tile = this.grid.addTile(slot.shape, poly, poly.segment());

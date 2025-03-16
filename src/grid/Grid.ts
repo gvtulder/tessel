@@ -419,6 +419,7 @@ export class Grid extends EventTarget {
         const poly = shape.constructPreferredPolygon(
             0,
             0,
+            this.atlas.scale,
             AngleUse.InitialTile,
         );
         return this.addTile(shape, poly, poly.segment(), sourcePoint);

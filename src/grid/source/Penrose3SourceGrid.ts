@@ -74,8 +74,8 @@ export class Penrose3SourceGrid extends SourceGrid {
             sigma[0] = { num: 0, den: 1 };
             for (let i = 1; i < dimensions; i++) {
                 // choose a random sigma[i]
-                const den = Math.ceil(Math.random() * MAX_DEN + 1);
-                const num = Math.round((Math.random() - 0.5) * 2 * den);
+                const den = Math.ceil(this.prng() * MAX_DEN + 1);
+                const num = Math.round((this.prng() - 0.5) * 2 * den);
                 sigma[i] = { num, den };
                 // subtract from sigma[0]
                 sigma[0] = {

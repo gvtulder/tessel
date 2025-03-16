@@ -10,7 +10,7 @@ describe("Penrose3SourceGrid", () => {
         const grid = new Penrose3SourceGrid(prng);
         const shapeCounts = testSourceGrid(grid);
         expect(shapeCounts.size).toBe(2);
-        expect(shapeCounts.get(grid.shapes[0])).toBeGreaterThanOrEqual(15);
-        expect(shapeCounts.get(grid.shapes[1])).toBeGreaterThanOrEqual(15);
+        expect(shapeCounts.get(grid.shapes[0])).toBe(64);
+        expect(shapeCounts.get(grid.shapes[1])).toBe(36);
     });
 });

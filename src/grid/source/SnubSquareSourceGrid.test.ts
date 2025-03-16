@@ -8,7 +8,7 @@ describe("SnubSquareSourceGrid", () => {
         const grid = new SnubSquareSourceGrid();
         const shapeCounts = testSourceGrid(grid);
         expect(shapeCounts.size).toBe(2);
-        expect(shapeCounts.get(grid.shapes[0])).toBeGreaterThanOrEqual(30);
-        expect(shapeCounts.get(grid.shapes[1])).toBeGreaterThanOrEqual(60);
+        expect(shapeCounts.get(grid.shapes[0])).toBeGreaterThanOrEqual(33);
+        expect(shapeCounts.get(grid.shapes[1])).toBeGreaterThanOrEqual(67);
     });
 });

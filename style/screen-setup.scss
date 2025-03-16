@@ -114,6 +114,7 @@
 .screen.game-setup .setting-row-option {
   margin: 0.4vw;
   width: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
+  height: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
   background: #cacaca;
   border: 3px solid transparent;
   border-radius: 0.7vw;
@@ -160,6 +161,7 @@
   }
   .screen.game-setup .setting-row-option {
     width: min(calc(min(37vw) / 5), calc(min(60vh) / 5));
+    height: min(calc(min(37vw) / 5), calc(min(60vh) / 5));
   }
 }
 
@@ -170,6 +172,7 @@
   }
   .screen.game-setup .setting-row-option {
     width: calc(45vw / 5);
+    height: calc(45vw / 5);
   }
 }
 
@@ -196,6 +199,7 @@
   }
   .screen.game-setup .setting-row-option {
     width: calc(55vw / 5);
+    height: calc(55vw / 5);
   }
   .screen.game-setup .game-button.play {
     width: min(12vw, 13vh);
@@ -213,5 +217,6 @@
   }
   .screen.game-setup .setting-row-option {
     width: calc(50vw / 4);
+    height: calc(50vw / 4);
   }
 }

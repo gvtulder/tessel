@@ -25,6 +25,7 @@ import { Penrose3SourceGrid } from "./grid/source/Penrose3SourceGrid";
 import { SnubSquareSourceGrid } from "./grid/source/SnubSquareSourceGrid";
 import { Tile, TileColors } from "./grid/Tile";
 import Color from "color";
+import { AmmannBeenkerAtlas } from "./grid/atlas/AmmannBeenkerAtlas";
 
 const COLORS = [
     "red",
@@ -277,6 +278,7 @@ export const SetupCatalog = {
         { key: "deltotrihex", atlas: DeltoTrihexAtlas },
         { key: "penrose", atlas: Penrose3GridAtlas },
         { key: "snubsquare", atlas: SnubSquareGridAtlas },
+        { key: "ammannbeenker", atlas: AmmannBeenkerAtlas },
     ),
     defaultAtlas: "square",
 

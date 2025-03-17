@@ -166,6 +166,11 @@
 }
 
 @media screen and (min-aspect-ratio: 0.8) and (max-aspect-ratio: 1.1) {
+  .screen.game-setup .setting-row-option {
+    width: min(calc(min(42vw) / 5), calc(min(50vh) / 5));
+    height: min(calc(min(42vw) / 5), calc(min(50vh) / 5));
+  }
+  /*
   .screen.game-setup .setting-row {
     grid-template-columns: min-content min-content;
     grid-template-rows: min-content min-content min-content min-content;
@@ -174,6 +179,7 @@
     width: calc(45vw / 5);
     height: calc(45vw / 5);
   }
+  */
 }
 
 @media screen and (max-aspect-ratio: 0.8) {
@@ -207,6 +213,7 @@
   }
 }
 
+/*
 @media screen and (max-aspect-ratio: 0.5) {
   .screen.game-setup .settings {
     margin: 1vw;
@@ -220,3 +227,4 @@
     height: calc(50vw / 4);
   }
 }
+*/

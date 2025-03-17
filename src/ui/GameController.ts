@@ -234,6 +234,12 @@ export class GameController {
             this.showMainMenu();
         };
 
+        const handleSetup = () => {
+            destroy();
+            window.history.pushState({}, "", `#setup`);
+            this.showGameSetupDisplay();
+        };
+
         const handleRestart = () => {
             destroy();
             this.startGame(gameSettings);
@@ -246,6 +252,10 @@ export class GameController {
                 handleMenu,
             );
             gameDisplay.removeEventListener(
+                UserEventType.SetupMenu,
+                handleSetup,
+            );
+            gameDisplay.removeEventListener(
                 UserEventType.RestartGame,
                 handleRestart,
             );
@@ -253,6 +263,7 @@ export class GameController {
         this.currentScreenDestroy = destroy;
 
         gameDisplay.addEventListener(UserEventType.BackToMenu, handleMenu);
+        gameDisplay.addEventListener(UserEventType.SetupMenu, handleSetup);
         gameDisplay.addEventListener(UserEventType.RestartGame, handleRestart);
     }
 

@@ -81,8 +81,10 @@
     }
   }
 
+  $margin: calc(0.4 * colors.$button-scale);
+
   .game-button.dropout {
-    margin: 1vw 1vw 0 0;
+    margin: $margin $margin 0 0;
   }
 
   .game-button.dropout svg {
@@ -92,12 +94,14 @@
   .items {
     display: none;
     margin: 1vw 0.5vw 1.5vw 0.5vw;
-    grid-template-columns: repeat(4, auto);
+    margin: $margin calc(0.5 * $margin) calc(1.5 * $margin) calc(0.5 * $margin);
+    grid-template-columns: auto auto auto auto auto auto;
   }
 
   .items .game-button {
     grid-row: 1;
-    margin: 0 0.5vw 1vw 1vw;
+    grid-column: span 2;
+    margin: 0 calc(0.5 * $margin) $margin $margin;
 
     transition: scale 0.1s;
 
@@ -111,15 +115,16 @@
   }
 
   .items .game-toggle {
-    grid-column: 1 / -1;
-    margin: 0 0 0.5vw 0;
-    padding: 0 1vw 0 1vw;
+    grid-column: span 3;
+    margin: 0 0 calc(0.3 * colors.$button-scale) 0;
+    padding: 0 calc(0.3 * colors.$button-scale);
   }
 
   .items,
-  .game-button + .game-toggle {
+  .game-button + .game-toggle,
+  .game-button + .game-toggle + .game-toggle {
     border-top: 1px solid #ddd;
-    padding-top: 1vw;
+    padding-top: $margin;
   }
 
   .game-button.backtomenu {
@@ -161,6 +166,10 @@
 
     .game-button {
       margin: 0 0 1.5vw;
+    }
+
+    .game-button.setup {
+      display: none;
     }
 
     .game-button + .game-button {

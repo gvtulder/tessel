@@ -24,6 +24,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
     menu: DropoutMenu;
     backtomenubutton: Button;
+    setupbutton: Button;
     restartgamebutton: Button;
     autorotate: Toggle;
     placeholders: Toggle;
@@ -114,6 +115,14 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         menu.addButton(this.backtomenubutton);
 
+        this.setupbutton = new Button(
+            icons.pencilIcon,
+            "Design a game",
+            () => this.dispatchEvent(new Event(UserEventType.SetupMenu)),
+            "setup",
+        );
+        menu.addButton(this.setupbutton);
+
         this.restartgamebutton = new Button(
             icons.rotateLeftIcon,
             "Restart game",
@@ -121,20 +130,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             "restart",
         );
         menu.addButton(this.restartgamebutton);
-
-        this.autorotate = new Toggle(
-            icons.arrowsSpinIcon,
-            "Autorotate",
-            () => {
-                tileDragController.autorotate = this.autorotate.checked;
-                localStorage.setItem(
-                    "autorotate",
-                    this.autorotate.checked ? "yes" : "no",
-                );
-            },
-            false,
-        );
-        menu.addToggle(this.autorotate);
 
         this.placeholders = new Toggle(
             icons.boxIcon,
@@ -152,6 +147,20 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             false,
         );
         menu.addToggle(this.placeholders);
+
+        this.autorotate = new Toggle(
+            icons.arrowsSpinIcon,
+            "Autorotate",
+            () => {
+                tileDragController.autorotate = this.autorotate.checked;
+                localStorage.setItem(
+                    "autorotate",
+                    this.autorotate.checked ? "yes" : "no",
+                );
+            },
+            false,
+        );
+        menu.addToggle(this.autorotate);
 
         this.hints = new Toggle(
             icons.squareCheckIcon,
@@ -224,6 +233,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         this.menu.destroy();
         this.backtomenubutton.destroy();
+        this.setupbutton.destroy();
         this.restartgamebutton.destroy();
         this.autorotate.destroy();
         this.hints.destroy();

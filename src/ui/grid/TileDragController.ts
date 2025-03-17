@@ -151,7 +151,7 @@ export class TileDragController extends EventTarget {
             1 +
             factor *
                 (this.dropTarget.scale / context.source.gridDisplay.scale - 1);
-        const newScale = `${scale.toFixed(3)}`;
+        const newScale = `${scale.toFixed(4)}`;
         if (updateTransform && this.currentScale != newScale) {
             evt.target.style.scale = this.currentScale = newScale;
         }

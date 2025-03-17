@@ -11,7 +11,7 @@ function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);
     for (let i = 0; i < points.length; i++) {
         points[i] =
-            `${(S * vertices[i].x).toFixed(6)} ${(S * vertices[i].y).toFixed(6)}`;
+            `${(S * vertices[i].x).toFixed(4)} ${(S * vertices[i].y).toFixed(4)}`;
     }
     return "M ".concat(points.join(" L ")).concat(" Z");
 }

@@ -103,7 +103,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             boundaryBBox = mergeBBox(bbox(boundary));
             const pathComponents = boundary
                 .reverse()
-                .map((v) => `${(v.x * S).toFixed(5)},${(v.y * S).toFixed(5)}`);
+                .map((v) => `${(v.x * S).toFixed(4)},${(v.y * S).toFixed(4)}`);
             const roundPathString = roundPathCorners(
                 "M " + pathComponents.join(" L ") + " Z",
                 0.1,
@@ -205,19 +205,19 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         if (boundaryBBox) {
             this.dropShadowBGRect.setAttribute(
                 "x",
-                `${(S * (boundaryBBox.minX - 0.5)).toFixed(3)}`,
+                `${(S * (boundaryBBox.minX - 0.5)).toFixed(4)}`,
             );
             this.dropShadowBGRect.setAttribute(
                 "y",
-                `${(S * (boundaryBBox.minY - 0.5)).toFixed(3)}`,
+                `${(S * (boundaryBBox.minY - 0.5)).toFixed(4)}`,
             );
             this.dropShadowBGRect.setAttribute(
                 "width",
-                `${(S * (boundaryBBox.maxX - boundaryBBox.minX + 1)).toFixed(3)}`,
+                `${(S * (boundaryBBox.maxX - boundaryBBox.minX + 1)).toFixed(4)}`,
             );
             this.dropShadowBGRect.setAttribute(
                 "height",
-                `${(S * (boundaryBBox.maxY - boundaryBBox.minY + 1)).toFixed(3)}`,
+                `${(S * (boundaryBBox.maxY - boundaryBBox.minY + 1)).toFixed(4)}`,
             );
         }
 

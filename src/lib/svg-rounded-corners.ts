@@ -234,7 +234,7 @@ export function roundPathCorners(
             str +
             c
                 .map((x) =>
-                    (x as number).toFixed ? (x as number).toFixed(10) : x,
+                    (x as number).toFixed ? (x as number).toFixed(4) : x,
                 )
                 .join(" ") +
             " "

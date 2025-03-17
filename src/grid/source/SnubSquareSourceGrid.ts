@@ -1,4 +1,4 @@
-import { PRNG } from "src/geom/RandomSampler";
+import { PRNG } from "../../geom/RandomSampler";
 import { parseShapeDefinition } from "../Atlas";
 import { Shape } from "../Shape";
 import { SourceGrid, SourcePoint } from "../SourceGrid";

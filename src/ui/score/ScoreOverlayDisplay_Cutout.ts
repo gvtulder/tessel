@@ -4,7 +4,7 @@ import { BGCOLOR } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
 import { polylabel } from "../../lib/polylabel";
 import { S, SVG } from "../shared/svg";
-import { BBox, bbox, mergeBBox } from "src/geom/math";
+import { BBox, bbox, mergeBBox } from "../../geom/math";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     shadowMask: SVGElement;

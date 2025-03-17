@@ -1,8 +1,5 @@
-import { TileOnScreenMatch } from "../grid/TileDisplay";
-import { PlaceholderTile, Tile, TileType } from "../../grid/Tile";
-import { GameController } from "../GameController";
+import { PlaceholderTile, TileType } from "../../grid/Tile";
 import { DEBUG } from "../../settings";
-import { Grid } from "../../grid/Grid";
 import {
     MAX_TILE_AUTOROTATE_POINT_DIST,
     MAX_TILE_SNAP_POINT_DIST,
@@ -10,7 +7,7 @@ import {
     TileDragSourceContext,
 } from "../grid/TileDragController";
 import { MainGridDisplay } from "./MainGridDisplay";
-import { angleDist, edgeToAngle, TWOPI } from "../../geom/math";
+import { edgeToAngle } from "../../geom/math";
 import { S, SVG } from "../shared/svg";
 import { DragHandlerEvent } from "../shared/DragHandler";
 

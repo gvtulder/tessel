@@ -1,18 +1,13 @@
 import { Grid } from "../../grid/Grid";
-import { FixedOrderTileStack, TileShapeColors } from "../../game/TileStack";
-import { GameEventType } from "../../game/Game";
-import { Tile, TileColors } from "../../grid/Tile";
-import { AngleUse, Shape } from "../../grid/Shape";
+import { TileShapeColors } from "../../game/TileStack";
+import { Tile } from "../../grid/Tile";
+import { AngleUse } from "../../grid/Shape";
 import { GridDisplay } from "../grid/GridDisplay";
 import { TileStackGridDisplay } from "./TileStackGridDisplay";
 import { TransformComponent } from "../../geom/Transform";
-import {
-    TileDragController,
-    TileDragSource,
-    TileRotationSet,
-} from "../grid/TileDragController";
+import { TileDragSource, TileRotationSet } from "../grid/TileDragController";
 import { Atlas } from "../../grid/Atlas";
-import { angleDist, angleDistDeg, RAD2DEG, TWOPI } from "../../geom/math";
+import { angleDistDeg, RAD2DEG } from "../../geom/math";
 import { BaseTileStackDisplay, TileStackDisplay } from "./TileStackDisplay";
 import { DEG2RAD } from "detect-collisions";
 import { DragHandler, DragHandlerEvent } from "../shared/DragHandler";

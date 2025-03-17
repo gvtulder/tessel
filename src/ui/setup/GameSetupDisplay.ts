@@ -1,13 +1,5 @@
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
-import { HexagonsAtlas } from "src/grid/atlas/HexagonsAtlas";
-import { SquaresAtlas } from "src/grid/atlas/SquaresAtlas";
-import { TrianglesAtlas } from "src/grid/TrianglesAtlas";
-import { RhombusAtlas } from "src/grid/atlas/RhombusAtlas";
-import {
-    DifferentEdgeColorsRuleSet,
-    MatchEdgeColorsRuleSet,
-} from "../../grid/RuleSet";
 import { ExampleDisplay } from "./ExampleDisplay";
 import { SettingRow } from "./SettingRow";
 import { SettingRowOption } from "./SettingRowOption";
@@ -18,10 +10,10 @@ import { RulesSettingRow } from "./RulesSettingRow";
 import { RulesOption } from "./RulesOption";
 import { Button } from "../shared/Button";
 import icons from "../shared/icons";
-import { generateSeed } from "src/geom/RandomSampler";
-import { SetupCatalog } from "src/saveGames";
+import { generateSeed } from "../../geom/RandomSampler";
+import { SetupCatalog } from "../../saveGames";
 import { SegmentsOption } from "./SegmentsOption";
-import { GameSettingsSerialized } from "src/game/Game";
+import { GameSettingsSerialized } from "../../game/Game";
 import { UserEvent, UserEventType } from "../GameController";
 
 export class GameSetupDisplay extends EventTarget implements ScreenDisplay {

@@ -1,4 +1,3 @@
-import { dist } from "src/geom/math";
 import { GridDisplay } from "../grid/GridDisplay";
 
 export class MainMenuGridDisplay extends GridDisplay {

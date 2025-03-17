@@ -1,7 +1,6 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import { Grid, GridEdge, GridVertex, SortedCorners } from "./Grid";
 import { PlaceholderTile, Tile } from "./Tile";
-import { Shape } from "./Shape";
 import { Polygon } from "../geom/Polygon";
 import { GridEventType } from "./GridEvent";
 import { mergeBBox, P, weightedSumPoint } from "../geom/math";

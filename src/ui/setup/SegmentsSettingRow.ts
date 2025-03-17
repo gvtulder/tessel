@@ -1,4 +1,4 @@
-import { ColorPatternPerShape } from "src/grid/Shape";
+import { ColorPatternPerShape } from "../../grid/Shape";
 import { Atlas } from "../../grid/Atlas";
 import { TileColors } from "../../grid/Tile";
 import { SegmentsOption } from "./SegmentsOption";

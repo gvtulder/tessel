@@ -1,14 +1,8 @@
-import { Polygon } from "src/geom/Polygon";
-import {
-    dist,
-    distClosestPoints,
-    distPolygons,
-    rotatePoints,
-    shiftPoints,
-} from "../../geom/math";
+import { Polygon } from "../../geom/Polygon";
+import { distPolygons, rotatePoints, shiftPoints } from "../../geom/math";
 import { Atlas } from "../../grid/Atlas";
 import { Grid } from "../../grid/Grid";
-import { AngleUse, ColorPattern, ColorPatternPerShape } from "../../grid/Shape";
+import { AngleUse, ColorPatternPerShape } from "../../grid/Shape";
 import { TileColor, TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { OptionGridDisplay } from "./OptionGridDisplay";

@@ -1,4 +1,3 @@
-import { GameSettings } from "../../game/Game";
 import icons from "../shared/icons";
 import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
@@ -9,7 +8,7 @@ import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
-import { AngleUse } from "src/grid/Shape";
+import { AngleUse } from "../../grid/Shape";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;

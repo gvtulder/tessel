@@ -1,12 +1,7 @@
 import { Grid } from "./Grid";
-import {
-    PRNG,
-    RandomSampler,
-    selectRandom,
-    shuffle,
-} from "../geom/RandomSampler";
-import { ColorPattern, ColorPatternPerShape, Shape } from "./Shape";
-import { Tile, TileColor, TileColors, TileSegment } from "./Tile";
+import { PRNG, selectRandom, shuffle } from "../geom/RandomSampler";
+import { ColorPatternPerShape } from "./Shape";
+import { TileColor, TileColors, TileSegment } from "./Tile";
 
 const MAX_GRID_COLORING_TRIES = 100;
 

@@ -1,5 +1,3 @@
-import { Point } from "../math";
-
 export function computePolygonSides(
     angles: readonly number[],
     sides?: readonly (number | null)[],

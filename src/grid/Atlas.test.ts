@@ -2,7 +2,7 @@ import { describe, expect, test } from "@jest/globals";
 import { Atlas, AtlasDefinitionDoc } from "./Atlas";
 import { HexagonsAtlas } from "./atlas/HexagonsAtlas";
 import { Penrose0Atlas } from "./atlas/Penrose0Atlas";
-import { deg2rad, rad2deg } from "../geom/math";
+import { rad2deg } from "../geom/math";
 import { Grid, SortedCorners } from "./Grid";
 
 function toFixed(xs: readonly number[], fractionDigits: number) {

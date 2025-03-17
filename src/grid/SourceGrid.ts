@@ -1,4 +1,4 @@
-import { PRNG } from "src/geom/RandomSampler";
+import { PRNG } from "../geom/RandomSampler";
 import { Shape } from "./Shape";
 
 export type SourceGridType = typeof SourceGrid;

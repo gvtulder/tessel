@@ -1,4 +1,4 @@
-import { describe, expect, jest, test } from "@jest/globals";
+import { describe, expect, test } from "@jest/globals";
 import { CentricGridBuilder } from "./GridBuilder";
 import { SquaresAtlas } from "./atlas/SquaresAtlas";
 import { GridColoring } from "./GridColoring";

@@ -1,4 +1,4 @@
-import { Edge, Point } from "../geom/math";
+import { Point } from "../geom/math";
 import { EdgeKey, edgeToDirectedKey } from "./Grid";
 
 type RingEdge = {

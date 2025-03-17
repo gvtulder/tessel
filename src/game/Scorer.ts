@@ -1,7 +1,7 @@
-import { isConvexPolygon } from "src/geom/polygon/isConvexPolygon";
+import { isConvexPolygon } from "../geom/polygon/isConvexPolygon";
 import { edgeToKey, Grid } from "../grid/Grid";
 import { Tile, TileColor, TileSegment } from "../grid/Tile";
-import { dist } from "src/geom/math";
+import { dist } from "../geom/math";
 
 export type ScoredRegion = {
     origin: TileSegment;

@@ -1,4 +1,4 @@
-import { describe, expect, jest, test } from "@jest/globals";
+import { describe, expect, test } from "@jest/globals";
 
 import { Rings } from "./Rings";
 import { P } from "../geom/math";

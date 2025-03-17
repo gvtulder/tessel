@@ -1,4 +1,4 @@
-import { AngleUse } from "src/grid/Shape";
+import { AngleUse } from "../../grid/Shape";
 import { Atlas } from "../../grid/Atlas";
 import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";

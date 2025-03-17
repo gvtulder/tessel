@@ -339,9 +339,12 @@ export class GridDisplay extends EventTarget {
         }
         */
 
-        if (this.animated && !this.element.classList.contains("animated")) {
+        if (
+            this.animated &&
+            !this.element.classList.contains("grid-display-animated")
+        ) {
             window.setTimeout(() => {
-                this.element.classList.add("animated");
+                this.element.classList.add("grid-display-animated");
             }, 1000);
         }
     }

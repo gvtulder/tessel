@@ -5,8 +5,8 @@
   height: 100%;
 }
 
-.grid-display.animated,
-.grid-display.animated .svg-grid {
+.grid-display-animated,
+.grid-display-animated .svg-grid {
   transition-property: all;
   transition-duration: 400ms;
 }
@@ -30,7 +30,7 @@
   }
 }
 
-.hide-placeholders .svg-placeholder {
+.screen.hide-placeholders .svg-placeholder {
   display: none;
   opacity: 0;
 

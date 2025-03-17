@@ -18,7 +18,16 @@ export class Button {
         this.element = button;
 
         const tapHandler = (this.tapHandler = new TapHandler(button));
-        tapHandler.onTap = (evt: TapHandlerEvent) => ontap(evt.event);
+        tapHandler.onTap = (evt: TapHandlerEvent) => {
+            button.classList.remove("game-button-pressed");
+            ontap(evt.event);
+        };
+        tapHandler.onStartPress = (evt: TapHandlerEvent) => {
+            button.classList.add("game-button-pressed");
+        };
+        tapHandler.onEndPress = (evt: TapHandlerEvent) => {
+            button.classList.remove("game-button-pressed");
+        };
     }
 
     destroy() {

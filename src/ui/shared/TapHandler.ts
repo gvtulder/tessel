@@ -18,13 +18,18 @@ export class TapHandlerEvent {
 export class TapHandler {
     element: HTMLElement;
 
+    pressed: boolean;
+    onStartPress?: (evt: TapHandlerEvent) => void;
+    onEndPress?: (evt: TapHandlerEvent) => void;
     onTap?: (evt: TapHandlerEvent) => void;
 
     pointerDownEventListener: (evt: PointerEvent) => void;
     pointerUpEventListener: (evt: PointerEvent) => void;
+    pointerOutEventListener: (evt: PointerEvent) => void;
 
     constructor(element: HTMLElement) {
         this.element = element;
+        this.pressed = false;
 
         element.addEventListener(
             "pointerdown",
@@ -36,15 +41,42 @@ export class TapHandler {
             (this.pointerUpEventListener = (evt: PointerEvent) =>
                 this.handlePointerUp(evt)),
         );
+        element.addEventListener(
+            "pointerout",
+            (this.pointerOutEventListener = (evt: PointerEvent) =>
+                this.handlePointerOut(evt)),
+        );
     }
 
     handlePointerDown(evt: PointerEvent) {
+        this.pressed = true;
+        if (this.onStartPress) {
+            this.onStartPress(
+                new TapHandlerEvent("startpress", evt, this.element, this),
+            );
+        }
         evt.preventDefault();
     }
 
     handlePointerUp(evt: PointerEvent) {
-        if (this.onTap) {
+        if (this.pressed && this.onTap) {
+            this.pressed = false;
             this.onTap(new TapHandlerEvent("tap", evt, this.element, this));
+        }
+        if (this.onEndPress) {
+            this.onEndPress(
+                new TapHandlerEvent("endpress", evt, this.element, this),
+            );
+        }
+        evt.preventDefault();
+    }
+
+    handlePointerOut(evt: PointerEvent) {
+        this.pressed = false;
+        if (this.onEndPress) {
+            this.onEndPress(
+                new TapHandlerEvent("endpress", evt, this.element, this),
+            );
         }
         evt.preventDefault();
     }
@@ -57,6 +89,10 @@ export class TapHandler {
         this.element.removeEventListener(
             "pointerup",
             this.pointerUpEventListener,
+        );
+        this.element.removeEventListener(
+            "pointercancel",
+            this.pointerOutEventListener,
         );
     }
 }

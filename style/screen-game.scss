@@ -101,6 +101,7 @@
 
     transition: scale 0.1s;
 
+    &.game-button-pressed,
     &:hover {
       scale: 1.05;
     }

@@ -98,7 +98,7 @@
     flex-grow: 1;
     border-radius: colors.$button-scale;
     padding: max(0.3vw, 4px);
-    background: #eee;
+    background: rgba(0, 0, 0, 8%);
     display: flex;
     flex-direction: row;
   }
@@ -113,10 +113,10 @@
   &.enabled {
     .toggle-box {
       justify-content: flex-end;
-      background: #e1f0c1;
+      background: colors.$toggle-bg;
     }
     .toggle-ball {
-      background: #63851d;
+      background: colors.$toggle-fg;
     }
   }
 }

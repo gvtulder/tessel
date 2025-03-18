@@ -1,3 +1,29 @@
-$main-bg: #ddd;
+@use "sass:color";
+
+$maintint: hsl(42deg, 5%, 50%);
+$green: hsl(80deg, 64%, 50%);
+$blue: hsl(214deg, 64%, 50%);
+
+$main-bg: color.change($maintint, $lightness: 87%);
+$panel-bg: color.change($maintint, $lightness: 70%);
+$dropout-bg: color.change($maintint, $lightness: 95%);
+$settings-option-panel-bg: color.change($maintint, $lightness: 80%);
+$settings-option-panel-bg-active: color.change($maintint, $lightness: 93%);
+$settings-option-panel-bg-hover: color.change($maintint, $lightness: 87%);
+
+$score-display-fg: color.change($green, $lightness: 32%);
+$score-display-bg: color.change($green, $lightness: 85%);
+
+$toggle-fg: color.change($green, $lightness: 32%);
+$toggle-bg: color.change($green, $lightness: 85%);
+
+$setup-play-button-bg: color.change($green, $lightness: 32%);
+$setup-play-button-bg-disabled: color.change($green, $lightness: 60%);
+$setup-play-button-fg: color.change($green, $lightness: 95%);
+
+$home-button-bg: color.change($blue, $lightness: 32%);
+$home-button-fg: color.change($blue, $lightness: 97%);
+$home-button-fg-hover: color.change($blue, $lightness: 97%);
+
 $button-scale: min(8vw, 7.5vh, max(2.5vw, 3.5vh, 20px));
 $svg-scale: 100;

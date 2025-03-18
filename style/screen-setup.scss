@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: #bbb;
+  background: colors.$panel-bg;
   overflow: hidden;
   box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
   display: grid;
@@ -18,7 +18,7 @@
 .screen.game-setup .example-grid {
   position: relative;
   grid-area: example;
-  background: #ddd;
+  background: colors.$main-bg;
 }
 
 .invalid-grid-warning {
@@ -70,19 +70,19 @@
   padding: 10px;
   margin: min(1vw, 1vh);
   border-radius: 100%;
-  background: #63851d;
+  background: colors.$setup-play-button-bg;
   text-align: center;
   transition: transform 0.1s;
 }
 .screen.game-setup .game-button.play.disabled {
-  background: #999;
+  background: colors.$setup-play-button-bg-disabled;
   svg {
-    fill: #ccc;
+    fill: rgba(255, 255, 255, 30%);
   }
 }
 .screen.game-setup .game-button.play svg {
   display: inline-block;
-  fill: #ddd;
+  fill: colors.$setup-play-button-fg;
   margin: 16% 0 0 9%;
   width: 65%;
   height: 65%;
@@ -93,10 +93,6 @@
   }
   .screen.game-setup .game-button.play.disabled:hover {
     transform: none;
-  }
-  .screen.game-setup .game-button.play:hover svg,
-  .screen.game-setup .game-button.play svg:hover {
-    fill: #fff;
   }
   .screen.game-setup .game-button.play.disabled:hover svg,
   .screen.game-setup .game-button.play.disabled svg:hover {
@@ -137,7 +133,7 @@
   margin: 0.4vw;
   width: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
   height: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
-  background: #cacaca;
+  background: colors.$settings-option-panel-bg;
   border: 3px solid transparent;
   border-radius: 0.7vw;
   box-sizing: border-box;
@@ -156,11 +152,11 @@
 .screen.game-setup .setting-row-option.selected,
 .screen.game-setup .setting-row-option.selected:hover {
   border: 3px solid #66f;
-  background: #eee;
+  background: colors.$settings-option-panel-bg-active;
 }
 @media (hover) {
   .screen.game-setup .setting-row-option:hover {
-    background: #ddd;
+    background: colors.$settings-option-panel-bg-hover;
   }
 }
 .screen.game-setup .settings .palette {

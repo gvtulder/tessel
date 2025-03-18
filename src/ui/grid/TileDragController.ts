@@ -8,9 +8,14 @@ import { Point } from "../../geom/math";
 import { Shape } from "../../grid/Shape";
 import { DragHandler, DragHandlerEvent } from "../shared/DragHandler";
 
-export const MAX_TILE_DROP_POINT_DIST = 0.31;
+// maximum distance to accept tile drops
+export const MAX_TILE_DROP_POINT_DIST = 0.4;
+// maximum distance to start autorotation
 export const MAX_TILE_AUTOROTATE_POINT_DIST = 0.5;
-export const MAX_TILE_SNAP_POINT_DIST = 0.3;
+// maximum distance to start snapping
+export const MAX_TILE_START_SNAP_POINT_DIST = 0.3;
+// minimum distance at which a snapped tile is released
+export const MAX_TILE_END_SNAP_POINT_DIST = 0.35;
 
 export type TileRotationSet = {
     readonly targetRotations: readonly number[];

@@ -2,7 +2,8 @@ import { PlaceholderTile, TileType } from "../../grid/Tile";
 import { DEBUG } from "../../settings";
 import {
     MAX_TILE_AUTOROTATE_POINT_DIST,
-    MAX_TILE_SNAP_POINT_DIST,
+    MAX_TILE_START_SNAP_POINT_DIST,
+    MAX_TILE_END_SNAP_POINT_DIST,
     TileDragController,
     TileDragSourceContext,
 } from "../grid/TileDragController";
@@ -16,6 +17,8 @@ export class MainGridTileDragController extends TileDragController {
     hints: boolean;
     snap: boolean;
 
+    currentlySnapped: boolean;
+
     debugPoints?: SVGCircleElement[];
 
     constructor(dropTarget: MainGridDisplay) {
@@ -24,6 +27,8 @@ export class MainGridTileDragController extends TileDragController {
         this.autorotate = false;
         this.hints = false;
         this.snap = false;
+
+        this.currentlySnapped = false;
 
         if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
             // debug
@@ -42,6 +47,8 @@ export class MainGridTileDragController extends TileDragController {
 
     onDragStart(context: TileDragSourceContext, evt: DragHandlerEvent) {
         super.onDragStart(context, evt);
+
+        this.currentlySnapped = false;
 
         const dropTarget = this.dropTarget as MainGridDisplay;
 
@@ -107,7 +114,9 @@ export class MainGridTileDragController extends TileDragController {
     ): { newTranslate: string; newScale: string } {
         let res = super.onDragMove(context, evt, false);
 
-        if (evt.dx > -10 && evt.dx < 10 && evt.dy > -10 && evt.dy < 10) {
+        const moved =
+            evt.dx > -10 && evt.dx < 10 && evt.dy > -10 && evt.dy < 10;
+        if (moved || this.currentlySnapped) {
             res = this.computeDragMove(
                 res.newTranslate,
                 res.newScale,
@@ -190,17 +199,23 @@ export class MainGridTileDragController extends TileDragController {
                     window.clearTimeout(context.autorotateTimeout);
                     context.autorotateTimeout = null;
                 }
+                /*
                 context.autorotateTimeout = window.setTimeout(() => {
                     // source.resetAutorotate();
                 }, 100);
+                */
             }
         }
 
         // snapping?
         if (this.snap) {
+            let snapping = false;
             if (
                 match &&
-                match.dist < MAX_TILE_SNAP_POINT_DIST &&
+                match.dist <
+                    (this.currentlySnapped
+                        ? MAX_TILE_END_SNAP_POINT_DIST
+                        : MAX_TILE_START_SNAP_POINT_DIST) &&
                 match.tile instanceof PlaceholderTile &&
                 context.autorotateCache.has(match.tile)
             ) {
@@ -223,8 +238,10 @@ export class MainGridTileDragController extends TileDragController {
                             centerSnapFrom.y,
                     };
                     newTranslate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
+                    snapping = true;
                 }
             }
+            this.currentlySnapped = snapping;
         }
 
         return { newTranslate: newTranslate, newScale: newScale };
@@ -236,6 +253,7 @@ export class MainGridTileDragController extends TileDragController {
         // reset
         context.autorotateCache.clear();
         context.source.resetAutorotate(successful);
+        this.currentlySnapped = false;
 
         for (const tsd of (
             this.dropTarget as MainGridDisplay

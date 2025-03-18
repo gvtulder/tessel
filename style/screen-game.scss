@@ -229,6 +229,7 @@
 .tile-counter {
   font-size: 1.5vw;
   flex-grow: 2;
+  cursor: pointer;
 
   @media screen and (max-aspect-ratio: 1.5) {
     span {

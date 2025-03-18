@@ -5,6 +5,7 @@ import { TileDragController } from "../grid/TileDragController";
 import { Atlas } from "../../grid/Atlas";
 import { SingleTileOnStackDisplay } from "./SingleTileStackDisplay";
 import { createElement } from "../shared/html";
+import { TapHandler } from "../shared/TapHandler";
 
 export abstract class BaseTileStackDisplay extends EventTarget {
     static events = {
@@ -51,6 +52,8 @@ export class TileStackDisplay extends BaseTileStackDisplay {
     counterDiv: HTMLElement;
     counter: HTMLElement;
 
+    counterTapHandler: TapHandler;
+
     updateSlotsHandler: EventListener;
 
     constructor(
@@ -65,6 +68,10 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         // TODO move this to a separate class
         this.counterDiv = createElement("div", "tile-counter");
         this.counter = createElement("span", null, this.counterDiv);
+        this.counterTapHandler = new TapHandler(this.counter);
+        this.counterTapHandler.onTap = () => {
+            this.tileStack.reshuffle();
+        };
 
         this.updateTiles();
         this.updateSlotsHandler = () => {
@@ -78,6 +85,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
 
     destroy() {
         super.destroy();
+        this.counterTapHandler.destroy();
         this.counterDiv.remove();
         this.tileStack.removeEventListener(
             GameEventType.UpdateSlots,

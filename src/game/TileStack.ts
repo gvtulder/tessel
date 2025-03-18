@@ -24,6 +24,12 @@ export class TileStack {
         }
         return this.tiles.shift();
     }
+    push(t: TileShapeColors) {
+        this.tiles.push(t);
+    }
+    shuffle() {
+        shuffle(this.tiles);
+    }
     removeWithIndex(idx: number): void {
         if (idx < this.tiles.length) {
             this.tiles.splice(idx, 1);
@@ -75,6 +81,18 @@ export class FixedOrderTileStack extends EventTarget {
 
     take(index: number) {
         this.slots[index] = null;
+        this.updateSlots();
+    }
+
+    reshuffle() {
+        for (let i = 0; i < this.numberShown; i++) {
+            const slot = this.slots[i];
+            if (slot) {
+                this.tileStack.push(slot);
+                this.slots[i] = null;
+            }
+        }
+        this.tileStack.shuffle();
         this.updateSlots();
     }
 

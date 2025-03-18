@@ -1,6 +1,16 @@
 import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
 
+export const NUMBER_TO_WORD = [
+    "Zero",
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+    "Six",
+];
+
 export abstract class SettingRowOption {
     key: string;
     element: HTMLDivElement;

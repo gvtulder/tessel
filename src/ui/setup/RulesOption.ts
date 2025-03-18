@@ -14,6 +14,7 @@ export class RulesOption extends SettingRowOption {
         super(key);
         this.rules = rules;
         this.colorIndex = colorIndex;
+        this.element.title = rules.name;
 
         const svg = SVG("svg", "rules", this.element, {
             viewBox: "0 0 1 1",

@@ -5,6 +5,11 @@ import { Tile, TileColors, TileSegment } from "./Tile";
  */
 export interface RuleSet {
     /**
+     * A user-friendly name for this ruleset.
+     */
+    name: string;
+
+    /**
      * Checks if the colors would fit on this tile.
      * @param tile a tile on the grid
      * @param colors the new color sequence
@@ -28,6 +33,8 @@ export interface RuleSet {
  * of a tile share the same color.
  */
 export class MatchEdgeColorsRuleSet implements RuleSet {
+    name = "Touching tiles must have the same color";
+
     checkColors(tile: Tile, colors: TileColors, offset?: number): boolean {
         const edges = tile.edges;
         const n = edges.length;
@@ -57,6 +64,8 @@ export class MatchEdgeColorsRuleSet implements RuleSet {
  * of a tile have different colors.
  */
 export class DifferentEdgeColorsRuleSet implements RuleSet {
+    name = "Touching tiles must have different colors";
+
     checkColors(tile: Tile, colors: TileColors, offset?: number): boolean {
         const edges = tile.edges;
         const n = edges.length;

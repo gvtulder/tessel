@@ -6,7 +6,7 @@ import { AngleUse, ColorPatternPerShape } from "../../grid/Shape";
 import { TileColor, TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { OptionGridDisplay } from "./OptionGridDisplay";
-import { SettingRowOption } from "./SettingRowOption";
+import { NUMBER_TO_WORD, SettingRowOption } from "./SettingRowOption";
 import { createElement } from "../shared/html";
 
 export class SegmentsOption extends SettingRowOption {
@@ -42,6 +42,16 @@ export class SegmentsOption extends SettingRowOption {
         const colorPattern = colorPatternPerShape.get(shape);
         if (!colorPattern) {
             throw new Error("no color pattern found for shape");
+        }
+
+        if (this.key == "all") {
+            this.element.title = "All color combinations";
+        } else if (this.uniqueTileColors) {
+            this.element.title = "All colors must be unique";
+        } else if (colorPattern.numColors == 1) {
+            this.element.title = "Single color per tile";
+        } else {
+            this.element.title = `${NUMBER_TO_WORD[colorPattern.numColors]} colors per tile`;
         }
 
         const groupColors: TileColor[] = [];

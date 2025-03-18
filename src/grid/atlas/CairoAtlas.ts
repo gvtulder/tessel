@@ -1,7 +1,7 @@
 import { Atlas } from "../Atlas";
 
 export const CairoAtlas = Atlas.fromDefinition({
-    name: "Cairo5",
+    name: "Cairo pentagonal",
     shapes: {
         P: {
             name: "pentagon",

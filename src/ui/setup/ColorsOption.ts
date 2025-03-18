@@ -1,7 +1,7 @@
 import { BBox, TWOPI, mergeBBox } from "../../geom/math";
 import { TileColors } from "../../grid/Tile";
 import { SVG } from "../shared/svg";
-import { SettingRowOption } from "./SettingRowOption";
+import { NUMBER_TO_WORD, SettingRowOption } from "./SettingRowOption";
 
 export class ColorsOption extends SettingRowOption {
     colors: TileColors;
@@ -9,6 +9,7 @@ export class ColorsOption extends SettingRowOption {
     constructor(key: string, colors: TileColors) {
         super(key);
         this.colors = colors;
+        this.element.title = `${NUMBER_TO_WORD[colors.length]} color${colors.length != 1 ? "s" : ""}`;
 
         const palette = SVG("svg", "palette", this.element);
         let bbox: BBox = undefined!;

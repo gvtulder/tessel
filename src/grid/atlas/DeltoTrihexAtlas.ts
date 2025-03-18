@@ -1,7 +1,7 @@
 import { Atlas } from "../Atlas";
 
 export const DeltoTrihexAtlas = Atlas.fromDefinition({
-    name: "Deltoidal-Trihexagonal",
+    name: "Deltoidal-trihexagonal",
     shapes: {
         P: {
             name: "kite",

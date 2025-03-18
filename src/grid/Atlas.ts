@@ -151,6 +151,10 @@ class VertexPattern {
  */
 export class Atlas {
     /**
+     * A user-friendly name for this atlas.
+     */
+    name: string;
+    /**
      * The patterns recognized in this atlas.
      */
     patterns: readonly VertexPattern[];
@@ -174,16 +178,20 @@ export class Atlas {
 
     /**
      * Initializes the atlas with a number of patterns.
+     * @param name a user-friendly name for this atlas
      * @param shapes the shapes in these patterns
      * @param patterns one or more patterns
      * @param shapeFrequencies of the shapes
+     * @param sourceGrid
      */
     constructor(
+        name: string,
         shapes: Shape[],
         patterns: VertexPattern[],
         shapeFrequencies?: ReadonlyMap<Shape, number>,
         sourceGrid?: SourceGridType,
     ) {
+        this.name = name;
         this.patterns = patterns;
         this.shapes = shapes;
         this.sourceGrid = sourceGrid;
@@ -287,17 +295,19 @@ export class Atlas {
             throw new Error("empty atlas pattern");
         }
         return new Atlas(
+            definition.name || "",
             [...shapes.values()],
             vertexPatterns,
             shapeFrequencies,
         );
     }
 
-    static fromSourceGrid(sourceGrid: SourceGridType): Atlas {
+    static fromSourceGrid(name: string, sourceGrid: SourceGridType): Atlas {
         const vertexPatterns = computeVertexPatterns([
             ...sourceGrid.shapes.values(),
         ]);
         return new Atlas(
+            name,
             [...sourceGrid.shapes],
             vertexPatterns,
             sourceGrid.shapeFrequencies,

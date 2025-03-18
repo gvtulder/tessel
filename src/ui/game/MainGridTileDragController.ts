@@ -47,6 +47,7 @@ export class MainGridTileDragController extends TileDragController {
 
     onDragStart(context: TileDragSourceContext, evt: DragHandlerEvent) {
         super.onDragStart(context, evt);
+        if (!context.source.tile) return;
 
         this.currentlySnapped = false;
 
@@ -111,8 +112,9 @@ export class MainGridTileDragController extends TileDragController {
         context: TileDragSourceContext,
         evt: DragHandlerEvent,
         updateTransform: boolean = true,
-    ): { newTranslate: string; newScale: string } {
+    ): { newTranslate: string; newScale: string } | null {
         let res = super.onDragMove(context, evt, false);
+        if (!res) return null;
 
         const moved =
             evt.dx > -10 && evt.dx < 10 && evt.dy > -10 && evt.dy < 10;

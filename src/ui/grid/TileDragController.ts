@@ -103,6 +103,7 @@ export class TileDragController extends EventTarget {
         for (const s of this.sources) {
             if (s !== context.source) s.resetDragStatus();
         }
+        if (!context.source.tile) return;
         context.source.startDrag();
         evt.target.style.willChange = "rotate scale translate";
         evt.target.style.translate = this.currentTranslate = `0px 0px`;
@@ -136,7 +137,8 @@ export class TileDragController extends EventTarget {
         context: TileDragSourceContext,
         evt: DragHandlerEvent,
         updateTransform: boolean = true,
-    ): { newTranslate: string; newScale: string } {
+    ): { newTranslate: string; newScale: string } | null {
+        if (!context.source.tile) return null;
         context.position.dx += evt.dx;
         context.position.dy += evt.dy;
 
@@ -169,6 +171,7 @@ export class TileDragController extends EventTarget {
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragHandlerEvent): boolean {
+        if (!context.source.tile) return false;
         const match = this.mapToFixedTile(context);
 
         let successful = false;

@@ -21,6 +21,28 @@
   background: #ddd;
 }
 
+.invalid-grid-warning {
+  position: absolute;
+  top: 3vw;
+  left: 3vw;
+  top: calc(50% - 0.75 * colors.$button-scale);
+  left: calc(50% - 0.75 * colors.$button-scale);
+
+  svg {
+    width: calc(1.5 * colors.$button-scale);
+    height: calc(1.5 * colors.$button-scale);
+    fill: #e06300;
+    vector-effect: non-scaling-stroke;
+  }
+
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+.invalid-grid-warning-active {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
 .screen.game-setup .game-button.exit {
   position: absolute;
   right: 3vw;

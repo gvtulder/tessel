@@ -7,13 +7,22 @@ import { ColorPatternPerShape } from "../../grid/Shape";
 import { TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { createElement } from "../shared/html";
+import icons from "../shared/icons";
 
 export class ExampleDisplay {
     element: HTMLDivElement;
+    warningIcon: HTMLDivElement;
     gridDisplay?: ExampleGridDisplay;
 
     constructor() {
         this.element = createElement("div", "example-grid");
+
+        this.warningIcon = createElement(
+            "div",
+            "invalid-grid-warning",
+            this.element,
+        );
+        this.warningIcon.innerHTML = icons.warningIcon;
     }
 
     showAtlas(
@@ -48,6 +57,11 @@ export class ExampleDisplay {
         this.gridDisplay = gridDisplay;
         this.element.appendChild(gridDisplay.element);
         this.gridDisplay.rescale();
+
+        this.warningIcon.classList.toggle(
+            "invalid-grid-warning-active",
+            !valid,
+        );
 
         return valid;
     }

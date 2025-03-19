@@ -20,13 +20,13 @@
     height: min-content;
     grid-template-columns: min-content min-content min-content;
     grid-template-rows: min-content min-content min-content;
-    margin: max(5vh, 5vw);
+    margin: max(10vh, 10vw);
   }
 }
 
 .paint-menu-atlas-option {
-  width: min(25vh, 25vw);
-  height: min(25vh, 25vw);
+  width: min(20vh, 20vw);
+  height: min(20vh, 20vw);
   aspect-ratio: 1;
   margin: min(3vh, 3vw);
   display: flex;
@@ -67,7 +67,7 @@
   right: 3vw;
 }
 
-$swatch-scale: min(9vh, calc(2 * colors.$button-scale));
+$swatch-scale: min(8vh, calc(2 * colors.$button-scale));
 
 .color-stack {
   display: flex;
@@ -76,7 +76,7 @@ $swatch-scale: min(9vh, calc(2 * colors.$button-scale));
   width: 100%;
   box-sizing: border-box;
   justify-content: flex-end;
-  padding-bottom: $swatch-scale;
+  padding-bottom: 3vw;
   align-items: center;
 }
 

@@ -1,16 +1,16 @@
-import { Game, GameEvent, GameEventType } from "../../game/Game.js";
-import { MainGridDisplay } from "./MainGridDisplay.js";
-import { TileStackDisplay } from "./TileStackDisplay.js";
-import { ScoreDisplay } from "./ScoreDisplay.js";
-import icons from "../shared/icons.js";
-import { TileDragController } from "../grid/TileDragController.js";
-import { MainGridTileDragController } from "./MainGridTileDragController.js";
-import { UserEventType } from "../GameController.js";
-import { ScreenDisplay } from "../shared/ScreenDisplay.js";
-import { createElement } from "../shared/html.js";
-import { Button } from "../shared/Button.js";
-import { DropoutMenu } from "./DropoutMenu.js";
-import { Toggle } from "./Toggle.js";
+import { Game, GameEvent, GameEventType } from "../../game/Game";
+import { MainGridDisplay } from "./MainGridDisplay";
+import { TileStackDisplay } from "./TileStackDisplay";
+import { ScoreDisplay } from "./ScoreDisplay";
+import icons from "../shared/icons";
+import { TileDragController } from "../grid/TileDragController";
+import { MainGridTileDragController } from "./MainGridTileDragController";
+import { UserEventType } from "../GameController";
+import { ScreenDisplay } from "../shared/ScreenDisplay";
+import { createElement } from "../shared/html";
+import { Button } from "../shared/Button";
+import { DropoutMenu } from "./DropoutMenu";
+import { Toggle } from "./Toggle";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;

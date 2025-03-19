@@ -10,6 +10,13 @@ import * as SaveGames from "../saveGames";
 import { GameSetupDisplay } from "./setup/GameSetupDisplay";
 import { ScreenDisplay } from "./shared/ScreenDisplay";
 import { Workbox } from "workbox-window";
+import { PaintDisplay } from "./paint/PaintDisplay";
+import { SquaresAtlas } from "src/grid/atlas/SquaresAtlas";
+import { Grid } from "src/grid/Grid";
+import { Penrose3SourceGrid } from "src/grid/source/Penrose3SourceGrid";
+import { Atlas } from "src/grid/Atlas";
+import { SnubSquareSourceGrid } from "src/grid/source/SnubSquareSourceGrid";
+import { TrianglesAtlas } from "src/grid/atlas/TrianglesAtlas";
 
 export const enum UserEventType {
     StartGame = "startgame",
@@ -82,6 +89,8 @@ export class GameController {
             this.startGame(gameSettings);
         } else if (saveGameId == "setup") {
             this.showGameSetupDisplay();
+        } else if (saveGameId == "paint") {
+            this.showPaintDisplay();
         } else {
             let gameSettings: GameSettings | null = null;
             try {
@@ -208,6 +217,37 @@ export class GameController {
             UserEventType.StartGameFromSetup,
             handleStart,
         );
+    }
+
+    showPaintDisplay() {
+        this.resetState();
+
+        const atlas = Atlas.fromSourceGrid("", SnubSquareSourceGrid);
+        const grid = new Grid(TrianglesAtlas);
+
+        const paintDisplay = new PaintDisplay(grid);
+        this.currentScreen = paintDisplay;
+        this.container.appendChild(paintDisplay.element);
+        paintDisplay.rescale();
+
+        const handleMenu = () => {
+            destroy();
+            window.history.pushState({}, "", window.location.pathname);
+            this.showMainMenu();
+        };
+
+        const destroy = () => {
+            paintDisplay.element.remove();
+            this.currentScreen = undefined;
+            this.currentScreenDestroy = undefined;
+            paintDisplay.removeEventListener(
+                UserEventType.BackToMenu,
+                handleMenu,
+            );
+        };
+        this.currentScreenDestroy = destroy;
+
+        paintDisplay.addEventListener(UserEventType.BackToMenu, handleMenu);
     }
 
     gameFromSerializedSettings(

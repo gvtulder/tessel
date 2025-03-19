@@ -73,7 +73,7 @@ console.log(
     JSON.stringify(WONG6_PUB.map((c) => Color(c).lighten(0.05).hex())),
 );
 */
-const WONG6 = [
+export const WONG6 = [
     "#E06300",
     "#0078BB",
     "#00A679",

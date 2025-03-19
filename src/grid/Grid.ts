@@ -1,6 +1,7 @@
 import {
     System as CollisionSystem,
     Polygon as CollisionPolygon,
+    Point as CollisionPoint,
     Body,
 } from "detect-collisions";
 
@@ -811,6 +812,29 @@ export class Grid extends EventTarget {
             return false;
         });
         return bestCandidate.tile ? bestCandidate : null;
+    }
+
+    /**
+     * Returns the tile at the given grid coordinate.
+     */
+    findTileAtPoint(gridPos: Point): Tile | null {
+        let tile: Tile | null = null;
+        const point = new CollisionPoint(gridPos);
+        // this normally happens on system.insert
+        point.bbox = point.getAABBAsBBox();
+        point.minX = point.bbox.minX - point.padding;
+        point.maxX = point.bbox.maxX - point.padding;
+        point.minY = point.bbox.minY - point.padding;
+        point.maxY = point.bbox.maxY - point.padding;
+        this.system.checkOne(point, (resp) => {
+            const other = resp.b.userData as Tile;
+            if (other) {
+                tile = other;
+                return true;
+            }
+            return false;
+        });
+        return tile;
     }
 
     /**

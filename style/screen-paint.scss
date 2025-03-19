@@ -1,0 +1,104 @@
+@use "sass:color";
+@use "./colors.scss";
+
+.screen.paint-display {
+  display: grid;
+  grid-template-columns: 1fr calc(2 * (colors.$button-scale) + 6vw);
+  grid-template-rows: 1fr;
+  grid-template-areas: "paint-grid color-stack";
+
+  .paint-grid {
+    grid-area: paint-grid;
+  }
+
+  .color-stack {
+    grid-area: color-stack;
+    background: colors.$panel-bg;
+  }
+}
+
+.paint-menu {
+  position: absolute;
+  top: 3vw;
+  right: 3vw;
+}
+
+$swatch-scale: min(9vh, calc(2 * colors.$button-scale));
+
+.color-stack {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: flex-end;
+  padding-bottom: $swatch-scale;
+  align-items: center;
+}
+
+.color-swatch {
+  box-sizing: border-box;
+  margin: calc(0.1 * $swatch-scale);
+  width: $swatch-scale;
+  height: $swatch-scale;
+  border-radius: 100%;
+  border: calc(0.1 * $swatch-scale) solid colors.$panel-bg;
+  cursor: grab;
+}
+
+.color-swatch-selected {
+  border: calc(0.1 * $swatch-scale) solid colors.$main-bg;
+}
+
+.color-swatch-remove {
+  background: colors.$main-bg;
+  background: rgba(0, 0, 0, 8%);
+
+  svg {
+    width: calc(0.5 * $swatch-scale);
+    height: calc(0.5 * $swatch-scale);
+    margin: 15% 0 0 15%;
+    fill: rgba(0, 0, 0, 35%);
+  }
+}
+.color-swatch-remove.color-swatch-selected {
+  background: colors.$main-bg;
+  svg {
+    fill: rgba(0, 0, 0, 70%);
+  }
+}
+
+@media screen and (orientation: portrait) {
+  $swatch-scale: min(10vw, calc(2 * colors.$button-scale));
+
+  .screen.paint-display {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 1fr max(20vw, 40px);
+    grid-template-areas:
+      "paint-grid"
+      "color-stack";
+  }
+
+  .color-stack {
+    flex-direction: row;
+    justify-content: center;
+    padding-bottom: 0;
+  }
+
+  .color-swatch {
+    margin: calc(0.1 * $swatch-scale);
+    width: $swatch-scale;
+    height: $swatch-scale;
+    border: calc(0.1 * $swatch-scale) solid colors.$panel-bg;
+  }
+
+  .color-swatch-selected {
+    border: calc(0.1 * $swatch-scale) solid colors.$main-bg;
+  }
+
+  .color-swatch-remove svg {
+    width: calc(0.5 * $swatch-scale);
+    height: calc(0.5 * $swatch-scale);
+  }
+}

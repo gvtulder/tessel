@@ -282,7 +282,7 @@ export class GameController {
     showPaintDisplay(atlas: Atlas) {
         this.resetState();
 
-        const grid = new Grid(TrianglesAtlas);
+        const grid = new Grid(atlas);
 
         const paintDisplay = new PaintDisplay(grid);
         this.currentScreen = paintDisplay;

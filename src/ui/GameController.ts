@@ -17,6 +17,7 @@ import { Penrose3SourceGrid } from "src/grid/source/Penrose3SourceGrid";
 import { Atlas } from "src/grid/Atlas";
 import { SnubSquareSourceGrid } from "src/grid/source/SnubSquareSourceGrid";
 import { TrianglesAtlas } from "src/grid/atlas/TrianglesAtlas";
+import { PaintMenu } from "./paint/PaintMenu";
 
 export const enum UserEventType {
     StartGame = "startgame",
@@ -24,6 +25,7 @@ export const enum UserEventType {
     RestartGame = "restartgame",
     SetupMenu = "setupmenu",
     StartGameFromSetup = "startgamefromsetup",
+    Paint = "paint",
 }
 
 export class UserEvent extends Event {
@@ -90,7 +92,15 @@ export class GameController {
         } else if (saveGameId == "setup") {
             this.showGameSetupDisplay();
         } else if (saveGameId == "paint") {
-            this.showPaintDisplay();
+            this.showPaintMenuDisplay();
+        } else if (saveGameId.match("^paint-")) {
+            const key = saveGameId.split("-")[1];
+            const atlas = SaveGames.SetupCatalog.atlas.get(key);
+            if (atlas) {
+                this.showPaintDisplay(atlas.atlas);
+            } else {
+                this.showPaintMenuDisplay();
+            }
         } else {
             let gameSettings: GameSettings | null = null;
             try {
@@ -147,6 +157,12 @@ export class GameController {
             this.showGameSetupDisplay();
         };
 
+        const handlePaintMenu = () => {
+            destroy();
+            window.history.pushState({}, "", `#paint`);
+            this.showPaintMenuDisplay();
+        };
+
         const destroy = () => {
             menuDisplay.element.remove();
             this.currentScreen = undefined;
@@ -159,11 +175,16 @@ export class GameController {
                 UserEventType.SetupMenu,
                 handleSetup,
             );
+            menuDisplay.removeEventListener(
+                UserEventType.Paint,
+                handlePaintMenu,
+            );
         };
         this.currentScreenDestroy = destroy;
 
         menuDisplay.addEventListener(UserEventType.StartGame, handleStart);
         menuDisplay.addEventListener(UserEventType.SetupMenu, handleSetup);
+        menuDisplay.addEventListener(UserEventType.Paint, handlePaintMenu);
     }
 
     showGameSetupDisplay() {
@@ -219,10 +240,48 @@ export class GameController {
         );
     }
 
-    showPaintDisplay() {
+    showPaintMenuDisplay() {
         this.resetState();
 
-        const atlas = Atlas.fromSourceGrid("", SnubSquareSourceGrid);
+        const paintMenu = new PaintMenu();
+        this.currentScreen = paintMenu;
+        this.container.appendChild(paintMenu.element);
+        paintMenu.rescale();
+
+        const handleMenu = () => {
+            destroy();
+            window.history.pushState({}, "", window.location.pathname);
+            this.showMainMenu();
+        };
+
+        const handlePaint = (evt: UserEvent) => {
+            destroy();
+            const atlas = SaveGames.SetupCatalog.atlas.get(evt.gameId || "");
+            if (atlas) {
+                window.history.pushState({}, "", `#paint-${atlas.key}`);
+                this.showPaintDisplay(atlas.atlas);
+            } else {
+                window.history.pushState({}, "", window.location.pathname);
+                this.showMainMenu();
+            }
+        };
+
+        const destroy = () => {
+            paintMenu.element.remove();
+            this.currentScreen = undefined;
+            this.currentScreenDestroy = undefined;
+            paintMenu.removeEventListener(UserEventType.BackToMenu, handleMenu);
+            paintMenu.removeEventListener(UserEventType.Paint, handlePaint);
+        };
+        this.currentScreenDestroy = destroy;
+
+        paintMenu.addEventListener(UserEventType.BackToMenu, handleMenu);
+        paintMenu.addEventListener(UserEventType.Paint, handlePaint);
+    }
+
+    showPaintDisplay(atlas: Atlas) {
+        this.resetState();
+
         const grid = new Grid(TrianglesAtlas);
 
         const paintDisplay = new PaintDisplay(grid);

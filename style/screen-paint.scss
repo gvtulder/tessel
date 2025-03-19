@@ -1,6 +1,50 @@
 @use "sass:color";
 @use "./colors.scss";
 
+.screen.paint-menu-display {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .game-button {
+    position: absolute;
+    top: 3vw;
+    right: 3vw;
+  }
+
+  .paint-options {
+    display: grid;
+    width: min-content;
+    height: min-content;
+    grid-template-columns: min-content min-content min-content;
+    grid-template-rows: min-content min-content min-content;
+    margin: max(5vh, 5vw);
+  }
+}
+
+.paint-menu-atlas-option {
+  width: min(25vh, 25vw);
+  height: min(25vh, 25vw);
+  aspect-ratio: 1;
+  margin: min(3vh, 3vw);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  transition: scale 0.1s;
+  &:hover {
+    scale: 1.1;
+  }
+
+  .wrap-grid {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .screen.paint-display {
   display: grid;
   grid-template-columns: 1fr calc(2 * (colors.$button-scale) + 6vw);

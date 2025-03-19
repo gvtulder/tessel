@@ -12,6 +12,12 @@
     right: 3vw;
   }
 
+  .button-paint-menu {
+    position: absolute;
+    top: calc(3vw + 2.5 * colors.$button-scale);
+    right: 3vw;
+  }
+
   .game-list {
     display: grid;
     width: 100%;

@@ -13,6 +13,7 @@ import { AngleUse } from "../../grid/Shape";
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
     setupButton: Button;
+    paintButton: Button;
     grids: Grid[];
     gridDisplays: GridDisplay[];
     tappables: TapHandler[];
@@ -29,7 +30,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         }
 
         const setupButton = new Button(
-            icons.pencilIcon,
+            icons.swatchbookIcon,
             "Design a game",
             () => {
                 this.dispatchEvent(new UserEvent(UserEventType.SetupMenu));
@@ -38,6 +39,17 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         );
         this.setupButton = setupButton;
         this.element.appendChild(setupButton.element);
+
+        const paintButton = new Button(
+            icons.paintbrushIcon,
+            "Paint a grid",
+            () => {
+                this.dispatchEvent(new UserEvent(UserEventType.Paint));
+            },
+            "button-paint-menu",
+        );
+        this.paintButton = paintButton;
+        this.element.appendChild(paintButton.element);
 
         const gameList = document.createElement("div");
         gameList.className = "game-list";
@@ -94,6 +106,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             gd.destroy();
         }
         this.setupButton.destroy();
+        this.paintButton.destroy();
         this.tappables = [];
         this.gridDisplays = [];
         this.grids = [];

@@ -4,6 +4,7 @@ import { HexagonsAtlas } from "./atlas/HexagonsAtlas";
 import { Penrose0Atlas } from "./atlas/Penrose0Atlas";
 import { rad2deg } from "../geom/math";
 import { Grid, SortedCorners } from "./Grid";
+import { SnubSquareSourceGrid } from "./source/SnubSquareSourceGrid";
 
 function toFixed(xs: readonly number[], fractionDigits: number) {
     return xs.map((x) => x.toFixed(fractionDigits));
@@ -41,6 +42,14 @@ describe("Atlas", () => {
         expect(atlas.patterns[0].definition[1].shape).toBe(shape);
         expect(atlas.patterns[0].definition[2].shape).toBe(shape);
         expect(atlas.patterns[0].definition[3].shape).toBe(shape);
+    });
+
+    test("can be created from a SourceGrid", () => {
+        const sourceGrid = SnubSquareSourceGrid;
+        const atlas = Atlas.fromSourceGrid("snub-square", sourceGrid);
+        expect(atlas.name).toBe("snub-square");
+        expect(atlas.shapes.length).toBe(2);
+        expect(atlas.shapes).toStrictEqual(sourceGrid.shapes);
     });
 
     test("checks for valid definitions", () => {

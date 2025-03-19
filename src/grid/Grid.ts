@@ -412,7 +412,9 @@ export class Grid extends EventTarget {
         );
     }
 
-    // TODO documentation
+    /**
+     * Places a new tile at the initial position.
+     */
     addInitialTile(): Tile {
         const sourcePoint = this.sourceGrid && this.sourceGrid.getOrigin();
         const shape = sourcePoint ? sourcePoint.shape : this.atlas.shapes[0];

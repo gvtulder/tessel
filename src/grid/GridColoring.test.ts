@@ -4,7 +4,7 @@ import { SquaresAtlas } from "./atlas/SquaresAtlas";
 import { GridColoring } from "./GridColoring";
 import { seedPRNG } from "../geom/RandomSampler";
 import { ColorPattern, Shape } from "./Shape";
-import { DifferentEdgeColorsRuleSet } from "./RuleSet";
+import { DifferentEdgeColorsRuleSet, MatchEdgeColorsRuleSet } from "./RuleSet";
 
 describe("GridColoring", () => {
     const buildGrid = (prng = seedPRNG(12345)) => {
@@ -140,5 +140,19 @@ describe("GridColoring", () => {
         const coloring = new GridColoring(grid);
         expect(coloring.groups.size).toBe(400);
         expect(coloring.assignColors(["red", "green", "blue"])).not.toBeNull();
+    });
+
+    test("returns null for impossible colorings", () => {
+        const grid = buildGrid();
+        grid.rules = new DifferentEdgeColorsRuleSet();
+        const coloring = new GridColoring(grid);
+        const colorPattern = new Map();
+        colorPattern.set(grid.atlas.shapes[0], {
+            numColors: 4,
+            segmentColors: [[0, 1, 2, 3]],
+        });
+        coloring.applyColorPattern(colorPattern, true);
+        expect(coloring.groups.size).toBe(400);
+        expect(coloring.assignColors(["red", "green", "blue"])).toBeNull();
     });
 });

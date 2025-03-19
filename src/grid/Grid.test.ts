@@ -7,6 +7,8 @@ import { mergeBBox, P, weightedSumPoint } from "../geom/math";
 import { rotateArray } from "../geom/arrays";
 import { SquaresAtlas } from "./atlas/SquaresAtlas";
 import { TrianglesAtlas } from "./atlas/TrianglesAtlas";
+import { Atlas } from "./Atlas";
+import { SnubSquareSourceGrid } from "./source/SnubSquareSourceGrid";
 
 const TRIANGLE = TrianglesAtlas.shapes[0];
 
@@ -347,6 +349,20 @@ describe("Grid", () => {
         expect(grid.placeholders.size).toBe(2);
     });
 
+    test("can add an initial tile", () => {
+        const grid = new Grid(atlas);
+        const tile = grid.addInitialTile();
+        expect(tile.shape).toBe(atlas.shapes[0]);
+    });
+
+    test("can add an initial tile from a source grid", () => {
+        const atlas = Atlas.fromSourceGrid("", SnubSquareSourceGrid);
+        const grid = new Grid(atlas);
+        const tile = grid.addInitialTile();
+        expect(tile.shape).toBe(atlas.shapes[0]);
+        expect(tile.sourcePoint).toBeDefined();
+    });
+
     test("computes combined bbox", () => {
         const grid = new Grid(atlas);
 
@@ -381,7 +397,6 @@ describe("Grid", () => {
 
         for (const edge of tile1.edges) {
             const possibleTiles = grid.computePossibilities(edge);
-            console.log(possibleTiles);
             expect(possibleTiles.length).toBe(1);
         }
 
@@ -392,8 +407,19 @@ describe("Grid", () => {
 
         for (const edge of grid.frontier) {
             const possibleTiles = grid.computePossibilities(edge);
-            console.log(possibleTiles);
             expect(possibleTiles.length).toBe(1);
+        }
+    });
+
+    test("can suggest possible tiles given a source grid", () => {
+        const atlas = Atlas.fromSourceGrid("", SnubSquareSourceGrid);
+        const grid = new Grid(atlas);
+        const tile1 = grid.addInitialTile();
+        expect(tile1.shape).toBe(atlas.shapes[0]);
+        for (const edge of tile1.edges) {
+            const possibleTiles = grid.computePossibilities(edge);
+            expect(possibleTiles.length).toBe(1);
+            expect(possibleTiles[0].shape).toBe(atlas.shapes[1]);
         }
     });
 

@@ -9,14 +9,29 @@ type RingEdge = {
     next: RingEdge;
 };
 
+/**
+ * Maintains a set of linked edges, tracking the boundary
+ * rings (outer for shapes, inner for holes) on the grid.
+ */
 export class Rings {
+    /**
+     * The edges currently registered.
+     */
     edges: Map<EdgeKey, RingEdge>;
+    /**
+     * Cache variable for the get rings function.
+     */
     private _rings?: readonly (readonly Point[])[];
 
     constructor() {
         this.edges = new Map<EdgeKey, RingEdge>();
     }
 
+    /**
+     * Adds a ring of edges to the grid. Merges with existing
+     * rings if applicable.
+     * @param points the sequence of points forming the new ring
+     */
     addRing(points: readonly Point[]): void {
         const edges = this.pointsToRing(points);
         if (this.edges.size > edges.length) {
@@ -39,10 +54,19 @@ export class Rings {
         this._rings = undefined;
     }
 
+    /**
+     * Removes a ring from the grid.
+     * @param points the sequence of points forming the ring to be removed
+     */
     removeRing(points: readonly Point[]) {
         this.addRing([...points].reverse());
     }
 
+    /**
+     * Returns the list of rings currently managed.
+     * Clockwise rings indicate outer rings, counter-clockwise
+     * indicates a hole.
+     */
     get rings(): readonly (readonly Point[])[] {
         if (this._rings) return this._rings;
         const rings = [];
@@ -63,6 +87,10 @@ export class Rings {
         return rings;
     }
 
+    /**
+     * Converts the list of points to a list edges,
+     * creating new linked edges if necessary.
+     */
     private pointsToRing(points: readonly Point[]): RingEdge[] {
         const n = points.length;
         const edges = new Array<RingEdge>(n);

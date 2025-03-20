@@ -18,7 +18,7 @@ $toggle-fg: color.change($green, $lightness: 32%);
 $toggle-bg: color.change($green, $lightness: 85%);
 
 $setup-play-button-bg: color.change($green, $lightness: 32%);
-$setup-play-button-bg-disabled: color.change($green, $lightness: 60%);
+$setup-play-button-bg-disabled: rgba(0, 0, 0, 10%);
 $setup-play-button-fg: color.change($green, $lightness: 95%);
 
 $home-button-bg: color.change($blue, $lightness: 32%);

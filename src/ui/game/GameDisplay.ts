@@ -116,7 +116,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         menu.addButton(this.backtomenubutton);
 
         this.setupbutton = new Button(
-            icons.pencilIcon,
+            icons.swatchbookIcon,
             "Design a game",
             () => this.dispatchEvent(new Event(UserEventType.SetupMenu)),
             "setup",

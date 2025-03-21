@@ -3,20 +3,29 @@ import { Grid } from "../../grid/Grid";
 import { Tile, TileColor, TileSegment } from "../../grid/Tile";
 
 export type ScoredRegion = {
-    origin: TileSegment;
-    color: TileColor;
-    tiles: Set<Tile>;
-    segments: Set<TileSegment>;
+    origin?: TileSegment;
+    color?: TileColor;
+    tiles?: Set<Tile>;
+    segments?: Set<TileSegment>;
     boundary: readonly Point[];
     finished: boolean;
     points: number;
 };
 
-export interface Scorer {
+export type ScorerType = typeof Scorer;
+
+export abstract class Scorer {
     /**
      * A friendly name for the scorer.
      */
-    name: string;
+    static friendlyName: string;
+
+    /**
+     * Create a new Scorer instance.
+     */
+    static create(): Scorer {
+        throw new Error("should be implemented in subclass");
+    }
 
     /**
      * Computes the score after placing the given tile.
@@ -26,7 +35,7 @@ export interface Scorer {
      * @param includeIncomplete return incomplete regions?
      * @returns the regions found from the tile
      */
-    computeScores(
+    abstract computeScores(
         grid: Grid,
         tile: Tile,
         includeIncomplete?: boolean,

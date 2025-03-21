@@ -4,8 +4,12 @@ import { Grid, edgeToKey } from "../../grid/Grid";
 import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
 
-export class ConvexShapeScorer implements Scorer {
-    name = "Convex shapes";
+export class ConvexShapeScorer extends Scorer {
+    static friendlyName = "Convex shapes";
+
+    static create() {
+        return new ConvexShapeScorer();
+    }
 
     computeScores(
         grid: Grid,

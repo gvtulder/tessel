@@ -326,19 +326,19 @@ export const SetupCatalog = {
     scorers: options(
         {
             key: "shape",
-            scorer: new ConnectedSegmentScorer(),
+            scorer: ConnectedSegmentScorer,
         },
         {
             key: "single-tile",
-            scorer: new FullTileScorer(),
+            scorer: FullTileScorer,
         },
         {
             key: "vertex",
-            scorer: new FullVertexScorer(),
+            scorer: FullVertexScorer,
         },
         {
             key: "convex",
-            scorer: new ConvexShapeScorer(),
+            scorer: ConvexShapeScorer,
         },
         /*
         {

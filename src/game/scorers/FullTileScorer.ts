@@ -2,8 +2,12 @@ import { Grid } from "../../grid/Grid";
 import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
 
-export class FullTileScorer implements Scorer {
-    name = "Single tiles";
+export class FullTileScorer extends Scorer {
+    static friendlyName = "Single tiles";
+
+    static create() {
+        return new FullTileScorer();
+    }
 
     computeScores(
         grid: Grid,

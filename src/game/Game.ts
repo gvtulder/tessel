@@ -1,5 +1,5 @@
 import { Grid } from "../grid/Grid";
-import { ScoredRegion, Scorer } from "./scorers/Scorer";
+import { ScoredRegion, Scorer, ScorerType } from "./scorers/Scorer";
 import { ConnectedSegmentScorer } from "./scorers/ConnectedSegmentScorer";
 import { Tile, TileColors } from "../grid/Tile";
 import { TileGenerator, TileGenerators } from "./TileGenerator";
@@ -15,7 +15,7 @@ export type GameSettings = {
     atlas: Atlas;
     colors?: TileColors;
     rules?: RuleSet;
-    scorer?: Scorer;
+    scorer?: ScorerType;
     colorPatternPerShape?: ColorPatternPerShape;
     tilesShownOnStack: number;
     initialTile: TileColors;
@@ -72,7 +72,7 @@ export class Game extends EventTarget {
 
         this.grid = new Grid(this.settings.atlas);
         if (settings.rules) this.grid.rules = settings.rules;
-        this.scorer = settings.scorer || new ConnectedSegmentScorer();
+        this.scorer = (settings.scorer || ConnectedSegmentScorer).create();
 
         // generate tiles
         let tiles: TileShapeColors[] = [];

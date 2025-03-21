@@ -11,12 +11,8 @@ import { GameSetupDisplay } from "./setup/GameSetupDisplay";
 import { ScreenDisplay } from "./shared/ScreenDisplay";
 import { Workbox } from "workbox-window";
 import { PaintDisplay } from "./paint/PaintDisplay";
-import { SquaresAtlas } from "src/grid/atlas/SquaresAtlas";
-import { Grid } from "src/grid/Grid";
-import { Penrose3SourceGrid } from "src/grid/source/Penrose3SourceGrid";
-import { Atlas } from "src/grid/Atlas";
-import { SnubSquareSourceGrid } from "src/grid/source/SnubSquareSourceGrid";
-import { TrianglesAtlas } from "src/grid/atlas/TrianglesAtlas";
+import { Grid } from "../grid/Grid";
+import { Atlas } from "../grid/Atlas";
 import { PaintMenu } from "./paint/PaintMenu";
 
 export const enum UserEventType {

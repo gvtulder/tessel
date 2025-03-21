@@ -1,4 +1,4 @@
-import { PlaceholderTile } from "src/grid/Tile";
+import { PlaceholderTile } from "../../grid/Tile";
 import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
 import { PaintDisplay } from "./PaintDisplay";

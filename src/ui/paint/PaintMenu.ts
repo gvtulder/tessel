@@ -8,9 +8,9 @@ import { Button } from "../shared/Button";
 import { PaintGridDisplay } from "./PaintGridDisplay";
 import { ColorStackDisplay } from "./ColorStackDisplay";
 import { WONG6 } from "../../saveGames";
-import { Atlas } from "src/grid/Atlas";
+import { Atlas } from "../../grid/Atlas";
 import { GridDisplay } from "../grid/GridDisplay";
-import { AngleUse } from "src/grid/Shape";
+import { AngleUse } from "../../grid/Shape";
 import { SetupCatalog } from "../../saveGames";
 import { TapHandler } from "../shared/TapHandler";
 

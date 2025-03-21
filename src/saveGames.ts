@@ -1,10 +1,8 @@
 import { GameSettings } from "./game/Game";
-import {
-    ConnectedSegmentScorer,
-    ConvexShapeScorer,
-    FullTileScorer,
-    FullVertexScorer,
-} from "./game/Scorer";
+import { ConnectedSegmentScorer } from "./game/scorers/ConnectedSegmentScorer";
+import { FullTileScorer } from "./game/scorers/FullTileScorer";
+import { ConvexShapeScorer } from "./game/scorers/ConvexShapeScorer";
+import { FullVertexScorer } from "./game/scorers/FullVertexScorer";
 import { TileGenerators } from "./game/TileGenerator";
 import { Atlas } from "./grid/Atlas";
 import { HexagonsAtlas } from "./grid/atlas/HexagonsAtlas";

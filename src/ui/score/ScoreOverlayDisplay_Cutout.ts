@@ -1,4 +1,4 @@
-import { ScoredRegion } from "../../game/Scorer";
+import { ScoredRegion } from "../../game/scorers/Scorer";
 import { roundPathCorners } from "../../lib/svg-rounded-corners";
 import { BGCOLOR } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";

@@ -1,4 +1,4 @@
-import { ScoredRegion } from "../../game/Scorer";
+import { ScoredRegion } from "../../game/scorers/Scorer";
 import { computeOutline, Vertex, Edge } from "../../lib/compute-outline";
 import { SVG } from "../shared/svg";
 

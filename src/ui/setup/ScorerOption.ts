@@ -1,4 +1,4 @@
-import { Scorer } from "../../game/Scorer";
+import { Scorer } from "../../game/scorers/Scorer";
 import { SettingRowOption } from "./SettingRowOption";
 import SVG_CONVEX from "bundle-text:./svgs/scorer-convex.svg";
 import SVG_HOLES from "bundle-text:./svgs/scorer-holes.svg";

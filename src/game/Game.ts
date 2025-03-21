@@ -1,5 +1,6 @@
 import { Grid } from "../grid/Grid";
-import { ConnectedSegmentScorer, ScoredRegion, Scorer } from "./Scorer";
+import { ScoredRegion, Scorer } from "./scorers/Scorer";
+import { ConnectedSegmentScorer } from "./scorers/ConnectedSegmentScorer";
 import { Tile, TileColors } from "../grid/Tile";
 import { TileGenerator, TileGenerators } from "./TileGenerator";
 import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";

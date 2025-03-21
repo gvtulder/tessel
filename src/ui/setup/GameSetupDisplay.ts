@@ -123,18 +123,12 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.settingSegments = settingSegments;
         this.settingRows.push(settingSegments);
 
-        const rulesAndScorer = createElement(
-            "div",
-            "rules-and-scorer",
-            settingsDiv,
-        );
-
         const settingRules = new RulesSettingRow();
         for (const { key, rules, exampleColors } of catalog.rules.values()) {
             settingRules.addOption(new RulesOption(key, rules, exampleColors));
         }
         settingRules.selectStoredOrDefault(catalog.defaultRules);
-        rulesAndScorer.appendChild(settingRules.element);
+        settingsDiv.appendChild(settingRules.element);
         this.settingRules = settingRules;
         this.settingRows.push(settingRules);
 
@@ -143,7 +137,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
             settingScorer.addOption(new ScorerOption(key, scorer));
         }
         settingScorer.selectStoredOrDefault(catalog.defaultScorer);
-        rulesAndScorer.appendChild(settingScorer.element);
+        settingsDiv.appendChild(settingScorer.element);
         this.settingScorer = settingScorer;
         this.settingRows.push(settingScorer);
 

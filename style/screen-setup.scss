@@ -61,15 +61,14 @@
   text-align: center;
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
-  margin-top: 2vh;
 }
 .screen.game-setup .game-button.play {
   width: min(8vw, 13vh);
   height: min(8vw, 13vh);
   padding: 10px;
-  margin: min(1vw, 1vh) min(2vw, 2vh);
+  margin: 0 min(3vw, 3vh) 0 0;
   border-radius: 100%;
   background: colors.$setup-play-button-bg;
   text-align: center;
@@ -106,42 +105,38 @@
   grid-area: settings;
   display: grid;
   grid-template-areas:
-    "atlas colors"
-    "segments rules"
-    "buttons rules";
-  grid-template-columns: min-content auto;
+    "atlas atlas colors colors"
+    "segments segments segments segments"
+    "rules scorer scorer buttons";
+  grid-template-columns: min-content min-content min-content 1fr;
   grid-template-rows: min-content min-content min-content;
   justify-content: center;
   align-content: center;
-  margin-top: calc(1.5 * colors.$button-scale);
-}
-.screen.game-setup .setting-row.atlas {
-  grid-area: atlas;
-}
-.screen.game-setup .setting-row.colors {
-  grid-area: colors;
-}
-.screen.game-setup .setting-row.segments {
-  grid-area: segments;
 }
 .screen.game-setup .setting-row {
   display: grid;
   grid-template-columns: min-content min-content min-content;
   grid-template-rows: min-content min-content min-content min-content;
   padding: min(8vw, 2vh);
-
-  &.segments.count4,
-  &.scorer.count4,
-  &.colors,
-  &.rules {
-    grid-template-columns: min-content min-content;
-  }
 }
-.screen.game-setup .rules-and-scorer {
+.screen.game-setup .setting-row.atlas {
+  grid-area: atlas;
+}
+.screen.game-setup .setting-row.colors {
+  grid-area: colors;
+  grid-template-columns: min-content min-content;
+}
+.screen.game-setup .setting-row.segments {
+  grid-area: segments;
+  grid-template-columns: repeat(5, min-content min-content min-content);
+}
+.screen.game-setup .setting-row.rules {
   grid-area: rules;
+  grid-template-columns: min-content;
 }
-.screen.game-setup .rules-and-scorer .setting-row + .setting-row {
-  padding-top: 0;
+.screen.game-setup .setting-row.scorer {
+  grid-area: scorer;
+  grid-template-columns: min-content min-content min-content;
 }
 .screen.game-setup .setting-row:last-child {
   border-bottom: none;
@@ -180,56 +175,29 @@
   padding: 11%;
 }
 
-@media screen and (min-aspect-ratio: 1.5) {
-  .screen.game-setup .settings {
-    grid-template-areas:
-      "atlas colors buttons"
-      "segments rules buttons";
-    grid-template-columns: min-content auto auto;
-    grid-template-rows: min-content min-content;
-    margin-right: calc(3 * colors.$button-scale);
-    margin-top: 0;
-  }
-  .screen.game-setup .settings .button-row {
-    margin-left: calc(0.5 * colors.$button-scale);
-    align-items: center;
-    justify-content: right;
-  }
-  .screen.game-setup .setting-row-option {
-    width: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
-    height: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
-  }
-}
-
 @media screen and (min-aspect-ratio: 0.8) and (max-aspect-ratio: 1.1) {
   .screen.game-setup .setting-row-option {
     width: min(calc(min(42vw) / 5), calc(min(50vh) / 5));
     height: min(calc(min(42vw) / 5), calc(min(50vh) / 5));
   }
-  /*
-  .screen.game-setup .setting-row {
-    grid-template-columns: min-content min-content;
-    grid-template-rows: min-content min-content min-content min-content;
-  }
-  .screen.game-setup .setting-row-option {
-    width: calc(45vw / 5);
-    height: calc(45vw / 5);
-  }
-  */
 }
 
 @media screen and (max-aspect-ratio: 0.8) {
   .screen.game-setup {
     grid-template-areas:
-      "example example"
-      "settings buttons";
-    grid-template-columns: max-content auto;
+      "example"
+      "settings";
+    grid-template-columns: 1fr;
     grid-template-rows: 1fr min-content;
+    justify-content: center;
   }
   .screen.game-setup .settings {
     grid-template-areas:
-      "atlas colors buttons"
-      "segments rules buttons";
+      "atlas atlas colors colors"
+      "segments segments segments segments"
+      "rules scorer scorer buttons";
+    grid-template-columns: min-content min-content min-content min-content;
+    grid-template-rows: min-content min-content min-content;
     margin: 2vh 0 2vh 1vw;
   }
   .screen.game-setup .settings .button-row {
@@ -248,19 +216,3 @@
     height: min(12vw, 13vh);
   }
 }
-
-/*
-@media screen and (max-aspect-ratio: 0.5) {
-  .screen.game-setup .settings {
-    margin: 1vw;
-  }
-  .screen.game-setup .setting-row {
-    grid-template-columns: min-content min-content;
-    grid-template-rows: min-content min-content min-content min-content;
-  }
-  .screen.game-setup .setting-row-option {
-    width: calc(50vw / 4);
-    height: calc(50vw / 4);
-  }
-}
-*/

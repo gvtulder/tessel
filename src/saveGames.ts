@@ -334,12 +334,12 @@ export const SetupCatalog = {
             scorer: FullTileScorer,
         },
         {
-            key: "vertex",
-            scorer: FullVertexScorer,
-        },
-        {
             key: "convex",
             scorer: ConvexShapeScorer,
+        },
+        {
+            key: "vertex",
+            scorer: FullVertexScorer,
         },
         {
             key: "holes",

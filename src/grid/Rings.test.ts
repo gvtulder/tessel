@@ -74,7 +74,6 @@ describe("Rings", () => {
 
         ring.removeRing([c, e, g]);
         expect(ring.edges.size).toBe(7);
-        console.log(ring.rings);
         expect(ring.rings).toStrictEqual([[a, b, c, g, f, e, d]]);
     });
 });

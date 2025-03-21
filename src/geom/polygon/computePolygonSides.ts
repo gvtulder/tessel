@@ -31,7 +31,6 @@ export function computePolygonSides(
     const lastIdx = (start + n - 1) % n;
     const expected = sides ? sides[lastIdx] : 1;
     if (expected && Math.abs(expected - side) > 1e-5) {
-        console.log(expected, sides, computedSides, angles);
         throw new Error(
             `Invalid shape: computed side ${side} does not match expected side ${expected}`,
         );

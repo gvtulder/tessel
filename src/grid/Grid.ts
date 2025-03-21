@@ -354,9 +354,7 @@ export class Grid extends EventTarget {
      */
     constructor(atlas: Atlas, rules?: RuleSet, sourceGrid?: SourceGrid) {
         if (!sourceGrid && atlas.sourceGrid) {
-            console.log("new Grid: sourceGrid=", sourceGrid);
             sourceGrid = atlas.sourceGrid.create();
-            console.log("new Grid: sourceGrid=", sourceGrid);
         }
 
         super();

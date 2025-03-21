@@ -115,7 +115,6 @@ describe("Shape", () => {
         ] as ColorPattern[]);
 
         const rhombus = new Shape("rhombus", [72, 108, 72, 108]);
-        console.log(JSON.stringify(rhombus.colorPatterns));
         expect(rhombus.colorPatterns).toStrictEqual([
             { numColors: 4, segmentColors: [[0, 1, 2, 3]] },
             { numColors: 2, segmentColors: [[0, 0, 1, 1]] },

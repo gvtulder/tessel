@@ -1,5 +1,5 @@
 import { TileColor, TileColors } from "../../grid/Tile";
-import { DragHandler } from "../shared/DragHandler";
+import { TapHandler } from "../shared/TapHandler";
 import { createElement } from "../shared/html";
 import icons from "../shared/icons";
 import { PaintDisplay } from "./PaintDisplay";
@@ -17,14 +17,14 @@ export class ColorStackDisplay {
         this.swatches = [];
         for (const color of colors) {
             const swatch = new ColorSwatch(color);
-            swatch.dragHandler.onTap = () => {
+            swatch.tapHandler.onTap = () => {
                 this.selectSwatch(swatch);
             };
             this.element.appendChild(swatch.element);
             this.swatches.push(swatch);
         }
         const swatch = new ColorSwatch(null);
-        swatch.dragHandler.onTap = () => {
+        swatch.tapHandler.onTap = () => {
             this.selectSwatch(swatch);
         };
         this.element.appendChild(swatch.element);
@@ -35,7 +35,7 @@ export class ColorStackDisplay {
 
     selectSwatch(selected: ColorSwatch) {
         for (const swatch of this.swatches) {
-            swatch.element.classList.toggle(
+            swatch.swatch.classList.toggle(
                 "color-swatch-selected",
                 swatch === selected,
             );
@@ -59,24 +59,29 @@ export class ColorStackDisplay {
 
 class ColorSwatch {
     element: HTMLDivElement;
-    dragHandler: DragHandler;
+    swatch: HTMLDivElement;
+    tapHandler: TapHandler;
     color: TileColor | null;
 
     constructor(color: TileColor | null) {
         this.color = color;
-        const swatch = createElement("div", "color-swatch");
+        const wrap = (this.element = createElement("div", "color-swatch-wrap"));
+        const swatch = (this.swatch = createElement(
+            "div",
+            "color-swatch",
+            wrap,
+        ));
         if (color) {
             swatch.style.background = color;
         } else {
             swatch.classList.add("color-swatch-remove");
             swatch.innerHTML = icons.eraserIcon;
         }
-        this.element = swatch;
-        this.dragHandler = new DragHandler(swatch);
+        this.tapHandler = new TapHandler(wrap);
     }
 
     destroy() {
         this.element.remove();
-        this.dragHandler.destroy();
+        this.tapHandler.destroy();
     }
 }

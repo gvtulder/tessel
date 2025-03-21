@@ -80,6 +80,13 @@ $swatch-scale: min(8vh, calc(2 * colors.$button-scale));
   align-items: center;
 }
 
+.color-swatch-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .color-swatch {
   box-sizing: border-box;
   margin: calc(0.1 * $swatch-scale);
@@ -128,6 +135,14 @@ $swatch-scale: min(8vh, calc(2 * colors.$button-scale));
     flex-direction: row;
     justify-content: center;
     padding-bottom: 0;
+  }
+
+  .color-swatch-wrap {
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .color-swatch {

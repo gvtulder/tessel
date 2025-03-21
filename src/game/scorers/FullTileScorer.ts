@@ -32,7 +32,6 @@ export class FullTileScorer implements Scorer {
             color: tile.segments[0].color!,
             tiles: new Set<Tile>([tile]),
             segments: new Set<TileSegment>(tile.segments),
-            edges: edges,
             finished: true,
             points: 1,
         };

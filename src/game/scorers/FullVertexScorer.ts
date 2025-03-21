@@ -42,7 +42,6 @@ export class FullVertexScorer implements Scorer {
                     color: tile.segments[0].color!,
                     tiles: tiles,
                     segments: shapeSegments,
-                    edges: [],
                     finished: true,
                     points: shapeSegments.size / 2,
                 };

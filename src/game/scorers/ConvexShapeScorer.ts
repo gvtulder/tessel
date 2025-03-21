@@ -65,7 +65,6 @@ export class ConvexShapeScorer implements Scorer {
                 color: tile.segments[0].color!,
                 tiles: tiles,
                 segments: segments,
-                edges: [],
                 finished: true,
                 points: tiles.size,
             };

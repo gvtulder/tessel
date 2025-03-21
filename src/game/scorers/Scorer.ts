@@ -6,7 +6,6 @@ export type ScoredRegion = {
     color: TileColor;
     tiles: Set<Tile>;
     segments: Set<TileSegment>;
-    edges: { from: TileSegment; to: TileSegment }[];
     finished: boolean;
     points: number;
 };

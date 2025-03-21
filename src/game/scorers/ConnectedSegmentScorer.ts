@@ -24,14 +24,12 @@ export class ConnectedSegmentScorer implements Scorer {
                 const color = origin.color;
                 const tilesInShape = new Set<Tile>();
                 const segmentsInShape = new Set<TileSegment>();
-                const edgesInShape: ScoredRegion["edges"] = [];
 
                 const shape: ScoredRegion = {
                     origin: origin,
                     color: origin.color!,
                     tiles: tilesInShape,
                     segments: segmentsInShape,
-                    edges: edgesInShape,
                     finished: true,
                     points: 0,
                 };
@@ -56,7 +54,6 @@ export class ConnectedSegmentScorer implements Scorer {
                                 queue.push(neighbor);
                                 visited.add(neighbor);
                             }
-                            edgesInShape.push({ from: segment, to: neighbor });
                         }
                     }
                 }

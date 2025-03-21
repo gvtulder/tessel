@@ -4,7 +4,7 @@ import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
 
 export class FullVertexScorer extends Scorer {
-    static friendlyName = "Full vertex";
+    static friendlyName = "Score full vertices";
 
     static create() {
         return new FullVertexScorer();

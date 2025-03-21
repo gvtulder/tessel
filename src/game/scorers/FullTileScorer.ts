@@ -3,7 +3,7 @@ import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
 
 export class FullTileScorer extends Scorer {
-    static friendlyName = "Single tiles";
+    static friendlyName = "Score single tiles";
 
     static create() {
         return new FullTileScorer();

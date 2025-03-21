@@ -5,6 +5,9 @@ import { BGCOLOR, SCALE } from "../../settings";
 import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
 import { SVG } from "../shared/svg";
 
+/**
+ * @deprecated Unused, see ScoreOverlayDisplay_Cutout.
+ */
 export class ScoreOverlayDisplay_Outline extends ScoreOverlayDisplay {
     fg: SVGElement;
     group?: SVGElement;

@@ -4,6 +4,9 @@ import { TileSegment } from "../../grid/Tile";
 import { SVG } from "../shared/svg";
 import { Point, weightedSumPoint } from "../../geom/math";
 
+/**
+ * @deprecated Unused, see ScoreOverlayDisplay_Cutout.
+ */
 export class ScoreOverlayDisplay_Circles extends ScoreOverlayDisplay {
     group?: SVGElement;
 

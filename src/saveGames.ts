@@ -24,6 +24,7 @@ import { SnubSquareSourceGrid } from "./grid/source/SnubSquareSourceGrid";
 import { Tile, TileColors } from "./grid/Tile";
 import Color from "color";
 import { AmmannBeenkerAtlas } from "./grid/atlas/AmmannBeenkerAtlas";
+import { HoleScorer } from "./game/scorers/HoleScorer";
 
 const COLORS = [
     "red",
@@ -340,12 +341,10 @@ export const SetupCatalog = {
             key: "convex",
             scorer: ConvexShapeScorer,
         },
-        /*
         {
             key: "holes",
-            scorer: new HolesScorer(),
+            scorer: HoleScorer,
         },
-        */
     ),
     defaultScorer: "shape",
 };

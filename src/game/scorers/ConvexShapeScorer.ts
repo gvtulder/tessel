@@ -58,13 +58,12 @@ export class ConvexShapeScorer implements Scorer {
                 }
             }
 
-            // TODO origin, color etc. does not really make sense
-            // boundary would be more efficient
             const shape: ScoredRegion = {
                 origin: tile.segments[0],
                 color: tile.segments[0].color!,
                 tiles: tiles,
                 segments: segments,
+                boundary: ring,
                 finished: true,
                 points: tiles.size,
             };

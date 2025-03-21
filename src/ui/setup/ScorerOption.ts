@@ -15,7 +15,6 @@ export class ScorerOption extends SettingRowOption {
         this.element.title = scorer.name;
 
         let svg = "";
-        console.log(SVG_CONVEX);
         if (key == "convex") {
             svg = SVG_CONVEX;
         } else if (key == "holes") {

@@ -98,12 +98,11 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         let boundaryBBox: BBox | undefined = undefined;
 
         for (const shape of shapes) {
-            const outlineResult = this.computeOutline(shape);
-            const boundary = outlineResult.boundary;
+            const boundary = shape.boundary;
             boundaryBBox = mergeBBox(boundaryBBox, bbox(boundary));
-            const pathComponents = boundary
-                .reverse()
-                .map((v) => `${(v.x * S).toFixed(4)},${(v.y * S).toFixed(4)}`);
+            const pathComponents = boundary.map(
+                (v) => `${(v.x * S).toFixed(4)},${(v.y * S).toFixed(4)}`,
+            );
             const roundPathString = roundPathCorners(
                 "M " + pathComponents.join(" L ") + " Z",
                 0.1,

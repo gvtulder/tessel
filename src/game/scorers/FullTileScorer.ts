@@ -26,12 +26,12 @@ export class FullTileScorer implements Scorer {
             });
         }
 
-        // TODO origin, color etc. does not really make sense
         const shape: ScoredRegion = {
             origin: tile.segments[0],
             color: tile.segments[0].color!,
             tiles: new Set<Tile>([tile]),
             segments: new Set<TileSegment>(tile.segments),
+            boundary: tile.polygon.vertices,
             finished: true,
             points: 1,
         };

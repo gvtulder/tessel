@@ -118,3 +118,22 @@ export class Rings {
         return edges;
     }
 }
+
+/**
+ * Returns the outermost ring formed by the smaller shapes.
+ * @param points the polygon vertices forming the rings
+ * @returns the outer ring
+ */
+export function computeRing(
+    points: readonly (readonly Point[])[],
+): readonly Point[] {
+    const ringSet = new Rings();
+    for (const ring of points) {
+        ringSet.addRing(ring);
+    }
+    const rings = ringSet.rings;
+    if (rings.length != 1) {
+        throw new Error(`Expected to find one ring, but found ${rings.length}`);
+    }
+    return rings[0];
+}

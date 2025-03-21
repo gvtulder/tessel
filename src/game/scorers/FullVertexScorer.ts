@@ -1,3 +1,4 @@
+import { computeRing } from "../../grid/Rings";
 import { Grid } from "../../grid/Grid";
 import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
@@ -36,12 +37,14 @@ export class FullVertexScorer implements Scorer {
                     tiles.add(tile);
                 }
 
-                // TODO origin, color etc. does not really make sense
                 const shape: ScoredRegion = {
                     origin: tile.segments[0],
                     color: tile.segments[0].color!,
                     tiles: tiles,
                     segments: shapeSegments,
+                    boundary: computeRing(
+                        [...shapeSegments].map((s) => s.polygon.vertices),
+                    ),
                     finished: true,
                     points: shapeSegments.size / 2,
                 };

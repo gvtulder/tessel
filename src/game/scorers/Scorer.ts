@@ -1,3 +1,4 @@
+import { Point } from "../../geom/math";
 import { Grid } from "../../grid/Grid";
 import { Tile, TileColor, TileSegment } from "../../grid/Tile";
 
@@ -6,6 +7,7 @@ export type ScoredRegion = {
     color: TileColor;
     tiles: Set<Tile>;
     segments: Set<TileSegment>;
+    boundary: readonly Point[];
     finished: boolean;
     points: number;
 };

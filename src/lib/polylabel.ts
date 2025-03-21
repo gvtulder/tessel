@@ -5,7 +5,7 @@ import { TinyQueue } from "./tinyqueue";
 
 type Pole = { x: number; y: number; distance: number };
 // TODO switch to Point { x, y }
-type Polygon = Point[][];
+type Polygon = readonly (readonly Point[])[];
 
 export function polylabel(
     polygon: Polygon,

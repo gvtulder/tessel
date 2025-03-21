@@ -1,3 +1,4 @@
+import { computeRing } from "../../grid/Rings";
 import { Grid } from "../../grid/Grid";
 import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
@@ -30,6 +31,7 @@ export class ConnectedSegmentScorer implements Scorer {
                     color: origin.color!,
                     tiles: tilesInShape,
                     segments: segmentsInShape,
+                    boundary: [],
                     finished: true,
                     points: 0,
                 };
@@ -61,6 +63,9 @@ export class ConnectedSegmentScorer implements Scorer {
         }
 
         for (const shape of shapes) {
+            shape.boundary = computeRing(
+                [...shape.segments].map((s) => s.polygon.vertices),
+            );
             if (shape.finished) {
                 // double points for shapes with four tiles or more
                 shape.points =

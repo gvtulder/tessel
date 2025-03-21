@@ -120,67 +120,13 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
             const polylabelPoint = polylabel([boundary], 0.01);
 
-            /*
-            // find a good location for the points
-            const meanX = mean(boundary.map((v) => v.x));
-            const meanY = mean(boundary.map((v) => v.y));
-            const center = [meanX, meanY];
-
-            const score = (candidate : [number, number]) => {
-                return dist(candidate, center);
-                return -Math.min(...boundary.map((v) => dist([v.x, v.y], candidate)));
-                return dist(candidate, center);
-                // furthest distance from the edge
-                return -Math.max(...boundary.map((v) => dist([v.x, v.y], candidate)));
-                return dist(candidate, center) - 10 * Math.max(...boundary.map((v) => dist([v.x, v.y], candidate)));
-                return -Math.min(...boundary.map((v) => dist([v.x, v.y], candidate)));
-                return -mean(boundary.map((v) => dist([v.x, v.y], candidate)));
-                return dist(candidate, center);
-                return -Math.max(...boundary.map((v) => dist([v.x, v.y], candidate)));
-                return -Math.min(...boundary.map((v) => dist([v.x, v.y], candidate)));
-            }
-
-            let bestScore = 0;
-            let bestPoint = center;
-            const updateBest = (candidate : [number, number]) => {
-                const d = score(candidate);
-                if (bestPoint === center || d < bestScore) {
-                    bestScore = d;
-                    bestPoint = candidate;
-                }
-            }
-
-            for (const edge of shape.edges) {
-                updateBest([edge.from.left + edge.from.center[0], edge.from.top + edge.from.center[1]]);
-                // mid-points between two triangles
-                updateBest([(edge.from.left + edge.from.center[0] + edge.to.left + edge.to.center[0]) / 2,
-                            (edge.from.top + edge.from.center[1] + edge.to.top + edge.to.center[1]) / 2]);
-            }
-            for (const [vertexId, edges] of outlineResult.edgesPerVertex.entries()) {
-                // point between three triangles of the same color
-                if (edges.length == 12) {
-                    const vertex = (edges[0].from.id == vertexId) ? edges[0].from : edges[0].to;
-                    updateBest([vertex.x, vertex.y]);
-                }
-                // points between two midpoints
-                for (const a of edges) {
-                    for (const b of edges) {
-                        const midA = [(a.from.x + a.to.x) / 2, (a.from.y + a.to.y) / 2];
-                        const midB = [(b.from.x + b.to.x) / 2, (b.from.y + b.to.y) / 2];
-                        updateBest([(midA[0] + midB[0]) / 2, (midB[1] + midB[1]) / 2]);
-                    }
-                }
-            }
-            */
-
             const bestPoint = polylabelPoint;
             const pointsScale = polylabelPoint.distance;
 
             // circle with scores
             const circle = SVG("circle", "points", null, {
-                cx: "0", // `${bestPoint[0] * SCALE}`,
-                cy: "0", // `${bestPoint[1] * SCALE}`,
-                // r: shape.triangles.size < 3 ? "20" : "25",
+                cx: "0",
+                cy: "0",
                 r: `${0.7 * S}`,
                 fill: Color.light,
                 stroke: Color.dark,
@@ -190,8 +136,8 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
             points.push(circle);
 
             const text = SVG("text", "points", null, {
-                x: "0", // `${bestPoint[0] * SCALE}`,
-                y: "0", // `${bestPoint[1] * SCALE + 1}`,
+                x: "0",
+                y: "0",
                 "alignment-baseline": "middle",
                 "dominant-baseline": "middle",
                 "text-anchor": "middle",

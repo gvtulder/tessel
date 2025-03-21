@@ -15,6 +15,8 @@ import { SetupCatalog } from "../../saveGames";
 import { SegmentsOption } from "./SegmentsOption";
 import { GameSettingsSerialized } from "../../game/Game";
 import { UserEvent, UserEventType } from "../GameController";
+import { ScorerSettingRow } from "./ScorerSettingRow";
+import { ScorerOption } from "./ScorerOption";
 
 export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -26,6 +28,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     settingColors: SettingRow<ColorsOption>;
     settingSegments: SettingRow<SegmentsOption>;
     settingRules: SettingRow<RulesOption>;
+    settingScorer: SettingRow<ScorerOption>;
 
     playButton: Button;
     exitButton: Button;
@@ -120,14 +123,29 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.settingSegments = settingSegments;
         this.settingRows.push(settingSegments);
 
+        const rulesAndScorer = createElement(
+            "div",
+            "rules-and-scorer",
+            settingsDiv,
+        );
+
         const settingRules = new RulesSettingRow();
         for (const { key, rules, exampleColors } of catalog.rules.values()) {
             settingRules.addOption(new RulesOption(key, rules, exampleColors));
         }
         settingRules.selectStoredOrDefault(catalog.defaultRules);
-        settingsDiv.appendChild(settingRules.element);
+        rulesAndScorer.appendChild(settingRules.element);
         this.settingRules = settingRules;
         this.settingRows.push(settingRules);
+
+        const settingScorer = new ScorerSettingRow();
+        for (const { key, scorer } of catalog.scorers.values()) {
+            settingScorer.addOption(new ScorerOption(key, scorer));
+        }
+        settingScorer.selectStoredOrDefault(catalog.defaultScorer);
+        rulesAndScorer.appendChild(settingScorer.element);
+        this.settingScorer = settingScorer;
+        this.settingRows.push(settingScorer);
 
         const update = () => {
             const atlas = settingAtlas.selected!.atlas;
@@ -153,6 +171,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         settingAtlas.onchange = update;
         settingSegments.onchange = update;
         settingRules.onchange = update;
+        settingScorer.onchange = update;
 
         update();
 
@@ -187,6 +206,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
             segments: this.settingSegments.selected!.segmentsIndex,
             uniqueTileColors: this.settingSegments.selected!.uniqueTileColors,
             rules: this.settingRules.selected!.key,
+            scorer: this.settingScorer.selected!.key,
         };
     }
 }

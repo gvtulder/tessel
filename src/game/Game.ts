@@ -27,6 +27,7 @@ export type GameSettingsSerialized = {
     segments: number;
     uniqueTileColors: boolean;
     rules: string;
+    scorer: string;
 };
 
 export const enum GameEventType {
@@ -164,6 +165,8 @@ export function gameFromSerializedSettings(
     if (!colors) return null;
     const rules = catalog.rules.get(serialized.rules);
     if (!rules) return null;
+    const scorer = catalog.scorers.get(serialized.scorer);
+    if (!scorer) return null;
 
     const colorPatternPerShape = new ColorPatternPerShape(
         atlas.atlas.shapes.map((shape) => [
@@ -182,7 +185,7 @@ export function gameFromSerializedSettings(
         atlas: atlas.atlas,
         colors: colors.colors,
         rules: rules.rules,
-        scorer: rules.scorer,
+        scorer: scorer.scorer,
         colorPatternPerShape: colorPatternPerShape,
         initialTile: initialTile,
         tilesShownOnStack: 3,

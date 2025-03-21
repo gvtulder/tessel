@@ -15,6 +15,11 @@ export type ScoredRegion = {
 
 export interface Scorer {
     /**
+     * A friendly name for the scorer.
+     */
+    name: string;
+
+    /**
      * Computes the score after placing the given tile.
      *
      * @param grid the grid
@@ -30,6 +35,8 @@ export interface Scorer {
 }
 
 export class ConnectedSegmentScorer implements Scorer {
+    name = "Connected segments";
+
     computeScores(
         grid: Grid,
         tile: Tile,
@@ -105,6 +112,8 @@ export class ConnectedSegmentScorer implements Scorer {
 }
 
 export class FullTileScorer implements Scorer {
+    name = "Single tiles";
+
     computeScores(
         grid: Grid,
         tile: Tile,
@@ -143,6 +152,8 @@ export class FullTileScorer implements Scorer {
 }
 
 export class ConvexShapeScorer implements Scorer {
+    name = "Convex shapes";
+
     computeScores(
         grid: Grid,
         tile: Tile,
@@ -213,6 +224,8 @@ export class ConvexShapeScorer implements Scorer {
 }
 
 export class FullVertexScorer implements Scorer {
+    name = "Full vertex";
+
     computeScores(
         grid: Grid,
         tile: Tile,

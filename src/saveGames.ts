@@ -310,16 +310,44 @@ export const SetupCatalog = {
             key: "same",
             rules: new MatchEdgeColorsRuleSet(),
             exampleColors: [0, 0] as [number, number],
-            scorer: new ConnectedSegmentScorer(),
+            // scorer: new ConvexShapeScorer(),
+            // scorer: new ConnectedSegmentScorer(),
+            scorer: new FullTileScorer(),
         },
         {
             key: "diff",
             rules: new DifferentEdgeColorsRuleSet(),
             exampleColors: [0, 1] as [number, number],
-            // scorer: new FullTileScorer(),
+            scorer: new FullTileScorer(),
             // scorer: new ConvexShapeScorer(),
-            scorer: new FullVertexScorer(),
+            // scorer: new FullVertexScorer(),
         },
     ),
     defaultRules: "same",
+
+    scorers: options(
+        {
+            key: "shape",
+            scorer: new ConnectedSegmentScorer(),
+        },
+        {
+            key: "single-tile",
+            scorer: new FullTileScorer(),
+        },
+        {
+            key: "vertex",
+            scorer: new FullVertexScorer(),
+        },
+        {
+            key: "convex",
+            scorer: new ConvexShapeScorer(),
+        },
+        /*
+        {
+            key: "holes",
+            scorer: new HolesScorer(),
+        },
+        */
+    ),
+    defaultScorer: "shape",
 };

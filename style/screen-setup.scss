@@ -63,6 +63,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  margin-top: 2vh;
 }
 .screen.game-setup .game-button.play {
   width: min(8vw, 13vh);
@@ -105,14 +106,24 @@
   grid-area: settings;
   display: grid;
   grid-template-areas:
-    "atlas colors"
-    "segments rules"
-    "other buttons";
-  grid-template-columns: min-content auto;
+    "atlas atlas colors"
+    "rules segments segments"
+    "rules buttons buttons";
+  grid-template-columns: min-content min-content auto;
   grid-template-rows: min-content min-content min-content;
   justify-content: center;
   align-content: center;
   margin-top: calc(1.5 * colors.$button-scale);
+}
+.screen.game-setup .setting-row.atlas {
+  grid-area: atlas;
+}
+.screen.game-setup .setting-row.colors {
+  grid-area: colors;
+}
+.screen.game-setup .setting-row.segments {
+  grid-area: segments;
+  justify-content: right;
 }
 .screen.game-setup .setting-row {
   display: grid;
@@ -121,10 +132,17 @@
   padding: min(8vw, 2vh);
 
   &.segments.count4,
+  &.scorer.count4,
   &.colors,
   &.rules {
     grid-template-columns: min-content min-content;
   }
+}
+.screen.game-setup .rules-and-scorer {
+  grid-area: rules;
+}
+.screen.game-setup .rules-and-scorer .setting-row + .setting-row {
+  padding-top: 0;
 }
 .screen.game-setup .setting-row:last-child {
   border-bottom: none;
@@ -168,9 +186,13 @@
     grid-template-areas:
       "atlas colors buttons"
       "segments rules buttons";
+    grid-template-areas:
+      "atlas atlas colors"
+      "rules segments segments"
+      "rules buttons buttons";
     grid-template-columns: min-content auto auto;
     grid-template-rows: min-content min-content;
-    margin-right: 2vw;
+    margin-right: calc(3 * colors.$button-scale);
     margin-top: 0;
   }
   .screen.game-setup .settings .button-row {
@@ -178,8 +200,8 @@
     align-items: center;
   }
   .screen.game-setup .setting-row-option {
-    width: min(calc(min(37vw) / 5), calc(min(60vh) / 5));
-    height: min(calc(min(37vw) / 5), calc(min(60vh) / 5));
+    width: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
+    height: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
   }
 }
 
@@ -212,6 +234,9 @@
     grid-template-areas:
       "atlas colors buttons"
       "segments rules buttons";
+    grid-template-areas:
+      "atlas atlas colors buttons"
+      "rules segments segments buttons";
     margin: 2vh 0 2vh 1vw;
   }
   .screen.game-setup .settings .button-row {

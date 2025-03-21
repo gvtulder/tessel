@@ -27,6 +27,7 @@
     "@jest/globals": "^29.7.0",
     "@parcel/packager-raw-url": "^2.14.0",
     "@parcel/reporter-bundle-analyzer": "^2.14.0",
+    "@parcel/transformer-inline-string": "^2.14.0",
     "@parcel/transformer-sass": "^2.14.0",
     "@parcel/transformer-webmanifest": "^2.14.0",
     "@swc/jest": "^0.2.37",

@@ -713,7 +713,12 @@ export class Grid extends EventTarget {
             if (resp.overlap < OVERLAP_EPS) return false;
             if (resp.b.userData instanceof PlaceholderTile) {
                 if (!includePlaceholders) return false;
-                if (resp.overlap < 1 - OVERLAP_EPS) return false;
+                // attempt to match points
+                const match = matchPoints(
+                    resp.b.userData.polygon.vertices,
+                    polygon.vertices,
+                );
+                if (!match || match.dist > 0.0001) return false;
             }
             overlappingTiles.push(resp.b.userData);
             return !findAll;

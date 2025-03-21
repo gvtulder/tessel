@@ -62,14 +62,14 @@
   width: 100%;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   margin-top: 2vh;
 }
 .screen.game-setup .game-button.play {
   width: min(8vw, 13vh);
   height: min(8vw, 13vh);
   padding: 10px;
-  margin: min(1vw, 1vh);
+  margin: min(1vw, 1vh) min(2vw, 2vh);
   border-radius: 100%;
   background: colors.$setup-play-button-bg;
   text-align: center;
@@ -106,10 +106,10 @@
   grid-area: settings;
   display: grid;
   grid-template-areas:
-    "atlas atlas colors"
-    "rules segments segments"
-    "rules buttons buttons";
-  grid-template-columns: min-content min-content auto;
+    "atlas colors"
+    "segments rules"
+    "buttons rules";
+  grid-template-columns: min-content auto;
   grid-template-rows: min-content min-content min-content;
   justify-content: center;
   align-content: center;
@@ -123,7 +123,6 @@
 }
 .screen.game-setup .setting-row.segments {
   grid-area: segments;
-  justify-content: right;
 }
 .screen.game-setup .setting-row {
   display: grid;
@@ -186,10 +185,6 @@
     grid-template-areas:
       "atlas colors buttons"
       "segments rules buttons";
-    grid-template-areas:
-      "atlas atlas colors"
-      "rules segments segments"
-      "rules buttons buttons";
     grid-template-columns: min-content auto auto;
     grid-template-rows: min-content min-content;
     margin-right: calc(3 * colors.$button-scale);
@@ -198,6 +193,7 @@
   .screen.game-setup .settings .button-row {
     margin-left: calc(0.5 * colors.$button-scale);
     align-items: center;
+    justify-content: right;
   }
   .screen.game-setup .setting-row-option {
     width: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
@@ -234,9 +230,6 @@
     grid-template-areas:
       "atlas colors buttons"
       "segments rules buttons";
-    grid-template-areas:
-      "atlas atlas colors buttons"
-      "rules segments segments buttons";
     margin: 2vh 0 2vh 1vw;
   }
   .screen.game-setup .settings .button-row {

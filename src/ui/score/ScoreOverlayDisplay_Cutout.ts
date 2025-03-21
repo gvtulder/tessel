@@ -100,7 +100,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         for (const shape of shapes) {
             const outlineResult = this.computeOutline(shape);
             const boundary = outlineResult.boundary;
-            boundaryBBox = mergeBBox(bbox(boundary));
+            boundaryBBox = mergeBBox(boundaryBBox, bbox(boundary));
             const pathComponents = boundary
                 .reverse()
                 .map((v) => `${(v.x * S).toFixed(4)},${(v.y * S).toFixed(4)}`);

@@ -11,12 +11,29 @@ export type ColorPattern = {
     readonly segmentColors: readonly (readonly number[])[];
 };
 
+/**
+ * Use case for predefined shape angles.
+ */
 export const enum AngleUse {
+    /**
+     * Angle of the initial shape drawn in a new game.
+     */
     InitialTile = "initial",
-    Display = "display",
+    /**
+     * Angle used for shapes on the main menu.
+     */
     MainMenu = "mainMenu",
+    /**
+     * Angle used for the tile stack display.
+     */
     StackDisplay = "stackDisplay",
+    /**
+     * Angle used for the atlas option in the setup menu.
+     */
     SetupAtlas = "setupAtlas",
+    /**
+     * Angle used for the segments option in the setup menu.
+     */
     SetupSegments = "setupSegments",
 }
 
@@ -222,8 +239,8 @@ export class Shape {
      * with sides of length, and rotated at the shape's preferred angle.
      * @param x the x coordinate for the first vertex
      * @param y the y coordinate for the first vertex
-     * @param length TODO
-     * @param angleUse TODO
+     * @param length the desired length of the first side
+     * @param angleUse draw the polygon at a predefined angle
      * @returns a new polygon
      */
     constructPreferredPolygon(

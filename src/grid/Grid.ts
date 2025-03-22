@@ -301,6 +301,7 @@ export class GridEdge {
 /**
  * A Grid maintains a collection of tiles in a plane.
  * It tracks the vertices and edges.
+ * Tiles can be associated with points in a SourceGrid.
  */
 export class Grid extends EventTarget {
     /**
@@ -438,8 +439,8 @@ export class Grid extends EventTarget {
      * @param shape the shape of this tile
      * @param polygon the polygon of this tile
      * @param segments the segment polygons of this tile
-     * @param sourcePoint TODO
-     * @param placeholder TODO
+     * @param sourcePoint the source point corresponding to this tile
+     * @param placeholder true when placing a placeholder (see addPlaceholder)
      * @returns the new tile
      */
     addTile(
@@ -598,7 +599,7 @@ export class Grid extends EventTarget {
      * Adds a placeholder tile to the grid.
      * @param shape the shape of the tile
      * @param polygon the polygon of the tile
-     * @param sourcePoint TODO
+     * @param sourcePoint the source point corresponding to the tile
      * @returns the new tile
      */
     addPlaceholder(

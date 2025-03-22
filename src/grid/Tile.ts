@@ -112,7 +112,9 @@ export class Tile {
      * The type of this tile.
      */
     tileType: TileType;
-    // TODO
+    /**
+     * The source point connected to this tile.
+     */
     sourcePoint?: SourcePoint;
     /**
      * The vertices forming the outline of this tile,

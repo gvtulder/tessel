@@ -101,7 +101,6 @@
 }
 
 .screen.game-setup .settings {
-  position: relative;
   grid-area: settings;
   display: grid;
   grid-template-areas:
@@ -175,10 +174,29 @@
   padding: 11%;
 }
 
-@media screen and (min-aspect-ratio: 0.8) and (max-aspect-ratio: 1.1) {
-  .screen.game-setup .setting-row-option {
-    width: min(calc(min(42vw) / 5), calc(min(50vh) / 5));
-    height: min(calc(min(42vw) / 5), calc(min(50vh) / 5));
+@media screen and (min-aspect-ratio: 0.8) and (max-aspect-ratio: 1.75) {
+  .screen.game-setup .button-row {
+    position: absolute;
+    right: 3vw;
+    bottom: 3vw;
+    display: block;
+    width: min-content;
+  }
+
+  .screen.game-setup .game-button.play {
+    margin: 0;
+  }
+}
+
+@media screen and (min-aspect-ratio: 1.75) {
+  .screen.game-setup .settings {
+    grid-template-areas:
+      "atlas atlas colors buttons"
+      "segments segments segments buttons"
+      "rules scorer scorer buttons";
+    grid-template-columns: min-content min-content 1fr 1fr;
+    grid-template-rows: min-content min-content min-content;
+    margin-left: 3vw;
   }
 }
 
@@ -196,13 +214,15 @@
       "atlas atlas colors colors"
       "segments segments segments segments"
       "rules scorer scorer buttons";
-    grid-template-columns: min-content min-content min-content min-content;
+    grid-template-columns: min-content min-content min-content 1fr;
     grid-template-rows: min-content min-content min-content;
-    margin: 2vh 0 2vh 1vw;
+    margin: 1vw;
   }
   .screen.game-setup .settings .button-row {
-    margin-left: calc(0.5 * colors.$button-scale);
+    margin: 0;
+    padding: 0;
     align-items: center;
+    justify-content: center;
   }
   .screen.game-setup .setting-row {
     padding: 3vw;
@@ -210,9 +230,12 @@
   .screen.game-setup .setting-row-option {
     width: calc(55vw / 5);
     height: calc(55vw / 5);
+    width: min(calc(min(70vw) / 5), calc(min(45vh) / 5));
+    height: min(calc(min(70vw) / 5), calc(min(45vh) / 5));
   }
   .screen.game-setup .game-button.play {
-    width: min(12vw, 13vh);
-    height: min(12vw, 13vh);
+    margin: 0 6vw 0 0;
+    width: min(13vw, 13vh);
+    height: min(13vw, 13vh);
   }
 }

@@ -18,6 +18,13 @@
     right: 3vw;
   }
 
+  @media screen and (max-aspect-ratio: 1) {
+    .button-paint-menu {
+      top: 3vw;
+      right: calc(3vw + 2.5 * colors.$button-scale);
+    }
+  }
+
   .game-list {
     display: grid;
     width: 100%;

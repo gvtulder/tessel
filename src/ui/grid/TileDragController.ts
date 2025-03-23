@@ -149,7 +149,9 @@ export class TileDragController extends EventTarget {
         context.position.x =
             context.position.dx + factor * context.dragCenterOffset.x;
         context.position.y =
-            context.position.dy + factor * context.dragCenterOffset.y;
+            context.position.dy +
+            factor * context.dragCenterOffset.y -
+            (evt.event.pointerType == "touch" ? 30 : 0);
         const newTranslate = `${Math.round(context.position.x)}px ${Math.round(context.position.y)}px`;
         if (updateTransform && this.currentTranslate != newTranslate) {
             evt.target.style.translate = this.currentTranslate = newTranslate;

@@ -4,7 +4,8 @@ import { SquaresAtlas } from "./atlas/SquaresAtlas";
 import { GridColoring } from "./GridColoring";
 import { seedPRNG } from "../geom/RandomSampler";
 import { ColorPattern, Shape } from "./Shape";
-import { DifferentEdgeColorsRuleSet, MatchEdgeColorsRuleSet } from "./RuleSet";
+import { MatchEdgeColorsRuleSet } from "./rules/MatchEdgeColorsRuleSet";
+import { DifferentEdgeColorsRuleSet } from "./rules/DifferentEdgeColorsRuleSet";
 
 describe("GridColoring", () => {
     const buildGrid = (prng = seedPRNG(12345)) => {

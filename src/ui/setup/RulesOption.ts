@@ -1,4 +1,4 @@
-import { RuleSet } from "../../grid/RuleSet";
+import { RuleSet } from "../../grid/rules/RuleSet";
 import { TileColors } from "../../grid/Tile";
 import { Color } from "../score/ScoreOverlayDisplay";
 import { SVG } from "../shared/svg";

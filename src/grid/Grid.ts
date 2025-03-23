@@ -23,7 +23,8 @@ import { Polygon } from "../geom/Polygon";
 import { matchPoints } from "../geom/polygon/matchPoints";
 import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
-import { MatchEdgeColorsRuleSet, RuleSet as RuleSet } from "./RuleSet";
+import { RuleSet as RuleSet } from "./rules/RuleSet";
+import { MatchEdgeColorsRuleSet } from "./rules/MatchEdgeColorsRuleSet";
 import { Rings } from "./Rings";
 import { SourceGrid, SourcePoint } from "./SourceGrid";
 

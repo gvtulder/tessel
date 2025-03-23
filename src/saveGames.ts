@@ -15,10 +15,8 @@ import { CairoAtlas } from "./grid/atlas/CairoAtlas";
 import { DeltoTrihexAtlas } from "./grid/atlas/DeltoTrihexAtlas";
 import { SnubSquareAtlas } from "./grid/atlas/SnubSquareAtlas";
 import { SnubSquareFreeAtlas } from "./grid/atlas/SnubSquareFreeAtlas";
-import {
-    DifferentEdgeColorsRuleSet,
-    MatchEdgeColorsRuleSet,
-} from "./grid/RuleSet";
+import { MatchEdgeColorsRuleSet } from "./grid/rules/MatchEdgeColorsRuleSet";
+import { DifferentEdgeColorsRuleSet } from "./grid/rules/DifferentEdgeColorsRuleSet";
 import { Penrose3SourceGrid } from "./grid/source/Penrose3SourceGrid";
 import { SnubSquareSourceGrid } from "./grid/source/SnubSquareSourceGrid";
 import { Tile, TileColors } from "./grid/Tile";

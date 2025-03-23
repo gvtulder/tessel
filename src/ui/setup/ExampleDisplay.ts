@@ -2,7 +2,7 @@ import { Atlas } from "../../grid/Atlas";
 import { CentricGridBuilder } from "../../grid/GridBuilder";
 import { GridColoring } from "../../grid/GridColoring";
 import { seedPRNG } from "../../geom/RandomSampler";
-import { RuleSet } from "../../grid/RuleSet";
+import { RuleSet } from "../../grid/rules/RuleSet";
 import { ColorPatternPerShape } from "../../grid/Shape";
 import { TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";

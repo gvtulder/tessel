@@ -6,7 +6,7 @@ import { TileGenerator, TileGenerators } from "./TileGenerator";
 import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
 import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/arrays";
-import { RuleSet } from "../grid/RuleSet";
+import { RuleSet } from "../grid/rules/RuleSet";
 import { ColorPatternPerShape } from "../grid/Shape";
 import { SetupCatalog } from "../saveGames";
 import { shuffle } from "../geom/RandomSampler";

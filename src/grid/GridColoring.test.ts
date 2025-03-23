@@ -6,6 +6,7 @@ import { seedPRNG } from "../geom/RandomSampler";
 import { ColorPattern, Shape } from "./Shape";
 import { MatchEdgeColorsRuleSet } from "./rules/MatchEdgeColorsRuleSet";
 import { DifferentEdgeColorsRuleSet } from "./rules/DifferentEdgeColorsRuleSet";
+import { RuleSet } from "./rules/RuleSet";
 
 describe("GridColoring", () => {
     const buildGrid = (prng = seedPRNG(12345)) => {
@@ -30,6 +31,7 @@ describe("GridColoring", () => {
 
     test.each([
         [
+            "four",
             {
                 numColors: 4,
                 segmentColors: [[0, 1, 2, 3]],
@@ -38,6 +40,7 @@ describe("GridColoring", () => {
             4,
         ],
         [
+            "two",
             {
                 numColors: 2,
                 segmentColors: [
@@ -49,6 +52,7 @@ describe("GridColoring", () => {
             2,
         ],
         [
+            "one",
             {
                 numColors: 1,
                 segmentColors: [[0, 0, 0, 0]],
@@ -57,8 +61,13 @@ describe("GridColoring", () => {
             1,
         ],
     ])(
-        "applies different-edge rules",
-        (pattern: ColorPattern, numGroups: number, numGroupsInTile: number) => {
+        "applies different-edge rules: %s colors",
+        (
+            _,
+            pattern: ColorPattern,
+            numGroups: number,
+            numGroupsInTile: number,
+        ) => {
             const grid = buildGrid();
             grid.rules = new DifferentEdgeColorsRuleSet();
             const coloring = new GridColoring(grid);
@@ -79,6 +88,7 @@ describe("GridColoring", () => {
 
     test.each([
         [
+            "four",
             {
                 numColors: 4,
                 segmentColors: [[0, 1, 2, 3]],
@@ -86,6 +96,7 @@ describe("GridColoring", () => {
             225,
         ],
         [
+            "two",
             {
                 numColors: 2,
                 segmentColors: [
@@ -96,22 +107,26 @@ describe("GridColoring", () => {
             27,
         ],
         [
+            "one",
             {
                 numColors: 1,
                 segmentColors: [[0, 0, 0, 0]],
             },
             1,
         ],
-    ])("applies color patterns", (pattern: ColorPattern, numGroups: number) => {
-        const grid = buildGrid();
-        const coloring = new GridColoring(grid);
-        expect(coloring.groups.size).toBe(225);
-        const prng = seedPRNG(12345);
-        const colorPattern = new Map();
-        colorPattern.set(grid.atlas.shapes[0], pattern);
-        coloring.applyColorPattern(colorPattern, false, prng);
-        expect(coloring.groups.size).toBe(numGroups);
-    });
+    ])(
+        "applies color patterns: %s colors",
+        (_, pattern: ColorPattern, numGroups: number) => {
+            const grid = buildGrid();
+            const coloring = new GridColoring(grid);
+            expect(coloring.groups.size).toBe(225);
+            const prng = seedPRNG(12345);
+            const colorPattern = new Map();
+            colorPattern.set(grid.atlas.shapes[0], pattern);
+            coloring.applyColorPattern(colorPattern, false, prng);
+            expect(coloring.groups.size).toBe(numGroups);
+        },
+    );
 
     test("applies color patterns with uniqueTileColors", () => {
         const pattern = {
@@ -135,13 +150,21 @@ describe("GridColoring", () => {
         coloring.assignColors(["red", "green", "blue"]);
     });
 
-    test("assigns colors with conflicts", () => {
-        const grid = buildGrid();
-        grid.rules = new DifferentEdgeColorsRuleSet();
-        const coloring = new GridColoring(grid);
-        expect(coloring.groups.size).toBe(400);
-        expect(coloring.assignColors(["red", "green", "blue"])).not.toBeNull();
-    });
+    test.each([
+        ["different", new DifferentEdgeColorsRuleSet(), 400],
+        ["matching", new MatchEdgeColorsRuleSet(), 225],
+    ])(
+        "assigns colors with conflicts: %s",
+        (_, rules: RuleSet, expected: number) => {
+            const grid = buildGrid();
+            grid.rules = rules;
+            const coloring = new GridColoring(grid);
+            expect(coloring.groups.size).toBe(expected);
+            expect(
+                coloring.assignColors(["red", "green", "blue"]),
+            ).not.toBeNull();
+        },
+    );
 
     test("returns null for impossible colorings", () => {
         const grid = buildGrid();

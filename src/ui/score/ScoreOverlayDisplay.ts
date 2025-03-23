@@ -29,6 +29,6 @@ export abstract class ScoreOverlayDisplay {
         boundary: Vertex[];
         edgesPerVertex: Map<string, Edge[]>;
     } {
-        return computeOutline(shape.segments);
+        return computeOutline(shape.segments!);
     }
 }

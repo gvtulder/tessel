@@ -142,8 +142,8 @@
 }
 .screen.game-setup .setting-row-option {
   margin: 0.4vw;
-  width: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
-  height: min(calc(min(37vw) / 5), calc(min(50vh) / 5));
+  width: min(calc(min(41vw) / 6), calc(min(50vh) / 5));
+  height: min(calc(min(41vw) / 6), calc(min(50vh) / 5));
   background: colors.$settings-option-panel-bg;
   border: 3px solid transparent;
   border-radius: 0.7vw;
@@ -188,6 +188,7 @@
   }
 }
 
+/*
 @media screen and (min-aspect-ratio: 1.75) {
   .screen.game-setup .settings {
     grid-template-areas:
@@ -199,6 +200,7 @@
     margin-left: 3vw;
   }
 }
+*/
 
 @media screen and (max-aspect-ratio: 0.8) {
   .screen.game-setup {

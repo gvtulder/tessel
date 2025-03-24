@@ -4,10 +4,10 @@ export class ScoreDisplay {
     element: HTMLDivElement;
     scoreField: HTMLSpanElement;
     private _points: number;
-    private onAnimationEnd: EventListener;
+    private onScoreAnimationEnd: EventListener;
 
     constructor() {
-        this.onAnimationEnd = () => {
+        this.onScoreAnimationEnd = () => {
             this.element.classList.remove("animate");
         };
 
@@ -21,11 +21,14 @@ export class ScoreDisplay {
         const scoreField = (this.scoreField = createElement("span", null, p));
         scoreField.innerHTML = "0";
 
-        element.addEventListener("animationend", this.onAnimationEnd);
+        element.addEventListener("animationend", this.onScoreAnimationEnd);
     }
 
     destroy() {
-        this.element.removeEventListener("animationend", this.onAnimationEnd);
+        this.element.removeEventListener(
+            "animationend",
+            this.onScoreAnimationEnd,
+        );
         this.element.remove();
     }
 

@@ -7,6 +7,8 @@ import { SingleTileOnStackDisplay } from "./SingleTileStackDisplay";
 import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
 
+const WIGGLE_TIMEOUT = 15000;
+
 export abstract class BaseTileStackDisplay extends EventTarget {
     static events = {
         TapTile: "taptile",
@@ -52,6 +54,9 @@ export class TileStackDisplay extends BaseTileStackDisplay {
     counterDiv: HTMLElement;
     counter: HTMLElement;
 
+    private onWiggleAnimationEnd: EventListener;
+    private wiggleTimeout!: number;
+
     counterTapHandler: TapHandler;
 
     updateSlotsHandler: EventListener;
@@ -81,15 +86,48 @@ export class TileStackDisplay extends BaseTileStackDisplay {
             GameEventType.UpdateSlots,
             this.updateSlotsHandler,
         );
+
+        this.onWiggleAnimationEnd = () => {
+            this.counter.classList.remove("wiggle");
+        };
+
+        this.counter.addEventListener(
+            "animationend",
+            this.onWiggleAnimationEnd,
+        );
+
+        this.setInactivityTimeout();
+    }
+
+    setInactivityTimeout() {
+        if (this.wiggleTimeout) {
+            window.clearTimeout(this.wiggleTimeout);
+        }
+        this.wiggleTimeout = window.setTimeout(() => {
+            this.wiggle();
+            this.setInactivityTimeout();
+        }, WIGGLE_TIMEOUT);
+    }
+
+    wiggle() {
+        console.log("Wiggle on idle.");
+        this.counter.classList.add("wiggle");
     }
 
     destroy() {
         super.destroy();
+        if (this.wiggleTimeout) {
+            window.clearTimeout(this.wiggleTimeout);
+        }
         this.counterTapHandler.destroy();
         this.counterDiv.remove();
         this.tileStack.removeEventListener(
             GameEventType.UpdateSlots,
             this.updateSlotsHandler,
+        );
+        this.counter.removeEventListener(
+            "animationend",
+            this.onWiggleAnimationEnd,
         );
     }
 
@@ -114,6 +152,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
         if (n > 0) {
             this.counter.innerHTML = `+ ${n}`;
+            this.setInactivityTimeout();
         } else {
             this.counter.innerHTML = "";
             this.counterDiv.style.opacity = "0";

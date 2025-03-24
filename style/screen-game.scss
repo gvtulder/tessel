@@ -245,7 +245,28 @@
       border-radius: 0.5vw;
       padding: 1.2em 0;
       aspect-ratio: 1;
+
+      &.wiggle {
+        animation-name: tile-counter-wiggle-anim;
+        animation-duration: 0.4s;
+        animation-iteration-count: 2;
+        animation-timing-function: linear;
+      }
     }
+  }
+}
+@keyframes tile-counter-wiggle-anim {
+  0% {
+    rotate: 0deg;
+  }
+  25% {
+    rotate: -10deg;
+  }
+  75% {
+    rotate: 10deg;
+  }
+  100% {
+    rotate: 0deg;
   }
 }
 

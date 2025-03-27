@@ -175,7 +175,10 @@ lookup.set("rhombus", {
     atlas: RhombusAtlas,
     initialTile: WONG4,
     tilesShownOnStack: 3,
-    tileGenerator: [TileGenerators.permutations(WONG4)],
+    tileGenerator: [
+        TileGenerators.permutations(WONG4),
+        TileGenerators.randomSubset(90),
+    ],
 });
 
 lookup.set("cairo5", {

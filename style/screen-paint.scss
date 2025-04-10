@@ -93,7 +93,10 @@ $swatch-scale: min(8vh, calc(2 * colors.$button-scale));
   width: $swatch-scale;
   height: $swatch-scale;
   border-radius: 100%;
+  /*
   border: calc(0.1 * $swatch-scale) solid colors.$panel-bg;
+  */
+  box-shadow: 0 0 15px rgb(0, 0, 0, 10%);
   cursor: grab;
 }
 

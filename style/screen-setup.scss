@@ -71,6 +71,7 @@
   margin: 0 min(3vw, 3vh) 0 0;
   border-radius: 100%;
   background: colors.$setup-play-button-bg;
+  box-shadow: 0 0 15px rgb(0, 0, 0, 30%);
   text-align: center;
   transition: transform 0.1s;
 }
@@ -141,13 +142,14 @@
   border-bottom: none;
 }
 .screen.game-setup .setting-row-option {
-  margin: 0.4vw;
+  margin: 0.5vw;
   width: min(calc(min(41vw) / 6), calc(min(50vh) / 5));
   height: min(calc(min(41vw) / 6), calc(min(50vh) / 5));
   background: colors.$settings-option-panel-bg;
   border: 3px solid transparent;
   border-radius: 0.7vw;
   box-sizing: border-box;
+  box-shadow: 0 0 5px rgb(0, 0, 0, 10%);
   aspect-ratio: 1;
   cursor: pointer;
   transition: transform 0.1s;
@@ -158,7 +160,7 @@
   margin: 12%;
 }
 .screen.game-setup .setting-row-option.selected {
-  transform: scale(1.1);
+  transform: scale(1.07);
 }
 .screen.game-setup .setting-row-option.selected,
 .screen.game-setup .setting-row-option.selected:hover {

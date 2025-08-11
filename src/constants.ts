@@ -6,6 +6,5 @@ export const VERSION = ENV_VERSION as string;
 export const INCLUDE_SERVICE_WORKER = ENV_INCLUDE_SERVICE_WORKER as boolean;
 
 declare global {
-    // eslint-disable-next-line no-var
     var gameController: GameController;
 }

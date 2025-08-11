@@ -62,7 +62,7 @@ describe("Atlas", () => {
                 },
                 vertices: [{ name: "square", vertex: "A0-B0-A0-B0" }],
             });
-        }).toThrowError();
+        }).toThrow();
 
         expect(() => {
             Atlas.fromDefinition({
@@ -72,7 +72,7 @@ describe("Atlas", () => {
                 },
                 vertices: [{ name: "square", vertex: "S0-X0-S0-S0" }],
             });
-        }).toThrowError();
+        }).toThrow();
 
         expect(() => {
             Atlas.fromDefinition({
@@ -82,7 +82,7 @@ describe("Atlas", () => {
                 },
                 vertices: [{ name: "square", vertex: "abc-S0-S0-S0" }],
             });
-        }).toThrowError();
+        }).toThrow();
 
         expect(() => {
             Atlas.fromDefinition({
@@ -92,7 +92,7 @@ describe("Atlas", () => {
                 },
                 vertices: [],
             });
-        }).toThrowError();
+        }).toThrow();
     });
 
     test("can compute rotation angles", () => {

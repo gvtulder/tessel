@@ -195,7 +195,7 @@ describe("Grid", () => {
         grid.addTile(TRIANGLE, poly2);
         grid.addTile(TRIANGLE, poly3);
 
-        expect(() => grid.addTile(TRIANGLE, poly1)).toThrowError();
+        expect(() => grid.addTile(TRIANGLE, poly1)).toThrow();
     });
 
     test("can remove tiles", () => {

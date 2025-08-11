@@ -17,11 +17,11 @@ describe("Shape", () => {
     });
 
     test("checks for valid inputs", () => {
-        expect(() => new Shape("", [45, 45, 45])).toThrowError();
-        expect(() => new Shape("", [90, 90])).toThrowError();
-        expect(() => new Shape("", [-10, 100, 90])).toThrowError();
-        expect(() => new Shape("", [43, 34, 43, 35])).toThrowError();
-        expect(() => new Shape("", [45, 45, 90])).toThrowError();
+        expect(() => new Shape("", [45, 45, 45])).toThrow();
+        expect(() => new Shape("", [90, 90])).toThrow();
+        expect(() => new Shape("", [-10, 100, 90])).toThrow();
+        expect(() => new Shape("", [43, 34, 43, 35])).toThrow();
+        expect(() => new Shape("", [45, 45, 90])).toThrow();
     });
 
     test("converts degrees to radians", () => {

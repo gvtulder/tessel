@@ -32,7 +32,7 @@ describe("Tile", () => {
         const colors = ["black", "red", "blue"];
         tile.colors = colors;
         expect(tile.colors).toStrictEqual(colors);
-        expect(callback).toBeCalled();
+        expect(callback).toHaveBeenCalled();
         tile.colors = "red";
         expect(tile.colors).toStrictEqual(["red", "red", "red"]);
     });

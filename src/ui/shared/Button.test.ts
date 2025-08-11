@@ -6,9 +6,9 @@ describe("Button", () => {
         const tapHandler = jest.fn((evt: PointerEvent) => {});
         const button = new Button("a", "b", tapHandler);
         button.element.dispatchEvent(new MouseEvent("pointerdown"));
-        expect(tapHandler).not.toBeCalled();
+        expect(tapHandler).not.toHaveBeenCalled();
         button.element.dispatchEvent(new MouseEvent("pointerup"));
-        expect(tapHandler).toBeCalled();
+        expect(tapHandler).toHaveBeenCalled();
         button.destroy();
     });
 });

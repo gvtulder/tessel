@@ -69,7 +69,7 @@ describe("computePolygonSides", () => {
         ) => {
             expect(() => {
                 computePolygonSides(deg2rad(angles), sides);
-            }).toThrowError();
+            }).toThrow();
         },
     );
 });

@@ -24,7 +24,9 @@ export class ConnectedSegmentScorer extends Scorer {
         }
 
         // visit each segment of the shape in turn
-        for (const origin of tile.segments) {
+        const segmentsToCheck = [...tile.segments];
+        while (segmentsToCheck.length > 0) {
+            const origin = segmentsToCheck.shift()!;
             if (!visited.has(origin)) {
                 const color = origin.color;
                 const tilesInShape = new Set<Tile>();
@@ -56,10 +58,19 @@ export class ConnectedSegmentScorer extends Scorer {
                         if (!neighbor || !neighbor.color) {
                             shape.finished = false;
                         } else if (neighbor.color === color) {
+                            // add the neighbor to the shape and explore further
                             if (!visited.has(neighbor)) {
                                 queue.push(neighbor);
                                 visited.add(neighbor);
                             }
+                        } else if (
+                            segment.tile === tile &&
+                            neighbor.tile !== tile
+                        ) {
+                            // check the neighboring segments of the current tile,
+                            // in case any of their shapes are now closed
+                            // (this may happen with the DifferentEdgeColorsRuleSet)
+                            segmentsToCheck.push(neighbor);
                         }
                     }
                 }

@@ -107,6 +107,7 @@ $swatch-scale: min(8vh, calc(2 * colors.$button-scale));
 .color-swatch-remove {
   background: colors.$main-bg;
   background: rgba(0, 0, 0, 8%);
+  border: calc(0.1 * $swatch-scale) solid transparent;
 
   svg {
     width: calc(0.5 * $swatch-scale);

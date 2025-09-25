@@ -16,13 +16,5 @@ export const DEBUG = {
     SHOW_DEBUG_POINTS_WHILE_DRAGGING: false,
 };
 
-// TODO remove
-/**
- * @deprecated
- */
-export const SCALE = 100;
-
-export const O = DEBUG.OVERLAP ? 0.1 : 0.05;
-
 export const BGCOLOR = "#dddddd";
 export const PLACEHOLDER = "#cccccc";

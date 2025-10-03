@@ -2,6 +2,7 @@
   "name": "Tile Game",
   "short_name": "Tile Game",
   "description": "A puzzle game with tiles.",
+  "categories": ["games"],
   "id": "/",
   "start_url": "/",
   "icons": [
@@ -83,5 +84,5 @@
   "display": "standalone",
   "orientation": "natural",
   "theme_color": "#000000",
-  "background_color": "#000000"
+  "background_color": "#e0dfdc"
 }

@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="robots" content="noindex, follow" />
-    <title>Tile Game</title>
+    <title>Tessel – A tile game</title>
     <style type="text/css">
       /* minimum css for splash screen */
       body {
@@ -46,6 +46,33 @@
         transition: scale 0.2s;
         scale: 0;
       }
+      .splash-footer {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: 0;
+        padding: 10px;
+        color: #999;
+        font-family: Barlow, sans-serif;
+        font-size: 12px;
+      }
+
+      @media screen and (min-aspect-ratio: 5/3) {
+        .splash-footer br {
+          display: none;
+        }
+      }
+
+      .splash-footer a {
+        color: #999;
+        text-decoration: none;
+        border-bottom: 1px solid;
+      }
+
+      .splash-footer a:active,
+      .splash-footer a:hover {
+        color: #071a3d;
+      }
     </style>
     <link
       rel="preload"
@@ -74,6 +101,12 @@
           <path fill="#f2a700" d="M0 1V0l.5.5Z" />
         </g>
       </svg>
+      <p class="splash-footer">
+        A game by <a href="https://www.vantulder.net/">Gijs van Tulder.</a>
+        <br />
+        View <a href="https://tessel.vantulder.net/source/">source code</a> and
+        <a href="https://tessel.vantulder.net/about/">documentation</a>.
+      </p>
     </div>
     <script type="module" src="src/main.ts"></script>
   </body>

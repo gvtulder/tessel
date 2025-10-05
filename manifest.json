@@ -1,6 +1,6 @@
 {
-  "name": "Tile Game",
-  "short_name": "Tile Game",
+  "name": "Tessel – A tile game",
+  "short_name": "Tessel",
   "description": "A puzzle game with tiles.",
   "categories": ["games"],
   "id": "/",

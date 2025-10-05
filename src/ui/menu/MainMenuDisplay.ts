@@ -25,8 +25,15 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         const div = createElement("div", "screen main-menu");
         this.element = div;
 
+        const footer = createElement("div", "footer", div);
+
+        const footerLine = createElement("p", "copyright", footer);
+        footerLine.innerHTML =
+            `A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>. <br/>` +
+            `View <a href="https://tessel.vantulder.net/source/">source code</a> and <a href="https://tessel.vantulder.net/about/">documentation</a>.`;
+
         if (version) {
-            const versionDiv = createElement("div", "version", div);
+            const versionDiv = createElement("p", "version", footer);
             versionDiv.innerHTML = version;
         }
 

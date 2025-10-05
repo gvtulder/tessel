@@ -1,11 +1,45 @@
 @use "./colors.scss";
 
-.version {
+.footer {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
   color: #aaa;
   font-size: 12px;
+
+  p {
+    color: #aaa;
+    margin: 0;
+    padding: 0;
+  }
+
+  p.copyright {
+    color: #777;
+  }
+
+  @media screen and (min-aspect-ratio: 5/3) {
+    p br {
+      display: none;
+    }
+  }
+
+  a {
+    color: #777;
+    text-decoration: none;
+    border-bottom: 1px solid;
+  }
+
+  a:active,
+  a:hover {
+    color: #000;
+  }
 }
 
 .screen {

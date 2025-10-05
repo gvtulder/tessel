@@ -1,10 +1,50 @@
 @use "./colors.scss";
 
+$logo-height: min(15vw, 10vh);
+$logo-row-height: min(20vw, 20vh);
+
 .screen.main-menu {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
+  .container {
+    flex-shrink: 1;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    display: grid;
+    grid-template:
+      "spacer" 1fr
+      "example-grid" max-content
+      "logo" 1fr;
+  }
+
+  .logo {
+    grid-area: logo;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: $logo-row-height;
+    max-height: $logo-row-height;
+
+    @media screen and (max-aspect-ratio: 0.8) {
+      align-items: start;
+      align-self: start;
+      padding-top: 5vh;
+    }
+
+    svg {
+      height: $logo-height;
+      fill: rgba(0, 0, 0, 35%);
+    }
+  }
 
   .button-setup-menu {
     position: absolute;
@@ -14,25 +54,19 @@
 
   .button-paint-menu {
     position: absolute;
-    top: calc(3vw + 2.5 * colors.$button-scale);
-    right: 3vw;
-  }
-
-  @media screen and (max-aspect-ratio: 1) {
-    .button-paint-menu {
-      top: 3vw;
-      right: calc(3vw + 2.5 * colors.$button-scale);
-    }
+    top: 3vw;
+    right: calc(3vw + 2.5 * colors.$button-scale);
   }
 
   .game-list {
+    grid-area: example-grid;
     display: grid;
     width: 100%;
     max-height: min(100vh, 100vw);
     grid-template-columns: 1fr 1fr 1fr 1fr;
     column-gap: min(5vh, 5vw);
     row-gap: min(5vw, 5vh);
-    padding: 10%;
+    padding: 0% 10% 0 10%;
     box-sizing: border-box;
 
     .example-tile {
@@ -50,7 +84,7 @@
       }
     }
 
-    @media screen and (max-aspect-ratio: 4.5/3) {
+    @media screen and (max-aspect-ratio: 3.5/3) {
       & {
         max-width: min(100vh, 100vw);
         grid-template-columns: 1fr 1fr;

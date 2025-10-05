@@ -9,6 +9,7 @@ import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
 import { AngleUse } from "../../grid/Shape";
+import SVG_LOGO from "bundle-text:../svgs/logo.svg";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -51,9 +52,10 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         this.paintButton = paintButton;
         this.element.appendChild(paintButton.element);
 
-        const gameList = document.createElement("div");
-        gameList.className = "game-list";
-        div.appendChild(gameList);
+        const container = createElement("div", "container", div);
+        const logo = createElement("div", "logo", container);
+        logo.innerHTML = SVG_LOGO;
+        const gameList = createElement("div", "game-list", container);
 
         this.grids = [];
         this.gridDisplays = [];

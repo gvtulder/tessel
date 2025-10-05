@@ -1,10 +1,10 @@
 import { Scorer, ScorerType } from "../../game/scorers/Scorer";
 import { SettingRowOption } from "./SettingRowOption";
-import SVG_CONVEX from "bundle-text:./svgs/scorer-convex.svg";
-import SVG_HOLES from "bundle-text:./svgs/scorer-holes.svg";
-import SVG_SHAPE from "bundle-text:./svgs/scorer-shape.svg";
-import SVG_SINGLE_TILE from "bundle-text:./svgs/scorer-single-tile.svg";
-import SVG_VERTEX from "bundle-text:./svgs/scorer-vertex.svg";
+import SVG_CONVEX from "bundle-text:../svgs/scorer-convex.svg";
+import SVG_HOLES from "bundle-text:../svgs/scorer-holes.svg";
+import SVG_SHAPE from "bundle-text:../svgs/scorer-shape.svg";
+import SVG_SINGLE_TILE from "bundle-text:../svgs/scorer-single-tile.svg";
+import SVG_VERTEX from "bundle-text:../svgs/scorer-vertex.svg";
 
 export class ScorerOption extends SettingRowOption {
     scorer: ScorerType;

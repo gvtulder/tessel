@@ -10,15 +10,9 @@
   },
   "browserslist": "defaults",
   "dependencies": {
-    "@interactjs/actions": "^1.10.27",
-    "@interactjs/auto-start": "^1.10.27",
-    "@interactjs/interact": "^1.10.27",
-    "@interactjs/pointer-events": "^1.10.27",
     "@parcel/service-worker": "^2.15.4",
     "detect-collisions": "^9.27.6",
-    "interactjs": "^1.10.27",
     "polygon-clipping": "^0.15.7",
-    "rbush": "^4.0.1",
     "workbox-core": "^7.3.0",
     "workbox-precaching": "^7.3.0",
     "workbox-window": "^7.3.0"

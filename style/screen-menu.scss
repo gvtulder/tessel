@@ -64,8 +64,8 @@ $logo-row-height: min(20vw, 20vh);
     width: 100%;
     max-height: min(100vh, 100vw);
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    column-gap: min(5vh, 5vw);
-    row-gap: min(5vw, 5vh);
+    column-gap: min(4vh, 4vw);
+    row-gap: min(4vw, 4vh);
     padding: 0% 10% 0 10%;
     box-sizing: border-box;
 
@@ -84,7 +84,7 @@ $logo-row-height: min(20vw, 20vh);
       }
     }
 
-    @media screen and (max-aspect-ratio: 3.5/3) {
+    @media screen and (max-aspect-ratio: 4/3) {
       & {
         max-width: min(100vh, 100vw);
         grid-template-columns: 1fr 1fr;

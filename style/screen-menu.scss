@@ -66,6 +66,7 @@ $logo-row-height: min(20vw, 20vh);
 
   .game-list {
     grid-area: example-grid;
+    justify-self: stretch;
     display: grid;
     max-height: min(100vh, 100vw, 60vh);
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -94,6 +95,9 @@ $logo-row-height: min(20vw, 20vh);
 
   @media screen and (max-aspect-ratio: 5/3) {
     .game-list {
+      justify-self: auto;
+      padding: 0;
+      height: min(65vh, 90vw);
       max-height: 90vh;
       max-width: min(100vh, 100vw, 90vh);
       grid-template-columns: 1fr 1fr;

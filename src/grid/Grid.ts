@@ -8,7 +8,7 @@ import {
     Polygon as CollisionPolygon,
     Point as CollisionPoint,
     Body,
-} from "detect-collisions";
+} from "check2d";
 
 import { Atlas } from "./Atlas";
 import {

@@ -14,7 +14,7 @@ import { TileDragSource, TileRotationSet } from "../grid/TileDragController";
 import { Atlas } from "../../grid/Atlas";
 import { angleDistDeg, RAD2DEG } from "../../geom/math";
 import { BaseTileStackDisplay, TileStackDisplay } from "./TileStackDisplay";
-import { DEG2RAD } from "detect-collisions";
+import { DEG2RAD } from "../../geom/math";
 import { DragHandler, DragHandlerEvent } from "../shared/DragHandler";
 import { createElement } from "../shared/html";
 

@@ -46,6 +46,10 @@ const screenshots = [
         filename: "settings",
         path: "#square",
         css: `
+          body, .screen {
+            background: transparent !important;
+            box-shadow: none !important;
+          }
           .screen.game-display .main-grid,
           .screen.game-display .fill,
           .screen.game-display .tile-stack,
@@ -54,6 +58,7 @@ const screenshots = [
           }
           .screen.game-display .dropout-menu {
               border-radius: 0;
+              background: transparent !important;
           }
         `,
         js: `
@@ -76,6 +81,19 @@ const screenshots = [
         dirname: `${__dirname}/../docs/images/`,
         filename: "setup-option",
         path: "#setup",
+        css: `
+          body, .screen {
+            background: transparent !important;
+          }
+          .screen.game-setup {
+            background: transparent !important;
+          }
+          .setting-row-option {
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+          }
+        `,
         js: `
           for (const el of document.getElementsByClassName("setting-row-option")) {
             el.classList.remove("selected");
@@ -244,6 +262,7 @@ async function captureScreenshot() {
                             const name = names ? `${key}-${names[i]}` : key;
                             await elements[i].screenshot({
                                 path: `${out}-${name}.png` as `${string}.png`,
+                                omitBackground: true,
                             });
                         }
                     }

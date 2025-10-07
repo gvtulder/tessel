@@ -1,18 +1,24 @@
-# <a href="https://tessel.vantulder.net/"><img src="logo/logo-with-tile.png" height="80" alt="Tessel – A tile game"/></a>
+<div align="center">
+<h1><a href="https://tessel.vantulder.net/"><img src="logo/logo-with-tile.png" height="80" alt="Tessel – A tile game"/></a></h1>
 
 _A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>_
+
+**[Play online!]** • [Tilings] • [Settings] • [Custom game]
+
+[Play online!]: https://tessel.vantulder.net/
+[Tilings]: #tilings
+[Settings]: #settings
+[Custom game]: #play-a-custom-game
 
 Place tiles with matching colors to make shapes and fill the board.
 
 <img src="screenshots/wide-main-menu.png" width="200"/> <img src="screenshots/wide-square.png" width="200"/> <img src="screenshots/wide-paint-triangle.png" width="200"/> <img src="screenshots/wide-setup.png" width="200"/>
 
-## [**<img src="icons/icon.png" height="30" valign="bottom"> Play now!**](https://tessel.vantulder.net/)
-
-- [Tilings](#tilings)
-- [Settings](#settings)
-- [Play a custom game](#play-a-custom-game)
+</div>
 
 ## Tilings
+
+Play one of the nine tiling patterns:
 
 | <img src="docs/images/setup-option-square.png" height="50"><br/>Square | <img src="docs/images/setup-option-triangle.png" height="50"><br/>Triangle | <img src="docs/images/setup-option-rhombus.png" height="50"><br/>Rhombus |
 | ---------------------------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
@@ -33,8 +39,7 @@ Place tiles with matching colors to make shapes and fill the board.
 
 Click the hamburger menu to change the settings of the current game:
 
-<img src="docs/images/settings-full-menu.png"
-height="200"/>
+<img src="docs/images/settings-full-menu.png" height="200"/>
 
 | Option                                                               | Action                                        |
 | -------------------------------------------------------------------- | --------------------------------------------- |
@@ -49,6 +54,8 @@ height="200"/>
 ## Play a custom game
 
 Customize shapes and colors in the design menu:
+
+<img src="screenshots/wide-setup.png" width="300"/>
 
 ### Tiling
 

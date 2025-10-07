@@ -97,9 +97,9 @@ $logo-row-height: min(20vw, 20vh);
     .game-list {
       justify-self: auto;
       padding: 0;
-      height: min(65vh, 90vw);
-      max-height: 90vh;
-      max-width: min(100vh, 100vw, 90vh);
+      height: min(65vh, 85vw);
+      max-height: 70vh;
+      max-width: min(100vh, 100vw, 70vh);
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
     }

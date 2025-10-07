@@ -33,49 +33,49 @@
   ],
   "screenshots": [
     {
-      "src": "screenshots/screenshot-portrait-main-menu.png",
+      "src": "screenshots/portrait-main-menu.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "screenshots/screenshot-portrait-square.png",
+      "src": "screenshots/portrait-square.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "screenshots/screenshot-portrait-setup.png",
+      "src": "screenshots/portrait-setup.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "screenshots/screenshot-portrait-paint-triangle.png",
+      "src": "screenshots/portrait-paint-triangle.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "screenshots/screenshot-wide-main-menu.png",
+      "src": "screenshots/wide-main-menu.png",
       "sizes": "2048x1536",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "screenshots/screenshot-wide-square.png",
+      "src": "screenshots/wide-square.png",
       "sizes": "2048x1536",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "screenshots/screenshot-wide-setup.png",
+      "src": "screenshots/wide-setup.png",
       "sizes": "2048x1536",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "screenshots/screenshot-wide-paint-triangle.png",
+      "src": "screenshots/wide-paint-triangle.png",
       "sizes": "2048x1536",
       "type": "image/png",
       "form_factor": "wide"

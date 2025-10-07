@@ -65,7 +65,11 @@ export class GameController {
         if (screen && screen.orientation) {
             screen.orientation.addEventListener("change", rescale);
         }
-        window.addEventListener("resize", rescale);
+        window.addEventListener("resize", () => {
+            rescale();
+            // iOS Safari sometimes doesn't immediately update the sizes
+            window.setTimeout(rescale, 50);
+        });
         window.addEventListener("popstate", (evt: PopStateEvent) => {
             this.run();
         });

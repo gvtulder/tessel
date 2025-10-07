@@ -3,12 +3,13 @@
 
 _A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>_
 
-**[Play online!]** • [Tilings] • [Settings] • [Custom game]
+**[Play online!]** • [Tilings] • [Settings] • [Custom game] • [Development]
 
 [Play online!]: https://tessel.vantulder.net/
 [Tilings]: #tilings
 [Settings]: #settings
 [Custom game]: #play-a-custom-game
+[Development]: #development
 
 Place tiles with matching colors to make shapes and fill the board.
 
@@ -90,6 +91,28 @@ Customize shapes and colors in the design menu:
 | <img src="docs/images/setup-option-score-connected.png" height="70"> | <img src="docs/images/setup-option-score-single-tile.png" height="70"> | <img src="docs/images/setup-option-score-convex-shape.png" height="70"> | <img src="docs/images/setup-option-score-full-vertex.png" height="70"> | <img src="docs/images/setup-option-score-holes.png" height="70"> |
 | -------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | Closed area                                                          | Single tile                                                            | Convex shape                                                            | Full vertex                                                            | Holes                                                            |
+
+## Development
+
+Tessel is written in TypeScript and based on HTML, SVG and CSS.
+
+Use NPM to install the required dependencies:
+
+```
+npm ci
+```
+
+Run a local development server:
+
+```
+npm run serve
+```
+
+Run all tests:
+
+```
+npm run test
+```
 
 ## License
 

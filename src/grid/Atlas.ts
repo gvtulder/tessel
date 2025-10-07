@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { CornerType, SortedCorners } from "./Grid";
 import { deg2rad, RAD2DEG } from "../geom/math";
 import { AngleUse, ColorPattern, Shape } from "./Shape";

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { describe, expect, test } from "@jest/globals";
 import { area, bbox, centroid, P, Point, shiftPoints } from "./math";
 import { Polygon } from "./Polygon";

@@ -1,5 +1,11 @@
 {
   "name": "tessel",
+  "homepage": "https://tessel.vantulder.net/",
+  "license": "GPL-3.0-or-later",
+  "author": {
+    "name": "Gijs van Tulder",
+    "url": "https://www.vantulder.net/"
+  },
   "scripts": {
     "build": "NODE_ENV=production parcel build index.html --no-source-maps",
     "serve": "NODE_ENV=development parcel serve index.html --no-cache",

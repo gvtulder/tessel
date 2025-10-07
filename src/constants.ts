@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { GameController } from "./ui/GameController";
 
 // @ts-expect-error: constant set by babel transform-define plugin

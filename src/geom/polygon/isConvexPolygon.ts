@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { Point } from "../math";
 
 const EPS = 1e-6;
@@ -6,7 +9,8 @@ const EPS = 1e-6;
  * Checks if the polygon is convex.
  */
 export function isConvexPolygon(vertices: readonly Point[]): boolean {
-    // https://math.stackexchange.com/a/1745427
+    // based on pseudocode from
+    // https://math.stackexchange.com/a/1745427 (CC BY-SA 3.0)
 
     const n = vertices.length;
     if (n < 3) return false;

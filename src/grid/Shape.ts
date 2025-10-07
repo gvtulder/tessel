@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { ArraySet } from "../geom/ArraySet";
 import { CornerType } from "./Grid";
 import { DEG2RAD, Edge, Point, rad2deg } from "../geom/math";

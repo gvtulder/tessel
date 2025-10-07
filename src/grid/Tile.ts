@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { GridEdge, GridVertex } from "./Grid";
 import { BBox, Point } from "../geom/math";
 import { Polygon } from "../geom/Polygon";

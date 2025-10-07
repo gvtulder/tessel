@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 export function wrapModulo(n: number, d: number): number {
     // support for negative numbers
     return ((n % d) + d) % d;
@@ -133,7 +136,7 @@ export function angleDist(a: number, b: number): number {
     return ab < ba ? ab : ba;
 }
 
-// https://stackoverflow.com/a/2049593
+// https://stackoverflow.com/a/2049593 (CC BY-SA 4.0)
 function sign(p1: Coord, p2: Coord, p3: Coord): number {
     return (
         (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1])

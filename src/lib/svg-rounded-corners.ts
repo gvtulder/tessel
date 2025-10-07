@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: Apache-2.0
+// SPDX-FileCopyrightText: Copyright (C) 2014 Yona Appletree
+
 /*****************************************************************************
  *                                                                            *
  *  SVG Path Rounding Function                                                *

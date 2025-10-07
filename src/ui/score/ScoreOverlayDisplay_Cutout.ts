@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { ScoredRegion } from "../../game/scorers/Scorer";
 import { roundPathCorners } from "../../lib/svg-rounded-corners";
 import { BGCOLOR } from "../../settings";

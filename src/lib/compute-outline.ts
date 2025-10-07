@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { TileSegment } from "../grid/Tile";
 
 export type Vertex = { id: string; x: number; y: number };

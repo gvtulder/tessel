@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { roundPathCorners } from "../../lib/svg-rounded-corners";
 import { Tile, TileType } from "../../grid/Tile";
 import { DEBUG, PLACEHOLDER } from "../../settings";

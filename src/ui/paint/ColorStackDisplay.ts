@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { TileColor, TileColors } from "../../grid/Tile";
 import { TapHandler } from "../shared/TapHandler";
 import { createElement } from "../shared/html";

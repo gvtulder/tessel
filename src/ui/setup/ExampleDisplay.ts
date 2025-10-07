@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { Atlas } from "../../grid/Atlas";
 import { CentricGridBuilder } from "../../grid/GridBuilder";
 import { GridColoring } from "../../grid/GridColoring";

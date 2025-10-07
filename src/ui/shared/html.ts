@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 export function createElement<K extends keyof HTMLElementTagNameMap>(
     tagName: K,
     className?: string | null,

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 import { dist } from "../../geom/math";
 import { isConvexPolygon } from "../../geom/polygon/isConvexPolygon";
 import { Grid, edgeToKey } from "../../grid/Grid";

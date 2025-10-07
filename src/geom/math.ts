@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+
 export type Point = {
     readonly x: number;
     readonly y: number;
@@ -77,7 +80,7 @@ export function distToLine(a: Point, b: Point, p: Point): number {
  * Computes the distance between point p and the line segment a -- b.
  */
 export function distToLineSegment(a: Point, b: Point, p: Point): number {
-    // https://stackoverflow.com/a/6853926
+    // https://stackoverflow.com/a/6853926 (CC BY-SA 4.0)
     const A = p.x - a.x;
     const B = p.y - a.y;
     const C = b.x - a.x;

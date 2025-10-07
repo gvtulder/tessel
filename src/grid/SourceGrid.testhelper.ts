@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { expect } from "@jest/globals";
 import { SourceGrid, SourcePoint } from "./SourceGrid";
 import { Shape } from "./Shape";

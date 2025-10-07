@@ -1,4 +1,9 @@
 /**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
+/**
  * Set-like object that looks inside arrays for equality.
  */
 export class ArraySet<T> {

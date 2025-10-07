@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { BBox, TWOPI, mergeBBox } from "../../geom/math";
 import { TileColors } from "../../grid/Tile";
 import { SVG } from "../shared/svg";

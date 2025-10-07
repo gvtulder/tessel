@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { Scorer, ScorerType } from "../../game/scorers/Scorer";
 import { SettingRowOption } from "./SettingRowOption";
 import SVG_CONVEX from "bundle-text:../svgs/scorer-convex.svg";

@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { rotateArray } from "./arrays";
 
 export type PRNG = () => number;
@@ -6,7 +11,7 @@ export function generateSeed(): number {
     return (Math.random() * 2 ** 32) >>> 0;
 }
 
-// https://stackoverflow.com/a/47593316
+// based on https://stackoverflow.com/a/47593316 (CC BY-SA 4.0)
 function splitmix32(a?: number): PRNG {
     if (a === undefined) {
         a = (Math.random() * 2 ** 32) >>> 0;

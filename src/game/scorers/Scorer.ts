@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { Point } from "../../geom/math";
 import { Grid } from "../../grid/Grid";
 import { Tile, TileColor, TileSegment } from "../../grid/Tile";

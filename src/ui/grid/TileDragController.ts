@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { TileOnScreenMatch } from "./TileDisplay";
 import { Tile } from "../../grid/Tile";
 import { DEBUG } from "../../settings";

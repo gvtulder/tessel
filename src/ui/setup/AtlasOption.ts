@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { AngleUse } from "../../grid/Shape";
 import { Atlas } from "../../grid/Atlas";
 import { Grid } from "../../grid/Grid";

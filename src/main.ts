@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { Workbox } from "workbox-window";
 import { INCLUDE_SERVICE_WORKER, VERSION } from "./constants";
 import disableIosZoom from "./lib/disable-ios-zoom";

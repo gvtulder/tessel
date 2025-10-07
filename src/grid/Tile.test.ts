@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { describe, expect, jest, test } from "@jest/globals";
 import { Shape } from "./Shape";
 import { PlaceholderTile, Tile } from "./Tile";

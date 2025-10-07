@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { ColorPatternPerShape } from "../../grid/Shape";
 import { Atlas } from "../../grid/Atlas";
 import { TileColors } from "../../grid/Tile";

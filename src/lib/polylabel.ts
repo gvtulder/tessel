@@ -1,4 +1,11 @@
+/**
+ * SPDX-License-Identifier: ISC
+ * SPDX-FileCopyrightText: Copyright (C) 2016 Mapbox
+ */
+
 // from node polylabel package
+// ISC License
+// Copyright (c) 2016 Mapbox
 
 import { Point } from "../geom/math";
 import { TinyQueue } from "./tinyqueue";

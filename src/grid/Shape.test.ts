@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { describe, expect, test } from "@jest/globals";
 import { ColorPattern, Shape } from "./Shape";
 import { DEG2RAD, dist, P, roundPoints } from "../geom/math";

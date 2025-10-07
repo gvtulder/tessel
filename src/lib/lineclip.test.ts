@@ -1,3 +1,9 @@
+/**
+ * SPDX-License-Identifier: ISC AND GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2015, Mapbox
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 // TypeScript port of https://github.com/mapbox/lineclip/
 // original code:
 // ISC License

@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { Grid } from "./Grid";
 import { PRNG, selectRandom, shuffle } from "../geom/RandomSampler";
 import { ColorPatternPerShape } from "./Shape";

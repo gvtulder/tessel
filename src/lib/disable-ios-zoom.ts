@@ -1,4 +1,7 @@
-// https://discourse.threejs.org/t/iphone-how-to-remove-text-selection-magnifier/47812/11
+/**
+ * SPDX-License-Identifier: CC-BY-NC-SA-3.0
+ * https://discourse.threejs.org/t/iphone-how-to-remove-text-selection-magnifier/47812/11
+ */
 
 export default () => {
     function createHandler(func: (e: Event) => void, timeout: number | null) {

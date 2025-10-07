@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { Polygon } from "../../geom/Polygon";
 import { distPolygons, rotatePoints, shiftPoints } from "../../geom/math";
 import { Atlas } from "../../grid/Atlas";

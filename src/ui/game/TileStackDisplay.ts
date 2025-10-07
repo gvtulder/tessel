@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
 import { FixedOrderTileStack } from "../../game/TileStack";
 import { GameEventType } from "../../game/Game";
 import { Tile } from "../../grid/Tile";

@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (c) 2021 Project Nayuki
+ */
+
 /*
  * Convex hull algorithm - Library (TypeScript)
  *

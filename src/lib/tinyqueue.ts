@@ -1,3 +1,13 @@
+/**
+ * SPDX-License-Identifier: ISC AND GPL-3.0-or-later
+ * SPDX-FileCopyrightText: Copyright (C) 2017 Vladimir Agafonkin
+ * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
+ */
+
+// TypeScript port of https://github.com/mourner/tinyqueue/
+// original code licensed under the ISC License
+// Copyright (c) 2017, Vladimir Agafonkin
+
 export class TinyQueue<T> {
     data: T[];
     length: number;

@@ -19,7 +19,7 @@ self.addEventListener("message", (event) => {
 });
 
 setCacheNameDetails({
-  prefix: "tilegame",
+  prefix: "tessel",
   suffix: version,
 });
 

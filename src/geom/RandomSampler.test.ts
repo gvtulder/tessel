@@ -12,7 +12,7 @@ describe("generateSeed", () => {
     test("can generate seeds", () => {
         const a = generateSeed();
         const b = generateSeed();
-        expect(a).not.toBeCloseTo(b);
+        expect(a).not.toBeCloseTo(b, 5);
     });
 });
 

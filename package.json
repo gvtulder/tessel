@@ -5,7 +5,7 @@
     "serve": "NODE_ENV=development parcel serve index.html --no-cache",
     "test": "jest",
     "check": "tsc --noEmit",
-    "update-icon": "rsvg-convert icon.svg -w 180 -h 180 -o icon.png ; for s in 180 192 512 ; do rsvg-convert icon.svg -w $s -h $s -o icons/icon-$s.png ; done",
+    "update-icon": "rsvg-convert icons/icon.svg -w 180 -h 180 -o icons/icon.png ; for s in 180 192 512 ; do rsvg-convert icons/icon.svg -w $s -h $s -o icons/icon-$s.png ; done",
     "screenshots": "tsx scripts/make-screenshots.ts"
   },
   "browserslist": "defaults",

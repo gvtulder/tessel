@@ -5,6 +5,7 @@ import { HexagonsAtlas } from "./atlas/HexagonsAtlas";
 import { SquaresAtlas } from "./atlas/SquaresAtlas";
 import { TrianglesAtlas } from "./atlas/TrianglesAtlas";
 import { RhombusAtlas } from "./atlas/RhombusAtlas";
+import { seedPRNG } from "../geom/RandomSampler";
 
 describe("GridBuilder", () => {
     test.each([
@@ -15,8 +16,9 @@ describe("GridBuilder", () => {
     ] as [string, Atlas][])(
         "builds a grid for %s",
         (_: string, atlas: Atlas) => {
+            const prng = seedPRNG(1234);
             const builder = new CentricGridBuilder();
-            const grid = builder.buildGrid(atlas, 100);
+            const grid = builder.buildGrid(atlas, 100, prng);
             expect(grid.tiles.size).toBe(100);
         },
     );

@@ -17,7 +17,7 @@
   "browserslist": "defaults",
   "dependencies": {
     "@parcel/service-worker": "^2.15.4",
-    "detect-collisions": "^9.27.6",
+    "detect-collisions": "^10.10.2025",
     "polygon-clipping": "^0.15.7",
     "workbox-core": "^7.3.0",
     "workbox-precaching": "^7.3.0",

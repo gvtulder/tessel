@@ -122,7 +122,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                 g.elements.push(path);
             }
 
-            const polylabelPoint = polylabel([boundary], 0.01);
+            const polylabelPoint = polylabel([boundary], 0.01, 0.01);
 
             const bestPoint = polylabelPoint;
             const pointsScale = polylabelPoint.distance;

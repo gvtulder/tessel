@@ -1,5 +1,6 @@
 {
   "extends": "@parcel/config-default",
   "namers": [ "parcel-namer-rewrite" ],
-  "optimizers": { "*.html": [] }
+  "optimizers": { "*.html": [] },
+  "reporters":  ["...", "parcel-reporter-static-files-copy"]
 }

@@ -56,6 +56,7 @@ export class FullVertexScorer extends Scorer {
                     ),
                     finished: true,
                     points: shapeSegments.size / 2,
+                    pointsAreVariable: true,
                 };
                 shapes.push(shape);
             }

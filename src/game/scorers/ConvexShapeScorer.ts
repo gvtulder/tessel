@@ -75,6 +75,7 @@ export class ConvexShapeScorer extends Scorer {
                 boundary: ring,
                 finished: true,
                 points: tiles.size,
+                pointsAreVariable: true,
             };
             shapes.push(shape);
         }

@@ -60,6 +60,7 @@ export class HoleScorer extends Scorer {
                 boundary: ring,
                 finished: true,
                 points: 1,
+                pointsAreVariable: false,
             };
             shapes.push(shape);
         }

@@ -43,6 +43,7 @@ export class FullTileScorer extends Scorer {
             boundary: tile.polygon.vertices,
             finished: true,
             points: 1,
+            pointsAreVariable: false,
         };
         shapes.push(shape);
 

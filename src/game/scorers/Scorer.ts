@@ -15,6 +15,7 @@ export type ScoredRegion = {
     boundary: readonly Point[];
     finished: boolean;
     points: number;
+    pointsAreVariable: boolean;
 };
 
 export type ScorerType = typeof Scorer;

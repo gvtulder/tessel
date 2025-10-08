@@ -45,6 +45,7 @@ export class ConnectedSegmentScorer extends Scorer {
                     boundary: [],
                     finished: true,
                     points: 0,
+                    pointsAreVariable: true,
                 };
                 shapes.push(shape);
 

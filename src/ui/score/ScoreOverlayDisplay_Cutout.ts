@@ -122,34 +122,36 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                 g.elements.push(path);
             }
 
-            const polylabelPoint = polylabel([boundary], 0.01, 0.01);
+            if (shape.pointsAreVariable) {
+                const polylabelPoint = polylabel([boundary], 0.01, 0.01);
 
-            const bestPoint = polylabelPoint;
-            const pointsScale = polylabelPoint.distance;
+                const bestPoint = polylabelPoint;
+                const pointsScale = polylabelPoint.distance;
 
-            // circle with scores
-            const circle = SVG("circle", "points", null, {
-                cx: "0",
-                cy: "0",
-                r: `${0.7 * S}`,
-                fill: Color.light,
-                stroke: Color.dark,
-                "stroke-width": `${0.16 * S}`,
-                style: `filter: drop-shadow(${0.1 * S}px ${0.1 * S}px ${0.2 * S}px rgb(0 0 0 / 0.9)); transform: translate(${(bestPoint.x * S).toFixed(4)}px, ${(bestPoint.y * S).toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
-            });
-            points.push(circle);
+                // circle with scores
+                const circle = SVG("circle", "points", null, {
+                    cx: "0",
+                    cy: "0",
+                    r: `${0.7 * S}`,
+                    fill: Color.light,
+                    stroke: Color.dark,
+                    "stroke-width": `${0.16 * S}`,
+                    style: `filter: drop-shadow(${0.1 * S}px ${0.1 * S}px ${0.2 * S}px rgb(0 0 0 / 0.9)); transform: translate(${(bestPoint.x * S).toFixed(4)}px, ${(bestPoint.y * S).toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
+                });
+                points.push(circle);
 
-            const text = SVG("text", "points", null, {
-                x: "0",
-                y: "0",
-                "alignment-baseline": "middle",
-                "dominant-baseline": "middle",
-                "text-anchor": "middle",
-                "font-size": `${0.75 * S}`,
-                style: `transform: translate(${(bestPoint.x * S).toFixed(4)}px, ${((bestPoint.y + 0.01) * S).toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
-            });
-            text.appendChild(document.createTextNode(`${shape.points}`));
-            points.push(text);
+                const text = SVG("text", "points", null, {
+                    x: "0",
+                    y: "0",
+                    "alignment-baseline": "middle",
+                    "dominant-baseline": "middle",
+                    "text-anchor": "middle",
+                    "font-size": `${0.75 * S}`,
+                    style: `transform: translate(${(bestPoint.x * S).toFixed(4)}px, ${((bestPoint.y + 0.01) * S).toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
+                });
+                text.appendChild(document.createTextNode(`${shape.points}`));
+                points.push(text);
+            }
         }
 
         if (boundaryBBox) {

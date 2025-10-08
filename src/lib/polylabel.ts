@@ -7,6 +7,9 @@
 // ISC License
 // Copyright (c) 2016 Mapbox
 
+// centroid gravity based on
+// https://github.com/datavis-tech/polylabel
+
 import { Point } from "../geom/math";
 import { TinyQueue } from "./tinyqueue";
 
@@ -16,9 +19,11 @@ type Polygon = readonly (readonly Point[])[];
 export function polylabel(
     polygon: Polygon,
     precision?: number,
+    centroidWeight?: number,
     debug?: boolean,
 ): Pole {
     precision = precision || 1.0;
+    centroidWeight = centroidWeight || 0;
 
     // find the bounding box of the outer ring
     let minX, minY, maxX, maxY;
@@ -51,19 +56,31 @@ export function polylabel(
     // a priority queue of cells in order of their "potential" (max distance to polygon)
     const cellQueue = new TinyQueue<Cell>([], compareMax);
 
+    // take centroid as the first best guess
+    const centroidCell = getCentroidCell(polygon);
+    let bestCell = centroidCell;
+
     // cover polygon with initial cells
     for (let x = minX; x < maxX; x += cellSize) {
         for (let y = minY; y < maxY; y += cellSize) {
-            cellQueue.push(new Cell(x + h, y + h, h, polygon));
+            cellQueue.push(new Cell(x + h, y + h, h, polygon, centroidCell));
         }
     }
 
-    // take centroid as the first best guess
-    let bestCell = getCentroidCell(polygon);
+    // the fitness function to be maximized
+    function fitness(cell: Cell) {
+        return cell.d - cell.distanceToCentroid * centroidWeight!;
+    }
 
     // special case for rectangular polygons
-    const bboxCell = new Cell(minX + width / 2, minY + height / 2, 0, polygon);
-    if (bboxCell.d > bestCell.d) bestCell = bboxCell;
+    const bboxCell = new Cell(
+        minX + width / 2,
+        minY + height / 2,
+        0,
+        polygon,
+        centroidCell,
+    );
+    if (fitness(bboxCell) > fitness(bestCell)) bestCell = bboxCell;
 
     let numProbes = cellQueue.length;
 
@@ -72,7 +89,7 @@ export function polylabel(
         const cell = cellQueue.pop()!;
 
         // update the best cell if we found a better one
-        if (cell.d > bestCell.d) {
+        if (fitness(cell) > fitness(bestCell)) {
             bestCell = cell;
             if (debug)
                 console.log(
@@ -87,10 +104,18 @@ export function polylabel(
 
         // split the cell into four cells
         h = cell.h / 2;
-        cellQueue.push(new Cell(cell.x - h, cell.y - h, h, polygon));
-        cellQueue.push(new Cell(cell.x + h, cell.y - h, h, polygon));
-        cellQueue.push(new Cell(cell.x - h, cell.y + h, h, polygon));
-        cellQueue.push(new Cell(cell.x + h, cell.y + h, h, polygon));
+        cellQueue.push(
+            new Cell(cell.x - h, cell.y - h, h, polygon, centroidCell),
+        );
+        cellQueue.push(
+            new Cell(cell.x + h, cell.y - h, h, polygon, centroidCell),
+        );
+        cellQueue.push(
+            new Cell(cell.x - h, cell.y + h, h, polygon, centroidCell),
+        );
+        cellQueue.push(
+            new Cell(cell.x + h, cell.y + h, h, polygon, centroidCell),
+        );
         numProbes += 4;
     }
 
@@ -112,14 +137,29 @@ class Cell {
     h: number;
     d: number;
     max: number;
+    distanceToCentroid: number;
 
-    constructor(x: number, y: number, h: number, polygon: Polygon) {
+    constructor(
+        x: number,
+        y: number,
+        h: number,
+        polygon: Polygon,
+        centroidCell?: Cell,
+    ) {
         this.x = x; // cell center x
         this.y = y; // cell center y
         this.h = h; // half the cell size
         this.d = pointToPolygonDist(x, y, polygon); // distance from cell center to polygon
         this.max = this.d + this.h * Math.SQRT2; // max distance to polygon within a cell
+        this.distanceToCentroid = centroidCell
+            ? pointToPointDist(this, centroidCell)
+            : 0;
     }
+}
+
+// distance between two cells
+function pointToPointDist(cellA: Cell, cellB: Cell) {
+    return Math.hypot(cellB.x - cellA.x, cellB.y - cellA.y);
 }
 
 // signed distance from point to polygon outline (negative if point is outside)

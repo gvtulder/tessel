@@ -6,6 +6,7 @@ dist/
 node_modules/
 public/
 build/
+*.jks
 .parcel-cache/
 coverage/
 parcel-bundle-reports/

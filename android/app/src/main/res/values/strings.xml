@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tessel</string>
+    <string name="title_activity_main">Tessel</string>
+    <string name="package_name">net.vantulder.tessel</string>
+    <string name="custom_url_scheme">net.vantulder.tessel</string>
+</resources>

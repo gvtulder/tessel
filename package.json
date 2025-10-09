@@ -12,7 +12,8 @@
     "serve": "NODE_ENV=development parcel serve index.html --no-cache",
     "test": "jest",
     "check": "tsc --noEmit",
-    "update-icon": "rsvg-convert assets/icons/icon.svg -w 180 -h 180 -o assets/icons/icon.png ; for s in 180 192 512 ; do rsvg-convert assets/icons/icon.svg -w $s -h $s -o assets/icons/icon-$s.png ; done",
+    "update-icon": "rsvg-convert assets/icons/icon.svg -w 180 -h 180 -o assets/icons/icon.png ; for s in 180 192 512 1024 ; do rsvg-convert assets/icons/icon.svg -w $s -h $s -o assets/icons/icon-$s.png ; done",
+    "update-cap-assets": "npx @capacitor/assets generate --iconBackgroundColor '#eeeeee' --iconBackgroundColorDark '#222222' --splashBackgroundColor '#eeeeee' --splashBackgroundColorDark '#111111' --android --assetPath assets/capacitor/",
     "screenshots": "tsx scripts/make-screenshots.ts"
   },
   "browserslist": "defaults",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.3",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^7.4.3",
     "@capacitor/core": "^7.4.3",
     "@capacitor/status-bar": "^7.0.3",

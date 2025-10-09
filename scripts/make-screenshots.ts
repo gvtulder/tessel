@@ -230,7 +230,8 @@ async function captureScreenshot() {
                     continue;
                 }
 
-                let out = screenshot.dirname || `${__dirname}/../screenshots/`;
+                let out =
+                    screenshot.dirname || `${__dirname}/../assets/screenshots/`;
                 if (!screenshot.viewport) {
                     out += `${size.name}-`;
                 }

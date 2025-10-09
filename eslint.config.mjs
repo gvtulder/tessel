@@ -6,12 +6,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 
 export default tseslint.config([
   {
-    files: [
-      "src/**/*.ts",
-      "webpack.config.js",
-      "eslint.config.mjs",
-      "packages*.json",
-    ],
+    files: ["src/**/*.ts", "webpack.config.js", "eslint.config.mjs"],
     extends: [
       eslint.configs.recommended,
       tseslint.configs.recommended,

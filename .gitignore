@@ -1,8 +1,10 @@
 .*.swp
+.idea
 src/game.js
 src/script.js
 src/*.js.map
 dist/
+dist-capacitor/
 node_modules/
 public/
 build/

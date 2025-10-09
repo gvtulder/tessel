@@ -13,7 +13,9 @@ export default {
       "transform-define",
       {
         ENV_VERSION: git("rev-parse --short HEAD"),
-        ENV_INCLUDE_SERVICE_WORKER: process.env["NODE_ENV"] == "production",
+        ENV_INCLUDE_SERVICE_WORKER:
+          process.env["NODE_ENV"] == "production" &&
+          !process.env["SKIP_SERVICE_WORKER"],
       },
     ],
   ],

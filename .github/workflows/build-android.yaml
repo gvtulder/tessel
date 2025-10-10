@@ -39,7 +39,7 @@ jobs:
           echo ${{ secrets.ANDROID_KEYSTORE }} | base64 --decode > ~/.keystore/keystore.jks
 
       - name: Build HTML assets for capacitor
-        run: npm run build-cap
+        run: npm run build-cap-html
 
       - name: Copy files to capacitor
         run: |

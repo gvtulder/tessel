@@ -188,7 +188,7 @@
 .tile-on-stack {
   z-index: 0;
   position: relative;
-  aspect-ratio: 1/1;
+  aspect-ratio: 1 / 1;
 
   max-height: 18vh;
   max-width: 100%;
@@ -199,7 +199,7 @@
   transition-duration: 100ms;
   svg {
     width: 100%;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1 / 1;
   }
   &.tile-dragging {
     cursor: grabbing;
@@ -235,7 +235,7 @@
   flex-grow: 2;
   cursor: pointer;
 
-  @media screen and (max-aspect-ratio: 1.5) {
+  @media screen and (max-aspect-ratio: 3 / 2) {
     span {
       display: block;
       margin: 1em auto;

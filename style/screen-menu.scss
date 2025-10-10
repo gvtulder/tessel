@@ -40,7 +40,7 @@ $logo-row-height: min(20vw, 20vh);
     min-height: $logo-row-height;
     max-height: $logo-row-height;
 
-    @media screen and (min-aspect-ratio: 0.8) and (max-aspect-ratio: 1.5) {
+    @media screen and (min-aspect-ratio: 4 / 5) and (max-aspect-ratio: 3 / 2) {
       align-items: center;
       align-self: center;
       padding-top: 0;
@@ -93,7 +93,7 @@ $logo-row-height: min(20vw, 20vh);
     }
   }
 
-  @media screen and (max-aspect-ratio: 5/3) {
+  @media screen and (max-aspect-ratio: 5 / 3) {
     .game-list {
       justify-self: auto;
       padding: 0;

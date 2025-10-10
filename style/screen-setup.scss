@@ -176,7 +176,7 @@
   padding: 11%;
 }
 
-@media screen and (min-aspect-ratio: 0.8) and (max-aspect-ratio: 1.75) {
+@media screen and (min-aspect-ratio: 4 / 5) and (max-aspect-ratio: 7 / 4) {
   .screen.game-setup .button-row {
     position: absolute;
     right: 3vw;
@@ -191,7 +191,7 @@
 }
 
 /*
-@media screen and (min-aspect-ratio: 1.75) {
+@media screen and (min-aspect-ratio: 7 / 4) {
   .screen.game-setup .settings {
     grid-template-areas:
       "atlas atlas colors buttons"
@@ -204,7 +204,7 @@
 }
 */
 
-@media screen and (max-aspect-ratio: 0.8) {
+@media screen and (max-aspect-ratio: 4 / 5) {
   .screen.game-setup {
     grid-template-areas:
       "example"

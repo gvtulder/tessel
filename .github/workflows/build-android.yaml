@@ -1,0 +1,56 @@
+name: build-android
+on: [push]
+
+jobs:
+  build-android:
+    name: build-android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Setup Android SDK 35.0.0
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK build tools
+        run: |
+          sdkmanager "build-tools;35.0.0"
+          echo "$ANDROID_SDK_ROOT/build-tools/35.0.0" >> $GITHUB_PATH
+
+      - name: Get keystore
+        run: |
+          mkdir ~/.keystore 
+          echo ${{ secrets.ANDROID_KEYSTORE }} | base64 --decode > ~/.keystore/keystore.jks
+
+      - name: Build HTML assets for capacitor
+        run: npm run build-cap
+
+      - name: Copy files to capacitor
+        run: |
+          npx cap telemetry off
+          npx cap sync
+
+      - name: Build APK with capacitor
+        run: npx cap build android --androidreleasetype APK --signing-type apksigner --keystorepath ~/.keystore/keystore.jks --keystorepass "${{secrets.ANDROID_KEYSTOREPASS}}" --keystorealias "${{secrets.ANDROID_KEYSTOREALIAS}}" --keystorealiaspass  "${{secrets.ANDROID_KEYSTOREALIASPASS}}"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android package
+          path: android/app/build/outputs/apk/release/app-release-signed.apk

@@ -1,5 +1,5 @@
 <div align="center">
-<h1><a href="https://tessel.vantulder.net/"><img src="logo/logo-with-tile.png" height="80" alt="Tessel – A tile game"/></a></h1>
+<h1><a href="https://tessel.vantulder.net/"><img src="assets/logo/logo-with-tile.png" height="80" alt="Tessel – A tile game"/></a></h1>
 
 _A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>_
 

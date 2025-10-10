@@ -52,10 +52,48 @@ jobs:
       - name: Resign for reproducible builds
         run: apksigner sign --ks ~/.keystore/keystore.jks --ks-pass "pass:${{secrets.ANDROID_KEYSTOREPASS}}" --ks-key-alias "${{secrets.ANDROID_KEYSTOREALIAS}}" --key-pass "pass:${{secrets.ANDROID_KEYSTOREALIASPASS}}" --alignment-preserved --in android/app/build/outputs/apk/release/app-release-unsigned.apk --out android/app/build/outputs/apk/release/app-release-signed.apk
 
+      - name: Rename outputs
+        run: |
+          sha_short=$(git rev-parse --short HEAD)
+          mv android/app/build/outputs/apk/release/app-release-unsigned.apk tessel-${sha_short}-unsigned.apk
+          mv android/app/build/outputs/apk/release/app-release-signed.apk tessel-${sha_short}.apk
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Android package
-          path: |
-            android/app/build/outputs/apk/release/app-release-unsigned.apk
-            android/app/build/outputs/apk/release/app-release-signed.apk
+          path: tessel-*.apk
+
+  make-release:
+    name: make-release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-android
+    permissions:
+      contents: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Download Android artifacts
+        uses: actions/download-artifact@v5
+
+      - name: Copy Changelog from metadata
+        run: |
+          versionCode=$( grep versionCode android/app/build.gradle | grep -ohE "[0-9]+" )
+          touch ${{ github.workspace }}-CHANGELOG.txt
+          if [[ -f metadata/en-US/changelogs/${versionCode}.txt ]] ; then
+            cat metadata/en-US/changelogs/${versionCode}.txt >> ${{ github.workspace }}-CHANGELOG.txt
+          fi
+
+      - name: Rename signed APK to include version
+        run: |
+          sha_short=$(git rev-parse --short HEAD)
+          mv tessel-${sha_short}.apk tessel-${{ github.ref_name }}.apk
+
+      - name: Make release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: tessel-${{ github.ref_name }}.apk
+          generate_release_notes: true
+          body_path: ${{ github.workspace }}-CHANGELOG.txt

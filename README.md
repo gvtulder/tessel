@@ -94,24 +94,37 @@ Customize shapes and colors in the design menu:
 
 ## Development
 
-Tessel is written in TypeScript and based on HTML, SVG and CSS.
+Tessel is written in TypeScript and uses HTML, SVG and CSS. It can be built using a recent Node version (tested for 20+). It can be played directly in the browser or installed as a Progressive Web App.
 
-Use NPM to install the required dependencies:
+### Building for web / PWA
+
+The plain HTML/JS/CSS version can be built using [Parcel](https://parceljs.org/).
 
 ```
+# install dependencies
 npm ci
-```
-
-Run a local development server:
-
-```
-npm run serve
-```
-
-Run all tests:
-
-```
+# run all tests
 npm run test
+# run a local development server
+npm run serve
+# or build JavaScript and HTML in dist/
+npm run build
+```
+
+### Building for Android
+
+An Android application can be built with [Capacitor](https://capacitorjs.com/). In addition to the standard Node/NPM dependencies, Capacitor requires the Android SDK. [See the Capacitor instructions.](https://capacitorjs.com/docs/getting-started/environment-setup#android-requirements)
+
+```
+# install dependencies
+npm ci
+# build Capacitor-ready JavaScript and HTML in dist-capacitor/
+npm run build-cap-html
+# build and run in the Android emulator
+npx cap run android
+# or build the Android app for release
+npx cap build android --androidreleasetype APK --signing-type apksigner
+# (this will ask for the parameters to your signing keys)
 ```
 
 ## License

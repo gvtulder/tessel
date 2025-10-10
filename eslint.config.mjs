@@ -7,7 +7,10 @@ import eslintConfigPrettier from "eslint-config-prettier";
 
 export default tseslint.config([
   {
-    files: ["src/**/*.ts", "webpack.config.js", "eslint.config.mjs"],
+    ignores: ["android/", "coverage/", "dist/"],
+  },
+  {
+    files: ["src/**/*.ts", "eslint.config.mjs"],
     extends: [
       eslint.configs.recommended,
       tseslint.configs.recommended,
@@ -15,7 +18,7 @@ export default tseslint.config([
     ],
   },
   {
-    files: ["src/**/*.ts", "webpack.config.js", "eslint.config.mjs"],
+    files: ["src/**/*.ts"],
     ignores: ["src/lib/*.ts"],
     plugins: {
       "license-header": licenseHeader,

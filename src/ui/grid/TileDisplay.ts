@@ -27,6 +27,8 @@ export type TileOnScreenMatch = {
     offset: number;
 };
 
+let tileDisplayCount = 0;
+
 export class TileDisplay {
     tile: Tile;
 
@@ -34,6 +36,8 @@ export class TileDisplay {
     segmentElements?: SVGPathElement[];
 
     element: SVGElement;
+    clipPath: SVGElement;
+    clipPathId: string;
 
     constructor(gridDisplay: GridDisplay, tile: Tile) {
         this.gridDisplay = gridDisplay;
@@ -45,6 +49,11 @@ export class TileDisplay {
                 ? "svg-placeholder"
                 : "svg-tile",
         );
+        this.clipPathId = `tile${tileDisplayCount}`;
+        tileDisplayCount = (tileDisplayCount + 1) % 100000;
+        const clipPath = SVG("clipPath", null, this.element);
+        clipPath.setAttribute("id", this.clipPathId);
+        this.clipPath = SVG("path", null, clipPath);
 
         this.redraw();
     }
@@ -156,10 +165,14 @@ export class TileDisplay {
             });
         } else {
             if (DEBUG.HIDE_TILE_OUTLINE) return;
-            this.element.setAttribute(
-                "clip-path",
-                `path('${roundPath}') view-box`,
-            );
+            // the view-box clip-path is not supported in older Android webviews,
+            // so we use a clipPath element instead
+            // this.element.setAttribute(
+            //     "clip-path",
+            //     `path('${roundPath}') view-box`,
+            // );
+            this.clipPath.setAttribute("d", roundPath);
+            this.element.setAttribute("clip-path", `url(#${this.clipPathId})`);
         }
     }
 

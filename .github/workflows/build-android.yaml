@@ -49,8 +49,13 @@ jobs:
       - name: Build APK with capacitor
         run: npx cap build android --androidreleasetype APK --signing-type apksigner --keystorepath ~/.keystore/keystore.jks --keystorepass "${{secrets.ANDROID_KEYSTOREPASS}}" --keystorealias "${{secrets.ANDROID_KEYSTOREALIAS}}" --keystorealiaspass  "${{secrets.ANDROID_KEYSTOREALIASPASS}}"
 
+      - name: Resign for reproducible builds
+        run: apksigner sign --ks ~/.keystore/keystore.jks --ks-pass "pass:${{secrets.ANDROID_KEYSTOREPASS}}" --ks-key-alias "${{secrets.ANDROID_KEYSTOREALIAS}}" --key-pass "pass:${{secrets.ANDROID_KEYSTOREALIASPASS}}" --alignment-preserved --in android/app/build/outputs/apk/release/app-release-unsigned.apk --out android/app/build/outputs/apk/release/app-release-signed.apk
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Android package
-          path: android/app/build/outputs/apk/release/app-release-signed.apk
+          path: |
+            android/app/build/outputs/apk/release/app-release-unsigned.apk
+            android/app/build/outputs/apk/release/app-release-signed.apk

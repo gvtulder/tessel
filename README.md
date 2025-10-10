@@ -113,7 +113,7 @@ npm run build
 
 ### Building for Android
 
-An Android application can be built with [Capacitor](https://capacitorjs.com/). In addition to the standard Node/NPM dependencies, Capacitor requires the Android SDK. [See the Capacitor instructions.](https://capacitorjs.com/docs/getting-started/environment-setup#android-requirements)
+An Android application can be built with [Capacitor](https://capacitorjs.com/). In addition to the standard Node/NPM dependencies, Capacitor requires the Android SDK. [See the instructions on the Capacitor website.](https://capacitorjs.com/docs/getting-started/environment-setup#android-requirements)
 
 ```
 # install dependencies

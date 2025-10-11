@@ -41,22 +41,27 @@ jobs:
       - name: Build HTML assets for capacitor
         run: npm run build-cap-html
 
-      - name: Copy files to capacitor
+      - name: Synchronize capacitor
         run: |
           npx cap telemetry off
           npx cap sync
 
-      - name: Build APK with capacitor
-        run: npx cap build android --androidreleasetype APK --signing-type apksigner --keystorepath ~/.keystore/keystore.jks --keystorepass "${{secrets.ANDROID_KEYSTOREPASS}}" --keystorealias "${{secrets.ANDROID_KEYSTOREALIAS}}" --keystorealiaspass  "${{secrets.ANDROID_KEYSTOREALIASPASS}}"
+      - name: Build APK
+        run: |
+          cd android/app
+          ../gradlew assembleRelease
 
-      - name: Resign for reproducible builds
-        run: apksigner sign --ks ~/.keystore/keystore.jks --ks-pass "pass:${{secrets.ANDROID_KEYSTOREPASS}}" --ks-key-alias "${{secrets.ANDROID_KEYSTOREALIAS}}" --key-pass "pass:${{secrets.ANDROID_KEYSTOREALIASPASS}}" --alignment-preserved --in android/app/build/outputs/apk/release/app-release-unsigned.apk --out android/app/build/outputs/apk/release/app-release-signed.apk
+      - name: Sign APK
+        run: |
+          apksigner sign --ks ~/.keystore/keystore.jks --ks-pass "pass:${{secrets.ANDROID_KEYSTOREPASS}}" --ks-key-alias "${{secrets.ANDROID_KEYSTOREALIAS}}" --key-pass "pass:${{secrets.ANDROID_KEYSTOREALIASPASS}}" --alignment-preserved --in android/app/build/outputs/apk/release/app-release-unsigned.apk --out android/app/build/outputs/apk/release/app-release-signed.apk
 
       - name: Rename outputs
         run: |
           sha_short=$(git rev-parse --short HEAD)
           mv android/app/build/outputs/apk/release/app-release-unsigned.apk tessel-${sha_short}-unsigned.apk
-          mv android/app/build/outputs/apk/release/app-release-signed.apk tessel-${sha_short}.apk
+          if [[ -f android/app/build/outputs/apk/release/app-release-signed.apk ]] ; then
+            mv android/app/build/outputs/apk/release/app-release-signed.apk tessel-${sha_short}.apk
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

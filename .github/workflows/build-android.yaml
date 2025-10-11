@@ -96,9 +96,10 @@ jobs:
           sha_short=$(git rev-parse --short HEAD)
           mv tessel-${sha_short}.apk tessel-${{ github.ref_name }}.apk
 
-      - name: Make release
+      - name: Make draft release
         uses: softprops/action-gh-release@v2
         with:
+          draft: true
           files: tessel-${{ github.ref_name }}.apk
           generate_release_notes: true
           body_path: ${{ github.workspace }}-CHANGELOG.txt

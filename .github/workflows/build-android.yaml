@@ -91,15 +91,18 @@ jobs:
             cat metadata/en-US/changelogs/${versionCode}.txt >> ${{ github.workspace }}-CHANGELOG.txt
           fi
 
-      - name: Rename signed APK to include version
+      - name: Rename APK to include version
         run: |
           sha_short=$(git rev-parse --short HEAD)
           mv tessel-${sha_short}.apk tessel-${{ github.ref_name }}.apk
+          mv tessel-${sha_short}-unsigned.apk tessel-${{ github.ref_name }}-unsigned.apk
 
       - name: Make draft release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
-          files: tessel-${{ github.ref_name }}.apk
+          files: |
+            tessel-${{ github.ref_name }}.apk
+            tessel-${{ github.ref_name }}-unsigned.apk
           generate_release_notes: true
           body_path: ${{ github.workspace }}-CHANGELOG.txt

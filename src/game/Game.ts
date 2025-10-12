@@ -15,6 +15,11 @@ import { RuleSet } from "../grid/rules/RuleSet";
 import { ColorPatternPerShape } from "../grid/Shape";
 import { SetupCatalog } from "../saveGames";
 import { shuffle } from "../geom/RandomSampler";
+import {
+    DemoGameInitializer,
+    DemoGameSettings,
+    GameInitializer,
+} from "./GameInitializer";
 
 export type GameSettings = {
     atlas: Atlas;
@@ -22,9 +27,11 @@ export type GameSettings = {
     rules?: RuleSet;
     scorer?: ScorerType;
     colorPatternPerShape?: ColorPatternPerShape;
+    uniqueTileColors?: boolean;
     tilesShownOnStack: number;
     initialTile: TileColors;
     tileGenerator: TileGenerator[];
+    gameInitializer?: GameInitializer;
 };
 
 export type GameSettingsSerialized = {
@@ -34,6 +41,7 @@ export type GameSettingsSerialized = {
     uniqueTileColors: boolean;
     rules: string;
     scorer: string;
+    demoGame?: DemoGameSettings;
 };
 
 export const enum GameEventType {
@@ -93,10 +101,19 @@ export class Game extends EventTarget {
             this.settings.tilesShownOnStack,
         );
 
-        const initialTileColors = this.settings.initialTile;
-        const tile = this.grid.addInitialTile();
-        tile.colors = initialTileColors;
-        this.tileStack.removeColors({ shape: tile.shape, colors: tile.colors });
+        // initialize grid with some tiles
+        if (this.settings.gameInitializer) {
+            this.settings.gameInitializer.initializeGame(this);
+        } else {
+            // use the default initial tile
+            const initialTileColors = this.settings.initialTile;
+            const tile = this.grid.addInitialTile();
+            tile.colors = initialTileColors;
+            this.tileStack.removeColors({
+                shape: tile.shape,
+                colors: tile.colors,
+            });
+        }
 
         this.grid.generatePlaceholders();
     }
@@ -187,12 +204,17 @@ export function gameFromSerializedSettings(
         (c) => colors.colors[c % colors.colors.length],
     );
 
+    const gameInitializer = serialized.demoGame
+        ? new DemoGameInitializer(serialized.demoGame)
+        : undefined;
+
     const settings: GameSettings = {
         atlas: atlas.atlas,
         colors: colors.colors,
         rules: rules.rules,
         scorer: scorer.scorer,
         colorPatternPerShape: colorPatternPerShape,
+        uniqueTileColors: serialized.uniqueTileColors,
         initialTile: initialTile,
         tilesShownOnStack: 3,
         tileGenerator: [
@@ -210,6 +232,7 @@ export function gameFromSerializedSettings(
             ),
             TileGenerators.ensureNumber(60, 100),
         ],
+        gameInitializer: gameInitializer,
     };
     return settings;
 }

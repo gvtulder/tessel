@@ -7,9 +7,9 @@
     "url": "https://www.vantulder.net/"
   },
   "scripts": {
-    "build": "NODE_ENV=production parcel build index.html --no-source-maps",
-    "build-cap-html": "NODE_ENV=production SKIP_SERVICE_WORKER=true parcel build index.capacitor.html --dist-dir dist-capacitor --no-source-maps",
-    "serve": "NODE_ENV=development parcel serve index.html --no-cache",
+    "build": "NODE_ENV=production parcel build src/index.html --no-source-maps",
+    "build-cap-html": "NODE_ENV=production SKIP_SERVICE_WORKER=true parcel build src/index.capacitor.html --dist-dir dist-capacitor --no-source-maps",
+    "serve": "NODE_ENV=development parcel serve src/index.html --no-cache",
     "test": "jest",
     "check": "tsc --noEmit",
     "update-icon": "rsvg-convert assets/icons/icon.svg -w 180 -h 180 -o assets/icons/icon.png ; for s in 180 192 512 1024 ; do rsvg-convert assets/icons/icon.svg -w $s -h $s -o assets/icons/icon-$s.png ; done",

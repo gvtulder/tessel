@@ -11,7 +11,7 @@ let wb: Workbox | undefined = undefined;
 
 if (INCLUDE_SERVICE_WORKER && "serviceWorker" in navigator) {
     navigator.serviceWorker.register(
-        new URL("../service-worker.js", import.meta.url),
+        new URL("service-worker.js", import.meta.url),
         { type: "module" },
     );
     wb = new Workbox("/service-worker.js");

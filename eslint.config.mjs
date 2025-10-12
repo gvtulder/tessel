@@ -25,7 +25,15 @@ export default tseslint.config([
     },
     rules: {
       "@typescript-eslint/no-unused-vars": "off",
-      "license-header/header": ["error", "./license-header.ts"],
+      "license-header/header": [
+        "error",
+        [
+          "/**",
+          " * SPDX-License-Identifier: GPL-3.0-or-later",
+          " * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder",
+          " */",
+        ],
+      ],
     },
   },
 ]);

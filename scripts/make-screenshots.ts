@@ -24,7 +24,18 @@ const sizes = [
     },
 ];
 
-const screenshots = [
+type ScreenshotTask = {
+    filename: string;
+    dirname?: string;
+    viewport?: { width: number; height: number; deviceScaleFactor: number };
+    path?: string;
+    js?: string;
+    css?: string;
+    elements?: ([string, string] | [string, string, string[]])[];
+    demoGame?: object;
+};
+
+const screenshots: ScreenshotTask[] = [
     {
         filename: "main-menu",
         path: "",
@@ -226,7 +237,7 @@ async function captureScreenshot() {
             "-d",
             `${__dirname}/../dist`,
         ]);
-    } catch (err) {
+    } catch (err: any) {
         console.log("Error starting server.", err.message);
         return;
     }
@@ -307,7 +318,7 @@ async function captureScreenshot() {
 
         await browser.close();
         console.log("Screenshots captured successfully.");
-    } catch (err) {
+    } catch (err: any) {
         console.log("Error: ", err.message);
     }
 

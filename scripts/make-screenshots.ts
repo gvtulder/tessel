@@ -46,6 +46,23 @@ const screenshots = [
         path: "#paint-triangle",
     },
     {
+        filename: "play-triangle",
+        demoGame: {
+            atlas: "triangle",
+            colors: "wong4",
+            segments: 0,
+            uniqueTileColors: false,
+            rules: "same",
+            scorer: "shape",
+            demoGame: {
+                seed: 124,
+                numberOfTiles: 15,
+                tileCenterWeight: 1,
+                points: 22,
+            },
+        },
+    },
+    {
         viewport: { width: 1024, height: 768, deviceScaleFactor: 2 },
         dirname: `${__dirname}/../docs/images/`,
         filename: "settings",
@@ -231,7 +248,8 @@ async function captureScreenshot() {
                 }
 
                 let out =
-                    screenshot.dirname || `${__dirname}/../assets/screenshots/`;
+                    screenshot.dirname ||
+                    `${__dirname}/../assets/src/screenshots/`;
                 if (!screenshot.viewport) {
                     out += `${size.name}-`;
                 }
@@ -246,8 +264,13 @@ async function captureScreenshot() {
                 // Set viewport width and height
                 await page.setViewport(screenshot.viewport || size.viewport);
 
+                let path = screenshot.path;
+                if (screenshot.demoGame) {
+                    path = "#" + btoa(JSON.stringify(screenshot.demoGame));
+                }
+
                 // Navigate to the target URL
-                await page.goto(targetUrl + screenshot.path);
+                await page.goto(targetUrl + path);
                 await new Promise((resolve) => setTimeout(resolve, 500));
 
                 if (screenshot.js) {

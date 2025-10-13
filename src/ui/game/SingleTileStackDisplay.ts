@@ -39,6 +39,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     rotateTransform: TransformComponent;
 
     onDragTransitionEnd: EventListener;
+    onAnimationEnd: EventListener;
 
     constructor(
         tileStackDisplay: BaseTileStackDisplay,
@@ -100,6 +101,11 @@ export class SingleTileOnStackDisplay implements TileDragSource {
             "transitionend",
             this.onDragTransitionEnd,
         );
+
+        this.onAnimationEnd = () => {
+            this.element.classList.remove("appear");
+        };
+        this.element.addEventListener("animationend", this.onAnimationEnd);
     }
 
     rescale() {
@@ -126,6 +132,10 @@ export class SingleTileOnStackDisplay implements TileDragSource {
             this.rescale();
         }
         this.current = slot;
+    }
+
+    startAppearAnimation() {
+        this.element.classList.add("appear");
     }
 
     disable() {
@@ -325,6 +335,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
             "transitionend",
             this.onDragTransitionEnd,
         );
+        this.element.removeEventListener("animationend", this.onAnimationEnd);
         if (this.normalizeRotationTimeout) {
             window.clearTimeout(this.normalizeRotationTimeout);
         }

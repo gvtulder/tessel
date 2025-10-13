@@ -81,6 +81,9 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         this.counterTapHandler = new TapHandler(this.counter);
         this.counterTapHandler.onTap = () => {
             this.tileStack.reshuffle();
+            for (const td of this.tileDisplays) {
+                td.startAppearAnimation();
+            }
         };
 
         this.updateTiles();

@@ -35,8 +35,10 @@ jobs:
 
       - name: Get keystore
         run: |
-          mkdir ~/.keystore 
-          echo ${{ secrets.ANDROID_KEYSTORE }} | base64 --decode > ~/.keystore/keystore.jks
+          if [[ -n "${{ secrets.ANDROID_KEYSTORE }}" ]] ; then
+            mkdir ~/.keystore
+            echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > ~/.keystore/keystore.jks
+          fi
 
       - name: Build HTML assets for capacitor
         run: npm run build-cap-html
@@ -53,7 +55,16 @@ jobs:
 
       - name: Sign APK
         run: |
-          apksigner sign --ks ~/.keystore/keystore.jks --ks-pass "pass:${{secrets.ANDROID_KEYSTOREPASS}}" --ks-key-alias "${{secrets.ANDROID_KEYSTOREALIAS}}" --key-pass "pass:${{secrets.ANDROID_KEYSTOREALIASPASS}}" --alignment-preserved --in android/app/build/outputs/apk/release/app-release-unsigned.apk --out android/app/build/outputs/apk/release/app-release-signed.apk
+          if [[ -f ~/.keystore/keystore.jks ]] ; then
+            apksigner sign \
+              --ks ~/.keystore/keystore.jks \
+              --ks-pass "pass:${{secrets.ANDROID_KEYSTOREPASS}}" \
+              --ks-key-alias "${{secrets.ANDROID_KEYSTOREALIAS}}" \
+              --key-pass "pass:${{secrets.ANDROID_KEYSTOREALIASPASS}}" \
+              --alignment-preserved \
+              --in android/app/build/outputs/apk/release/app-release-unsigned.apk \
+              --out android/app/build/outputs/apk/release/app-release-signed.apk
+          fi
 
       - name: Rename outputs
         run: |

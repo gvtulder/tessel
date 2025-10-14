@@ -100,6 +100,9 @@ jobs:
           touch ${{ github.workspace }}-CHANGELOG.txt
           if [[ -f metadata/en-US/changelogs/${versionCode}.txt ]] ; then
             cat metadata/en-US/changelogs/${versionCode}.txt >> ${{ github.workspace }}-CHANGELOG.txt
+          else
+            echo "::error::Missing changelog: expected metadata/en-US/changelogs/${versionCode}.txt"
+            exit 1
           fi
 
       - name: Rename APK to include version

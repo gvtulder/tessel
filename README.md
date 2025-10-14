@@ -1,5 +1,8 @@
-<div align="center">
 <h1><a href="https://tessel.vantulder.net/"><img src="assets/logo/logo-with-tile.svg" width="250" alt="Tessel – A tile game"/></a></h1>
+
+<a href="https://tessel.vantulder.net/"><img align="right" src="assets/social/play-now-badge.png" alt="Play now!" height="80"></a>
+
+<a href="https://f-droid.org/packages/net.vantulder.tessel"><img align="right" src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"></a>
 
 _A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>_
 
@@ -14,8 +17,6 @@ _A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>_
 Place tiles with matching colors to make shapes and fill the board.
 
 <img src="assets/screenshots/wide-main-menu.png" width="200"/> <img src="assets/screenshots/wide-square.png" width="200"/> <img src="assets/screenshots/wide-paint-triangle.png" width="200"/> <img src="assets/screenshots/wide-setup.png" width="200"/>
-
-</div>
 
 ## Tilings
 

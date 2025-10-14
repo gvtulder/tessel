@@ -23,6 +23,13 @@ for size in 1024x500 1200x630 1200x1200 ; do
    $OPTIPNG assets/social/tessel-${size}.png
 done
 
+# make badge
+cp assets/src/play-now-badge.svg assets/social/play-now-badge.svg
+svgo assets/social/play-now-badge.svg
+rsvg-convert assets/src/play-now-badge.svg \
+  -h 250 -o assets/social/play-now-badge.png
+$OPTIPNG assets/social/play-now-badge.png
+
 # copy to metadata screenshots
 cp assets/screenshots/portrait-main-menu.png \
    metadata/en-US/images/phoneScreenshots/1.png

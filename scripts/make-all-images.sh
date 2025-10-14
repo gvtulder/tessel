@@ -41,6 +41,10 @@ rsvg-convert assets/src/featureGraphic.svg \
   -b "#f2f2f2" -w 1024 -h 500 \
   -o metadata/en-US/images/featureGraphic.png
 $OPTIPNG metadata/en-US/images/featureGraphic.png
+rsvg-convert assets/src/featureGraphic-with-text.svg \
+  -b "#f2f2f2" -w 1024 -h 500 \
+  -o metadata/en-US/images/featureGraphic-with-text.png
+$OPTIPNG metadata/en-US/images/featureGraphic-with-text.png
 
 # build icons
 cp assets/src/icon-square.svg assets/icons/icon.svg

@@ -56,10 +56,12 @@ $OPTIPNG metadata/en-US/images/featureGraphic-with-text.png
 # build icons
 cp assets/src/icon-square.svg assets/icons/icon.svg
 rsvg-convert assets/icons/icon.svg -w 180 -h 180 -o assets/icons/icon.png
-for size in 180 192 512 1024 ; do
+for size in 48 180 192 512 1024 ; do
    rsvg-convert assets/src/icon-square.svg -w ${size} -h ${size} -o assets/icons/icon-${size}.png
    $OPTIPNG assets/icons/icon-${size}.png
 done
+cp assets/icons/icon-512.png assets/icons/apple-touch-icon.png
+convert assets/icons/icon-48.png assets/icons/favicon.ico
 
 # build logo
 cp assets/src/logo-tile-only.svg assets/logo/logo-tile-only.svg

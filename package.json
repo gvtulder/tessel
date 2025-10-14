@@ -73,11 +73,17 @@
   "staticFiles": [
     {
       "staticPath": "assets/social/tessel-1200x1200.png",
-      "distDir": "dist/social"
+      "staticOutPath": "social"
     },
     {
       "staticPath": "assets/social/tessel-1200x630.png",
       "distDir": "dist/social"
+    },
+    {
+      "staticPath": "assets/icons/favicon.ico"
+    },
+    {
+      "staticPath": "assets/icons/apple-touch-icon.png"
     }
   ]
 }

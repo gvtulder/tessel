@@ -1,8 +1,7 @@
 <h1><a href="https://tessel.vantulder.net/"><img src="assets/logo/logo-with-tile.svg" width="250" alt="Tessel – A tile game"/></a></h1>
 
-<a href="https://tessel.vantulder.net/"><img align="right" src="assets/social/play-now-badge.png" alt="Play now!" height="80"></a>
-
 <a href="https://f-droid.org/packages/net.vantulder.tessel"><img align="right" src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"></a>
+<a href="https://tessel.vantulder.net/"><img align="right" src="assets/social/play-now-badge.png" alt="Play now!" height="80"></a>
 
 _A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>_
 

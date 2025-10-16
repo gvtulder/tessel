@@ -51,7 +51,7 @@ jobs:
       - name: Build APK
         run: |
           cd android/app
-          ../gradlew assembleRelease
+          ../gradlew assembleRelease bundleRelease
 
       - name: Sign APK
         run: |
@@ -64,21 +64,35 @@ jobs:
               --alignment-preserved \
               --in android/app/build/outputs/apk/release/app-release-unsigned.apk \
               --out android/app/build/outputs/apk/release/app-release-signed.apk
+
+            apksigner sign \
+              --ks ~/.keystore/keystore.jks \
+              --ks-pass "pass:${{secrets.ANDROID_KEYSTOREPASS}}" \
+              --ks-key-alias "${{secrets.ANDROID_KEYSTOREALIAS}}" \
+              --key-pass "pass:${{secrets.ANDROID_KEYSTOREALIASPASS}}" \
+              --alignment-preserved \
+              --min-sdk-version 23 \
+              --in android/app/build/outputs/bundle/release/app-release.aab \
+              --out android/app/build/outputs/bundle/release/app-release-signed.aab
           fi
 
       - name: Rename outputs
         run: |
           sha_short=$(git rev-parse --short HEAD)
           mv android/app/build/outputs/apk/release/app-release-unsigned.apk tessel-${sha_short}-unsigned.apk
+          mv android/app/build/outputs/bundle/release/app-release.aab tessel-${sha_short}-unsigned.aab
           if [[ -f android/app/build/outputs/apk/release/app-release-signed.apk ]] ; then
             mv android/app/build/outputs/apk/release/app-release-signed.apk tessel-${sha_short}.apk
+            mv android/app/build/outputs/bundle/release/app-release-signed.aab tessel-${sha_short}.aab
           fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Android package
-          path: tessel-*.apk
+          path: |
+            tessel-*.apk
+            tessel-*.aab
 
   make-release:
     name: make-release
@@ -109,7 +123,9 @@ jobs:
         run: |
           sha_short=$(git rev-parse --short HEAD)
           mv tessel-${sha_short}.apk tessel-${{ github.ref_name }}.apk
+          mv tessel-${sha_short}.aab tessel-${{ github.ref_name }}.aab
           mv tessel-${sha_short}-unsigned.apk tessel-${{ github.ref_name }}-unsigned.apk
+          mv tessel-${sha_short}-unsigned.aab tessel-${{ github.ref_name }}-unsigned.aab
 
       - name: Make draft release
         uses: softprops/action-gh-release@v2
@@ -117,6 +133,8 @@ jobs:
           draft: true
           files: |
             tessel-${{ github.ref_name }}.apk
+            tessel-${{ github.ref_name }}.aab
             tessel-${{ github.ref_name }}-unsigned.apk
+            tessel-${{ github.ref_name }}-unsigned.aab
           generate_release_notes: true
           body_path: ${{ github.workspace }}-CHANGELOG.txt

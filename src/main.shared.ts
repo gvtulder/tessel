@@ -4,11 +4,12 @@
  */
 
 import { VERSION } from "./constants";
-import disableIosZoom from "./lib/disable-ios-zoom";
 import { GameController } from "./ui/GameController";
 
 export function startMainMenu(workbox?: Workbox) {
-    disableIosZoom();
+    document.body.addEventListener("touchstart", preventIosZoomAndSelection, {
+        passive: false,
+    });
 
     if (window.location.pathname != "/") {
         window.location.href = "/";
@@ -29,4 +30,15 @@ export function removeSplash() {
             splash.remove();
         }, 1000);
     }
+}
+
+/**
+ * Prevents any default touch events, except if the target is an A element.
+ */
+function preventIosZoomAndSelection(e: Event) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (e.target && (e.target as any).nodeName == "A") {
+        return;
+    }
+    e.preventDefault();
 }

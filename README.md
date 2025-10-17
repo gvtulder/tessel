@@ -96,6 +96,7 @@ Customize shapes and colors in the design menu:
 
 [![GitHub Version](https://img.shields.io/github/v/release/gvtulder/tessel.svg?logo=github&label=GitHub)](https://github.com/gvtulder/tessel/releases)
 [![F-Droid Version](https://img.shields.io/f-droid/v/net.vantulder.tessel.svg?logo=f-droid&label=F-Droid)](https://f-droid.org/packages/net.vantulder.tessel/)
+[![Web Version](https://tessel.vantulder.net/badge.svg)](https://tessel.vantulder.net/)
 
 Tessel is written in TypeScript and uses HTML, SVG and CSS. It can be built using a recent Node version (tested for 20+). It can be played directly in the browser or installed as a Progressive Web App.
 

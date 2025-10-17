@@ -78,7 +78,7 @@
   .items {
     display: none;
     margin: $dropout-inner-padding calc(0.5 * $dropout-inner-padding)
-      calc(1.5 * $dropout-inner-padding) calc(0.5 * $dropout-inner-padding);
+      calc(2 * $dropout-outer-padding) calc(0.5 * $dropout-inner-padding);
     grid-template-columns: auto auto auto auto auto auto;
   }
 
@@ -86,7 +86,7 @@
     grid-row: 1;
     grid-column: span 2;
     margin: 0 calc(0.5 * $dropout-inner-padding) $dropout-inner-padding
-      $dropout-inner-padding;
+      calc(0.5 * $dropout-inner-padding);
 
     transition: scale 0.1s;
 
@@ -94,9 +94,6 @@
     &:hover {
       scale: 1.05;
     }
-  }
-  .items .game-button + .game-button {
-    margin-left: calc(0.5 * $dropout-inner-padding);
   }
 
   .items .game-toggle {

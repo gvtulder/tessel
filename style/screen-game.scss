@@ -13,31 +13,6 @@
     grid-area: main-grid;
   }
 
-  .controls {
-    grid-area: controls;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #bbb;
-    text-align: center;
-    z-index: 1000;
-
-    .buttons {
-      order: 1;
-      margin: 0 10px;
-      display: flex;
-      flex-direction: row;
-    }
-    .toggles {
-      order: 2;
-      margin: 10px 10px;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-    }
-  }
-
   .fill {
     grid-area: fill;
     background: colors.$panel-bg;
@@ -131,13 +106,6 @@
     background: colors.$home-button-bg;
     fill: colors.$home-button-fg;
   }
-
-  /*
-  .game-button.restart {
-    background: #63851d;
-    fill: #fff;
-  }
-  */
 
   &.expanded {
     .items {

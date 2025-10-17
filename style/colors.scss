@@ -25,5 +25,80 @@ $home-button-bg: color.change($blue, $lightness: 32%);
 $home-button-fg: color.change($blue, $lightness: 97%);
 $home-button-fg-hover: color.change($blue, $lightness: 97%);
 
-$button-scale: min(8vw, 7.5vh, max(2.5vw, 3.5vh, 20px));
+// safe areas
+:root {
+  --safe-area-max-inset-top: env(
+    safe-area-max-inset-top,
+    env(safe-area-inset-top, 36px)
+  );
+  --safe-area-max-inset-right: env(
+    safe-area-max-inset-right,
+    env(safe-area-inset-right, 36px)
+  );
+  --safe-area-max-inset-bottom: env(
+    safe-area-max-inset-bottom,
+    env(safe-area-inset-bottom, 36px)
+  );
+  --safe-area-max-inset-left: env(
+    safe-area-max-inset-left,
+    env(safe-area-inset-left, 36px)
+  );
+}
+
+// svg scale factor (see corresponding parameter in the TS source)
 $svg-scale: 100;
+
+// size of the buttons (height and width including padding)
+$button-scale: min(16vw, 15vh, max(5vw, 7vh, 40px));
+
+// space around the button
+$button-margin-width: calc(0.6 * $button-scale);
+$button-margin-height: calc(0.6 * $button-scale);
+
+// safe area inset margins
+$inset-top: var(--safe-area-max-inset-top);
+$inset-right: var(--safe-area-max-inset-right);
+// at the bottom we'll make some extra space to safely drag the tiles
+$inset-bottom: calc(1.5 * var(--safe-area-max-inset-bottom));
+$inset-left: var(--safe-area-max-inset-left);
+
+// margin to keep the stack away from the edge
+$stack-margin-top: 0px;
+$stack-margin-right: 0px; // calc(max(15vw - 20vh, 0px));
+$stack-margin-bottom: 0px; // calc(max(15vh - 20vw, 0px));
+$stack-margin-left: 0px;
+
+// width/height of the tile stack
+$stack-width: calc($button-scale + 2 * $button-margin-width);
+$stack-height: max(20vw, 40px);
+
+// button position relative to the page
+$button-top: max(calc($button-margin-height + $stack-margin-top), $inset-top);
+$button-right: max(
+  calc($button-margin-width + $stack-margin-right),
+  $inset-right
+);
+$button-bottom: max(
+  calc($button-margin-height + $stack-margin-bottom),
+  $inset-bottom
+);
+$button-left: max(calc($button-margin-width + $stack-margin-left), $inset-left);
+
+// debugging CSS: add div elements to show safe area
+.safe-inset-top,
+.safe-inset-bottom {
+  background: #f00a;
+  z-index: 1000;
+  position: absolute;
+  left: $inset-left;
+  width: calc(100vw - $inset-left - $inset-right);
+  box-sizing: border-box;
+}
+.safe-inset-top {
+  top: 0;
+  height: $inset-top;
+}
+.safe-inset-bottom {
+  bottom: 0;
+  height: $inset-bottom;
+}

@@ -10,8 +10,8 @@
 
   .game-button {
     position: absolute;
-    top: 3vw;
-    right: 3vw;
+    top: colors.$button-top;
+    right: colors.$button-right;
   }
 
   .paint-options {
@@ -20,7 +20,10 @@
     height: min-content;
     grid-template-columns: min-content min-content min-content;
     grid-template-rows: min-content min-content min-content;
-    margin: max(10vh, 10vw);
+    margin: max(
+      10vh + colors.$button-top + colors.$button-bottom,
+      10vw + colors.$button-left + colors.$button-right
+    );
   }
 }
 
@@ -47,9 +50,11 @@
 
 .screen.paint-display {
   display: grid;
-  grid-template-columns: 1fr calc(2 * (colors.$button-scale) + 6vw);
+  grid-template-columns: 1fr colors.$stack-width calc(
+      colors.$stack-margin-right + colors.$inset-right
+    );
   grid-template-rows: 1fr;
-  grid-template-areas: "paint-grid color-stack";
+  grid-template-areas: "paint-grid color-stack fill-end";
 
   .paint-grid {
     grid-area: paint-grid;
@@ -59,15 +64,23 @@
     grid-area: color-stack;
     background: colors.$panel-bg;
   }
+
+  .fill-end {
+    grid-area: fill-end;
+    background: colors.$panel-bg;
+  }
 }
 
 .paint-menu {
   position: absolute;
-  top: 3vw;
-  right: 3vw;
+  top: colors.$button-top;
+  right: colors.$button-right;
 }
 
-$swatch-scale: min(8vh, calc(2 * colors.$button-scale));
+$swatch-scale: min(
+  calc((100vh - colors.$button-top - colors.$button-bottom) / 11),
+  calc(colors.$button-scale)
+);
 
 .color-stack {
   display: flex;
@@ -76,7 +89,7 @@ $swatch-scale: min(8vh, calc(2 * colors.$button-scale));
   width: 100%;
   box-sizing: border-box;
   justify-content: flex-end;
-  padding-bottom: 3vw;
+  padding-bottom: colors.$button-bottom;
   align-items: center;
 }
 
@@ -121,29 +134,28 @@ $swatch-scale: min(8vh, calc(2 * colors.$button-scale));
 }
 
 @media screen and (orientation: portrait) {
-  $swatch-scale: min(10vw, calc(2 * colors.$button-scale));
+  $swatch-scale: calc((100vw - colors.$inset-left - colors.$inset-right) / 10);
 
   .screen.paint-display {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 1fr max(20vw, 40px);
+    grid-template-rows: 1fr max(20vw, 40px) colors.$stack-margin-bottom;
     grid-template-areas:
       "paint-grid"
-      "color-stack";
+      "color-stack"
+      "fill-end";
   }
 
   .color-stack {
     flex-direction: row;
     justify-content: center;
+    padding-right: 0;
     padding-bottom: 0;
   }
 
   .color-swatch-wrap {
     width: auto;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .color-swatch {

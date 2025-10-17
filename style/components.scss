@@ -5,7 +5,8 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  padding: 10px;
+  padding: 10px calc(10px + colors.$inset-right)
+    calc(10px + colors.$inset-bottom) calc(10px + colors.$inset-left);
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -83,9 +84,9 @@
 }
 
 .game-button {
-  width: colors.$button-scale;
-  height: colors.$button-scale;
-  padding: calc(0.5 * colors.$button-scale);
+  width: calc(0.5 * colors.$button-scale);
+  height: calc(0.5 * colors.$button-scale);
+  padding: calc(0.25 * colors.$button-scale);
   cursor: pointer;
   border-radius: 100%;
 
@@ -118,8 +119,8 @@
 
   .icon {
     margin-left: 0.7vw;
-    width: calc(0.85 * colors.$button-scale);
-    height: calc(0.85 * colors.$button-scale);
+    width: calc(0.425 * colors.$button-scale);
+    height: calc(0.425 * colors.$button-scale);
     fill: rgba(0, 0, 0, 35%);
 
     svg {
@@ -139,8 +140,8 @@
 
   .toggle-ball {
     border-radius: 100%;
-    width: calc(0.85 * colors.$button-scale);
-    height: calc(0.85 * colors.$button-scale);
+    width: calc(0.425 * colors.$button-scale);
+    height: calc(0.425 * colors.$button-scale);
     background: rgba(0, 0, 0, 25%);
   }
 

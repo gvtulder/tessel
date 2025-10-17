@@ -78,6 +78,8 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         // filler element for the tile stack and score column
         createElement("div", "fill", element);
+        // filler element to add to the bottom/side of the tile stack
+        createElement("div", "fill-end", element);
 
         // tile stack
         const tileStackDisplay = (this.tileStackDisplay = new TileStackDisplay(

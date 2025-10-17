@@ -1,5 +1,10 @@
 @use "./colors.scss";
 
+$setting-row-option-scale: min(
+  calc(min(48vw - colors.$button-right) / 7),
+  calc(min(90vh - colors.$inset-top - colors.$inset-bottom) / 8)
+);
+
 .screen.game-setup {
   position: absolute;
   top: 0;
@@ -45,14 +50,14 @@
 
 .screen.game-setup .game-button.exit {
   position: absolute;
-  right: 3vw;
-  top: 3vw;
+  right: colors.$button-right;
+  top: colors.$button-top;
 }
 
 .screen.game-setup .game-button.regenerate {
   position: absolute;
-  left: 3vw;
-  bottom: 3vw;
+  left: colors.$button-left;
+  bottom: colors.$button-margin-height;
 }
 
 .screen.game-setup .button-row {
@@ -65,10 +70,10 @@
   justify-content: flex-start;
 }
 .screen.game-setup .game-button.play {
-  width: min(8vw, 13vh);
-  height: min(8vw, 13vh);
+  width: calc(1.5 * $setting-row-option-scale);
+  height: calc(1.5 * $setting-row-option-scale);
   padding: 10px;
-  margin: 0 min(3vw, 3vh) 0 0;
+  margin: 0 colors.$button-right 0 0;
   border-radius: 100%;
   background: colors.$setup-play-button-bg;
   box-shadow: 0 0 15px rgb(0, 0, 0, 30%);
@@ -112,6 +117,9 @@
   grid-template-rows: min-content min-content min-content;
   justify-content: center;
   align-content: center;
+  padding-top: calc(colors.$stack-margin-top + colors.$inset-top);
+  padding-right: calc(colors.$stack-margin-right + colors.$inset-right);
+  padding-bottom: calc(colors.$stack-margin-bottom + colors.$inset-bottom);
 }
 .screen.game-setup .setting-row {
   display: grid;
@@ -143,11 +151,11 @@
 }
 .screen.game-setup .setting-row-option {
   margin: 0.5vw;
-  width: min(calc(min(41vw) / 6), calc(min(50vh) / 5));
-  height: min(calc(min(41vw) / 6), calc(min(50vh) / 5));
+  width: $setting-row-option-scale;
+  height: $setting-row-option-scale;
   background: colors.$settings-option-panel-bg;
   border: 3px solid transparent;
-  border-radius: 0.7vw;
+  border-radius: calc(0.1 * $setting-row-option-scale);
   box-sizing: border-box;
   box-shadow: 0 0 5px rgb(0, 0, 0, 10%);
   aspect-ratio: 1;
@@ -179,8 +187,8 @@
 @media screen and (min-aspect-ratio: 4 / 5) and (max-aspect-ratio: 7 / 4) {
   .screen.game-setup .button-row {
     position: absolute;
-    right: 3vw;
-    bottom: 3vw;
+    right: colors.$button-right;
+    bottom: colors.$button-bottom;
     display: block;
     width: min-content;
   }
@@ -189,20 +197,6 @@
     margin: 0;
   }
 }
-
-/*
-@media screen and (min-aspect-ratio: 7 / 4) {
-  .screen.game-setup .settings {
-    grid-template-areas:
-      "atlas atlas colors buttons"
-      "segments segments segments buttons"
-      "rules scorer scorer buttons";
-    grid-template-columns: min-content min-content 1fr 1fr;
-    grid-template-rows: min-content min-content min-content;
-    margin-left: 3vw;
-  }
-}
-*/
 
 @media screen and (max-aspect-ratio: 4 / 5) {
   .screen.game-setup {
@@ -221,6 +215,8 @@
     grid-template-columns: min-content min-content min-content 1fr;
     grid-template-rows: min-content min-content min-content;
     margin: 1vw;
+    padding-top: 0;
+    padding-left: colors.$inset-left;
   }
   .screen.game-setup .settings .button-row {
     margin: 0;
@@ -228,18 +224,21 @@
     align-items: center;
     justify-content: center;
   }
+  $setting-row-option-scale: min(
+    calc(min(70vw - colors.$inset-left - colors.$inset-right) / 6),
+    calc(min(70vh - colors.$inset-top - colors.$inset-bottom) / 8)
+  );
   .screen.game-setup .setting-row {
-    padding: 3vw;
+    padding: calc(0.1 * $setting-row-option-scale);
   }
   .screen.game-setup .setting-row-option {
-    width: calc(55vw / 5);
-    height: calc(55vw / 5);
-    width: min(calc(min(70vw) / 5), calc(min(45vh) / 5));
-    height: min(calc(min(70vw) / 5), calc(min(45vh) / 5));
+    width: $setting-row-option-scale;
+    height: $setting-row-option-scale;
+    border-radius: calc(0.1 * $setting-row-option-scale);
   }
   .screen.game-setup .game-button.play {
-    margin: 0 6vw 0 0;
-    width: min(13vw, 13vh);
-    height: min(13vw, 13vh);
+    margin: 0;
+    width: $setting-row-option-scale;
+    height: $setting-row-option-scale;
   }
 }

@@ -54,6 +54,9 @@ export class PaintDisplay extends EventTarget implements ScreenDisplay {
         this.colorStackDisplay = colorStackDisplay;
         this.element.appendChild(colorStackDisplay.element);
 
+        // filler element to add to the bottom/side of the paint stack
+        createElement("div", "fill-end", element);
+
         // the home button
         const menu = createElement("div", "paint-menu", element);
 

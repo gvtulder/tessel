@@ -2,12 +2,14 @@
 
 .screen.game-display {
   display: grid;
-  grid-template-columns: 1fr calc(2 * (colors.$button-scale) + 6vw);
+  grid-template-columns: 1fr colors.$stack-width calc(
+      colors.$stack-margin-right + colors.$inset-right
+    );
   grid-template-rows: 2fr min-content 2fr;
   grid-template-areas:
-    "main-grid fill"
-    "main-grid tile-stack"
-    "main-grid counters";
+    "main-grid fill fill-end"
+    "main-grid tile-stack fill-end"
+    "main-grid counters fill-end";
 
   .main-grid {
     grid-area: main-grid;
@@ -15,6 +17,11 @@
 
   .fill {
     grid-area: fill;
+    background: colors.$panel-bg;
+  }
+
+  .fill-end {
+    grid-area: fill-end;
     background: colors.$panel-bg;
   }
 
@@ -37,16 +44,20 @@
 }
 
 .dropout-menu {
+  $dropout-outer-padding: calc(0.25 * colors.$button-scale);
+  $dropout-inner-padding: calc(0.2 * colors.$button-scale);
+  $dropout-outer-border-radius: calc(0.75 * colors.$button-scale);
+
   position: absolute;
-  right: 3vw;
-  top: 3vw;
+  right: colors.$button-right;
+  top: colors.$button-top;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  border-radius: (colors.$button-scale);
+  border-radius: $dropout-outer-border-radius;
   z-index: 10000;
 
-  margin: -1vw;
+  margin: calc(-1 * $dropout-outer-padding);
 
   &.expanded {
     background: colors.$dropout-bg;
@@ -56,10 +67,8 @@
     }
   }
 
-  $margin: calc(0.4 * colors.$button-scale);
-
   .game-button.dropout {
-    margin: $margin $margin 0 0;
+    margin: $dropout-outer-padding $dropout-outer-padding 0 0;
   }
 
   .game-button.dropout svg {
@@ -68,15 +77,16 @@
 
   .items {
     display: none;
-    margin: 1vw 0.5vw 1.5vw 0.5vw;
-    margin: $margin calc(0.5 * $margin) calc(1.5 * $margin) calc(0.5 * $margin);
+    margin: $dropout-inner-padding calc(0.5 * $dropout-inner-padding)
+      calc(1.5 * $dropout-inner-padding) calc(0.5 * $dropout-inner-padding);
     grid-template-columns: auto auto auto auto auto auto;
   }
 
   .items .game-button {
     grid-row: 1;
     grid-column: span 2;
-    margin: 0 calc(0.5 * $margin) $margin $margin;
+    margin: 0 calc(0.5 * $dropout-inner-padding) $dropout-inner-padding
+      $dropout-inner-padding;
 
     transition: scale 0.1s;
 
@@ -86,20 +96,20 @@
     }
   }
   .items .game-button + .game-button {
-    margin-left: 0.5vw;
+    margin-left: calc(0.5 * $dropout-inner-padding);
   }
 
   .items .game-toggle {
     grid-column: span 3;
-    margin: 0 0 calc(0.3 * colors.$button-scale) 0;
-    padding: 0 calc(0.3 * colors.$button-scale);
+    margin: 0 0 calc(0.5 * $dropout-inner-padding) 0;
+    padding: 0 calc(0.5 * $dropout-inner-padding);
   }
 
   .items,
   .game-button + .game-toggle,
   .game-button + .game-toggle + .game-toggle {
     border-top: 1px solid colors.$panel-bg;
-    padding-top: $margin;
+    padding-top: $dropout-inner-padding;
   }
 
   .game-button.backtomenu {
@@ -125,13 +135,13 @@
     .items {
       display: flex;
       flex-direction: column;
-      margin: 1vw;
+      margin: $dropout-outer-padding;
       padding: 0;
       border-top: none;
     }
 
     .game-button {
-      margin: 0 0 1.5vw;
+      margin: 0 0 $dropout-inner-padding 0;
     }
 
     .game-button.setup {
@@ -298,10 +308,13 @@
   .screen.game-display {
     display: grid;
     grid-template-columns: 5vw 60vw 1fr;
-    grid-template-rows: 1fr max(20vw, 40px);
+    grid-template-rows: 1fr max(20vw, 40px) calc(
+        colors.$stack-margin-bottom + colors.$inset-bottom
+      );
     grid-template-areas:
       "main-grid main-grid main-grid"
-      "fill tile-stack counters";
+      "fill tile-stack counters"
+      "fill-end fill-end fill-end";
 
     .tile-stack {
       flex-direction: row;

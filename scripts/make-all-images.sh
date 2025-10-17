@@ -2,6 +2,7 @@
 set -e
 
 OPTIPNG="optipng -quiet -strip all"
+SVGO="svgo --multipass"
 
 # make screenshots in assets/screenshots and docs/images
 if [[ $1 == screenshots ]] ; then
@@ -25,7 +26,7 @@ done
 
 # make badge
 cp assets/src/play-now-badge.svg assets/social/play-now-badge.svg
-svgo assets/social/play-now-badge.svg
+$SVGO assets/social/play-now-badge.svg
 rsvg-convert assets/src/play-now-badge.svg \
   -h 250 -o assets/social/play-now-badge.png
 $OPTIPNG assets/social/play-now-badge.png
@@ -66,8 +67,8 @@ convert assets/icons/icon-48.png assets/icons/favicon.ico
 # build logo
 cp assets/src/logo-tile-only.svg assets/logo/logo-tile-only.svg
 cp assets/src/logo-with-tile.svg assets/logo/logo-with-tile.svg
-svgo assets/logo/logo-tile-only.svg
-svgo assets/logo/logo-with-tile.svg
+$SVGO assets/logo/logo-tile-only.svg
+$SVGO assets/logo/logo-with-tile.svg
 rsvg-convert assets/src/logo-tile-only.svg -h 300 -o assets/logo/logo-tile-only.png
 rsvg-convert assets/src/logo-with-tile.svg -h 300 -o assets/logo/logo-with-tile.png
 $OPTIPNG assets/logo/*.png

@@ -2,7 +2,7 @@
 
 $setting-row-option-scale: min(
   calc(min(48vw - colors.$button-right) / 7),
-  calc(min(90vh - colors.$inset-top - colors.$inset-bottom) / 8)
+  calc(min(80vh - colors.$inset-top - colors.$inset-bottom) / 8)
 );
 
 .screen.game-setup {

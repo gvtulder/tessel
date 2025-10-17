@@ -65,7 +65,7 @@ $inset-left: var(--safe-area-max-inset-left);
 // margin to keep the stack away from the edge
 $stack-margin-top: 0px;
 $stack-margin-right: 0px; // calc(max(15vw - 20vh, 0px));
-$stack-margin-bottom: 0px; // calc(max(15vh - 20vw, 0px));
+$stack-margin-bottom: 0px; // calc(max(4vh - 4vw, 0px));
 $stack-margin-left: 0px;
 
 // width/height of the tile stack

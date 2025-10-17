@@ -139,7 +139,9 @@ $swatch-scale: min(
   .screen.paint-display {
     display: grid;
     grid-template-columns: auto;
-    grid-template-rows: 1fr max(20vw, 40px) colors.$stack-margin-bottom;
+    grid-template-rows: 1fr max(20vw, 40px) calc(
+        colors.$stack-margin-bottom + colors.$inset-bottom
+      );
     grid-template-areas:
       "paint-grid"
       "color-stack"

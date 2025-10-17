@@ -22,4 +22,3 @@ export const DEBUG = {
 };
 
 export const BGCOLOR = "#dddddd";
-export const PLACEHOLDER = "#cccccc";

@@ -62,12 +62,12 @@
 
   .color-stack {
     grid-area: color-stack;
-    background: colors.$panel-bg;
+    background: var(--panel-bg-color);
   }
 
   .fill-end {
     grid-area: fill-end;
-    background: colors.$panel-bg;
+    background: var(--panel-bg-color);
   }
 }
 
@@ -111,25 +111,25 @@ $swatch-scale: min(
 }
 
 .color-swatch-selected {
-  border: calc(0.1 * $swatch-scale) solid colors.$main-bg;
+  border: calc(0.1 * $swatch-scale) solid var(--main-bg-color);
 }
 
 .color-swatch-remove {
-  background: colors.$main-bg;
-  background: rgba(0, 0, 0, 8%);
+  background: var(--main-bg-color);
+  background: var(--button-bg-color);
   border: calc(0.1 * $swatch-scale) solid transparent;
 
   svg {
     width: calc(0.5 * $swatch-scale);
     height: calc(0.5 * $swatch-scale);
     margin: 15% 0 0 15%;
-    fill: rgba(0, 0, 0, 35%);
+    fill: var(--button-fg-color);
   }
 }
 .color-swatch-remove.color-swatch-selected {
-  background: colors.$main-bg;
+  background: var(--main-bg-color);
   svg {
-    fill: rgba(0, 0, 0, 70%);
+    fill: var(--button-fg-selected-color);
   }
 }
 
@@ -167,7 +167,7 @@ $swatch-scale: min(
   }
 
   .color-swatch-selected {
-    border: calc(0.1 * $swatch-scale) solid colors.$main-bg;
+    border: calc(0.1 * $swatch-scale) solid var(--main-bg-color);
   }
 
   .color-swatch-remove svg {

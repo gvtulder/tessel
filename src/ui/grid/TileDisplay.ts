@@ -5,7 +5,7 @@
 
 import { roundPathCorners } from "../../lib/svg-rounded-corners";
 import { Tile, TileType } from "../../grid/Tile";
-import { DEBUG, PLACEHOLDER } from "../../settings";
+import { DEBUG } from "../../settings";
 import { GridDisplay } from "./GridDisplay";
 import offsetPolygon from "../../lib/offset-polygon";
 import { Point } from "../../geom/math";
@@ -72,7 +72,7 @@ export class TileDisplay {
         const segments = this.tile.segments;
         const elements = this.segmentElements;
         for (let i = 0; i < segments.length; i++) {
-            elements[i].setAttribute("fill", segments[i].color || PLACEHOLDER);
+            elements[i].setAttribute("fill", segments[i].color || "");
         }
     }
 
@@ -98,7 +98,7 @@ export class TileDisplay {
                 );
             }
             const polyElement = SVG("path");
-            polyElement.setAttribute("fill", segments[i].color || PLACEHOLDER);
+            polyElement.setAttribute("fill", segments[i].color || "");
             polyElement.setAttribute("d", polygonToPath(poly));
             this.element.appendChild(polyElement);
             segmentElements[i] = polyElement;
@@ -121,10 +121,7 @@ export class TileDisplay {
             // placeholder
             const outline = SVG("path", null, this.element, {
                 d: roundPath,
-                fill: PLACEHOLDER,
-                stroke: PLACEHOLDER,
                 "stroke-width": `${S * 0.01}`,
-                "fill-opacity": DEBUG.HIDE_TILE_OUTLINE ? "0.0" : "0.5",
             });
         } else {
             if (DEBUG.HIDE_TILE_OUTLINE) return;

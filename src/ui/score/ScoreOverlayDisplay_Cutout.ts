@@ -6,7 +6,7 @@
 import { ScoredRegion } from "../../game/scorers/Scorer";
 import { roundPathCorners } from "../../lib/svg-rounded-corners";
 import { BGCOLOR } from "../../settings";
-import { ScoreOverlayDisplay, Color } from "./ScoreOverlayDisplay";
+import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay";
 import { polylabel } from "../../lib/polylabel";
 import { S, SVG } from "../shared/svg";
 import { BBox, bbox, mergeBBox } from "../../geom/math";
@@ -63,7 +63,6 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         // white outline around the shape
         const outlineBG = SVG("g", null, this.element, {
             class: "outline-bg",
-            stroke: BGCOLOR,
             "stroke-width": `${0.1 * S}px`,
             fill: "transparent",
         });
@@ -73,7 +72,6 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
         // green outline around the shape
         const outlineFG = SVG("g", null, this.element, {
             class: "outline-fg",
-            stroke: Color.main,
             "stroke-width": `${0.05 * S}px`,
             fill: "transparent",
         });
@@ -133,8 +131,6 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
                     cx: "0",
                     cy: "0",
                     r: `${0.7 * S}`,
-                    fill: Color.light,
-                    stroke: Color.dark,
                     "stroke-width": `${0.16 * S}`,
                     style: `filter: drop-shadow(${0.1 * S}px ${0.1 * S}px ${0.2 * S}px rgb(0 0 0 / 0.9)); transform: translate(${(bestPoint.x * S).toFixed(4)}px, ${(bestPoint.y * S).toFixed(4)}px) scale(${pointsScale.toFixed(4)});`,
                 });

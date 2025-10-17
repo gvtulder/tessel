@@ -11,7 +11,7 @@ $setting-row-option-scale: min(
   left: 0;
   width: 100%;
   height: 100%;
-  background: colors.$panel-bg;
+  background: var(--panel-bg-color);
   overflow: hidden;
   box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
   display: grid;
@@ -23,7 +23,7 @@ $setting-row-option-scale: min(
 .screen.game-setup .example-grid {
   position: relative;
   grid-area: example;
-  background: colors.$main-bg;
+  background: var(--main-bg-color);
 }
 
 .invalid-grid-warning {
@@ -36,7 +36,7 @@ $setting-row-option-scale: min(
   svg {
     width: calc(1.5 * colors.$button-scale);
     height: calc(1.5 * colors.$button-scale);
-    fill: #e06300;
+    fill: var(--invalid-grid-warning-color);
     vector-effect: non-scaling-stroke;
   }
 
@@ -75,20 +75,20 @@ $setting-row-option-scale: min(
   padding: 10px;
   margin: 0 colors.$button-right 0 0;
   border-radius: 100%;
-  background: colors.$setup-play-button-bg;
+  background: var(--setup-play-button-bg-color);
   box-shadow: 0 0 15px rgb(0, 0, 0, 30%);
   text-align: center;
   transition: transform 0.1s;
 }
 .screen.game-setup .game-button.play.disabled {
-  background: colors.$setup-play-button-bg-disabled;
+  background: var(--setup-play-button-bg-disabled-color);
   svg {
-    fill: rgba(255, 255, 255, 30%);
+    fill: var(--setup-play-button-fg-disabled-color);
   }
 }
 .screen.game-setup .game-button.play svg {
   display: inline-block;
-  fill: colors.$setup-play-button-fg;
+  fill: var(--setup-play-button-fg-color);
   margin: 16% 0 0 9%;
   width: 65%;
   height: 65%;
@@ -99,10 +99,6 @@ $setting-row-option-scale: min(
   }
   .screen.game-setup .game-button.play.disabled:hover {
     transform: none;
-  }
-  .screen.game-setup .game-button.play.disabled:hover svg,
-  .screen.game-setup .game-button.play.disabled svg:hover {
-    fill: #ccc;
   }
 }
 
@@ -153,7 +149,7 @@ $setting-row-option-scale: min(
   margin: 0.5vw;
   width: $setting-row-option-scale;
   height: $setting-row-option-scale;
-  background: colors.$settings-option-panel-bg;
+  background: var(--settings-option-panel-bg-color);
   border: 3px solid transparent;
   border-radius: calc(0.1 * $setting-row-option-scale);
   box-sizing: border-box;
@@ -172,16 +168,24 @@ $setting-row-option-scale: min(
 }
 .screen.game-setup .setting-row-option.selected,
 .screen.game-setup .setting-row-option.selected:hover {
-  border: 3px solid #66f;
-  background: colors.$settings-option-panel-bg-active;
+  border: 3px solid var(--settings-option-panel-border-active-color);
+  background: var(--settings-option-panel-bg-active-color);
 }
 @media (hover) {
   .screen.game-setup .setting-row-option:hover {
-    background: colors.$settings-option-panel-bg-hover;
+    background: var(--settings-option-panel-bg-hover-color);
   }
 }
 .screen.game-setup .settings .palette {
   padding: 11%;
+}
+.screen.game-setup circle.checkmark {
+  fill: var(--cutout-circle-points-fill-color);
+  stroke: var(--cutout-circle-points-stroke-color);
+}
+
+.screen.game-setup path.checkmark {
+  fill: var(--cutout-circle-points-stroke-color);
 }
 
 @media screen and (min-aspect-ratio: 4 / 5) and (max-aspect-ratio: 7 / 4) {

@@ -5,7 +5,6 @@
 
 import { RuleSet } from "../../grid/rules/RuleSet";
 import { TileColors } from "../../grid/Tile";
-import { Color } from "../score/ScoreOverlayDisplay";
 import { SVG } from "../shared/svg";
 import { SettingRowOption } from "./SettingRowOption";
 
@@ -122,17 +121,15 @@ export class RulesOption extends SettingRowOption {
         });
 
         // checkmark circle
-        SVG("circle", null, checkG, {
+        SVG("circle", "checkmark", checkG, {
             cx: "0.5",
             cy: "0.45",
             r: "1",
-            fill: Color.light,
-            stroke: Color.dark,
             "stroke-width": "0.15",
         });
 
         // checkmark
-        SVG("path", null, checkG, {
+        SVG("path", "checkmark", checkG, {
             d:
                 "M 0.87780016,0.02563948 0.35927277,0.65986061 0.12219998,0.36989528 " +
                 "c -0.02795756,-0.0341881 -0.07327848,-0.0341881 -0.10123613,0 " +
@@ -142,7 +139,6 @@ export class RulesOption extends SettingRowOption {
                 " L 0.97903606,0.149469 c 0.0279519,-0.0341952 0.0279519,-0.0896275 " +
                 "0,-0.12382256 -0.0279575,-0.03419526 " +
                 "-0.073284,-0.03419526 -0.1012359,0 z",
-            fill: Color.dark,
         });
     }
 

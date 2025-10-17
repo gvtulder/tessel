@@ -42,7 +42,7 @@ $logo-height: min(15vw, 10vh);
 
     svg {
       height: $logo-height;
-      fill: rgba(0, 0, 0, 35%);
+      fill: var(--logo-fill-color);
     }
   }
 

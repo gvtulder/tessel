@@ -7,12 +7,6 @@ import { ScoredRegion } from "../../game/scorers/Scorer";
 import { computeOutline, Vertex, Edge } from "../../lib/compute-outline";
 import { SVG } from "../shared/svg";
 
-export const Color = {
-    main: "#9acd32",
-    light: "#e1f0c1",
-    dark: "#63851d",
-};
-
 export abstract class ScoreOverlayDisplay {
     element: SVGElement;
 

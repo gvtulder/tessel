@@ -12,17 +12,18 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  color: #aaa;
+  color: var(--footer-version-color);
   font-size: 12px;
 
   p {
-    color: #aaa;
+    color: var(--footer-version-color);
     margin: 0;
     padding: 0;
   }
 
-  p.copyright {
-    color: #777;
+  p.copyright,
+  p.copyright a {
+    color: var(--footer-copyright-color);
   }
 
   @media screen and (min-aspect-ratio: 5 / 3) {
@@ -32,14 +33,13 @@
   }
 
   a {
-    color: #777;
     text-decoration: none;
     border-bottom: 1px solid;
   }
 
   a:active,
   a:hover {
-    color: #000;
+    color: var(--footer-copyright-color);
   }
 }
 
@@ -51,7 +51,7 @@
   height: 100%;
   width: 100%;
   box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
-  background: colors.$main-bg;
+  background: var(--main-bg-color);
 
   animation-name: animate-appear;
   animation-delay: 100ms;
@@ -93,11 +93,11 @@
   transform: scale(1);
   transition-property: transform;
   transition-duration: 100ms;
-  fill: rgba(0, 0, 0, 35%);
-  background: rgba(0, 0, 0, 8%);
+  fill: var(--button-fg-color);
+  background: var(--button-bg-color);
 
   &.game-button-pressed {
-    background: rgba(0, 0, 0, 15%);
+    background: var(--button-bg-pressed-color);
   }
 
   svg {
@@ -107,7 +107,7 @@
 
   @media (hover) {
     &:hover {
-      background: rgba(0, 0, 0, 15%);
+      background: var(--button-bg-hover-color);
     }
   }
 }
@@ -121,7 +121,7 @@
     margin-left: 0.7vw;
     width: calc(0.425 * colors.$button-scale);
     height: calc(0.425 * colors.$button-scale);
-    fill: rgba(0, 0, 0, 35%);
+    fill: var(--toggle-icon-color);
 
     svg {
       width: 100%;
@@ -133,7 +133,7 @@
     flex-grow: 1;
     border-radius: colors.$button-scale;
     padding: max(0.3vw, 4px);
-    background: rgba(0, 0, 0, 8%);
+    background: var(--toggle-bg-disabled-color);
     display: flex;
     flex-direction: row;
   }
@@ -142,16 +142,16 @@
     border-radius: 100%;
     width: calc(0.425 * colors.$button-scale);
     height: calc(0.425 * colors.$button-scale);
-    background: rgba(0, 0, 0, 25%);
+    background: var(--toggle-fg-disabled-color);
   }
 
   &.enabled {
     .toggle-box {
       justify-content: flex-end;
-      background: colors.$toggle-bg;
+      background: var(--toggle-bg-enabled-color);
     }
     .toggle-ball {
-      background: colors.$toggle-fg;
+      background: var(--toggle-fg-enabled-color);
     }
   }
 }

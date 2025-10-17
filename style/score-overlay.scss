@@ -31,8 +31,18 @@
   transition-delay: 200ms;
   opacity: 0;
 
+  .outline-bg {
+    stroke: var(--cutout-outline-bg-color);
+  }
+
+  .outline-fg {
+    stroke: var(--cutout-outline-fg-color);
+  }
+
   circle.points {
     stroke-dasharray: calc(6 * colors.$svg-scale) calc(6 * colors.$svg-scale);
+    fill: var(--cutout-circle-points-fill-color);
+    stroke: var(--cutout-circle-points-stroke-color);
   }
 
   &.disabled {

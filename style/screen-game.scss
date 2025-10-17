@@ -17,17 +17,17 @@
 
   .fill {
     grid-area: fill;
-    background: colors.$panel-bg;
+    background: var(--panel-bg-color);
   }
 
   .fill-end {
     grid-area: fill-end;
-    background: colors.$panel-bg;
+    background: var(--panel-bg-color);
   }
 
   .tile-stack {
     grid-area: tile-stack;
-    background: colors.$panel-bg;
+    background: var(--panel-bg-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,7 +35,7 @@
 
   .tile-counter-and-score {
     grid-area: counters;
-    background: colors.$panel-bg;
+    background: var(--panel-bg-color);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -60,7 +60,7 @@
   margin: calc(-1 * $dropout-outer-padding);
 
   &.expanded {
-    background: colors.$dropout-bg;
+    background: var(--dropout-bg-color);
 
     .game-button.dropout svg {
       rotate: 90deg;
@@ -105,13 +105,13 @@
   .items,
   .game-button + .game-toggle,
   .game-button + .game-toggle + .game-toggle {
-    border-top: 1px solid colors.$panel-bg;
+    border-top: 1px solid var(--panel-bg-color);
     padding-top: $dropout-inner-padding;
   }
 
   .game-button.backtomenu {
-    background: colors.$home-button-bg;
-    fill: colors.$home-button-fg;
+    background: var(--home-button-bg-color);
+    fill: var(--home-button-fg-color);
   }
 
   &.expanded {
@@ -156,7 +156,7 @@
     z-index: 1000;
   }
   .tile-outline {
-    stroke: colors.$main-bg;
+    stroke: var(--main-bg-color);
   }
 }
 
@@ -226,6 +226,7 @@
   font-size: 1.5vw;
   flex-grow: 2;
   cursor: pointer;
+  color: var(--tile-counter-text-color);
 
   @media screen and (max-aspect-ratio: 3 / 2) {
     span {
@@ -233,8 +234,7 @@
       margin: 1em auto;
       width: 4em;
       box-sizing: border-box;
-      border: 1px solid #999;
-      color: #777;
+      border: 1px solid var(--tile-counter-border-color);
       border-radius: 0.5vw;
       padding: 1.2em 0;
       aspect-ratio: 1;
@@ -269,9 +269,9 @@
   box-sizing: border-box;
   padding: 4% 0 7% 0;
   border-radius: 2vw;
-  border: 3px solid colors.$score-display-fg;
-  background: colors.$score-display-bg;
-  color: colors.$score-display-fg;
+  border: 3px solid var(--score-display-fg-color);
+  background: var(--score-display-bg-color);
+  color: var(--score-display-fg-color);
   opacity: 0.5;
   font-size: min(4vw, 5vh);
   text-align: center;

@@ -1,0 +1,1 @@
+Teljesen működőképes játék. Az Android-csomag kezdeti verziója.

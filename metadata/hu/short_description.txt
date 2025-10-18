@@ -1,0 +1,1 @@
+Rakjon le egyező színű csempéket, hogy alakzatokat kapjon és kitöltse a táblát.

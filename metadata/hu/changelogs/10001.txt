@@ -1,0 +1,4 @@
+Kisebb finomhangolások és fejlesztések.
+
+* Hely felszabadítása a kijelző alján a telefon navigációs gombjai számára.
+* Egy nem használt engedély eltávolítva az Android összeállítási folyamatból.

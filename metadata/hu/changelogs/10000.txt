@@ -1,0 +1,5 @@
+Első teljes kiadás.
+
+* Finomhangolt elrendezés és néhány böngészőspecifikus hiba kijavítva.
+* Animáció hozzáadva a csempék frissítésekor.
+* Továbbfejlesztett képernyőképek és dokumentáció.

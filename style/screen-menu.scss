@@ -1,4 +1,4 @@
-@use "./colors.scss";
+@use "./sizes.scss";
 
 $logo-height: min(15vw, 10vh);
 
@@ -20,7 +20,7 @@ $logo-height: min(15vw, 10vh);
     max-width: 100vw;
     max-height: 100vh;
     padding: calc(
-        max(colors.$button-top, colors.$button-bottom) + colors.$button-scale
+        max(sizes.$button-top, sizes.$button-bottom) + sizes.$button-scale
       )
       0;
     box-sizing: border-box;
@@ -48,14 +48,14 @@ $logo-height: min(15vw, 10vh);
 
   .button-setup-menu {
     position: absolute;
-    top: colors.$button-top;
-    right: colors.$button-right;
+    top: sizes.$button-top;
+    right: sizes.$button-right;
   }
 
   .button-paint-menu {
     position: absolute;
-    top: colors.$button-top;
-    right: calc(1.25 * colors.$button-scale + colors.$button-right);
+    top: sizes.$button-top;
+    right: calc(1.25 * sizes.$button-scale + sizes.$button-right);
   }
 
   .game-list {
@@ -66,7 +66,7 @@ $logo-height: min(15vw, 10vh);
     grid-template-columns: 1fr 1fr 1fr 1fr;
     column-gap: min(4vh, 4vw);
     row-gap: min(4vw, 4vh);
-    padding: 0% calc(10% + colors.$inset-right) 0 calc(10% + colors.$inset-left);
+    padding: 0% calc(10% + sizes.$inset-right) 0 calc(10% + sizes.$inset-left);
     box-sizing: border-box;
 
     .example-tile {
@@ -91,14 +91,12 @@ $logo-height: min(15vw, 10vh);
     .game-list {
       justify-self: auto;
       padding: 0;
-      height: calc(
-        min(65vh - colors.$button-top - colors.$button-bottom, 85vw)
-      );
-      max-height: calc(65vh - colors.$button-top - colors.$button-bottom);
+      height: calc(min(65vh - sizes.$button-top - sizes.$button-bottom, 85vw));
+      max-height: calc(65vh - sizes.$button-top - sizes.$button-bottom);
       max-width: min(
         100vh,
         100vw,
-        calc(65vh - colors.$button-top - colors.$button-bottom)
+        calc(65vh - sizes.$button-top - sizes.$button-bottom)
       );
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;

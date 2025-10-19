@@ -1,12 +1,12 @@
-@use "./colors.scss";
+@use "./sizes.scss";
 
 .footer {
   position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
-  padding: 10px calc(10px + colors.$inset-right)
-    calc(10px + colors.$inset-bottom) calc(10px + colors.$inset-left);
+  padding: 10px calc(10px + sizes.$inset-right) calc(10px + sizes.$inset-bottom)
+    calc(10px + sizes.$inset-left);
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -22,7 +22,7 @@
   }
 
   p.copyright,
-  p.copyright a {
+  a {
     color: var(--footer-copyright-color);
   }
 
@@ -39,7 +39,7 @@
 
   a:active,
   a:hover {
-    color: var(--footer-copyright-color);
+    color: var(--footer-link-hover-color);
   }
 }
 
@@ -84,9 +84,9 @@
 }
 
 .game-button {
-  width: calc(0.5 * colors.$button-scale);
-  height: calc(0.5 * colors.$button-scale);
-  padding: calc(0.25 * colors.$button-scale);
+  width: calc(0.5 * sizes.$button-scale);
+  height: calc(0.5 * sizes.$button-scale);
+  padding: calc(0.25 * sizes.$button-scale);
   cursor: pointer;
   border-radius: 100%;
 
@@ -119,8 +119,8 @@
 
   .icon {
     margin-left: 0.7vw;
-    width: calc(0.425 * colors.$button-scale);
-    height: calc(0.425 * colors.$button-scale);
+    width: calc(0.425 * sizes.$button-scale);
+    height: calc(0.425 * sizes.$button-scale);
     fill: var(--toggle-icon-color);
 
     svg {
@@ -131,7 +131,7 @@
 
   .toggle-box {
     flex-grow: 1;
-    border-radius: colors.$button-scale;
+    border-radius: sizes.$button-scale;
     padding: max(0.3vw, 4px);
     background: var(--toggle-bg-disabled-color);
     display: flex;
@@ -140,8 +140,8 @@
 
   .toggle-ball {
     border-radius: 100%;
-    width: calc(0.425 * colors.$button-scale);
-    height: calc(0.425 * colors.$button-scale);
+    width: calc(0.425 * sizes.$button-scale);
+    height: calc(0.425 * sizes.$button-scale);
     background: var(--toggle-fg-disabled-color);
   }
 

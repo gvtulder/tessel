@@ -1,4 +1,4 @@
-@use "./colors.scss";
+@use "./sizes.scss";
 
 .svg-score-overlay-mask {
   &.disabled {
@@ -40,7 +40,7 @@
   }
 
   circle.points {
-    stroke-dasharray: calc(6 * colors.$svg-scale) calc(6 * colors.$svg-scale);
+    stroke-dasharray: calc(6 * sizes.$svg-scale) calc(6 * sizes.$svg-scale);
     fill: var(--cutout-circle-points-fill-color);
     stroke: var(--cutout-circle-points-stroke-color);
   }
@@ -87,9 +87,8 @@
 
   &.enabled {
     .score-outline-outline-fg {
-      stroke-dasharray: calc(60 * colors.$svg-scale)
-        calc(60 * colors.$svg-scale);
-      stroke-dashoffset: calc(-60 * colors.$svg-scale);
+      stroke-dasharray: calc(60 * sizes.$svg-scale) calc(60 * sizes.$svg-scale);
+      stroke-dashoffset: calc(-60 * sizes.$svg-scale);
 
       animation-name: score-overlay-outline-fg-anim;
       animation-duration: 2s;
@@ -106,9 +105,8 @@
   }
   &.hiding {
     .score-outline-outline-fg {
-      stroke-dasharray: calc(60 * colors.$svg-scale)
-        calc(60 * colors.$svg-scale);
-      stroke-dashoffset: calc(-120 * colors.$svg-scale);
+      stroke-dasharray: calc(60 * sizes.$svg-scale) calc(60 * sizes.$svg-scale);
+      stroke-dashoffset: calc(-120 * sizes.$svg-scale);
 
       animation-name: score-overlay-outline-fg-anim-reverse;
       animation-duration: 1s;
@@ -121,72 +119,72 @@
       animation-duration: 300ms;
       animation-delay: 500ms;
       animation-fill-mode: forwards;
-      stroke-width: calc(0.1px * colors.$svg-scale);
+      stroke-width: calc(0.1px * sizes.$svg-scale);
     }
   }
 }
 
 @keyframes score-overlay-outline-fg-anim {
   0% {
-    stroke-dashoffset: calc(-60 * colors.$svg-scale);
+    stroke-dashoffset: calc(-60 * sizes.$svg-scale);
   }
   100% {
-    stroke-dashoffset: calc(-120 * colors.$svg-scale);
+    stroke-dashoffset: calc(-120 * sizes.$svg-scale);
   }
 }
 @keyframes score-overlay-outline-fg-anim-reverse {
   0% {
-    stroke-dashoffset: calc(-120 * colors.$svg-scale);
+    stroke-dashoffset: calc(-120 * sizes.$svg-scale);
   }
   100% {
-    stroke-dashoffset: calc(-60 * colors.$svg-scale);
+    stroke-dashoffset: calc(-60 * sizes.$svg-scale);
   }
 }
 @keyframes score-overlay-points-opacity-anim {
   0% {
     opacity: 0;
-    stroke-dashoffset: calc(-6 * colors.$svg-scale);
+    stroke-dashoffset: calc(-6 * sizes.$svg-scale);
   }
   25% {
-    stroke-dashoffset: calc(-6 * colors.$svg-scale);
+    stroke-dashoffset: calc(-6 * sizes.$svg-scale);
   }
   75% {
     opacity: 100;
   }
   100% {
     opacity: 100;
-    stroke-dashoffset: calc(-12 * colors.$svg-scale);
+    stroke-dashoffset: calc(-12 * sizes.$svg-scale);
   }
 }
 @keyframes score-overlay-points-opacity-anim-reverse {
   0% {
     opacity: 100;
-    stroke-dashoffset: calc(-4 * colors.$svg-scale);
+    stroke-dashoffset: calc(-4 * sizes.$svg-scale);
   }
   25% {
     opacity: 100;
   }
   75% {
-    stroke-dashoffset: calc(-6 * colors.$svg-scale);
+    stroke-dashoffset: calc(-6 * sizes.$svg-scale);
   }
   100% {
     opacity: 0;
-    stroke-dashoffset: calc(-6 * colors.$svg-scale);
+    stroke-dashoffset: calc(-6 * sizes.$svg-scale);
   }
 }
 @keyframes score-overlay-stroke-width {
   0% {
-    stroke-width: calc(0.01px * colors.$svg-scale);
+    stroke-width: calc(0.01px * sizes.$svg-scale);
   }
   100% {
-    stroke-width: calc(0.1px * colors.$svg-scale);
+    stroke-width: calc(0.1px * sizes.$svg-scale);
   }
 }
 @keyframes score-overlay-stroke-width-reverse {
   0% {
-    stroke-width: calc(0.1px * colors.$svg-scale);
+    stroke-width: calc(0.1px * sizes.$svg-scale);
   }
   100% {
-    stroke-width: calc(0.01px * colors.$svg-scale);
+    stroke-width: calc(0.01px * sizes.$svg-scale);
   }
 }

@@ -1,5 +1,5 @@
 @use "sass:color";
-@use "./colors.scss";
+@use "./sizes.scss";
 
 .screen.paint-menu-display {
   width: 100%;
@@ -10,8 +10,8 @@
 
   .game-button {
     position: absolute;
-    top: colors.$button-top;
-    right: colors.$button-right;
+    top: sizes.$button-top;
+    right: sizes.$button-right;
   }
 
   .paint-options {
@@ -21,8 +21,8 @@
     grid-template-columns: min-content min-content min-content;
     grid-template-rows: min-content min-content min-content;
     margin: max(
-      10vh + colors.$button-top + colors.$button-bottom,
-      10vw + colors.$button-left + colors.$button-right
+      10vh + sizes.$button-top + sizes.$button-bottom,
+      10vw + sizes.$button-left + sizes.$button-right
     );
   }
 }
@@ -50,8 +50,8 @@
 
 .screen.paint-display {
   display: grid;
-  grid-template-columns: 1fr colors.$stack-width calc(
-      colors.$stack-margin-right + colors.$inset-right
+  grid-template-columns: 1fr sizes.$stack-width calc(
+      sizes.$stack-margin-right + sizes.$inset-right
     );
   grid-template-rows: 1fr;
   grid-template-areas: "paint-grid color-stack fill-end";
@@ -73,13 +73,13 @@
 
 .paint-menu {
   position: absolute;
-  top: colors.$button-top;
-  right: colors.$button-right;
+  top: sizes.$button-top;
+  right: sizes.$button-right;
 }
 
 $swatch-scale: min(
-  calc((100vh - colors.$button-top - colors.$button-bottom) / 11),
-  calc(colors.$button-scale)
+  calc((100vh - sizes.$button-top - sizes.$button-bottom) / 11),
+  calc(sizes.$button-scale)
 );
 
 .color-stack {
@@ -89,7 +89,7 @@ $swatch-scale: min(
   width: 100%;
   box-sizing: border-box;
   justify-content: flex-end;
-  padding-bottom: colors.$button-bottom;
+  padding-bottom: sizes.$button-bottom;
   align-items: center;
 }
 
@@ -134,13 +134,13 @@ $swatch-scale: min(
 }
 
 @media screen and (orientation: portrait) {
-  $swatch-scale: calc((100vw - colors.$inset-left - colors.$inset-right) / 10);
+  $swatch-scale: calc((100vw - sizes.$inset-left - sizes.$inset-right) / 10);
 
   .screen.paint-display {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: 1fr max(20vw, 40px) calc(
-        colors.$stack-margin-bottom + colors.$inset-bottom
+        sizes.$stack-margin-bottom + sizes.$inset-bottom
       );
     grid-template-areas:
       "paint-grid"

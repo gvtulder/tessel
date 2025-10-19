@@ -1,8 +1,8 @@
-@use "./colors.scss";
+@use "./sizes.scss";
 
 $setting-row-option-scale: min(
-  calc(min(48vw - colors.$button-right) / 7),
-  calc(min(80vh - colors.$inset-top - colors.$inset-bottom) / 8)
+  calc(min(48vw - sizes.$button-right) / 7),
+  calc(min(80vh - sizes.$inset-top - sizes.$inset-bottom) / 8)
 );
 
 .screen.game-setup {
@@ -30,12 +30,12 @@ $setting-row-option-scale: min(
   position: absolute;
   top: 3vw;
   left: 3vw;
-  top: calc(50% - 0.75 * colors.$button-scale);
-  left: calc(50% - 0.75 * colors.$button-scale);
+  top: calc(50% - 0.75 * sizes.$button-scale);
+  left: calc(50% - 0.75 * sizes.$button-scale);
 
   svg {
-    width: calc(1.5 * colors.$button-scale);
-    height: calc(1.5 * colors.$button-scale);
+    width: calc(1.5 * sizes.$button-scale);
+    height: calc(1.5 * sizes.$button-scale);
     fill: var(--invalid-grid-warning-color);
     vector-effect: non-scaling-stroke;
   }
@@ -50,14 +50,14 @@ $setting-row-option-scale: min(
 
 .screen.game-setup .game-button.exit {
   position: absolute;
-  right: colors.$button-right;
-  top: colors.$button-top;
+  right: sizes.$button-right;
+  top: sizes.$button-top;
 }
 
 .screen.game-setup .game-button.regenerate {
   position: absolute;
-  left: colors.$button-left;
-  bottom: colors.$button-margin-height;
+  left: sizes.$button-left;
+  bottom: sizes.$button-margin-height;
 }
 
 .screen.game-setup .button-row {
@@ -73,7 +73,7 @@ $setting-row-option-scale: min(
   width: calc(1.5 * $setting-row-option-scale);
   height: calc(1.5 * $setting-row-option-scale);
   padding: 10px;
-  margin: 0 colors.$button-right 0 0;
+  margin: 0 sizes.$button-right 0 0;
   border-radius: 100%;
   background: var(--setup-play-button-bg-color);
   box-shadow: 0 0 15px rgb(0, 0, 0, 30%);
@@ -113,9 +113,9 @@ $setting-row-option-scale: min(
   grid-template-rows: min-content min-content min-content;
   justify-content: center;
   align-content: center;
-  padding-top: calc(colors.$stack-margin-top + colors.$inset-top);
-  padding-right: calc(colors.$stack-margin-right + colors.$inset-right);
-  padding-bottom: calc(colors.$stack-margin-bottom + colors.$inset-bottom);
+  padding-top: calc(sizes.$stack-margin-top + sizes.$inset-top);
+  padding-right: calc(sizes.$stack-margin-right + sizes.$inset-right);
+  padding-bottom: calc(sizes.$stack-margin-bottom + sizes.$inset-bottom);
 }
 .screen.game-setup .setting-row {
   display: grid;
@@ -191,8 +191,8 @@ $setting-row-option-scale: min(
 @media screen and (min-aspect-ratio: 4 / 5) and (max-aspect-ratio: 7 / 4) {
   .screen.game-setup .button-row {
     position: absolute;
-    right: colors.$button-right;
-    bottom: colors.$button-bottom;
+    right: sizes.$button-right;
+    bottom: sizes.$button-bottom;
     display: block;
     width: min-content;
   }
@@ -220,7 +220,7 @@ $setting-row-option-scale: min(
     grid-template-rows: min-content min-content min-content;
     margin: 1vw;
     padding-top: 0;
-    padding-left: colors.$inset-left;
+    padding-left: sizes.$inset-left;
   }
   .screen.game-setup .settings .button-row {
     margin: 0;
@@ -229,8 +229,8 @@ $setting-row-option-scale: min(
     justify-content: center;
   }
   $setting-row-option-scale: min(
-    calc(min(70vw - colors.$inset-left - colors.$inset-right) / 6),
-    calc(min(70vh - colors.$inset-top - colors.$inset-bottom) / 8)
+    calc(min(70vw - sizes.$inset-left - sizes.$inset-right) / 6),
+    calc(min(70vh - sizes.$inset-top - sizes.$inset-bottom) / 8)
   );
   .screen.game-setup .setting-row {
     padding: calc(0.1 * $setting-row-option-scale);

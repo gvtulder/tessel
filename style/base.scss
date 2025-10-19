@@ -36,6 +36,8 @@ body {
   -webkit-user-select: none;
   user-select: none;
   touch-action: none;
+
+  transition: background-color 50ms;
 }
 
 svg {

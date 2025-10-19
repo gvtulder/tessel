@@ -167,7 +167,7 @@ $swatch-scale: min(
   }
 
   .color-swatch-selected {
-    border: calc(0.1 * $swatch-scale) solid var(--main-bg-color);
+    border: calc(0.1 * $swatch-scale) solid var(--swatch-selected-border-color);
   }
 
   .color-swatch-remove svg {

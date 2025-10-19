@@ -65,8 +65,8 @@ $blue: hsl(214deg, 64%, 50%);
   --tile-counter-border-color: hsl(0deg, 0%, 60%);
 
   // placeholder tile colors
-  --placeholder-fill-color: #{hsla(0deg, 0%, 80%, 0.5)};
-  --placeholder-stroke-color: #{hsl(0deg, 0%, 80%)};
+  --placeholder-fill-color: hsla(0deg, 0%, 80%, 0.5);
+  --placeholder-stroke-color: hsl(0deg, 0%, 80%);
 
   // colors for ScoreOverlayDisplay_Cutout
   // - background of the outline, should match screen background
@@ -76,6 +76,11 @@ $blue: hsl(214deg, 64%, 50%);
   // - points circle
   --cutout-circle-points-fill-color: hsl(80deg, 61%, 85%);
   --cutout-circle-points-stroke-color: hsl(80deg, 61%, 32%);
+
+  // PAINT SCREEN
+
+  // active color swatch
+  --swatch-selected-border-color: var(--main-bg-color);
 
   // MAIN SCREEN
 

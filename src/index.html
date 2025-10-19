@@ -68,7 +68,7 @@ https://tessel.vantulder.net/source/
     <style type="text/css">
       /* minimum css for splash screen */
       body {
-        background: #ddd;
+        background: var(--main-bg-color);
         margin: 0;
         padding: 0;
       }
@@ -76,7 +76,7 @@ https://tessel.vantulder.net/source/
         position: absolute;
         top: 0;
         left: 0;
-        background: #ddd;
+        background: var(--main-bg-color);
         z-index: 1000;
         width: 100vw;
         height: 100vh;
@@ -105,8 +105,8 @@ https://tessel.vantulder.net/source/
         bottom: 0;
         margin: 0;
         padding: 10px;
-        color: #999;
-        font-family: Barlow, sans-serif;
+        color: var(--footer-version-color);
+        font-family: sans-serif;
         font-size: 12px;
       }
 
@@ -116,15 +116,28 @@ https://tessel.vantulder.net/source/
         }
       }
 
+      .splash-footer,
       .splash-footer a {
-        color: #999;
+        color: var(--footer-copyright-color);
+      }
+
+      .splash-footer a {
         text-decoration: none;
         border-bottom: 1px solid;
       }
 
-      .splash-footer a:active,
-      .splash-footer a:hover {
-        color: #071a3d;
+      .splash-footer {
+        --main-bg-color: #e0dfdc;
+        --footer-copyright-color: #777;
+      }
+
+      body.dark-mode #splash {
+        --main-bg-color: #0d0d0c;
+        --footer-copyright-color: #ccc;
+      }
+
+      body.dark-mode #splash svg {
+        filter: brightness(85%);
       }
     </style>
     <link

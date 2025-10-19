@@ -103,43 +103,6 @@ export class TileDisplay {
             this.element.appendChild(polyElement);
             segmentElements[i] = polyElement;
         }
-        /*
-        // add in correct order to make the overlapping work
-        const sortedTriangles = [...this.tile.triangles].sort((a, b) => {
-            return a.top.toFixed(2) != b.top.toFixed(2)
-                ? a.top - b.top
-                : a.left - b.left || a.height - b.height;
-        });
-        for (const c of [...this.element.childNodes]) {
-            this.element.removeChild(c);
-        }
-        for (const triangle of sortedTriangles) {
-            let triangleDisplay = this.triangleDisplays.get(triangle);
-            if (!triangleDisplay) {
-                triangleDisplay = new TriangleDisplay(triangle);
-                this.triangleDisplays.set(triangle, triangleDisplay);
-                this.gridDisplay.triangleDisplays.set(
-                    triangle,
-                    triangleDisplay,
-                );
-            }
-            const left = ((triangle.left - this.tile.left) * SCALE).toFixed(5);
-            const top = ((triangle.top - this.tile.top) * SCALE).toFixed(5);
-            triangleDisplay.element.setAttribute(
-                "transform",
-                `translate(${left} ${top})`,
-            );
-            this.element.appendChild(triangleDisplay.element);
-        }
-        const removedTriangles = [...this.triangleDisplays.keys()].filter(
-            (t) => t.tile !== this.tile,
-        );
-        for (const triangle of removedTriangles) {
-            this.triangleDisplays.get(triangle).destroy();
-            this.triangleDisplays.delete(triangle);
-            this.gridDisplay.triangleDisplays.delete(triangle);
-        }
-        */
     }
 
     drawOutline() {

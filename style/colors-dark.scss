@@ -4,115 +4,110 @@ $maintint: hsl(42deg, 5%, 50%);
 $green: hsl(80deg, 64%, 50%);
 $blue: hsl(214deg, 64%, 50%);
 
-@media screen and (prefers-color-scheme: dark) {
-  :root {
-    // main backgrounds
-    --main-bg-color: #{color.change($maintint, $lightness: 5%)};
-    --panel-bg-color: #{color.change($maintint, $lightness: 10%)};
-    --dropout-bg-color: #{color.change($maintint, $lightness: 20%)};
+body.dark-mode {
+  // main backgrounds
+  --main-bg-color: #{color.change($maintint, $lightness: 5%)};
+  --panel-bg-color: #{color.change($maintint, $lightness: 10%)};
+  --dropout-bg-color: #{color.change($maintint, $lightness: 20%)};
 
-    // COMPONENTS
+  // COMPONENTS
 
-    // toggle colors
-    --toggle-icon-color: rgba(255, 255, 255, 35%);
-    --toggle-fg-enabled-color: #{color.change(
-        $green,
-        $lightness: 45%,
-        $saturation: 40%
-      )};
-    --toggle-bg-enabled-color: #{color.change(
-        $green,
-        $lightness: 30%,
-        $saturation: 30%
-      )};
-    --toggle-fg-disabled-color: rgba(255, 255, 255, 25%);
-    --toggle-bg-disabled-color: rgba(255, 255, 255, 8%);
+  // toggle colors
+  --toggle-icon-color: rgba(255, 255, 255, 35%);
+  --toggle-fg-enabled-color: #{color.change(
+      $green,
+      $lightness: 45%,
+      $saturation: 40%
+    )};
+  --toggle-bg-enabled-color: #{color.change(
+      $green,
+      $lightness: 30%,
+      $saturation: 30%
+    )};
+  --toggle-fg-disabled-color: rgba(255, 255, 255, 25%);
+  --toggle-bg-disabled-color: rgba(255, 255, 255, 8%);
 
-    // button colors
-    --button-fg-color: rgba(255, 255, 255, 35%);
-    --button-bg-color: rgba(255, 255, 255, 8%);
-    --button-bg-pressed-color: rgba(255, 255, 255, 15%);
-    --button-bg-hover-color: rgba(255, 255, 255, 25%);
-    --button-bg-selected-color: rgba(255, 255, 255, 70%);
+  // button colors
+  --button-fg-color: rgba(255, 255, 255, 35%);
+  --button-bg-color: rgba(255, 255, 255, 8%);
+  --button-bg-pressed-color: rgba(255, 255, 255, 15%);
+  --button-bg-hover-color: rgba(255, 255, 255, 25%);
+  --button-bg-selected-color: rgba(255, 255, 255, 70%);
 
-    // large play button in the setup screen
-    --setup-play-button-bg-color: #{color.change($green, $lightness: 32%)};
-    --setup-play-button-bg-disabled-color: hsl(0deg, 0, 15%);
-    --setup-play-button-fg-color: #{color.change($green, $lightness: 95%)};
-    --setup-play-button-fg-disabled-color: hsl(0deg, 0, 20%);
+  // large play button in the setup screen
+  --setup-play-button-bg-color: #{color.change($green, $lightness: 32%)};
+  --setup-play-button-bg-disabled-color: hsl(0deg, 0, 15%);
+  --setup-play-button-fg-color: #{color.change($green, $lightness: 95%)};
+  --setup-play-button-fg-disabled-color: hsl(0deg, 0, 20%);
 
-    // home button in the play screen
-    --home-button-bg-color: #{color.change($blue, $lightness: 32%)};
-    --home-button-fg-color: #{color.change($blue, $lightness: 97%)};
-    --home-button-fg-hover-color: #{color.change($blue, $lightness: 97%)};
+  // home button in the play screen
+  --home-button-bg-color: #{color.change($blue, $lightness: 32%)};
+  --home-button-fg-color: #{color.change($blue, $lightness: 97%)};
+  --home-button-fg-hover-color: #{color.change($blue, $lightness: 97%)};
 
-    // SETUP SCREEN
+  // SETUP SCREEN
 
-    // settings menu options
-    --settings-option-panel-bg-color: #{color.change(
-        $maintint,
-        $lightness: 15%
-      )};
-    --settings-option-panel-bg-active-color: #{color.change(
-        $maintint,
-        $lightness: 5%
-      )};
-    --settings-option-panel-bg-hover-color: #{color.change(
-        $maintint,
-        $lightness: 5%
-      )};
-    --settings-option-panel-border-active-color: #66f;
+  // settings menu options
+  --settings-option-panel-bg-color: #{color.change($maintint, $lightness: 15%)};
+  --settings-option-panel-bg-active-color: #{color.change(
+      $maintint,
+      $lightness: 5%
+    )};
+  --settings-option-panel-bg-hover-color: #{color.change(
+      $maintint,
+      $lightness: 5%
+    )};
+  --settings-option-panel-border-active-color: #66f;
 
-    // warning symbol for invalid grid in setup menu
-    --invalid-grid-warning-color: #e06300;
+  // warning symbol for invalid grid in setup menu
+  --invalid-grid-warning-color: #e06300;
 
-    // GAME SCREEN
+  // GAME SCREEN
 
-    // score display in the tile stack
-    --score-display-fg-color: #{color.change($green, $lightness: 40%)};
-    --score-display-bg-color: #{color.change(
-        $green,
-        $lightness: 20%,
-        $saturation: 30%
-      )};
+  // score display in the tile stack
+  --score-display-fg-color: #{color.change($green, $lightness: 40%)};
+  --score-display-bg-color: #{color.change(
+      $green,
+      $lightness: 20%,
+      $saturation: 30%
+    )};
 
-    // tile counter
-    --tile-counter-text-color: hsl(0deg, 0%, 35%);
-    --tile-counter-border-color: hsl(0deg, 0%, 20%);
+  // tile counter
+  --tile-counter-text-color: hsl(0deg, 0%, 35%);
+  --tile-counter-border-color: hsl(0deg, 0%, 20%);
 
-    // placeholder tile colors
-    --placeholder-fill-color: hsl(0deg, 0%, 10%);
-    --placeholder-stroke-color: hsl(0deg, 0%, 15%);
-    --placeholder-fill-color: hsla(0deg, 0%, 15%, 0.5);
-    --placeholder-stroke-color: hsl(0deg, 0%, 15%);
+  // placeholder tile colors
+  --placeholder-fill-color: hsl(0deg, 0%, 10%);
+  --placeholder-stroke-color: hsl(0deg, 0%, 15%);
+  --placeholder-fill-color: hsla(0deg, 0%, 15%, 0.5);
+  --placeholder-stroke-color: hsl(0deg, 0%, 15%);
 
-    // colors for ScoreOverlayDisplay_Cutout
-    // - background of the outline, should match screen background
-    --cutout-outline-bg-color: var(--main-bg-color);
-    // - colored outline around the shape
-    --cutout-outline-fg-color: hsl(80deg, 61%, 50%);
-    // - points circle
-    --cutout-circle-points-fill-color: hsl(80deg, 61%, 85%);
-    --cutout-circle-points-stroke-color: hsl(80deg, 61%, 32%);
+  // colors for ScoreOverlayDisplay_Cutout
+  // - background of the outline, should match screen background
+  --cutout-outline-bg-color: var(--main-bg-color);
+  // - colored outline around the shape
+  --cutout-outline-fg-color: hsl(80deg, 61%, 50%);
+  // - points circle
+  --cutout-circle-points-fill-color: hsl(80deg, 61%, 85%);
+  --cutout-circle-points-stroke-color: hsl(80deg, 61%, 32%);
 
-    // tile colors
-    .svg-tile {
-      filter: brightness(85%);
-    }
-
-    // PAINT SCREEN
-
-    // active color swatch
-    --swatch-selected-border-color: hsl(0, 0%, 100%);
-
-    // MAIN SCREEN
-
-    // main screen footer
-    --footer-version-color: hsl(0, 0%, 67%);
-    --footer-copyright-color: hsl(0, 0%, 50%);
-    --footer-link-hover-color: hsl(0, 0%, 80%);
-
-    // logo on main screen
-    --logo-fill-color: hsl(0, 0%, 50%);
+  // tile colors
+  .svg-tile {
+    filter: brightness(85%);
   }
+
+  // PAINT SCREEN
+
+  // active color swatch
+  --swatch-selected-border-color: hsl(0, 0%, 100%);
+
+  // MAIN SCREEN
+
+  // main screen footer
+  --footer-version-color: hsl(0, 0%, 67%);
+  --footer-copyright-color: hsl(0, 0%, 50%);
+  --footer-link-hover-color: hsl(0, 0%, 80%);
+
+  // logo on main screen
+  --logo-fill-color: hsl(0, 0%, 50%);
 }

@@ -121,7 +121,8 @@
   }
 
   .game-finished & {
-    .game-toggle {
+    .game-toggle,
+    .game-threeway-toggle {
       display: none;
     }
 

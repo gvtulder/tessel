@@ -16,6 +16,8 @@ import { createElement } from "../shared/html";
 import { Button } from "../shared/Button";
 import { DropoutMenu } from "./DropoutMenu";
 import { Toggle } from "./Toggle";
+import { ThreeWayToggle } from "./ThreeWayToggle";
+import { setColorScheme } from "../shared/colorScheme";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;
@@ -35,6 +37,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     placeholders: Toggle;
     hints: Toggle;
     snap: Toggle;
+    colorMode: ThreeWayToggle;
 
     onTapTile: EventListener;
     onStartDrag: EventListener;
@@ -193,6 +196,26 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             false,
         );
         menu.addToggle(this.snap);
+
+        this.colorMode = new ThreeWayToggle(
+            icons.sunIcon,
+            icons.moonIcon,
+            "Light mode",
+            "Dark mode",
+            "light",
+            "dark",
+            () => {
+                const value = this.colorMode.value;
+                if (value) {
+                    localStorage.setItem("color-scheme", value);
+                } else {
+                    localStorage.removeItem("color-scheme");
+                }
+                setColorScheme();
+            },
+            localStorage.getItem("color-scheme"),
+        );
+        menu.addToggle(this.colorMode);
 
         // register event handlers
         tileStackDisplay.addEventListener(

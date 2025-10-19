@@ -6,14 +6,15 @@
 import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
 import icons from "../shared/icons";
+import { ThreeWayToggle } from "./ThreeWayToggle";
 import { Toggle } from "./Toggle";
 
 export class DropoutMenu {
     element: HTMLDivElement;
     container: HTMLDivElement;
-    dropoutButton: Button | Toggle;
+    dropoutButton: Button | Toggle | ThreeWayToggle;
     buttons: Button[];
-    toggles: Toggle[];
+    toggles: (Toggle | ThreeWayToggle)[];
     backgroundEventHandler: (evt: PointerEvent) => void;
 
     constructor() {
@@ -48,7 +49,7 @@ export class DropoutMenu {
         this.buttons.push(button);
     }
 
-    addToggle(toggle: Toggle) {
+    addToggle(toggle: Toggle | ThreeWayToggle) {
         this.container.appendChild(toggle.element);
         this.toggles.push(toggle);
     }

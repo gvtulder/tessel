@@ -18,6 +18,7 @@ $blue: hsl(214deg, 64%, 50%);
   --toggle-bg-enabled-color: #{color.change($green, $lightness: 85%)};
   --toggle-fg-disabled-color: rgba(0, 0, 0, 25%);
   --toggle-bg-disabled-color: rgba(0, 0, 0, 8%);
+  --toggle-threeway-icon-enabled-color: var(--dropout-bg-color);
 
   // button colors
   --button-fg-color: rgba(0, 0, 0, 35%);

@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { setColorScheme } from "./ui/shared/colorScheme";
 import { VERSION } from "./constants";
 import { GameController } from "./ui/GameController";
 
@@ -10,6 +11,16 @@ export function startMainMenu(workbox?: Workbox) {
     document.body.addEventListener("touchstart", preventIosZoomAndSelection, {
         passive: false,
     });
+
+    window.addEventListener("storage", (e) => {
+        if (e.key == "color-scheme") {
+            setColorScheme();
+        }
+    });
+    window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", setColorScheme);
+    setColorScheme();
 
     if (window.location.pathname != "/") {
         window.location.href = "/";

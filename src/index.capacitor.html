@@ -82,6 +82,17 @@ https://tessel.vantulder.net/source/
     <link rel="stylesheet" href="../style/main.scss" crossorigin="anonymous" />
   </head>
   <body>
+    <script type="text/javascript">
+      (function () {
+        let preference = localStorage.getItem("color-scheme");
+        if (!preference) {
+          preference = window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        }
+        document.body.classList.toggle("dark-mode", preference == "dark");
+      })();
+    </script>
     <div id="splash">
       <svg width="100" height="100" viewBox="0 0 1 1">
         <clipPath id="splashclip">

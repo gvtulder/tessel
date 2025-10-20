@@ -4,6 +4,7 @@
  */
 
 import { setColorScheme } from "./ui/shared/colorScheme";
+import { Workbox } from "workbox-window";
 import { VERSION } from "./constants";
 import { GameController } from "./ui/GameController";
 

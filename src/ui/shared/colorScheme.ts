@@ -3,8 +3,10 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-export function setColorScheme() {
-    let preference = localStorage.getItem("color-scheme");
+import { getStorageBackend } from "../../lib/storage-backend";
+
+export async function setColorScheme() {
+    let preference = await getStorageBackend().getItem("color-scheme");
     if (!preference) {
         preference = window.matchMedia("(prefers-color-scheme: dark)").matches
             ? "dark"

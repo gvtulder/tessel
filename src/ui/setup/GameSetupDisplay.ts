@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { getStorageBackend } from "../../lib/storage-backend";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
 import { ExampleDisplay } from "./ExampleDisplay";

@@ -4,6 +4,7 @@
  */
 
 import { Game, GameEvent, GameEventType } from "../../game/Game";
+import { getStorageBackend } from "../../lib/storage-backend";
 import { MainGridDisplay } from "./MainGridDisplay";
 import { TileStackDisplay } from "./TileStackDisplay";
 import { ScoreDisplay } from "./ScoreDisplay";
@@ -149,7 +150,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
                     "hide-placeholders",
                     !this.placeholders.checked,
                 );
-                localStorage.setItem(
+                getStorageBackend().setItem(
                     "placeholders",
                     this.placeholders.checked ? "yes" : "no",
                 );
@@ -163,7 +164,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             "Autorotate",
             () => {
                 tileDragController.autorotate = this.autorotate.checked;
-                localStorage.setItem(
+                getStorageBackend().setItem(
                     "autorotate",
                     this.autorotate.checked ? "yes" : "no",
                 );
@@ -177,7 +178,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             "Show hints",
             () => {
                 tileDragController.hints = this.hints.checked;
-                localStorage.setItem(
+                getStorageBackend().setItem(
                     "hints",
                     this.hints.checked ? "yes" : "no",
                 );
@@ -191,7 +192,10 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             "Snap",
             () => {
                 tileDragController.snap = this.snap.checked;
-                localStorage.setItem("snap", this.snap.checked ? "yes" : "no");
+                getStorageBackend().setItem(
+                    "snap",
+                    this.snap.checked ? "yes" : "no",
+                );
             },
             false,
         );
@@ -207,13 +211,13 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             () => {
                 const value = this.colorMode.value;
                 if (value) {
-                    localStorage.setItem("color-scheme", value);
+                    getStorageBackend().setItem("color-scheme", value);
                 } else {
-                    localStorage.removeItem("color-scheme");
+                    getStorageBackend().removeItem("color-scheme");
                 }
                 setColorScheme();
             },
-            localStorage.getItem("color-scheme"),
+            null,
         );
         menu.addToggle(this.colorMode);
 
@@ -230,15 +234,35 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         game.addEventListener(GameEventType.EndGame, this.onGameEndGame);
 
         // set default settings
-        this.autorotate.checked = localStorage.getItem("autorotate") != "no";
-        this.placeholders.checked =
-            localStorage.getItem("placeholders") != "no";
-        this.hints.checked = localStorage.getItem("hints") != "no";
-        this.snap.checked = localStorage.getItem("snap") != "no";
-        this.element.classList.toggle(
-            "hide-placeholders",
-            !this.placeholders.checked,
-        );
+        getStorageBackend()
+            .getItem("autorotate")
+            .then((result) => {
+                this.autorotate.checked = result != "no";
+            });
+        getStorageBackend()
+            .getItem("placeholders")
+            .then((result) => {
+                this.placeholders.checked = result != "no";
+                this.element.classList.toggle(
+                    "hide-placeholders",
+                    !this.placeholders.checked,
+                );
+            });
+        getStorageBackend()
+            .getItem("hints")
+            .then((result) => {
+                this.hints.checked = result != "no";
+            });
+        getStorageBackend()
+            .getItem("snap")
+            .then((result) => {
+                this.snap.checked = result != "no";
+            });
+        getStorageBackend()
+            .getItem("color-scheme")
+            .then((result) => {
+                this.colorMode.value = result;
+            });
 
         // initial scaling
         this.rescale();

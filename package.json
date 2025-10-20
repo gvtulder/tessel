@@ -31,6 +31,7 @@
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^7.4.3",
     "@capacitor/core": "^7.4.3",
+    "@capacitor/preferences": "^7.0.2",
     "@capacitor/status-bar": "^7.0.3",
     "@jest/globals": "^30.2.0",
     "@parcel/packager-raw-url": "^2.15.4",

@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { getStorageBackend } from "../../lib/storage-backend";
 import { createElement } from "../shared/html";
 import { SettingRowOption } from "./SettingRowOption";
 
@@ -36,7 +37,7 @@ export class SettingRow<T extends SettingRowOption> {
             this.selectedIndex = index;
             const selectedKey = this.selected && this.selected.key;
             if (selectedKey) {
-                localStorage.setItem(this.localStorageKey, selectedKey);
+                getStorageBackend().setItem(this.localStorageKey, selectedKey);
             }
             if (this.onchange) {
                 this.onchange();
@@ -86,8 +87,10 @@ export class SettingRow<T extends SettingRowOption> {
         }
     }
 
-    selectStoredOrDefault(defaultKey?: string) {
-        const storedKey = localStorage.getItem(this.localStorageKey);
+    async selectStoredOrDefault(defaultKey?: string) {
+        const storedKey = await getStorageBackend().getItem(
+            this.localStorageKey,
+        );
         let storedIndex: number | null = null;
         let defaultIndex: number | null = null;
         for (let i = 0; i < this.options.length; i++) {

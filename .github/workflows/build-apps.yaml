@@ -1,9 +1,13 @@
-name: build-android
+name: build-apps
 on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-android:
-    name: build-android
+    name: Build Android apps
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -94,18 +98,114 @@ jobs:
             tessel-*.apk
             tessel-*.aab
 
+  build-ios:
+    name: Build iOS app
+    runs-on: macos-15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: List available Xcode versions
+        run: ls /Applications | grep Xcode
+
+      - name: Set up Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
+      - name: Show current version of Xcode
+        run: xcodebuild -version
+
+      - name: Build HTML assets for capacitor
+        run: npm run build-cap-html
+
+      - name: Synchronize capacitor
+        run: |
+          npx cap telemetry off
+          npx cap sync
+
+      - name: Install Apple certificate and provisioning profile
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          BUILD_CERTIFICATE_PASSWORD: ${{ secrets.BUILD_CERTIFICATE_PASSWORD }}
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.cer
+          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$BUILD_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # apply provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+      - name: Build iOS app
+        run: |
+          xcodebuild -workspace './ios/App/App.xcworkspace' \
+            -scheme Tessel -destination generic/platform=iOS \
+            -archivePath Tessel.xcarchive archive
+          xcodebuild archive -archivePath Tessel.xcarchive \
+            -exportArchive -exportOptionsPlist ./ios/archive.plist \
+            -exportPath output -allowProvisioningUpdates
+
+      - name: Validate and upload build
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
+          APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
+          APP_STORE_CONNECT_API_ISSUER: ${{ secrets.APP_STORE_CONNECT_API_ISSUER }}
+        run: |
+          echo -n "$APP_STORE_CONNECT_API_KEY_BASE64" | base64 --decode -o $RUNNER_TEMP/AuthKey_$APP_STORE_CONNECT_API_KEY_ID.p8
+          API_PRIVATE_KEYS_DIR=$RUNNER_TEMP \
+          xcrun altool --validate-app -f output/Tessel.ipa -t ios \
+            --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+            --apiIssuer "$APP_STORE_CONNECT_API_ISSUER"
+          API_PRIVATE_KEYS_DIR=$RUNNER_TEMP \
+          xcrun altool --upload-app -f output/Tessel.ipa -t ios \
+            --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
+            --apiIssuer "$APP_STORE_CONNECT_API_ISSUER"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS package
+          path: |
+            output/Tessel*.ipa
+
   make-release:
-    name: make-release
+    name: Make release
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: build-android
+    needs: [build-android, build-ios]
     permissions:
       contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
 
-      - name: Download Android artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v5
 
       - name: Copy Changelog from metadata
@@ -119,13 +219,14 @@ jobs:
             exit 1
           fi
 
-      - name: Rename APK to include version
+      - name: Rename outputs to include version
         run: |
           sha_short=$(git rev-parse --short HEAD)
           mv tessel-${sha_short}.apk tessel-${{ github.ref_name }}.apk
           mv tessel-${sha_short}.aab tessel-${{ github.ref_name }}.aab
           mv tessel-${sha_short}-unsigned.apk tessel-${{ github.ref_name }}-unsigned.apk
           mv tessel-${sha_short}-unsigned.aab tessel-${{ github.ref_name }}-unsigned.aab
+          mv Tessel.ipa tessel-${{ github.ref_name }}.ipa
 
       - name: Make draft release
         uses: softprops/action-gh-release@v2
@@ -136,5 +237,6 @@ jobs:
             tessel-${{ github.ref_name }}.aab
             tessel-${{ github.ref_name }}-unsigned.apk
             tessel-${{ github.ref_name }}-unsigned.aab
+            tessel-${{ github.ref_name }}.ipa
           generate_release_notes: true
           body_path: ${{ github.workspace }}-CHANGELOG.txt

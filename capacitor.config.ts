@@ -11,6 +11,12 @@ const config: CapacitorConfig = {
             backgroundColor: "#00000000",
         },
     },
+    ios: {
+        buildOptions: {
+            signingStyle: "manual",
+        },
+        scheme: "Tessel",
+    },
 };
 
 export default config;

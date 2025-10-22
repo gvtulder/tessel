@@ -1,6 +1,7 @@
 .*.swp
 .idea
 *.code-workspace
+.DS_Store
 src/game.js
 src/script.js
 src/*.js.map

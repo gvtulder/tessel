@@ -84,10 +84,8 @@ body.dark-mode {
   --tile-counter-border-color: hsl(0deg, 0%, 20%);
 
   // placeholder tile colors
-  --placeholder-fill-color: hsl(0deg, 0%, 10%);
-  --placeholder-stroke-color: hsl(0deg, 0%, 15%);
-  --placeholder-fill-color: hsla(0deg, 0%, 15%, 0.5);
-  --placeholder-stroke-color: hsl(0deg, 0%, 15%);
+  --placeholder-fill-color: hsla(0deg, 0%, 23%, 0.5);
+  --placeholder-stroke-color: hsl(0deg, 0%, 23%);
 
   // colors for ScoreOverlayDisplay_Cutout
   // - background of the outline, should match screen background

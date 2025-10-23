@@ -11,7 +11,7 @@ import { SettingRow } from "./SettingRow";
 
 export class SegmentsSettingRow extends SettingRow<SegmentsOption> {
     constructor() {
-        super("segments", "setup-segments");
+        super("segments", "setup-segments", "Colors per tile");
     }
 
     showAtlas(atlas: Atlas, colors: TileColors) {
@@ -58,6 +58,15 @@ export class SegmentsSettingRow extends SettingRow<SegmentsOption> {
 
         while (numPatterns + 1 < this.options.length) {
             this.popOption();
+        }
+
+        // update current selection
+        if (this.currentOption) {
+            this.currentOption.showAtlas(
+                atlas,
+                colors,
+                this.options[this._selected || 0].colorPatternPerShape!,
+            );
         }
     }
 }

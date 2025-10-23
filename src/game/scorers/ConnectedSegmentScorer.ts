@@ -9,7 +9,7 @@ import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
 
 export class ConnectedSegmentScorer extends Scorer {
-    static friendlyName = "Score connected segments";
+    static friendlyName = "Count connected segments";
 
     static create() {
         return new ConnectedSegmentScorer();

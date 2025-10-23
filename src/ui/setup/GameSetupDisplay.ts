@@ -52,10 +52,65 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.valid = false;
 
         const div = (this.element = createElement("div", "screen game-setup"));
+
+        const heading = createElement("h2", null, div);
+        heading.innerHTML = "Custom game";
+
         const settingsDiv = createElement("div", "settings", div);
 
         this.exampleDisplay = new ExampleDisplay();
         div.appendChild(this.exampleDisplay.element);
+
+        this.settingRows = [];
+
+        const settingAtlas = new SettingRow<AtlasOption>(
+            "atlas",
+            "setup-atlas",
+            "Tiling pattern",
+        );
+        for (const { key, atlas } of catalog.atlas.values()) {
+            settingAtlas.addOption(new AtlasOption(key, atlas));
+        }
+        settingAtlas.selectStoredOrDefault(catalog.defaultAtlas);
+        settingsDiv.appendChild(settingAtlas.element);
+        this.settingAtlas = settingAtlas;
+        this.settingRows.push(settingAtlas);
+
+        const settingColors = new SettingRow<ColorsOption>(
+            "colors",
+            "setup-colors",
+            "Number of colors",
+        );
+        for (const { key, colors } of catalog.colors.values()) {
+            settingColors.addOption(new ColorsOption(key, colors));
+        }
+        settingColors.selectStoredOrDefault(catalog.defaultColor);
+        settingsDiv.appendChild(settingColors.element);
+        this.settingColors = settingColors;
+        this.settingRows.push(settingColors);
+
+        const settingSegments = new SegmentsSettingRow();
+        settingsDiv.appendChild(settingSegments.element);
+        this.settingSegments = settingSegments;
+        this.settingRows.push(settingSegments);
+
+        const settingRules = new RulesSettingRow();
+        for (const { key, rules, exampleColors } of catalog.rules.values()) {
+            settingRules.addOption(new RulesOption(key, rules, exampleColors));
+        }
+        settingRules.selectStoredOrDefault(catalog.defaultRules);
+        settingsDiv.appendChild(settingRules.element);
+        this.settingRules = settingRules;
+        this.settingRows.push(settingRules);
+
+        const settingScorer = new ScorerSettingRow();
+        for (const { key, scorer } of catalog.scorers.values()) {
+            settingScorer.addOption(new ScorerOption(key, scorer));
+        }
+        settingScorer.selectStoredOrDefault(catalog.defaultScorer);
+        settingsDiv.appendChild(settingScorer.element);
+        this.settingScorer = settingScorer;
+        this.settingRows.push(settingScorer);
 
         const buttonRow = createElement("div", "button-row", settingsDiv);
         const playButton = new Button(icons.playIcon, "Play game", () => {
@@ -97,55 +152,6 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         regenerateButton.element.classList.add("regenerate");
         this.exampleDisplay.element.appendChild(regenerateButton.element);
         this.regenerateButton = regenerateButton;
-
-        this.settingRows = [];
-
-        const settingAtlas = new SettingRow<AtlasOption>(
-            "atlas",
-            "setup-atlas",
-        );
-        for (const { key, atlas } of catalog.atlas.values()) {
-            settingAtlas.addOption(new AtlasOption(key, atlas));
-        }
-        settingAtlas.selectStoredOrDefault(catalog.defaultAtlas);
-        settingsDiv.appendChild(settingAtlas.element);
-        this.settingAtlas = settingAtlas;
-        this.settingRows.push(settingAtlas);
-
-        const settingColors = new SettingRow<ColorsOption>(
-            "colors",
-            "setup-colors",
-        );
-        for (const { key, colors } of catalog.colors.values()) {
-            settingColors.addOption(new ColorsOption(key, colors));
-        }
-        settingColors.selectStoredOrDefault(catalog.defaultColor);
-        settingsDiv.appendChild(settingColors.element);
-        this.settingColors = settingColors;
-        this.settingRows.push(settingColors);
-
-        const settingSegments = new SegmentsSettingRow();
-        settingsDiv.appendChild(settingSegments.element);
-        this.settingSegments = settingSegments;
-        this.settingRows.push(settingSegments);
-
-        const settingRules = new RulesSettingRow();
-        for (const { key, rules, exampleColors } of catalog.rules.values()) {
-            settingRules.addOption(new RulesOption(key, rules, exampleColors));
-        }
-        settingRules.selectStoredOrDefault(catalog.defaultRules);
-        settingsDiv.appendChild(settingRules.element);
-        this.settingRules = settingRules;
-        this.settingRows.push(settingRules);
-
-        const settingScorer = new ScorerSettingRow();
-        for (const { key, scorer } of catalog.scorers.values()) {
-            settingScorer.addOption(new ScorerOption(key, scorer));
-        }
-        settingScorer.selectStoredOrDefault(catalog.defaultScorer);
-        settingsDiv.appendChild(settingScorer.element);
-        this.settingScorer = settingScorer;
-        this.settingRows.push(settingScorer);
 
         const update = () => {
             const atlas = settingAtlas.selected!.atlas;

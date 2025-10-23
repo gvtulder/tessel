@@ -10,7 +10,7 @@ import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
 
 export class ConvexShapeScorer extends Scorer {
-    static friendlyName = "Score convex shapes";
+    static friendlyName = "Count convex shapes";
 
     static create() {
         return new ConvexShapeScorer();

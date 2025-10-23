@@ -14,7 +14,7 @@ export class ColorsOption extends SettingRowOption {
     constructor(key: string, colors: TileColors) {
         super(key);
         this.colors = colors;
-        this.element.title = `${NUMBER_TO_WORD[colors.length]} color${colors.length != 1 ? "s" : ""}`;
+        this.title = `${NUMBER_TO_WORD[colors.length]} color${colors.length != 1 ? "s" : ""}`;
 
         const palette = SVG("svg", "palette", this.element);
         let bbox: BBox = undefined!;
@@ -47,5 +47,9 @@ export class ColorsOption extends SettingRowOption {
                 .map((c) => c.toFixed(4))
                 .join(" "),
         );
+    }
+
+    cloneForDisplay(): ThisType<this> {
+        return new ColorsOption(this.key, this.colors);
     }
 }

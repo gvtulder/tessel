@@ -1,6 +1,9 @@
 // svg scale factor (see corresponding parameter in the TS source)
 $svg-scale: 100;
 
+// base font size
+$font-size: min(2vw, 2vh);
+
 // size of the buttons (height and width including padding)
 $button-scale: min(16vw, 15vh, max(5vw, 7vh, 40px));
 

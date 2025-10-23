@@ -1,8 +1,13 @@
 @use "./sizes.scss";
 
 $setting-row-option-scale: min(
-  calc(min(48vw - sizes.$button-right) / 7),
-  calc(min(80vh - sizes.$inset-top - sizes.$inset-bottom) / 8)
+  calc(min(48vw - sizes.$button-right) / 10),
+  calc(min(80vh - sizes.$inset-top - sizes.$inset-bottom) / 11)
+);
+
+$setting-row-option-height: max(
+  $setting-row-option-scale,
+  calc(3.5 * sizes.$font-size)
 );
 
 .screen.game-setup {
@@ -15,9 +20,20 @@ $setting-row-option-scale: min(
   overflow: hidden;
   box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
   display: grid;
-  grid-template-areas: "example settings";
+  grid-template-areas: "example heading" "example settings";
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
+  grid-template-rows:
+    calc(sizes.$button-top + sizes.$button-scale + max(calc(15vh - 5vw), 0px))
+    1fr;
+}
+
+.screen.game-setup h2 {
+  grid-area: heading;
+  margin: 0.6em calc(min(3vw, 2vh) + 0.1 * $setting-row-option-scale);
+  padding: 0;
+  font-weight: normal;
+  font-size: 2em;
+  align-self: flex-end;
 }
 
 .screen.game-setup .example-grid {
@@ -61,19 +77,13 @@ $setting-row-option-scale: min(
 }
 
 .screen.game-setup .button-row {
-  position: relative;
-  grid-area: buttons;
-  text-align: center;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  align-self: center;
+  justify-self: center;
 }
 .screen.game-setup .game-button.play {
   width: calc(1.5 * $setting-row-option-scale);
   height: calc(1.5 * $setting-row-option-scale);
   padding: 10px;
-  margin: 0 sizes.$button-right 0 0;
   border-radius: 100%;
   background: var(--setup-play-button-bg-color);
   box-shadow: 0 0 15px rgb(0, 0, 0, 30%);
@@ -102,103 +112,129 @@ $setting-row-option-scale: min(
   }
 }
 
-.screen.game-setup .settings {
-  grid-area: settings;
-  display: grid;
-  grid-template-areas:
-    "atlas atlas colors colors"
-    "segments segments segments segments"
-    "rules scorer scorer buttons";
-  grid-template-columns: min-content min-content min-content 1fr;
-  grid-template-rows: min-content min-content min-content;
-  justify-content: center;
-  align-content: center;
-  padding-top: calc(sizes.$stack-margin-top + sizes.$inset-top);
-  padding-right: calc(sizes.$stack-margin-right + sizes.$inset-right);
-  padding-bottom: calc(sizes.$stack-margin-bottom + sizes.$inset-bottom);
-}
-.screen.game-setup .setting-row {
-  display: grid;
-  grid-template-columns: min-content min-content min-content;
-  grid-template-rows: min-content min-content min-content min-content;
-  padding: min(8vw, 2vh);
-}
-.screen.game-setup .setting-row.atlas {
-  grid-area: atlas;
-}
-.screen.game-setup .setting-row.colors {
-  grid-area: colors;
-  grid-template-columns: min-content min-content;
-}
-.screen.game-setup .setting-row.segments {
-  grid-area: segments;
-  grid-template-columns: repeat(5, min-content min-content min-content);
-}
-.screen.game-setup .setting-row.rules {
-  grid-area: rules;
-  grid-template-columns: min-content;
-}
-.screen.game-setup .setting-row.scorer {
-  grid-area: scorer;
-  grid-template-columns: min-content min-content min-content;
-}
-.screen.game-setup .setting-row:last-child {
-  border-bottom: none;
-}
-.screen.game-setup .setting-row-option {
-  margin: 0.5vw;
-  width: $setting-row-option-scale;
-  height: $setting-row-option-scale;
-  background: var(--settings-option-panel-bg-color);
-  border: 3px solid transparent;
-  border-radius: calc(0.1 * $setting-row-option-scale);
-  box-sizing: border-box;
-  box-shadow: 0 0 5px rgb(0, 0, 0, 10%);
-  aspect-ratio: 1;
-  cursor: pointer;
-  transition: transform 0.1s;
-}
-.screen.game-setup .wrap-grid {
-  width: 76%;
-  height: 76%;
-  margin: 12%;
-}
-.screen.game-setup .setting-row-option.selected {
-  transform: scale(1.07);
-}
-.screen.game-setup .setting-row-option.selected,
-.screen.game-setup .setting-row-option.selected:hover {
-  border: 3px solid var(--settings-option-panel-border-active-color);
-  background: var(--settings-option-panel-bg-active-color);
-}
-@media (hover) {
-  .screen.game-setup .setting-row-option:hover {
-    background: var(--settings-option-panel-bg-hover-color);
+.screen.game-setup {
+  .settings {
+    position: relative;
+    grid-area: settings;
+    padding-right: calc(sizes.$stack-margin-right + sizes.$inset-right);
+    padding-bottom: calc(sizes.$stack-margin-bottom + sizes.$inset-bottom);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: max-content max-content 1fr;
+    align-content: flex-start;
   }
-}
-.screen.game-setup .settings .palette {
-  padding: 11%;
-}
-.screen.game-setup circle.checkmark {
-  fill: var(--cutout-circle-points-fill-color);
-  stroke: var(--cutout-circle-points-stroke-color);
-}
 
-.screen.game-setup path.checkmark {
-  fill: var(--cutout-circle-points-stroke-color);
-}
+  .setting-row {
+    position: relative;
+    margin: 0.6em min(3vw, 2vh);
+    min-height: calc(3.5em + $setting-row-option-height);
+  }
+  .setting-row h3 {
+    grid-column: span 2;
 
-@media screen and (min-aspect-ratio: 4 / 5) and (max-aspect-ratio: 7 / 4) {
-  .screen.game-setup .button-row {
+    font-size: 1.2em;
+    font-weight: normal;
+    margin: 0 0 0.6em calc(0.1 * $setting-row-option-scale);
+    padding: 0;
+  }
+
+  /* dropdown menu */
+  .setting-row .dropdown-wrap {
+    display: none;
     position: absolute;
-    right: sizes.$button-right;
-    bottom: sizes.$button-bottom;
+    margin-top: 0.2em;
+    width: 100%;
+    z-index: 1000;
+  }
+  .setting-row:nth-child(odd) .dropdown-wrap {
+    width: max(130%, min(180%, calc(12 * $setting-row-option-scale)));
+  }
+  .setting-row .dropdown {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-items: stretch;
+    align-content: flex-start;
+    border-radius: calc(0.1 * $setting-row-option-scale);
+    background: var(--settings-option-panel-bg-color);
+    box-shadow: 0 0 10px rgb(0, 0, 0, 10%);
+  }
+  .setting-row.open .dropdown-wrap {
     display: block;
-    width: min-content;
+  }
+  .setting-row .dropdown .setting-row-option {
+    width: 50%;
+  }
+  .setting-row.count2,
+  .setting-row.count3,
+  .setting-row.count4 {
+    .dropdown-wrap {
+      width: 100%;
+    }
+    .dropdown {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      .setting-row-option {
+        width: 100%;
+      }
+    }
   }
 
-  .screen.game-setup .game-button.play {
+  .setting-row-option {
+    display: grid;
+    grid-template-areas:
+      "example description"
+      "example description";
+    grid-template-columns: calc(0.76 * $setting-row-option-scale) 1fr;
+    grid-template-rows: 1fr 1fr;
+    column-gap: calc(0.2 * $setting-row-option-scale);
+    align-items: center;
+    padding-left: calc(0.1 * $setting-row-option-scale);
+    width: 100%;
+    min-height: $setting-row-option-height;
+    background: var(--settings-option-panel-bg-color);
+    border: 3px solid transparent;
+    border-radius: calc(0.1 * $setting-row-option-scale);
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: transform 0.1s;
+    @media (hover) {
+      &:hover {
+        background: var(--settings-option-panel-bg-hover-color);
+      }
+    }
+  }
+  .setting-row-option.current {
+    box-shadow: 0 0 5px rgb(0, 0, 0, 10%);
+  }
+  .setting-row-option .wrap-grid,
+  .setting-row-option > svg {
+    grid-area: example;
+    width: calc(0.76 * $setting-row-option-scale);
+    height: calc(0.76 * $setting-row-option-scale);
+    justify-self: center;
+  }
+  .setting-row-option > svg.palette {
+    width: calc(0.66 * $setting-row-option-scale);
+    height: calc(0.66 * $setting-row-option-scale);
+  }
+  .setting-row-option p {
+    grid-area: description;
+    padding: 0.2em calc(0.1 * $setting-row-option-scale) 0.4em 0;
     margin: 0;
+  }
+  .setting-row-option.selected,
+  .setting-row-option.selected:hover {
+    border: 3px solid var(--settings-option-panel-border-active-color);
+    background: var(--settings-option-panel-bg-active-color);
+  }
+  circle.checkmark {
+    fill: var(--cutout-circle-points-fill-color);
+    stroke: var(--cutout-circle-points-stroke-color);
+  }
+
+  path.checkmark {
+    fill: var(--cutout-circle-points-stroke-color);
   }
 }
 
@@ -206,43 +242,25 @@ $setting-row-option-scale: min(
   .screen.game-setup {
     grid-template-areas:
       "example"
+      "heading"
       "settings";
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr min-content;
+    grid-template-rows: 1fr min-content min-content;
     justify-content: center;
+    align-content: flex-start;
   }
+
+  .screen.game-setup h2 {
+    margin: 1.2em calc(min(3vw, 2vh) + 0.1 * $setting-row-option-scale);
+  }
+
   .screen.game-setup .settings {
-    grid-template-areas:
-      "atlas atlas colors colors"
-      "segments segments segments segments"
-      "rules scorer scorer buttons";
-    grid-template-columns: min-content min-content min-content 1fr;
-    grid-template-rows: min-content min-content min-content;
-    margin: 1vw;
-    padding-top: 0;
-    padding-left: sizes.$inset-left;
+    min-height: 40vh;
+    padding-left: calc(sizes.$stack-margin-left + sizes.$inset-left);
   }
-  .screen.game-setup .settings .button-row {
-    margin: 0;
-    padding: 0;
-    align-items: center;
-    justify-content: center;
-  }
-  $setting-row-option-scale: min(
-    calc(min(70vw - sizes.$inset-left - sizes.$inset-right) / 6),
-    calc(min(70vh - sizes.$inset-top - sizes.$inset-bottom) / 8)
-  );
-  .screen.game-setup .setting-row {
-    padding: calc(0.1 * $setting-row-option-scale);
-  }
-  .screen.game-setup .setting-row-option {
-    width: $setting-row-option-scale;
-    height: $setting-row-option-scale;
-    border-radius: calc(0.1 * $setting-row-option-scale);
-  }
+
   .screen.game-setup .game-button.play {
-    margin: 0;
-    width: $setting-row-option-scale;
-    height: $setting-row-option-scale;
+    width: calc(2 * $setting-row-option-scale);
+    height: calc(2 * $setting-row-option-scale);
   }
 }

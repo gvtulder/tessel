@@ -9,7 +9,7 @@ import { Tile } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
 
 export class HoleScorer extends Scorer {
-    static friendlyName = "Score holes";
+    static friendlyName = "Count holes";
 
     static create() {
         return new HoleScorer();

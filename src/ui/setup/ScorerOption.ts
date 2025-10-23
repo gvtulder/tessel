@@ -10,6 +10,7 @@ import SVG_HOLES from "bundle-text:../svgs/scorer-holes.svg";
 import SVG_SHAPE from "bundle-text:../svgs/scorer-shape.svg";
 import SVG_SINGLE_TILE from "bundle-text:../svgs/scorer-single-tile.svg";
 import SVG_VERTEX from "bundle-text:../svgs/scorer-vertex.svg";
+import { createElement } from "../shared/html";
 
 export class ScorerOption extends SettingRowOption {
     scorer: ScorerType;
@@ -17,7 +18,8 @@ export class ScorerOption extends SettingRowOption {
     constructor(key: string, scorer: ScorerType) {
         super(key);
         this.scorer = scorer;
-        this.element.title = scorer.friendlyName;
+        console.log(scorer.friendlyName);
+        this.title = scorer.friendlyName;
 
         let svg = "";
         if (key == "convex") {
@@ -31,6 +33,12 @@ export class ScorerOption extends SettingRowOption {
         } else if (key == "vertex") {
             svg = SVG_VERTEX;
         }
-        this.element.innerHTML = svg;
+        const el = createElement("div");
+        el.innerHTML = svg;
+        this.element.appendChild(el.firstChild!);
+    }
+
+    cloneForDisplay(): ThisType<this> {
+        return new ScorerOption(this.key, this.scorer);
     }
 }

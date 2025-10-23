@@ -9,15 +9,48 @@ import { SettingRowOption } from "./SettingRowOption";
 
 export class SettingRow<T extends SettingRowOption> {
     element: HTMLDivElement;
+    dropdownWrapElement: HTMLDivElement;
+    dropdownElement: HTMLDivElement;
+    currentOption?: T;
     options: T[];
     onchange?: () => void;
     _selected?: number;
     localStorageKey: string;
+    backgroundEventHandler: (evt: PointerEvent) => void;
 
-    constructor(className: string, localStorageKey: string) {
+    constructor(className: string, localStorageKey: string, title: string) {
         this.element = createElement("div", `setting-row ${className}`);
         this.localStorageKey = localStorageKey;
         this.options = [];
+
+        // title
+        const header = createElement("h3", null, this.element);
+        header.innerHTML = title;
+
+        // options dropdown
+        this.dropdownWrapElement = createElement(
+            "div",
+            "dropdown-wrap",
+            this.element,
+        );
+        this.dropdownElement = createElement(
+            "div",
+            "dropdown",
+            this.dropdownWrapElement,
+        );
+
+        this.backgroundEventHandler = (evt: PointerEvent) => {
+            const target = evt.target as HTMLElement;
+            if (
+                !target.closest ||
+                (target.closest(".setting-row-option") !==
+                    this.currentOption?.element &&
+                    target.closest(".dropdown") !== this.dropdownElement)
+            ) {
+                this.close();
+            }
+        };
+        window.addEventListener("pointerdown", this.backgroundEventHandler);
     }
 
     private updateOptionCount() {
@@ -30,10 +63,10 @@ export class SettingRow<T extends SettingRowOption> {
     }
 
     addOption(option: T) {
-        this.element.appendChild(option.element);
+        this.dropdownElement.appendChild(option.element);
         const index = this.options.length;
         this.options.push(option);
-        option.tappable.onTap = () => {
+        option.tappable.onStartPress = () => {
             this.selectedIndex = index;
             const selectedKey = this.selected && this.selected.key;
             if (selectedKey) {
@@ -42,6 +75,7 @@ export class SettingRow<T extends SettingRowOption> {
             if (this.onchange) {
                 this.onchange();
             }
+            this.toggleOpen();
         };
         if (this.selectedIndex === undefined) {
             this.selectedIndex = index;
@@ -87,6 +121,19 @@ export class SettingRow<T extends SettingRowOption> {
         }
     }
 
+    toggleOpen(state?: boolean) {
+        this.element.classList.toggle("open", state);
+        this.rescale();
+    }
+
+    open() {
+        this.toggleOpen(true);
+    }
+
+    close() {
+        this.toggleOpen(false);
+    }
+
     async selectStoredOrDefault(defaultKey?: string) {
         const storedKey = await getStorageBackend().getItem(
             this.localStorageKey,
@@ -115,13 +162,20 @@ export class SettingRow<T extends SettingRowOption> {
         for (const option of this.options) {
             option.rescale();
         }
+        if (this.currentOption) {
+            this.currentOption.rescale();
+        }
     }
 
     destroy() {
         for (const option of this.options) {
             option.destroy();
         }
+        if (this.currentOption) {
+            this.currentOption.destroy();
+        }
         this.element.remove();
+        window.removeEventListener("pointerdown", this.backgroundEventHandler);
     }
 
     private updateSelectedState() {
@@ -132,5 +186,20 @@ export class SettingRow<T extends SettingRowOption> {
                 i == this._selected,
             );
         }
+        if (this.currentOption) {
+            this.currentOption.destroy();
+        }
+        this.currentOption = options[
+            this._selected || 0
+        ].cloneForDisplay() as T;
+        this.currentOption.element.classList.add("current");
+        this.element.insertBefore(
+            this.currentOption.element,
+            this.dropdownWrapElement,
+        );
+        this.currentOption.rescale();
+        this.currentOption.tappable.onStartPress = () => {
+            this.toggleOpen();
+        };
     }
 }

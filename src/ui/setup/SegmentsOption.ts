@@ -17,6 +17,8 @@ import { createElement } from "../shared/html";
 export class SegmentsOption extends SettingRowOption {
     segmentsIndex: number;
     uniqueTileColors: boolean;
+    atlas?: Atlas;
+    colors?: TileColors;
     colorPatternPerShape?: ColorPatternPerShape;
     gridDisplay?: GridDisplay;
 
@@ -50,13 +52,13 @@ export class SegmentsOption extends SettingRowOption {
         }
 
         if (this.key == "all") {
-            this.element.title = "All color combinations";
+            this.title = "All color combinations";
         } else if (this.uniqueTileColors) {
-            this.element.title = "All colors must be unique";
+            this.title = "All colors must be unique";
         } else if (colorPattern.numColors == 1) {
-            this.element.title = "Single color per tile";
+            this.title = "One color per tile";
         } else {
-            this.element.title = `${NUMBER_TO_WORD[colorPattern.numColors]} colors per tile`;
+            this.title = `${NUMBER_TO_WORD[colorPattern.numColors]} colors per tile`;
         }
 
         const groupColors: TileColor[] = [];
@@ -161,7 +163,21 @@ export class SegmentsOption extends SettingRowOption {
         this.gridDisplay = gridDisplay;
         gridDisplay.rescale();
 
+        this.atlas = atlas;
+        this.colors = colors;
         this.colorPatternPerShape = colorPatternPerShape;
+    }
+
+    cloneForDisplay(): ThisType<this> {
+        const clone = new SegmentsOption(
+            this.key,
+            this.segmentsIndex,
+            this.uniqueTileColors,
+        );
+        if (this.atlas && this.colors && this.colorPatternPerShape) {
+            clone.showAtlas(this.atlas, this.colors, this.colorPatternPerShape);
+        }
+        return clone;
     }
 
     rescale() {

@@ -11,6 +11,7 @@ import { SettingRowOption } from "./SettingRowOption";
 export class RulesOption extends SettingRowOption {
     rules: RuleSet;
     colorIndex: [number, number];
+    colors?: TileColors;
     segmentA: SVGPolygonElement;
     segmentB: SVGPolygonElement;
 
@@ -18,7 +19,7 @@ export class RulesOption extends SettingRowOption {
         super(key);
         this.rules = rules;
         this.colorIndex = colorIndex;
-        this.element.title = rules.name;
+        this.title = rules.name;
 
         const svg = SVG("svg", "rules", this.element, {
             viewBox: "0 0 1 1",
@@ -145,5 +146,14 @@ export class RulesOption extends SettingRowOption {
     updateColors(colors: TileColors) {
         this.segmentA.setAttribute("fill", colors[this.colorIndex[0]]);
         this.segmentB.setAttribute("fill", colors[this.colorIndex[1]]);
+        this.colors = colors;
+    }
+
+    cloneForDisplay(): ThisType<this> {
+        const clone = new RulesOption(this.key, this.rules, this.colorIndex);
+        if (this.colors) {
+            clone.updateColors(this.colors);
+        }
+        return clone;
     }
 }

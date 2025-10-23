@@ -9,12 +9,15 @@ import { SettingRow } from "./SettingRow";
 
 export class RulesSettingRow extends SettingRow<RulesOption> {
     constructor() {
-        super("rules", "setup-rules");
+        super("rules", "setup-rules", "Matching rule");
     }
 
     updateColors(colors: TileColors) {
         for (const option of this.options) {
             option.updateColors(colors);
+        }
+        if (this.currentOption) {
+            this.currentOption.updateColors(colors);
         }
     }
 }

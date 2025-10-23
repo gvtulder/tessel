@@ -20,7 +20,7 @@ export class AtlasOption extends SettingRowOption {
     constructor(key: string, atlas: Atlas) {
         super(key);
         this.atlas = atlas;
-        this.element.title = `${atlas.name} tiling`;
+        this.title = `${atlas.name} tiling`;
 
         const grid = new Grid(atlas);
 
@@ -52,6 +52,10 @@ export class AtlasOption extends SettingRowOption {
         const gridDisplay = new OptionGridDisplay(grid, wrapper);
         wrapper.appendChild(gridDisplay.element);
         this.gridDisplay = gridDisplay;
+    }
+
+    cloneForDisplay(): ThisType<this> {
+        return new AtlasOption(this.key, this.atlas);
     }
 
     rescale() {

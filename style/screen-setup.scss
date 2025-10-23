@@ -18,7 +18,7 @@ $setting-row-option-height: max(
   height: 100%;
   background: var(--panel-bg-color);
   overflow: hidden;
-  box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
+  box-shadow: var(--screen-box-shadow);
   display: grid;
   grid-template-areas: "example heading" "example settings";
   grid-template-columns: 1fr 1fr;
@@ -40,6 +40,7 @@ $setting-row-option-height: max(
   position: relative;
   grid-area: example;
   background: var(--main-bg-color);
+  box-shadow: var(--screen-box-shadow);
 }
 
 .invalid-grid-warning {
@@ -86,7 +87,7 @@ $setting-row-option-height: max(
   padding: 10px;
   border-radius: 100%;
   background: var(--setup-play-button-bg-color);
-  box-shadow: 0 0 15px rgb(0, 0, 0, 30%);
+  box-shadow: var(--button-box-shadow);
   text-align: center;
   transition: transform 0.1s;
 }
@@ -157,7 +158,7 @@ $setting-row-option-height: max(
     align-content: flex-start;
     border-radius: calc(0.1 * $setting-row-option-scale);
     background: var(--settings-option-panel-bg-color);
-    box-shadow: 0 0 10px rgb(0, 0, 0, 10%);
+    box-shadow: var(--dropdown-box-shadow);
   }
   .setting-row.open .dropdown-wrap {
     display: block;
@@ -205,7 +206,7 @@ $setting-row-option-height: max(
     }
   }
   .setting-row-option.current {
-    box-shadow: 0 0 5px rgb(0, 0, 0, 10%);
+    box-shadow: var(--button-box-shadow);
   }
   .setting-row-option .wrap-grid,
   .setting-row-option > svg {

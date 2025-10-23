@@ -50,7 +50,7 @@
   overflow: hidden;
   height: 100%;
   width: 100%;
-  box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
+  box-shadow: var(--screen-box-shadow);
   background: var(--main-bg-color);
 
   transition: background-color 50ms;
@@ -91,6 +91,7 @@
   padding: calc(0.25 * sizes.$button-scale);
   cursor: pointer;
   border-radius: 100%;
+  box-shadow: var(--button-box-shadow);
 
   transform: scale(1);
   transition-property: transform;
@@ -164,6 +165,7 @@
     width: calc(0.425 * sizes.$button-scale);
     height: calc(0.425 * sizes.$button-scale);
     background: var(--toggle-fg-disabled-color);
+    box-shadow: var(--button-box-shadow);
   }
 
   .toggle-ball-icon {
@@ -204,5 +206,6 @@
   &.threeway.b .toggle-box.b .toggle-ball-icon {
     fill: var(--toggle-threeway-icon-enabled-color);
     background: var(--toggle-fg-enabled-color);
+    box-shadow: var(--button-box-shadow);
   }
 }

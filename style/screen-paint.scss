@@ -106,7 +106,7 @@ $swatch-scale: min(
   width: $swatch-scale;
   height: $swatch-scale;
   border-radius: 100%;
-  box-shadow: 0 0 15px rgb(0, 0, 0, 10%);
+  box-shadow: var(--button-box-shadow);
   cursor: grab;
 }
 

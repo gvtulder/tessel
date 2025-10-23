@@ -61,6 +61,7 @@
 
   &.expanded {
     background: var(--dropout-bg-color);
+    box-shadow: var(--dropdown-box-shadow);
 
     .game-button.dropout svg {
       rotate: 90deg;

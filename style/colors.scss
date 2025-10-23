@@ -38,6 +38,13 @@ $blue: hsl(214deg, 64%, 50%);
   --home-button-fg-color: #{color.change($blue, $lightness: 97%)};
   --home-button-fg-hover-color: #{color.change($blue, $lightness: 97%)};
 
+  // shadows
+  --button-box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.08), 0 3px 6px rgba(0, 0, 0, 0.12);
+  --dropdown-box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.08), 0 10px 20px rgba(0, 0, 0, 0.12);
+  --screen-box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
+
   // SETUP SCREEN
 
   // settings menu options

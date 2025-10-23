@@ -45,19 +45,25 @@ $blue: hsl(214deg, 64%, 50%);
     0 10px 20px rgba(0, 0, 0, 0.08), 0 10px 20px rgba(0, 0, 0, 0.12);
   --screen-box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
 
+  // text-color
+  --text-color: hsl(0, 0%, 0%);
+
   // SETUP SCREEN
 
   // settings menu options
   --settings-option-panel-bg-color: #{color.change($maintint, $lightness: 80%)};
   --settings-option-panel-bg-active-color: #{color.change(
       $maintint,
-      $lightness: 93%
+      $lightness: 91%
     )};
   --settings-option-panel-bg-hover-color: #{color.change(
       $maintint,
       $lightness: 87%
     )};
-  --settings-option-panel-border-active-color: #66f;
+  --settings-option-panel-border-active-color: #{color.change(
+      #66f,
+      $lightness: 80%
+    )};
 
   // warning symbol for invalid grid in setup menu
   --invalid-grid-warning-color: #e06300;

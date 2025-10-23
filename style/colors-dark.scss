@@ -45,19 +45,26 @@ body.dark-mode {
   --home-button-fg-color: #{color.change($blue, $lightness: 97%)};
   --home-button-fg-hover-color: #{color.change($blue, $lightness: 97%)};
 
+  // text-color
+  --text-color: hsl(0, 0%, 50%);
+
   // SETUP SCREEN
 
   // settings menu options
-  --settings-option-panel-bg-color: #{color.change($maintint, $lightness: 15%)};
+  --settings-option-panel-bg-color: #{color.change($maintint, $lightness: 16%)};
   --settings-option-panel-bg-active-color: #{color.change(
       $maintint,
-      $lightness: 5%
+      $lightness: 23%
     )};
   --settings-option-panel-bg-hover-color: #{color.change(
       $maintint,
-      $lightness: 5%
+      $lightness: 23%
     )};
-  --settings-option-panel-border-active-color: #66f;
+  --settings-option-panel-border-active-color: #{color.change(
+      #66f,
+      $lightness: 45%,
+      $saturation: 40%
+    )};
 
   // warning symbol for invalid grid in setup menu
   --invalid-grid-warning-color: #e06300;

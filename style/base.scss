@@ -37,6 +37,7 @@ body {
   -webkit-user-select: none;
   user-select: none;
   touch-action: none;
+  color: var(--text-color);
 
   transition: background-color 50ms;
 }

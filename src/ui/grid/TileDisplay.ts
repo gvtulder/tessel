@@ -11,6 +11,7 @@ import offsetPolygon from "../../lib/offset-polygon";
 import { Point } from "../../geom/math";
 import { addPointToPolygon } from "../../geom/polygon/addPointToPolygon";
 import { S, SVG } from "../shared/svg";
+import { UniqueIdSource } from "../shared/uniqueSvgId";
 
 function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);
@@ -27,7 +28,7 @@ export type TileOnScreenMatch = {
     offset: number;
 };
 
-let tileDisplayCount = 0;
+const uniqueIdSource = new UniqueIdSource("tile");
 
 export class TileDisplay {
     tile: Tile;
@@ -49,8 +50,7 @@ export class TileDisplay {
                 ? "svg-placeholder"
                 : "svg-tile",
         );
-        this.clipPathId = `tile${tileDisplayCount}`;
-        tileDisplayCount = (tileDisplayCount + 1) % 100000;
+        this.clipPathId = uniqueIdSource.getUniqueIdPrefix();
         const clipPath = SVG("clipPath", null, this.element);
         clipPath.setAttribute("id", this.clipPathId);
         this.clipPath = SVG("path", null, clipPath);

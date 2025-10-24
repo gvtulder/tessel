@@ -6,7 +6,10 @@
 import { RuleSet } from "../../grid/rules/RuleSet";
 import { TileColors } from "../../grid/Tile";
 import { SVG } from "../shared/svg";
+import { UniqueIdSource } from "../shared/uniqueSvgId";
 import { SettingRowOption } from "./SettingRowOption";
+
+const uniqueIdSource = new UniqueIdSource("rules");
 
 export class RulesOption extends SettingRowOption {
     rules: RuleSet;
@@ -21,6 +24,8 @@ export class RulesOption extends SettingRowOption {
         this.colorIndex = colorIndex;
         this.title = rules.name;
 
+        const prefix = uniqueIdSource.getUniqueIdPrefix();
+
         const svg = SVG("svg", "rules", this.element, {
             viewBox: "0 0 1 1",
         });
@@ -29,7 +34,7 @@ export class RulesOption extends SettingRowOption {
         const defs = SVG("defs", null, svg);
         let linearGradient;
         linearGradient = SVG("linearGradient", null, defs, {
-            id: "gradientH",
+            id: `${prefix}gradientH`,
             x1: "0",
             x2: "0",
             y1: "0",
@@ -53,7 +58,7 @@ export class RulesOption extends SettingRowOption {
             "stop-color": "black",
         });
         linearGradient = SVG("linearGradient", null, defs, {
-            id: "gradientV",
+            id: `${prefix}gradientV`,
             x1: "0",
             x2: "1",
             y1: "0",
@@ -77,7 +82,7 @@ export class RulesOption extends SettingRowOption {
         });
 
         const g = SVG("g", null, svg, {
-            mask: "url(#mask)",
+            mask: `url(#${prefix}mask)`,
         });
 
         // segments
@@ -90,21 +95,21 @@ export class RulesOption extends SettingRowOption {
 
         // mask
         const mask = SVG("mask", null, svg, {
-            id: "mask",
+            id: `${prefix}mask`,
         });
         SVG("rect", null, mask, {
             x: "0",
             y: "0",
             width: "1",
             height: "1",
-            fill: "url(#gradientV)",
+            fill: `url(#${prefix}gradientV)`,
         });
         SVG("rect", null, mask, {
             x: "0",
             y: "0",
             width: "1",
             height: "1",
-            fill: "url(#gradientH)",
+            fill: `url(#${prefix}gradientH)`,
         });
 
         // checkmark

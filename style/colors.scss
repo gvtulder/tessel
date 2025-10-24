@@ -111,8 +111,7 @@ $blue: hsl(214deg, 64%, 50%);
   --score-display-bg-color: #{color.change($green, $lightness: 85%)};
 
   // tile counter
-  --tile-counter-text-color: hsl(0deg, 0%, 47%);
-  --tile-counter-border-color: hsl(0deg, 0%, 60%);
+  --tile-counter-text-color: rgba(0, 0, 0, 0.5);
 
   // placeholder tile colors
   --placeholder-fill-color: hsla(0deg, 0%, 77%, 0.5);

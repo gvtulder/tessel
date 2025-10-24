@@ -226,34 +226,30 @@
 
 .tile-counter {
   font-size: 1.5vw;
-  flex-grow: 2;
   cursor: pointer;
   color: var(--tile-counter-text-color);
-  --fill-percentage: 0%;
 
-  @media screen and (max-aspect-ratio: 3 / 2) {
-    span {
-      display: block;
-      margin: 1em auto;
-      width: 4em;
-      box-sizing: border-box;
-      border: 1px solid var(--tile-counter-border-color);
-      border-radius: 0.5vw;
-      padding: 1.2em 0;
-      aspect-ratio: 1;
-      background: linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 8%) var(--fill-percentage),
-        transparent var(--fill-percentage)
-      );
+  span {
+    display: inline-block;
+  }
 
-      &.wiggle {
-        animation-name: tile-counter-wiggle-anim;
-        animation-duration: 0.4s;
-        animation-iteration-count: 2;
-        animation-timing-function: linear;
-      }
-    }
+  svg {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.5em;
+    width: 1.5em;
+    height: 1.5em;
+    stroke: var(--tile-counter-text-color);
+    stroke-width: 0.04em;
+    vector-effect: non-scaling-stroke;
+    fill: var(--panel-bg-color);
+  }
+
+  &.wiggle {
+    animation-name: tile-counter-wiggle-anim;
+    animation-duration: 0.4s;
+    animation-iteration-count: 2;
+    animation-timing-function: linear;
   }
 }
 @keyframes tile-counter-wiggle-anim {

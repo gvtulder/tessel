@@ -80,8 +80,7 @@ body.dark-mode {
     )};
 
   // tile counter
-  --tile-counter-text-color: hsl(0deg, 0%, 35%);
-  --tile-counter-border-color: hsl(0deg, 0%, 20%);
+  --tile-counter-text-color: var(--text-color);
 
   // placeholder tile colors
   --placeholder-fill-color: hsla(0deg, 0%, 23%, 0.5);

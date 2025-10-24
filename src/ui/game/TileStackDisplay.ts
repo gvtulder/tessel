@@ -11,6 +11,7 @@ import { Atlas } from "../../grid/Atlas";
 import { SingleTileOnStackDisplay } from "./SingleTileStackDisplay";
 import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
+import { TileCounter } from "./TileCounter";
 
 const WIGGLE_TIMEOUT = 15000;
 
@@ -56,14 +57,11 @@ export abstract class BaseTileStackDisplay extends EventTarget {
 
 export class TileStackDisplay extends BaseTileStackDisplay {
     tileStack: FixedOrderTileStack;
-    counterDiv: HTMLElement;
-    counter: HTMLElement;
     maxCount: number;
+    counter: TileCounter;
 
     private onWiggleAnimationEnd: EventListener;
     private wiggleTimeout!: number;
-
-    counterTapHandler: TapHandler;
 
     updateSlotsHandler: EventListener;
 
@@ -77,11 +75,8 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         this.tileStack = tileStack;
         this.maxCount = tileStack.tilesLeft - tileStack.numberShown;
 
-        // TODO move this to a separate class
-        this.counterDiv = createElement("div", "tile-counter");
-        this.counter = createElement("span", null, this.counterDiv);
-        this.counterTapHandler = new TapHandler(this.counter);
-        this.counterTapHandler.onTap = () => {
+        this.counter = new TileCounter();
+        this.counter.tapHandler.onTap = () => {
             this.tileStack.reshuffle();
             for (const td of this.tileDisplays) {
                 td.startAppearAnimation();
@@ -99,10 +94,10 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         );
 
         this.onWiggleAnimationEnd = () => {
-            this.counter.classList.remove("wiggle");
+            this.counter.element.classList.remove("wiggle");
         };
 
-        this.counter.addEventListener(
+        this.counter.element.addEventListener(
             "animationend",
             this.onWiggleAnimationEnd,
         );
@@ -122,7 +117,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
 
     wiggle() {
         console.log("Wiggle on idle.");
-        this.counter.classList.add("wiggle");
+        this.counter.element.classList.add("wiggle");
     }
 
     destroy() {
@@ -130,15 +125,14 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         if (this.wiggleTimeout) {
             window.clearTimeout(this.wiggleTimeout);
         }
-        this.counterTapHandler.destroy();
-        this.counterDiv.remove();
+        this.counter.element.removeEventListener(
+            "animationend",
+            this.onWiggleAnimationEnd,
+        );
+        this.counter.destroy();
         this.tileStack.removeEventListener(
             GameEventType.UpdateSlots,
             this.updateSlotsHandler,
-        );
-        this.counter.removeEventListener(
-            "animationend",
-            this.onWiggleAnimationEnd,
         );
     }
 
@@ -162,19 +156,11 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         }
         const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
         if (n > 0) {
-            const percentage = Math.min(
-                Math.max(Math.round((100 * n) / this.maxCount), 0),
-                100,
-            );
-            this.counter.innerHTML = `+ ${n}`;
-            this.counter.style.setProperty(
-                "--fill-percentage",
-                `${percentage}%`,
-            );
+            this.counter.update(n);
             this.setInactivityTimeout();
         } else {
-            this.counter.innerHTML = "";
-            this.counterDiv.style.opacity = "0";
+            this.counter.update(0);
+            this.counter.element.style.opacity = "0";
         }
     }
 

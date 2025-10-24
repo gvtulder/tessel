@@ -102,7 +102,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         // TODO this should go somewhere else
         // extract the tile count and move it to the counter segment
-        tileCounterAndScore.appendChild(tileStackDisplay.counterDiv);
+        tileCounterAndScore.appendChild(tileStackDisplay.counter.element);
 
         // the score display
         const scoreDisplayContainer = createElement(

@@ -1,8 +1,11 @@
 @use "./sizes.scss";
 
-$setting-row-option-scale: min(
-  calc(min(48vw - sizes.$button-right) / 10),
-  calc(min(80vh - sizes.$inset-top - sizes.$inset-bottom) / 11)
+$setting-row-option-scale: max(
+  min(
+    calc(min(48vw - sizes.$button-right) / 10),
+    calc(min(80vh - sizes.$inset-top - sizes.$inset-bottom) / 11)
+  ),
+  2rem
 );
 
 $setting-row-option-height: max(
@@ -29,10 +32,10 @@ $setting-row-option-height: max(
 
 .screen.game-setup h2 {
   grid-area: heading;
-  margin: 0.6em calc(min(3vw, 2vh) + 0.1 * $setting-row-option-scale);
+  margin: 0.6rem calc(min(3vw, 2vh) + 0.1 * $setting-row-option-scale);
   padding: 0;
   font-weight: normal;
-  font-size: 2em;
+  font-size: 2rem;
   align-self: flex-end;
 }
 
@@ -78,6 +81,7 @@ $setting-row-option-height: max(
 }
 
 .screen.game-setup .button-row {
+  grid-row: span 2;
   align-self: center;
   justify-self: center;
 }
@@ -121,34 +125,44 @@ $setting-row-option-height: max(
     padding-bottom: calc(sizes.$stack-margin-bottom + sizes.$inset-bottom);
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: max-content max-content 1fr;
+    grid-template-rows: min-content min-content min-content 1fr;
     align-content: flex-start;
   }
 
   .setting-row {
     position: relative;
-    margin: 0.6em min(3vw, 2vh);
-    min-height: calc(4.5em + $setting-row-option-height);
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    margin: 0.6rem min(3vw, 2vh);
   }
   .setting-row h3 {
-    grid-column: span 2;
-
-    font-size: 1.2em;
+    font-size: 1.2rem;
     font-weight: normal;
-    margin: 0 0 0.6em calc(0.1 * $setting-row-option-scale);
+    margin: 0 0 0.6rem calc(0.1 * $setting-row-option-scale);
     padding: 0;
+  }
+  .setting-row .option-wrap {
+    position: relative;
+    height: 100%;
   }
 
   /* dropdown menu */
   .setting-row .dropdown-wrap {
     display: none;
     position: absolute;
-    margin-top: 0.2em;
-    width: 100%;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    min-width: 180%;
     z-index: 1000;
+    top: 100%;
   }
-  .setting-row:nth-child(odd) .dropdown-wrap {
-    width: max(130%, min(180%, calc(12 * $setting-row-option-scale)));
+  .setting-row.upward .dropdown-wrap {
+    bottom: 100%;
+    top: auto;
+  }
+  .setting-row:nth-child(even) .dropdown-wrap {
+    right: 0;
   }
   .setting-row .dropdown {
     display: grid;
@@ -176,7 +190,7 @@ $setting-row-option-height: max(
       grid-template-columns: 1fr;
     }
   }
-  @media screen and (min-aspect-ratio: 4/5) and (max-aspect-ratio: 8/5) {
+  @media screen and (min-aspect-ratio: 4 / 5) and (max-aspect-ratio: 8 / 5) {
     .setting-row:nth-child(even) {
       .dropdown-wrap {
         width: 100%;
@@ -204,16 +218,30 @@ $setting-row-option-height: max(
     box-sizing: border-box;
     cursor: pointer;
     transition: transform 0.1s;
+    font-size: 0.9rem;
     @media (hover) {
       &:hover {
         background: var(--settings-option-panel-bg-hover-color);
       }
     }
   }
+  @media screen and (max-height: 550px) and (min-aspect-ratio: 8 / 5) {
+    .setting-row h3 {
+      display: none;
+    }
+    .setting-row-option {
+      min-height: min-content;
+    }
+  }
+  @media screen and (max-height: 350px) and (min-aspect-ratio: 8 / 5) {
+    .settings {
+      width: 65vw;
+    }
+  }
   .setting-row-option.current {
     box-shadow: var(--button-box-shadow);
     margin: 0;
-    padding: calc(0.2 * $setting-row-option-scale);
+    height: 100%;
   }
   .setting-row-option.current.changed {
     animation: 300ms linear setting-row-option-change-anim;
@@ -244,7 +272,7 @@ $setting-row-option-height: max(
   }
   .setting-row-option p {
     grid-area: description;
-    padding: 0.2em calc(0.1 * $setting-row-option-scale) 0.4em 0;
+    padding: 0.2rem calc(0.1 * $setting-row-option-scale) 0.4rem 0;
     margin: 0;
   }
   .setting-row-option.selected,
@@ -275,16 +303,12 @@ $setting-row-option-height: max(
   }
 
   .screen.game-setup h2 {
-    margin: 0.6em calc(min(3vw, 2vh) + 0.1 * $setting-row-option-scale);
+    margin: 1.2rem calc(min(3vw, 2vh) + 0.1 * $setting-row-option-scale);
   }
 
   .screen.game-setup .settings {
-    min-height: max(40vh, calc(10 * $setting-row-option-height));
+    min-height: max(40vh, calc(8 * $setting-row-option-height));
     padding-left: calc(sizes.$stack-margin-left + sizes.$inset-left);
-  }
-
-  .screen.game-setup .setting-row {
-    min-height: calc(3.5em + $setting-row-option-height);
   }
 
   .screen.game-setup .game-button.play {

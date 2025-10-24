@@ -2,7 +2,7 @@
 $svg-scale: 100;
 
 // base font size
-$font-size: min(2vw, 2vh);
+$font-size: clamp(16px, min(2.5vw, 2.5vh), 24px);
 
 // size of the buttons (height and width including padding)
 $button-scale: min(16vw, 15vh, max(5vw, 7vh, 40px));

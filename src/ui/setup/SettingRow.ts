@@ -9,6 +9,7 @@ import { SettingRowOption } from "./SettingRowOption";
 
 export class SettingRow<T extends SettingRowOption> {
     element: HTMLDivElement;
+    optionWrapElement: HTMLDivElement;
     dropdownWrapElement: HTMLDivElement;
     dropdownElement: HTMLDivElement;
     currentOption?: T;
@@ -28,10 +29,15 @@ export class SettingRow<T extends SettingRowOption> {
         header.innerHTML = title;
 
         // options dropdown
+        this.optionWrapElement = createElement(
+            "div",
+            "option-wrap",
+            this.element,
+        );
         this.dropdownWrapElement = createElement(
             "div",
             "dropdown-wrap",
-            this.element,
+            this.optionWrapElement,
         );
         this.dropdownElement = createElement(
             "div",
@@ -123,6 +129,15 @@ export class SettingRow<T extends SettingRowOption> {
 
     toggleOpen(state?: boolean) {
         this.element.classList.toggle("open", state);
+        if (this.element.classList.contains("open")) {
+            const upward =
+                window.innerHeight -
+                    this.element.getBoundingClientRect().bottom <
+                this.dropdownElement.scrollHeight;
+            this.element.classList.toggle("upward", upward);
+        } else {
+            this.element.classList.toggle("upward", false);
+        }
         this.rescale();
     }
 
@@ -193,10 +208,7 @@ export class SettingRow<T extends SettingRowOption> {
             this._selected || 0
         ].cloneForDisplay() as T;
         this.currentOption.element.classList.add("current");
-        this.element.insertBefore(
-            this.currentOption.element,
-            this.dropdownWrapElement,
-        );
+        this.optionWrapElement.appendChild(this.currentOption.element);
         this.currentOption.rescale();
         this.currentOption.tappable.onStartPress = () => {
             this.toggleOpen();

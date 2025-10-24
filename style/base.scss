@@ -23,12 +23,16 @@
     U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+:root {
+  font-family: "Barlow", sans-serif;
+  font-size: sizes.$font-size;
+  color: var(--text-color);
+}
+
 body {
   background: var(--main-bg-color);
   margin: 0;
   padding: 0;
-  font-family: "Barlow", sans-serif;
-  font-size: sizes.$font-size;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -khtml-user-select: none;
@@ -37,7 +41,6 @@ body {
   -webkit-user-select: none;
   user-select: none;
   touch-action: none;
-  color: var(--text-color);
 
   transition: background-color 50ms;
 }

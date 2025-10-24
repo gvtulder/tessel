@@ -26,7 +26,7 @@ $setting-row-option-height: max(
   grid-template-areas: "example heading" "example settings";
   grid-template-columns: 1fr 1fr;
   grid-template-rows:
-    calc(sizes.$button-top + sizes.$button-scale + max(calc(15vh - 5vw), 0px))
+    calc(sizes.$button-top + sizes.$button-scale + 1.2rem)
     1fr;
 }
 
@@ -121,11 +121,15 @@ $setting-row-option-height: max(
   .settings {
     position: relative;
     grid-area: settings;
-    padding-right: calc(sizes.$stack-margin-right + sizes.$inset-right);
+    padding-right: calc(
+      2 * min(3vw, 2vh) + sizes.$stack-margin-right + sizes.$inset-right
+    );
     padding-bottom: calc(sizes.$stack-margin-bottom + sizes.$inset-bottom);
+    padding-left: min(3vw, 2vh);
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: min-content min-content min-content 1fr;
+    column-gap: min(3vw, 2vh);
     align-content: flex-start;
   }
 
@@ -134,7 +138,7 @@ $setting-row-option-height: max(
     align-self: stretch;
     display: flex;
     flex-direction: column;
-    margin: 0.6rem min(3vw, 2vh);
+    margin: 0.6rem 0;
   }
   .setting-row h3 {
     font-size: 1.2rem;
@@ -185,6 +189,7 @@ $setting-row-option-height: max(
   .setting-row.count4 {
     .dropdown-wrap {
       width: 100%;
+      min-width: 100%;
     }
     .dropdown {
       grid-template-columns: 1fr;
@@ -233,7 +238,7 @@ $setting-row-option-height: max(
       min-height: min-content;
     }
   }
-  @media screen and (max-height: 350px) and (min-aspect-ratio: 8 / 5) {
+  @media screen and (max-height: 500px) and (min-aspect-ratio: 8 / 5) {
     .settings {
       width: 65vw;
     }
@@ -308,7 +313,12 @@ $setting-row-option-height: max(
 
   .screen.game-setup .settings {
     min-height: max(40vh, calc(8 * $setting-row-option-height));
-    padding-left: calc(sizes.$stack-margin-left + sizes.$inset-left);
+    padding-left: calc(
+      min(3vw, 3vh) + sizes.$stack-margin-left + sizes.$inset-left
+    );
+    padding-right: calc(
+      min(3vw, 3vh) + sizes.$stack-margin-right + sizes.$inset-right
+    );
   }
 
   .screen.game-setup .game-button.play {

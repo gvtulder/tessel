@@ -56,6 +56,12 @@ $blue: hsl(214deg, 64%, 50%);
       $saturation: 25%,
       $alpha: 80%
     )};
+  --button-fg-selected-color: #{color.change(
+      $maintint,
+      $lightness: 30%,
+      $saturation: 25%,
+      $alpha: 80%
+    )};
 
   // large play button in the setup screen
   --setup-play-button-bg-color: #{color.change($green, $lightness: 32%)};

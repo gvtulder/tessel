@@ -33,6 +33,7 @@ body.dark-mode {
   --button-bg-pressed-color: rgba(255, 255, 255, 15%);
   --button-bg-hover-color: rgba(255, 255, 255, 25%);
   --button-bg-selected-color: rgba(255, 255, 255, 70%);
+  --button-fg-selected-color: rgba(255, 255, 255, 70%);
 
   // large play button in the setup screen
   --setup-play-button-bg-color: #{color.change($green, $lightness: 32%)};

@@ -229,6 +229,7 @@
   flex-grow: 2;
   cursor: pointer;
   color: var(--tile-counter-text-color);
+  --fill-percentage: 0%;
 
   @media screen and (max-aspect-ratio: 3 / 2) {
     span {
@@ -240,6 +241,11 @@
       border-radius: 0.5vw;
       padding: 1.2em 0;
       aspect-ratio: 1;
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 8%) var(--fill-percentage),
+        transparent var(--fill-percentage)
+      );
 
       &.wiggle {
         animation-name: tile-counter-wiggle-anim;

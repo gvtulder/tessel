@@ -58,6 +58,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
     tileStack: FixedOrderTileStack;
     counterDiv: HTMLElement;
     counter: HTMLElement;
+    maxCount: number;
 
     private onWiggleAnimationEnd: EventListener;
     private wiggleTimeout!: number;
@@ -74,6 +75,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         super(atlas, tileDragController);
 
         this.tileStack = tileStack;
+        this.maxCount = tileStack.tilesLeft - tileStack.numberShown;
 
         // TODO move this to a separate class
         this.counterDiv = createElement("div", "tile-counter");
@@ -87,6 +89,7 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         };
 
         this.updateTiles();
+        this.maxCount = tileStack.tilesLeft;
         this.updateSlotsHandler = () => {
             this.updateTiles();
         };
@@ -159,7 +162,15 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         }
         const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
         if (n > 0) {
+            const percentage = Math.min(
+                Math.max(Math.round((100 * n) / this.maxCount), 0),
+                100,
+            );
             this.counter.innerHTML = `+ ${n}`;
+            this.counter.style.setProperty(
+                "--fill-percentage",
+                `${percentage}%`,
+            );
             this.setInactivityTimeout();
         } else {
             this.counter.innerHTML = "";

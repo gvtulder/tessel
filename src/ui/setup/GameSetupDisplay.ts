@@ -181,9 +181,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
 
         update();
 
-        settingSegments.selectStoredOrDefault();
-
-        update();
+        settingSegments.selectStoredOrDefault().then(() => update());
     }
 
     destroy() {

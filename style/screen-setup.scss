@@ -215,6 +215,22 @@ $setting-row-option-height: max(
     margin: 0;
     padding: calc(0.2 * $setting-row-option-scale);
   }
+  .setting-row-option.current.changed {
+    animation: 300ms linear setting-row-option-change-anim;
+  }
+  @keyframes setting-row-option-change-anim {
+    0% {
+    }
+    10% {
+      background: var(--settings-option-panel-bg-active-color);
+    }
+    50% {
+      background: var(--settings-option-panel-bg-active-color);
+    }
+    100% {
+    }
+  }
+  // background: var(--settings-option-panel-bg-active-color);
   .setting-row-option .wrap-grid,
   .setting-row-option > svg {
     grid-area: example;

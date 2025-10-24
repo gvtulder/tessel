@@ -201,5 +201,6 @@ export class SettingRow<T extends SettingRowOption> {
         this.currentOption.tappable.onStartPress = () => {
             this.toggleOpen();
         };
+        this.currentOption.element.classList.add("changed");
     }
 }

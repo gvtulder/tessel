@@ -3,8 +3,8 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { createElement } from "../shared/html";
-import { TapHandler } from "../shared/TapHandler";
+import { createElement } from "./html";
+import { TapHandler } from "./TapHandler";
 
 enum ThreeWayOption {
     OptionA = "A",
@@ -21,7 +21,7 @@ export class ThreeWayToggle {
     valueB: string;
     private _value!: ThreeWayValue;
 
-    private onchange: () => void;
+    private onchange: (source: ThreeWayToggle) => void;
     private tapHandler: TapHandler;
     private tapHandlerA: TapHandler;
     private tapHandlerB: TapHandler;
@@ -33,8 +33,8 @@ export class ThreeWayToggle {
         titleB: string,
         valueA: string,
         valueB: string,
-        onchange: () => void,
-        value: ThreeWayValue | string | null,
+        onchange: (source: ThreeWayToggle) => void,
+        value: Promise<ThreeWayValue | string | null>,
     ) {
         this.valueA = valueA;
         this.valueB = valueB;
@@ -52,8 +52,8 @@ export class ThreeWayToggle {
         const iconBEl = createElement("div", "toggle-ball-icon", boxB);
         iconBEl.innerHTML = iconB;
 
-        this.value = value;
         this.onchange = onchange;
+        value.then((v) => (this.value = v));
 
         this.tapHandler = new TapHandler(toggle);
         this.tapHandler.onTap = () => {};
@@ -96,7 +96,7 @@ export class ThreeWayToggle {
         this.element.classList.toggle("b", state == ThreeWayOption.OptionB);
         if (this._value != v) {
             this._value = state;
-            if (this.onchange) this.onchange();
+            if (this.onchange) this.onchange(this);
         }
     }
 }

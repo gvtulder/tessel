@@ -16,9 +16,9 @@ import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
 import { Button } from "../shared/Button";
 import { DropoutMenu } from "./DropoutMenu";
-import { Toggle } from "./Toggle";
-import { ThreeWayToggle } from "./ThreeWayToggle";
-import { setColorScheme } from "../shared/colorScheme";
+import { Toggle } from "../shared/Toggle";
+import { ThreeWayToggle } from "../shared/ThreeWayToggle";
+import { Toggles } from "../shared/toggles";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;
@@ -118,6 +118,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         const menu = (this.menu = new DropoutMenu());
         element.appendChild(menu.element);
 
+        // buttons
         this.backtomenubutton = new Button(
             icons.houseIcon,
             "Back to menu",
@@ -142,83 +143,31 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         menu.addButton(this.restartgamebutton);
 
-        this.placeholders = new Toggle(
-            icons.boxIcon,
-            "Show placeholders",
-            () => {
-                this.element.classList.toggle(
-                    "hide-placeholders",
-                    !this.placeholders.checked,
-                );
-                getStorageBackend().setItem(
-                    "placeholders",
-                    this.placeholders.checked ? "yes" : "no",
-                );
-            },
-            false,
+        // toggles
+        this.placeholders = Toggles.Placeholders(() =>
+            this.element.classList.toggle(
+                "hide-placeholders",
+                !this.placeholders.checked,
+            ),
         );
         menu.addToggle(this.placeholders);
 
-        this.autorotate = new Toggle(
-            icons.arrowsSpinIcon,
-            "Autorotate",
-            () => {
-                tileDragController.autorotate = this.autorotate.checked;
-                getStorageBackend().setItem(
-                    "autorotate",
-                    this.autorotate.checked ? "yes" : "no",
-                );
-            },
-            false,
+        this.autorotate = Toggles.Autorotate(
+            () => (tileDragController.autorotate = this.autorotate.checked),
         );
         menu.addToggle(this.autorotate);
 
-        this.hints = new Toggle(
-            icons.squareCheckIcon,
-            "Show hints",
-            () => {
-                tileDragController.hints = this.hints.checked;
-                getStorageBackend().setItem(
-                    "hints",
-                    this.hints.checked ? "yes" : "no",
-                );
-            },
-            false,
+        this.hints = Toggles.Hints(
+            () => (tileDragController.hints = this.hints.checked),
         );
         menu.addToggle(this.hints);
 
-        this.snap = new Toggle(
-            icons.magnetIcon,
-            "Snap",
-            () => {
-                tileDragController.snap = this.snap.checked;
-                getStorageBackend().setItem(
-                    "snap",
-                    this.snap.checked ? "yes" : "no",
-                );
-            },
-            false,
+        this.snap = Toggles.Snap(
+            () => (tileDragController.snap = this.snap.checked),
         );
         menu.addToggle(this.snap);
 
-        this.colorMode = new ThreeWayToggle(
-            icons.sunIcon,
-            icons.moonIcon,
-            "Light mode",
-            "Dark mode",
-            "light",
-            "dark",
-            () => {
-                const value = this.colorMode.value;
-                if (value) {
-                    getStorageBackend().setItem("color-scheme", value);
-                } else {
-                    getStorageBackend().removeItem("color-scheme");
-                }
-                setColorScheme();
-            },
-            null,
-        );
+        this.colorMode = Toggles.ColorScheme();
         menu.addToggle(this.colorMode);
 
         // register event handlers
@@ -235,33 +184,9 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         // set default settings
         getStorageBackend()
-            .getItem("autorotate")
-            .then((result) => {
-                this.autorotate.checked = result != "no";
-            });
-        getStorageBackend()
             .getItem("placeholders")
             .then((result) => {
                 this.placeholders.checked = result != "no";
-                this.element.classList.toggle(
-                    "hide-placeholders",
-                    !this.placeholders.checked,
-                );
-            });
-        getStorageBackend()
-            .getItem("hints")
-            .then((result) => {
-                this.hints.checked = result != "no";
-            });
-        getStorageBackend()
-            .getItem("snap")
-            .then((result) => {
-                this.snap.checked = result != "no";
-            });
-        getStorageBackend()
-            .getItem("color-scheme")
-            .then((result) => {
-                this.colorMode.value = result;
             });
 
         // initial scaling
@@ -291,7 +216,9 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         this.restartgamebutton.destroy();
         this.autorotate.destroy();
         this.hints.destroy();
+        this.placeholders.destroy();
         this.snap.destroy();
+        this.colorMode.destroy();
 
         this.tileDragController.destroy();
         this.tileStackDisplay.destroy();

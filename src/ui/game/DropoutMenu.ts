@@ -6,8 +6,8 @@
 import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
 import icons from "../shared/icons";
-import { ThreeWayToggle } from "./ThreeWayToggle";
-import { Toggle } from "./Toggle";
+import { ThreeWayToggle } from "../shared/ThreeWayToggle";
+import { Toggle } from "../shared/Toggle";
 
 export class DropoutMenu {
     element: HTMLDivElement;

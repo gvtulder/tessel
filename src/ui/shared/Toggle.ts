@@ -3,8 +3,8 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { createElement } from "../shared/html";
-import { TapHandler } from "../shared/TapHandler";
+import { createElement } from "./html";
+import { TapHandler } from "./TapHandler";
 
 export class Toggle {
     static events = {
@@ -13,14 +13,14 @@ export class Toggle {
     element: HTMLElement;
     private _checked!: boolean;
 
-    private onchange: () => void;
+    private onchange: (source: Toggle) => void;
     private tapHandler: TapHandler;
 
     constructor(
         icon: string,
         title: string,
-        onchange: () => void,
-        checked?: boolean,
+        onchange: (source: Toggle) => void,
+        checked?: Promise<boolean>,
     ) {
         const toggle = createElement("div", "game-toggle");
         this.element = toggle;
@@ -31,8 +31,10 @@ export class Toggle {
         const iconEl = createElement("div", "icon", toggle);
         iconEl.innerHTML = icon;
 
-        this.checked = checked ? true : false;
         this.onchange = onchange;
+        if (checked) {
+            checked.then((value: boolean) => (this.checked = value));
+        }
 
         this.tapHandler = new TapHandler(toggle);
         this.tapHandler.onTap = () => {
@@ -53,7 +55,7 @@ export class Toggle {
         this.element.classList.toggle("enabled", state);
         if (this._checked != state) {
             this._checked = state;
-            if (this.onchange) this.onchange();
+            if (this.onchange) this.onchange(this);
         }
     }
 

@@ -207,6 +207,8 @@ jobs:
 
       - name: Download artifacts
         uses: actions/download-artifact@v5
+        with:
+          merge-multiple: true
 
       - name: Copy Changelog from metadata
         run: |

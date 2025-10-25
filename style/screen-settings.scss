@@ -1,0 +1,118 @@
+@use "sass:color";
+@use "./sizes.scss";
+
+.screen.settings-display {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr min(25rem, 80vw) 1fr;
+  grid-template-rows:
+    calc(sizes.$button-top + sizes.$button-scale + 1.2rem)
+    1fr 4em;
+  grid-template-areas: ". header ." ". article ." ". . .";
+  overflow-y: auto;
+
+  .game-button {
+    position: absolute;
+    top: sizes.$button-top;
+    right: sizes.$button-right;
+  }
+
+  header {
+    grid-area: header;
+    padding: 0;
+    font-weight: normal;
+    font-size: 2rem;
+    align-self: flex-end;
+  }
+
+  article {
+    grid-area: article;
+    line-height: 1.5;
+  }
+
+  h2 {
+    margin: 0.6rem 0;
+    padding: 0;
+    font-weight: normal;
+    font-size: 2rem;
+    align-self: flex-end;
+  }
+
+  h3 {
+    margin: 1.2rem 0 0.6rem 0;
+    padding: 0;
+    font-weight: normal;
+    font-size: 1.5rem;
+    align-self: flex-end;
+  }
+
+  a {
+    color: var(--link-color);
+    border-bottom: 1px solid;
+    text-decoration: none;
+  }
+
+  a:active,
+  a:hover {
+    color: var(--link-hover-color);
+  }
+
+  a.internal {
+    color: var(--text-color);
+    border-bottom: none;
+  }
+
+  a.internal .icon {
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    vertical-align: middle;
+    background: var(--button-bg-color);
+    fill: var(--button-fg-color);
+    box-shadow: var(--button-box-shadow);
+    border-radius: 50%;
+    padding: 0.4em;
+    margin: 0 0.3em;
+  }
+
+  p {
+    margin: 0.6em 0;
+  }
+
+  ul {
+    margin: 0.6em 0;
+    padding: 0 0 0 1.5em;
+    text-indent: 0;
+  }
+
+  li {
+    margin: 0;
+    padding: 0;
+    text-indent: 0;
+  }
+
+  ul.options {
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 0.6em 0;
+    }
+
+    .game-toggle {
+      width: calc(1.8 * sizes.$button-scale);
+      margin-right: 0.5em;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+  }
+
+  p.version-line {
+    margin-top: 2.4rem;
+    color: var(--footer-version-color);
+  }
+}

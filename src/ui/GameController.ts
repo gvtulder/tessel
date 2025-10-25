@@ -19,6 +19,7 @@ import { PaintDisplay } from "./paint/PaintDisplay";
 import { Grid } from "../grid/Grid";
 import { Atlas } from "../grid/Atlas";
 import { PaintMenu } from "./paint/PaintMenu";
+import { SettingsDisplay } from "./settings/SettingsDisplay";
 
 export const enum UserEventType {
     StartGame = "startgame",
@@ -27,6 +28,7 @@ export const enum UserEventType {
     SetupMenu = "setupmenu",
     StartGameFromSetup = "startgamefromsetup",
     Paint = "paint",
+    Settings = "settings",
 }
 
 export class UserEvent extends Event {
@@ -96,6 +98,8 @@ export class GameController {
             this.startGame(gameSettings);
         } else if (saveGameId == "setup") {
             this.showGameSetupDisplay();
+        } else if (saveGameId == "settings") {
+            this.showSettingsDisplay();
         } else if (saveGameId == "paint") {
             this.showPaintMenuDisplay();
         } else if (saveGameId.match("^paint-")) {
@@ -162,6 +166,12 @@ export class GameController {
             this.showGameSetupDisplay();
         };
 
+        const handleSettings = () => {
+            destroy();
+            window.history.pushState({}, "", `#settings`);
+            this.showSettingsDisplay();
+        };
+
         const handlePaintMenu = () => {
             destroy();
             window.history.pushState({}, "", `#paint`);
@@ -181,6 +191,10 @@ export class GameController {
                 handleSetup,
             );
             menuDisplay.removeEventListener(
+                UserEventType.Settings,
+                handleSettings,
+            );
+            menuDisplay.removeEventListener(
                 UserEventType.Paint,
                 handlePaintMenu,
             );
@@ -189,7 +203,33 @@ export class GameController {
 
         menuDisplay.addEventListener(UserEventType.StartGame, handleStart);
         menuDisplay.addEventListener(UserEventType.SetupMenu, handleSetup);
+        menuDisplay.addEventListener(UserEventType.Settings, handleSettings);
         menuDisplay.addEventListener(UserEventType.Paint, handlePaintMenu);
+    }
+
+    showSettingsDisplay() {
+        this.resetState();
+
+        const settings = new SettingsDisplay(this.version);
+        this.currentScreen = settings;
+        this.container.appendChild(settings.element);
+        settings.rescale();
+
+        const handleMenu = () => {
+            destroy();
+            window.history.pushState({}, "", window.location.pathname);
+            this.showMainMenu();
+        };
+
+        const destroy = () => {
+            settings.element.remove();
+            this.currentScreen = undefined;
+            this.currentScreenDestroy = undefined;
+            settings.removeEventListener(UserEventType.BackToMenu, handleMenu);
+        };
+        this.currentScreenDestroy = destroy;
+
+        settings.addEventListener(UserEventType.BackToMenu, handleMenu);
     }
 
     showGameSetupDisplay() {

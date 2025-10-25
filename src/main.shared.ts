@@ -49,8 +49,17 @@ export function removeSplash() {
  */
 function preventIosZoomAndSelection(e: Event) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (e.target && (e.target as any).nodeName == "A") {
+    const target = e.target as HTMLElement;
+    if (target && target.nodeName == "A") {
         return;
     }
+    if (
+        target &&
+        target.closest &&
+        target.closest(".screen.settings-display")
+    ) {
+        return;
+    }
+    console.log("Prevent default.");
     e.preventDefault();
 }

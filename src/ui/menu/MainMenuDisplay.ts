@@ -18,6 +18,7 @@ import SVG_LOGO from "bundle-text:../svgs/logo.svg";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
+    settingsButton: Button;
     setupButton: Button;
     paintButton: Button;
     grids: Grid[];
@@ -33,14 +34,23 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         const footer = createElement("div", "footer", div);
 
         const footerLine = createElement("p", "copyright", footer);
-        footerLine.innerHTML =
-            `A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>. <br/>` +
-            `View <a href="https://tessel.vantulder.net/source/">source code</a> and <a href="https://tessel.vantulder.net/about/">documentation</a>.`;
+        footerLine.innerHTML = `A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>.`;
 
         if (version) {
             const versionDiv = createElement("p", "version", footer);
             versionDiv.innerHTML = version;
         }
+
+        const settingsButton = new Button(
+            icons.gearsIcon,
+            "Settings",
+            () => {
+                this.dispatchEvent(new UserEvent(UserEventType.Settings));
+            },
+            "button-settings-menu",
+        );
+        this.settingsButton = settingsButton;
+        this.element.appendChild(settingsButton.element);
 
         const setupButton = new Button(
             icons.swatchbookIcon,

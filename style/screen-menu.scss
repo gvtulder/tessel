@@ -46,16 +46,22 @@ $logo-height: min(15vw, 10vh);
     }
   }
 
-  .button-setup-menu {
+  .button-settings-menu {
     position: absolute;
     top: sizes.$button-top;
     right: sizes.$button-right;
   }
 
-  .button-paint-menu {
+  .button-setup-menu {
     position: absolute;
     top: sizes.$button-top;
     right: calc(1.25 * sizes.$button-scale + sizes.$button-right);
+  }
+
+  .button-paint-menu {
+    position: absolute;
+    top: sizes.$button-top;
+    right: calc(2.5 * sizes.$button-scale + sizes.$button-right);
   }
 
   .game-list {

@@ -15,7 +15,7 @@ _A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>_
 
 Place tiles with matching colors to make shapes and fill the board.
 
-<img src="assets/screenshots/wide-main-menu.png" width="200"/> <img src="assets/screenshots/wide-square.png" width="200"/> <img src="assets/screenshots/wide-paint-triangle.png" width="200"/> <img src="assets/screenshots/wide-setup.png" width="200"/>
+<img src="assets/screenshots/wide-01-main-menu.png" width="200"/> <img src="assets/screenshots/wide-03-square.png" width="200"/> <img src="assets/screenshots/wide-05-paint-triangle.png" width="200"/> <img src="assets/screenshots/wide-04-setup.png" width="200"/>
 
 ## Tilings
 
@@ -56,7 +56,7 @@ Click the hamburger menu to change the settings of the current game:
 
 Customize shapes and colors in the design menu:
 
-<img src="assets/screenshots/wide-setup.png" width="300"/>
+<img src="assets/screenshots/wide-04-setup.png" width="300"/>
 
 ### Tiling
 

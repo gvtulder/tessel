@@ -33,49 +33,61 @@
   ],
   "screenshots": [
     {
-      "src": "../assets/screenshots/portrait-main-menu.png",
-      "sizes": "750x1334",
+      "src": "../assets/screenshots/portrait-01-main-menu.png",
+      "sizes": "960x1600",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "../assets/screenshots/portrait-square.png",
-      "sizes": "750x1334",
+      "src": "../assets/screenshots/portrait-02-play-triangle.png",
+      "sizes": "960x1600",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "../assets/screenshots/portrait-setup.png",
-      "sizes": "750x1334",
+      "src": "../assets/screenshots/portrait-03-square.png",
+      "sizes": "960x1600",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "../assets/screenshots/portrait-paint-triangle.png",
-      "sizes": "750x1334",
+      "src": "../assets/screenshots/portrait-04-setup.png",
+      "sizes": "960x1600",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "../assets/screenshots/wide-main-menu.png",
+      "src": "../assets/screenshots/portrait-05-paint-triangle.png",
+      "sizes": "960x1600",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "../assets/screenshots/wide-01-main-menu.png",
       "sizes": "2048x1536",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "../assets/screenshots/wide-square.png",
+      "src": "../assets/screenshots/wide-02-play-triangle.png",
       "sizes": "2048x1536",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "../assets/screenshots/wide-setup.png",
+      "src": "../assets/screenshots/wide-03-square.png",
       "sizes": "2048x1536",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "../assets/screenshots/wide-paint-triangle.png",
+      "src": "../assets/screenshots/wide-04-setup.png",
+      "sizes": "2048x1536",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "../assets/screenshots/wide-05-paint-triangle.png",
       "sizes": "2048x1536",
       "type": "image/png",
       "form_factor": "wide"

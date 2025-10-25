@@ -32,16 +32,8 @@ rsvg-convert assets/src/play-now-badge.svg \
 $OPTIPNG assets/social/play-now-badge.png
 
 # copy to metadata screenshots
-cp assets/screenshots/portrait-main-menu.png \
-   metadata/en-US/images/phoneScreenshots/1.png
-cp assets/screenshots/portrait-play-triangle.png \
-   metadata/en-US/images/phoneScreenshots/2.png
-cp assets/screenshots/portrait-square.png \
-   metadata/en-US/images/phoneScreenshots/3.png
-cp assets/screenshots/portrait-setup.png \
-   metadata/en-US/images/phoneScreenshots/4.png
-cp assets/screenshots/portrait-paint-triangle.png \
-   metadata/en-US/images/phoneScreenshots/5.png
+cp assets/screenshots/portrait-0*.png \
+   metadata/en-US/images/phoneScreenshots/
 $OPTIPNG metadata/en-US/images/phoneScreenshots/*.png
 
 # build feature graphic
@@ -63,6 +55,12 @@ for size in 48 180 192 512 1024 ; do
 done
 cp assets/icons/icon-512.png assets/icons/apple-touch-icon.png
 convert assets/icons/icon-48.png assets/icons/favicon.ico
+
+# fastlane for Android
+cp metadata/en-US/images/featureGraphic-with-text.png \
+   fastlane/android/en-US/images/featureGraphic.png
+cp assets/icons/icon-512.png \
+   fastlane/android/en-US/images/icon.png
 
 # build logo
 cp assets/src/logo-tile-only.svg assets/logo/logo-tile-only.svg

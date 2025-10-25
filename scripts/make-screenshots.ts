@@ -4,30 +4,72 @@
  */
 
 import childProcess from "child_process";
-import fs from "fs";
-import { execArgv } from "process";
 import puppeteer from "puppeteer";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+type ViewportDef = { width: number; height: number; deviceScaleFactor: number };
+
 const sizes = [
     {
         name: "wide",
+        prefix: "wide-",
         viewport: { width: 1024, height: 768, deviceScaleFactor: 2 },
     },
     {
         name: "portrait",
-        viewport: { width: 375, height: 667, deviceScaleFactor: 2 },
+        prefix: "portrait-",
+        viewport: { width: 480, height: 800, deviceScaleFactor: 2 },
     },
-];
+] as {
+    name: string;
+    prefix?: string;
+    viewport: ViewportDef;
+    dirname?: string;
+}[];
+
+for (const [name, width, height] of [
+    ["IPHONE_67", 1290, 2796],
+    ["IPHONE_65", 1284, 2778],
+    // ["IPHONE_63", 1206, 2622],
+    ["IPHONE_58", 1170, 2532],
+    ["IPHONE_55", 1242, 2208],
+    ["IPHONE_47", 750, 1334],
+    ["IPHONE_40", 640, 1136],
+    ["IPAD", 2048, 1536],
+    ["IPAD_10_5", 2224, 1668],
+    ["IPAD_11", 2388, 1668],
+    ["IPAD_PRO", 2732, 2048],
+    ["IPAD_PRO_3GEN_129", 2732, 2048],
+] as [string, number, number][]) {
+    sizes.push({
+        name: name,
+        prefix: `${name}-`,
+        viewport: { width: width, height: height, deviceScaleFactor: 1 },
+        dirname: `${__dirname}/../fastlane/ios/screenshots/en-US/`,
+    });
+}
+
+for (const [name, width, height] of [
+    ["phoneScreenshots", 1080, 1920],
+    ["sevenInchScreenshots", 1920, 1080],
+    ["tenInchScreenshots", 1920, 1080],
+] as [string, number, number][]) {
+    sizes.push({
+        name: name,
+        viewport: { width: width, height: height, deviceScaleFactor: 1 },
+        dirname: `${__dirname}/../fastlane/android/en-US/images/${name}/`,
+    });
+}
 
 type ScreenshotTask = {
     filename: string;
     dirname?: string;
-    viewport?: { width: number; height: number; deviceScaleFactor: number };
+    viewport?: ViewportDef;
     path?: string;
     js?: string;
     css?: string;
@@ -37,15 +79,15 @@ type ScreenshotTask = {
 
 const screenshots: ScreenshotTask[] = [
     {
-        filename: "main-menu",
+        filename: "01-main-menu",
         path: "",
     },
     {
-        filename: "square",
+        filename: "03-square",
         path: "#square",
     },
     {
-        filename: "setup",
+        filename: "04-setup",
         path: "#setup",
         js: `
             localStorage.setItem("setup-atlas", "penrose");
@@ -53,11 +95,11 @@ const screenshots: ScreenshotTask[] = [
           `,
     },
     {
-        filename: "paint-triangle",
+        filename: "05-paint-triangle",
         path: "#paint-triangle",
     },
     {
-        filename: "play-triangle",
+        filename: "02-play-triangle",
         demoGame: {
             atlas: "triangle",
             colors: "wong4",
@@ -72,121 +114,6 @@ const screenshots: ScreenshotTask[] = [
                 points: 22,
             },
         },
-    },
-    {
-        viewport: { width: 1024, height: 768, deviceScaleFactor: 2 },
-        dirname: `${__dirname}/../docs/images/`,
-        filename: "settings",
-        path: "#square",
-        css: `
-          body, .screen {
-            background: transparent !important;
-            box-shadow: none !important;
-          }
-          .screen.game-display .main-grid,
-          .screen.game-display .fill,
-          .screen.game-display .tile-stack,
-          .screen.game-display .tile-counter-and-score {
-              display: none;
-          }
-          .screen.game-display .dropout-menu {
-              border-radius: 0;
-              background: transparent !important;
-          }
-        `,
-        js: `
-          document.getElementsByClassName("dropout-menu")[0].classList.add("expanded");
-        `,
-        elements: [
-            ["full-menu", ".dropout-menu"],
-            ["backtomenu", ".dropout-menu .backtomenu"],
-            ["setup", ".dropout-menu .setup"],
-            ["restart", ".dropout-menu .restart"],
-            [
-                "toggle",
-                ".dropout-menu .game-toggle .icon",
-                ["placeholder", "autorotate", "check", "snap"],
-            ],
-        ],
-    },
-    {
-        viewport: { width: 1024, height: 768, deviceScaleFactor: 2 },
-        dirname: `${__dirname}/../docs/images/`,
-        filename: "setup-option",
-        path: "#setup",
-        css: `
-          body, .screen {
-            background: transparent !important;
-          }
-          .screen.game-setup {
-            background: transparent !important;
-          }
-          .setting-row-option {
-            border: none !important;
-            background: transparent !important;
-            box-shadow: none !important;
-          }
-        `,
-        js: `
-          for (const el of document.getElementsByClassName("setting-row-option")) {
-            el.classList.remove("selected");
-          }
-        `,
-        elements: [
-            ["square", `.setting-row-option[title*="Square"]`],
-            ["triangle", `.setting-row-option[title^="Triangle"]`],
-            ["rhombus", `.setting-row-option[title^="Rhombus"]`],
-            ["pentagon", `.setting-row-option[title^="Cairo pentagon"]`],
-            ["hexagon", `.setting-row-option[title^="Hexagon"]`],
-            ["deltotrihex", `.setting-row-option[title^="Deltoidal"]`],
-            ["penrose", `.setting-row-option[title^="Penrose"]`],
-            ["snubsquare", `.setting-row-option[title^="Snub-square"]`],
-            ["ammannbeenker", `.setting-row-option[title^="Ammann-Beenker"]`],
-            ["six-colors", `.setting-row-option[title="Six colors"]`],
-            ["five-colors", `.setting-row-option[title="Five colors"]`],
-            ["four-colors", `.setting-row-option[title="Four colors"]`],
-            ["three-colors", `.setting-row-option[title="Three colors"]`],
-            ["two-colors", `.setting-row-option[title="Two colors"]`],
-            [
-                "tile-color-all",
-                `.setting-row-option[title^="All color combinations"]`,
-            ],
-            [
-                "tile-color-unique",
-                `.setting-row-option[title^="All colors must be unique"]`,
-            ],
-            [
-                "tile-color-two",
-                `.setting-row-option[title^="Two colors per tile"]`,
-            ],
-            [
-                "tile-color-single",
-                `.setting-row-option[title^="Single color per tile"]`,
-            ],
-            ["rule-same-color", `.setting-row-option[title$="same color"]`],
-            [
-                "rule-different-color",
-                `.setting-row-option[title$="different colors"]`,
-            ],
-            [
-                "score-connected",
-                `.setting-row-option[title$="connected segments"]`,
-            ],
-            [
-                "score-connected",
-                `.setting-row-option[title$="connected segments"]`,
-            ],
-            ["score-single-tile", `.setting-row-option[title$="single tiles"]`],
-            [
-                "score-convex-shape",
-                `.setting-row-option[title$="convex shapes"]`,
-            ],
-            [
-                "score-full-vertex",
-                `.setting-row-option[title$="full vertices"]`,
-            ],
-            ["score-holes", `.setting-row-option[title$="holes"]`],
-        ],
     },
 ];
 
@@ -260,11 +187,18 @@ async function captureScreenshot() {
 
                 let out =
                     screenshot.dirname ||
+                    size.dirname ||
                     `${__dirname}/../assets/src/screenshots/`;
                 if (!screenshot.viewport) {
-                    out += `${size.name}-`;
+                    out += size.prefix || "";
                 }
                 out += screenshot.filename;
+
+                if (fs.existsSync(`${out}.png`)) {
+                    continue;
+                }
+
+                fs.mkdirSync(path.dirname(out), { recursive: true });
 
                 console.log(`${size.name} ${screenshot.filename}`);
 
@@ -275,13 +209,14 @@ async function captureScreenshot() {
                 // Set viewport width and height
                 await page.setViewport(screenshot.viewport || size.viewport);
 
-                let path = screenshot.path;
+                let screenshotPath = screenshot.path;
                 if (screenshot.demoGame) {
-                    path = "#" + btoa(JSON.stringify(screenshot.demoGame));
+                    screenshotPath =
+                        "#" + btoa(JSON.stringify(screenshot.demoGame));
                 }
 
                 // Navigate to the target URL
-                await page.goto(targetUrl + path);
+                await page.goto(targetUrl + screenshotPath);
                 await new Promise((resolve) => setTimeout(resolve, 500));
 
                 if (screenshot.js) {
@@ -317,6 +252,7 @@ async function captureScreenshot() {
         }
 
         await browser.close();
+
         console.log("Screenshots captured successfully.");
     } catch (err: any) {
         console.log("Error: ", err.message);

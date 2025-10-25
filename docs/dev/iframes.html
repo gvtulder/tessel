@@ -74,6 +74,13 @@
         }
       }
       document.body.appendChild(iframes);
+      window.addEventListener("hashchange", () => {
+        const url =
+          document.location.hash.replace(/^#/, "") || "http://127.0.0.1:1234/";
+        for (const iframe of document.getElementsByTagName("iframe")) {
+          iframe.setAttribute("src", url);
+        }
+      });
     </script>
   </body>
 </html>

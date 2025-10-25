@@ -326,3 +326,12 @@ $setting-row-option-height: max(
     height: min(15vw, max(10vw, 10vh));
   }
 }
+
+@media screen and (max-width: 400px) and (min-aspect-ratio: 3 / 7) and (max-aspect-ratio: 8 / 10) {
+  .screen.game-setup h2 {
+    display: none;
+  }
+  .screen.game-setup .settings {
+    min-height: max(30vh, calc(7 * $setting-row-option-height));
+  }
+}

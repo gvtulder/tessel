@@ -51,7 +51,6 @@ export function removeSplash() {
  * Prevents any default touch events, except if the target is an A element.
  */
 function preventIosZoomAndSelection(e: Event) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const target = e.target as HTMLElement;
     if (target && target.nodeName == "A") {
         return;

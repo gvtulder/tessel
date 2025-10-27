@@ -9,7 +9,7 @@ import { messages as messages_en } from "../i18n/en";
 import { messages as messages_nl } from "../i18n/nl";
 import { getStorageBackend } from "./lib/storage-backend";
 
-const languages = {
+export const languages = {
     en: {
         title: "English",
         messages: messages_en,

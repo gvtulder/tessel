@@ -7,8 +7,8 @@
     "url": "https://www.vantulder.net/"
   },
   "scripts": {
-    "build": "NODE_ENV=production parcel build src/index.html --no-source-maps",
-    "build-cap-html": "NODE_ENV=production SKIP_SERVICE_WORKER=true parcel build src/index.capacitor.html --dist-dir dist-capacitor --no-source-maps && rm -r dist-capacitor/social/",
+    "build": "lingui compile --typescript && NODE_ENV=production parcel build src/index.html --no-source-maps",
+    "build-cap-html": "lingui compile --typescript && NODE_ENV=production SKIP_SERVICE_WORKER=true parcel build src/index.capacitor.html --dist-dir dist-capacitor --no-source-maps && rm -r dist-capacitor/social/",
     "serve": "NODE_ENV=development parcel serve src/index.html --no-cache",
     "test": "jest",
     "check": "tsc --noEmit",

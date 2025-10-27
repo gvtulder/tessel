@@ -221,15 +221,26 @@ export class GameController {
             this.showMainMenu();
         };
 
+        const handleSettings = () => {
+            destroy();
+            window.history.pushState({}, "", `#settings`);
+            this.showSettingsDisplay();
+        };
+
         const destroy = () => {
             settings.element.remove();
             this.currentScreen = undefined;
             this.currentScreenDestroy = undefined;
             settings.removeEventListener(UserEventType.BackToMenu, handleMenu);
+            settings.removeEventListener(
+                UserEventType.Settings,
+                handleSettings,
+            );
         };
         this.currentScreenDestroy = destroy;
 
         settings.addEventListener(UserEventType.BackToMenu, handleMenu);
+        settings.addEventListener(UserEventType.Settings, handleSettings);
     }
 
     showGameSetupDisplay() {

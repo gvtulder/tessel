@@ -78,3 +78,17 @@ $button-left: max(calc($button-margin-width + $stack-margin-left), $inset-left);
   bottom: 0;
   height: $inset-bottom;
 }
+
+/* settings in the setup menu */
+$setting-row-option-scale: max(
+  min(
+    calc(min(48vw - $button-right) / 10),
+    calc(min(80vh - $inset-top - $inset-bottom) / 11)
+  ),
+  2rem
+);
+
+$setting-row-option-height: max(
+  $setting-row-option-scale,
+  calc(3.5 * $font-size)
+);

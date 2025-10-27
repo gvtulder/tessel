@@ -187,7 +187,7 @@ msgstr "Show menu"
 #: src/ui/game/GameDisplay.ts:125
 #: src/ui/paint/PaintDisplay.ts:66
 #: src/ui/paint/PaintMenu.ts:55
-#: src/ui/settings/SettingsDisplay.ts:35
+#: src/ui/settings/SettingsDisplay.ts:38
 #: src/ui/setup/GameSetupDisplay.ts:145
 msgid "ui.menu.backToMenuButton"
 msgstr "Back to menu"
@@ -225,7 +225,7 @@ msgid "ui.settings.ColorsOption.title"
 msgstr "{0, plural, =1 {One color} =2 {Two colors} =3 {Three colors} =4 {Four colors} =5 {Five colors} =6 {Six colors} other {# colors}}"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:44
+#: src/ui/settings/SettingsDisplay.ts:47
 msgid "ui.settings.title"
 msgstr "Tessel"
 

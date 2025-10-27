@@ -24,15 +24,17 @@ export class SettingRow<T extends SettingRowOption> {
     constructor(
         className: string,
         localStorageKey: string,
-        title: MessageDescriptor,
+        title?: MessageDescriptor,
     ) {
         this.element = createElement("div", `setting-row ${className}`);
         this.localStorageKey = localStorageKey;
         this.options = [];
 
-        // title
-        const header = createElement("h3", null, this.element);
-        header.innerHTML = t(title);
+        if (title) {
+            // title
+            const header = createElement("h3", null, this.element);
+            header.innerHTML = t(title);
+        }
 
         // options dropdown
         this.optionWrapElement = createElement(

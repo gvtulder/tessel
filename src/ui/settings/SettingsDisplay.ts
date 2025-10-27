@@ -12,13 +12,16 @@ import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggle } from "../shared/Toggle";
 import { Toggles } from "../shared/toggles";
 import { msg, t } from "@lingui/core/macro";
-import { getLocalizedSettingsHTML } from "src/i18n";
+import { getLocalizedSettingsHTML, updateI18n } from "src/i18n";
+import { LanguagePicker } from "./LanguagePicker";
+import { i18n } from "@lingui/core";
 
 export class SettingsDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
 
     backtomenubutton: Button;
-    toggles: { [key: string]: Toggle | ThreeWayToggle };
+    languagePicker: LanguagePicker;
+    toggles: { [key: string]: Toggle | ThreeWayToggle | LanguagePicker };
 
     constructor(version?: string) {
         super();
@@ -47,16 +50,18 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
         const article = createElement("article", null, element);
         article.innerHTML = getLocalizedSettingsHTML();
 
-        // toggles
+        // toggles and language picker
+        this.languagePicker = new LanguagePicker();
         this.toggles = {
             placeholders: Toggles.Placeholders(),
             autorotate: Toggles.Autorotate(),
             hints: Toggles.Hints(),
             snap: Toggles.Snap(),
             "color-scheme": Toggles.ColorScheme(),
+            language: this.languagePicker,
         };
 
-        // insert toggles in text
+        // insert toggles and language picker in text
         for (const li of article.getElementsByTagName("li")) {
             const setting = li.getAttribute("data-setting");
             if (setting && this.toggles[setting]) {
@@ -89,6 +94,13 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
 
         // initial scaling
         this.rescale();
+
+        this.languagePicker.onchange = () => {
+            updateI18n(this.languagePicker.selected!.key);
+            // reload
+            this.dispatchEvent(new Event(UserEventType.Settings));
+        };
+        this.languagePicker.selectStoredOrDefault(i18n.locale);
     }
 
     destroy() {

@@ -29,7 +29,7 @@ export async function startMainMenu(workbox?: Workbox) {
         return;
     }
 
-    prepareI18n("en");
+    await prepareI18n();
 
     const controller = new GameController(document.body, VERSION, workbox);
     controller.run();

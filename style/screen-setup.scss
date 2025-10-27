@@ -1,18 +1,5 @@
 @use "./sizes.scss";
 
-$setting-row-option-scale: max(
-  min(
-    calc(min(48vw - sizes.$button-right) / 10),
-    calc(min(80vh - sizes.$inset-top - sizes.$inset-bottom) / 11)
-  ),
-  2rem
-);
-
-$setting-row-option-height: max(
-  $setting-row-option-scale,
-  calc(3.5 * sizes.$font-size)
-);
-
 .screen.game-setup {
   position: absolute;
   top: 0;
@@ -32,7 +19,7 @@ $setting-row-option-height: max(
 
 .screen.game-setup h2 {
   grid-area: heading;
-  margin: 0.6rem calc(min(3vw, 2vh) + 0.1 * $setting-row-option-scale);
+  margin: 0.6rem calc(min(3vw, 2vh) + 0.1 * sizes.$setting-row-option-scale);
   padding: 0;
   font-weight: normal;
   font-size: 2rem;
@@ -143,57 +130,12 @@ $setting-row-option-height: max(
   .setting-row h3 {
     font-size: 1.2rem;
     font-weight: normal;
-    margin: 0 0 0.6rem calc(0.1 * $setting-row-option-scale);
+    margin: 0 0 0.6rem calc(0.1 * sizes.$setting-row-option-scale);
     padding: 0;
   }
-  .setting-row .option-wrap {
-    position: relative;
-    height: 100%;
-  }
 
-  /* dropdown menu */
-  .setting-row .dropdown-wrap {
-    display: none;
-    position: absolute;
-    margin-top: 0.2rem;
-    margin-bottom: 0.2rem;
-    min-width: 180%;
-    z-index: 1000;
-    top: 100%;
-  }
-  .setting-row.upward .dropdown-wrap {
-    bottom: 100%;
-    top: auto;
-  }
   .setting-row:nth-child(even) .dropdown-wrap {
     right: 0;
-  }
-  .setting-row .dropdown {
-    display: grid;
-    justify-items: stretch;
-    align-content: flex-start;
-    grid-template-columns: 1fr 1fr;
-    column-gap: calc(0.1 * $setting-row-option-scale);
-    row-gap: calc(0.1 * $setting-row-option-scale);
-    border-radius: calc(0.4 * $setting-row-option-scale);
-    background: var(--settings-option-panel-bg-color);
-    box-shadow: var(--dropdown-box-shadow);
-    padding: calc(0.1 * $setting-row-option-scale);
-    box-sizing: content-box;
-  }
-  .setting-row.open .dropdown-wrap {
-    display: block;
-  }
-  .setting-row.count2,
-  .setting-row.count3,
-  .setting-row.count4 {
-    .dropdown-wrap {
-      width: 100%;
-      min-width: 100%;
-    }
-    .dropdown {
-      grid-template-columns: 1fr;
-    }
   }
   @media screen and (min-aspect-ratio: 4 / 5) and (max-aspect-ratio: 8 / 5) {
     .setting-row:nth-child(even) {
@@ -206,30 +148,6 @@ $setting-row-option-height: max(
     }
   }
 
-  .setting-row-option {
-    display: grid;
-    grid-template-areas:
-      "example description"
-      "example description";
-    grid-template-columns: $setting-row-option-scale 1fr;
-    grid-template-rows: 1fr 1fr;
-    column-gap: calc(0.2 * $setting-row-option-scale);
-    align-items: center;
-    padding-left: calc(0.1 * $setting-row-option-scale);
-    min-height: $setting-row-option-height;
-    background: var(--settings-option-panel-bg-color);
-    border: 2px solid transparent;
-    border-radius: calc(0.4 * $setting-row-option-scale);
-    box-sizing: border-box;
-    cursor: pointer;
-    transition: transform 0.1s;
-    font-size: 0.9rem;
-    @media (hover) {
-      &:hover {
-        background: var(--settings-option-panel-bg-hover-color);
-      }
-    }
-  }
   @media screen and (max-height: 550px) and (min-aspect-ratio: 8 / 5) {
     .setting-row h3 {
       display: none;
@@ -242,48 +160,6 @@ $setting-row-option-height: max(
     .settings {
       width: 65vw;
     }
-  }
-  .setting-row-option.current {
-    box-shadow: var(--button-box-shadow);
-    margin: 0;
-    height: 100%;
-  }
-  .setting-row-option.current.changed {
-    animation: 300ms linear setting-row-option-change-anim;
-  }
-  @keyframes setting-row-option-change-anim {
-    0% {
-    }
-    10% {
-      background: var(--settings-option-panel-bg-active-color);
-    }
-    50% {
-      background: var(--settings-option-panel-bg-active-color);
-    }
-    100% {
-    }
-  }
-  // background: var(--settings-option-panel-bg-active-color);
-  .setting-row-option .wrap-grid,
-  .setting-row-option > svg {
-    grid-area: example;
-    width: calc(0.76 * $setting-row-option-scale);
-    height: calc(0.76 * $setting-row-option-scale);
-    justify-self: center;
-  }
-  .setting-row-option > svg.palette {
-    width: calc(0.66 * $setting-row-option-scale);
-    height: calc(0.66 * $setting-row-option-scale);
-  }
-  .setting-row-option p {
-    grid-area: description;
-    padding: 0.2rem calc(0.1 * $setting-row-option-scale) 0.4rem 0;
-    margin: 0;
-  }
-  .setting-row-option.selected,
-  .setting-row-option.selected:hover {
-    border: 2px solid var(--settings-option-panel-border-active-color);
-    background: var(--settings-option-panel-bg-active-color);
   }
   circle.checkmark {
     fill: var(--cutout-circle-points-fill-color);
@@ -308,11 +184,11 @@ $setting-row-option-height: max(
   }
 
   .screen.game-setup h2 {
-    margin: 1.2rem calc(min(3vw, 2vh) + 0.1 * $setting-row-option-scale);
+    margin: 1.2rem calc(min(3vw, 2vh) + 0.1 * sizes.$setting-row-option-scale);
   }
 
   .screen.game-setup .settings {
-    min-height: max(40vh, calc(8 * $setting-row-option-height));
+    min-height: max(40vh, calc(8 * sizes.$setting-row-option-height));
     padding-left: calc(
       min(3vw, 3vh) + sizes.$stack-margin-left + sizes.$inset-left
     );
@@ -332,6 +208,6 @@ $setting-row-option-height: max(
     display: none;
   }
   .screen.game-setup .settings {
-    min-height: max(30vh, calc(7 * $setting-row-option-height));
+    min-height: max(30vh, calc(7 * sizes.$setting-row-option-height));
   }
 }

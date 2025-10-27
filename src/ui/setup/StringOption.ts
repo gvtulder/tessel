@@ -6,13 +6,16 @@
 import { MessageDescriptor } from "@lingui/core";
 import { SettingRowOption } from "./SettingRowOption";
 
-class StringOption extends SettingRowOption {
+export class StringOption extends SettingRowOption {
+    _title: MessageDescriptor;
+
     constructor(key: string, title: MessageDescriptor) {
         super(key);
+        this._title = title;
         this.title = title;
     }
 
     cloneForDisplay(): ThisType<this> {
-        return new StringOption(this.key, this.title);
+        return new StringOption(this.key, this._title);
     }
 }

@@ -9,6 +9,7 @@ export default {
     ...(process.env["NODE_ENV"] != "production"
       ? []
       : ["transform-remove-console"]),
+    "@lingui/babel-plugin-lingui-macro",
     [
       "transform-define",
       {

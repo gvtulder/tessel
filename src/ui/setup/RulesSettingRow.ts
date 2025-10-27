@@ -3,13 +3,18 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { TileColors } from "../../grid/Tile";
 import { RulesOption } from "./RulesOption";
 import { SettingRow } from "./SettingRow";
 
 export class RulesSettingRow extends SettingRow<RulesOption> {
     constructor() {
-        super("rules", "setup-rules", "Matching rule");
+        super(
+            "rules",
+            "setup-rules",
+            msg({ id: "ui.setup.optionTitle.rules", message: "Matching rule" }),
+        );
     }
 
     updateColors(colors: TileColors) {

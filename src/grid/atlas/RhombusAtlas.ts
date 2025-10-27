@@ -3,10 +3,18 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const RhombusAtlas = Atlas.fromDefinition({
-    name: "Rhombus-60-120",
+    name: msg({
+        id: "atlas.RhombusAtlas.friendlyName",
+        message: "Rhombus-60-120",
+    }),
+    tilingName: msg({
+        id: "atlas.RhombusAtlas.tilingName",
+        message: "Rhombille tiling",
+    }),
     shapes: {
         L: { name: "rhombus", angles: [60, 120, 60, 120] },
     },

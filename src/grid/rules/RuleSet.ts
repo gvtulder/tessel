@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { MessageDescriptor } from "@lingui/core";
 import { Tile, TileColors, TileSegment } from "../Tile";
 
 /**
@@ -12,7 +13,7 @@ export interface RuleSet {
     /**
      * A user-friendly name for this ruleset.
      */
-    name: string;
+    name: MessageDescriptor;
 
     /**
      * Checks if the colors would fit on this tile.

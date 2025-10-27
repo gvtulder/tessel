@@ -3,10 +3,18 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const DeltoTrihexAtlas = Atlas.fromDefinition({
-    name: "Deltoidal-trihexagonal",
+    name: msg({
+        id: "atlas.DeltoTrihexAtlas.friendlyName",
+        message: "Deltoidal-trihexagonal",
+    }),
+    tilingName: msg({
+        id: "atlas.DeltoTrihexAtlas.tilingName",
+        message: "Deltoidal-trihexagonal tiling",
+    }),
     shapes: {
         P: {
             name: "kite",

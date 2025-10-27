@@ -4,6 +4,7 @@ import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import licenseHeader from "eslint-plugin-license-header";
 import eslintConfigPrettier from "eslint-config-prettier";
+import pluginLingui from "eslint-plugin-lingui";
 
 export default tseslint.config([
   {
@@ -36,4 +37,5 @@ export default tseslint.config([
       ],
     },
   },
+  pluginLingui.configs["flat/recommended"],
 ]);

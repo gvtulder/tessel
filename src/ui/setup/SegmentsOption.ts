@@ -11,8 +11,9 @@ import { AngleUse, ColorPatternPerShape } from "../../grid/Shape";
 import { TileColor, TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
 import { OptionGridDisplay } from "./OptionGridDisplay";
-import { NUMBER_TO_WORD, SettingRowOption } from "./SettingRowOption";
+import { SettingRowOption } from "./SettingRowOption";
 import { createElement } from "../shared/html";
+import { plural, msg } from "@lingui/core/macro";
 
 export class SegmentsOption extends SettingRowOption {
     segmentsIndex: number;
@@ -52,13 +53,28 @@ export class SegmentsOption extends SettingRowOption {
         }
 
         if (this.key == "all") {
-            this.title = "All color combinations";
+            this.title = msg({
+                id: "ui.setup.SegmentsOption.allCombinations",
+                message: "All color combinations",
+            });
         } else if (this.uniqueTileColors) {
-            this.title = "All colors must be unique";
-        } else if (colorPattern.numColors == 1) {
-            this.title = "One color per tile";
+            this.title = msg({
+                id: "ui.setup.SegmentsOption.unique",
+                message: "All colors must be unique",
+            });
         } else {
-            this.title = `${NUMBER_TO_WORD[colorPattern.numColors]} colors per tile`;
+            this.title = msg({
+                id: "ui.setup.SegmentsOption.number",
+                message: plural(colorPattern.numColors, {
+                    1: "One color per tile",
+                    2: "Two colors per tile",
+                    3: "Three colors per tile",
+                    4: "Four colors per tile",
+                    5: "Five colors per tile",
+                    6: "Six colors per tile",
+                    other: "# colors per tile",
+                }),
+            });
         }
 
         const groupColors: TileColor[] = [];

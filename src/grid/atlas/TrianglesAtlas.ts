@@ -3,10 +3,15 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const TrianglesAtlas = Atlas.fromDefinition({
-    name: "Triangle",
+    name: msg({ id: "atlas.TrianglesAtlas.friendlyName", message: "Triangle" }),
+    tilingName: msg({
+        id: "atlas.TrianglesAtlas.tilingName",
+        message: "Triangular tiling",
+    }),
     shapes: {
         T: {
             name: "triangle",

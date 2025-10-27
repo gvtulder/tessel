@@ -21,7 +21,6 @@ export class ScorerOption extends SettingRowOption {
     constructor(key: string, scorer: ScorerType) {
         super(key);
         this.scorer = scorer;
-        console.log(scorer.friendlyName);
         this.title = scorer.friendlyName;
 
         let svg = "";

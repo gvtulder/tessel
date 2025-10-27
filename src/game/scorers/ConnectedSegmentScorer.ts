@@ -7,9 +7,13 @@ import { computeRing } from "../../grid/Rings";
 import { Grid } from "../../grid/Grid";
 import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
+import { msg } from "@lingui/core/macro";
 
 export class ConnectedSegmentScorer extends Scorer {
-    static friendlyName = "Count connected segments";
+    static friendlyName = msg({
+        id: "scorer.ConnectedSegmentScorer.friendlyName",
+        message: "Count connected segments",
+    });
 
     static create() {
         return new ConnectedSegmentScorer();

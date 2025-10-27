@@ -11,7 +11,8 @@ import { Button } from "../shared/Button";
 import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggle } from "../shared/Toggle";
 import { Toggles } from "../shared/toggles";
-import doc from "bundle-text:./doc.html";
+import { msg, t } from "@lingui/core/macro";
+import { getLocalizedSettingsHTML } from "src/i18n";
 
 export class SettingsDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -31,7 +32,7 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
         // menu button
         this.backtomenubutton = new Button(
             icons.houseIcon,
-            "Back to menu",
+            msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
             () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
             "backtomenu",
         );
@@ -40,11 +41,11 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
         // header
         const header = createElement("header", null, element);
         const h2 = createElement("h2", null, header);
-        h2.innerHTML = "Tessel";
+        h2.innerHTML = t({ id: "ui.settings.title", message: "Tessel" });
 
         // main page text
         const article = createElement("article", null, element);
-        article.innerHTML = doc;
+        article.innerHTML = getLocalizedSettingsHTML();
 
         // toggles
         this.toggles = {

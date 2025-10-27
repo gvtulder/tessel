@@ -8,9 +8,13 @@ import { isConvexPolygon } from "../../geom/polygon/isConvexPolygon";
 import { Grid, edgeToKey } from "../../grid/Grid";
 import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
+import { msg } from "@lingui/core/macro";
 
 export class ConvexShapeScorer extends Scorer {
-    static friendlyName = "Count convex shapes";
+    static friendlyName = msg({
+        id: "scorer.ConvexShapeScorer.friendlyName",
+        message: "Count convex shapes",
+    });
 
     static create() {
         return new ConvexShapeScorer();

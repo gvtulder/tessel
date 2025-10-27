@@ -6,9 +6,13 @@
 import { Grid } from "../../grid/Grid";
 import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
+import { msg } from "@lingui/core/macro";
 
 export class FullTileScorer extends Scorer {
-    static friendlyName = "Count tiles";
+    static friendlyName = msg({
+        id: "scorer.FullTileScorer.friendlyName",
+        message: "Count tiles",
+    });
 
     static create() {
         return new FullTileScorer();

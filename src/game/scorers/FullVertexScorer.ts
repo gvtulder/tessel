@@ -7,9 +7,13 @@ import { computeRing } from "../../grid/Rings";
 import { Grid } from "../../grid/Grid";
 import { Tile, TileSegment } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
+import { msg } from "@lingui/core/macro";
 
 export class FullVertexScorer extends Scorer {
-    static friendlyName = "Count full vertices";
+    static friendlyName = msg({
+        id: "scorer.FullVertexScorer.friendlyName",
+        message: "Count full vertices",
+    });
 
     static create() {
         return new FullVertexScorer();

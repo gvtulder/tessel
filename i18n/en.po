@@ -1,0 +1,316 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-10-27 12:12+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:10
+msgid "atlas.AmmannBeenkerAtlas.friendlyName"
+msgstr "Ammann-Beenker"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:14
+msgid "atlas.AmmannBeenkerAtlas.tilingName"
+msgstr "Ammann-Beenker tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:10
+msgid "atlas.CairoAtlas.friendlyName"
+msgstr "Cairo pentagonal"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:14
+msgid "atlas.CairoAtlas.tilingName"
+msgstr "Cairo pentagonal tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:10
+msgid "atlas.DeltoTrihexAtlas.friendlyName"
+msgstr "Deltoidal-trihexagonal"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:14
+msgid "atlas.DeltoTrihexAtlas.tilingName"
+msgstr "Deltoidal-trihexagonal tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:10
+msgid "atlas.HexagonsAtlas.friendlyName"
+msgstr "Hexagon"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:11
+msgid "atlas.HexagonsAtlas.tilingName"
+msgstr "Hexagonal tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:10
+msgid "atlas.Penrose0Atlas.friendlyName"
+msgstr "Penrose-3"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:11
+msgid "atlas.Penrose0Atlas.tilingName"
+msgstr "Penrose-3 tiling"
+
+#. js-lingui-explicit-id
+#: src/saveGames.ts:265
+msgid "atlas.Penrose3Grid.friendlyName"
+msgstr "Penrose-3 grid"
+
+#. js-lingui-explicit-id
+#: src/saveGames.ts:266
+msgid "atlas.Penrose3Grid.tilingName"
+msgstr "Penrose-3 tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:10
+msgid "atlas.PenroseFreeAtlas.friendlyName"
+msgstr "Penrose-3 free"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:14
+msgid "atlas.PenroseFreeAtlas.tilingName"
+msgstr "Penrose-3 tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:10
+msgid "atlas.RhombusAtlas.friendlyName"
+msgstr "Rhombus-60-120"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:14
+msgid "atlas.RhombusAtlas.tilingName"
+msgstr "Rhombille tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:10
+msgid "atlas.SnubSquareAtlas.friendlyName"
+msgstr "Snub square"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:14
+msgid "atlas.SnubSquareAtlas.tilingName"
+msgstr "Snub square tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:10
+msgid "atlas.SnubSquareFreeAtlas.friendlyName"
+msgstr "Snub square free"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:14
+msgid "atlas.SnubSquareFreeAtlas.tilingName"
+msgstr "Snub square tiling"
+
+#. js-lingui-explicit-id
+#: src/saveGames.ts:219
+msgid "atlas.SnubSquareGridAtlas.friendlyName"
+msgstr "Snub square grid"
+
+#. js-lingui-explicit-id
+#: src/saveGames.ts:223
+msgid "atlas.SnubSquareGridAtlas.tilingName"
+msgstr "Snub square tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:10
+msgid "atlas.SquaresAtlas.friendlyName"
+msgstr "Square"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:11
+msgid "atlas.SquaresAtlas.tilingName"
+msgstr "Square tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:10
+msgid "atlas.TrianglesAtlas.friendlyName"
+msgstr "Triangle"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:11
+msgid "atlas.TrianglesAtlas.tilingName"
+msgstr "Triangular tiling"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/DifferentEdgeColorsRuleSet.ts:16
+msgid "rules.DifferentEdgeColorsRuleSet.friendlyName"
+msgstr "Touching tiles must have different colors"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/MatchEdgeColorsRuleSet.ts:16
+msgid "rules.MatchEdgeColorsRuleSet.frienlyName"
+msgstr "Touching tiles must have the same color"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConnectedSegmentScorer.ts:13
+msgid "scorer.ConnectedSegmentScorer.friendlyName"
+msgstr "Count connected segments"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConvexShapeScorer.ts:14
+msgid "scorer.ConvexShapeScorer.friendlyName"
+msgstr "Count convex shapes"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullTileScorer.ts:12
+msgid "scorer.FullTileScorer.friendlyName"
+msgstr "Count tiles"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullVertexScorer.ts:13
+msgid "scorer.FullVertexScorer.friendlyName"
+msgstr "Count full vertices"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/HoleScorer.ts:13
+msgid "scorer.HoleScorer.friendlyName"
+msgstr "Count holes"
+
+#. js-lingui-explicit-id
+#: src/ui/game/DropoutMenu.ts:29
+msgid "ui.game.showMenuButton"
+msgstr "Show menu"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:125
+#: src/ui/paint/PaintDisplay.ts:66
+#: src/ui/paint/PaintMenu.ts:55
+#: src/ui/settings/SettingsDisplay.ts:35
+#: src/ui/setup/GameSetupDisplay.ts:145
+msgid "ui.menu.backToMenuButton"
+msgstr "Back to menu"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:38
+msgid "ui.menu.footer"
+msgstr "A game by <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:72
+msgid "ui.menu.paintButton"
+msgstr "Paint a grid"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:141
+msgid "ui.menu.restartGameButton"
+msgstr "Restart game"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:50
+msgid "ui.menu.settingsButton"
+msgstr "Settings"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:133
+#: src/ui/menu/MainMenuDisplay.ts:61
+msgid "ui.menu.setupButton"
+msgstr "Design a game"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colors.length
+#: src/ui/setup/ColorsOption.ts:18
+msgid "ui.settings.ColorsOption.title"
+msgstr "{0, plural, =1 {One color} =2 {Two colors} =3 {Three colors} =4 {Four colors} =5 {Five colors} =6 {Six colors} other {# colors}}"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:44
+msgid "ui.settings.title"
+msgstr "Tessel"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:56
+msgid "ui.setup.SegmentsOption.allCombinations"
+msgstr "All color combinations"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colorPattern.numColors
+#: src/ui/setup/SegmentsOption.ts:66
+msgid "ui.setup.SegmentsOption.number"
+msgstr "{0, plural, =1 {One color per tile} =2 {Two colors per tile} =3 {Three colors per tile} =4 {Four colors per tile} =5 {Five colors per tile} =6 {Six colors per tile} other {# colors per tile}}"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:61
+msgid "ui.setup.SegmentsOption.unique"
+msgstr "All colors must be unique"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:70
+msgid "ui.setup.optionTitle.atlas"
+msgstr "Tiling pattern"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:86
+msgid "ui.setup.optionTitle.colors"
+msgstr "Number of colors"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/RulesSettingRow.ts:16
+msgid "ui.setup.optionTitle.rules"
+msgstr "Matching rule"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/ScorerSettingRow.ts:15
+msgid "ui.setup.optionTitle.scorer"
+msgstr "Scoring rule"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsSettingRow.ts:18
+msgid "ui.setup.optionTitle.segments"
+msgstr "Colors per tile"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:125
+msgid "ui.setup.playButton"
+msgstr "Play game"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:156
+msgid "ui.setup.regenerateExampleButton"
+msgstr "Regenerate"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:58
+msgid "ui.setup.title"
+msgstr "Custom game"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:41
+msgid "ui.toggles.autorotate"
+msgstr "Autorotate"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:64
+msgid "ui.toggles.colorScheme.dark"
+msgstr "Dark mode"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:63
+msgid "ui.toggles.colorScheme.light"
+msgstr "Light mode"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:48
+msgid "ui.toggles.hints"
+msgstr "Show hints"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:31
+msgid "ui.toggles.placeholders"
+msgstr "Show placeholders"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:55
+msgid "ui.toggles.snap"
+msgstr "Snap"

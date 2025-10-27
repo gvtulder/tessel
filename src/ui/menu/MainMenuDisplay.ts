@@ -15,6 +15,7 @@ import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
 import { AngleUse } from "../../grid/Shape";
 import SVG_LOGO from "bundle-text:../svgs/logo.svg";
+import { msg, t } from "@lingui/core/macro";
 
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -34,7 +35,10 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         const footer = createElement("div", "footer", div);
 
         const footerLine = createElement("p", "copyright", footer);
-        footerLine.innerHTML = `A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>.`;
+        footerLine.innerHTML = t({
+            id: "ui.menu.footer",
+            message: `A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>.`,
+        });
 
         if (version) {
             const versionDiv = createElement("p", "version", footer);
@@ -43,7 +47,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
 
         const settingsButton = new Button(
             icons.gearsIcon,
-            "Settings",
+            msg({ id: "ui.menu.settingsButton", message: "Settings" }),
             () => {
                 this.dispatchEvent(new UserEvent(UserEventType.Settings));
             },
@@ -54,7 +58,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
 
         const setupButton = new Button(
             icons.swatchbookIcon,
-            "Design a game",
+            msg({ id: "ui.menu.setupButton", message: "Design a game" }),
             () => {
                 this.dispatchEvent(new UserEvent(UserEventType.SetupMenu));
             },
@@ -65,7 +69,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
 
         const paintButton = new Button(
             icons.paintbrushIcon,
-            "Paint a grid",
+            msg({ id: "ui.menu.paintButton", message: "Paint a grid" }),
             () => {
                 this.dispatchEvent(new UserEvent(UserEventType.Paint));
             },

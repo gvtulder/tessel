@@ -3,10 +3,18 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const SnubSquareFreeAtlas = Atlas.fromDefinition({
-    name: "Snub-Square-free",
+    name: msg({
+        id: "atlas.SnubSquareFreeAtlas.friendlyName",
+        message: "Snub square free",
+    }),
+    tilingName: msg({
+        id: "atlas.SnubSquareFreeAtlas.tilingName",
+        message: "Snub square tiling",
+    }),
     shapes: {
         S: {
             name: "square",

@@ -3,8 +3,10 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { MessageDescriptor } from "@lingui/core";
 import { createElement } from "./html";
 import { TapHandler } from "./TapHandler";
+import { t } from "@lingui/core/macro";
 
 export class Toggle {
     static events = {
@@ -18,7 +20,7 @@ export class Toggle {
 
     constructor(
         icon: string,
-        title: string,
+        title: MessageDescriptor,
         onchange: (source: Toggle) => void,
         checked?: Promise<boolean>,
     ) {
@@ -30,6 +32,7 @@ export class Toggle {
 
         const iconEl = createElement("div", "icon", toggle);
         iconEl.innerHTML = icon;
+        iconEl.title = t(title);
 
         this.onchange = onchange;
         if (checked) {

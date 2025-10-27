@@ -3,8 +3,10 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { MessageDescriptor } from "@lingui/core";
 import { createElement } from "./html";
 import { TapHandler } from "./TapHandler";
+import { t } from "@lingui/core/macro";
 
 enum ThreeWayOption {
     OptionA = "A",
@@ -29,8 +31,8 @@ export class ThreeWayToggle {
     constructor(
         iconA: string,
         iconB: string,
-        titleA: string,
-        titleB: string,
+        titleA: MessageDescriptor,
+        titleB: MessageDescriptor,
         valueA: string,
         valueB: string,
         onchange: (source: ThreeWayToggle) => void,
@@ -47,10 +49,12 @@ export class ThreeWayToggle {
         const boxA = createElement("div", "toggle-box a", wrap);
         const iconAEl = createElement("div", "toggle-ball-icon", boxA);
         iconAEl.innerHTML = iconA;
+        boxA.title = t(titleA);
 
         const boxB = createElement("div", "toggle-box b", wrap);
         const iconBEl = createElement("div", "toggle-ball-icon", boxB);
         iconBEl.innerHTML = iconB;
+        boxB.title = t(titleB);
 
         this.onchange = onchange;
         value.then((v) => (this.value = v));

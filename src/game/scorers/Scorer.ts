@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { MessageDescriptor } from "@lingui/core";
 import { Point } from "../../geom/math";
 import { Grid } from "../../grid/Grid";
 import { Tile, TileColor, TileSegment } from "../../grid/Tile";
@@ -22,9 +23,9 @@ export type ScorerType = typeof Scorer;
 
 export abstract class Scorer {
     /**
-     * A friendly name for the scorer.
+     * Translation key for the friendly name for the scorer.
      */
-    static friendlyName: string;
+    static friendlyName: MessageDescriptor;
 
     /**
      * Create a new Scorer instance.

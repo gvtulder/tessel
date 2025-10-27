@@ -8,10 +8,18 @@ import { Atlas } from "../../grid/Atlas";
 import { TileColors } from "../../grid/Tile";
 import { SegmentsOption } from "./SegmentsOption";
 import { SettingRow } from "./SettingRow";
+import { msg } from "@lingui/core/macro";
 
 export class SegmentsSettingRow extends SettingRow<SegmentsOption> {
     constructor() {
-        super("segments", "setup-segments", "Colors per tile");
+        super(
+            "segments",
+            "setup-segments",
+            msg({
+                id: "ui.setup.optionTitle.segments",
+                message: "Colors per tile",
+            }),
+        );
     }
 
     showAtlas(atlas: Atlas, colors: TileColors) {

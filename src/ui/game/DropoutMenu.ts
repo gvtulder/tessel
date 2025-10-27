@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
 import icons from "../shared/icons";
@@ -25,7 +26,7 @@ export class DropoutMenu {
 
         const dropoutButton = (this.dropoutButton = new Button(
             icons.barsIcon,
-            "Show menu",
+            msg({ id: "ui.game.showMenuButton", message: "Show menu" }),
             (evt: PointerEvent) => {
                 this.element.classList.toggle("expanded");
             },

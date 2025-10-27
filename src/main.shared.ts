@@ -7,8 +7,9 @@ import { setColorScheme } from "./ui/shared/colorScheme";
 import { Workbox } from "workbox-window";
 import { VERSION } from "./constants";
 import { GameController } from "./ui/GameController";
+import { prepareI18n } from "./i18n";
 
-export function startMainMenu(workbox?: Workbox) {
+export async function startMainMenu(workbox?: Workbox) {
     document.body.addEventListener("touchstart", preventIosZoomAndSelection, {
         passive: false,
     });
@@ -27,6 +28,8 @@ export function startMainMenu(workbox?: Workbox) {
         window.location.href = "/";
         return;
     }
+
+    prepareI18n("en");
 
     const controller = new GameController(document.body, VERSION, workbox);
     controller.run();

@@ -3,10 +3,15 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const Penrose0Atlas = Atlas.fromDefinition({
-    name: "Penrose-3",
+    name: msg({ id: "atlas.Penrose0Atlas.friendlyName", message: "Penrose-3" }),
+    tilingName: msg({
+        id: "atlas.Penrose0Atlas.tilingName",
+        message: "Penrose-3 tiling",
+    }),
     shapes: {
         L: { name: "rhombus-wide", angles: [72, 108, 72, 108], frequency: 5 },
         S: { name: "rhombus-narrow", angles: [36, 144, 36, 144], frequency: 3 },

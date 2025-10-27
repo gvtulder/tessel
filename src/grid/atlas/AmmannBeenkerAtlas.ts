@@ -3,10 +3,18 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const AmmannBeenkerAtlas = Atlas.fromDefinition({
-    name: "Ammann-Beenker",
+    name: msg({
+        id: "atlas.AmmannBeenkerAtlas.friendlyName",
+        message: "Ammann-Beenker",
+    }),
+    tilingName: msg({
+        id: "atlas.AmmannBeenkerAtlas.tilingName",
+        message: "Ammann-Beenker tiling",
+    }),
     shapes: {
         S: {
             name: "square",

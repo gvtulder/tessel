@@ -8,6 +8,7 @@ import icons from "./icons";
 import { ThreeWayToggle } from "./ThreeWayToggle";
 import { Toggle } from "./Toggle";
 import { setColorScheme } from "./colorScheme";
+import { msg } from "@lingui/core/macro";
 
 type OnChangeFunction<T> = (source: T) => void;
 
@@ -27,28 +28,31 @@ export const Toggles = {
     Placeholders: (onchange?: OnChangeFunction<Toggle>) =>
         new Toggle(
             icons.boxIcon,
-            "Show placeholders",
+            msg({
+                id: "ui.toggles.placeholders",
+                message: "Show placeholders",
+            }),
             Set_YesNo("placeholders", onchange),
             Get_YesNoDefaultYes("placeholders"),
         ),
     Autorotate: (onchange?: OnChangeFunction<Toggle>) =>
         new Toggle(
             icons.arrowsSpinIcon,
-            "Autorotate",
+            msg({ id: "ui.toggles.autorotate", message: "Autorotate" }),
             Set_YesNo("autorotate", onchange),
             Get_YesNoDefaultYes("autorotate"),
         ),
     Hints: (onchange?: OnChangeFunction<Toggle>) =>
         new Toggle(
             icons.squareCheckIcon,
-            "Show hints",
+            msg({ id: "ui.toggles.hints", message: "Show hints" }),
             Set_YesNo("hints", onchange),
             Get_YesNoDefaultYes("hints"),
         ),
     Snap: (onchange?: OnChangeFunction<Toggle>) =>
         new Toggle(
             icons.magnetIcon,
-            "Snap",
+            msg({ id: "ui.toggles.snap", message: "Snap" }),
             Set_YesNo("snap", onchange),
             Get_YesNoDefaultYes("snap"),
         ),
@@ -56,8 +60,8 @@ export const Toggles = {
         new ThreeWayToggle(
             icons.sunIcon,
             icons.moonIcon,
-            "Light mode",
-            "Dark mode",
+            msg({ id: "ui.toggles.colorScheme.light", message: "Light mode" }),
+            msg({ id: "ui.toggles.colorScheme.dark", message: "Dark mode" }),
             "light",
             "dark",
             (source: ThreeWayToggle) => {

@@ -23,6 +23,7 @@ import { GameSettingsSerialized } from "../../game/Game";
 import { UserEvent, UserEventType } from "../GameController";
 import { ScorerSettingRow } from "./ScorerSettingRow";
 import { ScorerOption } from "./ScorerOption";
+import { msg, t } from "@lingui/core/macro";
 
 export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -54,7 +55,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         const div = (this.element = createElement("div", "screen game-setup"));
 
         const heading = createElement("h2", null, div);
-        heading.innerHTML = "Custom game";
+        heading.innerHTML = t({ id: "ui.setup.title", message: "Custom game" });
 
         const settingsDiv = createElement("div", "settings", div);
 
@@ -66,7 +67,10 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         const settingAtlas = new SettingRow<AtlasOption>(
             "atlas",
             "setup-atlas",
-            "Tiling pattern",
+            msg({
+                id: "ui.setup.optionTitle.atlas",
+                message: "Tiling pattern",
+            }),
         );
         for (const { key, atlas } of catalog.atlas.values()) {
             settingAtlas.addOption(new AtlasOption(key, atlas));
@@ -79,7 +83,10 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         const settingColors = new SettingRow<ColorsOption>(
             "colors",
             "setup-colors",
-            "Number of colors",
+            msg({
+                id: "ui.setup.optionTitle.colors",
+                message: "Number of colors",
+            }),
         );
         for (const { key, colors } of catalog.colors.values()) {
             settingColors.addOption(new ColorsOption(key, colors));
@@ -113,25 +120,29 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.settingRows.push(settingScorer);
 
         const buttonRow = createElement("div", "button-row", settingsDiv);
-        const playButton = new Button(icons.playIcon, "Play game", () => {
-            if (this.valid) {
-                this.dispatchEvent(
-                    new UserEvent(
-                        UserEventType.StartGameFromSetup,
-                        undefined,
-                        undefined,
-                        this.settings,
-                    ),
-                );
-            }
-        });
+        const playButton = new Button(
+            icons.playIcon,
+            msg({ id: "ui.setup.playButton", message: "Play game" }),
+            () => {
+                if (this.valid) {
+                    this.dispatchEvent(
+                        new UserEvent(
+                            UserEventType.StartGameFromSetup,
+                            undefined,
+                            undefined,
+                            this.settings,
+                        ),
+                    );
+                }
+            },
+        );
         playButton.element.classList.add("play");
         buttonRow.appendChild(playButton.element);
         this.playButton = playButton;
 
         const exitButton = new Button(
             icons.houseIcon,
-            "Return to main menu",
+            msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
             () => {
                 this.dispatchEvent(new UserEvent(UserEventType.BackToMenu));
             },
@@ -142,7 +153,10 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
 
         const regenerateButton = new Button(
             icons.rotateRightIcon,
-            "Regenerate",
+            msg({
+                id: "ui.setup.regenerateExampleButton",
+                message: "Regenerate",
+            }),
             () => {
                 this.seed = generateSeed();
                 console.log(`Regenerate with new seed: ${this.seed}`);

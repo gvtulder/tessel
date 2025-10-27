@@ -3,7 +3,9 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { MessageDescriptor } from "@lingui/core";
 import { TapHandler, TapHandlerEvent } from "./TapHandler";
+import { t } from "@lingui/core/macro";
 
 export class Button {
     element: HTMLElement;
@@ -11,14 +13,14 @@ export class Button {
 
     constructor(
         icon: string,
-        title: string,
+        title: MessageDescriptor,
         ontap: (evt: PointerEvent) => void,
         className?: string,
     ) {
         const button = document.createElement("div");
         button.classList.add("game-button");
         if (className) button.classList.add(className);
-        button.title = title;
+        button.title = t(title);
         button.innerHTML = icon;
         this.element = button;
 

@@ -3,10 +3,18 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const CairoAtlas = Atlas.fromDefinition({
-    name: "Cairo pentagonal",
+    name: msg({
+        id: "atlas.CairoAtlas.friendlyName",
+        message: "Cairo pentagonal",
+    }),
+    tilingName: msg({
+        id: "atlas.CairoAtlas.tilingName",
+        message: "Cairo pentagonal tiling",
+    }),
     shapes: {
         P: {
             name: "pentagon",

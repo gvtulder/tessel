@@ -3,8 +3,10 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { MessageDescriptor } from "@lingui/core";
 import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
+import { t } from "@lingui/core/macro";
 
 export const NUMBER_TO_WORD = [
     "Zero",
@@ -32,9 +34,8 @@ export abstract class SettingRowOption {
         this.header = header;
     }
 
-    set title(title: string) {
-        this.element.title = title;
-        this.header.innerHTML = title;
+    set title(title: MessageDescriptor) {
+        this.element.title = this.header.innerHTML = t(title);
     }
 
     abstract cloneForDisplay(): ThisType<this>;

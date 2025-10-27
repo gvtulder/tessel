@@ -3,9 +3,11 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { MessageDescriptor } from "@lingui/core";
 import { getStorageBackend } from "../../lib/storage-backend";
 import { createElement } from "../shared/html";
 import { SettingRowOption } from "./SettingRowOption";
+import { t } from "@lingui/core/macro";
 
 export class SettingRow<T extends SettingRowOption> {
     element: HTMLDivElement;
@@ -19,14 +21,18 @@ export class SettingRow<T extends SettingRowOption> {
     localStorageKey: string;
     backgroundEventHandler: (evt: PointerEvent) => void;
 
-    constructor(className: string, localStorageKey: string, title: string) {
+    constructor(
+        className: string,
+        localStorageKey: string,
+        title: MessageDescriptor,
+    ) {
         this.element = createElement("div", `setting-row ${className}`);
         this.localStorageKey = localStorageKey;
         this.options = [];
 
         // title
         const header = createElement("h3", null, this.element);
-        header.innerHTML = title;
+        header.innerHTML = t(title);
 
         // options dropdown
         this.optionWrapElement = createElement(

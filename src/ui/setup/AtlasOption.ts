@@ -20,7 +20,7 @@ export class AtlasOption extends SettingRowOption {
     constructor(key: string, atlas: Atlas) {
         super(key);
         this.atlas = atlas;
-        this.title = `${atlas.name} tiling`;
+        this.title = atlas.tilingName;
 
         const grid = new Grid(atlas);
 

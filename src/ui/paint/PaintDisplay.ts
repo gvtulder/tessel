@@ -13,6 +13,7 @@ import { Button } from "../shared/Button";
 import { PaintGridDisplay } from "./PaintGridDisplay";
 import { ColorStackDisplay } from "./ColorStackDisplay";
 import { WONG6 } from "../../saveGames";
+import { msg } from "@lingui/core/macro";
 
 export class PaintDisplay extends EventTarget implements ScreenDisplay {
     grid: Grid;
@@ -62,7 +63,7 @@ export class PaintDisplay extends EventTarget implements ScreenDisplay {
 
         this.backtomenubutton = new Button(
             icons.houseIcon,
-            "Back to menu",
+            msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
             () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
             "backtomenu",
         );

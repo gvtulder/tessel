@@ -3,15 +3,16 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { MessageDescriptor } from "@lingui/core";
 import { SettingRowOption } from "./SettingRowOption";
 
 class StringOption extends SettingRowOption {
-    constructor(key: string) {
+    constructor(key: string, title: MessageDescriptor) {
         super(key);
-        this.title = key;
+        this.title = title;
     }
 
     cloneForDisplay(): ThisType<this> {
-        return new StringOption(this.key);
+        return new StringOption(this.key, this.title);
     }
 }

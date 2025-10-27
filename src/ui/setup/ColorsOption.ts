@@ -3,10 +3,11 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg, plural } from "@lingui/core/macro";
 import { BBox, TWOPI, mergeBBox } from "../../geom/math";
 import { TileColors } from "../../grid/Tile";
 import { SVG } from "../shared/svg";
-import { NUMBER_TO_WORD, SettingRowOption } from "./SettingRowOption";
+import { SettingRowOption } from "./SettingRowOption";
 
 export class ColorsOption extends SettingRowOption {
     colors: TileColors;
@@ -14,7 +15,18 @@ export class ColorsOption extends SettingRowOption {
     constructor(key: string, colors: TileColors) {
         super(key);
         this.colors = colors;
-        this.title = `${NUMBER_TO_WORD[colors.length]} color${colors.length != 1 ? "s" : ""}`;
+        this.title = msg({
+            id: "ui.settings.ColorsOption.title",
+            message: plural(colors.length, {
+                1: "One color",
+                2: "Two colors",
+                3: "Three colors",
+                4: "Four colors",
+                5: "Five colors",
+                6: "Six colors",
+                other: "# colors",
+            }),
+        });
 
         const palette = SVG("svg", "palette", this.element);
         let bbox: BBox = undefined!;

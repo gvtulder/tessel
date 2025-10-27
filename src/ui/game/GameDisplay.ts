@@ -19,6 +19,7 @@ import { DropoutMenu } from "./DropoutMenu";
 import { Toggle } from "../shared/Toggle";
 import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggles } from "../shared/toggles";
+import { msg } from "@lingui/core/macro";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;
@@ -121,7 +122,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         // buttons
         this.backtomenubutton = new Button(
             icons.houseIcon,
-            "Back to menu",
+            msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
             () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
             "backtomenu",
         );
@@ -129,7 +130,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         this.setupbutton = new Button(
             icons.swatchbookIcon,
-            "Design a game",
+            msg({ id: "ui.menu.setupButton", message: "Design a game" }),
             () => this.dispatchEvent(new Event(UserEventType.SetupMenu)),
             "setup",
         );
@@ -137,7 +138,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         this.restartgamebutton = new Button(
             icons.rotateLeftIcon,
-            "Restart game",
+            msg({ id: "ui.menu.restartGameButton", message: "Restart game" }),
             () => this.dispatchEvent(new Event(UserEventType.RestartGame)),
             "restart",
         );

@@ -18,6 +18,7 @@ import { GridDisplay } from "../grid/GridDisplay";
 import { AngleUse } from "../../grid/Shape";
 import { SetupCatalog } from "../../saveGames";
 import { TapHandler } from "../shared/TapHandler";
+import { msg } from "@lingui/core/macro";
 
 export class PaintMenu extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -51,7 +52,7 @@ export class PaintMenu extends EventTarget implements ScreenDisplay {
         // menu button
         this.backtomenubutton = new Button(
             icons.houseIcon,
-            "Back to menu",
+            msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
             () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
             "backtomenu",
         );

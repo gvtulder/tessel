@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { msg } from "@lingui/core/macro";
 import { Tile, TileColors, TileSegment } from "../Tile";
 import { RuleSet } from "./RuleSet";
 
@@ -12,7 +13,10 @@ import { RuleSet } from "./RuleSet";
  */
 
 export class MatchEdgeColorsRuleSet implements RuleSet {
-    name = "Touching tiles must have the same color";
+    name = msg({
+        id: "rules.MatchEdgeColorsRuleSet.frienlyName",
+        message: "Touching tiles must have the same color",
+    });
 
     checkColors(tile: Tile, colors: TileColors, offset?: number): boolean {
         const edges = tile.edges;

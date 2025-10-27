@@ -7,9 +7,13 @@ import { orientedArea, Point } from "../../geom/math";
 import { Grid } from "../../grid/Grid";
 import { Tile } from "../../grid/Tile";
 import { Scorer, ScoredRegion } from "./Scorer";
+import { msg } from "@lingui/core/macro";
 
 export class HoleScorer extends Scorer {
-    static friendlyName = "Count holes";
+    static friendlyName = msg({
+        id: "scorer.HoleScorer.friendlyName",
+        message: "Count holes",
+    });
 
     static create() {
         return new HoleScorer();

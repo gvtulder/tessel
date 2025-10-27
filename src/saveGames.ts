@@ -28,6 +28,7 @@ import { Tile, TileColors } from "./grid/Tile";
 import Color from "color";
 import { AmmannBeenkerAtlas } from "./grid/atlas/AmmannBeenkerAtlas";
 import { HoleScorer } from "./game/scorers/HoleScorer";
+import { msg } from "@lingui/core/macro";
 
 const COLORS = [
     "red",
@@ -215,7 +216,14 @@ lookup.set("snubsquare", {
 });
 
 const SnubSquareGridAtlas = Atlas.fromSourceGrid(
-    "Snub-square",
+    msg({
+        id: "atlas.SnubSquareGridAtlas.friendlyName",
+        message: "Snub square grid",
+    }),
+    msg({
+        id: "atlas.SnubSquareGridAtlas.tilingName",
+        message: "Snub square tiling",
+    }),
     SnubSquareSourceGrid,
 );
 lookup.set("snubsquaregrid", {
@@ -254,7 +262,8 @@ lookup.set("penrose3", {
 });
 
 export const Penrose3GridAtlas = Atlas.fromSourceGrid(
-    "Penrose P3",
+    msg({ id: "atlas.Penrose3Grid.friendlyName", message: "Penrose-3 grid" }),
+    msg({ id: "atlas.Penrose3Grid.tilingName", message: "Penrose-3 tiling" }),
     Penrose3SourceGrid,
 );
 lookup.set("penrose3grid", {

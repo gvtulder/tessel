@@ -19,4 +19,4 @@ if (INCLUDE_SERVICE_WORKER && "serviceWorker" in navigator) {
 }
 
 removeSplash();
-startMainMenu(wb);
+startMainMenu(navigator.language, wb);

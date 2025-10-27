@@ -9,7 +9,7 @@ import { VERSION } from "./constants";
 import { GameController } from "./ui/GameController";
 import { prepareI18n } from "./i18n";
 
-export async function startMainMenu(workbox?: Workbox) {
+export async function startMainMenu(language: string, workbox?: Workbox) {
     document.body.addEventListener("touchstart", preventIosZoomAndSelection, {
         passive: false,
     });
@@ -29,7 +29,7 @@ export async function startMainMenu(workbox?: Workbox) {
         return;
     }
 
-    await prepareI18n();
+    await prepareI18n(language);
 
     const controller = new GameController(document.body, VERSION, workbox);
     controller.run();

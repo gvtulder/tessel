@@ -34,12 +34,25 @@ for (const [language, data] of Object.entries(languages)) {
     i18n.load(language, data.messages);
 }
 
-export async function prepareI18n() {
-    let preference = await getStorageBackend().getItem("language");
-    if (!preference) {
-        preference = "en";
+export async function prepareI18n(navigatorLanguage: string) {
+    const options = [
+        await getStorageBackend().getItem("language"),
+        navigatorLanguage,
+        "en",
+    ];
+    for (const language of options) {
+        if (!language) continue;
+        if (languages[language]) {
+            i18n.activate(language);
+            console.log("selected", language);
+            return;
+        }
+        const firstPart = language.split("-")[0];
+        if (languages[firstPart]) {
+            i18n.activate(firstPart);
+            return;
+        }
     }
-    i18n.activate(preference);
 }
 
 export function updateI18n(locale: string) {

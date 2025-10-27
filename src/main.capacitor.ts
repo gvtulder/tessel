@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { Device } from "@capacitor/device";
 import { StatusBar } from "@capacitor/status-bar";
 import { Preferences } from "@capacitor/preferences";
 import { removeSplash, startMainMenu } from "./main.shared";
@@ -30,5 +31,7 @@ class PreferencesStorage implements StorageI {
 
 setStorageBackend(new PreferencesStorage("tessel"));
 
-removeSplash();
-startMainMenu();
+Device.getLanguageCode().then((result) => {
+    removeSplash();
+    startMainMenu(result.value);
+});

@@ -12,9 +12,7 @@ export class LanguagePicker extends SettingRow<StringOption> {
         super("language", "language");
 
         for (const [code, data] of Object.entries(languages)) {
-            this.addOption(
-                new StringOption(code, { id: "", message: data.title }),
-            );
+            this.addOption(new StringOption(code, data.title));
         }
     }
 }

@@ -35,7 +35,7 @@ export abstract class SettingRowOption {
     }
 
     set title(title: MessageDescriptor | string) {
-        if ((title as MessageDescriptor).message) {
+        if ((title as MessageDescriptor).id) {
             title = t(title as MessageDescriptor);
         }
         this.element.title = this.header.innerHTML = title as string;

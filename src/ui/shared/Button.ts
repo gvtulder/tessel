@@ -20,7 +20,7 @@ export class Button {
         const button = document.createElement("div");
         button.classList.add("game-button");
         if (className) button.classList.add(className);
-        button.title = (title as MessageDescriptor).message
+        button.title = (title as MessageDescriptor).id
             ? t(title as MessageDescriptor)
             : (title as string);
         button.innerHTML = icon;

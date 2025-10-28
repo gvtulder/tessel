@@ -7,9 +7,9 @@ import { MessageDescriptor } from "@lingui/core";
 import { SettingRowOption } from "./SettingRowOption";
 
 export class StringOption extends SettingRowOption {
-    _title: MessageDescriptor;
+    _title: MessageDescriptor | string;
 
-    constructor(key: string, title: MessageDescriptor) {
+    constructor(key: string, title: MessageDescriptor | string) {
         super(key);
         this._title = title;
         this.title = title;

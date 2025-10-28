@@ -13,14 +13,16 @@ export class Button {
 
     constructor(
         icon: string,
-        title: MessageDescriptor,
+        title: MessageDescriptor | string,
         ontap: (evt: PointerEvent) => void,
         className?: string,
     ) {
         const button = document.createElement("div");
         button.classList.add("game-button");
         if (className) button.classList.add(className);
-        button.title = t(title);
+        button.title = (title as MessageDescriptor).message
+            ? t(title as MessageDescriptor)
+            : (title as string);
         button.innerHTML = icon;
         this.element = button;
 

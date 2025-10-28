@@ -51,7 +51,7 @@ describe("Atlas", () => {
 
     test("can be created from a SourceGrid", () => {
         const sourceGrid = SnubSquareSourceGrid;
-        const atlas = Atlas.fromSourceGrid("snub-square", sourceGrid);
+        const atlas = Atlas.fromSourceGrid("snub-square", "", sourceGrid);
         expect(atlas.name).toBe("snub-square");
         expect(atlas.shapes.length).toBe(2);
         expect(atlas.shapes).toStrictEqual(sourceGrid.shapes);

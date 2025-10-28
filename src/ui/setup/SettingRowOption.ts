@@ -34,8 +34,11 @@ export abstract class SettingRowOption {
         this.header = header;
     }
 
-    set title(title: MessageDescriptor) {
-        this.element.title = this.header.innerHTML = t(title);
+    set title(title: MessageDescriptor | string) {
+        if ((title as MessageDescriptor).message) {
+            title = t(title as MessageDescriptor);
+        }
+        this.element.title = this.header.innerHTML = title as string;
     }
 
     abstract cloneForDisplay(): ThisType<this>;

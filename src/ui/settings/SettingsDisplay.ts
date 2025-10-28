@@ -12,7 +12,7 @@ import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggle } from "../shared/Toggle";
 import { Toggles } from "../shared/toggles";
 import { msg, t } from "@lingui/core/macro";
-import { getLocalizedSettingsHTML, updateI18n } from "src/i18n";
+import { getLocalizedSettingsHTML, updateI18n } from "../../i18n";
 import { LanguagePicker } from "./LanguagePicker";
 import { i18n } from "@lingui/core";
 

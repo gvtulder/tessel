@@ -44,7 +44,6 @@ export async function prepareI18n(navigatorLanguage: string) {
         if (!language) continue;
         if (languages[language]) {
             i18n.activate(language);
-            console.log("selected", language);
             return;
         }
         const firstPart = language.split("-")[0];

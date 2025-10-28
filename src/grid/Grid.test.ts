@@ -361,7 +361,7 @@ describe("Grid", () => {
     });
 
     test("can add an initial tile from a source grid", () => {
-        const atlas = Atlas.fromSourceGrid("", SnubSquareSourceGrid);
+        const atlas = Atlas.fromSourceGrid("", "", SnubSquareSourceGrid);
         const grid = new Grid(atlas);
         const tile = grid.addInitialTile();
         expect(tile.shape).toBe(atlas.shapes[0]);
@@ -417,7 +417,7 @@ describe("Grid", () => {
     });
 
     test("can suggest possible tiles given a source grid", () => {
-        const atlas = Atlas.fromSourceGrid("", SnubSquareSourceGrid);
+        const atlas = Atlas.fromSourceGrid("", "", SnubSquareSourceGrid);
         const grid = new Grid(atlas);
         const tile1 = grid.addInitialTile();
         expect(tile1.shape).toBe(atlas.shapes[0]);

@@ -57,19 +57,19 @@
   border-radius: $dropout-outer-border-radius;
   z-index: 10000;
 
-  margin: calc(-1 * $dropout-outer-padding);
-
   &.expanded {
+    margin: calc(-1 * $dropout-outer-padding);
+
     background: var(--dropout-bg-color);
     box-shadow: var(--dropdown-box-shadow);
 
-    .game-button.dropout svg {
-      rotate: 90deg;
-    }
-  }
+    .game-button.dropout {
+      margin: $dropout-outer-padding $dropout-outer-padding 0 0;
 
-  .game-button.dropout {
-    margin: $dropout-outer-padding $dropout-outer-padding 0 0;
+      svg {
+        rotate: 90deg;
+      }
+    }
   }
 
   .game-button.dropout svg {
@@ -316,6 +316,10 @@
       "main-grid main-grid main-grid"
       "fill tile-stack counters"
       "fill-end fill-end fill-end";
+
+    .dropout-menu {
+      background: var(--main-bg-color);
+    }
 
     .tile-stack {
       flex-direction: row;

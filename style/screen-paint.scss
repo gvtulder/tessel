@@ -148,6 +148,11 @@ $swatch-scale: min(
       "fill-end";
   }
 
+  .paint-menu {
+    background: var(--main-bg-color);
+    border-radius: 50%;
+  }
+
   .color-stack {
     flex-direction: row;
     justify-content: center;

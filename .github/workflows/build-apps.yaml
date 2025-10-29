@@ -83,12 +83,30 @@ jobs:
       - name: Rename outputs
         run: |
           sha_short=$(git rev-parse --short HEAD)
-          mv android/app/build/outputs/apk/release/app-release-unsigned.apk tessel-${sha_short}-unsigned.apk
-          mv android/app/build/outputs/bundle/release/app-release.aab tessel-${sha_short}-unsigned.aab
+          cp android/app/build/outputs/apk/release/app-release-unsigned.apk tessel-${sha_short}-unsigned.apk
+          cp android/app/build/outputs/bundle/release/app-release.aab tessel-${sha_short}-unsigned.aab
           if [[ -f android/app/build/outputs/apk/release/app-release-signed.apk ]] ; then
-            mv android/app/build/outputs/apk/release/app-release-signed.apk tessel-${sha_short}.apk
-            mv android/app/build/outputs/bundle/release/app-release-signed.aab tessel-${sha_short}.aab
+            cp android/app/build/outputs/apk/release/app-release-signed.apk tessel-${sha_short}.apk
+            cp android/app/build/outputs/bundle/release/app-release-signed.aab tessel-${sha_short}.aab
           fi
+
+      - name: Extract Google Play service account
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          ANDROID_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.ANDROID_SERVICE_ACCOUNT_JSON_BASE64 }}
+        run: |
+          echo -n "$ANDROID_SERVICE_ACCOUNT_JSON_BASE64" | base64 --decode -o $RUNNER_TEMP/service-account.json
+
+      - name: Upload to Google Play
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: $RUNNER_TEMP/service-account.json
+          packageName: net.vantulder.tessel
+          releaseFiles: android/app/build/outputs/bundle/release/app-release-signed.aab
+          track: ga
+          status: draft
+          changesNotSentForReview: true
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v5
@@ -237,8 +255,6 @@ jobs:
           files: |
             tessel-${{ github.ref_name }}.apk
             tessel-${{ github.ref_name }}.aab
-            tessel-${{ github.ref_name }}-unsigned.apk
-            tessel-${{ github.ref_name }}-unsigned.aab
             tessel-${{ github.ref_name }}.ipa
           generate_release_notes: true
           body_path: ${{ github.workspace }}-CHANGELOG.txt

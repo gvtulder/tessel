@@ -1,5 +1,0 @@
-First full release.
-
-* Tweaked layout and fixed some browser-specific bugs.
-* Added an animation when refreshing tiles.
-* Improved screenshots and documentation.

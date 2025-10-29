@@ -1,1 +1,0 @@
-Fully functional game. Initial version of the Android package.

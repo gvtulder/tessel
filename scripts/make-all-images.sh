@@ -58,9 +58,9 @@ convert assets/icons/icon-48.png assets/icons/favicon.ico
 
 # fastlane for Android
 cp metadata/en-US/images/featureGraphic-with-text.png \
-   fastlane/android/en-US/images/featureGraphic.png
+   fastlane/metadata/android/en-US/images/featureGraphic.png
 cp assets/icons/icon-512.png \
-   fastlane/android/en-US/images/icon.png
+   fastlane/metadata/android/en-US/images/icon.png
 
 # build logo
 cp assets/src/logo-tile-only.svg assets/logo/logo-tile-only.svg

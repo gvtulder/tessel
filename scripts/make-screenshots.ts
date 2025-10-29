@@ -62,7 +62,7 @@ for (const [name, width, height] of [
     sizes.push({
         name: name,
         viewport: { width: width, height: height, deviceScaleFactor: 1 },
-        dirname: `${__dirname}/../fastlane/android/en-US/images/${name}/`,
+        dirname: `${__dirname}/../fastlane/metadata/android/en-US/images/${name}/`,
     });
 }
 

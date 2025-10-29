@@ -225,7 +225,7 @@
 }
 
 .tile-counter {
-  font-size: 1.5vw;
+  font-size: 2vw;
   cursor: pointer;
   color: var(--tile-counter-text-color);
 
@@ -240,7 +240,7 @@
     width: 1.5em;
     height: 1.5em;
     stroke: var(--tile-counter-text-color);
-    stroke-width: 0.04em;
+    stroke-width: 0.03em;
     vector-effect: non-scaling-stroke;
     fill: var(--panel-bg-color);
   }
@@ -328,7 +328,14 @@
     }
 
     .tile-counter {
-      font-size: 2.5vw;
+      font-size: 3.5vw;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      span,
+      svg {
+        display: block;
+      }
     }
 
     .score-display {

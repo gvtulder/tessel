@@ -7,6 +7,7 @@ import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const SnubSquareFreeAtlas = Atlas.fromDefinition({
+    id: "SnubSquareFreeAtlas",
     name: msg({
         id: "atlas.SnubSquareFreeAtlas.friendlyName",
         message: "Snub square free",

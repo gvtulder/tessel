@@ -7,6 +7,7 @@ import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const PenroseFreeAtlas = Atlas.fromDefinition({
+    id: "PenroseFreeAtlas",
     name: msg({
         id: "atlas.PenroseFreeAtlas.friendlyName",
         message: "Penrose-3 free",

@@ -7,6 +7,7 @@ import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const RhombusAtlas = Atlas.fromDefinition({
+    id: "RhombusAtlas",
     name: msg({
         id: "atlas.RhombusAtlas.friendlyName",
         message: "Rhombus-60-120",

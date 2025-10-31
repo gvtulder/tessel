@@ -17,6 +17,7 @@ function toFixed(xs: readonly number[], fractionDigits: number) {
 
 describe("Atlas", () => {
     const squaresDef = {
+        id: "squares",
         name: "Squares",
         shapes: {
             S: { name: "square", angles: [90, 90, 90, 90] },
@@ -25,6 +26,7 @@ describe("Atlas", () => {
     };
 
     const trianglesDef = {
+        id: "triangles",
         name: "Triangles",
         shapes: {
             T: { name: "triangle", angles: [60, 60, 60] },
@@ -34,6 +36,7 @@ describe("Atlas", () => {
 
     test("can be created from a definition", () => {
         const def: AtlasDefinitionDoc = {
+            id: "squares",
             name: "Square",
             shapes: {
                 S: { name: "square", angles: [90, 90, 90, 90] },
@@ -51,8 +54,8 @@ describe("Atlas", () => {
 
     test("can be created from a SourceGrid", () => {
         const sourceGrid = SnubSquareSourceGrid;
-        const atlas = Atlas.fromSourceGrid("snub-square", "", sourceGrid);
-        expect(atlas.name).toBe("snub-square");
+        const atlas = Atlas.fromSourceGrid("snub-square", "", "", sourceGrid);
+        expect(atlas.id).toBe("snub-square");
         expect(atlas.shapes.length).toBe(2);
         expect(atlas.shapes).toStrictEqual(sourceGrid.shapes);
     });
@@ -60,6 +63,7 @@ describe("Atlas", () => {
     test("checks for valid definitions", () => {
         expect(() => {
             Atlas.fromDefinition({
+                id: "test",
                 name: "Duplicate shapes",
                 shapes: {
                     A: { name: "square", angles: [90, 90, 90, 90] },
@@ -71,6 +75,7 @@ describe("Atlas", () => {
 
         expect(() => {
             Atlas.fromDefinition({
+                id: "test",
                 name: "Unknown shape",
                 shapes: {
                     S: { name: "square", angles: [90, 90, 90, 90] },
@@ -81,6 +86,7 @@ describe("Atlas", () => {
 
         expect(() => {
             Atlas.fromDefinition({
+                id: "test",
                 name: "Invalid component",
                 shapes: {
                     S: { name: "square", angles: [90, 90, 90, 90] },
@@ -91,6 +97,7 @@ describe("Atlas", () => {
 
         expect(() => {
             Atlas.fromDefinition({
+                id: "test",
                 name: "Empty",
                 shapes: {
                     S: { name: "square", angles: [90, 90, 90, 90] },

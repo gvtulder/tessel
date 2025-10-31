@@ -216,6 +216,7 @@ lookup.set("snubsquare", {
 });
 
 const SnubSquareGridAtlas = Atlas.fromSourceGrid(
+    "SnubSquareGridAtlas",
     msg({
         id: "atlas.SnubSquareGridAtlas.friendlyName",
         message: "Snub square grid",
@@ -262,6 +263,7 @@ lookup.set("penrose3", {
 });
 
 export const Penrose3GridAtlas = Atlas.fromSourceGrid(
+    "Penrose3GridAtlas",
     msg({ id: "atlas.Penrose3Grid.friendlyName", message: "Penrose-3 grid" }),
     msg({ id: "atlas.Penrose3Grid.tilingName", message: "Penrose-3 tiling" }),
     Penrose3SourceGrid,

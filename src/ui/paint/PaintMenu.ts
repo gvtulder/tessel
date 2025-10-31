@@ -18,7 +18,8 @@ import { GridDisplay } from "../grid/GridDisplay";
 import { AngleUse } from "../../grid/Shape";
 import { SetupCatalog } from "../../saveGames";
 import { TapHandler } from "../shared/TapHandler";
-import { msg } from "@lingui/core/macro";
+import { msg, t } from "@lingui/core/macro";
+import { MessageDescriptor } from "@lingui/core";
 
 export class PaintMenu extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -90,7 +91,11 @@ class AtlasOption {
         this.element = createElement("div", "paint-menu-atlas-option");
         this.key = key;
         this.atlas = atlas;
-        this.element.title = `${atlas.name} tiling`;
+        if ((atlas.tilingName as MessageDescriptor).id) {
+            this.element.title = t(atlas.tilingName as MessageDescriptor);
+        } else {
+            this.element.title = atlas.tilingName as string;
+        }
 
         this.tapHandler = new TapHandler(this.element);
         this.tapHandler.onTap = onTap;

@@ -12,11 +12,15 @@ import { RuleSet } from "./RuleSet";
  * of a tile share the same color.
  */
 
-export class MatchEdgeColorsRuleSet implements RuleSet {
-    name = msg({
-        id: "rules.MatchEdgeColorsRuleSet.frienlyName",
+export class MatchEdgeColorsRuleSet extends RuleSet {
+    static friendlyName = msg({
+        id: "rules.MatchEdgeColorsRuleSet.friendlyName",
         message: "Touching tiles must have the same color",
     });
+
+    static create() {
+        return new MatchEdgeColorsRuleSet();
+    }
 
     checkColors(tile: Tile, colors: TileColors, offset?: number): boolean {
         const edges = tile.edges;

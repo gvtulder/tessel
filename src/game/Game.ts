@@ -11,7 +11,7 @@ import { TileGenerator, TileGenerators } from "./TileGenerator";
 import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
 import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/arrays";
-import { RuleSet } from "../grid/rules/RuleSet";
+import { RuleSetType } from "../grid/rules/RuleSet";
 import { ColorPatternPerShape } from "../grid/Shape";
 import { SetupCatalog } from "../saveGames";
 import { shuffle } from "../geom/RandomSampler";
@@ -24,7 +24,7 @@ import {
 export type GameSettings = {
     atlas: Atlas;
     colors?: TileColors;
-    rules?: RuleSet;
+    rules?: RuleSetType;
     scorer?: ScorerType;
     colorPatternPerShape?: ColorPatternPerShape;
     uniqueTileColors?: boolean;
@@ -84,7 +84,7 @@ export class Game extends EventTarget {
         this.points = 0;
 
         this.grid = new Grid(this.settings.atlas);
-        if (settings.rules) this.grid.rules = settings.rules;
+        if (settings.rules) this.grid.rules = settings.rules.create();
         this.scorer = (settings.scorer || ConnectedSegmentScorer).create();
 
         // generate tiles

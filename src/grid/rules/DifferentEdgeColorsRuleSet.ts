@@ -12,11 +12,15 @@ import { RuleSet } from "./RuleSet";
  * of a tile have different colors.
  */
 
-export class DifferentEdgeColorsRuleSet implements RuleSet {
-    name = msg({
+export class DifferentEdgeColorsRuleSet extends RuleSet {
+    static friendlyName = msg({
         id: "rules.DifferentEdgeColorsRuleSet.friendlyName",
         message: "Touching tiles must have different colors",
     });
+
+    static create() {
+        return new DifferentEdgeColorsRuleSet();
+    }
 
     checkColors(tile: Tile, colors: TileColors, offset?: number): boolean {
         const edges = tile.edges;

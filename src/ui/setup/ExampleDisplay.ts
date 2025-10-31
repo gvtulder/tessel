@@ -7,7 +7,7 @@ import { Atlas } from "../../grid/Atlas";
 import { CentricGridBuilder } from "../../grid/GridBuilder";
 import { GridColoring } from "../../grid/GridColoring";
 import { seedPRNG } from "../../geom/RandomSampler";
-import { RuleSet } from "../../grid/rules/RuleSet";
+import { RuleSetType } from "../../grid/rules/RuleSet";
 import { ColorPatternPerShape } from "../../grid/Shape";
 import { TileColors } from "../../grid/Tile";
 import { GridDisplay } from "../grid/GridDisplay";
@@ -35,7 +35,7 @@ export class ExampleDisplay {
         colors: TileColors,
         colorPatternPerShape: ColorPatternPerShape,
         uniqueTileColors: boolean,
-        rules: RuleSet,
+        rules: RuleSetType,
         seed: number = 123456,
     ): boolean {
         if (this.gridDisplay) {
@@ -49,7 +49,7 @@ export class ExampleDisplay {
         const prngColor = seedPRNG(seed);
 
         const grid = new CentricGridBuilder().buildGrid(atlas, 30, prngShape);
-        grid.rules = rules;
+        grid.rules = rules.create();
         const coloring = new GridColoring(grid);
         coloring.applyColorPattern(
             colorPatternPerShape,

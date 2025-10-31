@@ -324,19 +324,13 @@ export const SetupCatalog = {
     rules: options(
         {
             key: "same",
-            rules: new MatchEdgeColorsRuleSet(),
+            rules: MatchEdgeColorsRuleSet,
             exampleColors: [0, 0] as [number, number],
-            // scorer: new ConvexShapeScorer(),
-            // scorer: new ConnectedSegmentScorer(),
-            scorer: new FullTileScorer(),
         },
         {
             key: "diff",
-            rules: new DifferentEdgeColorsRuleSet(),
+            rules: DifferentEdgeColorsRuleSet,
             exampleColors: [0, 1] as [number, number],
-            scorer: new FullTileScorer(),
-            // scorer: new ConvexShapeScorer(),
-            // scorer: new FullVertexScorer(),
         },
     ),
     defaultRules: "same",

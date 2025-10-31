@@ -150,7 +150,7 @@ msgstr "Touching tiles must have different colors"
 
 #. js-lingui-explicit-id
 #: src/grid/rules/MatchEdgeColorsRuleSet.ts:16
-msgid "rules.MatchEdgeColorsRuleSet.frienlyName"
+msgid "rules.MatchEdgeColorsRuleSet.friendlyName"
 msgstr "Touching tiles must have the same color"
 
 #. js-lingui-explicit-id

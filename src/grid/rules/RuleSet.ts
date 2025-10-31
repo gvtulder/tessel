@@ -6,14 +6,23 @@
 import { MessageDescriptor } from "@lingui/core";
 import { Tile, TileColors, TileSegment } from "../Tile";
 
+export type RuleSetType = typeof RuleSet;
+
 /**
  * A RuleSet can check if the new colors would fit on the given tile.
  */
-export interface RuleSet {
+export abstract class RuleSet {
     /**
      * A user-friendly name for this ruleset.
      */
-    name: MessageDescriptor;
+    static friendlyName: MessageDescriptor;
+
+    /**
+     * Create a new RuleSet instance.
+     */
+    static create(): RuleSet {
+        throw new Error("should be implemented in subclass");
+    }
 
     /**
      * Checks if the colors would fit on this tile.
@@ -21,14 +30,18 @@ export interface RuleSet {
      * @param colors the new color sequence
      * @param offset the offset of the colors in the tile
      */
-    checkColors(tile: Tile, colors: TileColors, offset?: number): boolean;
+    abstract checkColors(
+        tile: Tile,
+        colors: TileColors,
+        offset?: number,
+    ): boolean;
 
     /**
      * Returns the color constraints for the tile segment,
      * listing the tile segments that should have the same color
      * and those that should have a different color.
      */
-    computeColorConstraints(tileSegment: TileSegment): {
+    abstract computeColorConstraints(tileSegment: TileSegment): {
         same: TileSegment[];
         different: TileSegment[];
     };

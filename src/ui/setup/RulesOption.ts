@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { RuleSet } from "../../grid/rules/RuleSet";
+import { RuleSetType } from "../../grid/rules/RuleSet";
 import { TileColors } from "../../grid/Tile";
 import { SVG } from "../shared/svg";
 import { UniqueIdSource } from "../shared/uniqueSvgId";
@@ -12,17 +12,17 @@ import { SettingRowOption } from "./SettingRowOption";
 const uniqueIdSource = new UniqueIdSource("rules");
 
 export class RulesOption extends SettingRowOption {
-    rules: RuleSet;
+    rules: RuleSetType;
     colorIndex: [number, number];
     colors?: TileColors;
     segmentA: SVGPolygonElement;
     segmentB: SVGPolygonElement;
 
-    constructor(key: string, rules: RuleSet, colorIndex: [number, number]) {
+    constructor(key: string, rules: RuleSetType, colorIndex: [number, number]) {
         super(key);
         this.rules = rules;
         this.colorIndex = colorIndex;
-        this.title = rules.name;
+        this.title = rules.friendlyName;
 
         const prefix = uniqueIdSource.getUniqueIdPrefix();
 

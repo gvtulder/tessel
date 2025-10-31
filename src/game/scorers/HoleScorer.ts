@@ -10,6 +10,8 @@ import { Scorer, ScoredRegion } from "./Scorer";
 import { msg } from "@lingui/core/macro";
 
 export class HoleScorer extends Scorer {
+    static id = "holes";
+
     static friendlyName = msg({
         id: "scorer.HoleScorer.friendlyName",
         message: "Count holes",

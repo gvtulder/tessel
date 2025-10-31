@@ -10,6 +10,8 @@ import { Scorer, ScoredRegion } from "./Scorer";
 import { msg } from "@lingui/core/macro";
 
 export class ConnectedSegmentScorer extends Scorer {
+    static id = "shape";
+
     static friendlyName = msg({
         id: "scorer.ConnectedSegmentScorer.friendlyName",
         message: "Count connected segments",

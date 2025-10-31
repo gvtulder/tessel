@@ -10,6 +10,8 @@ import { Scorer, ScoredRegion } from "./Scorer";
 import { msg } from "@lingui/core/macro";
 
 export class FullVertexScorer extends Scorer {
+    static id = "vertex";
+
     static friendlyName = msg({
         id: "scorer.FullVertexScorer.friendlyName",
         message: "Count full vertices",

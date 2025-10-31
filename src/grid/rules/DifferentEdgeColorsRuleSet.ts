@@ -13,6 +13,8 @@ import { RuleSet } from "./RuleSet";
  */
 
 export class DifferentEdgeColorsRuleSet extends RuleSet {
+    static id = "diff";
+
     static friendlyName = msg({
         id: "rules.DifferentEdgeColorsRuleSet.friendlyName",
         message: "Touching tiles must have different colors",

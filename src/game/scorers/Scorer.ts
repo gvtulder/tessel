@@ -23,6 +23,11 @@ export type ScorerType = typeof Scorer;
 
 export abstract class Scorer {
     /**
+     * A unique identifier for this scorer type.
+     */
+    static id: string;
+
+    /**
      * Translation key for the friendly name for the scorer.
      */
     static friendlyName: MessageDescriptor;
@@ -47,4 +52,11 @@ export abstract class Scorer {
         tile: Tile,
         includeIncomplete?: boolean,
     ): ScoredRegion[];
+
+    /**
+     * A unique identifier for this scorer type.
+     */
+    get id(): string {
+        return (this.constructor as typeof Scorer).id;
+    }
 }

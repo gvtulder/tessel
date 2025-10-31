@@ -13,6 +13,11 @@ export type RuleSetType = typeof RuleSet;
  */
 export abstract class RuleSet {
     /**
+     * A unique identifier for this ruleset.
+     */
+    static id: string;
+
+    /**
      * A user-friendly name for this ruleset.
      */
     static friendlyName: MessageDescriptor;
@@ -45,4 +50,11 @@ export abstract class RuleSet {
         same: TileSegment[];
         different: TileSegment[];
     };
+
+    /**
+     * A unique identifier for this ruleset type.
+     */
+    get id(): string {
+        return (this.constructor as typeof RuleSet).id;
+    }
 }

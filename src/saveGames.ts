@@ -216,7 +216,7 @@ lookup.set("snubsquare", {
 });
 
 const SnubSquareGridAtlas = Atlas.fromSourceGrid(
-    "SnubSquareGridAtlas",
+    "snubsquare",
     msg({
         id: "atlas.SnubSquareGridAtlas.friendlyName",
         message: "Snub square grid",
@@ -263,7 +263,7 @@ lookup.set("penrose3", {
 });
 
 export const Penrose3GridAtlas = Atlas.fromSourceGrid(
-    "Penrose3GridAtlas",
+    "penrose",
     msg({ id: "atlas.Penrose3Grid.friendlyName", message: "Penrose-3 grid" }),
     msg({ id: "atlas.Penrose3Grid.tilingName", message: "Penrose-3 tiling" }),
     Penrose3SourceGrid,
@@ -292,17 +292,17 @@ function options<T extends { key: string }>(...entries: T[]) {
 
 export const SetupCatalog = {
     atlas: options(
-        { key: "square", atlas: SquaresAtlas },
-        { key: "triangle", atlas: TrianglesAtlas },
-        { key: "rhombus", atlas: RhombusAtlas },
-        { key: "pentagon", atlas: CairoAtlas },
-        { key: "hexagon", atlas: HexagonsAtlas },
-        { key: "deltotrihex", atlas: DeltoTrihexAtlas },
-        { key: "penrose", atlas: Penrose3GridAtlas },
-        { key: "snubsquare", atlas: SnubSquareGridAtlas },
-        { key: "ammannbeenker", atlas: AmmannBeenkerAtlas },
+        { key: SquaresAtlas.id, atlas: SquaresAtlas },
+        { key: TrianglesAtlas.id, atlas: TrianglesAtlas },
+        { key: RhombusAtlas.id, atlas: RhombusAtlas },
+        { key: CairoAtlas.id, atlas: CairoAtlas },
+        { key: HexagonsAtlas.id, atlas: HexagonsAtlas },
+        { key: DeltoTrihexAtlas.id, atlas: DeltoTrihexAtlas },
+        { key: Penrose3GridAtlas.id, atlas: Penrose3GridAtlas },
+        { key: SnubSquareGridAtlas.id, atlas: SnubSquareGridAtlas },
+        { key: AmmannBeenkerAtlas.id, atlas: AmmannBeenkerAtlas },
     ),
-    defaultAtlas: "square",
+    defaultAtlas: SquaresAtlas.id,
 
     colors: options(
         /*
@@ -323,39 +323,39 @@ export const SetupCatalog = {
 
     rules: options(
         {
-            key: "same",
+            key: MatchEdgeColorsRuleSet.id,
             rules: MatchEdgeColorsRuleSet,
             exampleColors: [0, 0] as [number, number],
         },
         {
-            key: "diff",
+            key: DifferentEdgeColorsRuleSet.id,
             rules: DifferentEdgeColorsRuleSet,
             exampleColors: [0, 1] as [number, number],
         },
     ),
-    defaultRules: "same",
+    defaultRules: MatchEdgeColorsRuleSet.id,
 
     scorers: options(
         {
-            key: "shape",
+            key: ConnectedSegmentScorer.id,
             scorer: ConnectedSegmentScorer,
         },
         {
-            key: "single-tile",
+            key: FullTileScorer.id,
             scorer: FullTileScorer,
         },
         {
-            key: "convex",
+            key: ConvexShapeScorer.id,
             scorer: ConvexShapeScorer,
         },
         {
-            key: "vertex",
+            key: FullVertexScorer.id,
             scorer: FullVertexScorer,
         },
         {
-            key: "holes",
+            key: HoleScorer.id,
             scorer: HoleScorer,
         },
     ),
-    defaultScorer: "shape",
+    defaultScorer: HoleScorer.id,
 };

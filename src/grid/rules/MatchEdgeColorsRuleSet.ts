@@ -13,6 +13,8 @@ import { RuleSet } from "./RuleSet";
  */
 
 export class MatchEdgeColorsRuleSet extends RuleSet {
+    static id = "same";
+
     static friendlyName = msg({
         id: "rules.MatchEdgeColorsRuleSet.friendlyName",
         message: "Touching tiles must have the same color",

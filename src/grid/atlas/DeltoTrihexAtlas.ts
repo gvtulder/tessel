@@ -7,7 +7,7 @@ import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const DeltoTrihexAtlas = Atlas.fromDefinition({
-    id: "DeltoTrihexAtlas",
+    id: "deltotrihex",
     name: msg({
         id: "atlas.DeltoTrihexAtlas.friendlyName",
         message: "Deltoidal-trihexagonal",

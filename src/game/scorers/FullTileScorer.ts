@@ -9,6 +9,8 @@ import { Scorer, ScoredRegion } from "./Scorer";
 import { msg } from "@lingui/core/macro";
 
 export class FullTileScorer extends Scorer {
+    static id = "single-tile";
+
     static friendlyName = msg({
         id: "scorer.FullTileScorer.friendlyName",
         message: "Count tiles",

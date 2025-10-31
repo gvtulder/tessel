@@ -11,6 +11,8 @@ import { Scorer, ScoredRegion } from "./Scorer";
 import { msg } from "@lingui/core/macro";
 
 export class ConvexShapeScorer extends Scorer {
+    static id = "convex";
+
     static friendlyName = msg({
         id: "scorer.ConvexShapeScorer.friendlyName",
         message: "Count convex shapes",

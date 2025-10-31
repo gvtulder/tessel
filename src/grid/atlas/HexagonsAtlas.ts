@@ -7,7 +7,7 @@ import { msg } from "@lingui/core/macro";
 import { Atlas } from "../Atlas";
 
 export const HexagonsAtlas = Atlas.fromDefinition({
-    id: "HexagonsAtlas",
+    id: "hexagon",
     name: msg({ id: "atlas.HexagonsAtlas.friendlyName", message: "Hexagon" }),
     tilingName: msg({
         id: "atlas.HexagonsAtlas.tilingName",

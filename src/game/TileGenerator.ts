@@ -176,11 +176,18 @@ export class TileGenerators {
 
     static ensureNumber(min: number, max: number): TileGenerator {
         return (tiles: TileShapeColors[]) => {
-            shuffle(tiles);
-            if (min <= tiles.length && tiles.length <= max) {
-                return tiles;
+            let selectedTiles: TileShapeColors[] = [];
+            // repeat tiles if necessary
+            while (selectedTiles.length < min) {
+                selectedTiles = selectedTiles.concat(tiles);
             }
-            const selectedTiles: TileShapeColors[] = [];
+            shuffle(selectedTiles);
+            if (selectedTiles.length <= max) {
+                return selectedTiles;
+            }
+            // select a subset
+            tiles = selectedTiles;
+            selectedTiles = [];
             for (let i = Math.round((max + min) / 2); i >= 0; i--) {
                 selectedTiles.push(tiles[i % tiles.length]);
             }

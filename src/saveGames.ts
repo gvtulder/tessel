@@ -22,13 +22,13 @@ import { SnubSquareAtlas } from "./grid/atlas/SnubSquareAtlas";
 import { SnubSquareFreeAtlas } from "./grid/atlas/SnubSquareFreeAtlas";
 import { MatchEdgeColorsRuleSet } from "./grid/rules/MatchEdgeColorsRuleSet";
 import { DifferentEdgeColorsRuleSet } from "./grid/rules/DifferentEdgeColorsRuleSet";
-import { Penrose3SourceGrid } from "./grid/source/Penrose3SourceGrid";
-import { SnubSquareSourceGrid } from "./grid/source/SnubSquareSourceGrid";
 import { Tile, TileColors } from "./grid/Tile";
 import Color from "color";
 import { AmmannBeenkerAtlas } from "./grid/atlas/AmmannBeenkerAtlas";
 import { HoleScorer } from "./game/scorers/HoleScorer";
 import { msg } from "@lingui/core/macro";
+import { SnubSquareGridAtlas } from "./grid/atlas/SnubSquareGridAtlas";
+import { Penrose3GridAtlas } from "./grid/atlas/Penrose3GridAtlas";
 
 const COLORS = [
     "red",
@@ -215,18 +215,6 @@ lookup.set("snubsquare", {
     ],
 });
 
-const SnubSquareGridAtlas = Atlas.fromSourceGrid(
-    "snubsquare",
-    msg({
-        id: "atlas.SnubSquareGridAtlas.friendlyName",
-        message: "Snub square grid",
-    }),
-    msg({
-        id: "atlas.SnubSquareGridAtlas.tilingName",
-        message: "Snub square tiling",
-    }),
-    SnubSquareSourceGrid,
-);
 lookup.set("snubsquaregrid", {
     atlas: SnubSquareGridAtlas,
     initialTile: WONG4,
@@ -262,12 +250,6 @@ lookup.set("penrose3", {
     ],
 });
 
-export const Penrose3GridAtlas = Atlas.fromSourceGrid(
-    "penrose",
-    msg({ id: "atlas.Penrose3Grid.friendlyName", message: "Penrose-3 grid" }),
-    msg({ id: "atlas.Penrose3Grid.tilingName", message: "Penrose-3 tiling" }),
-    Penrose3SourceGrid,
-);
 lookup.set("penrose3grid", {
     atlas: Penrose3GridAtlas,
     initialTile: WONG4,

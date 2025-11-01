@@ -122,6 +122,8 @@
   }
 
   .game-finished & {
+    margin: calc(-1 * $dropout-outer-padding);
+
     .game-toggle,
     .game-threeway-toggle {
       display: none;

@@ -20,8 +20,11 @@ import {
     DemoGameSettings,
     GameInitializer,
 } from "./GameInitializer";
+import { StatisticsMonitor } from "../stats/StatisticsMonitor";
+import { StatisticsEvent } from "../stats/Events";
 
 export type GameSettings = {
+    serializedJSON?: string;
     atlas: Atlas;
     colors?: TileColors;
     rules?: RuleSetType;
@@ -60,25 +63,31 @@ export const enum GameEventType {
     EndGame = "endgame",
     Score = "score",
     UpdateSlots = "updateslots",
+    PlaceTile = "placetile",
 }
 
 export class GameEvent extends Event {
     game?: Game;
     scoreShapes?: ScoredRegion[];
+    tile?: Tile;
 
     constructor(
         type: GameEventType,
-        game?: Game,
-        scoreShapes?: ScoredRegion[],
+        game?: Game | null,
+        scoreShapes?: ScoredRegion[] | null,
+        tile?: Tile | null,
     ) {
         super(type);
-        this.game = game;
-        this.scoreShapes = scoreShapes;
+        this.game = game || undefined;
+        this.scoreShapes = scoreShapes || undefined;
+        this.tile = tile || undefined;
     }
 }
 
 export class Game extends EventTarget {
     settings: GameSettings;
+
+    stats?: StatisticsMonitor;
 
     grid: Grid;
     scorer: Scorer;
@@ -87,7 +96,7 @@ export class Game extends EventTarget {
     points: number;
     finished: boolean;
 
-    constructor(settings: GameSettings) {
+    constructor(settings: GameSettings, stats?: StatisticsMonitor) {
         super();
 
         this.settings = settings;
@@ -128,6 +137,11 @@ export class Game extends EventTarget {
         }
 
         this.grid.generatePlaceholders();
+
+        this.stats = stats;
+        if (stats) {
+            stats.countEvent(StatisticsEvent.GameStarted);
+        }
     }
 
     finish() {
@@ -162,8 +176,11 @@ export class Game extends EventTarget {
                 this.tileStack.take(indexOnStack);
             }
 
-            // compute scores
+            // compute scores and update listeners
             this.computeScores(tile);
+            this.dispatchEvent(
+                new GameEvent(GameEventType.PlaceTile, this, null, tile),
+            );
 
             // end of game?
             if (this.tileStack.isEmpty()) {
@@ -221,6 +238,7 @@ export function gameFromSerializedSettings(
         : undefined;
 
     const settings: GameSettings = {
+        serializedJSON: serializedToJSON(serialized),
         atlas: atlas.atlas,
         colors: colors.colors,
         rules: rules.rules,

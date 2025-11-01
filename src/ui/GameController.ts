@@ -5,6 +5,8 @@
 
 import {
     Game,
+    GameEvent,
+    GameEventType,
     gameFromSerializedSettings,
     GameSettings,
     GameSettingsSerialized,
@@ -21,6 +23,8 @@ import { Grid } from "../grid/Grid";
 import { Atlas } from "../grid/Atlas";
 import { PaintMenu } from "./paint/PaintMenu";
 import { SettingsDisplay } from "./settings/SettingsDisplay";
+import { StatisticsMonitor } from "../stats/StatisticsMonitor";
+import { StatisticsEvent } from "../stats/Events";
 
 export const enum UserEventType {
     StartGame = "startgame",
@@ -54,6 +58,7 @@ export class GameController {
     version?: string;
     workbox?: Workbox;
     container: HTMLElement;
+    stats: StatisticsMonitor;
     game?: Game;
     currentScreen?: ScreenDisplay;
     currentScreenDestroy?: () => void;
@@ -63,6 +68,7 @@ export class GameController {
         this.container = container;
         this.version = version;
         this.workbox = workbox;
+        this.stats = StatisticsMonitor.instance;
 
         const rescale = () => this.rescale();
         if (screen && screen.orientation) {
@@ -382,6 +388,44 @@ export class GameController {
         this.container.appendChild(gameDisplay.element);
         gameDisplay.rescale();
 
+        // track game events
+        this.stats.countEvent(StatisticsEvent.GameStarted, game.grid.atlas.id);
+        game.addEventListener(GameEventType.Score, (event: GameEvent) => {
+            this.stats.updateHighScore(
+                StatisticsEvent.HighScore,
+                game.points,
+                game.settings.serializedJSON,
+            );
+            for (const region of event.scoreShapes || []) {
+                if (region.finished) {
+                    this.stats.countEvent(
+                        StatisticsEvent.ShapeCompleted,
+                        game.grid.atlas.id,
+                    );
+                    if (region.tiles) {
+                        this.stats.updateHighScore(
+                            StatisticsEvent.ShapeTileCount,
+                            region.tiles.size,
+                            game.grid.atlas.id,
+                        );
+                    }
+                }
+            }
+        });
+        game.addEventListener(GameEventType.PlaceTile, (event: GameEvent) => {
+            this.stats.countEvent(
+                StatisticsEvent.TilePlaced,
+                event.tile?.shape?.name,
+            );
+        });
+        game.addEventListener(GameEventType.EndGame, () => {
+            this.stats.countEvent(
+                StatisticsEvent.GameCompleted,
+                game.grid.atlas.id,
+            );
+        });
+
+        // add button handlers
         const handleMenu = () => {
             destroy();
             window.history.pushState({}, "", window.location.pathname);

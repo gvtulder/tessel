@@ -8,6 +8,8 @@ import { Workbox } from "workbox-window";
 import { VERSION } from "./constants";
 import { GameController } from "./ui/GameController";
 import { prepareI18n } from "./i18n";
+import { getStorageBackend } from "./lib/storage-backend";
+import { StatisticsMonitor } from "./stats/StatisticsMonitor";
 
 export async function startMainMenu(language: string, workbox?: Workbox) {
     document.body.addEventListener("touchstart", preventIosZoomAndSelection, {
@@ -29,6 +31,7 @@ export async function startMainMenu(language: string, workbox?: Workbox) {
         return;
     }
 
+    StatisticsMonitor.instance.storageBackend = getStorageBackend();
     await prepareI18n(language);
 
     const controller = new GameController(document.body, VERSION, workbox);

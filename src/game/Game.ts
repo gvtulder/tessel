@@ -44,6 +44,18 @@ export type GameSettingsSerialized = {
     demoGame?: DemoGameSettings;
 };
 
+export function serializedToJSON(settings: GameSettingsSerialized): string {
+    return JSON.stringify(settings, [
+        "atlas",
+        "colors",
+        "segments",
+        "uniqueTileColors",
+        "rules",
+        "scorer",
+        "demoGame",
+    ]);
+}
+
 export const enum GameEventType {
     EndGame = "endgame",
     Score = "score",

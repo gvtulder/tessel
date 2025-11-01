@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { GameSettings } from "./game/Game";
+import { gameFromSerializedSettings, GameSettings } from "./game/Game";
 import { ConnectedSegmentScorer } from "./game/scorers/ConnectedSegmentScorer";
 import { FullTileScorer } from "./game/scorers/FullTileScorer";
 import { ConvexShapeScorer } from "./game/scorers/ConvexShapeScorer";
@@ -88,16 +88,6 @@ const WONG4 = WONG6.filter((_, i) => i < 4);
 
 export const lookup = new Map<string, GameSettings>();
 
-lookup.set("square", {
-    atlas: SquaresAtlas,
-    initialTile: WONG4,
-    tilesShownOnStack: 3,
-    tileGenerator: [
-        // TileGenerators.permutations(["red", "black", "blue", "white"]),
-        TileGenerators.permutations(WONG4),
-    ],
-});
-
 lookup.set("square5", {
     atlas: SquaresAtlas,
     initialTile: ["red", "black", "blue", "white"],
@@ -116,27 +106,6 @@ lookup.set("squareUnique", {
         TileGenerators.permutations(WONG4),
         TileGenerators.onlyUniqueColors(),
         TileGenerators.repeat(10),
-    ],
-});
-
-lookup.set("triangle", {
-    atlas: TrianglesAtlas,
-    initialTile: [WONG4[0], WONG4[1], WONG4[2]],
-    tilesShownOnStack: 3,
-    tileGenerator: [
-        TileGenerators.permutations(WONG4),
-        TileGenerators.repeat(3),
-    ],
-});
-
-lookup.set("hexagons", {
-    atlas: HexagonsAtlas,
-    initialTile: WONG6,
-    tilesShownOnStack: 3,
-    tileGenerator: [
-        // TileGenerators.permutations(["red", "black", "blue", "white"]),
-        TileGenerators.permutations(WONG6),
-        TileGenerators.randomSubset(70),
     ],
 });
 
@@ -341,3 +310,39 @@ export const SetupCatalog = {
     ),
     defaultScorer: HoleScorer.id,
 };
+
+lookup.set(
+    "triangle",
+    gameFromSerializedSettings(SetupCatalog, {
+        atlas: TrianglesAtlas.id,
+        colors: "wong4",
+        segments: 0,
+        uniqueTileColors: false,
+        rules: MatchEdgeColorsRuleSet.id,
+        scorer: ConnectedSegmentScorer.id,
+    })!,
+);
+
+lookup.set(
+    "square",
+    gameFromSerializedSettings(SetupCatalog, {
+        atlas: SquaresAtlas.id,
+        colors: "wong4",
+        segments: 0,
+        uniqueTileColors: false,
+        rules: MatchEdgeColorsRuleSet.id,
+        scorer: ConnectedSegmentScorer.id,
+    })!,
+);
+
+lookup.set(
+    "hexagons",
+    gameFromSerializedSettings(SetupCatalog, {
+        atlas: HexagonsAtlas.id,
+        colors: "wong6",
+        segments: 0,
+        uniqueTileColors: false,
+        rules: MatchEdgeColorsRuleSet.id,
+        scorer: ConnectedSegmentScorer.id,
+    })!,
+);

@@ -8,6 +8,7 @@ import {
     gameFromSerializedSettings,
     GameSettings,
     GameSettingsSerialized,
+    serializedToJSON,
 } from "../game/Game";
 import { GameDisplay } from "./game/GameDisplay";
 import { MainMenuDisplay } from "./menu/MainMenuDisplay";
@@ -264,7 +265,7 @@ export class GameController {
             window.history.pushState(
                 {},
                 "",
-                `#${btoa(JSON.stringify(settings))}`,
+                `#${btoa(serializedToJSON(settings))}`,
             );
             const gameSettings = this.gameFromSerializedSettings(settings);
             if (gameSettings) this.startGame(gameSettings);

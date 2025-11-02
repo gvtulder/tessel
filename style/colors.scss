@@ -7,11 +7,8 @@ $blue: hsl(214deg, 64%, 50%);
 :root {
   // main backgrounds
   --main-bg-color: #{color.change($maintint, $lightness: 87%)};
-  --panel-bg-color: #{color.change(
-      $maintint,
-      $lightness: 70%,
-      $saturation: 15%
-    )};
+  $panel-bg-color: color.change($maintint, $lightness: 70%, $saturation: 15%);
+  --panel-bg-color: #{$panel-bg-color};
   --dropout-bg-color: #{color.change($maintint, $lightness: 95%)};
 
   // COMPONENTS
@@ -121,7 +118,7 @@ $blue: hsl(214deg, 64%, 50%);
   --score-display-bg-color: #{color.change($green, $lightness: 85%)};
 
   // tile counter
-  --tile-counter-text-color: rgba(0, 0, 0, 0.5);
+  --tile-counter-text-color: #{color.mix($panel-bg-color, #000, 50%)};
 
   // placeholder tile colors
   --placeholder-fill-color: hsla(0deg, 0%, 77%, 0.5);

@@ -20,6 +20,8 @@ import { Toggle } from "../shared/Toggle";
 import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggles } from "../shared/toggles";
 import { msg } from "@lingui/core/macro";
+import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
+import { StatisticsEvent } from "../../stats/Events";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;
@@ -46,7 +48,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     onGameScore: EventListener;
     onGameEndGame: EventListener;
 
-    constructor(game: Game) {
+    constructor(game: Game, stats?: StatisticsMonitor) {
         super();
         this.game = game;
 
@@ -61,6 +63,48 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             this.element.classList.add("game-finished");
             this.gridDisplay.gameFinished();
         };
+
+        if (stats) {
+            // track game events
+            stats.countEvent(StatisticsEvent.GameStarted, game.grid.atlas.id);
+            game.addEventListener(GameEventType.Score, (event: GameEvent) => {
+                stats.updateHighScore(
+                    StatisticsEvent.HighScore,
+                    game.points,
+                    game.settings.serializedJSON,
+                );
+                for (const region of event.scoreShapes || []) {
+                    if (region.finished) {
+                        stats.countEvent(
+                            StatisticsEvent.ShapeCompleted,
+                            game.settings.serializedJSON,
+                        );
+                        if (region.tiles) {
+                            stats.updateHighScore(
+                                StatisticsEvent.ShapeTileCount,
+                                region.tiles.size,
+                                game.settings.serializedJSON,
+                            );
+                        }
+                    }
+                }
+            });
+            game.addEventListener(
+                GameEventType.PlaceTile,
+                (event: GameEvent) => {
+                    stats.countEvent(
+                        StatisticsEvent.TilePlaced,
+                        event.tile?.shape?.name.split("-")[0],
+                    );
+                },
+            );
+            game.addEventListener(GameEventType.EndGame, () => {
+                stats.countEvent(
+                    StatisticsEvent.GameCompleted,
+                    game.grid.atlas.id,
+                );
+            });
+        }
 
         // main element
         const element = (this.element = createElement(
@@ -111,7 +155,9 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             "score-display",
             tileCounterAndScore,
         );
-        this.scoreDisplay = new ScoreDisplay();
+        this.scoreDisplay = new ScoreDisplay(
+            stats?.counters.get(`HighScore.${game.settings.serializedJSON}`),
+        );
         scoreDisplayContainer.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
 

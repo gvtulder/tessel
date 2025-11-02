@@ -10,8 +10,8 @@ import { createElement } from "../shared/html";
 import { Button } from "../shared/Button";
 import { msg, t } from "@lingui/core/macro";
 import { i18n, MessageDescriptor } from "@lingui/core";
-import { StatisticsMonitor } from "src/stats/StatisticsMonitor";
-import { SetupCatalog } from "src/saveGames";
+import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
+import { SetupCatalog } from "../../saveGames";
 
 export type StatisticsSection = {
     heading?: {

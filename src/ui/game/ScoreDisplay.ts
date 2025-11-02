@@ -4,6 +4,7 @@
  */
 
 import { createElement } from "../shared/html";
+import icons from "../shared/icons";
 
 export class ScoreDisplay {
     element: HTMLDivElement;
@@ -11,7 +12,7 @@ export class ScoreDisplay {
     private _points: number;
     private onScoreAnimationEnd: EventListener;
 
-    constructor() {
+    constructor(highScore?: number) {
         this.onScoreAnimationEnd = () => {
             this.element.classList.remove("animate");
         };
@@ -25,6 +26,13 @@ export class ScoreDisplay {
 
         const scoreField = (this.scoreField = createElement("span", null, p));
         scoreField.innerHTML = "0";
+
+        if (highScore) {
+            const pHigh = createElement("p", "high-score", element);
+            pHigh.innerHTML = icons.starIcon;
+            const highScoreField = createElement("span", null, pHigh);
+            highScoreField.innerHTML = `${highScore}`;
+        }
 
         element.addEventListener("animationend", this.onScoreAnimationEnd);
     }

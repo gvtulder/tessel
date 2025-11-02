@@ -226,8 +226,11 @@
   transition-property: none;
 }
 
+$score-font-size: min(4vw, 5vh);
+$tile-counter-and-high-score-font-size: max(18px, min(2vw, 2.5vh));
+
 .tile-counter {
-  font-size: 2vw;
+  font-size: $tile-counter-and-high-score-font-size;
   cursor: pointer;
   color: var(--tile-counter-text-color);
 
@@ -271,25 +274,46 @@
 
 .score-display .score {
   flex-grow: 1;
-  margin: 10% 10% 3vw 10%;
+  margin: 10% 10% 1.5vw 10%;
   box-sizing: border-box;
-  padding: 4% 0 7% 0;
-  border-radius: 2vw;
-  border: 3px solid var(--score-display-fg-color);
-  background: var(--score-display-bg-color);
-  color: var(--score-display-fg-color);
-  opacity: 0.5;
-  font-size: min(4vw, 5vh);
-  text-align: center;
+  font-size: $score-font-size;
+
+  p:first-child {
+    padding: 4% 0 7% 0;
+    border-radius: 1vw;
+    border: 3px solid var(--score-display-fg-color);
+    background: var(--score-display-bg-color);
+    color: var(--score-display-fg-color);
+    fill: var(--score-display-fg-color);
+    font-size: 1em;
+    opacity: 0.5;
+    text-align: center;
+  }
 
   &.animate {
-    animation-name: score-display-anim;
-    animation-duration: 1000ms;
+    p:first-child {
+      animation-name: score-display-anim;
+      animation-duration: 1000ms;
+    }
   }
 
   p {
     margin: 0;
     padding: 0;
+  }
+
+  p.high-score {
+    padding-top: 0.1em;
+    font-size: $tile-counter-and-high-score-font-size;
+    color: var(--tile-counter-text-color);
+    fill: var(--tile-counter-text-color);
+  }
+
+  svg {
+    display: inline-block;
+    vertical-align: -0.1em;
+    height: 0.8em;
+    padding-right: 0.2em;
   }
 }
 @keyframes score-display-anim {
@@ -334,7 +358,6 @@
     }
 
     .tile-counter {
-      font-size: 3.5vw;
       display: flex;
       flex-direction: column-reverse;
       align-items: center;

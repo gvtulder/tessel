@@ -429,47 +429,10 @@ export class GameController {
 
         const game = new Game(gameSettings);
         this.game = game;
-        const gameDisplay = new GameDisplay(game);
+        const gameDisplay = new GameDisplay(game, this.stats);
         this.currentScreen = gameDisplay;
         this.container.appendChild(gameDisplay.element);
         gameDisplay.rescale();
-
-        // track game events
-        this.stats.countEvent(StatisticsEvent.GameStarted, game.grid.atlas.id);
-        game.addEventListener(GameEventType.Score, (event: GameEvent) => {
-            this.stats.updateHighScore(
-                StatisticsEvent.HighScore,
-                game.points,
-                game.settings.serializedJSON,
-            );
-            for (const region of event.scoreShapes || []) {
-                if (region.finished) {
-                    this.stats.countEvent(
-                        StatisticsEvent.ShapeCompleted,
-                        game.settings.serializedJSON,
-                    );
-                    if (region.tiles) {
-                        this.stats.updateHighScore(
-                            StatisticsEvent.ShapeTileCount,
-                            region.tiles.size,
-                            game.settings.serializedJSON,
-                        );
-                    }
-                }
-            }
-        });
-        game.addEventListener(GameEventType.PlaceTile, (event: GameEvent) => {
-            this.stats.countEvent(
-                StatisticsEvent.TilePlaced,
-                event.tile?.shape?.name.split("-")[0],
-            );
-        });
-        game.addEventListener(GameEventType.EndGame, () => {
-            this.stats.countEvent(
-                StatisticsEvent.GameCompleted,
-                game.grid.atlas.id,
-            );
-        });
 
         // add button handlers
         const handleMenu = () => {

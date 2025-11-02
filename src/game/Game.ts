@@ -20,8 +20,6 @@ import {
     DemoGameSettings,
     GameInitializer,
 } from "./GameInitializer";
-import { StatisticsMonitor } from "../stats/StatisticsMonitor";
-import { StatisticsEvent } from "../stats/Events";
 
 export type GameSettings = {
     serializedJSON?: string;
@@ -87,8 +85,6 @@ export class GameEvent extends Event {
 export class Game extends EventTarget {
     settings: GameSettings;
 
-    stats?: StatisticsMonitor;
-
     grid: Grid;
     scorer: Scorer;
     tileStack: FixedOrderTileStack;
@@ -96,7 +92,7 @@ export class Game extends EventTarget {
     points: number;
     finished: boolean;
 
-    constructor(settings: GameSettings, stats?: StatisticsMonitor) {
+    constructor(settings: GameSettings) {
         super();
 
         this.settings = settings;
@@ -137,11 +133,6 @@ export class Game extends EventTarget {
         }
 
         this.grid.generatePlaceholders();
-
-        this.stats = stats;
-        if (stats) {
-            stats.countEvent(StatisticsEvent.GameStarted);
-        }
     }
 
     finish() {

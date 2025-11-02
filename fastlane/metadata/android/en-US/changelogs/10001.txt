@@ -1,0 +1,4 @@
+Minor tweaks and improvements.
+
+* Leave room at the bottom of the screen for the phone navigation buttons.
+* Removed an unused permission from the Android build process.

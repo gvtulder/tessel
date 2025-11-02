@@ -1,0 +1,1 @@
+Added a dark mode color scheme.

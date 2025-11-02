@@ -23,6 +23,7 @@ import { Grid } from "../grid/Grid";
 import { Atlas } from "../grid/Atlas";
 import { PaintMenu } from "./paint/PaintMenu";
 import { SettingsDisplay } from "./settings/SettingsDisplay";
+import { StatisticsDisplay } from "./statistics/StatisticsDisplay";
 import { StatisticsMonitor } from "../stats/StatisticsMonitor";
 import { StatisticsEvent } from "../stats/Events";
 
@@ -34,6 +35,7 @@ export const enum UserEventType {
     StartGameFromSetup = "startgamefromsetup",
     Paint = "paint",
     Settings = "settings",
+    Statistics = "statistics",
 }
 
 export class UserEvent extends Event {
@@ -107,6 +109,8 @@ export class GameController {
             this.showGameSetupDisplay();
         } else if (saveGameId == "settings") {
             this.showSettingsDisplay();
+        } else if (saveGameId == "statistics") {
+            this.showStatisticsDisplay();
         } else if (saveGameId == "paint") {
             this.showPaintMenuDisplay();
         } else if (saveGameId.match("^paint-")) {
@@ -179,6 +183,12 @@ export class GameController {
             this.showSettingsDisplay();
         };
 
+        const handleStatistics = () => {
+            destroy();
+            window.history.pushState({}, "", `#statistics`);
+            this.showStatisticsDisplay();
+        };
+
         const handlePaintMenu = () => {
             destroy();
             window.history.pushState({}, "", `#paint`);
@@ -202,6 +212,10 @@ export class GameController {
                 handleSettings,
             );
             menuDisplay.removeEventListener(
+                UserEventType.Statistics,
+                handleStatistics,
+            );
+            menuDisplay.removeEventListener(
                 UserEventType.Paint,
                 handlePaintMenu,
             );
@@ -211,6 +225,10 @@ export class GameController {
         menuDisplay.addEventListener(UserEventType.StartGame, handleStart);
         menuDisplay.addEventListener(UserEventType.SetupMenu, handleSetup);
         menuDisplay.addEventListener(UserEventType.Settings, handleSettings);
+        menuDisplay.addEventListener(
+            UserEventType.Statistics,
+            handleStatistics,
+        );
         menuDisplay.addEventListener(UserEventType.Paint, handlePaintMenu);
     }
 
@@ -248,6 +266,34 @@ export class GameController {
 
         settings.addEventListener(UserEventType.BackToMenu, handleMenu);
         settings.addEventListener(UserEventType.Settings, handleSettings);
+    }
+
+    showStatisticsDisplay() {
+        this.resetState();
+
+        const statistics = new StatisticsDisplay(this.stats);
+        this.currentScreen = statistics;
+        this.container.appendChild(statistics.element);
+        statistics.rescale();
+
+        const handleMenu = () => {
+            destroy();
+            window.history.pushState({}, "", window.location.pathname);
+            this.showMainMenu();
+        };
+
+        const destroy = () => {
+            statistics.element.remove();
+            this.currentScreen = undefined;
+            this.currentScreenDestroy = undefined;
+            statistics.removeEventListener(
+                UserEventType.BackToMenu,
+                handleMenu,
+            );
+        };
+        this.currentScreenDestroy = destroy;
+
+        statistics.addEventListener(UserEventType.BackToMenu, handleMenu);
     }
 
     showGameSetupDisplay() {
@@ -400,13 +446,13 @@ export class GameController {
                 if (region.finished) {
                     this.stats.countEvent(
                         StatisticsEvent.ShapeCompleted,
-                        game.grid.atlas.id,
+                        game.settings.serializedJSON,
                     );
                     if (region.tiles) {
                         this.stats.updateHighScore(
                             StatisticsEvent.ShapeTileCount,
                             region.tiles.size,
-                            game.grid.atlas.id,
+                            game.settings.serializedJSON,
                         );
                     }
                 }
@@ -415,7 +461,7 @@ export class GameController {
         game.addEventListener(GameEventType.PlaceTile, (event: GameEvent) => {
             this.stats.countEvent(
                 StatisticsEvent.TilePlaced,
-                event.tile?.shape?.name,
+                event.tile?.shape?.name.split("-")[0],
             );
         });
         game.addEventListener(GameEventType.EndGame, () => {

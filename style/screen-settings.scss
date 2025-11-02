@@ -1,7 +1,8 @@
 @use "sass:color";
 @use "./sizes.scss";
 
-.screen.settings-display {
+.screen.settings-display,
+.screen.statistics-display {
   width: 100%;
   height: 100%;
   display: grid;
@@ -119,5 +120,77 @@
   p.version-line {
     margin-top: 2.4rem;
     color: var(--footer-version-color);
+  }
+}
+
+.screen.statistics-display {
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  article {
+    position: relative;
+  }
+
+  $stats-column-width: 6em;
+  table,
+  th,
+  td {
+    font-weight: normal;
+    border-spacing: 0;
+    font-size: 0.9em;
+  }
+  table {
+    max-width: 100%;
+    width: 100%;
+    table-layout: fixed;
+    margin-bottom: 1.2em;
+  }
+  table th,
+  table td {
+    padding: 2px 2px;
+    vertical-align: top;
+  }
+  table th.label,
+  table td.label {
+    padding-left: 8px;
+    border-left: 8px var(--main-bg-color) solid;
+  }
+  table th:first-child,
+  table td:first-child,
+  table th.label:first-child,
+  table td.label:first-child {
+    padding-left: 8px;
+    border: none;
+  }
+  thead th {
+    text-align: center;
+    width: $stats-column-width;
+    max-width: $stats-column-width;
+    vertical-align: bottom;
+  }
+  thead tr:last-child th,
+  thead tr:last-child td {
+    border-bottom: 1px solid var(--button-fg-color);
+  }
+  tbody th,
+  tfoot th {
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  tbody td,
+  tfoot td {
+    text-align: center;
+    width: $stats-column-width;
+    max-width: $stats-column-width;
+  }
+  tbody tr:nth-child(odd) th,
+  tbody tr:nth-child(odd) td {
+    background: var(--button-bg-color);
+  }
+  tfoot tr:first-child th,
+  tfoot tr:first-child td {
+    border-top: 1px solid var(--button-fg-color);
   }
 }

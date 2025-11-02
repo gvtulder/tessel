@@ -58,13 +58,13 @@ function preventIosZoomAndSelection(e: Event) {
     if (target && target.nodeName == "A") {
         return;
     }
+    const screen = target && target.closest && target.closest(".screen");
     if (
-        target &&
-        target.closest &&
-        target.closest(".screen.settings-display")
+        screen &&
+        (screen.classList.contains("settings-display") ||
+            screen?.classList.contains("statistics-display"))
     ) {
         return;
     }
-    console.log("Prevent default.");
     e.preventDefault();
 }

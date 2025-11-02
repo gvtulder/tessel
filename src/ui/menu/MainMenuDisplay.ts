@@ -20,6 +20,7 @@ import { msg, t } from "@lingui/core/macro";
 export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
     settingsButton: Button;
+    statisticsButton: Button;
     setupButton: Button;
     paintButton: Button;
     grids: Grid[];
@@ -45,6 +46,8 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             versionDiv.innerHTML = version;
         }
 
+        const buttonRow = createElement("div", "button-row", this.element);
+
         const settingsButton = new Button(
             icons.gearsIcon,
             msg({ id: "ui.menu.settingsButton", message: "Settings" }),
@@ -54,7 +57,18 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             "button-settings-menu",
         );
         this.settingsButton = settingsButton;
-        this.element.appendChild(settingsButton.element);
+        buttonRow.appendChild(settingsButton.element);
+
+        const statisticsButton = new Button(
+            icons.chartIcon,
+            msg({ id: "ui.menu.statisticsButton", message: "Statistics" }),
+            () => {
+                this.dispatchEvent(new UserEvent(UserEventType.Statistics));
+            },
+            "button-statistics-menu",
+        );
+        this.statisticsButton = statisticsButton;
+        buttonRow.appendChild(statisticsButton.element);
 
         const setupButton = new Button(
             icons.swatchbookIcon,
@@ -65,7 +79,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             "button-setup-menu",
         );
         this.setupButton = setupButton;
-        this.element.appendChild(setupButton.element);
+        buttonRow.appendChild(setupButton.element);
 
         const paintButton = new Button(
             icons.paintbrushIcon,
@@ -76,7 +90,7 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
             "button-paint-menu",
         );
         this.paintButton = paintButton;
-        this.element.appendChild(paintButton.element);
+        buttonRow.appendChild(paintButton.element);
 
         const container = createElement("div", "container", div);
         const logo = createElement("div", "logo", container);
@@ -133,6 +147,8 @@ export class MainMenuDisplay extends EventTarget implements ScreenDisplay {
         for (const gd of this.gridDisplays) {
             gd.destroy();
         }
+        this.settingsButton.destroy();
+        this.statisticsButton.destroy();
         this.setupButton.destroy();
         this.paintButton.destroy();
         this.tappables = [];

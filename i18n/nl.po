@@ -14,167 +14,167 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/AmmannBeenkerAtlas.ts:10
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:11
 msgid "atlas.AmmannBeenkerAtlas.friendlyName"
 msgstr "Ammann-Beenker"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/AmmannBeenkerAtlas.ts:14
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:15
 msgid "atlas.AmmannBeenkerAtlas.tilingName"
 msgstr "Ammann-Beenker-betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/CairoAtlas.ts:10
+#: src/grid/atlas/CairoAtlas.ts:11
 msgid "atlas.CairoAtlas.friendlyName"
 msgstr "Cairo pentagonal"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/CairoAtlas.ts:14
+#: src/grid/atlas/CairoAtlas.ts:15
 msgid "atlas.CairoAtlas.tilingName"
 msgstr "Caïro vijfhoekige betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/DeltoTrihexAtlas.ts:10
+#: src/grid/atlas/DeltoTrihexAtlas.ts:11
 msgid "atlas.DeltoTrihexAtlas.friendlyName"
 msgstr "Deltoïdale-trihexagonale betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/DeltoTrihexAtlas.ts:14
+#: src/grid/atlas/DeltoTrihexAtlas.ts:15
 msgid "atlas.DeltoTrihexAtlas.tilingName"
 msgstr "Deltoïdale-trihexagonale betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/HexagonsAtlas.ts:10
+#: src/grid/atlas/HexagonsAtlas.ts:11
 msgid "atlas.HexagonsAtlas.friendlyName"
 msgstr "Zeshoek"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/HexagonsAtlas.ts:11
+#: src/grid/atlas/HexagonsAtlas.ts:12
 msgid "atlas.HexagonsAtlas.tilingName"
 msgstr "Zeshoekige betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/Penrose0Atlas.ts:10
+#: src/grid/atlas/Penrose0Atlas.ts:11
 msgid "atlas.Penrose0Atlas.friendlyName"
 msgstr "Penrose-3"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/Penrose0Atlas.ts:11
+#: src/grid/atlas/Penrose0Atlas.ts:12
 msgid "atlas.Penrose0Atlas.tilingName"
 msgstr "Penrose-3-betegeling"
 
 #. js-lingui-explicit-id
-#: src/saveGames.ts:265
+#: src/grid/atlas/Penrose3GridAtlas.ts:12
 msgid "atlas.Penrose3Grid.friendlyName"
 msgstr "Penrose-3-grid"
 
 #. js-lingui-explicit-id
-#: src/saveGames.ts:266
+#: src/grid/atlas/Penrose3GridAtlas.ts:13
 msgid "atlas.Penrose3Grid.tilingName"
 msgstr "Penrose-3-betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/PenroseFreeAtlas.ts:10
+#: src/grid/atlas/PenroseFreeAtlas.ts:11
 msgid "atlas.PenroseFreeAtlas.friendlyName"
 msgstr "Penrose-3-free"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/PenroseFreeAtlas.ts:14
+#: src/grid/atlas/PenroseFreeAtlas.ts:15
 msgid "atlas.PenroseFreeAtlas.tilingName"
 msgstr "Penrose-3-betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/RhombusAtlas.ts:10
+#: src/grid/atlas/RhombusAtlas.ts:11
 msgid "atlas.RhombusAtlas.friendlyName"
 msgstr "Rhombus-60-120"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/RhombusAtlas.ts:14
+#: src/grid/atlas/RhombusAtlas.ts:15
 msgid "atlas.RhombusAtlas.tilingName"
 msgstr "Rhombille-betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/SnubSquareAtlas.ts:10
+#: src/grid/atlas/SnubSquareAtlas.ts:11
 msgid "atlas.SnubSquareAtlas.friendlyName"
 msgstr "Snub-square"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/SnubSquareAtlas.ts:14
+#: src/grid/atlas/SnubSquareAtlas.ts:15
 msgid "atlas.SnubSquareAtlas.tilingName"
 msgstr "Snub-vierkante betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/SnubSquareFreeAtlas.ts:10
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:11
 msgid "atlas.SnubSquareFreeAtlas.friendlyName"
 msgstr "Snub-square-free"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/SnubSquareFreeAtlas.ts:14
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:15
 msgid "atlas.SnubSquareFreeAtlas.tilingName"
 msgstr "Snub-vierkante betegeling"
 
 #. js-lingui-explicit-id
-#: src/saveGames.ts:219
+#: src/grid/atlas/SnubSquareGridAtlas.ts:12
 msgid "atlas.SnubSquareGridAtlas.friendlyName"
 msgstr "Snub-square-grid"
 
 #. js-lingui-explicit-id
-#: src/saveGames.ts:223
+#: src/grid/atlas/SnubSquareGridAtlas.ts:16
 msgid "atlas.SnubSquareGridAtlas.tilingName"
 msgstr "Snub-vierkante betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/SquaresAtlas.ts:10
+#: src/grid/atlas/SquaresAtlas.ts:11
 msgid "atlas.SquaresAtlas.friendlyName"
 msgstr "Vierkanten"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/SquaresAtlas.ts:11
+#: src/grid/atlas/SquaresAtlas.ts:12
 msgid "atlas.SquaresAtlas.tilingName"
 msgstr "Vierkante betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/TrianglesAtlas.ts:10
+#: src/grid/atlas/TrianglesAtlas.ts:11
 msgid "atlas.TrianglesAtlas.friendlyName"
 msgstr "Driehoek"
 
 #. js-lingui-explicit-id
-#: src/grid/atlas/TrianglesAtlas.ts:11
+#: src/grid/atlas/TrianglesAtlas.ts:12
 msgid "atlas.TrianglesAtlas.tilingName"
 msgstr "Driehoekige betegeling"
 
 #. js-lingui-explicit-id
-#: src/grid/rules/DifferentEdgeColorsRuleSet.ts:16
+#: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
 msgid "rules.DifferentEdgeColorsRuleSet.friendlyName"
 msgstr "Buurtegels moeten een andere kleur hebben"
 
 #. js-lingui-explicit-id
-#: src/grid/rules/MatchEdgeColorsRuleSet.ts:16
+#: src/grid/rules/MatchEdgeColorsRuleSet.ts:18
 msgid "rules.MatchEdgeColorsRuleSet.friendlyName"
 msgstr "Buurtegels moeten dezelfde kleur hebben"
 
 #. js-lingui-explicit-id
-#: src/game/scorers/ConnectedSegmentScorer.ts:13
+#: src/game/scorers/ConnectedSegmentScorer.ts:15
 msgid "scorer.ConnectedSegmentScorer.friendlyName"
 msgstr "Gesloten vormen"
 
 #. js-lingui-explicit-id
-#: src/game/scorers/ConvexShapeScorer.ts:14
+#: src/game/scorers/ConvexShapeScorer.ts:16
 msgid "scorer.ConvexShapeScorer.friendlyName"
 msgstr "Convexe vormen"
 
 #. js-lingui-explicit-id
-#: src/game/scorers/FullTileScorer.ts:12
+#: src/game/scorers/FullTileScorer.ts:14
 msgid "scorer.FullTileScorer.friendlyName"
 msgstr "Tegels"
 
 #. js-lingui-explicit-id
-#: src/game/scorers/FullVertexScorer.ts:13
+#: src/game/scorers/FullVertexScorer.ts:15
 msgid "scorer.FullVertexScorer.friendlyName"
 msgstr "Volledige hoekpunten"
 
 #. js-lingui-explicit-id
-#: src/game/scorers/HoleScorer.ts:13
+#: src/game/scorers/HoleScorer.ts:15
 msgid "scorer.HoleScorer.friendlyName"
 msgstr "Gaten"
 
@@ -186,19 +186,20 @@ msgstr "Menu openen"
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:125
 #: src/ui/paint/PaintDisplay.ts:66
-#: src/ui/paint/PaintMenu.ts:55
+#: src/ui/paint/PaintMenu.ts:56
 #: src/ui/settings/SettingsDisplay.ts:38
 #: src/ui/setup/GameSetupDisplay.ts:145
+#: src/ui/statistics/StatisticsDisplay.ts:50
 msgid "ui.menu.backToMenuButton"
 msgstr "Terug naar het menu"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:38
+#: src/ui/menu/MainMenuDisplay.ts:39
 msgid "ui.menu.footer"
 msgstr "Een spel van <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:72
+#: src/ui/menu/MainMenuDisplay.ts:86
 msgid "ui.menu.paintButton"
 msgstr "Tekenen"
 
@@ -208,15 +209,20 @@ msgid "ui.menu.restartGameButton"
 msgstr "Herstarten"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:50
+#: src/ui/menu/MainMenuDisplay.ts:53
 msgid "ui.menu.settingsButton"
 msgstr "Instellingen"
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:133
-#: src/ui/menu/MainMenuDisplay.ts:61
+#: src/ui/menu/MainMenuDisplay.ts:75
 msgid "ui.menu.setupButton"
 msgstr "Ontwerpen"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:64
+msgid "ui.menu.statisticsButton"
+msgstr "Statistieken"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: colors.length
@@ -284,6 +290,76 @@ msgstr "Opnieuw berekenen"
 #: src/ui/setup/GameSetupDisplay.ts:58
 msgid "ui.setup.title"
 msgstr "Ontwerpen"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:231
+msgid "ui.statistics.columns.GameCompleted"
+msgstr "Gespeeld"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:223
+msgid "ui.statistics.columns.HighScore"
+msgstr "Highscore"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:227
+msgid "ui.statistics.columns.ShapeCompleted"
+msgstr "Vormen"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:259
+msgid "ui.statistics.columns.TilePlaced"
+msgstr "Tegels"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:294
+msgid "ui.statistics.counter.TilePlaced.hexagon"
+msgstr "Zeshoeken"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:301
+msgid "ui.statistics.counter.TilePlaced.kite"
+msgstr "Vliegers"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:287
+msgid "ui.statistics.counter.TilePlaced.pentagon"
+msgstr "Vijfhoeken"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:280
+msgid "ui.statistics.counter.TilePlaced.rhombus"
+msgstr "Rhombi"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:266
+msgid "ui.statistics.counter.TilePlaced.square"
+msgstr "Vierkanten"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:273
+msgid "ui.statistics.counter.TilePlaced.triangle"
+msgstr "Driehoeken"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:214
+msgid "ui.statistics.headings.ShapeCompleted"
+msgstr "{value, plural, one {Je hebt één vorm gemaakt.} other {Je hebt # vormen gemaakt.}}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:250
+msgid "ui.statistics.headings.TilePlaced"
+msgstr "{value, plural, one {Je hebt één tegel geplaatst.} other {Je hebt # tegels geplaatst.}}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:70
+msgid "ui.statistics.notPlayed"
+msgstr "Je hebt nog niet gespeeld."
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:59
+msgid "ui.statistics.title"
+msgstr "Statistieken"
 
 #. js-lingui-explicit-id
 #: src/ui/shared/toggles.ts:41

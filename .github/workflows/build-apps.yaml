@@ -233,10 +233,10 @@ jobs:
         run: |
           versionCode=$( grep versionCode android/app/build.gradle | grep -ohE "[0-9]+" )
           touch ${{ github.workspace }}-CHANGELOG.txt
-          if [[ -f metadata/en-US/changelogs/${versionCode}.txt ]] ; then
-            cat metadata/en-US/changelogs/${versionCode}.txt >> ${{ github.workspace }}-CHANGELOG.txt
+          if [[ -f fastlane/metadata/android/en-US/changelogs/${versionCode}.txt ]] ; then
+            cat fastlane/metadata/android/en-US/changelogs/${versionCode}.txt >> ${{ github.workspace }}-CHANGELOG.txt
           else
-            echo "::error::Missing changelog: expected metadata/en-US/changelogs/${versionCode}.txt"
+            echo "::error::Missing changelog: expected fastlane/metadata/android/en-US/changelogs/${versionCode}.txt"
             exit 1
           fi
 

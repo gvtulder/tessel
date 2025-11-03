@@ -32,19 +32,17 @@ rsvg-convert assets/src/play-now-badge.svg \
 $OPTIPNG assets/social/play-now-badge.png
 
 # copy to metadata screenshots
-cp assets/screenshots/portrait-0*.png \
-   metadata/en-US/images/phoneScreenshots/
-$OPTIPNG metadata/en-US/images/phoneScreenshots/*.png
+$OPTIPNG fastlane/metadata/android/en-US/images/phoneScreenshots/*.png
 
 # build feature graphic
 rsvg-convert assets/src/featureGraphic.svg \
   -b "#f2f2f2" -w 1024 -h 500 \
-  -o metadata/en-US/images/featureGraphic.png
-$OPTIPNG metadata/en-US/images/featureGraphic.png
+  -o fastlane/metadata/android/en-US/images/featureGraphic.png
+$OPTIPNG fastlane/metadata/android/en-US/images/featureGraphic.png
 rsvg-convert assets/src/featureGraphic-with-text.svg \
   -b "#f2f2f2" -w 1024 -h 500 \
-  -o metadata/en-US/images/featureGraphic-with-text.png
-$OPTIPNG metadata/en-US/images/featureGraphic-with-text.png
+  -o fastlane/metadata/android/en-US/images/featureGraphic.png
+$OPTIPNG fastlane/metadata/android/en-US/images/featureGraphic.png
 
 # build icons
 cp assets/src/icon-square.svg assets/icons/icon.svg
@@ -57,8 +55,6 @@ cp assets/icons/icon-512.png assets/icons/apple-touch-icon.png
 convert assets/icons/icon-48.png assets/icons/favicon.ico
 
 # fastlane for Android
-cp metadata/en-US/images/featureGraphic-with-text.png \
-   fastlane/metadata/android/en-US/images/featureGraphic.png
 cp assets/icons/icon-512.png \
    fastlane/metadata/android/en-US/images/icon.png
 

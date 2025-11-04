@@ -30,6 +30,11 @@ $SVGO assets/social/play-now-badge.svg
 rsvg-convert assets/src/play-now-badge.svg \
   -h 250 -o assets/social/play-now-badge.png
 $OPTIPNG assets/social/play-now-badge.png
+cp assets/src/apple-app-store.svg assets/social/apple-app-store.svg
+$SVGO assets/social/apple-app-store.svg
+rsvg-convert assets/src/apple-app-store.svg \
+  -h 250 -o assets/social/apple-app-store.png
+$OPTIPNG assets/social/apple-app-store.png
 
 # copy to metadata screenshots
 $OPTIPNG fastlane/metadata/android/en-US/images/phoneScreenshots/*.png

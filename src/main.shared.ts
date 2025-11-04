@@ -55,7 +55,10 @@ export function removeSplash() {
  */
 function preventIosZoomAndSelection(e: Event) {
     const target = e.target as HTMLElement;
-    if (target && target.nodeName == "A") {
+    if (
+        (target && target.nodeName == "A") ||
+        (target.closest && target.closest("a"))
+    ) {
         return;
     }
     const screen = target && target.closest && target.closest(".screen");

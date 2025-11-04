@@ -102,6 +102,7 @@ Contribute to the translation of this game via [Weblate](https://hosted.weblate.
 
 [![GitHub Version](https://img.shields.io/github/v/release/gvtulder/tessel.svg?logo=github&label=GitHub)](https://github.com/gvtulder/tessel/releases)
 [![F-Droid Version](https://img.shields.io/f-droid/v/net.vantulder.tessel.svg?logo=f-droid&label=F-Droid)](https://f-droid.org/packages/net.vantulder.tessel/)
+[![iOS Version](https://img.shields.io/itunes/v/6754282700?logo=Apple&label=iOS)](https://apps.apple.com/app/tessel/id6754282700)
 [![Web Version](https://tessel.vantulder.net/badge.svg)](https://tessel.vantulder.net/)
 
 Tessel is written in TypeScript and uses HTML, SVG and CSS. It can be built using a recent Node version (tested for 20+). It can be played directly in the browser or installed as a Progressive Web App.

@@ -14,7 +14,7 @@ export const languages = {
         title: "English",
         messages: messages_en,
         settingsHTML: fs.readFileSync(
-            __dirname + "/../i18n/settings/en.html",
+            __dirname + "/../i18n/en/settings.html",
             "utf-8",
         ),
     },
@@ -22,7 +22,7 @@ export const languages = {
         title: "Nederlands",
         messages: messages_nl,
         settingsHTML: fs.readFileSync(
-            __dirname + "/../i18n/settings/nl.html",
+            __dirname + "/../i18n/nl/settings.html",
             "utf-8",
         ),
     },

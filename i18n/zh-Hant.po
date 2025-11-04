@@ -1,0 +1,392 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-11-04 11:45+0800\n"
+"PO-Revision-Date: \n"
+"Last-Translator: gheescoo gheescoo@yandex.com\n"
+"Language-Team: \n"
+"Language: zh-Hant\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:11
+msgid "atlas.AmmannBeenkerAtlas.friendlyName"
+msgstr "Ammann-Beenker"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:15
+msgid "atlas.AmmannBeenkerAtlas.tilingName"
+msgstr "Ammann-Beenker 鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:11
+msgid "atlas.CairoAtlas.friendlyName"
+msgstr "開羅五邊形"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:15
+msgid "atlas.CairoAtlas.tilingName"
+msgstr "開羅五邊形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:11
+msgid "atlas.DeltoTrihexAtlas.friendlyName"
+msgstr "鳶形三六邊形"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:15
+msgid "atlas.DeltoTrihexAtlas.tilingName"
+msgstr "鳶形三六邊形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:11
+msgid "atlas.HexagonsAtlas.friendlyName"
+msgstr "六邊形"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:12
+msgid "atlas.HexagonsAtlas.tilingName"
+msgstr "六邊形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:11
+msgid "atlas.Penrose0Atlas.friendlyName"
+msgstr "彭羅斯-3"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:12
+msgid "atlas.Penrose0Atlas.tilingName"
+msgstr "彭羅斯菱形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:12
+msgid "atlas.Penrose3Grid.friendlyName"
+msgstr "彭羅斯-3 網格"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:13
+msgid "atlas.Penrose3Grid.tilingName"
+msgstr "彭羅斯菱形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:11
+msgid "atlas.PenroseFreeAtlas.friendlyName"
+msgstr "彭羅斯-3 自由"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:15
+msgid "atlas.PenroseFreeAtlas.tilingName"
+msgstr "彭羅斯菱形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:11
+msgid "atlas.RhombusAtlas.friendlyName"
+msgstr "菱形-60-120"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:15
+msgid "atlas.RhombusAtlas.tilingName"
+msgstr "菱形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:11
+msgid "atlas.SnubSquareAtlas.friendlyName"
+msgstr "扭稜正方形"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:15
+msgid "atlas.SnubSquareAtlas.tilingName"
+msgstr "扭稜正方形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:11
+msgid "atlas.SnubSquareFreeAtlas.friendlyName"
+msgstr "扭稜正方形自由"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:15
+msgid "atlas.SnubSquareFreeAtlas.tilingName"
+msgstr "扭稜正方形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:12
+msgid "atlas.SnubSquareGridAtlas.friendlyName"
+msgstr "扭稜正方形網格"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:16
+msgid "atlas.SnubSquareGridAtlas.tilingName"
+msgstr "扭稜正方形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:11
+msgid "atlas.SquaresAtlas.friendlyName"
+msgstr "正方形"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:12
+msgid "atlas.SquaresAtlas.tilingName"
+msgstr "正方形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:11
+msgid "atlas.TrianglesAtlas.friendlyName"
+msgstr "三角形"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:12
+msgid "atlas.TrianglesAtlas.tilingName"
+msgstr "三角形鑲嵌"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
+msgid "rules.DifferentEdgeColorsRuleSet.friendlyName"
+msgstr "相鄰原塊須為異色"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/MatchEdgeColorsRuleSet.ts:18
+msgid "rules.MatchEdgeColorsRuleSet.friendlyName"
+msgstr "相鄰原塊須為同色"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConnectedSegmentScorer.ts:15
+msgid "scorer.ConnectedSegmentScorer.friendlyName"
+msgstr "計拼接的色塊數"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConvexShapeScorer.ts:16
+msgid "scorer.ConvexShapeScorer.friendlyName"
+msgstr "計形成的凸多邊形原塊數"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullTileScorer.ts:14
+msgid "scorer.FullTileScorer.friendlyName"
+msgstr "計原塊數"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullVertexScorer.ts:15
+msgid "scorer.FullVertexScorer.friendlyName"
+msgstr "計滿頂點數"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/HoleScorer.ts:15
+msgid "scorer.HoleScorer.friendlyName"
+msgstr "計孔洞數"
+
+#. js-lingui-explicit-id
+#: src/ui/game/DropoutMenu.ts:29
+msgid "ui.game.showMenuButton"
+msgstr "顯示菜單"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:125
+#: src/ui/paint/PaintDisplay.ts:66
+#: src/ui/paint/PaintMenu.ts:56
+#: src/ui/settings/SettingsDisplay.ts:38
+#: src/ui/setup/GameSetupDisplay.ts:145
+#: src/ui/statistics/StatisticsDisplay.ts:50
+msgid "ui.menu.backToMenuButton"
+msgstr "回到菜單"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:39
+msgid "ui.menu.footer"
+msgstr "由 <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a> 製作的遊戲。"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:86
+msgid "ui.menu.paintButton"
+msgstr "填塗一格"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:141
+msgid "ui.menu.restartGameButton"
+msgstr "重啟遊戲"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:53
+msgid "ui.menu.settingsButton"
+msgstr "設定"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:133
+#: src/ui/menu/MainMenuDisplay.ts:75
+msgid "ui.menu.setupButton"
+msgstr "遊戲設定"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:64
+msgid "ui.menu.statisticsButton"
+msgstr "統計"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colors.length
+#: src/ui/setup/ColorsOption.ts:18
+msgid "ui.settings.ColorsOption.title"
+msgstr "{0, plural, =1 {一種顏色} =2 {兩種顏色} =3 {三種顏色} =4 {四種顏色} =5 {五種顏色} =6 {六種顏色} other {# 種顏色}}"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:47
+msgid "ui.settings.title"
+msgstr "Tessel"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:56
+msgid "ui.setup.SegmentsOption.allCombinations"
+msgstr "任意顏色組合"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colorPattern.numColors
+#: src/ui/setup/SegmentsOption.ts:66
+msgid "ui.setup.SegmentsOption.number"
+msgstr "{0, plural, =1 {每格一種顏色} =2 {每格兩種顏色} =3 {每格三種顏色} =4 {每格四種顏色} =5 {每格五種顏色} =6 {每格六種顏色} other {每格 # 種顏色}}"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:61
+msgid "ui.setup.SegmentsOption.unique"
+msgstr "顏色兩兩不同"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:70
+msgid "ui.setup.optionTitle.atlas"
+msgstr "鑲嵌模式"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:86
+msgid "ui.setup.optionTitle.colors"
+msgstr "顏色數量"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/RulesSettingRow.ts:16
+msgid "ui.setup.optionTitle.rules"
+msgstr "匹配規則"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/ScorerSettingRow.ts:15
+msgid "ui.setup.optionTitle.scorer"
+msgstr "計分規則"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsSettingRow.ts:18
+msgid "ui.setup.optionTitle.segments"
+msgstr "原塊色塊"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:125
+msgid "ui.setup.playButton"
+msgstr "啟動遊戲"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:156
+msgid "ui.setup.regenerateExampleButton"
+msgstr "再次生成"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:58
+msgid "ui.setup.title"
+msgstr "自定義遊戲"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:231
+msgid "ui.statistics.columns.GameCompleted"
+msgstr "已完成的遊戲"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:223
+msgid "ui.statistics.columns.HighScore"
+msgstr "高分榜"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:227
+msgid "ui.statistics.columns.ShapeCompleted"
+msgstr "組成的形狀"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:259
+msgid "ui.statistics.columns.TilePlaced"
+msgstr "放置的原塊"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:294
+msgid "ui.statistics.counter.TilePlaced.hexagon"
+msgstr "六邊形"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:301
+msgid "ui.statistics.counter.TilePlaced.kite"
+msgstr "紙鳶"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:287
+msgid "ui.statistics.counter.TilePlaced.pentagon"
+msgstr "五邊形"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:280
+msgid "ui.statistics.counter.TilePlaced.rhombus"
+msgstr "菱形"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:266
+msgid "ui.statistics.counter.TilePlaced.square"
+msgstr "正方形"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:273
+msgid "ui.statistics.counter.TilePlaced.triangle"
+msgstr "三角形"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:214
+msgid "ui.statistics.headings.ShapeCompleted"
+msgstr "您已組成 {value} 個形狀。"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:250
+msgid "ui.statistics.headings.TilePlaced"
+msgstr "您已放置 {value} 個圖塊。"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:70
+msgid "ui.statistics.notPlayed"
+msgstr "您未嘗遊玩！"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:59
+msgid "ui.statistics.title"
+msgstr "統計"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:41
+msgid "ui.toggles.autorotate"
+msgstr "自動旋轉"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:64
+msgid "ui.toggles.colorScheme.dark"
+msgstr "深色模式"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:63
+msgid "ui.toggles.colorScheme.light"
+msgstr "淺色模式"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:48
+msgid "ui.toggles.hints"
+msgstr "顯示鑲嵌提示"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:31
+msgid "ui.toggles.placeholders"
+msgstr "顯示佔位格"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:55
+msgid "ui.toggles.snap"
+msgstr "吸附"

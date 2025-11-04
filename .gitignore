@@ -1,3 +1,4 @@
+.swc/
 .*.swp
 .idea
 *.code-workspace

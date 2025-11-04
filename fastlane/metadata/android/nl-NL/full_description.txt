@@ -1,20 +1,16 @@
 Tessel is een kleurrijk tegelspel. Plaats tegels met de juiste kleuren om vormen te maken het bord te vullen. Hoe groter de vorm, hoe meer punten je verdient.
 
-<ul>
-<li>Speel een relaxed spel met vierkante tegels, of kies één van de meer ingewikkelde vormen.</li>
-<li>Pas de spelregels en vormen aan voor nog meer variatie.</li>
-<li>Kleur je eigen tegelpatroon met de tekentool.</li>
-</ul>
+* Speel een relaxed spel met vierkante tegels, of kies één van de meer ingewikkelde vormen.
+* Pas de spelregels en vormen aan voor nog meer variatie.
+* Kleur je eigen tegelpatroon met de tekentool.
 
 Probeer deze interessante tegelpatronen voor eindeloze variaties:
-<ul>
-<li>Vierkante betegeling</li>
-<li>Driehoekige betegeling</li>
-<li>Rhombille-betegeling</li>
-<li>Caïro vijfhoekige betegeling</li>
-<li>Zeshoekige betegeling</li>
-<li>Deltoïdale-trihexagonala betegeling</li>
-<li>Penrose P3-betegeling</li>
-<li>Snub-vierkante betegeling</li>
-<li>Ammann-Beenker betegeling</li>
-</ul>
+* Vierkante betegeling
+* Driehoekige betegeling
+* Rhombille-betegeling
+* Caïro vijfhoekige betegeling
+* Zeshoekige betegeling
+* Deltoïdale-trihexagonala betegeling
+* Penrose P3-betegeling
+* Snub-vierkante betegeling
+* Ammann-Beenker betegeling

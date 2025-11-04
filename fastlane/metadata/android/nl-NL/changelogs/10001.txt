@@ -1,0 +1,4 @@
+Kleine verbeteringen.
+
+* Laat aan de onderkant van het scherm ruimte vrij voor knoppen.
+* Een ongebruikte Android-toestemming verwijderd.

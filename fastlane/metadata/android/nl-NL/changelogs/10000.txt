@@ -1,0 +1,5 @@
+Eerste volledige versie.
+
+* Layout aangepast en enkele browser-specifieke bugs opgelost.
+* Een animatie als de tegels worden ververst.
+* Verbeterde screenshots en documentatie.

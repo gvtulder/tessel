@@ -5,12 +5,13 @@
 
 _A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>_
 
-**[Play online!]** • [Tilings] • [Settings] • [Custom game] • [Development]
+**[Play online!]** • [Tilings] • [Settings] • [Custom game] • [Translations] • [Development]
 
 [Play online!]: https://tessel.vantulder.net/
 [Tilings]: #tilings
 [Settings]: #settings
 [Custom game]: #play-a-custom-game
+[Translations]: #translations
 [Development]: #development
 
 Place tiles with matching colors to make shapes and fill the board.
@@ -91,6 +92,10 @@ Customize shapes and colors in the design menu:
 | <img src="docs/images/setup-option-score-connected.png" height="70"> | <img src="docs/images/setup-option-score-single-tile.png" height="70"> | <img src="docs/images/setup-option-score-convex-shape.png" height="70"> | <img src="docs/images/setup-option-score-full-vertex.png" height="70"> | <img src="docs/images/setup-option-score-holes.png" height="70"> |
 | -------------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | Closed area                                                          | Single tile                                                            | Convex shape                                                            | Full vertex                                                            | Holes                                                            |
+
+## Translations
+
+Contribute to the translation of this game via [Weblate](https://hosted.weblate.org/projects/tessel/).
 
 ## Development
 

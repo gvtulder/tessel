@@ -1,0 +1,5 @@
+İlk tam sürüm.
+
+* Yerleşimler düzenlendi ve tarayıcıya özgü bazı hatalar düzeltildi.
+* Döşemeleri yenilerken bir animasyon eklendi.
+* Ekran görüntüleri ve belgeler iyileştirildi.

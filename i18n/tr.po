@@ -1,20 +1,5 @@
-#
-# Muha Aliss <muhaaliss@pm.me>, 2025.
-#
 msgid ""
-msgstr ""
-"POT-Creation-Date: 2025-10-27 12:12+0100\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Gtranslator 49.0\n"
-"Language: tr\n"
-"Project-Id-Version: unnamed project\n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-06 20:48+0300\n"
-"Last-Translator: Muha Aliss <muhaaliss@pm.me>\n"
-"Language-Team: Turkish\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+msgstr "PO-Revision-Date: 2025-11-06 22:18+0000\nLast-Translator: Muha Aliss <muhaaliss@users.noreply.hosted.weblate.org>\nLanguage-Team: Turkish <https://hosted.weblate.org/projects/tessel/game/tr/>\nLanguage: tr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -24,7 +9,7 @@ msgstr "Ammann-Beenker"
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:15
 msgid "atlas.AmmannBeenkerAtlas.tilingName"
-msgstr "Ammann-Beenker döşemesi"
+msgstr "Ammann-Beenker döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/CairoAtlas.ts:11
@@ -34,7 +19,7 @@ msgstr "Cairo beşgen"
 #. js-lingui-explicit-id
 #: src/grid/atlas/CairoAtlas.ts:15
 msgid "atlas.CairoAtlas.tilingName"
-msgstr "Cairo beşgen döşemesi"
+msgstr "Cairo beşgen döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/DeltoTrihexAtlas.ts:11
@@ -44,7 +29,7 @@ msgstr "Deltoidal-trihexagonal"
 #. js-lingui-explicit-id
 #: src/grid/atlas/DeltoTrihexAtlas.ts:15
 msgid "atlas.DeltoTrihexAtlas.tilingName"
-msgstr "Deltoidal-trihexagonal döşemesi"
+msgstr "Deltoidal-trihexagonal döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/HexagonsAtlas.ts:11
@@ -54,7 +39,7 @@ msgstr "Altıgen"
 #. js-lingui-explicit-id
 #: src/grid/atlas/HexagonsAtlas.ts:12
 msgid "atlas.HexagonsAtlas.tilingName"
-msgstr "Altıgen döşemesi"
+msgstr "Altıgen döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/Penrose0Atlas.ts:11
@@ -64,7 +49,7 @@ msgstr "Penrose-3"
 #. js-lingui-explicit-id
 #: src/grid/atlas/Penrose0Atlas.ts:12
 msgid "atlas.Penrose0Atlas.tilingName"
-msgstr "Penrose-3 döşemesi"
+msgstr "Penrose-3 döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/Penrose3GridAtlas.ts:12
@@ -74,7 +59,7 @@ msgstr "Penrose-3 ızgara"
 #. js-lingui-explicit-id
 #: src/grid/atlas/Penrose3GridAtlas.ts:13
 msgid "atlas.Penrose3Grid.tilingName"
-msgstr "Penrose-3 döşemesi"
+msgstr "Penrose-3 döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/PenroseFreeAtlas.ts:11
@@ -84,7 +69,7 @@ msgstr "Penrose-3 serbest"
 #. js-lingui-explicit-id
 #: src/grid/atlas/PenroseFreeAtlas.ts:15
 msgid "atlas.PenroseFreeAtlas.tilingName"
-msgstr "Penrose-3 döşemesi"
+msgstr "Penrose-3 döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/RhombusAtlas.ts:11
@@ -94,7 +79,7 @@ msgstr "Eşkenar dörtgen-60-120"
 #. js-lingui-explicit-id
 #: src/grid/atlas/RhombusAtlas.ts:15
 msgid "atlas.RhombusAtlas.tilingName"
-msgstr "Rhombille döşemesi"
+msgstr "Rhombille döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareAtlas.ts:11
@@ -104,17 +89,17 @@ msgstr "Kesik kare"
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareAtlas.ts:15
 msgid "atlas.SnubSquareAtlas.tilingName"
-msgstr "Kesik kare döşemesi"
+msgstr "Kesik kare döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareFreeAtlas.ts:11
 msgid "atlas.SnubSquareFreeAtlas.friendlyName"
-msgstr "Kesik kare serbest"
+msgstr "Kesik serbest kare"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareFreeAtlas.ts:15
 msgid "atlas.SnubSquareFreeAtlas.tilingName"
-msgstr "Kesik kare döşemesi"
+msgstr "Kesik kare döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareGridAtlas.ts:12
@@ -124,7 +109,7 @@ msgstr "Kesik kare ızgara"
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareGridAtlas.ts:16
 msgid "atlas.SnubSquareGridAtlas.tilingName"
-msgstr "Kesik kare döşemesi"
+msgstr "Kesik kare döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SquaresAtlas.ts:11
@@ -134,7 +119,7 @@ msgstr "Kare"
 #. js-lingui-explicit-id
 #: src/grid/atlas/SquaresAtlas.ts:12
 msgid "atlas.SquaresAtlas.tilingName"
-msgstr "Kare döşemesi"
+msgstr "Kare döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/TrianglesAtlas.ts:11
@@ -144,7 +129,7 @@ msgstr "Üçgen"
 #. js-lingui-explicit-id
 #: src/grid/atlas/TrianglesAtlas.ts:12
 msgid "atlas.TrianglesAtlas.tilingName"
-msgstr "Üçgen döşemesi"
+msgstr "Üçgen döşeme"
 
 #. js-lingui-explicit-id
 #: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
@@ -187,8 +172,10 @@ msgid "ui.game.showMenuButton"
 msgstr "Menüyü göster"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:125 src/ui/paint/PaintDisplay.ts:66
-#: src/ui/paint/PaintMenu.ts:56 src/ui/settings/SettingsDisplay.ts:38
+#: src/ui/game/GameDisplay.ts:125
+#: src/ui/paint/PaintDisplay.ts:66
+#: src/ui/paint/PaintMenu.ts:56
+#: src/ui/settings/SettingsDisplay.ts:38
 #: src/ui/setup/GameSetupDisplay.ts:145
 #: src/ui/statistics/StatisticsDisplay.ts:50
 msgid "ui.menu.backToMenuButton"
@@ -197,9 +184,7 @@ msgstr "Menüye dön"
 #. js-lingui-explicit-id
 #: src/ui/menu/MainMenuDisplay.ts:39
 msgid "ui.menu.footer"
-msgstr ""
-"<a href=\"https://www.vantulder.net/\">Gijs van Tulder</a> tarafından "
-"geliştirildi."
+msgstr "<a href=\"https://www.vantulder.net/\">Gijs van Tulder</a> tarafından geliştirildi."
 
 #. js-lingui-explicit-id
 #: src/ui/menu/MainMenuDisplay.ts:86
@@ -217,7 +202,8 @@ msgid "ui.menu.settingsButton"
 msgstr "Ayarlar"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:133 src/ui/menu/MainMenuDisplay.ts:75
+#: src/ui/game/GameDisplay.ts:133
+#: src/ui/menu/MainMenuDisplay.ts:75
 msgid "ui.menu.setupButton"
 msgstr "Oyun tasarla"
 
@@ -230,9 +216,7 @@ msgstr "İstatistikler"
 #. placeholder {0}: colors.length
 #: src/ui/setup/ColorsOption.ts:18
 msgid "ui.settings.ColorsOption.title"
-msgstr ""
-"{0, plural, =1 {Bir renk} =2 {İki renk} =3 {Üç renk} =4 {Dört renk} =5 {Beş "
-"renk} =6 {Altı renk} other {# renk}}"
+msgstr "{0, plural, =1 {Bir renk} =2 {İki renk} =3 {Üç renk} =4 {Dört renk} =5 {Beş renk} =6 {Altı renk} other {# renk}}"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:47
@@ -248,10 +232,7 @@ msgstr "Tüm renk kombinasyonları"
 #. placeholder {0}: colorPattern.numColors
 #: src/ui/setup/SegmentsOption.ts:66
 msgid "ui.setup.SegmentsOption.number"
-msgstr ""
-"{0, plural, =1 {Karo başına bir renk} =2 {Karo başına iki renk} =3 {Karo "
-"başına üç renk} =4 {Karo başına dört renk} =5 {Karo başına beş renk} =6 "
-"{Karo başına altı renk} other {Karo başına # renk}}"
+msgstr "{0, plural, =1 {Karo başına bir renk} =2 {Karo başına iki renk} =3 {Karo başına üç renk} =4 {Karo başına dört renk} =5 {Karo başına beş renk} =6 {Karo başına altı renk} other {Karo başına # renk}}"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/SegmentsOption.ts:61
@@ -351,14 +332,12 @@ msgstr "Üçgenler"
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:214
 msgid "ui.statistics.headings.ShapeCompleted"
-msgstr ""
-"{value, plural, one {Bir şekil oluşturdun.} other {# şekil oluşturdun.}}"
+msgstr "{value, plural, one {Bir şekil oluşturdun.} other {# şekil oluşturdun.}}"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:250
 msgid "ui.statistics.headings.TilePlaced"
-msgstr ""
-"{value, plural, one {Bir karo yerleştirdin.} other {# karo yerleştirdin.}}"
+msgstr "{value, plural, one {Bir karo yerleştirdin.} other {# karo yerleştirdin.}}"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:70

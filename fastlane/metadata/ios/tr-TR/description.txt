@@ -12,6 +12,6 @@ Sonsuz çeşitlilikte mozaikler oluşturmak için çok çeşitli döşeme desenl
 * Kahire beşgeni
 * Altıgen
 * Deltoidal-üç altıgen
-*Penrose P3
+* Penrose P3
 * Kalkık kare
 * Ammann-Beenker

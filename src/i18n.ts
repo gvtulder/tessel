@@ -7,6 +7,7 @@ import fs from "fs";
 import { i18n, Messages } from "@lingui/core";
 import { messages as messages_en } from "../i18n/en";
 import { messages as messages_nl } from "../i18n/nl";
+import { messages as messages_tr } from "../i18n/tr";
 import { messages as messages_zhhant } from "../i18n/zh-Hant";
 import { getStorageBackend } from "./lib/storage-backend";
 
@@ -24,6 +25,14 @@ export const languages = {
         messages: messages_nl,
         settingsHTML: fs.readFileSync(
             __dirname + "/../i18n/nl/settings.html",
+            "utf-8",
+        ),
+    },
+    tr: {
+        title: "Türkçe",
+        messages: messages_tr,
+        settingsHTML: fs.readFileSync(
+            __dirname + "/../i18n/tr/settings.html",
             "utf-8",
         ),
     },

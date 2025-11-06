@@ -1,0 +1,4 @@
+Küçük ayarlamalar ve iyileştirmeler.
+
+* Telefon gezinme düğmeleri için ekranın alt kısmında yer bırakıldı.
+* Android derleme sürecinden kullanılmayan bir izin kaldırıldı.

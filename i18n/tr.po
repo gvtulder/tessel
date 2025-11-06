@@ -1,0 +1,401 @@
+#
+# Muha Aliss <muhaaliss@pm.me>, 2025.
+#
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-10-27 12:12+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Gtranslator 49.0\n"
+"Language: tr\n"
+"Project-Id-Version: unnamed project\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2025-11-06 20:48+0300\n"
+"Last-Translator: Muha Aliss <muhaaliss@pm.me>\n"
+"Language-Team: Turkish\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:11
+msgid "atlas.AmmannBeenkerAtlas.friendlyName"
+msgstr "Ammann-Beenker"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:15
+msgid "atlas.AmmannBeenkerAtlas.tilingName"
+msgstr "Ammann-Beenker döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:11
+msgid "atlas.CairoAtlas.friendlyName"
+msgstr "Cairo beşgen"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:15
+msgid "atlas.CairoAtlas.tilingName"
+msgstr "Cairo beşgen döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:11
+msgid "atlas.DeltoTrihexAtlas.friendlyName"
+msgstr "Deltoidal-trihexagonal"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:15
+msgid "atlas.DeltoTrihexAtlas.tilingName"
+msgstr "Deltoidal-trihexagonal döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:11
+msgid "atlas.HexagonsAtlas.friendlyName"
+msgstr "Altıgen"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:12
+msgid "atlas.HexagonsAtlas.tilingName"
+msgstr "Altıgen döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:11
+msgid "atlas.Penrose0Atlas.friendlyName"
+msgstr "Penrose-3"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:12
+msgid "atlas.Penrose0Atlas.tilingName"
+msgstr "Penrose-3 döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:12
+msgid "atlas.Penrose3Grid.friendlyName"
+msgstr "Penrose-3 ızgara"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:13
+msgid "atlas.Penrose3Grid.tilingName"
+msgstr "Penrose-3 döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:11
+msgid "atlas.PenroseFreeAtlas.friendlyName"
+msgstr "Penrose-3 serbest"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:15
+msgid "atlas.PenroseFreeAtlas.tilingName"
+msgstr "Penrose-3 döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:11
+msgid "atlas.RhombusAtlas.friendlyName"
+msgstr "Eşkenar dörtgen-60-120"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:15
+msgid "atlas.RhombusAtlas.tilingName"
+msgstr "Rhombille döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:11
+msgid "atlas.SnubSquareAtlas.friendlyName"
+msgstr "Kesik kare"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:15
+msgid "atlas.SnubSquareAtlas.tilingName"
+msgstr "Kesik kare döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:11
+msgid "atlas.SnubSquareFreeAtlas.friendlyName"
+msgstr "Kesik kare serbest"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:15
+msgid "atlas.SnubSquareFreeAtlas.tilingName"
+msgstr "Kesik kare döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:12
+msgid "atlas.SnubSquareGridAtlas.friendlyName"
+msgstr "Kesik kare ızgara"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:16
+msgid "atlas.SnubSquareGridAtlas.tilingName"
+msgstr "Kesik kare döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:11
+msgid "atlas.SquaresAtlas.friendlyName"
+msgstr "Kare"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:12
+msgid "atlas.SquaresAtlas.tilingName"
+msgstr "Kare döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:11
+msgid "atlas.TrianglesAtlas.friendlyName"
+msgstr "Üçgen"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:12
+msgid "atlas.TrianglesAtlas.tilingName"
+msgstr "Üçgen döşemesi"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
+msgid "rules.DifferentEdgeColorsRuleSet.friendlyName"
+msgstr "Komşu karolar farklı renkte olmalıdır"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/MatchEdgeColorsRuleSet.ts:18
+msgid "rules.MatchEdgeColorsRuleSet.friendlyName"
+msgstr "Komşu karolar aynı renkte olmalıdır"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConnectedSegmentScorer.ts:15
+msgid "scorer.ConnectedSegmentScorer.friendlyName"
+msgstr "Bağlı segmentleri say"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConvexShapeScorer.ts:16
+msgid "scorer.ConvexShapeScorer.friendlyName"
+msgstr "Dışbükey şekilleri say"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullTileScorer.ts:14
+msgid "scorer.FullTileScorer.friendlyName"
+msgstr "Karoları say"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullVertexScorer.ts:15
+msgid "scorer.FullVertexScorer.friendlyName"
+msgstr "Tam köşeleri say"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/HoleScorer.ts:15
+msgid "scorer.HoleScorer.friendlyName"
+msgstr "Boşlukları say"
+
+#. js-lingui-explicit-id
+#: src/ui/game/DropoutMenu.ts:29
+msgid "ui.game.showMenuButton"
+msgstr "Menüyü göster"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:125 src/ui/paint/PaintDisplay.ts:66
+#: src/ui/paint/PaintMenu.ts:56 src/ui/settings/SettingsDisplay.ts:38
+#: src/ui/setup/GameSetupDisplay.ts:145
+#: src/ui/statistics/StatisticsDisplay.ts:50
+msgid "ui.menu.backToMenuButton"
+msgstr "Menüye dön"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:39
+msgid "ui.menu.footer"
+msgstr ""
+"<a href=\"https://www.vantulder.net/\">Gijs van Tulder</a> tarafından "
+"geliştirildi."
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:86
+msgid "ui.menu.paintButton"
+msgstr "Bir ızgarayı boya"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:141
+msgid "ui.menu.restartGameButton"
+msgstr "Oyunu yeniden başlat"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:53
+msgid "ui.menu.settingsButton"
+msgstr "Ayarlar"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:133 src/ui/menu/MainMenuDisplay.ts:75
+msgid "ui.menu.setupButton"
+msgstr "Oyun tasarla"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:64
+msgid "ui.menu.statisticsButton"
+msgstr "İstatistikler"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colors.length
+#: src/ui/setup/ColorsOption.ts:18
+msgid "ui.settings.ColorsOption.title"
+msgstr ""
+"{0, plural, =1 {Bir renk} =2 {İki renk} =3 {Üç renk} =4 {Dört renk} =5 {Beş "
+"renk} =6 {Altı renk} other {# renk}}"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:47
+msgid "ui.settings.title"
+msgstr "Tessel"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:56
+msgid "ui.setup.SegmentsOption.allCombinations"
+msgstr "Tüm renk kombinasyonları"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colorPattern.numColors
+#: src/ui/setup/SegmentsOption.ts:66
+msgid "ui.setup.SegmentsOption.number"
+msgstr ""
+"{0, plural, =1 {Karo başına bir renk} =2 {Karo başına iki renk} =3 {Karo "
+"başına üç renk} =4 {Karo başına dört renk} =5 {Karo başına beş renk} =6 "
+"{Karo başına altı renk} other {Karo başına # renk}}"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:61
+msgid "ui.setup.SegmentsOption.unique"
+msgstr "Tüm renkler benzersiz olmalıdır"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:70
+msgid "ui.setup.optionTitle.atlas"
+msgstr "Döşeme deseni"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:86
+msgid "ui.setup.optionTitle.colors"
+msgstr "Renk sayısı"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/RulesSettingRow.ts:16
+msgid "ui.setup.optionTitle.rules"
+msgstr "Eşleme kuralı"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/ScorerSettingRow.ts:15
+msgid "ui.setup.optionTitle.scorer"
+msgstr "Puanlama kuralı"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsSettingRow.ts:18
+msgid "ui.setup.optionTitle.segments"
+msgstr "Karo başına renk"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:125
+msgid "ui.setup.playButton"
+msgstr "Oyunu başlat"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:156
+msgid "ui.setup.regenerateExampleButton"
+msgstr "Yeniden oluştur"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:58
+msgid "ui.setup.title"
+msgstr "Özel oyun"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:231
+msgid "ui.statistics.columns.GameCompleted"
+msgstr "Tamamlanan oyunlar"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:223
+msgid "ui.statistics.columns.HighScore"
+msgstr "En yüksek skor"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:227
+msgid "ui.statistics.columns.ShapeCompleted"
+msgstr "Oluşturulan şekiller"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:259
+msgid "ui.statistics.columns.TilePlaced"
+msgstr "Yerleştirilen karolar"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:294
+msgid "ui.statistics.counter.TilePlaced.hexagon"
+msgstr "Altıgenler"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:301
+msgid "ui.statistics.counter.TilePlaced.kite"
+msgstr "Uçurtmalar"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:287
+msgid "ui.statistics.counter.TilePlaced.pentagon"
+msgstr "Beşgenler"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:280
+msgid "ui.statistics.counter.TilePlaced.rhombus"
+msgstr "Eşkenar dörtgenler"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:266
+msgid "ui.statistics.counter.TilePlaced.square"
+msgstr "Kareler"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:273
+msgid "ui.statistics.counter.TilePlaced.triangle"
+msgstr "Üçgenler"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:214
+msgid "ui.statistics.headings.ShapeCompleted"
+msgstr ""
+"{value, plural, one {Bir şekil oluşturdun.} other {# şekil oluşturdun.}}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:250
+msgid "ui.statistics.headings.TilePlaced"
+msgstr ""
+"{value, plural, one {Bir karo yerleştirdin.} other {# karo yerleştirdin.}}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:70
+msgid "ui.statistics.notPlayed"
+msgstr "Henüz oynamadın!"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:59
+msgid "ui.statistics.title"
+msgstr "İstatistikler"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:41
+msgid "ui.toggles.autorotate"
+msgstr "Otomatik döndürme"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:64
+msgid "ui.toggles.colorScheme.dark"
+msgstr "Karanlık mod"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:63
+msgid "ui.toggles.colorScheme.light"
+msgstr "Aydınlık mod"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:48
+msgid "ui.toggles.hints"
+msgstr "İpuçlarını göster"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:31
+msgid "ui.toggles.placeholders"
+msgstr "Yer tutucuları göster"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:55
+msgid "ui.toggles.snap"
+msgstr "Yerine oturtma"

@@ -1,0 +1,1 @@
+Oyun tasarımı menüsü yeniden düzenlendi ve diğer bazı kullanıcı arayüzü ögelerinde ince ayarlar yapıldı.

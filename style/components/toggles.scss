@@ -1,0 +1,96 @@
+@use "../sizes.scss";
+
+.game-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  .icon {
+    margin-left: 0.7vw;
+    width: calc(0.425 * sizes.$button-scale);
+    height: calc(0.425 * sizes.$button-scale);
+    fill: var(--toggle-icon-color);
+
+    svg {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  .toggle-box {
+    flex-grow: 1;
+    border-radius: sizes.$button-scale;
+    padding: max(0.3vw, 4px);
+    background: var(--toggle-bg-disabled-color);
+    display: flex;
+    flex-direction: row;
+  }
+
+  &.threeway .wrap {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    border-radius: sizes.$button-scale;
+    background: var(--toggle-bg-disabled-color);
+    .toggle-box {
+      background: transparent;
+    }
+  }
+  &.threeway .toggle-box.a {
+    justify-content: flex-start;
+    background: transparent;
+  }
+  &.threeway .toggle-box.b {
+    justify-content: flex-end;
+    background: transparent;
+  }
+
+  .toggle-ball {
+    border-radius: 100%;
+    width: calc(0.425 * sizes.$button-scale);
+    height: calc(0.425 * sizes.$button-scale);
+    background: var(--toggle-fg-disabled-color);
+    box-shadow: var(--button-box-shadow);
+  }
+
+  .toggle-ball-icon {
+    width: calc(0.425 * sizes.$button-scale - max(0.3vw, 4px));
+    height: calc(0.425 * sizes.$button-scale - max(0.3vw, 4px));
+    fill: var(--toggle-icon-color);
+    border-radius: 100%;
+    padding: max(0.3vw, 4px);
+
+    svg {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+  }
+
+  &.enabled {
+    .toggle-box {
+      justify-content: flex-end;
+      background: var(--toggle-bg-enabled-color);
+    }
+    .toggle-ball {
+      background: var(--toggle-fg-enabled-color);
+    }
+  }
+
+  &.threeway.a .toggle-box.a,
+  &.threeway.b .toggle-box.b {
+    flex-grow: 1;
+    flex-shrink: 0;
+    background: var(--toggle-bg-enabled-color);
+  }
+  &.threeway.a .toggle-box.b,
+  &.threeway.b .toggle-box.a {
+    flex-grow: 0;
+    flex-shrink: 1;
+  }
+  &.threeway.a .toggle-box.a .toggle-ball-icon,
+  &.threeway.b .toggle-box.b .toggle-ball-icon {
+    fill: var(--toggle-threeway-icon-enabled-color);
+    background: var(--toggle-fg-enabled-color);
+    box-shadow: var(--button-box-shadow);
+  }
+}

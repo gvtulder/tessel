@@ -16,6 +16,7 @@ const wide = parseShapeDefinition({
     preferredAngles: {
         display: 200,
         setupAtlas: 200,
+        mainMenu: 200,
     },
 });
 

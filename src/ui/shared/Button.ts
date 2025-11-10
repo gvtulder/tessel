@@ -6,6 +6,7 @@
 import { MessageDescriptor } from "@lingui/core";
 import { TapHandler, TapHandlerEvent } from "./TapHandler";
 import { t } from "@lingui/core/macro";
+import { createElement } from "./html";
 
 export class Button {
     element: HTMLElement;
@@ -15,7 +16,8 @@ export class Button {
         icon: string,
         title: MessageDescriptor | string,
         ontap: (evt: PointerEvent) => void,
-        className?: string,
+        className?: string | null,
+        showLabel?: boolean,
     ) {
         const button = document.createElement("div");
         button.classList.add("game-button");
@@ -24,6 +26,10 @@ export class Button {
             ? t(title as MessageDescriptor)
             : (title as string);
         button.innerHTML = icon;
+        if (showLabel) {
+            const span = createElement("span", null, button);
+            span.innerHTML = button.title;
+        }
         this.element = button;
 
         const tapHandler = (this.tapHandler = new TapHandler(button));

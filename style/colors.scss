@@ -6,7 +6,8 @@ $blue: hsl(214deg, 64%, 50%);
 
 :root {
   // main backgrounds
-  --main-bg-color: #{color.change($maintint, $lightness: 87%)};
+  $main-bg-color: color.change($maintint, $lightness: 87%);
+  --main-bg-color: #{$main-bg-color};
   $panel-bg-color: color.change($maintint, $lightness: 70%, $saturation: 15%);
   --panel-bg-color: #{$panel-bg-color};
   --dropout-bg-color: #{color.change($maintint, $lightness: 95%)};
@@ -75,6 +76,15 @@ $blue: hsl(214deg, 64%, 50%);
   --home-button-bg-color: #{color.change($blue, $lightness: 32%)};
   --home-button-fg-color: #{color.change($blue, $lightness: 97%)};
   --home-button-fg-hover-color: #{color.change($blue, $lightness: 97%)};
+
+  // navbar
+  --navbar-bg-color: #{color.mix(
+      $main-bg-color,
+      color.change($maintint, $lightness: 30%, $saturation: 25%),
+      88%
+    )};
+  --navbar-bg-active-color: #{color.change($maintint, $lightness: 87%)};
+  --navbar-bg-hover-color: #{color.change($maintint, $lightness: 87%)};
 
   // shadows
   --button-box-shadow:
@@ -146,5 +156,5 @@ $blue: hsl(214deg, 64%, 50%);
   --footer-link-hover-color: #000;
 
   // logo on main screen
-  --logo-fill-color: rgba(0, 0, 0, 35%);
+  --logo-fill-color: var(--button-fg-color); // rgba(0, 0, 0, 35%);
 }

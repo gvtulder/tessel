@@ -119,7 +119,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.settingScorer = settingScorer;
         this.settingRows.push(settingScorer);
 
-        const buttonRow = createElement("div", "button-row", settingsDiv);
+        const buttonRow = createElement("div", "buttons", settingsDiv);
         const playButton = new Button(
             icons.playIcon,
             msg({ id: "ui.setup.playButton", message: "Play game" }),
@@ -141,7 +141,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
         this.playButton = playButton;
 
         const exitButton = new Button(
-            icons.houseIcon,
+            icons.angleLeftIcon,
             msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
             () => {
                 this.dispatchEvent(new UserEvent(UserEventType.BackToMenu));

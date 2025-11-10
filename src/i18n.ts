@@ -19,6 +19,10 @@ export const languages = {
             __dirname + "/../i18n/en/settings.html",
             "utf-8",
         ),
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/en/about.html",
+            "utf-8",
+        ),
     },
     nl: {
         title: "Nederlands",
@@ -27,6 +31,7 @@ export const languages = {
             __dirname + "/../i18n/nl/settings.html",
             "utf-8",
         ),
+        aboutHTML: "TODO",
     },
     tr: {
         title: "Türkçe",
@@ -35,6 +40,7 @@ export const languages = {
             __dirname + "/../i18n/tr/settings.html",
             "utf-8",
         ),
+        aboutHTML: "TODO",
     },
     zh: {
         title: "繁體中文",
@@ -43,9 +49,15 @@ export const languages = {
             __dirname + "/../i18n/zh-Hant/settings.html",
             "utf-8",
         ),
+        aboutHTML: "TODO",
     },
 } as {
-    [key: string]: { title: string; messages: Messages; settingsHTML: string };
+    [key: string]: {
+        title: string;
+        messages: Messages;
+        aboutHTML: string;
+        settingsHTML: string;
+    };
 };
 
 for (const [language, data] of Object.entries(languages)) {
@@ -78,4 +90,8 @@ export function updateI18n(locale: string) {
 
 export function getLocalizedSettingsHTML(): string {
     return languages[i18n.locale]?.settingsHTML || languages["en"].settingsHTML;
+}
+
+export function getLocalizedAboutHTML(): string {
+    return languages[i18n.locale]?.aboutHTML || languages["en"].aboutHTML;
 }

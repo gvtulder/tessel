@@ -22,6 +22,7 @@ const square = parseShapeDefinition({
     ],
     preferredAngles: {
         setupAtlas: 315,
+        mainMenu: 315,
     },
 });
 

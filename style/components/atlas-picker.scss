@@ -1,0 +1,50 @@
+@use "../sizes.scss";
+
+// atlas picker for main menu, all games, paint menu
+
+.atlas-picker-grid {
+  display: grid;
+  width: min-content;
+  height: min-content;
+  --grid-columns: 3;
+  --grid-rows: 3;
+  --grid-margin-width: 1vh;
+  --grid-margin-height: 4vh;
+  --grid-available-width: calc(
+    100vw - var(--grid-margin-width) - #{sizes.$button-left} -
+      #{sizes.$button-right}
+  );
+  --grid-available-height: calc(
+    100vh - var(--grid-margin-height) - #{sizes.$button-top} -
+      #{sizes.$main-navbar-top}
+  );
+  grid-template-columns: repeat(var(--grid-columns), min-content);
+}
+
+.atlas-picker-option {
+  --option-margin: min(2vw, 2vh);
+  --option-size: min(
+    calc((var(--grid-available-width)) / var(--grid-columns)) - 2 *
+      var(--option-margin),
+    calc((var(--grid-available-height)) / var(--grid-rows)) - 2 *
+      var(--option-margin)
+  );
+  width: var(--option-size);
+  height: var(--option-size);
+  aspect-ratio: 1;
+  margin: var(--option-margin);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  transition: scale 0.1s;
+  &:hover {
+    scale: 1.1;
+  }
+
+  .wrap-grid {
+    width: 100%;
+    height: 100%;
+  }
+}

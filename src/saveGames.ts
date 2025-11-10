@@ -146,16 +146,6 @@ lookup.set("cairo5", {
 });
 */
 
-lookup.set("rhombus", {
-    atlas: RhombusAtlas,
-    initialTile: WONG4,
-    tilesShownOnStack: 3,
-    tileGenerator: [
-        TileGenerators.permutations(WONG4),
-        TileGenerators.randomSubset(90),
-    ],
-});
-
 lookup.set("cairo5", {
     atlas: CairoAtlas,
     initialTile: [...WONG4, WONG4[2]],
@@ -233,18 +223,14 @@ lookup.set("penrose3grid", {
     ],
 });
 
-export const defaultGameList = ["triangle", "square", "rhombus", "hexagons"];
-
-// ["triangle", "square", "isometric", "hex"]
-
 function options<T extends { key: string }>(...entries: T[]) {
     return new Map<string, T>(entries.map((e: T) => [e.key, e]));
 }
 
 export const SetupCatalog = {
     atlas: options(
-        { key: SquaresAtlas.id, atlas: SquaresAtlas },
         { key: TrianglesAtlas.id, atlas: TrianglesAtlas },
+        { key: SquaresAtlas.id, atlas: SquaresAtlas },
         { key: RhombusAtlas.id, atlas: RhombusAtlas },
         { key: CairoAtlas.id, atlas: CairoAtlas },
         { key: HexagonsAtlas.id, atlas: HexagonsAtlas },
@@ -311,38 +297,26 @@ export const SetupCatalog = {
     defaultScorer: HoleScorer.id,
 };
 
-lookup.set(
-    "triangle",
-    gameFromSerializedSettings(SetupCatalog, {
-        atlas: TrianglesAtlas.id,
-        colors: "wong4",
-        segments: 0,
-        uniqueTileColors: false,
-        rules: MatchEdgeColorsRuleSet.id,
-        scorer: ConnectedSegmentScorer.id,
-    })!,
-);
+for (const atlas of SetupCatalog.atlas.keys()) {
+    lookup.set(
+        atlas,
+        gameFromSerializedSettings(SetupCatalog, {
+            atlas: atlas,
+            colors: "wong4",
+            segments: 0,
+            uniqueTileColors: false,
+            rules: MatchEdgeColorsRuleSet.id,
+            scorer: ConnectedSegmentScorer.id,
+        })!,
+    );
+}
 
-lookup.set(
-    "square",
-    gameFromSerializedSettings(SetupCatalog, {
-        atlas: SquaresAtlas.id,
-        colors: "wong4",
-        segments: 0,
-        uniqueTileColors: false,
-        rules: MatchEdgeColorsRuleSet.id,
-        scorer: ConnectedSegmentScorer.id,
-    })!,
-);
-
-lookup.set(
-    "hexagons",
-    gameFromSerializedSettings(SetupCatalog, {
-        atlas: HexagonsAtlas.id,
-        colors: "wong6",
-        segments: 0,
-        uniqueTileColors: false,
-        rules: MatchEdgeColorsRuleSet.id,
-        scorer: ConnectedSegmentScorer.id,
-    })!,
-);
+/*
+export const defaultGameList = [
+    ...SetupCatalog.atlas.keys()
+];
+*/
+export const defaultGameLists = [
+    ["triangle", "square", "rhombus", "hexagon"],
+    [...SetupCatalog.atlas.keys()],
+];

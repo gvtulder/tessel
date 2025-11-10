@@ -1,0 +1,98 @@
+@use "../sizes.scss";
+
+.screen.main-menu {
+  display: grid;
+  grid-template-rows: 3fr min-content minmax(min-content, 4fr);
+  grid-template-areas: "." "atlas-picker-grid" "logo";
+
+  $logo-height: max(min(15vw, 15vh), sizes.$button-scale);
+
+  .atlas-picker-grid {
+    grid-area: atlas-picker-grid;
+    --grid-columns: 2;
+    --grid-rows: 2;
+    --grid-margin-height: (8vh + #{$logo-height});
+  }
+
+  @media screen and (min-aspect-ratio: 10 / 7) {
+    .atlas-picker-grid {
+      --grid-columns: 4;
+      --grid-rows: 1;
+      --grid-margin-width: 4vh;
+    }
+  }
+
+  .logo {
+    grid-area: logo;
+
+    display: flex;
+    align-items: start;
+    align-self: start;
+    justify-content: center;
+    width: 100%;
+    padding: calc(0.15 * $logo-height) 0 calc(0.4 * $logo-height) 0;
+
+    svg {
+      height: $logo-height;
+      padding-right: calc(0.15 * $logo-height);
+      fill: var(--logo-fill-color);
+    }
+  }
+
+  /*
+    .example-tile:nth-child(1) {
+      animation: example-tile-appear-left 300ms;
+    }
+
+    .example-tile:nth-child(2) {
+      animation: example-tile-appear-right 300ms;
+    }
+
+    .example-tile:nth-child(3),
+    .example-tile:nth-child(4) {
+      animation: example-tile-appear-bottom 300ms;
+    }
+
+    .logo {
+      animation: example-tile-appear-bottom 300ms;
+    }
+  */
+}
+
+/*
+@keyframes example-tile-appear-left {
+  20% {
+    transform: translate(-50vw, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes example-tile-appear-right {
+  20% {
+    transform: translate(50vw, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes example-tile-appear-bottom {
+  20% {
+    transform: translate(0, 50vw);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes example-tile-appear-bottom-reverse {
+  100% {
+    transform: translate(0, 50vw);
+  }
+  0% {
+    transform: translate(0, 0);
+  }
+}
+*/

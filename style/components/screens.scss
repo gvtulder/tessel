@@ -1,0 +1,55 @@
+@use "../sizes.scss";
+
+.screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: var(--screen-box-shadow);
+  background: var(--main-bg-color);
+  display: flex;
+  flex-direction: column;
+
+  transition: background-color 50ms;
+
+  /*
+  animation-name: animate-appear;
+  animation-delay: 100ms;
+  animation-duration: 500ms;
+  animation-fill-mode: backwards;
+
+  &.disappear {
+    animation-name: animate-disappear;
+    animation-delay: 100ms;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+  }
+  */
+}
+
+.screen.with-navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: sizes.$main-navbar-top;
+}
+
+@keyframes animate-appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100;
+  }
+}
+@keyframes animate-disappear {
+  0% {
+    opacity: 100;
+  }
+  100% {
+    opacity: 0;
+  }
+}

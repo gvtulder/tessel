@@ -25,15 +25,29 @@ import { PaintMenu } from "./paint/PaintMenu";
 import { SettingsDisplay } from "./settings/SettingsDisplay";
 import { StatisticsDisplay } from "./statistics/StatisticsDisplay";
 import { StatisticsMonitor } from "../stats/StatisticsMonitor";
-import { StatisticsEvent } from "../stats/Events";
+import { MainNavBar, NavBarItems } from "./shared/MainNavBar";
+import { AllGamesDisplay } from "./menu/AllGamesDisplay";
+import { AboutDisplay } from "./about/AboutDisplay";
 
 export const enum UserEventType {
     StartGame = "startgame",
     BackToMenu = "backtomenu",
     RestartGame = "restartgame",
+    AllGamesMenu = "allgames",
     SetupMenu = "setupmenu",
     StartGameFromSetup = "startgamefromsetup",
     Paint = "paint",
+    Settings = "settings",
+    Statistics = "statistics",
+    Navigate = "navigate",
+}
+
+export const enum Pages {
+    MainMenu = "main",
+    AllGames = "all-games",
+    SetupMenu = "setup",
+    PaintMenu = "paint",
+    About = "about",
     Settings = "settings",
     Statistics = "statistics",
 }
@@ -56,6 +70,15 @@ export class UserEvent extends Event {
     }
 }
 
+export class NavigateEvent extends Event {
+    page?: Pages;
+
+    constructor(page: Pages) {
+        super(UserEventType.Navigate);
+        this.page = page;
+    }
+}
+
 export class GameController {
     version?: string;
     workbox?: Workbox;
@@ -63,14 +86,19 @@ export class GameController {
     stats: StatisticsMonitor;
     game?: Game;
     currentScreen?: ScreenDisplay;
-    currentScreenDestroy?: () => void;
+    currentScreenDestroy?: null | (() => void);
     restartNeeded?: boolean;
+    mainNavBar: MainNavBar;
+    destroyMainNavBar: () => void;
 
     constructor(container: HTMLElement, version?: string, workbox?: Workbox) {
         this.container = container;
         this.version = version;
         this.workbox = workbox;
         this.stats = StatisticsMonitor.instance;
+
+        [this.mainNavBar, this.destroyMainNavBar] = this.buildMainNavBar();
+        this.container.appendChild(this.mainNavBar.element);
 
         const rescale = () => this.rescale();
         if (screen && screen.orientation) {
@@ -100,18 +128,52 @@ export class GameController {
         }
     }
 
+    buildMainNavBar(): [MainNavBar, () => void] {
+        const navBar = new MainNavBar();
+
+        const handleNavigate = (evt: NavigateEvent) => {
+            this.navigateTo(evt.page!);
+        };
+
+        navBar.addEventListener(UserEventType.Navigate, handleNavigate);
+
+        const destroy = () => {
+            navBar.removeEventListener(UserEventType.Navigate, handleNavigate);
+            navBar.destroy();
+        };
+
+        return [navBar, destroy];
+    }
+
+    navigateTo(page: Pages | string) {
+        if (page == Pages.MainMenu) {
+            window.history.pushState({}, "", window.location.pathname);
+        } else {
+            window.history.pushState({}, "", `#${page}`);
+        }
+        this.run();
+    }
+
     run() {
+        if (this.currentScreenDestroy) {
+            this.currentScreenDestroy();
+            this.currentScreenDestroy = null;
+        }
         const saveGameId = window.location.hash.replace("#", "");
         const gameSettings = SaveGames.lookup.get(saveGameId);
         if (gameSettings) {
             this.startGame(gameSettings);
-        } else if (saveGameId == "setup") {
+        } else if (saveGameId == Pages.AllGames) {
+            this.showAllGames();
+        } else if (saveGameId == Pages.SetupMenu) {
             this.showGameSetupDisplay();
-        } else if (saveGameId == "settings") {
+        } else if (saveGameId == Pages.About) {
+            this.showAboutDisplay();
+        } else if (saveGameId == Pages.Settings) {
             this.showSettingsDisplay();
-        } else if (saveGameId == "statistics") {
+        } else if (saveGameId == Pages.Statistics) {
             this.showStatisticsDisplay();
-        } else if (saveGameId == "paint") {
+        } else if (saveGameId == Pages.PaintMenu) {
             this.showPaintMenuDisplay();
         } else if (saveGameId.match("^paint-")) {
             const key = saveGameId.split("-")[1];
@@ -155,6 +217,8 @@ export class GameController {
 
     showMainMenu() {
         this.resetState();
+        this.mainNavBar.show();
+        this.mainNavBar.activeTab = NavBarItems.MainMenu;
 
         if (this.checkForUpdate()) return;
 
@@ -171,30 +235,6 @@ export class GameController {
             this.startGame(evt.gameSettings!);
         };
 
-        const handleSetup = () => {
-            destroy();
-            window.history.pushState({}, "", `#setup`);
-            this.showGameSetupDisplay();
-        };
-
-        const handleSettings = () => {
-            destroy();
-            window.history.pushState({}, "", `#settings`);
-            this.showSettingsDisplay();
-        };
-
-        const handleStatistics = () => {
-            destroy();
-            window.history.pushState({}, "", `#statistics`);
-            this.showStatisticsDisplay();
-        };
-
-        const handlePaintMenu = () => {
-            destroy();
-            window.history.pushState({}, "", `#paint`);
-            this.showPaintMenuDisplay();
-        };
-
         const destroy = () => {
             menuDisplay.element.remove();
             this.currentScreen = undefined;
@@ -203,124 +243,151 @@ export class GameController {
                 UserEventType.StartGame,
                 handleStart,
             );
-            menuDisplay.removeEventListener(
-                UserEventType.SetupMenu,
-                handleSetup,
-            );
-            menuDisplay.removeEventListener(
-                UserEventType.Settings,
-                handleSettings,
-            );
-            menuDisplay.removeEventListener(
-                UserEventType.Statistics,
-                handleStatistics,
-            );
-            menuDisplay.removeEventListener(
-                UserEventType.Paint,
-                handlePaintMenu,
-            );
         };
         this.currentScreenDestroy = destroy;
 
         menuDisplay.addEventListener(UserEventType.StartGame, handleStart);
-        menuDisplay.addEventListener(UserEventType.SetupMenu, handleSetup);
-        menuDisplay.addEventListener(UserEventType.Settings, handleSettings);
-        menuDisplay.addEventListener(
-            UserEventType.Statistics,
-            handleStatistics,
-        );
-        menuDisplay.addEventListener(UserEventType.Paint, handlePaintMenu);
+    }
+
+    showAllGames() {
+        this.resetState();
+        this.mainNavBar.show();
+        this.mainNavBar.activeTab = NavBarItems.AllGames;
+
+        const allGamesDisplay = new AllGamesDisplay();
+        this.currentScreen = allGamesDisplay;
+        this.container.appendChild(allGamesDisplay.element);
+        allGamesDisplay.rescale();
+
+        const handleStart = (evt: UserEvent) => {
+            destroy();
+            if (evt.gameId) {
+                window.history.pushState({}, "", `#${evt.gameId}`);
+            }
+            this.startGame(evt.gameSettings!);
+        };
+
+        const handleSetup = () => {
+            this.navigateTo(Pages.SetupMenu);
+        };
+
+        const destroy = () => {
+            allGamesDisplay.element.remove();
+            this.currentScreen = undefined;
+            this.currentScreenDestroy = undefined;
+            allGamesDisplay.removeEventListener(
+                UserEventType.StartGame,
+                handleStart,
+            );
+            allGamesDisplay.removeEventListener(
+                UserEventType.SetupMenu,
+                handleSetup,
+            );
+        };
+        this.currentScreenDestroy = destroy;
+
+        allGamesDisplay.addEventListener(UserEventType.StartGame, handleStart);
+        allGamesDisplay.addEventListener(UserEventType.SetupMenu, handleSetup);
+    }
+
+    showAboutDisplay() {
+        this.resetState();
+        this.mainNavBar.show();
+        this.mainNavBar.activeTab = NavBarItems.Settings;
+
+        const handleNavigate = (evt: NavigateEvent) => {
+            this.navigateTo(evt.page!);
+        };
+
+        const about = new AboutDisplay(this.version);
+        this.currentScreen = about;
+        this.container.appendChild(about.element);
+        about.rescale();
+
+        const destroy = () => {
+            about.element.remove();
+            this.currentScreen = undefined;
+            this.currentScreenDestroy = undefined;
+            about.removeEventListener(UserEventType.Navigate, handleNavigate);
+        };
+        this.currentScreenDestroy = destroy;
+
+        about.addEventListener(UserEventType.Navigate, handleNavigate);
     }
 
     showSettingsDisplay() {
         this.resetState();
+        this.mainNavBar.show();
+        this.mainNavBar.activeTab = NavBarItems.Settings;
+
+        const handleNavigate = (evt: NavigateEvent) => {
+            this.navigateTo(evt.page!);
+        };
 
         const settings = new SettingsDisplay(this.version);
         this.currentScreen = settings;
         this.container.appendChild(settings.element);
         settings.rescale();
 
-        const handleMenu = () => {
-            destroy();
-            window.history.pushState({}, "", window.location.pathname);
-            this.showMainMenu();
-        };
-
-        const handleSettings = () => {
-            destroy();
-            window.history.pushState({}, "", `#settings`);
-            this.showSettingsDisplay();
-        };
-
         const destroy = () => {
             settings.element.remove();
             this.currentScreen = undefined;
             this.currentScreenDestroy = undefined;
-            settings.removeEventListener(UserEventType.BackToMenu, handleMenu);
             settings.removeEventListener(
-                UserEventType.Settings,
-                handleSettings,
+                UserEventType.Navigate,
+                handleNavigate,
             );
         };
         this.currentScreenDestroy = destroy;
 
-        settings.addEventListener(UserEventType.BackToMenu, handleMenu);
-        settings.addEventListener(UserEventType.Settings, handleSettings);
+        settings.addEventListener(UserEventType.Navigate, handleNavigate);
     }
 
     showStatisticsDisplay() {
         this.resetState();
+        this.mainNavBar.show();
+        this.mainNavBar.activeTab = NavBarItems.Settings;
+
+        const handleNavigate = (evt: NavigateEvent) => {
+            this.navigateTo(evt.page!);
+        };
 
         const statistics = new StatisticsDisplay(this.stats);
         this.currentScreen = statistics;
         this.container.appendChild(statistics.element);
         statistics.rescale();
 
-        const handleMenu = () => {
-            destroy();
-            window.history.pushState({}, "", window.location.pathname);
-            this.showMainMenu();
-        };
-
         const destroy = () => {
             statistics.element.remove();
             this.currentScreen = undefined;
             this.currentScreenDestroy = undefined;
             statistics.removeEventListener(
-                UserEventType.BackToMenu,
-                handleMenu,
+                UserEventType.Navigate,
+                handleNavigate,
             );
         };
         this.currentScreenDestroy = destroy;
 
-        statistics.addEventListener(UserEventType.BackToMenu, handleMenu);
+        statistics.addEventListener(UserEventType.Navigate, handleNavigate);
     }
 
     showGameSetupDisplay() {
         this.resetState();
+        this.mainNavBar.hide();
+        this.mainNavBar.activeTab = NavBarItems.AllGames;
 
         const setupDisplay = new GameSetupDisplay();
         this.currentScreen = setupDisplay;
         this.container.appendChild(setupDisplay.element);
         setupDisplay.rescale();
 
-        const handleBackToMenu = (evt: UserEvent) => {
-            destroy();
-            window.history.pushState({}, "", window.location.pathname);
-            this.showMainMenu();
-        };
-
         const handleStart = (evt: UserEvent) => {
             const settings = evt.gameSettingsSerialized!;
-            console.log("Clicked play to start", settings);
-            destroy();
-            window.history.pushState(
-                {},
-                "",
-                `#${btoa(serializedToJSON(settings))}`,
-            );
-            const gameSettings = this.gameFromSerializedSettings(settings);
-            if (gameSettings) this.startGame(gameSettings);
+            this.navigateTo(btoa(serializedToJSON(settings)));
+        };
+
+        const handleBack = () => {
+            this.navigateTo(Pages.AllGames);
         };
 
         const destroy = () => {
@@ -329,49 +396,39 @@ export class GameController {
             this.currentScreenDestroy = undefined;
             setupDisplay.destroy();
             setupDisplay.removeEventListener(
-                UserEventType.BackToMenu,
-                handleBackToMenu,
-            );
-            setupDisplay.removeEventListener(
                 UserEventType.StartGameFromSetup,
                 handleStart,
+            );
+            setupDisplay.removeEventListener(
+                UserEventType.BackToMenu,
+                handleBack,
             );
         };
         this.currentScreenDestroy = destroy;
 
         setupDisplay.addEventListener(
-            UserEventType.BackToMenu,
-            handleBackToMenu,
-        );
-        setupDisplay.addEventListener(
             UserEventType.StartGameFromSetup,
             handleStart,
         );
+        setupDisplay.addEventListener(UserEventType.BackToMenu, handleBack);
     }
 
     showPaintMenuDisplay() {
         this.resetState();
+        this.mainNavBar.show();
+        this.mainNavBar.activeTab = NavBarItems.Paint;
 
         const paintMenu = new PaintMenu();
         this.currentScreen = paintMenu;
         this.container.appendChild(paintMenu.element);
         paintMenu.rescale();
 
-        const handleMenu = () => {
-            destroy();
-            window.history.pushState({}, "", window.location.pathname);
-            this.showMainMenu();
-        };
-
         const handlePaint = (evt: UserEvent) => {
-            destroy();
             const atlas = SaveGames.SetupCatalog.atlas.get(evt.gameId || "");
             if (atlas) {
-                window.history.pushState({}, "", `#paint-${atlas.key}`);
-                this.showPaintDisplay(atlas.atlas);
+                this.navigateTo(`paint-${atlas.key}`);
             } else {
-                window.history.pushState({}, "", window.location.pathname);
-                this.showMainMenu();
+                this.navigateTo(Pages.MainMenu);
             }
         };
 
@@ -379,17 +436,17 @@ export class GameController {
             paintMenu.element.remove();
             this.currentScreen = undefined;
             this.currentScreenDestroy = undefined;
-            paintMenu.removeEventListener(UserEventType.BackToMenu, handleMenu);
             paintMenu.removeEventListener(UserEventType.Paint, handlePaint);
         };
         this.currentScreenDestroy = destroy;
 
-        paintMenu.addEventListener(UserEventType.BackToMenu, handleMenu);
         paintMenu.addEventListener(UserEventType.Paint, handlePaint);
     }
 
     showPaintDisplay(atlas: Atlas) {
         this.resetState();
+        this.mainNavBar.hide();
+        this.mainNavBar.activeTab = NavBarItems.Paint;
 
         const grid = new Grid(atlas);
 
@@ -399,9 +456,7 @@ export class GameController {
         paintDisplay.rescale();
 
         const handleMenu = () => {
-            destroy();
-            window.history.pushState({}, "", window.location.pathname);
-            this.showMainMenu();
+            this.navigateTo(Pages.PaintMenu);
         };
 
         const destroy = () => {
@@ -426,6 +481,8 @@ export class GameController {
 
     startGame(gameSettings: GameSettings) {
         this.resetState();
+        this.mainNavBar.hide();
+        this.mainNavBar.activeTab = NavBarItems.AllGames;
 
         const game = new Game(gameSettings);
         this.game = game;
@@ -436,15 +493,12 @@ export class GameController {
 
         // add button handlers
         const handleMenu = () => {
-            destroy();
-            window.history.pushState({}, "", window.location.pathname);
-            this.showMainMenu();
+            // TODO return to main menu or all games
+            this.navigateTo(Pages.MainMenu);
         };
 
         const handleSetup = () => {
-            destroy();
-            window.history.pushState({}, "", `#setup`);
-            this.showGameSetupDisplay();
+            this.navigateTo(Pages.SetupMenu);
         };
 
         const handleRestart = () => {

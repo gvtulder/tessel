@@ -26,19 +26,21 @@ export class PaintMenu extends EventTarget implements ScreenDisplay {
 
     options: AtlasOption[];
 
-    backtomenubutton: Button;
-
     constructor() {
         super();
 
         // main element
         const element = (this.element = createElement(
             "div",
-            "screen paint-menu-display",
+            "screen with-navbar paint-menu-display",
         ));
 
         // render options
-        const optionsDiv = createElement("div", "paint-options", this.element);
+        const optionsDiv = createElement(
+            "div",
+            "paint-options atlas-picker-grid",
+            this.element,
+        );
         this.options = [];
         for (const setting of SetupCatalog.atlas.values()) {
             const option = new AtlasOption(setting.key, setting.atlas, () => {
@@ -50,15 +52,6 @@ export class PaintMenu extends EventTarget implements ScreenDisplay {
             optionsDiv.appendChild(option.element);
         }
 
-        // menu button
-        this.backtomenubutton = new Button(
-            icons.houseIcon,
-            msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
-            () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
-            "backtomenu",
-        );
-        element.appendChild(this.backtomenubutton.element);
-
         // initial scaling
         this.rescale();
     }
@@ -68,7 +61,6 @@ export class PaintMenu extends EventTarget implements ScreenDisplay {
         for (const option of this.options) {
             option.destroy();
         }
-        this.backtomenubutton.destroy();
     }
 
     rescale() {
@@ -88,7 +80,7 @@ class AtlasOption {
     tapHandler: TapHandler;
 
     constructor(key: string, atlas: Atlas, onTap: () => void) {
-        this.element = createElement("div", "paint-menu-atlas-option");
+        this.element = createElement("div", "atlas-picker-option");
         this.key = key;
         this.atlas = atlas;
         if ((atlas.tilingName as MessageDescriptor).id) {

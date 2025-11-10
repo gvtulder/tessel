@@ -4,7 +4,7 @@
  */
 
 import icons from "../shared/icons";
-import { UserEventType } from "../GameController";
+import { NavigateEvent, Pages, UserEventType } from "../GameController";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
 import { Button } from "../shared/Button";
@@ -15,11 +15,12 @@ import { msg, t } from "@lingui/core/macro";
 import { getLocalizedSettingsHTML, updateI18n } from "../../i18n";
 import { LanguagePicker } from "./LanguagePicker";
 import { i18n } from "@lingui/core";
+import { SmallNavBar, SmallNavBarItems } from "./SmallNavBar";
 
 export class SettingsDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
 
-    backtomenubutton: Button;
+    navBar: SmallNavBar;
     languagePicker: LanguagePicker;
     toggles: { [key: string]: Toggle | ThreeWayToggle | LanguagePicker };
 
@@ -29,22 +30,15 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
         // main element
         const element = (this.element = createElement(
             "div",
-            "screen settings-display",
+            "screen with-navbar settings-display",
         ));
 
-        // menu button
-        this.backtomenubutton = new Button(
-            icons.houseIcon,
-            msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
-            () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
-            "backtomenu",
-        );
-        element.appendChild(this.backtomenubutton.element);
-
-        // header
-        const header = createElement("header", null, element);
-        const h2 = createElement("h2", null, header);
-        h2.innerHTML = t({ id: "ui.settings.title", message: "Tessel" });
+        // navbar
+        const navBar = (this.navBar = new SmallNavBar((page: Pages) => {
+            this.dispatchEvent(new NavigateEvent(page));
+        }));
+        navBar.activeTab = SmallNavBarItems.Settings;
+        element.appendChild(navBar.element);
 
         // main page text
         const article = createElement("article", null, element);
@@ -83,15 +77,6 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
             }
         }
 
-        // insert version number
-        for (const p of article.getElementsByClassName("version-line")) {
-            if (version) {
-                p.innerHTML = p.innerHTML.replace("VERSION", version);
-            } else {
-                p.remove();
-            }
-        }
-
         // initial scaling
         this.rescale();
 
@@ -104,7 +89,7 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
     }
 
     destroy() {
-        this.backtomenubutton.destroy();
+        this.navBar.destroy();
         for (const toggle of Object.values(this.toggles)) {
             toggle.destroy();
         }

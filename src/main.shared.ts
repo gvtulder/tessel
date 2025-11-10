@@ -65,7 +65,8 @@ function preventIosZoomAndSelection(e: Event) {
     if (
         screen &&
         (screen.classList.contains("settings-display") ||
-            screen?.classList.contains("statistics-display"))
+            screen.classList.contains("about-display") ||
+            screen.classList.contains("statistics-display"))
     ) {
         return;
     }

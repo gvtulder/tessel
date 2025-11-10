@@ -6,7 +6,8 @@ $blue: hsl(214deg, 64%, 50%);
 
 body.dark-mode {
   // main backgrounds
-  --main-bg-color: #{color.change($maintint, $lightness: 5%)};
+  $main-bg-color: color.change($maintint, $lightness: 5%);
+  --main-bg-color: #{$main-bg-color};
   --panel-bg-color: #{color.change($maintint, $lightness: 10%)};
   --dropout-bg-color: #{color.change($maintint, $lightness: 20%)};
 
@@ -45,6 +46,9 @@ body.dark-mode {
   --home-button-bg-color: #{color.change($blue, $lightness: 32%)};
   --home-button-fg-color: #{color.change($blue, $lightness: 97%)};
   --home-button-fg-hover-color: #{color.change($blue, $lightness: 97%)};
+
+  // navbar
+  --navbar-bg-color: #{color.mix($main-bg-color, #fff, 85%)};
 
   // text-color
   --text-color: hsl(0, 0%, 50%);

@@ -1,0 +1,125 @@
+@use "../sizes.scss";
+
+/* dropdown settings list */
+.setting-row .option-wrap {
+  position: relative;
+  height: 100%;
+}
+
+/* dropdown menu */
+.setting-row .dropdown-wrap {
+  display: none;
+  position: absolute;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  min-width: 180%;
+  z-index: 1000;
+  top: 100%;
+}
+.setting-row.upward .dropdown-wrap {
+  bottom: 100%;
+  top: auto;
+}
+.setting-row .dropdown {
+  display: grid;
+  justify-items: stretch;
+  align-content: flex-start;
+  grid-template-columns: 1fr 1fr;
+  column-gap: calc(0.1 * sizes.$setting-row-option-scale);
+  row-gap: calc(0.1 * sizes.$setting-row-option-scale);
+  border-radius: calc(0.4 * sizes.$setting-row-option-scale);
+  background: var(--settings-option-panel-bg-color);
+  box-shadow: var(--dropdown-box-shadow);
+  padding: calc(0.1 * sizes.$setting-row-option-scale);
+  box-sizing: content-box;
+}
+.setting-row.open .dropdown-wrap {
+  display: block;
+}
+.setting-row.count2,
+.setting-row.count3,
+.setting-row.count4 {
+  .dropdown-wrap {
+    width: 100%;
+    min-width: 100%;
+  }
+  .dropdown {
+    grid-template-columns: 1fr;
+  }
+}
+.setting-row-option {
+  display: grid;
+  grid-template-areas:
+    "example description"
+    "example description";
+  grid-template-columns: sizes.$setting-row-option-scale 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: calc(0.2 * sizes.$setting-row-option-scale);
+  align-items: center;
+  padding-left: calc(0.1 * sizes.$setting-row-option-scale);
+  min-height: sizes.$setting-row-option-height;
+  background: var(--settings-option-panel-bg-color);
+  border: 2px solid transparent;
+  border-radius: calc(0.4 * sizes.$setting-row-option-scale);
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: transform 0.1s;
+  font-size: 0.9rem;
+  @media (hover) {
+    &:hover {
+      background: var(--settings-option-panel-bg-hover-color);
+    }
+  }
+}
+.setting-row.language .setting-row-option {
+  grid-template-areas: "description";
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  min-height: 1.2em;
+  padding-left: calc(0.4 * sizes.$setting-row-option-scale);
+  p {
+    margin: 0;
+  }
+}
+.setting-row-option.current {
+  box-shadow: var(--button-box-shadow);
+  margin: 0;
+  height: 100%;
+}
+.setting-row-option.current.changed {
+  animation: 300ms linear setting-row-option-change-anim;
+}
+@keyframes setting-row-option-change-anim {
+  0% {
+  }
+  10% {
+    background: var(--settings-option-panel-bg-active-color);
+  }
+  50% {
+    background: var(--settings-option-panel-bg-active-color);
+  }
+  100% {
+  }
+}
+// background: var(--settings-option-panel-bg-active-color);
+.setting-row-option .wrap-grid,
+.setting-row-option > svg {
+  grid-area: example;
+  width: calc(0.76 * sizes.$setting-row-option-scale);
+  height: calc(0.76 * sizes.$setting-row-option-scale);
+  justify-self: center;
+}
+.setting-row-option > svg.palette {
+  width: calc(0.66 * sizes.$setting-row-option-scale);
+  height: calc(0.66 * sizes.$setting-row-option-scale);
+}
+.setting-row-option p {
+  grid-area: description;
+  padding: 0.2rem calc(0.1 * sizes.$setting-row-option-scale) 0.4rem 0;
+  margin: 0;
+}
+.setting-row-option.selected,
+.setting-row-option.selected:hover {
+  border: 2px solid var(--settings-option-panel-border-active-color);
+  background: var(--settings-option-panel-bg-active-color);
+}

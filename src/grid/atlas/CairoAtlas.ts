@@ -31,6 +31,7 @@ export const CairoAtlas = Atlas.fromDefinition({
             preferredAngles: {
                 setupAtlas: 180,
                 setupSegments: 180,
+                mainMenu: 180,
             },
         },
     },

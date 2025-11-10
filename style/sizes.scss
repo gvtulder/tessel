@@ -40,6 +40,11 @@ $button-bottom: max(
 );
 $button-left: max(calc($button-margin-width + $stack-margin-left), $inset-left);
 
+// size of the main navbar
+$main-navbar-height: calc(1.25 * $button-scale);
+$main-navbar-bottom: $button-bottom;
+$main-navbar-top: calc($button-bottom + $main-navbar-height);
+
 // safe areas
 :root {
   --safe-area-max-inset-top: env(

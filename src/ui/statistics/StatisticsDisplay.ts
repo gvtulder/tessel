@@ -4,7 +4,7 @@
  */
 
 import icons from "../shared/icons";
-import { UserEventType } from "../GameController";
+import { NavigateEvent, Pages, UserEventType } from "../GameController";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
 import { Button } from "../shared/Button";
@@ -12,6 +12,7 @@ import { msg, t } from "@lingui/core/macro";
 import { i18n, MessageDescriptor } from "@lingui/core";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { SetupCatalog } from "../../saveGames";
+import { SmallNavBar, SmallNavBarItems } from "../settings/SmallNavBar";
 
 export type StatisticsSection = {
     heading?: {
@@ -33,7 +34,7 @@ export type StatisticsSection = {
 export class StatisticsDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
 
-    backtomenubutton: Button;
+    navBar: SmallNavBar;
 
     constructor(stats: StatisticsMonitor) {
         super();
@@ -41,31 +42,26 @@ export class StatisticsDisplay extends EventTarget implements ScreenDisplay {
         // main element
         const element = (this.element = createElement(
             "div",
-            "screen statistics-display",
+            "screen with-navbar statistics-display",
         ));
 
-        // menu button
-        this.backtomenubutton = new Button(
-            icons.houseIcon,
-            msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
-            () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
-            "backtomenu",
-        );
-        element.appendChild(this.backtomenubutton.element);
-
-        // header
-        const header = createElement("header", null, element);
-        const h2 = createElement("h2", null, header);
-        h2.innerHTML = t({ id: "ui.statistics.title", message: "Statistics" });
+        // navbar
+        const navBar = (this.navBar = new SmallNavBar((page: Pages) => {
+            this.dispatchEvent(new NavigateEvent(page));
+        }));
+        navBar.activeTab = SmallNavBarItems.Statistics;
+        element.appendChild(navBar.element);
 
         // main page text
         const article = createElement("article", null, element);
+        const h3 = createElement("h3", null, article);
+        h3.innerHTML = t({ id: "ui.statistics.title", message: "Statistics" });
 
         for (const section of StatisticsSections) {
             article.appendChild(this.buildSection(stats, section));
         }
 
-        if (article.childNodes.length == 0) {
+        if (article.childNodes.length == 1) {
             const p = createElement("p", null, article);
             p.innerHTML = t({
                 id: "ui.statistics.notPlayed",
@@ -93,7 +89,7 @@ export class StatisticsDisplay extends EventTarget implements ScreenDisplay {
     }
 
     destroy() {
-        this.backtomenubutton.destroy();
+        this.navBar.destroy();
         this.element.remove();
     }
 
@@ -132,7 +128,7 @@ export class StatisticsDisplay extends EventTarget implements ScreenDisplay {
 
         // insert heading
         if (section.heading) {
-            const h3 = createElement("h3", null, fragment);
+            const h3 = createElement("h4", null, fragment);
             if (section.heading.key) {
                 h3.innerHTML = i18n.t(section.heading.title.id, {
                     value: stats.counters.get(section.heading.key) || 0,

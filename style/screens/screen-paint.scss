@@ -1,52 +1,5 @@
 @use "sass:color";
-@use "./sizes.scss";
-
-.screen.paint-menu-display {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .game-button {
-    position: absolute;
-    top: sizes.$button-top;
-    right: sizes.$button-right;
-  }
-
-  .paint-options {
-    display: grid;
-    width: min-content;
-    height: min-content;
-    grid-template-columns: min-content min-content min-content;
-    grid-template-rows: min-content min-content min-content;
-    margin: max(
-      10vh + sizes.$button-top + sizes.$button-bottom,
-      10vw + sizes.$button-left + sizes.$button-right
-    );
-  }
-}
-
-.paint-menu-atlas-option {
-  width: min(20vh, 20vw);
-  height: min(20vh, 20vw);
-  aspect-ratio: 1;
-  margin: min(3vh, 3vw);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-
-  transition: scale 0.1s;
-  &:hover {
-    scale: 1.1;
-  }
-
-  .wrap-grid {
-    width: 100%;
-    height: 100%;
-  }
-}
+@use "../sizes.scss";
 
 .screen.paint-display {
   display: grid;

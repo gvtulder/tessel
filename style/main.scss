@@ -2,11 +2,19 @@
 @use "./colors-dark.scss";
 @use "./sizes.scss";
 @use "./base.scss";
-@use "./components.scss";
-@use "./grid-display.scss";
-@use "./screen-menu.scss";
-@use "./screen-game.scss";
-@use "./screen-settings.scss";
-@use "./screen-paint.scss";
-@use "./score-overlay.scss";
-@use "./screen-setup.scss";
+
+@use "./components/atlas-picker.scss";
+@use "./components/buttons.scss";
+@use "./components/footer.scss";
+@use "./components/grid-display.scss";
+@use "./components/score-overlay.scss";
+@use "./components/screens.scss";
+@use "./components/setting-rows.scss";
+@use "./components/toggles.scss";
+@use "./components/navbar.scss";
+
+@use "./screens/screen-menu.scss";
+@use "./screens/screen-game.scss";
+@use "./screens/screen-settings.scss";
+@use "./screens/screen-paint.scss";
+@use "./screens/screen-setup.scss";

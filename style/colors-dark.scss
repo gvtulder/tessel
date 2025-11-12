@@ -48,7 +48,9 @@ body.dark-mode {
   --home-button-fg-hover-color: #{color.change($blue, $lightness: 97%)};
 
   // navbar
-  --navbar-bg-color: #{color.mix($main-bg-color, #fff, 85%)};
+  --navbar-bg-color: #{color.mix($main-bg-color, #fff, 90%)};
+  --navbar-bg-active-color: #{color.mix($main-bg-color, #fff, 80%)};
+  --navbar-bg-hover-color: #{color.mix($main-bg-color, #fff, 85%)};
 
   // text-color
   --text-color: hsl(0, 0%, 50%);
@@ -117,7 +119,7 @@ body.dark-mode {
   // MAIN SCREEN
 
   // main screen footer
-  --footer-version-color: hsl(0, 0%, 67%);
+  --footer-version-color: hsl(0, 0%, 25%);
   --footer-copyright-color: hsl(0, 0%, 50%);
   --footer-link-hover-color: hsl(0, 0%, 80%);
 

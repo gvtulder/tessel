@@ -83,7 +83,7 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
         this.languagePicker.onchange = () => {
             updateI18n(this.languagePicker.selected!.key);
             // reload
-            this.dispatchEvent(new Event(UserEventType.Settings));
+            this.dispatchEvent(new NavigateEvent(Pages.Settings));
         };
         this.languagePicker.selectStoredOrDefault(i18n.locale);
     }

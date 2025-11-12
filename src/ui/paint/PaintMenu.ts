@@ -20,6 +20,7 @@ import { SetupCatalog } from "../../saveGames";
 import { TapHandler } from "../shared/TapHandler";
 import { msg, t } from "@lingui/core/macro";
 import { MessageDescriptor } from "@lingui/core";
+import { MainMenuGridDisplay } from "../menu/MainMenuGridDisplay";
 
 export class PaintMenu extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -72,6 +73,7 @@ export class PaintMenu extends EventTarget implements ScreenDisplay {
 
 const PROTO_TILE_COLOR = "#6666ff";
 
+// TODO combine with GameListDisplay
 class AtlasOption {
     element: HTMLDivElement;
     key: string;
@@ -135,8 +137,4 @@ class AtlasOption {
     }
 }
 
-export class PaintOptionGridDisplay extends GridDisplay {
-    // TODO scale based on area
-    animated = false;
-    margins = { top: 0, right: 0, bottom: 0, left: 0 };
-}
+export const PaintOptionGridDisplay = MainMenuGridDisplay;

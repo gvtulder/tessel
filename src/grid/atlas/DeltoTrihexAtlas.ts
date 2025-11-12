@@ -29,6 +29,7 @@ export const DeltoTrihexAtlas = Atlas.fromDefinition({
                 [[0, 0, 0, 0]],
             ],
             preferredAngles: {
+                mainMenu: 30,
                 setupAtlas: 30,
             },
         },

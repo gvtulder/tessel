@@ -11,6 +11,7 @@ import { UserEvent, UserEventType } from "../GameController";
 import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
 import { AngleUse } from "../../grid/Shape";
+import { rotateArray } from "../../geom/arrays";
 
 export class GameListDisplay extends EventTarget {
     element: HTMLDivElement;
@@ -64,7 +65,11 @@ export class GameListDisplay extends EventTarget {
                     otherPoly,
                     otherPoly.segment(),
                 );
-                otherTile.colors = gameSettings.initialTile;
+                // rotate the colors until they match the first tile
+                otherTile.colors = rotateArray(
+                    gameSettings.initialTile,
+                    gameSettings.initialTile.indexOf(tile.colors[i]),
+                );
             }
 
             this.grids.push(grid);

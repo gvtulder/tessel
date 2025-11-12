@@ -151,9 +151,9 @@ $blue: hsl(214deg, 64%, 50%);
   // MAIN SCREEN
 
   // main screen footer
-  --footer-version-color: #aaa;
-  --footer-copyright-color: #777;
-  --footer-link-hover-color: #000;
+  --footer-version-color: var(--button-fg-color);
+  --footer-copyright-color: var(--button-fg-color);
+  --footer-link-hover-color: var(--button-fg-color);
 
   // logo on main screen
   --logo-fill-color: var(--button-fg-color); // rgba(0, 0, 0, 35%);

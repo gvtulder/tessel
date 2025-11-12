@@ -14,17 +14,17 @@ export class MainMenuDisplay extends GameListDisplay {
         super(defaultGameLists[0]);
         this.element.classList.add("main-menu");
 
-        const footer = createElement("div", "footer", this.element);
+        const header = createElement("div", "header", this.element);
 
-        const footerLine = createElement("p", "copyright", footer);
-        footerLine.innerHTML = t({
+        const headerLine = createElement("p", "copyright", header);
+        headerLine.innerHTML = t({
             id: "ui.menu.footer",
             message: `A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>.`,
         });
 
         /*
         if (version) {
-            const versionDiv = createElement("p", "version", footer);
+            const versionDiv = createElement("p", "version", header);
             versionDiv.innerHTML = version;
         }
         */

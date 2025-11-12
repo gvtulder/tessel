@@ -8,8 +8,8 @@
   height: min-content;
   --grid-columns: 3;
   --grid-rows: 3;
-  --grid-margin-width: 1vh;
-  --grid-margin-height: 4vh;
+  --grid-margin-width: 2vh;
+  --grid-margin-height: 8vh;
   --grid-available-width: calc(
     100vw - var(--grid-margin-width) - #{sizes.$button-left} -
       #{sizes.$button-right}

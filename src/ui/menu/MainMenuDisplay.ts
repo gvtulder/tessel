@@ -5,7 +5,7 @@
 
 import { createElement } from "../shared/html";
 import { GameListDisplay } from "./GameListDisplay";
-import { defaultGameLists } from "src/saveGames";
+import { defaultGameLists } from "../../saveGames";
 import SVG_LOGO from "bundle-text:../svgs/logo.svg";
 import { t } from "@lingui/core/macro";
 

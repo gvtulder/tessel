@@ -9,7 +9,7 @@ import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
 import { msg } from "@lingui/core/macro";
 import { GameListDisplay } from "./GameListDisplay";
-import { defaultGameLists } from "src/saveGames";
+import { defaultGameLists } from "../../saveGames";
 
 export class AllGamesDisplay extends GameListDisplay {
     setupButton: Button;

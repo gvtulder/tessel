@@ -12,7 +12,7 @@ import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggle } from "../shared/Toggle";
 import { Toggles } from "../shared/toggles";
 import { msg, t } from "@lingui/core/macro";
-import { getLocalizedSettingsHTML, updateI18n } from "../../i18n";
+import { updateI18n } from "../../i18n";
 import { LanguagePicker } from "./LanguagePicker";
 import { i18n } from "@lingui/core";
 import { SmallNavBar, SmallNavBarItems } from "./SmallNavBar";
@@ -42,40 +42,75 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
 
         // main page text
         const article = createElement("article", null, element);
-        article.innerHTML = getLocalizedSettingsHTML();
+        const h3 = createElement("h3", null, article);
+        h3.innerHTML = t({ id: "ui.settings.title", message: "Settings" });
 
-        // toggles and language picker
+        // options list
+        const ul = createElement("ul", "options", article);
+
+        const addLi = (
+            toggle: LanguagePicker | Toggle | ThreeWayToggle,
+            description: string,
+        ) => {
+            const li = createElement("li", null, ul);
+            li.appendChild(toggle.element);
+            const span = createElement("span", "", li);
+            span.innerHTML = description;
+        };
+
+        // language picker
         this.languagePicker = new LanguagePicker();
         this.toggles = {
             placeholders: Toggles.Placeholders(),
             autorotate: Toggles.Autorotate(),
             hints: Toggles.Hints(),
             snap: Toggles.Snap(),
-            "color-scheme": Toggles.ColorScheme(),
+            colorScheme: Toggles.ColorScheme(),
             language: this.languagePicker,
         };
 
-        // insert toggles and language picker in text
-        for (const li of article.getElementsByTagName("li")) {
-            const setting = li.getAttribute("data-setting");
-            if (setting && this.toggles[setting]) {
-                const description = li.innerHTML;
-                li.innerHTML = "";
-                li.appendChild(this.toggles[setting].element);
-                const span = createElement("span", "", li);
-                span.innerHTML = description;
-            }
-        }
-
-        // convert internal links
-        for (const a of article.getElementsByTagName("a")) {
-            if (a.getAttribute("data-internal") == "setup") {
-                const span = createElement("span", "icon");
-                span.innerHTML = icons.swatchbookIcon;
-                a.insertBefore(span, a.firstChild);
-                a.classList.add("internal");
-            }
-        }
+        addLi(
+            this.languagePicker,
+            t({
+                id: "ui.settings.description.language",
+                message: "Language",
+            }),
+        );
+        addLi(
+            this.toggles.colorScheme,
+            t({
+                id: "ui.settings.description.colorScheme",
+                message: "Light mode, dark mode, or follow your device",
+            }),
+        );
+        addLi(
+            this.toggles.placeholders,
+            t({
+                id: "ui.settings.description.placeholders",
+                message: "Show placeholder tiles",
+            }),
+        );
+        addLi(
+            this.toggles.hints,
+            t({
+                id: "ui.settings.description.hints",
+                message: "Highlight valid positions",
+            }),
+        );
+        addLi(
+            this.toggles.autorotate,
+            t({
+                id: "ui.settings.description.autorotate",
+                message: "Auto-rotate tiles",
+            }),
+        );
+        addLi(
+            this.toggles.snap,
+            t({
+                id: "ui.settings.description.snap",
+                message: "Snap tiles into place",
+            }),
+        );
 
         // initial scaling
         this.rescale();

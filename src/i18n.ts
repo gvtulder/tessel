@@ -15,10 +15,6 @@ export const languages = {
     en: {
         title: "English",
         messages: messages_en,
-        settingsHTML: fs.readFileSync(
-            __dirname + "/../i18n/en/settings.html",
-            "utf-8",
-        ),
         aboutHTML: fs.readFileSync(
             __dirname + "/../i18n/en/about.html",
             "utf-8",
@@ -27,36 +23,32 @@ export const languages = {
     nl: {
         title: "Nederlands",
         messages: messages_nl,
-        settingsHTML: fs.readFileSync(
-            __dirname + "/../i18n/nl/settings.html",
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/nl/about.html",
             "utf-8",
         ),
-        aboutHTML: "TODO",
     },
     tr: {
         title: "Türkçe",
         messages: messages_tr,
-        settingsHTML: fs.readFileSync(
-            __dirname + "/../i18n/tr/settings.html",
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/tr/about.html",
             "utf-8",
         ),
-        aboutHTML: "TODO",
     },
     zh: {
         title: "繁體中文",
         messages: messages_zhhant,
-        settingsHTML: fs.readFileSync(
-            __dirname + "/../i18n/zh-Hant/settings.html",
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/zh-Hant/about.html",
             "utf-8",
         ),
-        aboutHTML: "TODO",
     },
 } as {
     [key: string]: {
         title: string;
         messages: Messages;
         aboutHTML: string;
-        settingsHTML: string;
     };
 };
 
@@ -86,10 +78,6 @@ export async function prepareI18n(navigatorLanguage: string) {
 
 export function updateI18n(locale: string) {
     i18n.activate(locale);
-}
-
-export function getLocalizedSettingsHTML(): string {
-    return languages[i18n.locale]?.settingsHTML || languages["en"].settingsHTML;
 }
 
 export function getLocalizedAboutHTML(): string {

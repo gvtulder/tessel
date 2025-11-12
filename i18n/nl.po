@@ -172,43 +172,73 @@ msgid "ui.game.showMenuButton"
 msgstr "Menu openen"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:125
+#: src/ui/shared/MainNavBar.ts:48
+msgid "ui.menu.AllGamesButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:49
+msgid "ui.menu.HowToPlayButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:35
+msgid "ui.menu.MainMenuButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:61
+msgid "ui.menu.PaintButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:34
+#: src/ui/shared/MainNavBar.ts:74
+msgid "ui.menu.SettingsButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:64
+msgid "ui.menu.StatisticsButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:171
 #: src/ui/paint/PaintDisplay.ts:66
-#: src/ui/paint/PaintMenu.ts:56
-#: src/ui/settings/SettingsDisplay.ts:38
 #: src/ui/setup/GameSetupDisplay.ts:145
-#: src/ui/statistics/StatisticsDisplay.ts:50
 msgid "ui.menu.backToMenuButton"
 msgstr "Terug naar het menu"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:39
+#: src/ui/menu/MainMenuDisplay.old.ts:39
+#: src/ui/menu/MainMenuDisplay.ts:20
 msgid "ui.menu.footer"
 msgstr "Een spel van <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:86
+#: src/ui/menu/MainMenuDisplay.old.ts:87
 msgid "ui.menu.paintButton"
 msgstr "Tekenen"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:141
+#: src/ui/game/GameDisplay.ts:187
 msgid "ui.menu.restartGameButton"
 msgstr "Herstarten"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:53
+#: src/ui/menu/MainMenuDisplay.old.ts:54
 msgid "ui.menu.settingsButton"
 msgstr "Instellingen"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:133
-#: src/ui/menu/MainMenuDisplay.ts:75
+#: src/ui/game/GameDisplay.ts:179
+#: src/ui/menu/AllGamesDisplay.ts:29
+#: src/ui/menu/MainMenuDisplay.old.ts:76
 msgid "ui.menu.setupButton"
 msgstr "Ontwerpen"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:64
+#: src/ui/menu/MainMenuDisplay.old.ts:65
 msgid "ui.menu.statisticsButton"
 msgstr "Statistieken"
 
@@ -219,7 +249,37 @@ msgid "ui.settings.ColorsOption.title"
 msgstr "{0, plural, =1 {Één kleur} =2 {Twee kleuren} =3 {Drie kleuren} =4 {Vier kleuren} =5 {Vijf kleuren} =6 {Zes kleuren} other {# kleuren}}"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:47
+#: src/ui/settings/SettingsDisplay.ts:99
+msgid "ui.settings.description.autorotate"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:78
+msgid "ui.settings.description.colorScheme"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:92
+msgid "ui.settings.description.hints"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:71
+msgid "ui.settings.description.language"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:85
+msgid "ui.settings.description.placeholders"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:106
+msgid "ui.settings.description.snap"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:46
 msgid "ui.settings.title"
 msgstr "Tessel"
 
@@ -280,72 +340,72 @@ msgid "ui.setup.title"
 msgstr "Ontwerpen"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:231
+#: src/ui/statistics/StatisticsDisplay.ts:227
 msgid "ui.statistics.columns.GameCompleted"
 msgstr "Gespeeld"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:223
+#: src/ui/statistics/StatisticsDisplay.ts:219
 msgid "ui.statistics.columns.HighScore"
 msgstr "Highscore"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:227
+#: src/ui/statistics/StatisticsDisplay.ts:223
 msgid "ui.statistics.columns.ShapeCompleted"
 msgstr "Vormen"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:259
+#: src/ui/statistics/StatisticsDisplay.ts:255
 msgid "ui.statistics.columns.TilePlaced"
 msgstr "Tegels"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:294
+#: src/ui/statistics/StatisticsDisplay.ts:290
 msgid "ui.statistics.counter.TilePlaced.hexagon"
 msgstr "Zeshoeken"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:301
+#: src/ui/statistics/StatisticsDisplay.ts:297
 msgid "ui.statistics.counter.TilePlaced.kite"
 msgstr "Vliegers"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:287
+#: src/ui/statistics/StatisticsDisplay.ts:283
 msgid "ui.statistics.counter.TilePlaced.pentagon"
 msgstr "Vijfhoeken"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:280
+#: src/ui/statistics/StatisticsDisplay.ts:276
 msgid "ui.statistics.counter.TilePlaced.rhombus"
 msgstr "Rhombi"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:266
+#: src/ui/statistics/StatisticsDisplay.ts:262
 msgid "ui.statistics.counter.TilePlaced.square"
 msgstr "Vierkanten"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:273
+#: src/ui/statistics/StatisticsDisplay.ts:269
 msgid "ui.statistics.counter.TilePlaced.triangle"
 msgstr "Driehoeken"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:214
+#: src/ui/statistics/StatisticsDisplay.ts:210
 msgid "ui.statistics.headings.ShapeCompleted"
 msgstr "{value, plural, one {Je hebt één vorm gemaakt.} other {Je hebt # vormen gemaakt.}}"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:250
+#: src/ui/statistics/StatisticsDisplay.ts:246
 msgid "ui.statistics.headings.TilePlaced"
 msgstr "{value, plural, one {Je hebt één tegel geplaatst.} other {Je hebt # tegels geplaatst.}}"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:70
+#: src/ui/statistics/StatisticsDisplay.ts:66
 msgid "ui.statistics.notPlayed"
 msgstr "Je hebt nog niet gespeeld!"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:59
+#: src/ui/statistics/StatisticsDisplay.ts:58
 msgid "ui.statistics.title"
 msgstr "Statistieken"
 

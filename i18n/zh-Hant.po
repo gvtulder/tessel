@@ -172,43 +172,73 @@ msgid "ui.game.showMenuButton"
 msgstr "顯示菜單"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:125
+#: src/ui/shared/MainNavBar.ts:48
+msgid "ui.menu.AllGamesButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:49
+msgid "ui.menu.HowToPlayButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:35
+msgid "ui.menu.MainMenuButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:61
+msgid "ui.menu.PaintButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:34
+#: src/ui/shared/MainNavBar.ts:74
+msgid "ui.menu.SettingsButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:64
+msgid "ui.menu.StatisticsButton"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:171
 #: src/ui/paint/PaintDisplay.ts:66
-#: src/ui/paint/PaintMenu.ts:56
-#: src/ui/settings/SettingsDisplay.ts:38
 #: src/ui/setup/GameSetupDisplay.ts:145
-#: src/ui/statistics/StatisticsDisplay.ts:50
 msgid "ui.menu.backToMenuButton"
 msgstr "回到菜單"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:39
+#: src/ui/menu/MainMenuDisplay.old.ts:39
+#: src/ui/menu/MainMenuDisplay.ts:20
 msgid "ui.menu.footer"
 msgstr "由 <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a> 製作的遊戲。"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:86
+#: src/ui/menu/MainMenuDisplay.old.ts:87
 msgid "ui.menu.paintButton"
 msgstr "填塗一格"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:141
+#: src/ui/game/GameDisplay.ts:187
 msgid "ui.menu.restartGameButton"
 msgstr "重啟遊戲"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:53
+#: src/ui/menu/MainMenuDisplay.old.ts:54
 msgid "ui.menu.settingsButton"
 msgstr "設定"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:133
-#: src/ui/menu/MainMenuDisplay.ts:75
+#: src/ui/game/GameDisplay.ts:179
+#: src/ui/menu/AllGamesDisplay.ts:29
+#: src/ui/menu/MainMenuDisplay.old.ts:76
 msgid "ui.menu.setupButton"
 msgstr "遊戲設定"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:64
+#: src/ui/menu/MainMenuDisplay.old.ts:65
 msgid "ui.menu.statisticsButton"
 msgstr "統計"
 
@@ -219,7 +249,37 @@ msgid "ui.settings.ColorsOption.title"
 msgstr "{0, plural, =1 {一種顏色} =2 {兩種顏色} =3 {三種顏色} =4 {四種顏色} =5 {五種顏色} =6 {六種顏色} other {# 種顏色}}"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:47
+#: src/ui/settings/SettingsDisplay.ts:99
+msgid "ui.settings.description.autorotate"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:78
+msgid "ui.settings.description.colorScheme"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:92
+msgid "ui.settings.description.hints"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:71
+msgid "ui.settings.description.language"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:85
+msgid "ui.settings.description.placeholders"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:106
+msgid "ui.settings.description.snap"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:46
 msgid "ui.settings.title"
 msgstr "Tessel"
 
@@ -280,72 +340,72 @@ msgid "ui.setup.title"
 msgstr "自定義遊戲"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:231
+#: src/ui/statistics/StatisticsDisplay.ts:227
 msgid "ui.statistics.columns.GameCompleted"
 msgstr "已完成的遊戲"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:223
+#: src/ui/statistics/StatisticsDisplay.ts:219
 msgid "ui.statistics.columns.HighScore"
 msgstr "高分榜"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:227
+#: src/ui/statistics/StatisticsDisplay.ts:223
 msgid "ui.statistics.columns.ShapeCompleted"
 msgstr "組成的形狀"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:259
+#: src/ui/statistics/StatisticsDisplay.ts:255
 msgid "ui.statistics.columns.TilePlaced"
 msgstr "放置的原塊"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:294
+#: src/ui/statistics/StatisticsDisplay.ts:290
 msgid "ui.statistics.counter.TilePlaced.hexagon"
 msgstr "六邊形"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:301
+#: src/ui/statistics/StatisticsDisplay.ts:297
 msgid "ui.statistics.counter.TilePlaced.kite"
 msgstr "紙鳶"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:287
+#: src/ui/statistics/StatisticsDisplay.ts:283
 msgid "ui.statistics.counter.TilePlaced.pentagon"
 msgstr "五邊形"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:280
+#: src/ui/statistics/StatisticsDisplay.ts:276
 msgid "ui.statistics.counter.TilePlaced.rhombus"
 msgstr "菱形"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:266
+#: src/ui/statistics/StatisticsDisplay.ts:262
 msgid "ui.statistics.counter.TilePlaced.square"
 msgstr "正方形"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:273
+#: src/ui/statistics/StatisticsDisplay.ts:269
 msgid "ui.statistics.counter.TilePlaced.triangle"
 msgstr "三角形"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:214
+#: src/ui/statistics/StatisticsDisplay.ts:210
 msgid "ui.statistics.headings.ShapeCompleted"
 msgstr "您已組成 {value} 個形狀。"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:250
+#: src/ui/statistics/StatisticsDisplay.ts:246
 msgid "ui.statistics.headings.TilePlaced"
 msgstr "您已放置 {value} 個圖塊。"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:70
+#: src/ui/statistics/StatisticsDisplay.ts:66
 msgid "ui.statistics.notPlayed"
 msgstr "您未嘗遊玩！"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:59
+#: src/ui/statistics/StatisticsDisplay.ts:58
 msgid "ui.statistics.title"
 msgstr "統計"
 

@@ -298,10 +298,22 @@ $tile-counter-and-high-score-font-size: max(18px, min(2vw, 2.5vh));
   }
 
   p.high-score {
-    padding-top: 0.1em;
     font-size: $tile-counter-and-high-score-font-size;
     color: var(--tile-counter-text-color);
     fill: var(--tile-counter-text-color);
+    transition:
+      opacity 300ms,
+      height 300ms;
+    padding-top: 0;
+    height: 0px;
+    opacity: 0;
+  }
+  &.show-highscore {
+    p.high-score {
+      padding-top: 0.1em;
+      height: 1.2em;
+      opacity: 1;
+    }
   }
 
   svg {

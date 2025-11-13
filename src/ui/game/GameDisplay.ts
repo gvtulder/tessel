@@ -39,7 +39,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     autorotate: Toggle;
     placeholders: Toggle;
     hints: Toggle;
-    snap: Toggle;
+    highscore: Toggle;
 
     onTapTile: EventListener;
     onStartDrag: EventListener;
@@ -199,10 +199,13 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         menu.addToggle(this.hints);
 
-        this.snap = Toggles.Snap(
-            () => (tileDragController.snap = this.snap.checked),
-        );
-        menu.addToggle(this.snap);
+        this.highscore = Toggles.Highscore(() => {
+            this.scoreDisplay.element.classList.toggle(
+                "show-highscore",
+                this.highscore.checked,
+            );
+        });
+        menu.addToggle(this.highscore);
 
         // register event handlers
         tileStackDisplay.addEventListener(
@@ -221,6 +224,11 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             .getItem("placeholders")
             .then((result) => {
                 this.placeholders.checked = result != "no";
+            });
+        getStorageBackend()
+            .getItem("highscore")
+            .then((result) => {
+                this.highscore.checked = result == "yes";
             });
 
         // initial scaling
@@ -250,7 +258,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         this.autorotate.destroy();
         this.hints.destroy();
         this.placeholders.destroy();
-        this.snap.destroy();
+        this.highscore.destroy();
 
         this.tileDragController.destroy();
         this.tileStackDisplay.destroy();

@@ -24,6 +24,11 @@ const Get_YesNoDefaultYes = (key: string) =>
         .getItem(key)
         .then((value: string | null) => value != "no");
 
+const Get_YesNoDefaultNo = (key: string) =>
+    getStorageBackend()
+        .getItem(key)
+        .then((value: string | null) => value == "yes");
+
 export const Toggles = {
     Placeholders: (onchange?: OnChangeFunction<Toggle>) =>
         new Toggle(
@@ -55,6 +60,13 @@ export const Toggles = {
             msg({ id: "ui.toggles.snap", message: "Snap" }),
             Set_YesNo("snap", onchange),
             Get_YesNoDefaultYes("snap"),
+        ),
+    Highscore: (onchange?: OnChangeFunction<Toggle>) =>
+        new Toggle(
+            icons.chartIcon,
+            msg({ id: "ui.toggles.highscore", message: "Show highscore" }),
+            Set_YesNo("highscore", onchange),
+            Get_YesNoDefaultNo("highscore"),
         ),
     ColorScheme: (onchange?: OnChangeFunction<ThreeWayToggle>) =>
         new ThreeWayToggle(

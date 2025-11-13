@@ -66,7 +66,7 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
             placeholders: Toggles.Placeholders(),
             autorotate: Toggles.Autorotate(),
             hints: Toggles.Hints(),
-            snap: Toggles.Snap(),
+            highscore: Toggles.Highscore(),
             colorScheme: Toggles.ColorScheme(),
             language: this.languagePicker,
         };
@@ -107,10 +107,10 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
             }),
         );
         addLi(
-            this.toggles.snap,
+            this.toggles.highscore,
             t({
-                id: "ui.settings.description.snap",
-                message: "Snap tiles into place",
+                id: "ui.settings.description.highscore",
+                message: "Show highscore",
             }),
         );
 

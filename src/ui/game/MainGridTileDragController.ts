@@ -31,7 +31,7 @@ export class MainGridTileDragController extends TileDragController {
 
         this.autorotate = false;
         this.hints = false;
-        this.snap = false;
+        this.snap = true;
 
         this.currentlySnapped = false;
 

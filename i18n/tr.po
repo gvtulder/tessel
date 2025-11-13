@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-11-12 23:58+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Turkish <https://hosted.weblate.org/projects/tessel/game/tr/>\nLanguage: tr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-11-13 22:59+0000\nLast-Translator: Muha Aliss <muhaaliss@users.noreply.hosted.weblate.org>\nLanguage-Team: Turkish <https://hosted.weblate.org/projects/tessel/game/tr/>\nLanguage: tr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -185,19 +185,9 @@ msgid "ui.menu.footer"
 msgstr "<a href=\"https://www.vantulder.net/\">Gijs van Tulder</a> tarafından geliştirildi."
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.old.ts:87
-msgid "ui.menu.paintButton"
-msgstr "Bir ızgarayı boya"
-
-#. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:187
 msgid "ui.menu.restartGameButton"
 msgstr "Oyunu yeniden başlat"
-
-#. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.old.ts:54
-msgid "ui.menu.settingsButton"
-msgstr "Ayarlar"
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:179
@@ -205,11 +195,6 @@ msgstr "Ayarlar"
 #: src/ui/menu/MainMenuDisplay.old.ts:76
 msgid "ui.menu.setupButton"
 msgstr "Oyun tasarla"
-
-#. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.old.ts:65
-msgid "ui.menu.statisticsButton"
-msgstr "İstatistikler"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: colors.length
@@ -420,6 +405,16 @@ msgid "ui.settings.description.placeholders"
 msgstr "Yer tutucu taşları göster"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:106
-msgid "ui.settings.description.snap"
-msgstr "Döşemeyi yerine oturt"
+#: src/ui/shared/MainNavBar.ts:48
+msgid "ui.menu.AllGamesButton"
+msgstr "Tüm Oyunlar"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:35
+msgid "ui.menu.MainMenuButton"
+msgstr "Ev"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:61
+msgid "ui.menu.PaintButton"
+msgstr "Boya"

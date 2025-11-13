@@ -185,19 +185,9 @@ msgid "ui.menu.footer"
 msgstr "由 <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a> 製作的遊戲。"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.old.ts:87
-msgid "ui.menu.paintButton"
-msgstr "填塗一格"
-
-#. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:187
 msgid "ui.menu.restartGameButton"
 msgstr "重啟遊戲"
-
-#. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.old.ts:54
-msgid "ui.menu.settingsButton"
-msgstr "設定"
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:179
@@ -205,11 +195,6 @@ msgstr "設定"
 #: src/ui/menu/MainMenuDisplay.old.ts:76
 msgid "ui.menu.setupButton"
 msgstr "遊戲設定"
-
-#. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.old.ts:65
-msgid "ui.menu.statisticsButton"
-msgstr "統計"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: colors.length
@@ -423,8 +408,3 @@ msgstr "語言"
 #: src/ui/settings/SettingsDisplay.ts:85
 msgid "ui.settings.description.placeholders"
 msgstr "顯示佔位格"
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:106
-msgid "ui.settings.description.snap"
-msgstr "吸附原塊"

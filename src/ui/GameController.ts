@@ -45,6 +45,7 @@ export class GameController {
     currentScreenDestroy?: null | (() => void);
     restartNeeded?: boolean;
     mainNavBar: MainNavBar;
+    lastSettingsTab?: Pages;
     destroyMainNavBar: () => void;
 
     constructor(container: HTMLElement, version?: string, workbox?: Workbox) {
@@ -88,7 +89,12 @@ export class GameController {
         const navBar = new MainNavBar();
 
         const handleNavigate = (evt: NavigateEvent) => {
-            this.navigateTo(evt.page!);
+            let page = evt.page!;
+            if (page == Pages.Settings) {
+                // return to previous tab
+                page = this.lastSettingsTab || Pages.Settings;
+            }
+            this.navigateTo(page);
         };
 
         navBar.addEventListener(UserEventType.Navigate, handleNavigate);
@@ -188,7 +194,7 @@ export class GameController {
             if (evt.gameId) {
                 window.history.pushState({}, "", `#${evt.gameId}`);
             }
-            this.startGame(evt.gameSettings!);
+            this.startGame(evt.gameSettings!, Pages.MainMenu);
         };
 
         const destroy = () => {
@@ -220,7 +226,7 @@ export class GameController {
             if (evt.gameId) {
                 window.history.pushState({}, "", `#${evt.gameId}`);
             }
-            this.startGame(evt.gameSettings!);
+            this.startGame(evt.gameSettings!, Pages.AllGames);
         };
 
         const handleSetup = () => {
@@ -250,6 +256,7 @@ export class GameController {
         this.resetState();
         this.mainNavBar.show();
         this.mainNavBar.activeTab = NavBarItems.Settings;
+        this.lastSettingsTab = Pages.About;
 
         const handleNavigate = (evt: NavigateEvent) => {
             this.navigateTo(evt.page!);
@@ -275,6 +282,7 @@ export class GameController {
         this.resetState();
         this.mainNavBar.show();
         this.mainNavBar.activeTab = NavBarItems.Settings;
+        this.lastSettingsTab = Pages.Settings;
 
         const handleNavigate = (evt: NavigateEvent) => {
             this.navigateTo(evt.page!);
@@ -303,6 +311,7 @@ export class GameController {
         this.resetState();
         this.mainNavBar.show();
         this.mainNavBar.activeTab = NavBarItems.Settings;
+        this.lastSettingsTab = Pages.Statistics;
 
         const handleNavigate = (evt: NavigateEvent) => {
             this.navigateTo(evt.page!);
@@ -435,7 +444,7 @@ export class GameController {
         return gameFromSerializedSettings(SaveGames.SetupCatalog, serialized);
     }
 
-    startGame(gameSettings: GameSettings) {
+    startGame(gameSettings: GameSettings, previousPage?: string) {
         this.resetState();
         this.mainNavBar.hide();
         this.mainNavBar.activeTab = NavBarItems.AllGames;
@@ -449,8 +458,7 @@ export class GameController {
 
         // add button handlers
         const handleMenu = () => {
-            // TODO return to main menu or all games
-            this.navigateTo(Pages.MainMenu);
+            this.navigateTo(previousPage || Pages.MainMenu);
         };
 
         const handleSetup = () => {
@@ -459,7 +467,7 @@ export class GameController {
 
         const handleRestart = () => {
             destroy();
-            this.startGame(gameSettings);
+            this.startGame(gameSettings, previousPage);
         };
 
         const destroy = () => {

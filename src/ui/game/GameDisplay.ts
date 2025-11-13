@@ -41,7 +41,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     placeholders: Toggle;
     hints: Toggle;
     snap: Toggle;
-    colorMode: ThreeWayToggle;
 
     onTapTile: EventListener;
     onStartDrag: EventListener;
@@ -214,9 +213,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         menu.addToggle(this.snap);
 
-        this.colorMode = Toggles.ColorScheme();
-        menu.addToggle(this.colorMode);
-
         // register event handlers
         tileStackDisplay.addEventListener(
             TileStackDisplay.events.TapTile,
@@ -265,7 +261,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         this.hints.destroy();
         this.placeholders.destroy();
         this.snap.destroy();
-        this.colorMode.destroy();
 
         this.tileDragController.destroy();
         this.tileStackDisplay.destroy();

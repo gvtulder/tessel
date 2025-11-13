@@ -213,6 +213,11 @@ msgid "ui.menu.StatisticsButton"
 msgstr "Statistics"
 
 #. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:183
+msgid "ui.menu.addMoreTilesButton"
+msgstr "More tiles"
+
+#. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:169
 #: src/ui/paint/PaintDisplay.ts:66
 #: src/ui/setup/GameSetupDisplay.ts:146

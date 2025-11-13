@@ -1,5 +1,5 @@
 msgid ""
-msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-11-06 23:29+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Dutch <https://hosted.weblate.org/projects/tessel/game/nl/>\nLanguage: nl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-11-12 23:58+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Dutch <https://hosted.weblate.org/projects/tessel/game/nl/>\nLanguage: nl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -172,37 +172,6 @@ msgid "ui.game.showMenuButton"
 msgstr "Menu openen"
 
 #. js-lingui-explicit-id
-#: src/ui/shared/MainNavBar.ts:48
-msgid "ui.menu.AllGamesButton"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SmallNavBar.ts:49
-msgid "ui.menu.HowToPlayButton"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/shared/MainNavBar.ts:35
-msgid "ui.menu.MainMenuButton"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/shared/MainNavBar.ts:61
-msgid "ui.menu.PaintButton"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SmallNavBar.ts:34
-#: src/ui/shared/MainNavBar.ts:74
-msgid "ui.menu.SettingsButton"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SmallNavBar.ts:64
-msgid "ui.menu.StatisticsButton"
-msgstr ""
-
-#. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:171
 #: src/ui/paint/PaintDisplay.ts:66
 #: src/ui/setup/GameSetupDisplay.ts:145
@@ -249,39 +218,9 @@ msgid "ui.settings.ColorsOption.title"
 msgstr "{0, plural, =1 {Één kleur} =2 {Twee kleuren} =3 {Drie kleuren} =4 {Vier kleuren} =5 {Vijf kleuren} =6 {Zes kleuren} other {# kleuren}}"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:99
-msgid "ui.settings.description.autorotate"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:78
-msgid "ui.settings.description.colorScheme"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:92
-msgid "ui.settings.description.hints"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:71
-msgid "ui.settings.description.language"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:85
-msgid "ui.settings.description.placeholders"
-msgstr ""
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:106
-msgid "ui.settings.description.snap"
-msgstr ""
-
-#. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:46
 msgid "ui.settings.title"
-msgstr "Tessel"
+msgstr "Instellingen"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/SegmentsOption.ts:56
@@ -438,3 +377,64 @@ msgstr "Mogelijkheden"
 #: src/ui/shared/toggles.ts:55
 msgid "ui.toggles.snap"
 msgstr "Vastklikken"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:48
+msgid "ui.menu.AllGamesButton"
+msgstr "Overzicht"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:49
+msgid "ui.menu.HowToPlayButton"
+msgstr "Hoe speel je het spel?"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:35
+msgid "ui.menu.MainMenuButton"
+msgstr "Start"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:61
+msgid "ui.menu.PaintButton"
+msgstr "Tekenen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:34
+#: src/ui/shared/MainNavBar.ts:74
+msgid "ui.menu.SettingsButton"
+msgstr "Instellingen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:64
+msgid "ui.menu.StatisticsButton"
+msgstr "Statistieken"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:99
+msgid "ui.settings.description.autorotate"
+msgstr "Tegels automatisch draaien"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:78
+msgid "ui.settings.description.colorScheme"
+msgstr "Lichte modus, donkere modus, of volg de standaardinstelling van je apparaat"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:92
+msgid "ui.settings.description.hints"
+msgstr "Geldige posities tonen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:71
+msgid "ui.settings.description.language"
+msgstr "Taal"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:85
+msgid "ui.settings.description.placeholders"
+msgstr "Volgende tegelposities tonen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:106
+msgid "ui.settings.description.snap"
+msgstr "Tegels automatisch vastklikken"

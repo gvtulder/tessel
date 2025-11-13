@@ -1,5 +1,5 @@
 msgid ""
-msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-11-06 23:28+0000\nLast-Translator: Anonymous <noreply@weblate.org>\nLanguage-Team: English <https://hosted.weblate.org/projects/tessel/game/en/>\nLanguage: en\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-11-12 23:58+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: English <https://hosted.weblate.org/projects/tessel/game/en/>\nLanguage: en\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -281,7 +281,7 @@ msgstr "Snap tiles into place"
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:46
 msgid "ui.settings.title"
-msgstr "Tessel"
+msgstr "Settings"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/SegmentsOption.ts:56

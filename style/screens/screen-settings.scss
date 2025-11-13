@@ -109,28 +109,38 @@
       text-indent: 0;
     }
 
-    ul.options {
-      padding: 0;
-      list-style: none;
+    .option {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: 0.6em 0;
+    }
 
-      li {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin: 0.6em 0;
+    .option.label-before {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-bottom: 0.2em;
+
+      .label {
+        padding-bottom: 0.2em;
       }
 
       .game-toggle {
         width: calc(1.8 * sizes.$button-scale);
-        margin-right: 0.5em;
-        flex-grow: 0;
-        flex-shrink: 0;
       }
+    }
 
-      .setting-row {
-        width: 50%;
-        margin-right: 0.5em;
-      }
+    .option.label-before + .option.label-aside {
+      padding-top: 1.2em;
+    }
+
+    .game-toggle {
+      width: 100%;
+    }
+
+    .setting-row {
+      width: 50%;
+      margin-right: 0.5em;
     }
 
     p.version-line {

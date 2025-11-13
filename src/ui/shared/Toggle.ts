@@ -13,6 +13,7 @@ export class Toggle {
         Change: "change",
     };
     element: HTMLElement;
+    private boxElement: HTMLElement;
     private _checked!: boolean;
 
     private onchange: (source: Toggle) => void;
@@ -29,6 +30,7 @@ export class Toggle {
 
         const box = createElement("div", "toggle-box", toggle);
         createElement("div", "toggle-ball", box);
+        this.boxElement = box;
 
         const iconEl = createElement("div", "icon", toggle);
         iconEl.innerHTML = icon;
@@ -64,5 +66,12 @@ export class Toggle {
 
     toggle() {
         this.checked = !this.checked;
+    }
+
+    set label(label: string) {
+        // makes this a labeled toggle
+        this.element.classList.add("with-label");
+        const span = createElement("span", "label", this.element);
+        span.innerHTML = label;
     }
 }

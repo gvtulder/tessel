@@ -26,6 +26,18 @@
     flex-direction: row;
   }
 
+  &.with-label {
+    .label {
+      padding-left: 0.5em;
+      flex-grow: 1;
+    }
+    .toggle-box {
+      width: calc(1 * sizes.$button-scale);
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+  }
+
   &.threeway .wrap {
     flex-grow: 1;
     display: flex;

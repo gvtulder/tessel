@@ -47,22 +47,30 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
         const h3 = createElement("h3", null, article);
         h3.innerHTML = t({ id: "ui.settings.title", message: "Settings" });
 
-        // options list
-        const ul = createElement("ul", "options", article);
-
-        const addLi = (
-            toggle: LanguagePicker | Toggle | ThreeWayToggle,
-            description: string,
+        const addTwoLineOptionRow = (
+            toggle: LanguagePicker | ThreeWayToggle,
+            label: string,
         ) => {
-            const li = createElement("li", null, ul);
-            li.appendChild(toggle.element);
-            const span = createElement("span", "", li);
-            span.innerHTML = description;
+            const div = createElement("div", "option label-before", article);
+            const span = createElement("span", "label", div);
+            span.innerHTML = label;
+            div.appendChild(toggle.element);
+        };
+
+        const addOptionRow = (
+            toggle: Toggle | ThreeWayToggle,
+            label?: string,
+        ) => {
+            const div = createElement("div", "option label-aside", article);
+            div.appendChild(toggle.element);
+            if (label) {
+                toggle.label = label;
+            }
         };
 
         // language picker
         this.languagePicker = new LanguagePicker();
-        this.toggles = {
+        const toggles = {
             placeholders: Toggles.Placeholders(),
             autorotate: Toggles.Autorotate(),
             hints: Toggles.Hints(),
@@ -70,44 +78,45 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
             colorScheme: Toggles.ColorScheme(),
             language: this.languagePicker,
         };
+        this.toggles = toggles;
 
-        addLi(
+        addTwoLineOptionRow(
             this.languagePicker,
             t({
                 id: "ui.settings.description.language",
                 message: "Language",
             }),
         );
-        addLi(
-            this.toggles.colorScheme,
+        addTwoLineOptionRow(
+            toggles.colorScheme,
             t({
                 id: "ui.settings.description.colorScheme",
                 message: "Light mode, dark mode, or follow your device",
             }),
         );
-        addLi(
-            this.toggles.placeholders,
+        addOptionRow(
+            toggles.placeholders,
             t({
                 id: "ui.settings.description.placeholders",
                 message: "Show placeholder tiles",
             }),
         );
-        addLi(
-            this.toggles.hints,
+        addOptionRow(
+            toggles.hints,
             t({
                 id: "ui.settings.description.hints",
                 message: "Highlight valid positions",
             }),
         );
-        addLi(
-            this.toggles.autorotate,
+        addOptionRow(
+            toggles.autorotate,
             t({
                 id: "ui.settings.description.autorotate",
                 message: "Auto-rotate tiles",
             }),
         );
-        addLi(
-            this.toggles.highscore,
+        addOptionRow(
+            toggles.highscore,
             t({
                 id: "ui.settings.description.highscore",
                 message: "Show highscore",

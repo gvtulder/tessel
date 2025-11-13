@@ -103,4 +103,11 @@ export class ThreeWayToggle {
             if (this.onchange) this.onchange(this);
         }
     }
+
+    set label(label: string) {
+        // makes this a labeled toggle
+        this.element.classList.add("with-label");
+        const span = createElement("span", "label", this.element);
+        span.innerHTML = label;
+    }
 }

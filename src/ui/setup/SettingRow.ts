@@ -8,12 +8,14 @@ import { getStorageBackend } from "../../lib/storage-backend";
 import { createElement } from "../shared/html";
 import { SettingRowOption } from "./SettingRowOption";
 import { t } from "@lingui/core/macro";
+import icons from "../shared/icons";
 
 export class SettingRow<T extends SettingRowOption> {
     element: HTMLDivElement;
     optionWrapElement: HTMLDivElement;
     dropdownWrapElement: HTMLDivElement;
     dropdownElement: HTMLDivElement;
+    anglesElement: HTMLElement;
     currentOption?: T;
     options: T[];
     onchange?: () => void;
@@ -52,6 +54,11 @@ export class SettingRow<T extends SettingRowOption> {
             "dropdown",
             this.dropdownWrapElement,
         );
+
+        // angles up down icon
+        const anglesIconContainer = createElement("div", "angles");
+        anglesIconContainer.innerHTML = icons.anglesUpDownIcon;
+        this.anglesElement = anglesIconContainer;
 
         this.backgroundEventHandler = (evt: PointerEvent) => {
             const target = evt.target as HTMLElement;
@@ -215,6 +222,7 @@ export class SettingRow<T extends SettingRowOption> {
         this.currentOption = options[
             this._selected || 0
         ].cloneForDisplay() as T;
+        this.currentOption.element.appendChild(this.anglesElement);
         this.currentOption.element.classList.add("current");
         this.optionWrapElement.appendChild(this.currentOption.element);
         this.currentOption.rescale();

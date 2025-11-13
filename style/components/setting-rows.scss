@@ -6,6 +6,21 @@
   height: 100%;
 }
 
+/* arrows icon */
+.setting-row .option-wrap .angles {
+  position: absolute;
+  right: 0.5rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  fill: var(--button-fg-color);
+
+  svg {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+}
+
 /* dropdown menu */
 .setting-row .dropdown-wrap {
   display: none;
@@ -83,6 +98,7 @@
 }
 .setting-row-option.current {
   box-shadow: var(--button-box-shadow);
+  padding-right: 2em;
   margin: 0;
   height: 100%;
 }

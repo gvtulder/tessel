@@ -6,8 +6,9 @@
 import { Grid } from "../../grid/Grid";
 import { GridDisplay } from "../grid/GridDisplay";
 import { MainMenuGridDisplay } from "./MainMenuGridDisplay";
-import * as SaveGames from "../../saveGames";
-import { UserEvent, UserEventType } from "../GameController";
+import { lookup as SaveGamesLookup } from "../../saveGames";
+import { UserEvent } from "../shared/UserEvent";
+import { UserEventType } from "../shared/UserEvent";
 import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
 import { AngleUse } from "../../grid/Shape";
@@ -36,7 +37,7 @@ export class GameListDisplay extends EventTarget {
         );
 
         for (const saveGameId of gameList) {
-            const gameSettings = SaveGames.lookup.get(saveGameId);
+            const gameSettings = SaveGamesLookup.get(saveGameId);
             if (!gameSettings) continue;
 
             const exampleTile = document.createElement("div");

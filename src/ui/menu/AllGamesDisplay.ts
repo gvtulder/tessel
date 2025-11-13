@@ -4,7 +4,8 @@
  */
 
 import icons from "../shared/icons";
-import { UserEvent, UserEventType } from "../GameController";
+import { UserEvent } from "../shared/UserEvent";
+import { UserEventType } from "../shared/UserEvent";
 import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
 import { msg } from "@lingui/core/macro";

@@ -6,7 +6,7 @@
 import { Grid } from "../../grid/Grid";
 import { TileColor } from "../../grid/Tile";
 import icons from "../shared/icons";
-import { UserEventType } from "../GameController";
+import { UserEventType } from "../shared/UserEvent";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
 import { Button } from "../shared/Button";

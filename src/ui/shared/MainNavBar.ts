@@ -7,12 +7,10 @@ import { msg } from "@lingui/core/macro";
 import { Button } from "./Button";
 import icons from "./icons";
 import { NavBar } from "./NavBar";
-import {
-    NavigateEvent,
-    Pages,
-    UserEvent,
-    UserEventType,
-} from "../GameController";
+import { NavigateEvent } from "./UserEvent";
+import { UserEvent } from "./UserEvent";
+import { Pages } from "./UserEvent";
+import { UserEventType } from "./UserEvent";
 
 export enum NavBarItems {
     MainMenu,

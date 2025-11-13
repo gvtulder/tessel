@@ -3,7 +3,8 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { NavigateEvent, Pages } from "../GameController";
+import { NavigateEvent } from "../shared/UserEvent";
+import { Pages } from "../shared/UserEvent";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
 import { t } from "@lingui/core/macro";

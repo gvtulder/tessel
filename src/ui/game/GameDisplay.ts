@@ -11,7 +11,7 @@ import { ScoreDisplay } from "./ScoreDisplay";
 import icons from "../shared/icons";
 import { TileDragController } from "../grid/TileDragController";
 import { MainGridTileDragController } from "./MainGridTileDragController";
-import { UserEventType } from "../GameController";
+import { UserEventType } from "../shared/UserEvent";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
 import { Button } from "../shared/Button";

@@ -35,7 +35,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
     menu: DropoutMenu;
     backtomenubutton: Button;
-    setupbutton: Button;
     restartgamebutton: Button;
     autorotate: Toggle;
     placeholders: Toggle;
@@ -173,14 +172,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         menu.addButton(this.backtomenubutton);
 
-        this.setupbutton = new Button(
-            icons.swatchbookIcon,
-            msg({ id: "ui.menu.setupButton", message: "Design a game" }),
-            () => this.dispatchEvent(new Event(UserEventType.SetupMenu)),
-            "setup",
-        );
-        menu.addButton(this.setupbutton);
-
         this.restartgamebutton = new Button(
             icons.rotateLeftIcon,
             msg({ id: "ui.menu.restartGameButton", message: "Restart game" }),
@@ -255,7 +246,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         this.menu.destroy();
         this.backtomenubutton.destroy();
-        this.setupbutton.destroy();
         this.restartgamebutton.destroy();
         this.autorotate.destroy();
         this.hints.destroy();

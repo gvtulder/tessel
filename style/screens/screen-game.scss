@@ -78,8 +78,8 @@
 
   .items {
     display: none;
-    margin: $dropout-inner-padding calc(0.5 * $dropout-inner-padding)
-      calc(2 * $dropout-outer-padding) calc(0.5 * $dropout-inner-padding);
+    margin: calc(-1 * (sizes.$button-scale)) calc(0.5 * $dropout-inner-padding)
+      $dropout-outer-padding calc(0.5 * $dropout-inner-padding);
     grid-template-columns: auto auto auto auto auto auto;
   }
 
@@ -90,20 +90,15 @@
       calc(0.5 * $dropout-inner-padding);
 
     transition: scale 0.1s;
-
-    &.game-button-pressed,
-    &:hover {
-      scale: 1.05;
-    }
   }
 
   .items .game-toggle {
     grid-column: span 3;
+    width: calc(1.7 * sizes.$button-scale);
     margin: 0 0 calc(0.5 * $dropout-inner-padding) 0;
     padding: 0 calc(0.5 * $dropout-inner-padding);
   }
 
-  .items,
   .game-button + .game-toggle,
   .game-button + .game-toggle + .game-toggle {
     border-top: 1px solid var(--panel-bg-color);

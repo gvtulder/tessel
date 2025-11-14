@@ -46,7 +46,11 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     onGameScore: EventListener;
     onGameEndGame: EventListener;
 
-    constructor(game: Game, stats?: StatisticsMonitor) {
+    constructor(
+        game: Game,
+        stats?: StatisticsMonitor,
+        returnToSetup?: boolean,
+    ) {
         super();
         this.game = game;
 
@@ -165,7 +169,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         // buttons
         this.backtomenubutton = new Button(
-            icons.houseIcon,
+            returnToSetup ? icons.swatchbookIcon : icons.houseIcon,
             msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
             () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
             "backtomenu",

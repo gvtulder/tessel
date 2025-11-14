@@ -329,7 +329,11 @@ export class GameController {
     startGame(gameSettings: GameSettings) {
         const game = new Game(gameSettings);
         this.game = game;
-        const gameDisplay = new GameDisplay(game, this.stats);
+        const gameDisplay = new GameDisplay(
+            game,
+            this.stats,
+            this.lastMainPage == Pages.SetupMenu,
+        );
         this.showScreen(gameDisplay);
     }
 

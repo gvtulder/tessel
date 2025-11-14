@@ -47,6 +47,7 @@ export class GameController {
     previousScreenDestroyTimeout?: number;
     restartNeeded?: boolean;
     mainNavBar: MainNavBar;
+    lastNavBarItem?: NavBarItems | null;
     lastMainPage?: Pages;
     lastSettingsTab?: Pages;
     destroyMainNavBar: () => void;
@@ -183,12 +184,21 @@ export class GameController {
         lastSettingsTab?: Pages,
         handlers?: [UserEventType, () => void][],
     ) {
+        if (this.lastNavBarItem != mainNavBarTab) {
+            screen.element.addEventListener("animationend", () =>
+                screen.element.classList.remove("appear"),
+            );
+            screen.element.classList.add("appear");
+        }
+
         this.resetState();
         if (mainNavBarTab) {
             this.mainNavBar.show();
             this.mainNavBar.activeTab = mainNavBarTab;
+            this.lastNavBarItem = mainNavBarTab;
         } else {
             this.mainNavBar.hide();
+            this.lastNavBarItem = null;
         }
         if (lastMainPage) {
             this.lastMainPage = lastMainPage;

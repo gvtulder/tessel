@@ -12,6 +12,8 @@ export class NavBar extends EventTarget {
     buttons: Button[];
     listElement: HTMLUListElement;
     listItemElements: HTMLLIElement[];
+    _animationendHandler: () => void;
+    _visible?: boolean;
 
     constructor(className: string) {
         super();
@@ -23,6 +25,17 @@ export class NavBar extends EventTarget {
         this.listElement = createElement("ul", null, div);
         this.listItemElements = [];
         this._activeIndex = -1;
+
+        this._animationendHandler = () => {
+            if (!this._visible) {
+                this.element.style.display = "none";
+            }
+            this.element.classList.remove("appear", "disappear");
+        };
+        this.element.addEventListener(
+            "animationend",
+            this._animationendHandler,
+        );
     }
 
     addButton(button: Button) {
@@ -44,13 +57,26 @@ export class NavBar extends EventTarget {
         for (const button of this.buttons) {
             button.destroy();
         }
+        this.element.removeEventListener(
+            "animationend",
+            this._animationendHandler,
+        );
     }
 
     show() {
-        this.element.style.display = "";
+        if (!this._visible) {
+            this._visible = true;
+            this.element.style.display = "";
+            this.element.classList.remove("disappear");
+            this.element.classList.add("appear");
+        }
     }
 
     hide() {
-        this.element.style.display = "none";
+        if (this._visible) {
+            this._visible = false;
+            this.element.classList.remove("appear");
+            this.element.classList.add("disappear");
+        }
     }
 }

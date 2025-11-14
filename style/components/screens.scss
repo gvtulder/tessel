@@ -15,15 +15,17 @@
 
   transition: background-color 50ms;
 
-  animation-name: animate-appear;
-  animation-delay: 100ms;
-  animation-duration: 500ms;
-  animation-fill-mode: backwards;
+  &.appear {
+    animation-name: screen-animate-appear;
+    animation-delay: 100ms;
+    animation-duration: 500ms;
+    animation-fill-mode: backwards;
+  }
 
   &.disappear {
-    animation-name: animate-disappear;
+    animation-name: screen-animate-disappear;
     animation-delay: 0;
-    animation-duration: 500ms;
+    animation-duration: 400ms;
     animation-fill-mode: forwards;
   }
 }
@@ -35,7 +37,7 @@
   padding-bottom: sizes.$main-navbar-top;
 }
 
-@keyframes animate-appear {
+@keyframes screen-animate-appear {
   0% {
     opacity: 0;
   }
@@ -43,7 +45,7 @@
     opacity: 100;
   }
 }
-@keyframes animate-disappear {
+@keyframes screen-animate-disappear {
   0% {
     opacity: 100;
   }

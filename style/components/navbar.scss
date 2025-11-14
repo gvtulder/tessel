@@ -67,6 +67,20 @@
   z-index: 100;
 
   --navbar-size: calc(#{sizes.$main-navbar-height} / 2.5);
+
+  &.appear {
+    animation-name: navbar-animate-appear;
+    animation-delay: 300ms;
+    animation-duration: 200ms;
+    animation-fill-mode: both;
+  }
+
+  &.disappear {
+    animation-name: navbar-animate-appear;
+    animation-duration: 200ms;
+    animation-direction: reverse;
+    animation-fill-mode: both;
+  }
 }
 
 .small-navbar {
@@ -74,4 +88,13 @@
   max-width: max-content;
   font-size: 0.9rem;
   --navbar-size: 0.9rem;
+}
+
+@keyframes navbar-animate-appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 100;
+  }
 }

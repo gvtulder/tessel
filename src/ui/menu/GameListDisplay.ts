@@ -108,7 +108,7 @@ export class GameListDisplay extends EventTarget {
 
     rescale() {
         for (const gridDisplay of this.gridDisplays) {
-            gridDisplay.triggerRescale();
+            gridDisplay.rescale();
         }
     }
 }

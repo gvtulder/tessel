@@ -6,7 +6,7 @@
 import { Grid } from "../../grid/Grid";
 import { TileColor } from "../../grid/Tile";
 import icons from "../shared/icons";
-import { UserEventType } from "../shared/UserEvent";
+import { NavigateEvent, Pages, UserEventType } from "../shared/UserEvent";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
 import { Button } from "../shared/Button";
@@ -64,7 +64,7 @@ export class PaintDisplay extends EventTarget implements ScreenDisplay {
         this.backtomenubutton = new Button(
             icons.houseIcon,
             msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
-            () => this.dispatchEvent(new Event(UserEventType.BackToMenu)),
+            () => this.dispatchEvent(new NavigateEvent(Pages.PaintMenu)),
             "backtomenu",
         );
         menu.appendChild(this.backtomenubutton.element);

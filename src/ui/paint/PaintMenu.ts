@@ -6,7 +6,7 @@
 import { Grid } from "../../grid/Grid";
 import { TileColor } from "../../grid/Tile";
 import icons from "../shared/icons";
-import { UserEvent } from "../shared/UserEvent";
+import { NavigateEvent, UserEvent } from "../shared/UserEvent";
 import { UserEventType } from "../shared/UserEvent";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
@@ -46,9 +46,7 @@ export class PaintMenu extends EventTarget implements ScreenDisplay {
         this.options = [];
         for (const setting of SetupCatalog.atlas.values()) {
             const option = new AtlasOption(setting.key, setting.atlas, () => {
-                this.dispatchEvent(
-                    new UserEvent(UserEventType.Paint, undefined, option.key),
-                );
+                this.dispatchEvent(new NavigateEvent(`paint-${option.key}`));
             });
             this.options.push(option);
             optionsDiv.appendChild(option.element);

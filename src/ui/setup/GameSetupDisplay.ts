@@ -20,7 +20,7 @@ import { generateSeed } from "../../geom/RandomSampler";
 import { SetupCatalog } from "../../saveGames";
 import { SegmentsOption } from "./SegmentsOption";
 import { GameSettingsSerialized } from "../../game/Game";
-import { UserEvent } from "../shared/UserEvent";
+import { NavigateEvent, Pages, UserEvent } from "../shared/UserEvent";
 import { UserEventType } from "../shared/UserEvent";
 import { ScorerSettingRow } from "./ScorerSettingRow";
 import { ScorerOption } from "./ScorerOption";
@@ -128,7 +128,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
                 if (this.valid) {
                     this.dispatchEvent(
                         new UserEvent(
-                            UserEventType.StartGameFromSetup,
+                            UserEventType.StartGame,
                             undefined,
                             undefined,
                             this.settings,
@@ -145,7 +145,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
             icons.angleLeftIcon,
             msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
             () => {
-                this.dispatchEvent(new UserEvent(UserEventType.BackToMenu));
+                this.dispatchEvent(new NavigateEvent(Pages.AllGames));
             },
         );
         exitButton.element.classList.add("exit");

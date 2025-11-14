@@ -13,7 +13,7 @@ import { Pages } from "./UserEvent";
 import { UserEventType } from "./UserEvent";
 
 export enum NavBarItems {
-    MainMenu,
+    MainMenu = 1,
     AllGames,
     Paint,
     Settings,

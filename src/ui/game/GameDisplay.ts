@@ -180,6 +180,11 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         menu.addButton(this.restartgamebutton);
 
+        const moreTiles = msg({
+            id: "ui.menu.addMoreTilesButton",
+            message: "More tiles",
+        });
+
         // toggles
         this.placeholders = Toggles.Placeholders(() =>
             this.element.classList.toggle(

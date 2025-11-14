@@ -45,9 +45,9 @@ export class UserEvent extends Event {
 }
 
 export class NavigateEvent extends Event {
-    page?: Pages;
+    page?: Pages | string;
 
-    constructor(page: Pages) {
+    constructor(page: Pages | string) {
         super(UserEventType.Navigate);
         this.page = page;
     }

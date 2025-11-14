@@ -4,7 +4,7 @@
  */
 
 import icons from "../shared/icons";
-import { UserEvent } from "../shared/UserEvent";
+import { NavigateEvent, Pages, UserEvent } from "../shared/UserEvent";
 import { UserEventType } from "../shared/UserEvent";
 import { Button } from "../shared/Button";
 import { createElement } from "../shared/html";
@@ -29,7 +29,7 @@ export class AllGamesDisplay extends GameListDisplay {
             icons.swatchbookIcon,
             msg({ id: "ui.menu.setupButton", message: "Design a game" }),
             () => {
-                this.dispatchEvent(new UserEvent(UserEventType.SetupMenu));
+                this.dispatchEvent(new NavigateEvent(Pages.SetupMenu));
             },
             "button-setup-menu",
         );

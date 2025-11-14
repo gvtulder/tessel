@@ -185,10 +185,13 @@ export class GameController {
         handlers?: [UserEventType, () => void][],
     ) {
         if (this.lastNavBarItem != mainNavBarTab) {
-            screen.element.addEventListener("animationend", () =>
-                screen.element.classList.remove("appear"),
-            );
+            window.setTimeout(() => {
+                screen.element.classList.remove("appear", "appear-initial");
+            }, 1000);
             screen.element.classList.add("appear");
+            if (!this.lastNavBarItem) {
+                screen.element.classList.add("appear-initial");
+            }
         }
 
         this.resetState();

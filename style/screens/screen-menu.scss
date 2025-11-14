@@ -79,68 +79,104 @@
     }
   }
 
-  .atlas-picker-option {
-    animation-duration: 300ms;
-    animation-delay: 50ms;
-  }
-  .atlas-picker-option:nth-child(1) {
-    animation-name: example-tile-appear-left;
-  }
+  &.appear-initial {
+    .atlas-picker-option {
+      animation-duration: 300ms;
+      animation-delay: 50ms;
+    }
+    .atlas-picker-option:nth-child(1) {
+      animation-name: example-tile-appear-right-down;
+    }
 
-  .atlas-picker-option:nth-child(2) {
-    animation-name: example-tile-appear-right;
-  }
-
-  .atlas-picker-option:nth-child(3),
-  .atlas-picker-option:nth-child(4) {
-    animation-name: example-tile-appear-bottom;
-  }
-
-  @media screen and (min-aspect-ratio: 10 / 7) {
-    .atlas-picker-option:nth-child(1),
     .atlas-picker-option:nth-child(2) {
-      animation-name: example-tile-appear-left;
+      animation-name: example-tile-appear-left-down;
     }
 
-    .atlas-picker-option:nth-child(3),
-    .atlas-picker-option:nth-child(4) {
-      animation-name: example-tile-appear-right;
-    }
-
-    .atlas-picker-option:nth-child(2),
     .atlas-picker-option:nth-child(3) {
-      animation-duration: 200ms;
+      animation-name: example-tile-appear-right-up;
+    }
+    .atlas-picker-option:nth-child(4) {
+      animation-name: example-tile-appear-left-up;
+    }
+
+    @media screen and (min-aspect-ratio: 10 / 7) {
+      .atlas-picker-option:nth-child(1),
+      .atlas-picker-option:nth-child(2) {
+        animation-name: example-tile-appear-right-0;
+      }
+
+      .atlas-picker-option:nth-child(3),
+      .atlas-picker-option:nth-child(4) {
+        animation-name: example-tile-appear-left-0;
+      }
+
+      .atlas-picker-option:nth-child(2),
+      .atlas-picker-option:nth-child(3) {
+        animation-duration: 200ms;
+      }
+    }
+
+    .logo {
+      animation: example-tile-appear-bottom 300ms;
     }
   }
+}
 
-  .logo {
-    animation: example-tile-appear-bottom 300ms;
+.screen.all-games {
+  &.appear-initial {
+    .atlas-picker-option {
+      animation-duration: 300ms;
+      animation-delay: 50ms;
+      animation-composition: add;
+    }
+    .atlas-picker-option:nth-child(1) {
+      animation-name: example-tile-appear-right-down;
+    }
+    .atlas-picker-option:nth-child(2) {
+      animation-name: example-tile-appear-0-down;
+    }
+    .atlas-picker-option:nth-child(3) {
+      animation-name: example-tile-appear-left-down;
+    }
+    .atlas-picker-option:nth-child(4) {
+      animation-name: example-tile-appear-right-0;
+    }
+    .atlas-picker-option:nth-child(6) {
+      animation-name: example-tile-appear-left-0;
+    }
+    .atlas-picker-option:nth-child(7) {
+      animation-name: example-tile-appear-right-up;
+    }
+    .atlas-picker-option:nth-child(8) {
+      animation-name: example-tile-appear-0-up;
+    }
+    .atlas-picker-option:nth-child(9) {
+      animation-name: example-tile-appear-left-up;
+    }
   }
 }
 
-@keyframes example-tile-appear-left {
-  0% {
-    transform: translate(-50vw, 0);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-@keyframes example-tile-appear-right {
-  0% {
-    transform: translate(50vw, 0);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
-@keyframes example-tile-appear-bottom {
-  0% {
-    transform: translate(0, 50vw);
-  }
-  100% {
-    transform: translate(0, 0);
+@each $leftright in (left, 0, right) {
+  @each $updown in (up, 0, down) {
+    @keyframes example-tile-appear-#{$leftright}-#{$updown} {
+      $dy: 0;
+      @if $updown == up {
+        $dy: 30vw;
+      } @else if $updown == down {
+        $dy: -30vw;
+      }
+      $dx: 0;
+      @if $leftright == left {
+        $dx: 30vw;
+      } @else if $leftright == right {
+        $dx: -30vw;
+      }
+      0% {
+        transform: translate($dx, $dy);
+      }
+      100% {
+        transform: translate(0, 0);
+      }
+    }
   }
 }

@@ -77,6 +77,8 @@ export class NavBar extends EventTarget {
             this._visible = false;
             this.element.classList.remove("appear");
             this.element.classList.add("disappear");
+        } else {
+            this.element.style.display = "none";
         }
     }
 }

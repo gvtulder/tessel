@@ -17,6 +17,7 @@ export class AllGamesDisplay extends GameListDisplay {
 
     constructor(version?: string) {
         super(defaultGameLists[1]);
+        this.element.classList.add("all-games");
 
         // buttons
         const buttonRow = createElement(

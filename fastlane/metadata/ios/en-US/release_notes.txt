@@ -1,7 +1,7 @@
 Several changes and improvements.
 
 * You can now ask for more tiles to continue playing.
-* Redesigned the menu navigation bar.
+* Redesigned the menus and added a navigation bar.
 * Fixed a bug in the highscore overview.
 * New translation: traditional Chinese (by @gheesco).
 * New translation: Turkish (by Muha Aliss / @muhaaliss).

@@ -36,6 +36,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     menu: DropoutMenu;
     backtomenubutton: Button;
     restartgamebutton: Button;
+    addTilesButton: Button;
     autorotate: Toggle;
     placeholders: Toggle;
     hints: Toggle;
@@ -45,6 +46,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     onStartDrag: EventListener;
     onGameScore: EventListener;
     onGameEndGame: EventListener;
+    onGameContinueGame: EventListener;
 
     constructor(
         game: Game,
@@ -65,16 +67,22 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             this.element.classList.add("game-finished");
             this.gridDisplay.gameFinished();
         };
+        this.onGameContinueGame = () => {
+            this.element.classList.remove("game-finished");
+            this.gridDisplay.gameContinue();
+        };
 
         if (stats) {
             // track game events
             stats.countEvent(StatisticsEvent.GameStarted, game.grid.atlas.id);
             game.addEventListener(GameEventType.Score, (event: GameEvent) => {
-                stats.updateHighScore(
-                    StatisticsEvent.HighScore,
-                    game.points,
-                    game.settings.serializedJSON,
-                );
+                if (!game.continued) {
+                    stats.updateHighScore(
+                        StatisticsEvent.HighScore,
+                        game.points,
+                        game.settings.serializedJSON,
+                    );
+                }
                 for (const region of event.scoreShapes || []) {
                     if (region.finished) {
                         stats.countEvent(
@@ -101,10 +109,12 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
                 },
             );
             game.addEventListener(GameEventType.EndGame, () => {
-                stats.countEvent(
-                    StatisticsEvent.GameCompleted,
-                    game.grid.atlas.id,
-                );
+                if (!game.continued) {
+                    stats.countEvent(
+                        StatisticsEvent.GameCompleted,
+                        game.grid.atlas.id,
+                    );
+                }
             });
         }
 
@@ -184,10 +194,13 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         menu.addButton(this.restartgamebutton);
 
-        const moreTiles = msg({
-            id: "ui.menu.addMoreTilesButton",
-            message: "More tiles",
-        });
+        this.addTilesButton = new Button(
+            icons.addTilesIcon,
+            msg({ id: "ui.menu.addMoreTilesButton", message: "More tiles" }),
+            () => this.game.continue(),
+            "addtiles",
+        );
+        this.tileStackDisplay.element.appendChild(this.addTilesButton.element);
 
         // toggles
         this.placeholders = Toggles.Placeholders(() =>
@@ -227,6 +240,10 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         game.addEventListener(GameEventType.Score, this.onGameScore);
         game.addEventListener(GameEventType.EndGame, this.onGameEndGame);
+        game.addEventListener(
+            GameEventType.ContinueGame,
+            this.onGameContinueGame,
+        );
 
         // set default settings
         getStorageBackend()
@@ -260,10 +277,15 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             GameEventType.EndGame,
             this.onGameEndGame,
         );
+        this.game.removeEventListener(
+            GameEventType.ContinueGame,
+            this.onGameContinueGame,
+        );
 
         this.menu.destroy();
         this.backtomenubutton.destroy();
         this.restartgamebutton.destroy();
+        this.addTilesButton.destroy();
         this.autorotate.destroy();
         this.hints.destroy();
         this.placeholders.destroy();

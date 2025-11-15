@@ -59,7 +59,9 @@ export function serializedToJSON(settings: GameSettingsSerialized): string {
 
 export const enum GameEventType {
     EndGame = "endgame",
+    ContinueGame = "continuegame",
     Score = "score",
+    UpdateTileCount = "updatetilecount",
     UpdateSlots = "updateslots",
     PlaceTile = "placetile",
 }
@@ -90,15 +92,15 @@ export class Game extends EventTarget {
     tileStack: FixedOrderTileStack;
 
     points: number;
-    finished: boolean;
+    continued: boolean;
 
     constructor(settings: GameSettings) {
         super();
 
         this.settings = settings;
-        this.finished = false;
 
         this.points = 0;
+        this.continued = false;
 
         this.grid = new Grid(this.settings.atlas);
         if (settings.rules) this.grid.rules = settings.rules.create();
@@ -136,8 +138,13 @@ export class Game extends EventTarget {
     }
 
     finish() {
-        this.finished = true;
         this.dispatchEvent(new GameEvent(GameEventType.EndGame, this));
+    }
+
+    continue() {
+        this.continued = true;
+        this.tileStack.restart();
+        this.dispatchEvent(new GameEvent(GameEventType.ContinueGame, this));
     }
 
     placeTile(

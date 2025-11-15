@@ -130,6 +130,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
             this.tile.colors = slot.colors;
             this.rotateTileTo(0);
             this.rescale();
+            this.startAppearAnimation();
         }
         this.current = slot;
     }

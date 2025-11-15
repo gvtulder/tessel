@@ -92,6 +92,10 @@ export class TileStackDisplay extends BaseTileStackDisplay {
             GameEventType.UpdateSlots,
             this.updateSlotsHandler,
         );
+        this.tileStack.addEventListener(
+            GameEventType.UpdateTileCount,
+            this.updateSlotsHandler,
+        );
 
         this.onWiggleAnimationEnd = () => {
             this.counter.element.classList.remove("wiggle");
@@ -134,6 +138,10 @@ export class TileStackDisplay extends BaseTileStackDisplay {
             GameEventType.UpdateSlots,
             this.updateSlotsHandler,
         );
+        this.tileStack.removeEventListener(
+            GameEventType.UpdateTileCount,
+            this.updateSlotsHandler,
+        );
     }
 
     updateTiles() {
@@ -160,7 +168,6 @@ export class TileStackDisplay extends BaseTileStackDisplay {
             this.setInactivityTimeout();
         } else {
             this.counter.update(0);
-            this.counter.element.style.opacity = "0";
         }
     }
 

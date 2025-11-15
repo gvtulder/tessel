@@ -27,6 +27,7 @@
 
   .tile-stack {
     grid-area: tile-stack;
+    position: relative;
     background: var(--panel-bg-color);
     display: flex;
     flex-direction: column;
@@ -40,6 +41,31 @@
     flex-direction: column;
     justify-content: space-between;
     text-align: center;
+  }
+
+  .game-button.addtiles {
+    position: absolute;
+    top: calc(50% - 0.5 * sizes.$button-scale);
+    left: calc(50% - 0.5 * sizes.$button-scale);
+    display: none;
+  }
+  &.game-finished {
+    .game-button.addtiles {
+      display: block;
+    }
+
+    .game-button {
+      animation: game-button-appear 500ms;
+    }
+  }
+}
+
+@keyframes game-button-appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 
@@ -383,6 +409,11 @@ $tile-counter-and-high-score-font-size: max(18px, min(2vw, 2.5vh));
       border-radius: 2vw;
       font-size: 7vw;
       width: 15vw;
+    }
+
+    .game-button.addtiles {
+      top: calc(50% - 0.5 * sizes.$button-scale);
+      left: calc(45vw - 0.5 * sizes.$button-scale);
     }
   }
 

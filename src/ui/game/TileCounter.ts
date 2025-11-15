@@ -42,6 +42,7 @@ export class TileCounter {
     update(numTiles: number) {
         this.span.innerHTML = `+${numTiles}`;
         this.draw(numTiles);
+        this.element.style.opacity = numTiles == 0 ? "0" : "";
     }
 
     draw(numTiles: number) {

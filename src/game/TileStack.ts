@@ -56,16 +56,21 @@ export class TileStack {
     isEmpty() {
         return this.tiles.length == 0;
     }
+    clone() {
+        return new TileStack([...this.tiles]);
+    }
 }
 
 export class FixedOrderTileStack extends EventTarget {
     numberShown: number;
     slots: (TileShapeColors | null | undefined)[];
     tileStack: TileStack;
+    originalTileStack: TileStack;
 
     constructor(tileStack: TileStack, numberShown: number) {
         super();
-        this.tileStack = tileStack;
+        this.originalTileStack = tileStack;
+        this.tileStack = tileStack.clone();
         this.numberShown = numberShown;
         this.slots = [];
         this.updateSlots();
@@ -80,6 +85,7 @@ export class FixedOrderTileStack extends EventTarget {
             }
         }
         if (updated) {
+            this.dispatchEvent(new GameEvent(GameEventType.UpdateTileCount));
             this.dispatchEvent(new GameEvent(GameEventType.UpdateSlots));
         }
     }
@@ -98,6 +104,12 @@ export class FixedOrderTileStack extends EventTarget {
             }
         }
         this.tileStack.shuffle();
+        this.updateSlots();
+    }
+
+    restart() {
+        this.tileStack = this.originalTileStack.clone();
+        this.dispatchEvent(new GameEvent(GameEventType.UpdateTileCount));
         this.updateSlots();
     }
 

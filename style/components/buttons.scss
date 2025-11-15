@@ -28,6 +28,17 @@
       background: var(--button-bg-hover-color);
     }
   }
+
+  &.addtiles {
+    width: calc(0.6 * sizes.$button-scale);
+    padding-left: calc(0.2 * sizes.$button-scale);
+    padding-right: calc(0.2 * sizes.$button-scale);
+
+    svg {
+      aspect-ratio: auto;
+      padding-top: 5%;
+    }
+  }
 }
 
 .button-row {

@@ -51,6 +51,14 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
         return false;
     }
 
+    gameContinue() {
+        this.ignorePlaceholders = false;
+        this.triggerRescale();
+        for (const placeholder of this.tileDisplays.values()) {
+            placeholder.unhide();
+        }
+    }
+
     gameFinished() {
         const placeholders = [...this.tileDisplays.values()].filter(
             (d) => d.tile.tileType === TileType.Placeholder,

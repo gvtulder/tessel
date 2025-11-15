@@ -140,6 +140,10 @@ export class TileDisplay {
         this.element.classList.add("hide");
     }
 
+    unhide() {
+        this.element.classList.remove("hide");
+    }
+
     highlightHint(ok: boolean) {
         this.element.classList.toggle("highlight-hint-ok", ok);
         this.element.classList.toggle("highlight-hint-notok", !ok);

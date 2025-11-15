@@ -30,6 +30,11 @@ $SVGO assets/social/play-now-badge.svg
 rsvg-convert assets/src/play-now-badge.svg \
   -h 250 -o assets/social/play-now-badge.png
 $OPTIPNG assets/social/play-now-badge.png
+cp assets/src/google-play.svg assets/social/google-play.svg
+$SVGO assets/social/google-play.svg
+rsvg-convert assets/src/google-play.svg \
+  -h 250 -o assets/social/google-play.png
+$OPTIPNG assets/social/google-play.png
 cp assets/src/apple-app-store.svg assets/social/apple-app-store.svg
 $SVGO assets/social/apple-app-store.svg
 rsvg-convert assets/src/apple-app-store.svg \

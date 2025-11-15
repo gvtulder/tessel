@@ -3,6 +3,14 @@
   "short_name": "Tessel",
   "description": "A puzzle game with tiles.",
   "categories": ["games"],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=net.vantulder.tessel",
+      "id": "net.vantulder.tessel"
+    }
+  ],
+  "prefer_related_applications": true,
   "id": "/",
   "start_url": "/",
   "icons": [

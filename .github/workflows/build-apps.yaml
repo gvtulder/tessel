@@ -118,6 +118,11 @@ jobs:
   build-ios:
     name: Build iOS app
     runs-on: macos-15
+    env:
+      BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+      BUILD_CERTIFICATE_PASSWORD: ${{ secrets.BUILD_CERTIFICATE_PASSWORD }}
+      BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+      KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
@@ -149,11 +154,7 @@ jobs:
           npx cap sync
 
       - name: Install Apple certificate and provisioning profile
-        env:
-          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          BUILD_CERTIFICATE_PASSWORD: ${{ secrets.BUILD_CERTIFICATE_PASSWORD }}
-          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        if: ${{ env.KEYCHAIN_PASSWORD != '' }}
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.cer
@@ -179,6 +180,7 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: Build iOS app
+        if: ${{ env.KEYCHAIN_PASSWORD != '' }}
         run: |
           xcodebuild -workspace './ios/App/App.xcworkspace' \
             -scheme Tessel -destination generic/platform=iOS \
@@ -188,7 +190,7 @@ jobs:
             -exportPath output -allowProvisioningUpdates
 
       - name: Validate and upload build
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: ${{ env.KEYCHAIN_PASSWORD != '' }} && startsWith(github.ref, 'refs/tags/v')
         env:
           APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}
@@ -208,6 +210,7 @@ jobs:
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v5
+        if: ${{ env.KEYCHAIN_PASSWORD != '' }}
         with:
           name: iOS package
           path: |

@@ -5,6 +5,9 @@
 
 import childProcess from "child_process";
 import puppeteer from "puppeteer";
+import finalhandler from "finalhandler";
+import http from "http";
+import serveStatic from "serve-static";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -157,13 +160,11 @@ async function captureScreenshot() {
 
     console.log("Starting server...");
     try {
-        server = childProcess.spawn("python3", [
-            "-m",
-            "http.server",
-            "1234",
-            "-d",
-            `${__dirname}/../dist`,
-        ]);
+        const serve = serveStatic(`${__dirname}/../dist`);
+        server = http.createServer((req, res) =>
+            serve(req, res, finalhandler(req, res)),
+        );
+        server.listen(1234);
     } catch (err: any) {
         console.log("Error starting server.", err.message);
         return;
@@ -260,7 +261,7 @@ async function captureScreenshot() {
 
     if (server) {
         console.log("Stopping server...");
-        server.kill();
+        server.close();
     }
 }
 

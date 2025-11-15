@@ -190,7 +190,7 @@ jobs:
             -exportPath output -allowProvisioningUpdates
 
       - name: Validate and upload build
-        if: ${{ env.KEYCHAIN_PASSWORD != '' }} && startsWith(github.ref, 'refs/tags/v')
+        if: ${{ env.KEYCHAIN_PASSWORD != '' && startsWith(github.ref, 'refs/tags/v') }}
         env:
           APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
           APP_STORE_CONNECT_API_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}

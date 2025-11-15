@@ -281,6 +281,11 @@ msgstr "Show placeholder tiles"
 #~ msgstr "Snap tiles into place"
 
 #. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:99
+msgid "ui.settings.group.gameSettings"
+msgstr "Game settings"
+
+#. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:48
 msgid "ui.settings.title"
 msgstr "Settings"

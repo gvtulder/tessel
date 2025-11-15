@@ -94,6 +94,13 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
                 message: "Light mode, dark mode, or follow your device",
             }),
         );
+
+        const h5 = createElement("h5", null, article);
+        h5.innerHTML = t({
+            id: "ui.settings.group.gameSettings",
+            message: "Game settings",
+        });
+
         addOptionRow(
             toggles.placeholders,
             t({

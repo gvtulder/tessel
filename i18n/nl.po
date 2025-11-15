@@ -203,6 +203,11 @@ msgid "ui.settings.ColorsOption.title"
 msgstr "{0, plural, =1 {Één kleur} =2 {Twee kleuren} =3 {Drie kleuren} =4 {Vier kleuren} =5 {Vijf kleuren} =6 {Zes kleuren} other {# kleuren}}"
 
 #. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:99
+msgid "ui.settings.group.gameSettings"
+msgstr "Tijdens het spel"
+
+#. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:46
 msgid "ui.settings.title"
 msgstr "Instellingen"

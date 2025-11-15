@@ -1,2 +1,2 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-11-12 23:35+0000\nLast-Translator: Anonymous <noreply@weblate.org>\nLanguage-Team: Hungarian <https://hosted.weblate.org/projects/tessel/game/hu/>\nLanguage: hu\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-11-15 01:28+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Hungarian <https://hosted.weblate.org/projects/tessel/game/hu/>\nLanguage: hu\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"

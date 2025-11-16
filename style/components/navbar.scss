@@ -13,7 +13,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: calc(2.5 * var(--navbar-size));
+    min-height: calc(2.5 * var(--navbar-size));
     column-gap: calc(0.25 * var(--navbar-size));
     padding: 0 calc(0.25 * var(--navbar-size));
     border-radius: calc(1.25 * var(--navbar-size));
@@ -36,6 +36,8 @@
     background: transparent;
 
     svg {
+      flex-grow: 0;
+      flex-shrink: 0;
       width: var(--navbar-size);
       height: var(--navbar-size);
     }
@@ -88,6 +90,12 @@
   max-width: max-content;
   font-size: 0.9rem;
   --navbar-size: 0.9rem;
+
+  .game-button {
+    height: auto;
+    min-height: calc(2 * var(--navbar-size));
+    margin: calc(0.5 * var(--navbar-size)) 0;
+  }
 }
 
 @keyframes navbar-animate-appear {

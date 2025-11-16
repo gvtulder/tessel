@@ -10,6 +10,9 @@ const config: CapacitorConfig = {
             style: "DARK",
             backgroundColor: "#00000000",
         },
+        EdgeToEdge: {
+            backgroundColor: "#000000",
+        },
     },
     ios: {
         buildOptions: {

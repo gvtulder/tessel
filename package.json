@@ -38,6 +38,7 @@
     "@capacitor/ios": "^7.4.4",
     "@capacitor/preferences": "^7.0.2",
     "@capacitor/status-bar": "^7.0.3",
+    "@capawesome/capacitor-android-edge-to-edge-support": "^7.2.3",
     "@jest/globals": "^30.2.0",
     "@lingui/babel-plugin-lingui-macro": "^5.6.0",
     "@lingui/cli": "^5.6.0",

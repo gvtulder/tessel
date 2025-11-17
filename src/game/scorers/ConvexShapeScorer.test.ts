@@ -26,5 +26,14 @@ describe("ConvexShapeScorer", () => {
             ],
             points: [1, 0, 9, 0, 0, 12],
         },
+        {
+            name: "with a hole",
+            def: [
+                [4, 0, 0, 2],
+                [1, 0, 5, 2],
+                [1, 1, 1, 3],
+            ],
+            points: [0, 0, 0, 0, 0, 12],
+        },
     ]);
 });

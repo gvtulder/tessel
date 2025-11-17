@@ -9,13 +9,35 @@ import { randomRotate, shuffle } from "../geom/RandomSampler";
 import { TileShapeColors } from "./TileStack";
 import { rotateArray } from "../geom/arrays";
 
+/**
+ * Generate a tile list.
+ *
+ * A TileGenerator is a function that returns a list of tiles.
+ * Some generators take a list of tiles as input and return a
+ * modified list, others generate a list from scratch.
+ *
+ * @param tiles the input tile list or an empty list
+ * @param defaultShape the default shape for the tiles
+ * @param colorPattern the color pattern to use
+ * @returns a list of tiles (colors and shape)
+ */
 export type TileGenerator = (
     tiles: TileShapeColors[],
     defaultShape: Shape,
     colorPattern?: ColorPattern,
 ) => TileShapeColors[];
 
+/**
+ * A collection of TileGenerators.
+ */
 export class TileGenerators {
+    /**
+     * Return a predefined list of colors for the given shape.
+     *
+     * @param colors the list of tile colors
+     * @param shape the shape
+     * @returns a TileGenerator that returns the colors combined with the shape
+     */
     static fromList(colors: TileColors[], shape?: Shape): TileGenerator {
         return (_, defaultShape: Shape) =>
             colors.map((c) => ({
@@ -24,6 +46,20 @@ export class TileGenerators {
             }));
     }
 
+    /**
+     * Generate tiles for one or more shapes.
+     *
+     * For each shape, this runs the given generator (e.g., a permutation
+     * generator) to generate tile colorings for the given coloring pattern.
+     * The generated tiles are then repeated, if necessary, to ensure the
+     * required frequency for each shape in the final tile list.
+     *
+     * @param shapes the shape to generate tiles for
+     * @param generator the generator or generator pipeline for the initial tile list
+     * @param colorPatternPerShape the color pattern for each shape
+     * @param shapeFrequencies the frequency for each shape
+     * @returns a tile generator that generates tiles
+     */
     static forShapes(
         shapes: readonly Shape[],
         generator: TileGenerator | TileGenerator[],
@@ -36,6 +72,7 @@ export class TileGenerators {
         return () => {
             const tilesPerShape: TileShapeColors[][] = [];
             const proportion: number[] = [];
+            // generate the tiles for each shape
             for (const shape of shapes) {
                 const colorPattern = colorPatternPerShape
                     ? colorPatternPerShape.get(shape)
@@ -53,9 +90,9 @@ export class TileGenerators {
                     shapeFrequencies!.get(shape)! / tilesForShape.length,
                 );
             }
+            // repeat tiles to obtain the required proportion
             const minProp = Math.min(...proportion);
             const repetitions = proportion.map((p) => Math.round(p / minProp));
-            console.log("Required tile repetitions per shape:", repetitions);
             const tiles: TileShapeColors[] = [];
             for (let i = 0; i < shapes.length; i++) {
                 for (let r = 0; r < repetitions[i]; r++) {
@@ -66,6 +103,15 @@ export class TileGenerators {
         };
     }
 
+    /**
+     * Return the list of all rotation-invariant permutations of colors
+     * for the given shape.
+     *
+     * @param colors a list of colors
+     * @param shape the shape to be colored
+     * @param onlyUniqueColors if true, all colors on a tile must be unique
+     * @returns a tile generator that returns all possible tile variants
+     */
     static permutations(
         colors: TileColors,
         shape?: Shape,
@@ -78,11 +124,21 @@ export class TileGenerators {
                 ? colorPattern.numColors
                 : sh.cornerAngles.length;
 
+            // This function generates tile permutations by enumerating
+            // all numbers from 0 to ncolors^ngroups. The numbers are then
+            // mapped to and from a color sequences by expressing
+            // them as base-{ncolors} strings.
+            //
+            // E.g., for squares with four colors:
+            // 5 -> 0011 -> [colors[0], colors[0], colors[1], colors[1]]
+
+            // convert a number to a color sequence
             const cToComponents = (c: number, numGroups: number) => {
                 const s = c.toString(numColors).split("");
                 while (s.length < numGroups) s.unshift("0");
                 return s;
             };
+            // convert a color sequence to a number
             const componentsToC = (components: string[]) =>
                 parseInt(components.join(""), numColors);
 
@@ -126,8 +182,6 @@ export class TileGenerators {
                 );
             }
 
-            console.log(`Generated ${uniqueCs.size} tiles`);
-
             return mappedColors.map((colors) => ({
                 shape: sh,
                 colors: colors,
@@ -135,6 +189,15 @@ export class TileGenerators {
         };
     }
 
+    /**
+     * Repeat each color n times.
+     *
+     * For example:
+     * ["A", "B"] -> ["A", "A", "B", "B"]
+     *
+     * @param repeats the number of repeats
+     * @returns a tile generator that repeats colors
+     */
     static repeatColors(repeats: number): TileGenerator {
         return (tiles: TileShapeColors[]) => {
             return tiles.map((t: TileShapeColors) => {
@@ -149,6 +212,12 @@ export class TileGenerators {
         };
     }
 
+    /**
+     * Filter the tile list to include only tiles where every color
+     * is unique.
+     *
+     * @returns a tile generator that only returns tiles with unique colors
+     */
     static onlyUniqueColors(): TileGenerator {
         return (tiles: TileShapeColors[]) =>
             tiles.filter(
@@ -157,6 +226,12 @@ export class TileGenerators {
             );
     }
 
+    /**
+     * Repeats the input tile list n times.
+     *
+     * @param repeats the number of repeats
+     * @returns a tile generator that returns a repeated tile list
+     */
     static repeat(repeats: number): TileGenerator {
         return (tiles: TileShapeColors[]) => {
             const repeatedTiles: TileShapeColors[] = [];
@@ -167,6 +242,12 @@ export class TileGenerators {
         };
     }
 
+    /**
+     * Return a random subset of n tiles from the input tile list.
+     *
+     * @param n the number of tiles to return
+     * @returns a tile generator that returns a random subset of tiles
+     */
     static randomSubset(n: number): TileGenerator {
         return (tiles: TileShapeColors[]) => {
             shuffle(tiles);
@@ -174,6 +255,18 @@ export class TileGenerators {
         };
     }
 
+    /**
+     * Repeats or subsamples tiles to obtain the required number.
+     *
+     * 1. If the number of tiles is less than the minimum,
+     *    the tile list is repeated.
+     * 2. If there are more than the maximum number of tiles, the
+     *    tile list is subsampled to return (max + min) / 2 tiles
+     *
+     * @param min the minimum number of tiles
+     * @param max the maximum number of tiles
+     * @returns a tile generator that repeats or subsamples the input
+     */
     static ensureNumber(min: number, max: number): TileGenerator {
         return (tiles: TileShapeColors[]) => {
             let selectedTiles: TileShapeColors[] = [];

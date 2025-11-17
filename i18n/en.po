@@ -213,12 +213,12 @@ msgid "ui.menu.StatisticsButton"
 msgstr "Statistics"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:183
+#: src/ui/game/GameDisplay.ts:212
 msgid "ui.menu.addMoreTilesButton"
 msgstr "More tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:169
+#: src/ui/game/GameDisplay.ts:188
 #: src/ui/paint/PaintDisplay.ts:66
 #: src/ui/setup/GameSetupDisplay.ts:146
 msgid "ui.menu.backToMenuButton"
@@ -240,7 +240,7 @@ msgid "ui.menu.restartGameButton"
 msgstr "Restart game"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/AllGamesDisplay.ts:30
+#: src/ui/menu/AllGamesDisplay.ts:31
 msgid "ui.menu.setupButton"
 msgstr "Design a game"
 
@@ -251,7 +251,7 @@ msgid "ui.settings.ColorsOption.title"
 msgstr "{0, plural, =1 {One color} =2 {Two colors} =3 {Three colors} =4 {Four colors} =5 {Five colors} =6 {Six colors} other {# colors}}"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:113
+#: src/ui/settings/SettingsDisplay.ts:120
 msgid "ui.settings.description.autorotate"
 msgstr "Auto-rotate tiles"
 
@@ -261,12 +261,12 @@ msgid "ui.settings.description.colorScheme"
 msgstr "Light mode, dark mode, or follow your device"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:120
+#: src/ui/settings/SettingsDisplay.ts:127
 msgid "ui.settings.description.highscore"
 msgstr "Show highscore"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:106
+#: src/ui/settings/SettingsDisplay.ts:113
 msgid "ui.settings.description.hints"
 msgstr "Highlight valid positions"
 
@@ -276,7 +276,7 @@ msgid "ui.settings.description.language"
 msgstr "Language"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:99
+#: src/ui/settings/SettingsDisplay.ts:106
 msgid "ui.settings.description.placeholders"
 msgstr "Show placeholder tiles"
 

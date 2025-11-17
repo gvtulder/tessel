@@ -3,9 +3,11 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { FixedOrderTileStack } from "src/game/TileStack";
 import { createElement } from "../shared/html";
 import { SVG } from "../shared/svg";
 import { TapHandler } from "../shared/TapHandler";
+import { GameEventType } from "src/game/Game";
 
 const STROKE_WIDTH = 1;
 const RADIUS = 2;
@@ -21,10 +23,12 @@ export class TileCounter {
     svgGroup: SVGGElement;
 
     tapHandler: TapHandler;
+    updateTileCountHandler: () => void;
 
+    tileStack: FixedOrderTileStack;
     currentCount: number = -1;
 
-    constructor() {
+    constructor(tileStack: FixedOrderTileStack) {
         this.element = createElement("div", "tile-counter");
 
         const span = createElement("span", "number", this.element);
@@ -37,9 +41,24 @@ export class TileCounter {
         this.svgGroup = SVG("g", null, svg);
 
         this.tapHandler = new TapHandler(this.element);
+
+        this.tileStack = tileStack;
+        this.updateTileCountHandler = () => {
+            this.update();
+        };
+        this.tileStack.addEventListener(
+            GameEventType.UpdateTileCount,
+            this.updateTileCountHandler,
+        );
+
+        this.update();
     }
 
-    update(numTiles: number) {
+    update() {
+        let numTiles = this.tileStack.tilesLeft - this.tileStack.numberShown;
+        if (!numTiles || numTiles < 0) {
+            numTiles = 0;
+        }
         this.span.innerHTML = `+${numTiles}`;
         this.draw(numTiles);
         this.element.style.opacity = numTiles == 0 ? "0" : "";
@@ -76,6 +95,10 @@ export class TileCounter {
     }
 
     destroy() {
+        this.tileStack.removeEventListener(
+            GameEventType.UpdateTileCount,
+            this.updateTileCountHandler,
+        );
         this.tapHandler.destroy();
         this.element.remove();
     }

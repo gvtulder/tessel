@@ -230,7 +230,12 @@ msgid "ui.menu.footer"
 msgstr "A game by <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:177
+#: src/ui/game/GameDisplay.ts:204
+msgid "ui.menu.refreshTilesButton"
+msgstr "Shuffle tiles"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:196
 msgid "ui.menu.restartGameButton"
 msgstr "Restart game"
 

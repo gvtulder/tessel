@@ -58,10 +58,6 @@ export abstract class BaseTileStackDisplay extends EventTarget {
 export class TileStackDisplay extends BaseTileStackDisplay {
     tileStack: FixedOrderTileStack;
     maxCount: number;
-    counter: TileCounter;
-
-    private onWiggleAnimationEnd: EventListener;
-    private wiggleTimeout!: number;
 
     updateSlotsHandler: EventListener;
 
@@ -74,14 +70,6 @@ export class TileStackDisplay extends BaseTileStackDisplay {
 
         this.tileStack = tileStack;
         this.maxCount = tileStack.tilesLeft - tileStack.numberShown;
-
-        this.counter = new TileCounter();
-        this.counter.tapHandler.onTap = () => {
-            this.tileStack.reshuffle();
-            for (const td of this.tileDisplays) {
-                td.startAppearAnimation();
-            }
-        };
 
         this.updateTiles();
         this.maxCount = tileStack.tilesLeft;
@@ -96,44 +84,10 @@ export class TileStackDisplay extends BaseTileStackDisplay {
             GameEventType.UpdateTileCount,
             this.updateSlotsHandler,
         );
-
-        this.onWiggleAnimationEnd = () => {
-            this.counter.element.classList.remove("wiggle");
-        };
-
-        this.counter.element.addEventListener(
-            "animationend",
-            this.onWiggleAnimationEnd,
-        );
-
-        this.setInactivityTimeout();
-    }
-
-    setInactivityTimeout() {
-        if (this.wiggleTimeout) {
-            window.clearTimeout(this.wiggleTimeout);
-        }
-        this.wiggleTimeout = window.setTimeout(() => {
-            this.wiggle();
-            this.setInactivityTimeout();
-        }, WIGGLE_TIMEOUT);
-    }
-
-    wiggle() {
-        console.log("Wiggle on idle.");
-        this.counter.element.classList.add("wiggle");
     }
 
     destroy() {
         super.destroy();
-        if (this.wiggleTimeout) {
-            window.clearTimeout(this.wiggleTimeout);
-        }
-        this.counter.element.removeEventListener(
-            "animationend",
-            this.onWiggleAnimationEnd,
-        );
-        this.counter.destroy();
         this.tileStack.removeEventListener(
             GameEventType.UpdateSlots,
             this.updateSlotsHandler,
@@ -161,13 +115,6 @@ export class TileStackDisplay extends BaseTileStackDisplay {
             const slot = this.tileStack.slots[i];
             this.tileDisplays[i].showTile(slot);
             if (!slot) this.tileDisplays[i].removeDraggable();
-        }
-        const n = this.tileStack.tilesLeft - this.tileStack.numberShown;
-        if (n > 0) {
-            this.counter.update(n);
-            this.setInactivityTimeout();
-        } else {
-            this.counter.update(0);
         }
     }
 

@@ -22,12 +22,14 @@ import { Toggles } from "../shared/toggles";
 import { msg } from "@lingui/core/macro";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { StatisticsEvent } from "../../stats/Events";
+import { TileCounter } from "./TileCounter";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;
 
     gridDisplay: MainGridDisplay;
     tileStackDisplay: TileStackDisplay;
+    tileCounterDisplay: TileCounter;
     scoreDisplay: ScoreDisplay;
     tileDragController: MainGridTileDragController;
 
@@ -36,6 +38,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     menu: DropoutMenu;
     backtomenubutton: Button;
     restartgamebutton: Button;
+    refreshTilesButton: Button;
     addTilesButton: Button;
     autorotate: Toggle;
     placeholders: Toggle;
@@ -157,9 +160,11 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             element,
         );
 
-        // TODO this should go somewhere else
-        // extract the tile count and move it to the counter segment
-        tileCounterAndScore.appendChild(tileStackDisplay.counter.element);
+        // tile counter
+        this.tileCounterDisplay = new TileCounter(this.game.tileStack);
+        this.tileCounterDisplay.tapHandler.onTap = () =>
+            this.game.tileStack.reshuffle();
+        tileCounterAndScore.appendChild(this.tileCounterDisplay.element);
 
         // the score display
         const scoreDisplayContainer = createElement(
@@ -194,6 +199,14 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         menu.addButton(this.restartgamebutton);
 
+        this.refreshTilesButton = new Button(
+            icons.arrowsRotateIcon,
+            msg({ id: "ui.menu.refreshTilesButton", message: "Shuffle tiles" }),
+            () => this.game.tileStack.reshuffle(),
+            "refreshtiles",
+        );
+        tileCounterAndScore.appendChild(this.refreshTilesButton.element);
+
         this.addTilesButton = new Button(
             icons.addTilesIcon,
             msg({ id: "ui.menu.addMoreTilesButton", message: "More tiles" }),
@@ -222,7 +235,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         menu.addToggle(this.hints);
 
         this.highscore = Toggles.Highscore(() => {
-            this.scoreDisplay.element.classList.toggle(
+            this.element.classList.toggle(
                 "show-highscore",
                 this.highscore.checked,
             );
@@ -285,12 +298,14 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         this.menu.destroy();
         this.backtomenubutton.destroy();
         this.restartgamebutton.destroy();
+        this.refreshTilesButton.destroy();
         this.addTilesButton.destroy();
         this.autorotate.destroy();
         this.hints.destroy();
         this.placeholders.destroy();
         this.highscore.destroy();
 
+        this.tileCounterDisplay.destroy();
         this.tileDragController.destroy();
         this.tileStackDisplay.destroy();
         this.scoreDisplay.destroy();

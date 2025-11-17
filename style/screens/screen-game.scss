@@ -1,5 +1,7 @@
 @use "../sizes.scss";
 
+$score-font-size: min(4vw, 5vh);
+
 .screen.game-display {
   display: grid;
   grid-template-columns: 1fr sizes.$stack-width calc(
@@ -37,10 +39,42 @@
   .tile-counter-and-score {
     grid-area: counters;
     background: var(--panel-bg-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     text-align: center;
+    display: grid;
+    grid-template-areas: "tile-counter refresh-tiles" "score-display score-display";
+    grid-template-rows: min-content 1fr;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media screen and (min-aspect-ratio: 1 / 1) and (max-aspect-ratio: 4 / 3) {
+    .tile-counter-and-score {
+      padding-top: 2vw;
+    }
+  }
+
+  --refreshtiles-size: calc(#{$score-font-size} / 2);
+  --tile-counter-fontsize: calc(#{$score-font-size} / 2);
+
+  .tile-counter {
+    grid-area: tile-counter;
+    justify-self: center;
+    margin-left: 1vw;
+    margin-top: calc(0.25 * var(--refreshtiles-size));
+  }
+
+  .game-button.refreshtiles {
+    grid-area: refresh-tiles;
+    justify-self: center;
+    align-self: center;
+    width: var(--refreshtiles-size);
+    height: var(--refreshtiles-size);
+    padding: calc(0.5 * var(--refreshtiles-size));
+    margin-right: 1vw;
+  }
+
+  .score-display {
+    grid-area: score-display;
+    align-self: flex-end;
   }
 
   .game-button.addtiles {
@@ -247,11 +281,8 @@
   transition-property: none;
 }
 
-$score-font-size: min(4vw, 5vh);
-$tile-counter-and-high-score-font-size: max(18px, min(2vw, 2.5vh));
-
 .tile-counter {
-  font-size: $tile-counter-and-high-score-font-size;
+  font-size: var(--tile-counter-fontsize);
   cursor: pointer;
   color: var(--tile-counter-text-color);
 
@@ -269,27 +300,6 @@ $tile-counter-and-high-score-font-size: max(18px, min(2vw, 2.5vh));
     stroke-width: 0.03em;
     vector-effect: non-scaling-stroke;
     fill: var(--panel-bg-color);
-  }
-
-  &.wiggle {
-    animation-name: tile-counter-wiggle-anim;
-    animation-duration: 0.4s;
-    animation-iteration-count: 2;
-    animation-timing-function: linear;
-  }
-}
-@keyframes tile-counter-wiggle-anim {
-  0% {
-    rotate: 0deg;
-  }
-  25% {
-    rotate: -10deg;
-  }
-  75% {
-    rotate: 10deg;
-  }
-  100% {
-    rotate: 0deg;
   }
 }
 
@@ -324,7 +334,7 @@ $tile-counter-and-high-score-font-size: max(18px, min(2vw, 2.5vh));
   }
 
   p.high-score {
-    font-size: $tile-counter-and-high-score-font-size;
+    font-size: var(--tile-counter-fontsize);
     color: var(--tile-counter-text-color);
     fill: var(--tile-counter-text-color);
     transition:
@@ -334,7 +344,8 @@ $tile-counter-and-high-score-font-size: max(18px, min(2vw, 2.5vh));
     height: 0px;
     opacity: 0;
   }
-  &.show-highscore {
+
+  .show-highscore & {
     p.high-score {
       padding-top: 0.1em;
       height: 1.2em;
@@ -385,22 +396,32 @@ $tile-counter-and-high-score-font-size: max(18px, min(2vw, 2.5vh));
       justify-content: center;
     }
 
+    $score-font-size: 7vw;
+    --refreshtiles-size: calc(#{$score-font-size} / 2);
+    --tile-counter-fontsize: calc(#{$score-font-size} / 2);
+
     .tile-counter-and-score {
-      flex-direction: row;
-      align-items: center;
+      display: grid;
+      grid-template-areas: "refresh-tiles score-display" "tile-counter score-display";
+      grid-template-rows: 1fr min-content;
+      grid-template-columns: 1fr max-content;
+      padding: 2vw 2vw 3vw 0;
     }
 
     .tile-counter {
-      display: flex;
-      flex-direction: column-reverse;
-      align-items: center;
-      span,
-      svg {
-        display: block;
-      }
+      align-self: flex-end;
+      margin: 0;
+      transition: margin 300ms;
+    }
+
+    .game-button.refreshtiles {
+      align-self: center;
+      margin: 0;
+      transition: margin 300ms;
     }
 
     .score-display {
+      align-self: center;
       padding-right: 15%;
     }
 
@@ -409,6 +430,26 @@ $tile-counter-and-high-score-font-size: max(18px, min(2vw, 2.5vh));
       border-radius: 2vw;
       font-size: 7vw;
       width: 15vw;
+    }
+
+    &.show-highscore {
+      .score-display {
+        align-self: flex-end;
+      }
+
+      .game-button.refreshtiles {
+        margin-bottom: 0.5em;
+      }
+
+      .score-display p {
+        padding-top: 0;
+        line-height: 1em;
+      }
+
+      .score-display p.high-score {
+        padding-top: 0.2em;
+        padding-bottom: 0.2em;
+      }
     }
 
     .game-button.addtiles {

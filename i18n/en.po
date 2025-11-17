@@ -213,12 +213,12 @@ msgid "ui.menu.StatisticsButton"
 msgstr "Statistics"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:212
+#: src/ui/game/GameDisplay.ts:211
 msgid "ui.menu.addMoreTilesButton"
 msgstr "More tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:188
+#: src/ui/game/GameDisplay.ts:187
 #: src/ui/paint/PaintDisplay.ts:66
 #: src/ui/setup/GameSetupDisplay.ts:146
 msgid "ui.menu.backToMenuButton"
@@ -230,12 +230,12 @@ msgid "ui.menu.footer"
 msgstr "A game by <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:204
+#: src/ui/game/GameDisplay.ts:203
 msgid "ui.menu.refreshTilesButton"
 msgstr "Shuffle tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:196
+#: src/ui/game/GameDisplay.ts:195
 msgid "ui.menu.restartGameButton"
 msgstr "Restart game"
 

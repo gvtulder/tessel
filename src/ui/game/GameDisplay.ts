@@ -17,7 +17,6 @@ import { createElement } from "../shared/html";
 import { Button } from "../shared/Button";
 import { DropoutMenu } from "./DropoutMenu";
 import { Toggle } from "../shared/Toggle";
-import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggles } from "../shared/toggles";
 import { msg } from "@lingui/core/macro";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";

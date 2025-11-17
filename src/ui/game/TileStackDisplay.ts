@@ -10,8 +10,6 @@ import { TileDragController } from "../grid/TileDragController";
 import { Atlas } from "../../grid/Atlas";
 import { SingleTileOnStackDisplay } from "./SingleTileStackDisplay";
 import { createElement } from "../shared/html";
-import { TapHandler } from "../shared/TapHandler";
-import { TileCounter } from "./TileCounter";
 
 const WIGGLE_TIMEOUT = 15000;
 

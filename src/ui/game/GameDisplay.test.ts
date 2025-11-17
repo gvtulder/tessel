@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, jest, test, expect, beforeAll } from "@jest/globals";
+import { describe, test } from "@jest/globals";
 import { GameDisplay } from "./GameDisplay";
 import { SquaresAtlas } from "../../grid/atlas/SquaresAtlas";
 import { TileGenerators } from "../../game/TileGenerator";

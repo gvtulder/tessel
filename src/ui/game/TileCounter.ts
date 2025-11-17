@@ -3,11 +3,11 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { FixedOrderTileStack } from "src/game/TileStack";
 import { createElement } from "../shared/html";
 import { SVG } from "../shared/svg";
 import { TapHandler } from "../shared/TapHandler";
-import { GameEventType } from "src/game/Game";
+import { GameEventType } from "../../game/Game";
+import { FixedOrderTileStack } from "../../game/TileStack";
 
 const STROKE_WIDTH = 1;
 const RADIUS = 2;

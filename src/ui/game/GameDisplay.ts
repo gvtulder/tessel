@@ -49,6 +49,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     onGameScore: EventListener;
     onGameEndGame: EventListener;
     onGameContinueGame: EventListener;
+    onUpdateTileCount: EventListener;
 
     constructor(
         game: Game,
@@ -256,6 +257,13 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             GameEventType.ContinueGame,
             this.onGameContinueGame,
         );
+        game.tileStack.addEventListener(
+            GameEventType.UpdateTileCount,
+            (this.onUpdateTileCount = () => {
+                const n = game.tileStack.tilesLeft - game.tileStack.numberShown;
+                this.element.classList.toggle("no-more-tiles", !(n > 0));
+            }),
+        );
 
         // set default settings
         getStorageBackend()
@@ -292,6 +300,10 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         this.game.removeEventListener(
             GameEventType.ContinueGame,
             this.onGameContinueGame,
+        );
+        this.game.tileStack.removeEventListener(
+            GameEventType.UpdateTileCount,
+            this.onUpdateTileCount,
         );
 
         this.menu.destroy();

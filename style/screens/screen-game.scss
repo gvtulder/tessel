@@ -60,6 +60,8 @@ $score-font-size: min(4vw, 5vh);
     justify-self: center;
     margin-left: 1vw;
     margin-top: calc(0.25 * var(--refreshtiles-size));
+    opacity: 1;
+    transition: opacity 300ms;
   }
 
   .game-button.refreshtiles {
@@ -70,6 +72,16 @@ $score-font-size: min(4vw, 5vh);
     height: var(--refreshtiles-size);
     padding: calc(0.5 * var(--refreshtiles-size));
     margin-right: 1vw;
+    opacity: 1;
+    transition: opacity 300ms;
+  }
+
+  &.no-more-tiles {
+    .tile-counter,
+    .game-button.refreshtiles {
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 
   .score-display {
@@ -84,12 +96,19 @@ $score-font-size: min(4vw, 5vh);
     display: none;
   }
   &.game-finished {
+    .tile-on-stack {
+      pointer-events: none;
+    }
+
     .game-button.addtiles {
       display: block;
     }
 
     .game-button {
       animation: game-button-appear 500ms;
+    }
+    .game-button.game-button.refreshtiles {
+      animation: none;
     }
   }
 }
@@ -411,13 +430,17 @@ $score-font-size: min(4vw, 5vh);
     .tile-counter {
       align-self: flex-end;
       margin: 0;
-      transition: margin 300ms;
+      transition:
+        margin 300ms,
+        opacity 300ms;
     }
 
     .game-button.refreshtiles {
       align-self: center;
       margin: 0;
-      transition: margin 300ms;
+      transition:
+        margin 300ms,
+        opacity 300ms;
     }
 
     .score-display {

@@ -1,2 +1,2 @@
 msgid ""
-msgstr "X-Generator: Weblate\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit"
+msgstr "PO-Revision-Date: 2025-11-18 17:43+0000\nLast-Translator: Anonymous <noreply@weblate.org>\nLanguage-Team: German <https://hosted.weblate.org/projects/tessel/game/de/>\nLanguage: de\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"

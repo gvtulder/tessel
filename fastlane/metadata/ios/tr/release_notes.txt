@@ -1,2 +1,4 @@
+Çeşitli değişiklikler ve iyileştirmeler.
+
 * Added: a button to reshuffle the tile stack while playing.
 * New translation: Spanish (by @anauta).

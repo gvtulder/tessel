@@ -7,6 +7,7 @@
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>en</string>
+		<string>es</string>
 		<string>nl</string>
 		<string>tr</string>
 		<string>zh-Hant</string>

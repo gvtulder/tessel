@@ -1,0 +1,17 @@
+Tessel es un colorido juego de colocación de teselas . Coloque las piezas con colores iguales para hacer formas y llenar el tablero. Cuanto mayor sea la forma, más alta será la puntuación
+
+Características:
+* Juega un juego sencillo con cuadrados, o elige un patrón más desafiante.
+* Personaliza la configuración del juego para cambiar las reglas.
+* Crea tus propios patrones de teselado en la herramienta de dibujo.
+
+Elige entre una amplia gama de patrones para formar teselaciones infinitamente variadas:
+* Cuadrada
+* Triangular
+* Cubos reversibles
+* Pentagonal de El Cairo
+* Hexagonal
+* Deltoidal-trihexagonal
+* Penrose P3
+* Cuadrada achatada
+* Ammann-Beenker

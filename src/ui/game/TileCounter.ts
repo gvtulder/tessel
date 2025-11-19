@@ -7,7 +7,7 @@ import { createElement } from "../shared/html";
 import { SVG } from "../shared/svg";
 import { TapHandler } from "../shared/TapHandler";
 import { GameEventType } from "../../game/Game";
-import { FixedOrderTileStack } from "../../game/TileStack";
+import { TileStackWithSlots } from "../../game/TileStackWithSlots";
 
 const STROKE_WIDTH = 1;
 const RADIUS = 2;
@@ -25,10 +25,10 @@ export class TileCounter {
     tapHandler: TapHandler;
     updateTileCountHandler: () => void;
 
-    tileStack: FixedOrderTileStack;
+    tileStack: TileStackWithSlots;
     currentCount: number = -1;
 
-    constructor(tileStack: FixedOrderTileStack) {
+    constructor(tileStack: TileStackWithSlots) {
         this.element = createElement("div", "tile-counter");
 
         const span = createElement("span", "number", this.element);
@@ -55,7 +55,7 @@ export class TileCounter {
     }
 
     update() {
-        let numTiles = this.tileStack.tilesLeft - this.tileStack.numberShown;
+        let numTiles = this.tileStack.tilesOnStack;
         if (!numTiles || numTiles < 0) {
             numTiles = 0;
         }

@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { FixedOrderTileStack } from "../../game/TileStack";
+import { TileStackWithSlots } from "../../game/TileStackWithSlots";
 import { GameEventType } from "../../game/Game";
 import { Tile } from "../../grid/Tile";
 import { TileDragController } from "../grid/TileDragController";
@@ -54,23 +54,20 @@ export abstract class BaseTileStackDisplay extends EventTarget {
 }
 
 export class TileStackDisplay extends BaseTileStackDisplay {
-    tileStack: FixedOrderTileStack;
-    maxCount: number;
+    tileStack: TileStackWithSlots;
 
     updateSlotsHandler: EventListener;
 
     constructor(
         atlas: Atlas,
-        tileStack: FixedOrderTileStack,
+        tileStack: TileStackWithSlots,
         tileDragController: TileDragController,
     ) {
         super(atlas, tileDragController);
 
         this.tileStack = tileStack;
-        this.maxCount = tileStack.tilesLeft - tileStack.numberShown;
 
         this.updateTiles();
-        this.maxCount = tileStack.tilesLeft;
         this.updateSlotsHandler = () => {
             this.updateTiles();
         };

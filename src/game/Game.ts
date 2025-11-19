@@ -8,7 +8,8 @@ import { ScoredRegion, Scorer, ScorerType } from "./scorers/Scorer";
 import { ConnectedSegmentScorer } from "./scorers/ConnectedSegmentScorer";
 import { Tile, TileColors } from "../grid/Tile";
 import { TileGenerator, TileGenerators } from "./TileGenerator";
-import { FixedOrderTileStack, TileShapeColors, TileStack } from "./TileStack";
+import { TileShapeColors, TileStack } from "./TileStack";
+import { TileStackWithSlots } from "./TileStackWithSlots";
 import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/arrays";
 import { RuleSetType } from "../grid/rules/RuleSet";
@@ -89,7 +90,7 @@ export class Game extends EventTarget {
 
     grid: Grid;
     scorer: Scorer;
-    tileStack: FixedOrderTileStack;
+    tileStack: TileStackWithSlots;
 
     points: number;
     continued: boolean;
@@ -115,7 +116,7 @@ export class Game extends EventTarget {
 
         // construct the tile stack
         const tileStack = new TileStack(tiles);
-        this.tileStack = new FixedOrderTileStack(
+        this.tileStack = new TileStackWithSlots(
             tileStack,
             this.settings.tilesShownOnStack,
         );

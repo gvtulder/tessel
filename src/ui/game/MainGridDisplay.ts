@@ -18,6 +18,8 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
     scoreOverlayDisplay: ScoreOverlayDisplay;
     ignorePlaceholders: boolean;
 
+    cleanUpTimeout?: number;
+
     constructor(grid: Grid, container: HTMLElement, gameDisplay: GameDisplay) {
         super(grid, container);
         this.gameDisplay = gameDisplay;
@@ -52,6 +54,9 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
     }
 
     gameContinue() {
+        if (this.cleanUpTimeout) {
+            window.clearTimeout(this.cleanUpTimeout);
+        }
         this.ignorePlaceholders = false;
         this.triggerRescale();
         for (const placeholder of this.tileDisplays.values()) {
@@ -70,7 +75,7 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
             if (placeholder && this.gameDisplay.placeholders.checked) {
                 placeholder.hide();
                 delay = Math.max(20, delay * 0.9);
-                window.setTimeout(
+                this.cleanUpTimeout = window.setTimeout(
                     cleanUp,
                     placeholders.length > 0 ? delay : 100,
                 );
@@ -79,10 +84,13 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
                 this.triggerRescale();
             }
         };
-        window.setTimeout(cleanUp, delay);
+        this.cleanUpTimeout = window.setTimeout(cleanUp, delay);
     }
 
     destroy() {
+        if (this.cleanUpTimeout) {
+            window.clearTimeout(this.cleanUpTimeout);
+        }
         super.destroy();
         this.scoreOverlayDisplay.destroy();
     }

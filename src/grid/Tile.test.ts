@@ -109,4 +109,23 @@ describe("PlaceholderTile", () => {
         expect(tile.segments).toBeUndefined();
         expect(tile.colors).toBeUndefined();
     });
+
+    test("can have neighbors", () => {
+        const grid = new Grid(TrianglesAtlas);
+        const shape = grid.atlas.shapes[0];
+
+        // one triangle with a triangle at each of edge
+        const poly1 = shape.constructPolygonXYR(0, 0, 1);
+        const tile1 = grid.addTile(shape, poly1, poly1.segment());
+        const poly2 = shape.constructPolygonEdge(poly1.outsideEdges[0], 0);
+        grid.addTile(shape, poly2, poly2.segment());
+        const poly3 = shape.constructPolygonEdge(poly1.outsideEdges[1], 0);
+        grid.addTile(shape, poly3, poly3.segment());
+        const poly4 = shape.constructPolygonEdge(poly1.outsideEdges[2], 0);
+        const tile4 = grid.addPlaceholder(shape, poly4);
+        // placeholders should not show up as neighbors
+        expect(tile1.neighbors.size).toBe(2);
+        // but placeholders should find normal tile neighbors
+        expect(tile4.neighbors.size).toBe(1);
+    });
 });

@@ -196,10 +196,10 @@ export class Tile {
     get neighbors(): ReadonlySet<Tile> {
         const neighbors = new Set<Tile>();
         for (const edge of this.edges) {
-            if (edge.tileA === this && edge.tileB) {
-                neighbors.add(edge.tileB);
-            } else if (edge.tileB === this && edge.tileA) {
+            if (edge.tileA && edge.tileA !== this) {
                 neighbors.add(edge.tileA);
+            } else if (edge.tileB && edge.tileB !== this) {
+                neighbors.add(edge.tileB);
             }
         }
         return neighbors;

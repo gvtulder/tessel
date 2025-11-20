@@ -87,7 +87,7 @@ export class TileStackWithSlots extends EventTarget {
     /**
      * Shuffles the tile stack and displays new tiles.
      */
-    reshuffle(prng: PRNG) {
+    reshuffle(prng?: PRNG) {
         for (let i = 0; i < this.numberShown; i++) {
             const slot = this.slots[i];
             if (slot) {

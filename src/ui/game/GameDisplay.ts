@@ -22,7 +22,7 @@ import { msg } from "@lingui/core/macro";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { StatisticsEvent } from "../../stats/Events";
 import { TileCounter } from "./TileCounter";
-import { AutoPlayer } from "src/game/autoplayer/AutoPlayer";
+import { AutoPlayer } from "../../game/autoplayer/AutoPlayer";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;

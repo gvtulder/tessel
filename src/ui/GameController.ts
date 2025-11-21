@@ -351,6 +351,13 @@ export class GameController {
             this.previousScreenDestroy = undefined;
             this.previousScreenDestroyTimeout = undefined;
         }
+        if (window.getSelection) {
+            // unselected all selected text in the current screen,
+            // otherwise the selection highlight might linger until the
+            // screen is finally removed
+            const selection = window.getSelection();
+            if (selection) selection.removeAllRanges();
+        }
         // gracefully clear and destroy the current screen
         if (this.currentScreen) {
             const oldDestroy = this.currentScreenDestroy;

@@ -1,5 +1,9 @@
 @use "../sizes.scss";
 
+.setting-row {
+  @include sizes.disable-select;
+}
+
 /* dropdown settings list */
 .setting-row .option-wrap {
   position: relative;

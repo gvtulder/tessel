@@ -1,6 +1,8 @@
 @use "../sizes.scss";
 
 .navbar {
+  @include sizes.disable-select;
+
   ul,
   li {
     list-style: none;

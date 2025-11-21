@@ -2,6 +2,8 @@
 @use "../sizes.scss";
 
 .screen.paint-display {
+  @include sizes.disable-select;
+
   display: grid;
   grid-template-columns: 1fr sizes.$stack-width calc(
       sizes.$stack-margin-right + sizes.$inset-right
@@ -25,6 +27,8 @@
 }
 
 .paint-menu {
+  @include sizes.disable-select;
+
   position: absolute;
   top: sizes.$button-top;
   right: sizes.$button-right;

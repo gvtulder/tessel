@@ -1,6 +1,8 @@
 @use "../sizes.scss";
 
 .game-button {
+  @include sizes.disable-select;
+
   width: calc(0.5 * sizes.$button-scale);
   height: calc(0.5 * sizes.$button-scale);
   padding: calc(0.25 * sizes.$button-scale);
@@ -42,6 +44,7 @@
 }
 
 .button-row {
+  @include sizes.disable-select;
   position: absolute;
   display: flex;
   flex-direction: row;

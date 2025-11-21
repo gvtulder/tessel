@@ -1,6 +1,8 @@
 @use "../sizes.scss";
 
 .screen.main-menu {
+  @include sizes.disable-select;
+
   display: grid;
   grid-template-rows: minmax(min-content, 3fr) min-content minmax(
       min-content,

@@ -97,3 +97,13 @@ $setting-row-option-height: max(
   $setting-row-option-scale,
   calc(3.5 * $font-size)
 );
+
+/* disable selection */
+@mixin disable-select {
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+}

@@ -1,6 +1,8 @@
 @use "../sizes.scss";
 
 .game-toggle {
+  @include sizes.disable-select;
+
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -28,6 +30,7 @@
 
   &.with-label {
     .label {
+      @include sizes.disable-select;
       padding-left: 0.5em;
       flex-grow: 1;
     }

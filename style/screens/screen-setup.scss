@@ -1,6 +1,8 @@
 @use "../sizes.scss";
 
 .screen.game-setup {
+  @include sizes.disable-select;
+
   position: absolute;
   width: 100%;
   height: 100%;

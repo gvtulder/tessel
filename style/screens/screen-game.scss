@@ -3,6 +3,8 @@
 $score-font-size: min(4vw, 5vh);
 
 .screen.game-display {
+  @include sizes.disable-select;
+
   display: grid;
   grid-template-columns: 1fr sizes.$stack-width calc(
       sizes.$stack-margin-right + sizes.$inset-right

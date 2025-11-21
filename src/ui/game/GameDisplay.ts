@@ -22,6 +22,7 @@ import { msg } from "@lingui/core/macro";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { StatisticsEvent } from "../../stats/Events";
 import { TileCounter } from "./TileCounter";
+import { AutoPlayer } from "src/game/autoplayer/AutoPlayer";
 
 export class GameDisplay extends EventTarget implements ScreenDisplay {
     game: Game;
@@ -79,6 +80,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             // track game events
             stats.countEvent(StatisticsEvent.GameStarted, game.grid.atlas.id);
             game.addEventListener(GameEventType.Score, (event: GameEvent) => {
+                if (!stats) return;
                 if (!game.continued) {
                     stats.updateHighScore(
                         StatisticsEvent.HighScore,
@@ -105,6 +107,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             game.addEventListener(
                 GameEventType.PlaceTile,
                 (event: GameEvent) => {
+                    if (!stats) return;
                     stats.countEvent(
                         StatisticsEvent.TilePlaced,
                         event.tile?.shape?.name.split("-")[0],
@@ -112,7 +115,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
                 },
             );
             game.addEventListener(GameEventType.EndGame, () => {
-                if (!game.continued) {
+                if (stats && !game.continued) {
                     stats.countEvent(
                         StatisticsEvent.GameCompleted,
                         game.grid.atlas.id,
@@ -177,6 +180,13 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         );
         scoreDisplayContainer.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
+
+        // the autoplay button
+        this.scoreDisplay.onTapAutoPlay = () => {
+            // disable highscores and other statistics
+            stats = undefined;
+            new AutoPlayer(this.game).playAllTiles(100);
+        };
 
         // the controls menu
         const menu = (this.menu = new DropoutMenu());

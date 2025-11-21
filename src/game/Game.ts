@@ -158,6 +158,10 @@ export class Game extends EventTarget {
             throw new Error("no colors defined on moving tile");
         }
         const colors = rotateArray(movingTile.colors, offset);
+        return this.placeColors(colors, fixedTile, indexOnStack);
+    }
+
+    placeColors(colors: TileColors, fixedTile: Tile, indexOnStack?: number) {
         const matchColors = this.grid.checkColors(fixedTile, colors);
         if (matchColors) {
             const tile = this.grid.addTile(

@@ -225,9 +225,9 @@ msgid "ui.menu.backToMenuButton"
 msgstr "Back to menu"
 
 #. js-lingui-explicit-id
-#: src/ui/menu/MainMenuDisplay.ts:20
+#: src/ui/menu/MainMenuDisplay.ts:21
 msgid "ui.menu.footer"
-msgstr "A game by <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a>."
+msgstr "A game by <a href=\"{url}\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:214

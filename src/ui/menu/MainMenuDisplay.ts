@@ -17,9 +17,10 @@ export class MainMenuDisplay extends GameListDisplay {
         const header = createElement("div", "header", this.element);
 
         const headerLine = createElement("p", "copyright", header);
+        const url = "https://www.vantulder.net/";
         headerLine.innerHTML = t({
             id: "ui.menu.footer",
-            message: `A game by <a href="https://www.vantulder.net/">Gijs van Tulder</a>.`,
+            message: `A game by <a href="${url}">Gijs van Tulder</a>.`,
         });
 
         /*

@@ -34,12 +34,15 @@ export class AboutDisplay extends EventTarget implements ScreenDisplay {
 
         // main page text
         const article = createElement("article", null, element);
-        article.innerHTML = getLocalizedAboutHTML();
+        article.innerHTML = getLocalizedAboutHTML().replaceAll(
+            "{setup}",
+            "#setup",
+        );
 
         // insert version number
         for (const p of article.getElementsByClassName("version-line")) {
             if (version) {
-                p.innerHTML = p.innerHTML.replace("VERSION", version);
+                p.innerHTML = p.innerHTML.replace("{version}", version);
             } else {
                 p.remove();
             }

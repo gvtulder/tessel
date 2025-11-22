@@ -308,12 +308,11 @@ $score-font-size: min(4vw, 5vh);
   color: var(--tile-counter-text-color);
 
   span {
-    display: inline-block;
+    display: block;
   }
 
   svg {
-    display: inline-block;
-    vertical-align: middle;
+    display: block;
     margin-left: 0.5em;
     width: 1.5em;
     height: 1.5em;
@@ -440,6 +439,15 @@ $score-font-size: min(4vw, 5vh);
       transition:
         margin 300ms,
         opacity 300ms;
+
+      span,
+      svg {
+        display: inline-block;
+      }
+
+      svg {
+        vertical-align: middle;
+      }
     }
 
     .game-button.refreshtiles {

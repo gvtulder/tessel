@@ -1,5 +1,5 @@
 msgid ""
-msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-11-18 11:55+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Dutch <https://hosted.weblate.org/projects/tessel/game/nl/>\nLanguage: nl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-11-22 22:58+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Dutch <https://hosted.weblate.org/projects/tessel/game/nl/>\nLanguage: nl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -182,7 +182,7 @@ msgstr "Terug naar het menu"
 #: src/ui/menu/MainMenuDisplay.old.ts:39
 #: src/ui/menu/MainMenuDisplay.ts:20
 msgid "ui.menu.footer"
-msgstr "Een spel van <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a>."
+msgstr "Een spel van <a href=\"{url}\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:187
@@ -206,16 +206,6 @@ msgstr "{0, plural, =1 {Één kleur} =2 {Twee kleuren} =3 {Drie kleuren} =4 {Vie
 #: src/ui/settings/SettingsDisplay.ts:99
 msgid "ui.settings.group.gameSettings"
 msgstr "Tijdens het spel"
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:145
-msgid "ui.settings.group.reviewPromptApple"
-msgstr "Leuk spel? Laat <a href=\"{url}\">een beoordeling</a> achter in de App Store of deel het met anderen. Bedankt!"
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:137
-msgid "ui.settings.group.reviewPromptGoogle"
-msgstr "Leuk spel? Laat <a href=\"{url}\">een beoordeling</a> achter in de Google Play Store of deel het met anderen. Bedankt!"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:48
@@ -453,3 +443,48 @@ msgstr "Meer tegels"
 #: src/ui/game/GameDisplay.ts:203
 msgid "ui.menu.refreshTilesButton"
 msgstr "Tegels wisselen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:143
+msgid "ui.settings.about.credits"
+msgstr "Tessel is een spel van <a href=\"{url}\">Gijs van Tulder</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:177
+msgid "ui.settings.about.feedbackPrompt"
+msgstr "Suggesties, opmerkingen of bugs? <a href=\"{email}\">Stuur me een e-mail</a> of <a href=\"{github}\">laat het weten via GitHub</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:165
+msgid "ui.settings.about.reviewPromptApple"
+msgstr "Leuk spel? <a href=\"{url}\">Plaats een beoordeling</a> in de App Store of <a href=\"{share}\">deel het spel met anderen</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:155
+msgid "ui.settings.about.reviewPromptGoogle"
+msgstr "Leuk spel? <a href=\"{url}\">Plaats een beoordeling</a> in de Google Play Store of <a href=\"{share}\">deel het spel met anderen</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:137
+msgid "ui.settings.about.title"
+msgstr "Over het spel"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:193
+msgid "ui.settings.opensource.source"
+msgstr "De <a href=\"{source}\">broncode</a> van dit spel is beschikbaar onder de GPL 3.0-licentie. Bekijk de <a href=\"{github}\">repository op GitHub</a> voor issues and pull requests."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:186
+msgid "ui.settings.opensource.title"
+msgstr "Open source"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:199
+msgid "ui.settings.opensource.weblate"
+msgstr "Kijk op <a href=\"{weblate}\">Weblate</a> om te helpen bij de vertaling."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:207
+msgid "ui.settings.version"
+msgstr "Versie {version}."

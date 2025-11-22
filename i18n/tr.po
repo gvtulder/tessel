@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-11-15 01:28+0000\nLast-Translator: Anonymous <noreply@weblate.org>\nLanguage-Team: Turkish <https://hosted.weblate.org/projects/tessel/game/tr/>\nLanguage: tr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-11-22 22:58+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Turkish <https://hosted.weblate.org/projects/tessel/game/tr/>\nLanguage: tr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -182,7 +182,7 @@ msgstr "Menüye dön"
 #: src/ui/menu/MainMenuDisplay.old.ts:39
 #: src/ui/menu/MainMenuDisplay.ts:20
 msgid "ui.menu.footer"
-msgstr "<a href=\"https://www.vantulder.net/\">Gijs van Tulder</a> tarafından geliştirildi."
+msgstr "<a href=\"{url}\">Gijs van Tulder</a> tarafından geliştirildi."
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:187
@@ -418,3 +418,58 @@ msgstr "Ev"
 #: src/ui/shared/MainNavBar.ts:61
 msgid "ui.menu.PaintButton"
 msgstr "Boya"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:143
+msgid "ui.settings.about.credits"
+msgstr "Tessel, <a href=\"{url}\">Gijs van Tulder</a>'ın bir oyunudur."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:177
+#, fuzzy
+msgid "ui.settings.about.feedbackPrompt"
+msgstr "Oyunun tadını çıkar. Paylaşacak bir fikrin mi var? <a href=\"{email}\">e-Posta gönder</a> veya <a href=\"{github}\">GitHub üzerinden ilet</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:137
+msgid "ui.settings.about.title"
+msgstr "Oyun hakkında"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:193
+msgid "ui.settings.opensource.source"
+msgstr "Bu oyunun <a href=\"{source}\">kaynak kodu</a> GPL 3.0 lisansı kapsamında sunulur. Sorunlar ve çekme istekleri için <a href=\"{github}\">GitHub'taki depoya</a> bak."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:186
+msgid "ui.settings.opensource.title"
+msgstr "Özgür yazılım"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:207
+msgid "ui.settings.version"
+msgstr "Sürüm {version}."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:128
+#, fuzzy
+msgid "ui.settings.description.highscore"
+msgstr "En yüksek skoru göster"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:165
+#, fuzzy
+msgid "ui.settings.about.reviewPromptApple"
+msgstr "Oyun keyfini mi çıkarıyorsunuz? <a href=\"{url}\">App Store'da inceleme bırak</a> veya <a href=\"{share}\">diğerleriyle oyunu paylaş</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:155
+#, fuzzy
+msgid "ui.settings.about.reviewPromptGoogle"
+msgstr "Oyun keyfini mi çıkarıyorsunuz? <a href=\"{url}\">Google Play Store'da inceleme bırak</a> veya <a href=\"{share}\">diğerleriyle oyunu paylaş</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:199
+#, fuzzy
+msgid "ui.settings.opensource.weblate"
+msgstr "Çeviriye yardımcı olmak için <a href=\"{weblate}\">Weblate</a> ziyaret edin."

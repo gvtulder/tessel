@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-11-18 17:21+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Spanish <https://hosted.weblate.org/projects/tessel/game/es/>\nLanguage: es\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-11-22 22:58+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Spanish <https://hosted.weblate.org/projects/tessel/game/es/>\nLanguage: es\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
@@ -217,7 +217,7 @@ msgstr "Regresar al menú"
 #. js-lingui-explicit-id
 #: src/ui/menu/MainMenuDisplay.ts:20
 msgid "ui.menu.footer"
-msgstr "Un juego creado por <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a>."
+msgstr "Un juego creado por <a href=\"{url}\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:203
@@ -440,3 +440,51 @@ msgstr "Mostrar posiciones posibles"
 #: src/ui/shared/toggles.ts:60
 msgid "ui.toggles.snap"
 msgstr "Alinear"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:143
+msgid "ui.settings.about.credits"
+msgstr "Tessel es un juego creado por <a href=\"{url}\">Gijs van Tulder</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:177
+#, fuzzy
+msgid "ui.settings.about.feedbackPrompt"
+msgstr "Tienes alguna idea que compartir? <a href=\"{email}\">Envíame un email</a> o <a href=\"{github}\">dímelo en GitHub</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:165
+#, fuzzy
+msgid "ui.settings.about.reviewPromptApple"
+msgstr "¿Estás disfrutando del juego? <a href=\"{url}\">Deja una reseña en la App Store</a> o <a href=\"{share}\">comparte el juego con otros</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:155
+#, fuzzy
+msgid "ui.settings.about.reviewPromptGoogle"
+msgstr "¿Estás disfrutando del juego? <a href=\"{url}\">Deja una reseña en Google Play Store</a> o <a href=\"{share}\">comparte el juego con otros</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:137
+msgid "ui.settings.about.title"
+msgstr "Sobre el juego"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:193
+msgid "ui.settings.opensource.source"
+msgstr "El <a href=\"{source}\">código fuente</a> de este juego está disponible bajo la licencia GPL 3.0. Vea el <a href=\"{github}\">repositorio en GitHub</a> para reportar problemas o contribuir código."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:186
+msgid "ui.settings.opensource.title"
+msgstr "Código abierto"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:199
+msgid "ui.settings.opensource.weblate"
+msgstr "Visita <a href=\"{weblate}\">Weblate</a> para ayudar con la traducción."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:207
+msgid "ui.settings.version"
+msgstr "Versión {version}."

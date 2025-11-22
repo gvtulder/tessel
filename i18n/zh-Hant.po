@@ -1,5 +1,5 @@
 msgid ""
-msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-11-04 11:45+0800\nPO-Revision-Date: 2025-11-15 01:28+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/projects/tessel/game/zh_Hant/>\nLanguage: zh-Hant\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-11-04 11:45+0800\nPO-Revision-Date: 2025-11-22 22:59+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/projects/tessel/game/zh_Hant/>\nLanguage: zh-Hant\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -182,7 +182,7 @@ msgstr "回到菜單"
 #: src/ui/menu/MainMenuDisplay.old.ts:39
 #: src/ui/menu/MainMenuDisplay.ts:20
 msgid "ui.menu.footer"
-msgstr "由 <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a> 製作的遊戲。"
+msgstr "由 <a href=\"{url}\">Gijs van Tulder</a> 製作的遊戲。"
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:187
@@ -408,3 +408,64 @@ msgstr "語言"
 #: src/ui/settings/SettingsDisplay.ts:85
 msgid "ui.settings.description.placeholders"
 msgstr "顯示佔位格"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:143
+msgid "ui.settings.about.credits"
+msgstr "Tessel 是一款由 <a href=\"{url}\">Gijs van Tulder</a> 製作的遊戲。"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:177
+#, fuzzy
+msgid "ui.settings.about.feedbackPrompt"
+msgstr "喜歡這款遊戲或有想法要分享嗎？ <a href=\"{email}\">給我發一份電子郵件</a> 或 <a href=\"{github}\">在 GitHub 上告訴我</a>。"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:137
+msgid "ui.settings.about.title"
+msgstr "關於此遊戲"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:193
+msgid "ui.settings.opensource.source"
+msgstr "此遊戲的<a href=\"{source}\">源碼</a>是根據 GPL 3.0 許可證提供的。請參閱<a href=\"{github}\">GitHub 上的代碼庫</a>以提交issue和拉取請求。"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:186
+msgid "ui.settings.opensource.title"
+msgstr "開源"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:207
+msgid "ui.settings.version"
+msgstr "版本 {version}."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:128
+#, fuzzy
+msgid "ui.settings.description.highscore"
+msgstr "顯示高分"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:67
+#, fuzzy
+msgid "ui.toggles.highscore"
+msgstr "顯示高分"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:165
+#, fuzzy
+msgid "ui.settings.about.reviewPromptApple"
+msgstr "享受這款遊戲嗎？<a href=\"{url}\">在 App Store 留下評論</a> 或 <a href=\"{share}\">與他人分享這款遊戲</a>。"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:155
+#, fuzzy
+msgid "ui.settings.about.reviewPromptGoogle"
+msgstr "享受這款遊戲嗎？<a href=\"{url}\">在 Google Play Store 留下評論</a> 或 <a href=\"{share}\">與他人分享這款遊戲</a>。"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:199
+#, fuzzy
+msgid "ui.settings.opensource.weblate"
+msgstr "訪問 [<a href=\"{weblate}\">Weblate</a> 幫助進行翻譯。"

@@ -13,11 +13,12 @@ import { Button } from "../shared/Button";
 import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggle } from "../shared/Toggle";
 import { Toggles } from "../shared/toggles";
-import { msg, t } from "@lingui/core/macro";
+import { t } from "@lingui/core/macro";
 import { updateI18n } from "../../i18n";
 import { LanguagePicker } from "./LanguagePicker";
 import { i18n } from "@lingui/core";
 import { SmallNavBar, SmallNavBarItems } from "./SmallNavBar";
+import { getShareBackend } from "../../lib/share-backend";
 
 export class SettingsDisplay extends EventTarget implements ScreenDisplay {
     element: HTMLDivElement;
@@ -26,7 +27,7 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
     languagePicker: LanguagePicker;
     toggles: { [key: string]: Toggle | ThreeWayToggle | LanguagePicker };
 
-    constructor(version?: string) {
+    constructor(version?: string, platform?: string) {
         super();
 
         // main element
@@ -129,6 +130,113 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
                 message: "Show highscore",
             }),
         );
+
+        // about section
+        {
+            const h4 = createElement("h3", null, article);
+            h4.innerHTML = t({
+                id: "ui.settings.about.title",
+                message: "About the game",
+            });
+
+            const url = "https://www.vantulder.net/";
+            createElement("p", null, article).innerHTML = t({
+                id: "ui.settings.about.credits",
+                message: `Tessel is a game by <a href="${url}">Gijs van Tulder</a>.`,
+            });
+        }
+
+        // app store review prompt
+        if (platform === "android") {
+            const url =
+                "https://play.google.com/store/apps/details?id=net.vantulder.tessel";
+            const share = "#share";
+            const p = createElement("p", "review-prompt", article);
+            p.innerHTML = t({
+                id: "ui.settings.about.reviewPromptGoogle",
+                message: `Enjoying the game? <a href="${url}">Leave a review</a> in the Google Play Store or <a href="${share}">share the game with others</a>.`,
+            });
+        }
+        if (platform === "ios") {
+            const url =
+                "https://apps.apple.com/app/tessel/id6754282700?action=write-review";
+            const share = "#share";
+            const p = createElement("p", "review-prompt", article);
+            p.innerHTML = t({
+                id: "ui.settings.about.reviewPromptApple",
+                message: `Enjoying the game? <a href="${url}">Leave a review</a> in the App Store or <a href="${share}">share the game with others</a>.`,
+            });
+        }
+
+        // email and issues
+        {
+            const email =
+                "mailto:tessel-play@vantulder.eu?subject=Tessel%20feedback";
+            const github = "https://github.com/gvtulder/tessel/issues";
+            const p = createElement("p", "review-prompt", article);
+            p.innerHTML = t({
+                id: "ui.settings.about.feedbackPrompt",
+                message: `Suggestions, comments, or bugs? <a href="${email}">Send me an email</a> or <a href="${github}">tell me on GitHub</a>.`,
+            });
+        }
+
+        // open source link
+        {
+            const h4 = createElement("h3", null, article);
+            h4.innerHTML = t({
+                id: "ui.settings.opensource.title",
+                message: "Open source",
+            });
+
+            const source = "https://tessel.vantulder.net/source/";
+            const github = "https://github.com/gvtulder/tessel/";
+            createElement("p", null, article).innerHTML = t({
+                id: "ui.settings.opensource.source",
+                message: `The <a href="${source}">source code</a> for this game is available under the GPL 3.0 license. See <a href="${github}">GitHub</a> for issues and pull requests.`,
+            });
+
+            const weblate = "https://hosted.weblate.org/engage/tessel/";
+            createElement("p", null, article).innerHTML = t({
+                id: "ui.settings.opensource.weblate",
+                message: `Visit <a href="${weblate}">Weblate</a> to help with the translation.`,
+            });
+        }
+
+        // version
+        if (version) {
+            createElement("p", "version-line", article).innerHTML = t({
+                id: "ui.settings.version",
+                message: `Version ${version}.`,
+            });
+        }
+
+        // map share link
+        for (const a of article.getElementsByTagName("a")) {
+            if (a.href.endsWith("#share")) {
+                // unlink the text ...
+                const span = createElement("span");
+                span.innerHTML = a.innerHTML;
+                a.replaceWith(span);
+                // ... until we find out that sharing is enabled
+                getShareBackend()
+                    .canShare()
+                    .then((supported: boolean) => {
+                        if (supported) {
+                            a.addEventListener("click", (evt) => {
+                                getShareBackend().share({
+                                    title: "Tessel – A tile game",
+                                    text: "Play Tessel – A tile game",
+                                    url: "https://tessel.vantulder.net/",
+                                    dialogTitle: "Share Tessel",
+                                });
+                                evt.preventDefault();
+                                return false;
+                            });
+                            span.replaceWith(a);
+                        }
+                    });
+            }
+        }
 
         // initial scaling
         this.rescale();

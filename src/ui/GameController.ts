@@ -38,6 +38,7 @@ import {
 export class GameController {
     version?: string;
     workbox?: Workbox;
+    platform?: string;
     container: HTMLElement;
     stats: StatisticsMonitor;
     game?: Game;
@@ -52,10 +53,16 @@ export class GameController {
     lastSettingsTab?: Pages;
     destroyMainNavBar: () => void;
 
-    constructor(container: HTMLElement, version?: string, workbox?: Workbox) {
+    constructor(
+        container: HTMLElement,
+        version?: string,
+        workbox?: Workbox,
+        platform?: string,
+    ) {
         this.container = container;
         this.version = version;
         this.workbox = workbox;
+        this.platform = platform;
         this.stats = StatisticsMonitor.instance;
 
         [this.mainNavBar, this.destroyMainNavBar] = this.buildMainNavBar();
@@ -293,7 +300,7 @@ export class GameController {
 
     showSettingsDisplay() {
         this.showScreen(
-            new SettingsDisplay(this.version),
+            new SettingsDisplay(this.version, this.platform),
             NavBarItems.Settings,
             Pages.Settings,
             Pages.Settings,

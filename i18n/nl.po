@@ -208,7 +208,17 @@ msgid "ui.settings.group.gameSettings"
 msgstr "Tijdens het spel"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:46
+#: src/ui/settings/SettingsDisplay.ts:145
+msgid "ui.settings.group.reviewPromptApple"
+msgstr "Leuk spel? Laat <a href=\"{url}\">een beoordeling</a> achter in de App Store of deel het met anderen. Bedankt!"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:137
+msgid "ui.settings.group.reviewPromptGoogle"
+msgstr "Leuk spel? Laat <a href=\"{url}\">een beoordeling</a> achter in de Google Play Store of deel het met anderen. Bedankt!"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:48
 msgid "ui.settings.title"
 msgstr "Instellingen"
 

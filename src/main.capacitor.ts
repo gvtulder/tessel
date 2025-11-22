@@ -3,11 +3,14 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { Capacitor } from "@capacitor/core";
 import { Device } from "@capacitor/device";
+import { Share, ShareOptions } from "@capacitor/share";
 import { StatusBar } from "@capacitor/status-bar";
 import { Preferences } from "@capacitor/preferences";
 import { removeSplash, startMainMenu } from "./main.shared";
 import { setStorageBackend, StorageI } from "./lib/storage-backend";
+import { setShareBackend, ShareI } from "./lib/share-backend";
 
 StatusBar.hide();
 
@@ -31,7 +34,19 @@ class PreferencesStorage implements StorageI {
 
 setStorageBackend(new PreferencesStorage("tessel"));
 
+class ShareBackend implements ShareI {
+    canShare() {
+        return Share.canShare().then((result) => result.value);
+    }
+
+    share(options: ShareOptions) {
+        Share.share(options);
+    }
+}
+
+setShareBackend(new ShareBackend());
+
 Device.getLanguageCode().then((result) => {
     removeSplash();
-    startMainMenu(result.value);
+    startMainMenu(result.value, undefined, Capacitor.getPlatform());
 });

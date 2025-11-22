@@ -11,7 +11,11 @@ import { prepareI18n } from "./i18n";
 import { getStorageBackend } from "./lib/storage-backend";
 import { StatisticsMonitor } from "./stats/StatisticsMonitor";
 
-export async function startMainMenu(language: string, workbox?: Workbox) {
+export async function startMainMenu(
+    language: string,
+    workbox?: Workbox,
+    platform?: string,
+) {
     document.body.addEventListener("touchstart", preventIosZoomAndSelection, {
         passive: false,
     });
@@ -34,7 +38,12 @@ export async function startMainMenu(language: string, workbox?: Workbox) {
     StatisticsMonitor.instance.storageBackend = getStorageBackend();
     await prepareI18n(language);
 
-    const controller = new GameController(document.body, VERSION, workbox);
+    const controller = new GameController(
+        document.body,
+        VERSION,
+        workbox,
+        platform,
+    );
     controller.run();
 
     globalThis.gameController = controller;

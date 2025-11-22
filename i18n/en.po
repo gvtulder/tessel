@@ -213,12 +213,12 @@ msgid "ui.menu.StatisticsButton"
 msgstr "Statistics"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:211
+#: src/ui/game/GameDisplay.ts:222
 msgid "ui.menu.addMoreTilesButton"
 msgstr "More tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:187
+#: src/ui/game/GameDisplay.ts:198
 #: src/ui/paint/PaintDisplay.ts:66
 #: src/ui/setup/GameSetupDisplay.ts:146
 msgid "ui.menu.backToMenuButton"
@@ -230,12 +230,12 @@ msgid "ui.menu.footer"
 msgstr "A game by <a href=\"https://www.vantulder.net/\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:203
+#: src/ui/game/GameDisplay.ts:214
 msgid "ui.menu.refreshTilesButton"
 msgstr "Shuffle tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:195
+#: src/ui/game/GameDisplay.ts:206
 msgid "ui.menu.restartGameButton"
 msgstr "Restart game"
 
@@ -251,49 +251,89 @@ msgid "ui.settings.ColorsOption.title"
 msgstr "{0, plural, =1 {One color} =2 {Two colors} =3 {Three colors} =4 {Four colors} =5 {Five colors} =6 {Six colors} other {# colors}}"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:120
+#: src/ui/settings/SettingsDisplay.ts:143
+msgid "ui.settings.about.credits"
+msgstr "Tessel is a game by <a href=\"{url}\">Gijs van Tulder</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:177
+msgid "ui.settings.about.feedbackPrompt"
+msgstr "Suggestions, comments, or bugs? <a href=\"{email}\">Send me an email</a> or <a href=\"{github}\">tell me on GitHub</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:165
+msgid "ui.settings.about.reviewPromptApple"
+msgstr "Enjoying the game? <a href=\"{url}\">Leave a review</a> in the App Store or <a href=\"{share}\">share the game with others</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:155
+msgid "ui.settings.about.reviewPromptGoogle"
+msgstr "Enjoying the game? <a href=\"{url}\">Leave a review</a> in the Google Play Store or <a href=\"{share}\">share the game with others</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:137
+msgid "ui.settings.about.title"
+msgstr "About the game"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:121
 msgid "ui.settings.description.autorotate"
 msgstr "Auto-rotate tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:92
+#: src/ui/settings/SettingsDisplay.ts:93
 msgid "ui.settings.description.colorScheme"
 msgstr "Light mode, dark mode, or follow your device"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:127
+#: src/ui/settings/SettingsDisplay.ts:128
 msgid "ui.settings.description.highscore"
 msgstr "Show highscore"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:113
+#: src/ui/settings/SettingsDisplay.ts:114
 msgid "ui.settings.description.hints"
 msgstr "Highlight valid positions"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:85
+#: src/ui/settings/SettingsDisplay.ts:86
 msgid "ui.settings.description.language"
 msgstr "Language"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:106
+#: src/ui/settings/SettingsDisplay.ts:107
 msgid "ui.settings.description.placeholders"
 msgstr "Show placeholder tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:106
-#~ msgid "ui.settings.description.snap"
-#~ msgstr "Snap tiles into place"
-
-#. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:99
+#: src/ui/settings/SettingsDisplay.ts:100
 msgid "ui.settings.group.gameSettings"
 msgstr "Game settings"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:48
+#: src/ui/settings/SettingsDisplay.ts:193
+msgid "ui.settings.opensource.source"
+msgstr "The <a href=\"{source}\">source code</a> for this game is available under the GPL 3.0 license. See <a href=\"{github}\">GitHub</a> for issues and pull requests."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:186
+msgid "ui.settings.opensource.title"
+msgstr "Open source"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:199
+msgid "ui.settings.opensource.weblate"
+msgstr "Visit <a href=\"{weblate}\">Weblate</a> to help with the translation."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:49
 msgid "ui.settings.title"
 msgstr "Settings"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:207
+msgid "ui.settings.version"
+msgstr "Version {version}."
 
 #. js-lingui-explicit-id
 #: src/ui/setup/SegmentsOption.ts:56

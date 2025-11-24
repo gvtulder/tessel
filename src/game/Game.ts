@@ -15,7 +15,7 @@ import { rotateArray } from "../geom/arrays";
 import { RuleSetType } from "../grid/rules/RuleSet";
 import { ColorPatternPerShape } from "../grid/Shape";
 import { SetupCatalog } from "../saveGames";
-import { shuffle } from "../geom/RandomSampler";
+import { PRNG, shuffle } from "../geom/RandomSampler";
 import {
     DemoGameInitializer,
     DemoGameSettings,
@@ -95,7 +95,7 @@ export class Game extends EventTarget {
     points: number;
     continued: boolean;
 
-    constructor(settings: GameSettings) {
+    constructor(settings: GameSettings, prng?: PRNG) {
         super();
 
         this.settings = settings;
@@ -110,15 +110,21 @@ export class Game extends EventTarget {
         // generate tiles
         let tiles: TileShapeColors[] = [];
         for (const tileGenerator of this.settings.tileGenerator) {
-            tiles = tileGenerator(tiles, this.settings.atlas.shapes[0]);
+            tiles = tileGenerator(
+                tiles,
+                this.settings.atlas.shapes[0],
+                undefined,
+                prng,
+            );
         }
-        shuffle(tiles);
+        shuffle(tiles, prng);
 
         // construct the tile stack
-        const tileStack = new TileStack(tiles);
+        const tileStack = new TileStack(tiles, prng);
         this.tileStack = new TileStackWithSlots(
             tileStack,
             this.settings.tilesShownOnStack,
+            prng,
         );
 
         // initialize grid with some tiles

@@ -44,11 +44,12 @@ export class TileStackWithSlots extends EventTarget {
      *
      * @param tileStack the stack of tiles
      * @param numberShown the number of tiles to show simultaneously
+     * @param prng random number generator
      */
-    constructor(tileStack: TileStack, numberShown: number) {
+    constructor(tileStack: TileStack, numberShown: number, prng?: PRNG) {
         super();
         this.originalTileStack = tileStack;
-        this.tileStack = tileStack.clone();
+        this.tileStack = tileStack.clone(prng);
         this.numberShown = numberShown;
         this.slots = [];
         this.updateSlots();
@@ -101,12 +102,13 @@ export class TileStackWithSlots extends EventTarget {
 
     /**
      * Restarts the game by adding the original list of tiles again.
+     * @param prng random number generator
      */
-    restart() {
+    restart(prng?: PRNG) {
         for (let i = 0; i < this.numberShown; i++) {
             this.slots[i] = null;
         }
-        this.tileStack = this.originalTileStack.clone();
+        this.tileStack = this.originalTileStack.clone(prng);
         this.updateSlots();
     }
 

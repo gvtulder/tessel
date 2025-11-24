@@ -127,10 +127,11 @@ export class TileStack {
 
     /**
      * Creates a clone of the current tile stack.
+     * @param prng random number generator
      * @returns the new tilestack
      */
-    clone() {
-        return new TileStack([...this.tiles]);
+    clone(prng?: PRNG) {
+        return new TileStack([...this.tiles], prng);
     }
 }
 

@@ -1,1 +1,1 @@
-Coloque las piezas con colores iguales para hacer formas y llenar el tablero.
+Coloca las piezas con colores iguales, haz formas y llena el tablero.

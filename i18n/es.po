@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-11-22 22:58+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Spanish <https://hosted.weblate.org/projects/tessel/game/es/>\nLanguage: es\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-11-24 23:23+0000\nLast-Translator: anauta <treschavales@gmail.com>\nLanguage-Team: Spanish <https://hosted.weblate.org/projects/tessel/game/es/>\nLanguage: es\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
@@ -144,12 +144,12 @@ msgstr "Los azulejos que se tocan deben tener el mismo color"
 #. js-lingui-explicit-id
 #: src/game/scorers/ConnectedSegmentScorer.ts:15
 msgid "scorer.ConnectedSegmentScorer.friendlyName"
-msgstr "Cuenta los segmentos conectados"
+msgstr "Contar segmentos conectados"
 
 #. js-lingui-explicit-id
 #: src/game/scorers/ConvexShapeScorer.ts:16
 msgid "scorer.ConvexShapeScorer.friendlyName"
-msgstr "Contar las formas convexas"
+msgstr "Contar formas convexas"
 
 #. js-lingui-explicit-id
 #: src/game/scorers/FullTileScorer.ts:14

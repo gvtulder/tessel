@@ -9,6 +9,7 @@ import { Shape } from "../grid/Shape";
 import { SquaresAtlas } from "../grid/atlas/SquaresAtlas";
 import { TrianglesAtlas } from "../grid/atlas/TrianglesAtlas";
 import { TileShapeColors } from "./TileStack";
+import { seedPRNG } from "../geom/RandomSampler";
 
 function colorsWithShape(
     colorList: string[][],
@@ -52,7 +53,13 @@ describe("TileGenerator", () => {
         const colors = ["A", "B", "C", "D"];
 
         test("one shape", () => {
-            const expected = TileGenerators.permutations(colors)([], triangle);
+            const prng = seedPRNG(1234);
+            const expected = TileGenerators.permutations(colors)(
+                [],
+                triangle,
+                undefined,
+                prng,
+            );
 
             expect(
                 TileGenerators.forShapes(
@@ -60,7 +67,7 @@ describe("TileGenerator", () => {
                     TileGenerators.permutations(colors),
                     undefined,
                     new Map([[triangle, 1]]),
-                )([], triangle).length,
+                )([], triangle, undefined, prng).length,
             ).toEqual(24);
         });
 

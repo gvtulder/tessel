@@ -5,7 +5,7 @@
 
 import { ColorPattern, ColorPatternPerShape, Shape } from "../grid/Shape";
 import { TileColors, TileColor } from "../grid/Tile";
-import { randomRotate, shuffle } from "../geom/RandomSampler";
+import { PRNG, randomRotate, shuffle } from "../geom/RandomSampler";
 import { TileShapeColors } from "./TileStack";
 import { rotateArray } from "../geom/arrays";
 
@@ -19,12 +19,14 @@ import { rotateArray } from "../geom/arrays";
  * @param tiles the input tile list or an empty list
  * @param defaultShape the default shape for the tiles
  * @param colorPattern the color pattern to use
+ * @param prng the random number generator
  * @returns a list of tiles (colors and shape)
  */
 export type TileGenerator = (
     tiles: TileShapeColors[],
     defaultShape: Shape,
     colorPattern?: ColorPattern,
+    prng?: PRNG,
 ) => TileShapeColors[];
 
 /**
@@ -69,7 +71,7 @@ export class TileGenerators {
         if (generator instanceof Function) {
             generator = [generator];
         }
-        return () => {
+        return (_colors, _shapes, _pattern, prng?: PRNG) => {
             const tilesPerShape: TileShapeColors[][] = [];
             const proportion: number[] = [];
             // generate the tiles for each shape
@@ -77,12 +79,13 @@ export class TileGenerators {
                 const colorPattern = colorPatternPerShape
                     ? colorPatternPerShape.get(shape)
                     : undefined;
-                let tilesForShape = generator[0]([], shape, colorPattern);
+                let tilesForShape = generator[0]([], shape, colorPattern, prng);
                 for (let j = 1; j < generator.length; j++) {
                     tilesForShape = generator[j](
                         tilesForShape,
                         shape,
                         colorPattern,
+                        prng,
                     );
                 }
                 tilesPerShape.push(tilesForShape);
@@ -117,7 +120,12 @@ export class TileGenerators {
         shape?: Shape,
         onlyUniqueColors?: boolean,
     ): TileGenerator {
-        return (_, defaultShape: Shape, colorPattern?: ColorPattern) => {
+        return (
+            _,
+            defaultShape: Shape,
+            colorPattern?: ColorPattern,
+            prng?: PRNG,
+        ) => {
             const sh = shape || defaultShape;
             const numColors = colors.length;
             const numColorGroups = colorPattern
@@ -171,7 +179,7 @@ export class TileGenerators {
             for (const c of uniqueCs) {
                 let cc = cToComponents(c, numColorGroups);
                 // shuffle the starting point of the colors
-                cc = randomRotate(cc);
+                cc = randomRotate(cc, prng);
                 if (colorPattern) {
                     // use the first segment order of the pattern only,
                     // because the others should all be rotation variants
@@ -249,8 +257,8 @@ export class TileGenerators {
      * @returns a tile generator that returns a random subset of tiles
      */
     static randomSubset(n: number): TileGenerator {
-        return (tiles: TileShapeColors[]) => {
-            shuffle(tiles);
+        return (tiles: TileShapeColors[], _shape, _pattern, prng?: PRNG) => {
+            shuffle(tiles, prng);
             return tiles.slice(0, n);
         };
     }
@@ -268,13 +276,13 @@ export class TileGenerators {
      * @returns a tile generator that repeats or subsamples the input
      */
     static ensureNumber(min: number, max: number): TileGenerator {
-        return (tiles: TileShapeColors[]) => {
+        return (tiles: TileShapeColors[], _shape, _pattern, prng?: PRNG) => {
             let selectedTiles: TileShapeColors[] = [];
             // repeat tiles if necessary
             while (selectedTiles.length < min) {
                 selectedTiles = selectedTiles.concat(tiles);
             }
-            shuffle(selectedTiles);
+            shuffle(selectedTiles, prng);
             if (selectedTiles.length <= max) {
                 return selectedTiles;
             }

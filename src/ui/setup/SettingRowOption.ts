@@ -46,7 +46,7 @@ export abstract class SettingRowOption {
     rescale() {}
 
     destroy() {
-        this.element.remove();
         this.tappable.destroy();
+        this.element.remove();
     }
 }

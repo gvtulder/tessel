@@ -130,9 +130,9 @@ class AtlasOption {
     }
 
     destroy() {
-        this.element.remove();
         this.tapHandler.destroy();
         this.gridDisplay.destroy();
+        this.element.remove();
     }
 }
 

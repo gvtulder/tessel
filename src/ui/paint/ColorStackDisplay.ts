@@ -86,7 +86,7 @@ class ColorSwatch {
     }
 
     destroy() {
-        this.element.remove();
         this.tapHandler.destroy();
+        this.element.remove();
     }
 }

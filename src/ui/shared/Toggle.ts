@@ -16,7 +16,7 @@ export class Toggle {
     private boxElement: HTMLElement;
     private _checked!: boolean;
 
-    private onchange: (source: Toggle) => void;
+    private onchange?: (source: Toggle) => void;
     private tapHandler: TapHandler;
 
     constructor(
@@ -48,8 +48,9 @@ export class Toggle {
     }
 
     destroy() {
-        this.element.remove();
+        this.onchange = undefined;
         this.tapHandler.destroy();
+        this.element.remove();
     }
 
     get checked(): boolean {

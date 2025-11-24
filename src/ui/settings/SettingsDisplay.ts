@@ -222,21 +222,12 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
                     .canShare()
                     .then((supported: boolean) => {
                         if (supported) {
-                            a.addEventListener("click", (evt) => {
-                                getShareBackend().share({
-                                    title: "Tessel – A tile game",
-                                    text: "Play Tessel – A tile game",
-                                    url: "https://tessel.vantulder.net/",
-                                    dialogTitle: "Share Tessel",
-                                });
-                                evt.preventDefault();
-                                return false;
-                            });
                             span.replaceWith(a);
                         }
                     });
             }
         }
+        this.element.addEventListener("click", this.handleClick);
 
         // initial scaling
         this.rescale();
@@ -249,7 +240,26 @@ export class SettingsDisplay extends EventTarget implements ScreenDisplay {
         this.languagePicker.selectStoredOrDefault(i18n.locale);
     }
 
+    handleClick(evt: MouseEvent) {
+        const target = evt.target as HTMLAnchorElement;
+        if (
+            target &&
+            target.nodeName == "A" &&
+            target.href?.endsWith("#share")
+        ) {
+            getShareBackend().share({
+                title: "Tessel – A tile game",
+                text: "Play Tessel – A tile game",
+                url: "https://tessel.vantulder.net/",
+                dialogTitle: "Share Tessel",
+            });
+            evt.preventDefault();
+            return false;
+        }
+    }
+
     destroy() {
+        this.element.removeEventListener("click", this.handleClick);
         this.navBar.destroy();
         for (const toggle of Object.values(this.toggles)) {
             toggle.destroy();

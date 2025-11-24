@@ -23,7 +23,7 @@ export class ThreeWayToggle {
     valueB: string;
     private _value!: ThreeWayValue;
 
-    private onchange: (source: ThreeWayToggle) => void;
+    private onchange?: (source: ThreeWayToggle) => void;
     private tapHandler: TapHandler;
     private tapHandlerA: TapHandler;
     private tapHandlerB: TapHandler;
@@ -78,10 +78,11 @@ export class ThreeWayToggle {
     }
 
     destroy() {
-        this.element.remove();
+        this.onchange = undefined;
         this.tapHandler.destroy();
         this.tapHandlerA.destroy();
         this.tapHandlerB.destroy();
+        this.element.remove();
     }
 
     get value(): string | null {

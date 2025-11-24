@@ -46,7 +46,7 @@ export class Button {
     }
 
     destroy() {
-        this.element.remove();
         this.tapHandler.destroy();
+        this.element.remove();
     }
 }

@@ -87,6 +87,9 @@ export class TapHandler {
     }
 
     destroy() {
+        this.onStartPress = undefined;
+        this.onEndPress = undefined;
+        this.onTap = undefined;
         this.element.removeEventListener(
             "pointerdown",
             this.pointerDownEventListener,

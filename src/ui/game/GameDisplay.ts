@@ -51,6 +51,9 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     onGameEndGame: EventListener;
     onGameContinueGame: EventListener;
     onUpdateTileCount: EventListener;
+    onGameScoreForStats?: EventListener;
+    onGamePlaceTileForStats?: EventListener;
+    onGameEndGameForStats?: EventListener;
 
     constructor(
         game: Game,
@@ -79,7 +82,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         if (stats) {
             // track game events
             stats.countEvent(StatisticsEvent.GameStarted, game.grid.atlas.id);
-            game.addEventListener(GameEventType.Score, (event: GameEvent) => {
+            this.onGameScoreForStats = (event: GameEvent) => {
                 if (!stats) return;
                 if (!game.continued) {
                     stats.updateHighScore(
@@ -103,25 +106,34 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
                         }
                     }
                 }
-            });
-            game.addEventListener(
-                GameEventType.PlaceTile,
-                (event: GameEvent) => {
-                    if (!stats) return;
-                    stats.countEvent(
-                        StatisticsEvent.TilePlaced,
-                        event.tile?.shape?.name.split("-")[0],
-                    );
-                },
-            );
-            game.addEventListener(GameEventType.EndGame, () => {
+            };
+            this.onGamePlaceTileForStats = (event: GameEvent) => {
+                if (!stats) return;
+                stats.countEvent(
+                    StatisticsEvent.TilePlaced,
+                    event.tile?.shape?.name.split("-")[0],
+                );
+            };
+            this.onGameEndGameForStats = () => {
                 if (stats && !game.continued) {
                     stats.countEvent(
                         StatisticsEvent.GameCompleted,
                         game.grid.atlas.id,
                     );
                 }
-            });
+            };
+            game.addEventListener(
+                GameEventType.Score,
+                this.onGameScoreForStats,
+            );
+            game.addEventListener(
+                GameEventType.PlaceTile,
+                this.onGamePlaceTileForStats,
+            );
+            game.addEventListener(
+                GameEventType.EndGame,
+                this.onGameEndGameForStats,
+            );
         }
 
         // main element
@@ -315,6 +327,24 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             GameEventType.UpdateTileCount,
             this.onUpdateTileCount,
         );
+        if (this.onGameScoreForStats) {
+            this.game.removeEventListener(
+                GameEventType.Score,
+                this.onGameScoreForStats,
+            );
+        }
+        if (this.onGamePlaceTileForStats) {
+            this.game.removeEventListener(
+                GameEventType.PlaceTile,
+                this.onGamePlaceTileForStats,
+            );
+        }
+        if (this.onGameEndGameForStats) {
+            this.game.removeEventListener(
+                GameEventType.EndGame,
+                this.onGameEndGameForStats,
+            );
+        }
 
         this.menu.destroy();
         this.backtomenubutton.destroy();

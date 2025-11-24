@@ -25,9 +25,9 @@
     "@parcel/service-worker": "^2.16.1",
     "check2d": "^9.33.0",
     "polygon-clipping": "^0.15.7",
-    "workbox-core": "^7.3.0",
-    "workbox-precaching": "^7.3.0",
-    "workbox-window": "^7.3.0"
+    "workbox-core": "^7.4.0",
+    "workbox-precaching": "^7.4.0",
+    "workbox-window": "^7.4.0"
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.4",

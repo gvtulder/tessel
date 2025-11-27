@@ -218,12 +218,12 @@ async function captureScreenshot() {
 
                 // Navigate to the target URL
                 await page.goto(targetUrl + screenshotPath);
-                await new Promise((resolve) => setTimeout(resolve, 500));
+                await new Promise((resolve) => setTimeout(resolve, 1000));
 
                 if (screenshot.js) {
                     await new Promise((resolve) => setTimeout(resolve, 500));
                     await page.evaluate(screenshot.js);
-                    await new Promise((resolve) => setTimeout(resolve, 500));
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
                 }
 
                 if (screenshot.css) {

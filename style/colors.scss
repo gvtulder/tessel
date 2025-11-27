@@ -37,17 +37,17 @@ $blue: hsl(214deg, 64%, 50%);
   --button-bg-color-on-main-bg: #{color.mix(
       $button-base-color,
       $main-bg-color,
-      12
+      12%
     )};
   --button-bg-pressed-color-on-main-bg: #{color.mix(
       $button-base-color,
       $main-bg-color,
-      24
+      24%
     )};
   --button-bg-hover-color-on-main-bg: #{color.mix(
       $button-base-color,
       $main-bg-color,
-      32
+      32%
     )};
 
   // large play button in the setup screen

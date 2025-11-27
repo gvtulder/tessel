@@ -199,11 +199,13 @@ export class MainGridTileDragController extends TileDragController {
                             context.source.startAutorotate(rotation, step);
                             // if there is more than one rotation that fits,
                             // rotate to the next option after a short delay
-                            step++;
-                            context.autorotateTimeout = window.setTimeout(
-                                fn,
-                                3000,
-                            );
+                            if (rotation.relativeRotationAngles.length > 1) {
+                                step++;
+                                context.autorotateTimeout = window.setTimeout(
+                                    fn,
+                                    2000,
+                                );
+                            }
                         };
                         context.autorotateTimeout = window.setTimeout(fn, 100);
                     }

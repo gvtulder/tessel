@@ -194,9 +194,18 @@ export class MainGridTileDragController extends TileDragController {
                         // this tile would fit
                         if (context.autorotateTimeout)
                             window.clearTimeout(context.autorotateTimeout);
-                        context.autorotateTimeout = window.setTimeout(() => {
-                            context.source.startAutorotate(rotation);
-                        }, 100);
+                        let step = 0;
+                        const fn = () => {
+                            context.source.startAutorotate(rotation, step);
+                            // if there is more than one rotation that fits,
+                            // rotate to the next option after a short delay
+                            step++;
+                            context.autorotateTimeout = window.setTimeout(
+                                fn,
+                                3000,
+                            );
+                        };
+                        context.autorotateTimeout = window.setTimeout(fn, 100);
                     }
                 }
             } else {
@@ -260,6 +269,8 @@ export class MainGridTileDragController extends TileDragController {
         // reset
         context.autorotateCache.clear();
         context.source.resetAutorotate(successful);
+        if (context.autorotateTimeout)
+            window.clearTimeout(context.autorotateTimeout);
         this.currentlySnapped = false;
 
         for (const tsd of (

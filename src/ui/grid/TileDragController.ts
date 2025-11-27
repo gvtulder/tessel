@@ -266,7 +266,7 @@ export interface TileDragSource {
     startDrag(): void;
     endDrag(successful: boolean): void;
     resetDragStatus(): void;
-    startAutorotate(rotation: TileRotationSet): void;
+    startAutorotate(rotation: TileRotationSet, step: number): void;
     resetAutorotate(keepRotation: boolean): void;
 }
 

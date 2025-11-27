@@ -10,6 +10,7 @@ import {
     gameFromSerializedSettings,
     GameSettings,
     GameSettingsSerialized,
+    GameState_S,
     serializedToJSON,
 } from "../game/Game";
 import { GameDisplay } from "./game/GameDisplay";
@@ -19,7 +20,7 @@ import { GameSetupDisplay } from "./setup/GameSetupDisplay";
 import { ScreenDisplay } from "./shared/ScreenDisplay";
 import { Workbox } from "workbox-window";
 import { PaintDisplay } from "./paint/PaintDisplay";
-import { Grid } from "../grid/Grid";
+import { Grid, TileSet_S } from "../grid/Grid";
 import { Atlas } from "../grid/Atlas";
 import { PaintMenu } from "./paint/PaintMenu";
 import { SettingsDisplay } from "./settings/SettingsDisplay";
@@ -34,6 +35,17 @@ import {
     UserEvent,
     UserEventType,
 } from "./shared/UserEvent";
+import { getStorageBackend } from "../lib/storage-backend";
+import * as zod from "zod";
+
+const ControllerState_S = zod.object({
+    hash: zod.string(),
+    gameState: zod.optional(GameState_S),
+    gridState: zod.optional(TileSet_S),
+    lastMainPage: zod.optional(zod.enum(Pages)),
+    lastSettingsTab: zod.optional(zod.enum(Pages)),
+});
+type ControllerState_S = zod.infer<typeof ControllerState_S>;
 
 export class GameController {
     version?: string;
@@ -42,6 +54,7 @@ export class GameController {
     container: HTMLElement;
     stats: StatisticsMonitor;
     game?: Game;
+    grid?: Grid;
     currentScreen?: ScreenDisplay;
     currentScreenDestroy?: null | (() => void);
     previousScreenDestroy?: null | (() => void);
@@ -127,11 +140,34 @@ export class GameController {
         this.run();
     }
 
-    run() {
+    async run(attemptResume?: boolean) {
+        // check if there is a previous state to resume
+        // e.g, after the game was closed by the OS
+        let state: ControllerState_S | undefined = undefined;
+        if (attemptResume) {
+            try {
+                state = await this.getSavedControllerState();
+            } catch (error) {
+                console.log("Error loading resume state.", error);
+            }
+        }
+        if (state) {
+            // resume
+            this.lastMainPage = state.lastMainPage;
+            this.lastSettingsTab = state.lastSettingsTab;
+            window.history.replaceState({}, "", state.hash);
+        }
+        // make sure we only resume once after saving the state
+        this.clearSaveControllerState();
+
+        // cancel any running game
+        this.game = undefined;
+        this.grid = undefined;
+
         const saveGameId = window.location.hash.replace("#", "");
         const gameSettings = SaveGames.lookup.get(saveGameId);
         if (gameSettings) {
-            this.startGame(gameSettings);
+            this.startGame(gameSettings, state?.gameState);
         } else if (saveGameId == Pages.AllGames) {
             this.showAllGames();
         } else if (saveGameId == Pages.SetupMenu) {
@@ -148,7 +184,11 @@ export class GameController {
             const key = saveGameId.split("-")[1];
             const atlas = SaveGames.SetupCatalog.atlas.get(key);
             if (atlas) {
-                this.showPaintDisplay(atlas.atlas, saveGameId);
+                this.showPaintDisplay(
+                    atlas.atlas,
+                    saveGameId,
+                    state?.gridState,
+                );
             } else {
                 this.showPaintMenuDisplay();
             }
@@ -161,7 +201,7 @@ export class GameController {
                 gameSettings = null;
             }
             if (gameSettings) {
-                this.startGame(gameSettings);
+                this.startGame(gameSettings, state?.gameState);
             } else {
                 this.showMainMenu();
             }
@@ -324,8 +364,12 @@ export class GameController {
         this.showScreen(new PaintMenu(), NavBarItems.Paint, Pages.PaintMenu);
     }
 
-    showPaintDisplay(atlas: Atlas, page: string) {
+    showPaintDisplay(atlas: Atlas, page: string, tileSet?: TileSet_S) {
         const grid = new Grid(atlas);
+        if (tileSet) {
+            grid.restoreTiles(tileSet);
+        }
+        this.grid = grid;
         const paintDisplay = new PaintDisplay(grid);
         this.showScreen(paintDisplay);
     }
@@ -336,8 +380,8 @@ export class GameController {
         return gameFromSerializedSettings(SaveGames.SetupCatalog, serialized);
     }
 
-    startGame(gameSettings: GameSettings) {
-        const game = new Game(gameSettings);
+    async startGame(gameSettings: GameSettings, resumeState?: GameState_S) {
+        const game = new Game(gameSettings, undefined, resumeState);
         this.game = game;
         const gameDisplay = new GameDisplay(
             game,
@@ -345,6 +389,26 @@ export class GameController {
             this.lastMainPage == Pages.SetupMenu,
         );
         this.showScreen(gameDisplay);
+    }
+
+    async getSavedControllerState(): Promise<ControllerState_S | undefined> {
+        const state = await getStorageBackend().getItem("resumeState");
+        return state ? ControllerState_S.parse(JSON.parse(state)) : undefined;
+    }
+
+    saveControllerState() {
+        const state: ControllerState_S = {
+            hash: window.location.hash,
+            gameState: this.game?.saveState(),
+            gridState: this.grid?.saveTilesAndPlaceholders(),
+            lastMainPage: this.lastMainPage,
+            lastSettingsTab: this.lastSettingsTab,
+        };
+        getStorageBackend().setItem("resumeState", JSON.stringify(state));
+    }
+
+    clearSaveControllerState() {
+        getStorageBackend().removeItem("resumeState");
     }
 
     /**

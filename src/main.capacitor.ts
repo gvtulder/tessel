@@ -4,6 +4,7 @@
  */
 
 import { Capacitor } from "@capacitor/core";
+import { App } from "@capacitor/app";
 import { Device } from "@capacitor/device";
 import { Share, ShareOptions } from "@capacitor/share";
 import { StatusBar } from "@capacitor/status-bar";
@@ -45,6 +46,18 @@ class ShareBackend implements ShareI {
 }
 
 setShareBackend(new ShareBackend());
+
+App.addListener("pause", () => {
+    if (globalThis.gameController) {
+        globalThis.gameController.saveControllerState();
+    }
+});
+
+App.addListener("resume", () => {
+    if (globalThis.gameController) {
+        globalThis.gameController.clearSaveControllerState();
+    }
+});
 
 Device.getLanguageCode().then((result) => {
     removeSplash();

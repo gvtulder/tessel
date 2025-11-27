@@ -8,6 +8,7 @@ import { parseShapeDefinition } from "../Atlas";
 import { Shape } from "../Shape";
 import { SourceGrid, SourcePoint } from "../SourceGrid";
 import { dist, Point } from "../../geom/math";
+import * as zod from "zod";
 
 const wide = parseShapeDefinition({
     name: "rhombus-wide",
@@ -41,7 +42,7 @@ export class Penrose3SourceGrid extends SourceGrid {
     ]) as ReadonlyMap<Shape, number>;
 
     dimensions: number;
-    sigma!: number[];
+    sigma!: readonly number[];
 
     angles!: number[];
     cos!: number[];
@@ -55,12 +56,40 @@ export class Penrose3SourceGrid extends SourceGrid {
         return new Penrose3SourceGrid(prng);
     }
 
-    constructor(prng?: PRNG) {
+    constructor(prng?: PRNG, fixedSigma?: readonly number[]) {
         super(prng);
         this.dimensions = 5;
-        this.generateSigma();
+        if (fixedSigma !== undefined) {
+            this.sigma = fixedSigma;
+        } else {
+            this.generateSigma();
+        }
         this.precomputeAngles();
         this.precomputeShapes();
+    }
+
+    save() {
+        return Penrose3SourceGrid.codec.encode(this);
+    }
+
+    static restore(data: unknown): Penrose3SourceGrid {
+        return Penrose3SourceGrid.codec.parse(data);
+    }
+
+    static codec = zod.codec(
+        zod.object({
+            sigma: zod.array(zod.number()).length(5).readonly(),
+        }),
+        zod.instanceof(Penrose3SourceGrid),
+        {
+            encode: (grid) => ({ sigma: grid.sigma }),
+            decode: (value) => new Penrose3SourceGrid(undefined, value.sigma),
+        },
+    );
+
+    restorePoint(data: unknown): SourcePoint {
+        const p = Penrose3SourcePoint_S.parse(data);
+        return this.getPoint(p.lineA, p.lineB);
     }
 
     private generateSigma() {
@@ -318,6 +347,12 @@ function computeKey(lineA: DeBruijnGridLine, lineB: DeBruijnGridLine): string {
     return `${Math.round(lineA.index)} ${Math.round(lineA.offset)} ${Math.round(lineB.index)} ${Math.round(lineB.offset)}`;
 }
 
+const Penrose3SourcePoint_S = zod.object({
+    lineA: zod.object({ index: zod.number(), offset: zod.number() }),
+    lineB: zod.object({ index: zod.number(), offset: zod.number() }),
+});
+type Penrose3SourcePoint_S = zod.infer<typeof Penrose3SourcePoint_S>;
+
 class Penrose3SourcePoint extends SourcePoint {
     private grid: Penrose3SourceGrid;
     /**
@@ -350,6 +385,13 @@ class Penrose3SourcePoint extends SourcePoint {
         this.lineA = lineA.index < lineB.index ? lineA : lineB;
         this.lineB = lineA.index < lineB.index ? lineB : lineA;
         this.intersection = grid.intersection(lineA, lineB);
+    }
+
+    save(): Penrose3SourcePoint_S {
+        return {
+            lineA: { index: this.lineA.index, offset: this.lineA.offset },
+            lineB: { index: this.lineB.index, offset: this.lineB.offset },
+        };
     }
 
     neighbor(side: number) {

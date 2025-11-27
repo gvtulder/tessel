@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import * as zod from "zod";
 import { PRNG } from "../geom/RandomSampler";
 import { Shape } from "./Shape";
 
@@ -25,6 +26,9 @@ export abstract class SourceGrid {
     }
 
     abstract getOrigin(): SourcePoint;
+
+    abstract save(): unknown;
+    abstract restorePoint(d: unknown): SourcePoint;
 }
 
 type SourcePointSide = {
@@ -44,4 +48,6 @@ export abstract class SourcePoint {
     }
 
     abstract neighbor(side: number): SourcePointSide;
+
+    abstract save(): unknown;
 }

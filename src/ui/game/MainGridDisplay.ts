@@ -64,10 +64,16 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
         }
     }
 
-    gameFinished() {
+    gameFinished(immediate?: boolean) {
         const placeholders = [...this.tileDisplays.values()].filter(
             (d) => d.tile.tileType === TileType.Placeholder,
         );
+        if (immediate) {
+            placeholders.forEach((t) => t.hide());
+            this.ignorePlaceholders = true;
+            this.triggerRescale();
+            return;
+        }
         shuffle(placeholders);
         let delay = 100;
         const cleanUp = () => {

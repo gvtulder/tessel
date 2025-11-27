@@ -5,7 +5,7 @@
 
 import { describe, expect, jest, test } from "@jest/globals";
 import { Grid, GridEdge, GridVertex, SortedCorners } from "./Grid";
-import { PlaceholderTile, Tile } from "./Tile";
+import { PlaceholderTile, Tile, TileType } from "./Tile";
 import { Polygon } from "../geom/Polygon";
 import { GridEventType } from "./GridEvent";
 import { mergeBBox, P, weightedSumPoint } from "../geom/math";
@@ -575,5 +575,36 @@ describe("Grid", () => {
         expect(
             grid.checkColorsWithRotation(tile2, ["red", "red", "white"]),
         ).toStrictEqual([0, 1]);
+    });
+
+    test("can save and restore tiles", () => {
+        const atlas = TrianglesAtlas;
+        const grid = new Grid(atlas);
+        const tile1 = grid.addTile(TRIANGLE, poly1, poly1.segment());
+        const tile2 = grid.addTile(TRIANGLE, poly2, poly2.segment());
+        const tile3 = grid.addPlaceholder(TRIANGLE, poly3);
+        tile2.colors = ["red", "green", "blue"];
+
+        const savedTiles = grid.saveTilesAndPlaceholders();
+        expect(savedTiles.length).toBe(3);
+
+        const grid2 = new Grid(atlas);
+        grid2.restoreTiles(savedTiles);
+
+        expect(grid2.tiles.size).toBe(2);
+        expect(grid2.placeholders.size).toBe(1);
+    });
+
+    test("can save and restore tiles with a source grid", () => {
+        const atlas = Atlas.fromSourceGrid("", "", "", SnubSquareSourceGrid);
+        const grid = new Grid(atlas);
+        const tile = grid.addInitialTile();
+        const savedTiles = grid.saveTilesAndPlaceholders();
+
+        const grid2 = new Grid(atlas);
+        grid2.restoreTiles(savedTiles);
+        const restoredTile = [...grid2.tiles][0];
+        expect(restoredTile.centroid).toEqual(tile.centroid);
+        expect(restoredTile.sourcePoint).toEqual(tile.sourcePoint);
     });
 });

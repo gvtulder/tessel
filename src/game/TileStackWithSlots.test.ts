@@ -91,4 +91,13 @@ describe("TileStackWithSlots", () => {
         expect(stack.tilesLeft).toBe(3);
         expect(stack.tilesVisible).toBe(3);
     });
+
+    test("can be saved", () => {
+        const shapeMap = [square];
+        const source = new TileStack(list);
+        const stack = new TileStackWithSlots(source, 3);
+        const saved = stack.save(shapeMap);
+        const restored = TileStackWithSlots.restore(saved, shapeMap);
+        expect(restored).toStrictEqual(stack);
+    });
 });

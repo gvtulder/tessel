@@ -50,7 +50,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
     onGameScore: EventListener;
     onGameEndGame: EventListener;
     onGameContinueGame: EventListener;
-    onUpdateTileCount: EventListener;
+    onUpdateTileCount: () => void;
     onGameScoreForStats?: EventListener;
     onGamePlaceTileForStats?: EventListener;
     onGameEndGameForStats?: EventListener;
@@ -298,6 +298,13 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             .then((result) => {
                 this.highscore.checked = result == "yes";
             });
+
+        // if this is a restored game, it might be already finished
+        if (this.game.tileStack.tilesLeft == 0) {
+            this.element.classList.add("game-finished");
+            this.gridDisplay.gameFinished(true);
+        }
+        this.onUpdateTileCount();
 
         // initial scaling
         this.rescale();

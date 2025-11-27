@@ -81,6 +81,14 @@ describe("TileStack", () => {
         expect(stack.tilesLeft).toBe(3);
         expect(stack2.tilesLeft).toBe(3);
     });
+
+    test("can be saved", () => {
+        const shapeMap = [square];
+        const stack = new TileStack(list);
+        const saved = stack.save(shapeMap);
+        const restored = TileStack.restore(saved, shapeMap);
+        expect(restored).toStrictEqual(stack);
+    });
 });
 
 describe("tileColorsEqualWithRotation", () => {

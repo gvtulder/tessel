@@ -7,6 +7,7 @@ import { PRNG } from "../../geom/RandomSampler";
 import { parseShapeDefinition } from "../Atlas";
 import { Shape } from "../Shape";
 import { SourceGrid, SourcePoint } from "../SourceGrid";
+import * as zod from "zod";
 
 const square = parseShapeDefinition({
     name: "square",
@@ -70,6 +71,19 @@ export class SnubSquareSourceGrid extends SourceGrid {
         return new SnubSquareSourceGrid(prng);
     }
 
+    save() {
+        return {};
+    }
+
+    static restore(data: unknown): SnubSquareSourceGrid {
+        return new SnubSquareSourceGrid();
+    }
+
+    restorePoint(data: unknown): SourcePoint {
+        const p = SnubSquareSourcePoint_S.parse(data);
+        return this.getPoint(p.x, p.y, p.z);
+    }
+
     getOrigin(): SourcePoint {
         return this.getPoint(0, 0, 0);
     }
@@ -84,6 +98,13 @@ export class SnubSquareSourceGrid extends SourceGrid {
         return point;
     }
 }
+
+const SnubSquareSourcePoint_S = zod.object({
+    x: zod.number(),
+    y: zod.number(),
+    z: zod.number(),
+});
+type SnubSquareSourcePoint_S = zod.infer<typeof SnubSquareSourcePoint_S>;
 
 class SnubSquareSourcePoint extends SourcePoint {
     private grid: SnubSquareSourceGrid;
@@ -101,6 +122,10 @@ class SnubSquareSourcePoint extends SourcePoint {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    save(): SnubSquareSourcePoint_S {
+        return { x: this.x, y: this.y, z: this.z };
     }
 
     neighbor(side: number) {

@@ -5,7 +5,7 @@
 
 import { describe, expect, jest, test } from "@jest/globals";
 import { Shape } from "./Shape";
-import { PlaceholderTile, Tile } from "./Tile";
+import { PlaceholderTile, Tile, TileType } from "./Tile";
 import { P } from "../geom/math";
 import { Grid } from "./Grid";
 import { TrianglesAtlas } from "./atlas/TrianglesAtlas";
@@ -98,6 +98,14 @@ describe("Tile", () => {
             null,
         ]);
     });
+
+    test("can be saved and restored", () => {
+        const shapeMap = [TRIANGLE];
+        const tile = new Tile(TRIANGLE, polygon);
+        const saved = tile.save(shapeMap);
+        const restored = Tile.restore(saved, shapeMap);
+        expect(restored.centroid).toEqual(tile.centroid);
+    });
 });
 
 describe("PlaceholderTile", () => {
@@ -127,5 +135,13 @@ describe("PlaceholderTile", () => {
         expect(tile1.neighbors.size).toBe(2);
         // but placeholders should find normal tile neighbors
         expect(tile4.neighbors.size).toBe(1);
+    });
+
+    test("can be saved and restored", () => {
+        const shapeMap = [TRIANGLE];
+        const tile = new PlaceholderTile(TRIANGLE, polygon);
+        const saved = tile.save(shapeMap);
+        const restored = Tile.restore(saved, shapeMap);
+        expect(restored).toStrictEqual(tile);
     });
 });

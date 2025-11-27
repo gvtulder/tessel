@@ -7,7 +7,8 @@ import { GridEdge, GridVertex } from "./Grid";
 import { BBox, Point } from "../geom/math";
 import { Polygon } from "../geom/Polygon";
 import { Shape } from "./Shape";
-import { SourcePoint } from "./SourceGrid";
+import { SourceGrid, SourcePoint } from "./SourceGrid";
+import * as zod from "zod";
 
 export type TileColor = string;
 export type TileColors = readonly TileColor[];
@@ -23,6 +24,16 @@ export const enum TileType {
      */
     Placeholder,
 }
+
+export const Tile_S = zod.object({
+    shape: zod.number().int().nonnegative(),
+    polygon: Polygon.codec.in,
+    segments: zod.optional(zod.array(Polygon.codec.in)),
+    sourcePoint: zod.optional(zod.unknown()),
+    placeholder: zod.boolean(),
+    colors: zod.optional(zod.array(zod.optional(zod.string())).readonly()),
+});
+export type Tile_S = zod.infer<typeof Tile_S>;
 
 /**
  * A TileSegment represents a segment of a tile
@@ -186,6 +197,56 @@ export class Tile {
         // generate segments
         if (segments) {
             this.segments = segments.map((s, i) => new TileSegment(this, i, s));
+        }
+    }
+
+    /**
+     * Serializes the tile.
+     *
+     * @param shapeMap the sequence of shapes to map shapes to indices
+     * @returns the serialized tile
+     */
+    save(shapeMap: readonly Shape[]): Tile_S {
+        return {
+            shape: shapeMap.indexOf(this.shape),
+            polygon: this.polygon.save(),
+            segments: this.segments?.map((segment) => segment.polygon.save()),
+            sourcePoint: this.sourcePoint?.save(),
+            placeholder: this.tileType === TileType.Placeholder,
+            colors: this.colors,
+        };
+    }
+
+    /**
+     * Restores a serialized tile.
+     *
+     * @param data the serialized tile
+     * @param shapeMap the sequence of shapes to map indices to shapes
+     * @returns the restored tile
+     */
+    static restore(
+        data: unknown,
+        shapeMap: readonly Shape[],
+        sourceGrid?: SourceGrid,
+    ): Tile {
+        const d = Tile_S.parse(data);
+        if (d.placeholder) {
+            return new PlaceholderTile(
+                shapeMap[d.shape],
+                Polygon.restore(d.polygon),
+                sourceGrid?.restorePoint(d.sourcePoint),
+            );
+        } else {
+            const tile = new Tile(
+                shapeMap[d.shape],
+                Polygon.restore(d.polygon),
+                d.segments?.map((segment) => Polygon.restore(segment)),
+                sourceGrid?.restorePoint(d.sourcePoint),
+            );
+            if (d.colors && d.colors.every((c) => c)) {
+                tile.colors = d.colors as TileColors;
+            }
+            return tile;
         }
     }
 

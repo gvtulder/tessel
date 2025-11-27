@@ -10,6 +10,8 @@ import {
     TileStack,
     tileColorsEqualWithRotation,
 } from "./TileStack";
+import { Shape } from "../grid/Shape";
+import { TileStackWithSlots_S } from "./TileStackWithSlots_S";
 
 /**
  * A tile stack with a number of tiles shown to the player.
@@ -53,6 +55,56 @@ export class TileStackWithSlots extends EventTarget {
         this.numberShown = numberShown;
         this.slots = [];
         this.updateSlots();
+    }
+
+    /**
+     * Serializes the tile stack.
+     *
+     * @param shapeMap the sequence of shapes to map shapes to indices
+     * @returns the serialized tiles
+     */
+    save(shapeMap: readonly Shape[]): TileStackWithSlots_S {
+        return {
+            numberShown: this.numberShown,
+            slots: this.slots.map((slot) =>
+                slot
+                    ? {
+                          shape: shapeMap.indexOf(slot.shape),
+                          colors: slot?.colors,
+                      }
+                    : undefined,
+            ),
+            originalTileStack: this.originalTileStack.save(shapeMap),
+            tileStack: this.tileStack.save(shapeMap),
+        };
+    }
+
+    /**
+     * Restores a serialized tile stack.
+     *
+     * @param shapeMap the sequence of shapes to map indices to shapes
+     * @returns the restored tile stack
+     */
+    static restore(
+        data: unknown,
+        shapeMap: readonly Shape[],
+    ): TileStackWithSlots {
+        const d = TileStackWithSlots_S.parse(data);
+        const stack = new TileStackWithSlots(
+            TileStack.restore(d.originalTileStack, shapeMap),
+            d.numberShown,
+        );
+        // restore state
+        stack.tileStack = TileStack.restore(d.tileStack, shapeMap);
+        stack.slots = d.slots.map((slot) =>
+            slot
+                ? {
+                      shape: shapeMap[slot.shape],
+                      colors: slot.colors,
+                  }
+                : undefined,
+        );
+        return stack;
     }
 
     /**

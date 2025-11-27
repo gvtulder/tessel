@@ -4,6 +4,7 @@
  */
 
 import { BBox, area, bbox, centroid, Edge, Point, shiftPoints } from "./math";
+import * as zod from "zod";
 
 /**
  * A polygon consists of a number vertices.
@@ -98,4 +99,30 @@ export class Polygon {
     toShifted(dx: number, dy: number): Polygon {
         return new Polygon(shiftPoints(this.vertices, dx, dy));
     }
+
+    save() {
+        return Polygon.codec.encode(this);
+    }
+
+    static restore(data: unknown) {
+        return Polygon.codec.parse(data);
+    }
+
+    static codec = zod.codec(
+        zod
+            .array(
+                zod.object({
+                    x: zod.number().readonly(),
+                    y: zod.number().readonly(),
+                }),
+            )
+            .readonly(),
+        zod.instanceof(Polygon),
+        {
+            encode: (polygon) => polygon.vertices,
+            decode: (vertices) => new Polygon(vertices),
+        },
+    );
 }
+
+export type Polygon_S = zod.input<typeof Polygon.codec>;

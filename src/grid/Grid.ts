@@ -9,6 +9,7 @@ import {
     Point as CollisionPoint,
     Body,
 } from "check2d";
+import * as zod from "zod";
 
 import { Atlas } from "./Atlas";
 import {
@@ -23,8 +24,8 @@ import {
     weightedSumPoint,
 } from "../geom/math";
 import { AngleUse, Shape } from "./Shape";
-import { PlaceholderTile, Tile, TileColors } from "./Tile";
-import { Polygon } from "../geom/Polygon";
+import { PlaceholderTile, Tile, Tile_S, TileColors, TileType } from "./Tile";
+import { Polygon, Polygon_S } from "../geom/Polygon";
 import { matchPoints } from "../geom/polygon/matchPoints";
 import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
@@ -156,6 +157,9 @@ export class SortedCorners extends Array<GridVertexCorner> {
 
 type VertexKey = string;
 export type EdgeKey = string;
+
+export const TileSet_S = zod.array(Tile_S);
+export type TileSet_S = zod.infer<typeof TileSet_S>;
 
 /**
  * A tile placement.
@@ -434,6 +438,30 @@ export class Grid extends EventTarget {
     }
 
     /**
+     * Serializes all tiles on this set.
+     *
+     * @returns the serialized set of tiles
+     */
+    saveTilesAndPlaceholders(): TileSet_S {
+        const saved: TileSet_S = [];
+        for (const t of this.tiles) saved.push(t.save(this.atlas.shapes));
+        for (const t of this.placeholders)
+            saved.push(t.save(this.atlas.shapes));
+        return saved;
+    }
+
+    /**
+     * Restore a set of serialized tiles.
+     *
+     * @param data the tiles data
+     */
+    restoreTiles(data: unknown): void {
+        for (const t of TileSet_S.parse(data)) {
+            this.doAddTile(Tile.restore(t, this.atlas.shapes, this.sourceGrid));
+        }
+    }
+
+    /**
      * Adds a tile to the grid.
      *
      * This function links the tile to vertices and edges and updates
@@ -449,6 +477,20 @@ export class Grid extends EventTarget {
      * @param placeholder true when placing a placeholder (see addPlaceholder)
      * @returns the new tile
      */
+    addTile(
+        shape: Shape,
+        polygon: Polygon,
+        segments: Polygon[] | null | undefined,
+        sourcePoint: SourcePoint | undefined,
+        placeholder: true,
+    ): PlaceholderTile;
+    addTile(
+        shape: Shape,
+        polygon: Polygon,
+        segments?: Polygon[] | null,
+        sourcePoint?: SourcePoint,
+        placeholder?: boolean,
+    ): Tile;
     addTile(
         shape: Shape,
         polygon: Polygon,
@@ -471,19 +513,30 @@ export class Grid extends EventTarget {
         const tile = placeholder
             ? new PlaceholderTile(shape, polygon, sourcePoint)
             : new Tile(shape, polygon, segments, sourcePoint);
+
+        this.doAddTile(tile);
+        return tile;
+    }
+
+    /**
+     * Adds an already initialized tile to the grid.
+     *
+     * @param tile the tile to add
+     */
+    private doAddTile(tile: Tile): void {
         tile.onUpdateColor = this.handleTileColorUpdate;
-        const points = polygon.vertices;
+        const points = tile.polygon.vertices;
         const n = points.length;
 
         // add tile to grid
-        if (placeholder) {
+        if (tile.tileType == TileType.Placeholder) {
             this.placeholders.add(tile);
         } else {
             this.tiles.add(tile);
         }
         const collisionPolygon = this.system.createPolygon(
             {},
-            polygon.vertices as Point[],
+            tile.polygon.vertices as Point[],
             { userData: tile },
         );
         this.tileBodies.set(tile, collisionPolygon);
@@ -515,7 +568,7 @@ export class Grid extends EventTarget {
                 this.edges.set(key, edge);
             }
             edges[i] = edge;
-            if (placeholder) {
+            if (tile.tileType == TileType.Placeholder) {
                 edge.placeholders.add(tile as PlaceholderTile);
             } else {
                 // link to edge
@@ -539,13 +592,11 @@ export class Grid extends EventTarget {
         tile.edges = edges;
 
         // update rings
-        if (!placeholder) {
+        if (tile.tileType != TileType.Placeholder) {
             this.rings.addRing(tile.polygon.vertices);
         }
 
         this.dispatchEvent(new GridEvent(GridEventType.AddTile, this, tile));
-
-        return tile;
     }
 
     /**
@@ -613,13 +664,7 @@ export class Grid extends EventTarget {
         polygon: Polygon,
         sourcePoint?: SourcePoint,
     ): PlaceholderTile {
-        return this.addTile(
-            shape,
-            polygon,
-            null,
-            sourcePoint,
-            true,
-        ) as PlaceholderTile;
+        return this.addTile(shape, polygon, null, sourcePoint, true);
     }
 
     /**

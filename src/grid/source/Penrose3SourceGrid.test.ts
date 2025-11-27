@@ -17,4 +17,15 @@ describe("Penrose3SourceGrid", () => {
         expect(shapeCounts.get(Penrose3SourceGrid.shapes[0])).toBe(64);
         expect(shapeCounts.get(Penrose3SourceGrid.shapes[1])).toBe(36);
     });
+
+    test("can be saved", () => {
+        const prng = seedPRNG(1234);
+        const grid = new Penrose3SourceGrid(prng);
+        const point = grid.getOrigin().neighbor(0).point;
+        const saved = point.save();
+        const restored = grid.restorePoint(saved);
+        expect(restored).toBe(point);
+        const savedGrid = grid.save();
+        expect(Penrose3SourceGrid.restore(savedGrid)).toBeDefined();
+    });
 });

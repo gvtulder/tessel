@@ -78,4 +78,11 @@ describe("Polygon", () => {
         expect(poly.vertices).toStrictEqual(triangle);
         expect(shifted.vertices).toStrictEqual(expected);
     });
+
+    test("can be saved", () => {
+        const poly = new Polygon(triangle);
+        const saved = Polygon.codec.encode(poly);
+        const restored = Polygon.codec.decode(saved);
+        expect(restored).toStrictEqual(poly);
+    });
 });

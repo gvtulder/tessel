@@ -27,10 +27,12 @@
     "polygon-clipping": "^0.15.7",
     "workbox-core": "^7.4.0",
     "workbox-precaching": "^7.4.0",
-    "workbox-window": "^7.4.0"
+    "workbox-window": "^7.4.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.4",
+    "@capacitor/app": "^7.1.0",
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^7.4.4",
     "@capacitor/core": "^7.4.4",

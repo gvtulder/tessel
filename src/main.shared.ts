@@ -44,7 +44,7 @@ export async function startMainMenu(
         workbox,
         platform,
     );
-    controller.run();
+    controller.run(true);
 
     globalThis.gameController = controller;
 }

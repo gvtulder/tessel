@@ -5,27 +5,29 @@
 
 import { GameSettings, GameSettingsSerialized } from "../../game/Game";
 
-export const enum UserEventType {
-    StartGame = "startgame",
-    BackToMenu = "backtomenu",
-    RestartGame = "restartgame",
-    AllGamesMenu = "allgames",
-    SetupMenu = "setupmenu",
-    StartGameFromSetup = "startgamefromsetup",
-    Paint = "paint",
-    Settings = "settings",
-    Statistics = "statistics",
-    Navigate = "navigate",
-}
-export const enum Pages {
-    MainMenu = "main",
-    AllGames = "all-games",
-    SetupMenu = "setup",
-    PaintMenu = "paint",
-    About = "about",
-    Settings = "settings",
-    Statistics = "statistics",
-}
+export const UserEventType = {
+    StartGame: "startgame",
+    BackToMenu: "backtomenu",
+    RestartGame: "restartgame",
+    AllGamesMenu: "allgames",
+    SetupMenu: "setupmenu",
+    StartGameFromSetup: "startgamefromsetup",
+    Paint: "paint",
+    Settings: "settings",
+    Statistics: "statistics",
+    Navigate: "navigate",
+} as const;
+export type UserEventType = (typeof UserEventType)[keyof typeof UserEventType];
+export const Pages = {
+    MainMenu: "main",
+    AllGames: "all-games",
+    SetupMenu: "setup",
+    PaintMenu: "paint",
+    About: "about",
+    Settings: "settings",
+    Statistics: "statistics",
+} as const;
+export type Pages = (typeof Pages)[keyof typeof Pages];
 export class UserEvent extends Event {
     gameSettings?: GameSettings;
     gameId?: string;

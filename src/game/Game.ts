@@ -3,13 +3,15 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { Grid } from "../grid/Grid";
+import * as zod from "zod";
+import { Grid, TileSet_S } from "../grid/Grid";
 import { ScoredRegion, Scorer, ScorerType } from "./scorers/Scorer";
 import { ConnectedSegmentScorer } from "./scorers/ConnectedSegmentScorer";
 import { Tile, TileColors } from "../grid/Tile";
 import { TileGenerator, TileGenerators } from "./TileGenerator";
 import { TileShapeColors, TileStack } from "./TileStack";
 import { TileStackWithSlots } from "./TileStackWithSlots";
+import { TileStackWithSlots_S } from "./TileStackWithSlots_S";
 import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/arrays";
 import { RuleSetType } from "../grid/rules/RuleSet";
@@ -58,6 +60,14 @@ export function serializedToJSON(settings: GameSettingsSerialized): string {
     ]);
 }
 
+export const GameState_S = zod.object({
+    points: zod.number(),
+    continued: zod.boolean(),
+    tileStack: TileStackWithSlots_S,
+    tiles: TileSet_S,
+});
+export type GameState_S = zod.infer<typeof GameState_S>;
+
 export const enum GameEventType {
     EndGame = "endgame",
     ContinueGame = "continuegame",
@@ -95,17 +105,35 @@ export class Game extends EventTarget {
     points: number;
     continued: boolean;
 
-    constructor(settings: GameSettings, prng?: PRNG) {
+    constructor(settings: GameSettings, prng?: PRNG, restoreState?: unknown) {
         super();
 
         this.settings = settings;
 
-        this.points = 0;
-        this.continued = false;
-
         this.grid = new Grid(this.settings.atlas);
         if (settings.rules) this.grid.rules = settings.rules.create();
         this.scorer = (settings.scorer || ConnectedSegmentScorer).create();
+
+        if (restoreState) {
+            // restore previous game state
+            try {
+                const state = GameState_S.parse(restoreState);
+                this.points = state.points;
+                this.continued = state.continued;
+                this.tileStack = TileStackWithSlots.restore(
+                    state.tileStack,
+                    this.grid.atlas.shapes,
+                );
+                this.grid.restoreTiles(state.tiles);
+                return;
+            } catch (err) {
+                console.log(err);
+                // continue with default initialization
+            }
+        }
+
+        this.points = 0;
+        this.continued = false;
 
         // generate tiles
         let tiles: TileShapeColors[] = [];
@@ -142,6 +170,15 @@ export class Game extends EventTarget {
         }
 
         this.grid.generatePlaceholders();
+    }
+
+    saveState(): GameState_S {
+        return {
+            points: this.points,
+            continued: this.continued,
+            tileStack: this.tileStack.save(this.grid.atlas.shapes),
+            tiles: this.grid.saveTilesAndPlaceholders(),
+        };
     }
 
     finish() {

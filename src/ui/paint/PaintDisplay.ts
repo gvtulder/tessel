@@ -31,9 +31,11 @@ export class PaintDisplay extends EventTarget implements ScreenDisplay {
 
         const colors = WONG6;
 
-        const tile = grid.addInitialTile();
-        tile.colors = colors[0];
-        grid.generatePlaceholders();
+        if (grid.tiles.size == 0) {
+            const tile = grid.addInitialTile();
+            tile.colors = colors[0];
+            grid.generatePlaceholders();
+        }
 
         // main element
         const element = (this.element = createElement(

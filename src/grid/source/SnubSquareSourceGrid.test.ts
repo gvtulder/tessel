@@ -19,4 +19,14 @@ describe("SnubSquareSourceGrid", () => {
             shapeCounts.get(SnubSquareSourceGrid.shapes[1]),
         ).toBeGreaterThanOrEqual(67);
     });
+
+    test("can be saved", () => {
+        const grid = new SnubSquareSourceGrid();
+        const point = grid.getPoint(0, 1, 0);
+        const saved = point.save();
+        const restored = grid.restorePoint(saved);
+        expect(restored).toBe(point);
+        const savedGrid = grid.save();
+        expect(SnubSquareSourceGrid.restore(savedGrid)).toBeDefined();
+    });
 });

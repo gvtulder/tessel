@@ -6,6 +6,7 @@
 import { TileColors } from "../grid/Tile";
 import { Shape } from "../grid/Shape";
 import { PRNG, shuffle } from "../geom/RandomSampler";
+import * as zod from "zod";
 
 /**
  * A tile on the TileStack, defined by a shape and colors.
@@ -20,6 +21,15 @@ export type TileShapeColors = {
      */
     colors: TileColors;
 };
+
+export const TileShapeColors_S = zod.object({
+    shape: zod.number(),
+    colors: zod.array(zod.string()).readonly(),
+});
+export type TileShapeColors_S = zod.infer<typeof TileShapeColors_S>;
+
+export const TileStack_S = zod.array(TileShapeColors_S).readonly();
+export type TileStack_S = zod.infer<typeof TileStack_S>;
 
 /**
  * A TileStack representing the tiles available during the game.
@@ -38,11 +48,42 @@ export class TileStack {
      * added to the stack.
      *
      * @param tileSet the initial set of tiles
-     * @param prng the random number generator to use
+     * @param prng the random number generator to use, or false to disable shuffling
      */
-    constructor(tileSet: TileShapeColors[], prng?: PRNG) {
+    constructor(tileSet: TileShapeColors[], prng?: PRNG | false) {
         this.tiles = [...tileSet];
-        shuffle(this.tiles, prng);
+        if (prng !== false) {
+            shuffle(this.tiles, prng);
+        }
+    }
+
+    /**
+     * Serializes the tile stack.
+     *
+     * @param shapeMap the sequence of shapes to map shapes to indices
+     * @returns the serialized tiles
+     */
+    save(shapeMap: readonly Shape[]): TileStack_S {
+        return this.tiles.map((t) => ({
+            shape: shapeMap.indexOf(t.shape),
+            colors: t.colors,
+        }));
+    }
+
+    /**
+     * Restores a serialized tile stack.
+     *
+     * @param shapeMap the sequence of shapes to map indices to shapes
+     * @returns the restored tile stack
+     */
+    static restore(data: unknown, shapeMap: readonly Shape[]): TileStack {
+        return new TileStack(
+            TileStack_S.parse(data).map((d) => ({
+                shape: shapeMap[d.shape],
+                colors: d.colors,
+            })),
+            false,
+        );
     }
 
     /**

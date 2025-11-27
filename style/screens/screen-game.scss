@@ -124,11 +124,11 @@ $score-font-size: min(4vw, 5vh);
   }
 }
 
-.dropout-menu {
-  $dropout-outer-padding: calc(0.25 * sizes.$button-scale);
-  $dropout-inner-padding: calc(0.2 * sizes.$button-scale);
-  $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
+$dropout-outer-padding: calc(0.25 * sizes.$button-scale);
+$dropout-inner-padding: calc(0.2 * sizes.$button-scale);
+$dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
 
+.dropout-menu {
   position: absolute;
   right: sizes.$button-right;
   top: sizes.$button-top;
@@ -414,6 +414,26 @@ $score-font-size: min(4vw, 5vh);
 
     .dropout-menu {
       background: var(--main-bg-color);
+      opacity: 1;
+      transition: 100ms opacity;
+    }
+
+    &.dragging-tile .dropout-menu {
+      opacity: 0;
+    }
+
+    &.game-finished .dropout-menu .items {
+      flex-direction: row;
+      padding: 0;
+      border-top: none;
+
+      .game-button {
+        margin: 0;
+      }
+
+      .game-button + .game-button {
+        margin: 0 0 0 $dropout-inner-padding;
+      }
     }
 
     .tile-stack {

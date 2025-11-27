@@ -47,6 +47,7 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
     onTapTile: EventListener;
     onStartDrag: EventListener;
+    onEndDrag: EventListener;
     onGameScore: EventListener;
     onGameEndGame: EventListener;
     onGameContinueGame: EventListener;
@@ -65,7 +66,14 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
 
         // event handlers
         this.onTapTile = () => this.gridDisplay.scoreOverlayDisplay.hide();
-        this.onStartDrag = () => this.gridDisplay.scoreOverlayDisplay.hide();
+        this.onStartDrag = () => {
+            this.gridDisplay.scoreOverlayDisplay.hide();
+            this.element.classList.add("dragging-tile");
+        };
+        this.onEndDrag = () => {
+            this.gridDisplay.scoreOverlayDisplay.hide();
+            this.element.classList.remove("dragging-tile");
+        };
         this.onGameScore = (evt: GameEvent) => {
             this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes!);
             this.scoreDisplay.points = this.game.points;
@@ -273,6 +281,10 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             TileDragController.events.StartDrag,
             this.onStartDrag,
         );
+        tileDragController.addEventListener(
+            TileDragController.events.EndDrag,
+            this.onEndDrag,
+        );
         game.addEventListener(GameEventType.Score, this.onGameScore);
         game.addEventListener(GameEventType.EndGame, this.onGameEndGame);
         game.addEventListener(
@@ -320,6 +332,10 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
         this.tileDragController.removeEventListener(
             TileDragController.events.StartDrag,
             this.onStartDrag,
+        );
+        this.tileDragController.addEventListener(
+            TileDragController.events.EndDrag,
+            this.onEndDrag,
         );
         this.game.removeEventListener(GameEventType.Score, this.onGameScore);
         this.game.removeEventListener(

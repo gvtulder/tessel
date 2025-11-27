@@ -25,21 +25,13 @@ for size in 1024x500 1200x630 1200x1200 ; do
 done
 
 # make badge
-cp assets/src/play-now-badge.svg assets/social/play-now-badge.svg
-$SVGO assets/social/play-now-badge.svg
-rsvg-convert assets/src/play-now-badge.svg \
-  -h 250 -o assets/social/play-now-badge.png
-$OPTIPNG assets/social/play-now-badge.png
-cp assets/src/google-play.svg assets/social/google-play.svg
-$SVGO assets/social/google-play.svg
-rsvg-convert assets/src/google-play.svg \
-  -h 250 -o assets/social/google-play.png
-$OPTIPNG assets/social/google-play.png
-cp assets/src/apple-app-store.svg assets/social/apple-app-store.svg
-$SVGO assets/social/apple-app-store.svg
-rsvg-convert assets/src/apple-app-store.svg \
-  -h 250 -o assets/social/apple-app-store.png
-$OPTIPNG assets/social/apple-app-store.png
+for badge in play-now-badge apple-app-store google-play fdroid-badge ; do
+  cp assets/src/$badge.svg assets/social/$badge.svg
+  $SVGO assets/social/$badge.svg
+  rsvg-convert assets/src/$badge.svg \
+    -h 250 -o assets/social/$badge.png
+  $OPTIPNG assets/social/$badge.png
+done
 
 # copy to metadata screenshots
 $OPTIPNG fastlane/metadata/android/en-US/images/phoneScreenshots/*.png

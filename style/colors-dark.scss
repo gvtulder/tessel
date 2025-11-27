@@ -29,12 +29,28 @@ body.dark-mode {
   --toggle-bg-disabled-color: rgba(255, 255, 255, 8%);
 
   // button colors
+  $button-base-color: rgb(255, 255, 255);
   --button-fg-color: rgba(255, 255, 255, 35%);
   --button-bg-color: rgba(255, 255, 255, 8%);
   --button-bg-pressed-color: rgba(255, 255, 255, 15%);
   --button-bg-hover-color: rgba(255, 255, 255, 25%);
   --button-bg-selected-color: rgba(255, 255, 255, 70%);
   --button-fg-selected-color: rgba(255, 255, 255, 70%);
+  --button-bg-color-on-main-bg: #{color.mix(
+      $button-base-color,
+      $main-bg-color,
+      12
+    )};
+  --button-bg-pressed-color-on-main-bg: #{color.mix(
+      $button-base-color,
+      $main-bg-color,
+      24
+    )};
+  --button-bg-hover-color-on-main-bg: #{color.mix(
+      $button-base-color,
+      $main-bg-color,
+      32
+    )};
 
   // large play button in the setup screen
   --setup-play-button-bg-color: #{color.change($green, $lightness: 32%)};
@@ -81,6 +97,9 @@ body.dark-mode {
   --invalid-grid-warning-color: #e06300;
 
   // GAME SCREEN
+
+  // background behind buttons on top of grid
+  --dropout-menu-bg-mask-color: #{color.change($main-bg-color, $alpha: 50%)};
 
   // score display in the tile stack
   --score-display-fg-color: #{color.change($green, $lightness: 40%)};

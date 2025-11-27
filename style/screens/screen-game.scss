@@ -413,7 +413,11 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
       "fill-end fill-end fill-end";
 
     .dropout-menu {
-      background: var(--main-bg-color);
+      // make buttons opaque
+      --button-bg-color: var(--button-bg-color-on-main-bg);
+      --button-bg-pressed-color: var(--button-bg-pressed-color-on-main-bg);
+      --button-bg-hover-color: var(--button-bg-hover-color-on-main-bg);
+
       opacity: 1;
       transition: 100ms opacity;
     }
@@ -422,17 +426,21 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
       opacity: 0;
     }
 
-    &.game-finished .dropout-menu .items {
-      flex-direction: row;
-      padding: 0;
-      border-top: none;
+    &.game-finished .dropout-menu {
+      background: var(--dropout-menu-bg-mask-color);
 
-      .game-button {
-        margin: 0;
-      }
+      .items {
+        flex-direction: row;
+        padding: 0;
+        border-top: none;
 
-      .game-button + .game-button {
-        margin: 0 0 0 $dropout-inner-padding;
+        .game-button {
+          margin: 0;
+        }
+
+        .game-button + .game-button {
+          margin: 0 0 0 $dropout-inner-padding;
+        }
       }
     }
 

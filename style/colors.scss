@@ -23,50 +23,37 @@ $blue: hsl(214deg, 64%, 50%);
   --toggle-threeway-icon-enabled-color: var(--dropout-bg-color);
 
   // button colors
-  --button-fg-color: #{color.change(
-      $maintint,
-      $lightness: 30%,
-      $saturation: 25%,
-      $alpha: 60%
+  $button-base-color: color.change(
+    $maintint,
+    $lightness: 30%,
+    $saturation: 25%
+  );
+  --button-fg-color: #{color.change($button-base-color, $alpha: 60%)};
+  --button-bg-color: #{color.change($button-base-color, $alpha: 12%)};
+  --button-bg-pressed-color: #{color.change($button-base-color, $alpha: 24%)};
+  --button-bg-hover-color: #{color.change($button-base-color, $alpha: 32%)};
+  --button-bg-selected-color: #{color.change($button-base-color, $alpha: 80%)};
+  --button-fg-selected-color: #{color.change($button-base-color, $alpha: 80%)};
+  --button-bg-color-on-main-bg: #{color.mix(
+      $button-base-color,
+      $main-bg-color,
+      12
     )};
-  --button-bg-color: rgba(0, 0, 0, 8%);
-  --button-bg-color: #{color.change(
-      $maintint,
-      $lightness: 30%,
-      $saturation: 25%,
-      $alpha: 12%
+  --button-bg-pressed-color-on-main-bg: #{color.mix(
+      $button-base-color,
+      $main-bg-color,
+      24
     )};
-  --button-bg-pressed-color: #{color.change(
-      $maintint,
-      $lightness: 30%,
-      $saturation: 25%,
-      $alpha: 24%
-    )};
-  --button-bg-hover-color: #{color.change(
-      $maintint,
-      $lightness: 30%,
-      $saturation: 25%,
-      $alpha: 32%
-    )};
-  --button-bg-selected-color: #{color.change(
-      $maintint,
-      $lightness: 30%,
-      $saturation: 25%,
-      $alpha: 80%
-    )};
-  --button-fg-selected-color: #{color.change(
-      $maintint,
-      $lightness: 30%,
-      $saturation: 25%,
-      $alpha: 80%
+  --button-bg-hover-color-on-main-bg: #{color.mix(
+      $button-base-color,
+      $main-bg-color,
+      32
     )};
 
   // large play button in the setup screen
   --setup-play-button-bg-color: #{color.change($green, $lightness: 32%)};
   --setup-play-button-bg-disabled-color: #{color.change(
-      $maintint,
-      $lightness: 30%,
-      $saturation: 25%,
+      $button-base-color,
       $alpha: 12%
     )};
   --setup-play-button-fg-color: #{color.change($green, $lightness: 95%)};
@@ -78,11 +65,7 @@ $blue: hsl(214deg, 64%, 50%);
   --home-button-fg-hover-color: #{color.change($blue, $lightness: 97%)};
 
   // navbar
-  --navbar-bg-color: #{color.mix(
-      $main-bg-color,
-      color.change($maintint, $lightness: 30%, $saturation: 25%),
-      88%
-    )};
+  --navbar-bg-color: #{color.mix($main-bg-color, $button-base-color, 88%)};
   --navbar-bg-active-color: #{color.change($maintint, $lightness: 87%)};
   --navbar-bg-hover-color: #{color.change($maintint, $lightness: 87%)};
 
@@ -122,6 +105,9 @@ $blue: hsl(214deg, 64%, 50%);
   --undefined-tile-color: hsl(0deg, 0%, 50%);
 
   // GAME SCREEN
+
+  // background behind buttons on top of grid
+  --dropout-menu-bg-mask-color: #{color.change($main-bg-color, $alpha: 50%)};
 
   // score display in the tile stack
   --score-display-fg-color: #{color.change($green, $lightness: 32%)};

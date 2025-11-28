@@ -1,17 +1,17 @@
 Tessel renkli bir döşeme yerleştirme oyunudur. Şekiller oluşturmak ve tahtayı doldurmak için eşleşen renklere sahip döşemeleri yerleştir. Şekil ne kadar büyük olursa puanlar da o kadar yüksek olur.
 
 Özellikler:
-* Kolay bir kare oyunu oyna veya daha zorlu bir desen seç.
-* Kuralları değiştirmek için oyun ayarlarını özelleştir.
-* Çizim aracında kendi döşeme desenlerini oluştur.
+• Kolay bir kare oyunu oyna veya daha zorlu bir desen seç.
+• Kuralları değiştirmek için oyun ayarlarını özelleştir.
+• Çizim aracında kendi döşeme desenlerini oluştur.
 
 Sonsuz çeşitlilikte mozaikler oluşturmak için çok çeşitli döşeme desenleri arasından seçim yap:
-* Kare
-* Üçgen
-* Eşkenar dörtgen
-* Kahire beşgeni
-* Altıgen
-* Deltoidal-üç altıgen
-* Penrose P3
-* Kalkık kare
-* Ammann-Beenker
+• Kare
+• Üçgen
+• Eşkenar dörtgen
+• Kahire beşgeni
+• Altıgen
+• Deltoidal-üç altıgen
+• Penrose P3
+• Kalkık kare
+• Ammann-Beenker

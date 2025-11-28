@@ -1,17 +1,17 @@
 A Tessel egy színes csempéket lerakó játék. Rakjon le egyező színű csempéket, hogy alakzatokat kapjon és kitöltse a táblát. Minél nagyobb az alakzat, annál több pontot kap.
 
 Funkciók:
-* Játsszon egyszerű négyzetes játékot, vagy válasszon nehezebb mintát.
-* Szabja személyre a játék beállításait, hogy megváltoztassa a szabályokat.
-* Hozzon létre saját csempézési mintákat a rajzeszközben.
+• Játsszon egyszerű négyzetes játékot, vagy válasszon nehezebb mintát.
+• Szabja személyre a játék beállításait, hogy megváltoztassa a szabályokat.
+• Hozzon létre saját csempézési mintákat a rajzeszközben.
 
 Válasszon sokféle csempézési mintából, hogy végtelenül változatos mozaikokat alkosson:
-* Négyzet
-* Háromszög
-* Rombusz
-* Kairói ötszög
-* Hatszög
-* Deltoid
-* Rombuszpár
-* Csúcsos négyzet
-* Ammann–Beenker
+• Négyzet
+• Háromszög
+• Rombusz
+• Kairói ötszög
+• Hatszög
+• Deltoid
+• Rombuszpár
+• Csúcsos négyzet
+• Ammann–Beenker

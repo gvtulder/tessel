@@ -1,1 +1,1 @@
-tesselaties, tegelpatronen, betegeling, tegels, tegelspel, penrose-betegeling, penrose-patronen
+../../android/nl-NL/keywords.txt

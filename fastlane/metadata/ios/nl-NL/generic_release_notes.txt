@@ -1,1 +1,1 @@
-Diverse wijzigingen en verbeteringen.
+../../android/nl-NL/generic_release_notes.txt

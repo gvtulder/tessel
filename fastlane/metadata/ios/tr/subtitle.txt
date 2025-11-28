@@ -1,1 +1,1 @@
-Bir döşeme oyunu
+../../android/tr-TR/subtitle.txt

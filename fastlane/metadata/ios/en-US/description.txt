@@ -1,17 +1,1 @@
-Tessel is a colorful tile placement game. Place tiles with matching colors to make shapes and fill the board. The larger the shape, the higher the points.
-
-Features:
-• Play an easy square game, or choose a more challenging pattern.
-• Customize your game settings to change the rules.
-• Create your own tiling patterns in the drawing tool.
-
-Choose from a wide range of tiling patterns to form endlessly varied tesselations:
-• Square
-• Triangular
-• Rhombille
-• Cairo pentagonal
-• Hexagonal
-• Deltoidal-trihexagonal
-• Penrose P3
-• Snub square
-• Ammann-Beenker
+../../android/en-US/full_description.txt

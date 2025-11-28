@@ -1,1 +1,1 @@
-A tile game
+../../android/en-US/subtitle.txt

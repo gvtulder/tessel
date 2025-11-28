@@ -1,0 +1,1 @@
+../../android/tr-TR/generic_release_notes.txt

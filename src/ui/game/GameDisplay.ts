@@ -71,7 +71,6 @@ export class GameDisplay extends EventTarget implements ScreenDisplay {
             this.element.classList.add("dragging-tile");
         };
         this.onEndDrag = () => {
-            this.gridDisplay.scoreOverlayDisplay.hide();
             this.element.classList.remove("dragging-tile");
         };
         this.onGameScore = (evt: GameEvent) => {

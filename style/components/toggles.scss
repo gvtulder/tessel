@@ -3,6 +3,9 @@
 .game-toggle {
   @include sizes.disable-select;
 
+  $ball-width: calc(0.425 * sizes.$button-scale);
+  $toggle-box-padding: max(0.3vw, 4px);
+
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -22,10 +25,11 @@
   .toggle-box {
     flex-grow: 1;
     border-radius: sizes.$button-scale;
-    padding: max(0.3vw, 4px);
+    padding: $toggle-box-padding;
+    height: $ball-width;
     background: var(--toggle-bg-disabled-color);
     display: flex;
-    flex-direction: row;
+    position: relative;
   }
 
   &.with-label {
@@ -49,6 +53,10 @@
     background: var(--toggle-bg-disabled-color);
     .toggle-box {
       background: transparent;
+      height: calc($ball-width + max(0.3vw, 4px));
+      transition:
+        flex-shrink 100ms,
+        flex-grow 100ms;
     }
   }
   &.threeway .toggle-box.a {
@@ -62,10 +70,13 @@
 
   .toggle-ball {
     border-radius: 100%;
-    width: calc(0.425 * sizes.$button-scale);
-    height: calc(0.425 * sizes.$button-scale);
+    width: $ball-width;
+    height: $ball-width;
     background: var(--toggle-fg-disabled-color);
     box-shadow: var(--button-box-shadow);
+    position: absolute;
+    right: calc(100% - $ball-width - $toggle-box-padding);
+    transition: 100ms right;
   }
 
   .toggle-ball-icon {
@@ -88,6 +99,7 @@
     }
     .toggle-ball {
       background: var(--toggle-fg-enabled-color);
+      right: $toggle-box-padding;
     }
   }
 

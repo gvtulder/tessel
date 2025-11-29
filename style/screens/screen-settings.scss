@@ -73,6 +73,7 @@
       color: var(--link-color);
       border-bottom: 1px solid;
       text-decoration: none;
+      -webkit-tap-highlight-color: var(--link-tap-highlight-color);
     }
 
     a:active,

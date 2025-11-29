@@ -1,0 +1,1 @@
+Placer des tuiles assorties pour faire des formes et remplir le plateau.

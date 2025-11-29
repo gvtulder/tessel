@@ -1,0 +1,17 @@
+Tessel est un jeu de placement de tuiles colorées. Placer les tuiles avec des couleurs assorties pour faire des formes et remplir le plateau. Plus la forme est grande, plus vous recevez de points.
+
+Caractéristiques :
+• Jouez à un jeu de tuiles facile ou choisissez un modèle plus difficile.
+• Personnalisez vos paramètres de jeu pour modifier les règles.
+• Créez vos propres motifs de pavage dans l'outil de dessin.
+
+Choisissez parmi une large gamme de motifs de pavage pour former des pavages infiniment variés :
+• Carré
+• Triangulaire
+• Rhombille
+• Pentagonal du Caire
+• Hexagonal
+• Deltoïdal-trihexagonal
+• Penrose P3
+• Carré adouci
+• Ammann-Beenker

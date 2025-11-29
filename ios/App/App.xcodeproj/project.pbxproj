@@ -19,6 +19,7 @@
 
 /* Begin PBXFileReference section */
 		2A6BB4552ECD2C2200FB2810 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		5F9B5378A61686871BC05114 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		2A6BB4562ECD2C3C00FB2810 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		2A6BB4572ECD2C3E00FB2810 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		2A6BB4582ECD2C4300FB2810 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
@@ -145,9 +146,10 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
 				es,
+				fr,
 				nl,
 				tr,
 				"zh-Hant",
@@ -239,6 +241,7 @@
 			children = (
 				504EC3111FED79650016851F /* Base */,
 				2A6BB4552ECD2C2200FB2810 /* es */,
+				5F9B5378A61686871BC05114 /* fr */,
 				2A6BB4562ECD2C3C00FB2810 /* nl */,
 				2A6BB4572ECD2C3E00FB2810 /* tr */,
 				2A6BB4582ECD2C4300FB2810 /* zh-Hant */,

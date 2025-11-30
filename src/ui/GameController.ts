@@ -29,6 +29,7 @@ import { StatisticsMonitor } from "../stats/StatisticsMonitor";
 import { MainNavBar, NavBarItems } from "./shared/MainNavBar";
 import { AllGamesDisplay } from "./menu/AllGamesDisplay";
 import { AboutDisplay } from "./about/AboutDisplay";
+import { NavigationManager } from "./shared/NavigationManager";
 import {
     NavigateEvent,
     Pages,
@@ -48,6 +49,13 @@ const ControllerState_S = zod.object({
 });
 type ControllerState_S = zod.infer<typeof ControllerState_S>;
 
+type GameControllerConfig = {
+    version?: string;
+    useCustomHistory?: boolean;
+    workbox?: Workbox;
+    platform?: string;
+};
+
 export class GameController {
     version?: string;
     workbox?: Workbox;
@@ -63,28 +71,26 @@ export class GameController {
     restartNeeded?: boolean;
     mainNavBar: MainNavBar;
 
-    history: NavigationHistory;
+    navigation: NavigationManager;
 
     lastNavBarItem?: NavBarItems | null;
     lastMainPage?: Pages;
     lastSettingsTab?: Pages;
     destroyMainNavBar: () => void;
 
-    constructor(
-        container: HTMLElement,
-        version?: string,
-        workbox?: Workbox,
-        platform?: string,
-    ) {
+    constructor(container: HTMLElement, config: GameControllerConfig) {
         this.container = container;
-        this.version = version;
-        this.workbox = workbox;
-        this.platform = platform;
+        this.version = config.version;
+        this.workbox = config.workbox;
+        this.platform = config.platform;
         this.stats = StatisticsMonitor.instance;
 
-        this.history = new NavigationHistory();
-        this.history.push("");
-        this.history.push(window.location.hash.replace("#", ""));
+        this.navigation = new NavigationManager(
+            config.useCustomHistory || false,
+        );
+        this.navigation.onNavigate = () => {
+            this.run();
+        };
 
         [this.mainNavBar, this.destroyMainNavBar] = this.buildMainNavBar();
         this.container.appendChild(this.mainNavBar.element);
@@ -97,9 +103,6 @@ export class GameController {
             rescale();
             // iOS Safari sometimes doesn't immediately update the sizes
             window.setTimeout(rescale, 50);
-        });
-        window.addEventListener("popstate", (evt: PopStateEvent) => {
-            this.run();
         });
 
         if (this.workbox) {
@@ -115,6 +118,31 @@ export class GameController {
                 wb.messageSkipWaiting();
             });
         }
+    }
+
+    async start() {
+        // check if there is a previous state to resume
+        // e.g, after the game was closed by the OS
+        let state: ControllerState_S | undefined = undefined;
+        try {
+            state = await this.getSavedControllerState();
+        } catch (error) {
+            console.log("Error loading resume state.", error);
+        }
+
+        if (state && state.history) {
+            // restore saved history
+            this.navigation.restoreHistory(state.history);
+            this.lastMainPage = state.lastMainPage;
+            this.lastSettingsTab = state.lastSettingsTab;
+        } else {
+            // ensure default history
+            this.navigation.restoreHistory(
+                window.location.hash == "" ? [""] : ["", window.location.hash],
+            );
+        }
+
+        this.run(state);
     }
 
     buildMainNavBar(): [MainNavBar, () => void] {
@@ -141,14 +169,7 @@ export class GameController {
 
     navigateTo(page: Pages | string) {
         const nextHash = page == Pages.MainMenu ? "" : `#${page}`;
-        this.history.push(nextHash.replace("#", ""));
-        console.log("navigate to", nextHash);
-        window.history.pushState(
-            {},
-            "",
-            `${window.location.pathname}${nextHash}`,
-        );
-        this.run();
+        this.navigation.navigate(nextHash);
     }
 
     navigateBack(): boolean {
@@ -156,40 +177,10 @@ export class GameController {
         if (this.currentScreen && !this.currentScreen.handleBackButton()) {
             return true;
         }
-        if (this.history.length == 1) {
-            // failed to go back further
-            // perhaps exit the app?
-            return false;
-        } else {
-            this.history.pop();
-            this.navigateTo(this.history.last!);
-            return true;
-        }
+        return this.navigation.back();
     }
 
-    async run(attemptResume?: boolean) {
-        // check if there is a previous state to resume
-        // e.g, after the game was closed by the OS
-        let state: ControllerState_S | undefined = undefined;
-        if (attemptResume) {
-            try {
-                state = await this.getSavedControllerState();
-            } catch (error) {
-                console.log("Error loading resume state.", error);
-            }
-        }
-        if (state) {
-            // resume
-            this.lastMainPage = state.lastMainPage;
-            this.lastSettingsTab = state.lastSettingsTab;
-            if (state.history) {
-                for (const hash of state.history) {
-                    this.history.push(hash);
-                }
-            }
-            this.history.push(state.hash.replace("#", ""));
-            window.history.replaceState({}, "", state.hash);
-        }
+    run(resumeState?: ControllerState_S) {
         // make sure we only resume once after saving the state
         this.clearSaveControllerState();
 
@@ -200,7 +191,7 @@ export class GameController {
         const saveGameId = window.location.hash.replace("#", "");
         const gameSettings = SaveGames.lookup.get(saveGameId);
         if (gameSettings) {
-            this.startGame(gameSettings, state?.gameState);
+            this.startGame(gameSettings, resumeState?.gameState);
         } else if (saveGameId == Pages.AllGames) {
             this.showAllGames();
         } else if (saveGameId == Pages.SetupMenu) {
@@ -220,7 +211,7 @@ export class GameController {
                 this.showPaintDisplay(
                     atlas.atlas,
                     saveGameId,
-                    state?.gridState,
+                    resumeState?.gridState,
                 );
             } else {
                 this.showPaintMenuDisplay();
@@ -234,7 +225,7 @@ export class GameController {
                 gameSettings = null;
             }
             if (gameSettings) {
-                this.startGame(gameSettings, state?.gameState);
+                this.startGame(gameSettings, resumeState?.gameState);
             } else {
                 this.showMainMenu();
             }
@@ -435,7 +426,7 @@ export class GameController {
             gridState: this.grid?.saveTilesAndPlaceholders(),
             lastMainPage: this.lastMainPage,
             lastSettingsTab: this.lastSettingsTab,
-            history: this.history.history,
+            history: this.navigation.history,
         };
         getStorageBackend().setItem("resumeState", JSON.stringify(state));
     }
@@ -485,38 +476,5 @@ export class GameController {
         if (this.currentScreen) {
             this.currentScreen.rescale();
         }
-    }
-}
-
-class NavigationHistory {
-    history: string[];
-
-    constructor() {
-        this.history = [];
-    }
-
-    push(page: string): void {
-        if (page == "") {
-            // reset when on main screen
-            this.history = [""];
-        } else {
-            // deduplicate
-            this.history = this.history.filter((h) => h != page);
-            this.history.push(page);
-        }
-    }
-
-    get last(): string | undefined {
-        return this.history.length == 0
-            ? undefined
-            : this.history[this.history.length - 1];
-    }
-
-    pop(): string | undefined {
-        return this.history.pop();
-    }
-
-    get length(): number {
-        return this.history.length;
     }
 }

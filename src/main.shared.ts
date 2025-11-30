@@ -11,11 +11,12 @@ import { prepareI18n } from "./i18n";
 import { getStorageBackend } from "./lib/storage-backend";
 import { StatisticsMonitor } from "./stats/StatisticsMonitor";
 
-export async function startMainMenu(
-    language: string,
-    workbox?: Workbox,
-    platform?: string,
-) {
+export async function startMainMenu(config: {
+    language: string;
+    useCustomHistory?: boolean;
+    workbox?: Workbox;
+    platform?: string;
+}) {
     document.body.addEventListener("touchstart", preventIosZoomAndSelection, {
         passive: false,
     });
@@ -36,15 +37,15 @@ export async function startMainMenu(
     }
 
     StatisticsMonitor.instance.storageBackend = getStorageBackend();
-    await prepareI18n(language);
+    await prepareI18n(config.language);
 
-    const controller = new GameController(
-        document.body,
-        VERSION,
-        workbox,
-        platform,
-    );
-    controller.run(true);
+    const controller = new GameController(document.body, {
+        version: VERSION,
+        useCustomHistory: config.useCustomHistory,
+        workbox: config.workbox,
+        platform: config.platform,
+    });
+    controller.start();
 
     globalThis.gameController = controller;
 }

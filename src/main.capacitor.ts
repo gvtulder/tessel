@@ -70,5 +70,9 @@ App.addListener("backButton", () => {
 
 Device.getLanguageCode().then((result) => {
     removeSplash();
-    startMainMenu(result.value, undefined, Capacitor.getPlatform());
+    startMainMenu({
+        language: result.value,
+        useCustomHistory: true,
+        platform: Capacitor.getPlatform(),
+    });
 });

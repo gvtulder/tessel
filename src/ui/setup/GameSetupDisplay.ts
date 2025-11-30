@@ -145,7 +145,7 @@ export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
             icons.angleLeftIcon,
             msg({ id: "ui.menu.backToMenuButton", message: "Back to menu" }),
             () => {
-                this.dispatchEvent(new NavigateEvent(Pages.AllGames));
+                this.dispatchEvent(new UserEvent(UserEventType.BackToMenu));
             },
         );
         exitButton.element.classList.add("exit");

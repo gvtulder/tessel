@@ -44,6 +44,7 @@ const ControllerState_S = zod.object({
     gridState: zod.optional(TileSet_S),
     lastMainPage: zod.optional(zod.enum(Pages)),
     lastSettingsTab: zod.optional(zod.enum(Pages)),
+    history: zod.optional(zod.array(zod.string())),
 });
 type ControllerState_S = zod.infer<typeof ControllerState_S>;
 
@@ -61,6 +62,9 @@ export class GameController {
     previousScreenDestroyTimeout?: number;
     restartNeeded?: boolean;
     mainNavBar: MainNavBar;
+
+    history: NavigationHistory;
+
     lastNavBarItem?: NavBarItems | null;
     lastMainPage?: Pages;
     lastSettingsTab?: Pages;
@@ -77,6 +81,10 @@ export class GameController {
         this.workbox = workbox;
         this.platform = platform;
         this.stats = StatisticsMonitor.instance;
+
+        this.history = new NavigationHistory();
+        this.history.push("");
+        this.history.push(window.location.hash.replace("#", ""));
 
         [this.mainNavBar, this.destroyMainNavBar] = this.buildMainNavBar();
         this.container.appendChild(this.mainNavBar.element);
@@ -132,12 +140,27 @@ export class GameController {
     }
 
     navigateTo(page: Pages | string) {
-        if (page == Pages.MainMenu) {
-            window.history.pushState({}, "", window.location.pathname);
-        } else {
-            window.history.pushState({}, "", `#${page}`);
-        }
+        const nextHash = page == Pages.MainMenu ? "" : `#${page}`;
+        this.history.push(nextHash.replace("#", ""));
+        console.log("navigate to", nextHash);
+        window.history.pushState(
+            {},
+            "",
+            `${window.location.pathname}${nextHash}`,
+        );
         this.run();
+    }
+
+    navigateBack(): boolean {
+        if (this.history.length == 1) {
+            // failed to go back further
+            // perhaps exit the app?
+            return false;
+        } else {
+            this.history.pop();
+            this.navigateTo(this.history.last!);
+            return true;
+        }
     }
 
     async run(attemptResume?: boolean) {
@@ -155,6 +178,12 @@ export class GameController {
             // resume
             this.lastMainPage = state.lastMainPage;
             this.lastSettingsTab = state.lastSettingsTab;
+            if (state.history) {
+                for (const hash of state.history) {
+                    this.history.push(hash);
+                }
+            }
+            this.history.push(state.hash.replace("#", ""));
             window.history.replaceState({}, "", state.hash);
         }
         // make sure we only resume once after saving the state
@@ -262,7 +291,7 @@ export class GameController {
         };
 
         const handleBack = () => {
-            this.navigateTo(this.lastMainPage || Pages.MainMenu);
+            this.navigateBack();
         };
 
         const handleRestart = () => {
@@ -273,10 +302,9 @@ export class GameController {
             if (evt.gameSettingsSerialized) {
                 const settings = evt.gameSettingsSerialized!;
                 this.navigateTo(btoa(serializedToJSON(settings)));
+            } else if (evt.gameId) {
+                this.navigateTo(evt.gameId);
             } else {
-                if (evt.gameId) {
-                    window.history.pushState({}, "", `#${evt.gameId}`);
-                }
                 this.startGame(evt.gameSettings!);
             }
         };
@@ -403,6 +431,7 @@ export class GameController {
             gridState: this.grid?.saveTilesAndPlaceholders(),
             lastMainPage: this.lastMainPage,
             lastSettingsTab: this.lastSettingsTab,
+            history: this.history.history,
         };
         getStorageBackend().setItem("resumeState", JSON.stringify(state));
     }
@@ -452,5 +481,38 @@ export class GameController {
         if (this.currentScreen) {
             this.currentScreen.rescale();
         }
+    }
+}
+
+class NavigationHistory {
+    history: string[];
+
+    constructor() {
+        this.history = [];
+    }
+
+    push(page: string): void {
+        if (page == "") {
+            // reset when on main screen
+            this.history = [""];
+        } else {
+            // deduplicate
+            this.history = this.history.filter((h) => h != page);
+            this.history.push(page);
+        }
+    }
+
+    get last(): string | undefined {
+        return this.history.length == 0
+            ? undefined
+            : this.history[this.history.length - 1];
+    }
+
+    pop(): string | undefined {
+        return this.history.pop();
+    }
+
+    get length(): number {
+        return this.history.length;
     }
 }

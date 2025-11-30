@@ -59,6 +59,15 @@ App.addListener("resume", () => {
     }
 });
 
+App.addListener("backButton", () => {
+    if (globalThis.gameController) {
+        const success = globalThis.gameController.navigateBack();
+        if (!success) {
+            App.exitApp();
+        }
+    }
+});
+
 Device.getLanguageCode().then((result) => {
     removeSplash();
     startMainMenu(result.value, undefined, Capacitor.getPlatform());

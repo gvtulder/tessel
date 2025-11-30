@@ -26,7 +26,7 @@ import { ScorerSettingRow } from "./ScorerSettingRow";
 import { ScorerOption } from "./ScorerOption";
 import { msg, t } from "@lingui/core/macro";
 
-export class GameSetupDisplay extends EventTarget implements ScreenDisplay {
+export class GameSetupDisplay extends ScreenDisplay {
     element: HTMLDivElement;
 
     exampleDisplay: ExampleDisplay;

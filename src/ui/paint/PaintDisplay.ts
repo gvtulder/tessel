@@ -15,7 +15,7 @@ import { ColorStackDisplay } from "./ColorStackDisplay";
 import { WONG6 } from "../../saveGames";
 import { msg } from "@lingui/core/macro";
 
-export class PaintDisplay extends EventTarget implements ScreenDisplay {
+export class PaintDisplay extends ScreenDisplay {
     grid: Grid;
 
     gridDisplay: PaintGridDisplay;

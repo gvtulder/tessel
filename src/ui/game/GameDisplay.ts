@@ -24,7 +24,7 @@ import { StatisticsEvent } from "../../stats/Events";
 import { TileCounter } from "./TileCounter";
 import { AutoPlayer } from "../../game/autoplayer/AutoPlayer";
 
-export class GameDisplay extends EventTarget implements ScreenDisplay {
+export class GameDisplay extends ScreenDisplay {
     game: Game;
 
     gridDisplay: MainGridDisplay;

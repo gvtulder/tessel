@@ -11,7 +11,7 @@ import { t } from "@lingui/core/macro";
 import { getLocalizedAboutHTML, updateI18n } from "../../i18n";
 import { SmallNavBar, SmallNavBarItems } from "../settings/SmallNavBar";
 
-export class AboutDisplay extends EventTarget implements ScreenDisplay {
+export class AboutDisplay extends ScreenDisplay {
     element: HTMLDivElement;
 
     navBar: SmallNavBar;

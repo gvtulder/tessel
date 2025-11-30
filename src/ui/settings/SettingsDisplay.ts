@@ -20,7 +20,7 @@ import { i18n } from "@lingui/core";
 import { SmallNavBar, SmallNavBarItems } from "./SmallNavBar";
 import { getShareBackend } from "../../lib/share-backend";
 
-export class SettingsDisplay extends EventTarget implements ScreenDisplay {
+export class SettingsDisplay extends ScreenDisplay {
     element: HTMLDivElement;
 
     navBar: SmallNavBar;

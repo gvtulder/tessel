@@ -33,7 +33,7 @@ export type StatisticsSection = {
     }[];
 };
 
-export class StatisticsDisplay extends EventTarget implements ScreenDisplay {
+export class StatisticsDisplay extends ScreenDisplay {
     element: HTMLDivElement;
 
     navBar: SmallNavBar;

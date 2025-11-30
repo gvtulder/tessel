@@ -13,8 +13,9 @@ import { createElement } from "../shared/html";
 import { TapHandler } from "../shared/TapHandler";
 import { AngleUse } from "../../grid/Shape";
 import { rotateArray } from "../../geom/arrays";
+import { ScreenDisplay } from "../shared/ScreenDisplay";
 
-export class GameListDisplay extends EventTarget {
+export class GameListDisplay extends ScreenDisplay {
     element: HTMLDivElement;
     grids: Grid[];
     gridDisplays: GridDisplay[];

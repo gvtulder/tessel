@@ -23,7 +23,7 @@ import { msg, t } from "@lingui/core/macro";
 import { MessageDescriptor } from "@lingui/core";
 import { MainMenuGridDisplay } from "../menu/MainMenuGridDisplay";
 
-export class PaintMenu extends EventTarget implements ScreenDisplay {
+export class PaintMenu extends ScreenDisplay {
     element: HTMLDivElement;
 
     options: AtlasOption[];

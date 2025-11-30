@@ -152,6 +152,10 @@ export class GameController {
     }
 
     navigateBack(): boolean {
+        // give the current screen the option to override the back button
+        if (this.currentScreen && !this.currentScreen.handleBackButton()) {
+            return true;
+        }
         if (this.history.length == 1) {
             // failed to go back further
             // perhaps exit the app?

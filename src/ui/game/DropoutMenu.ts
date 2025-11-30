@@ -45,6 +45,14 @@ export class DropoutMenu {
         window.addEventListener("pointerdown", this.backgroundEventHandler);
     }
 
+    get isExpanded(): boolean {
+        return this.element.classList.contains("expanded");
+    }
+
+    expand(): void {
+        this.element.classList.add("expanded");
+    }
+
     addButton(button: Button) {
         this.container.appendChild(button.element);
         this.buttons.push(button);

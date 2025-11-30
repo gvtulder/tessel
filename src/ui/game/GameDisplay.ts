@@ -321,6 +321,14 @@ export class GameDisplay extends ScreenDisplay {
         this.rescale();
     }
 
+    handleBackButton(): boolean {
+        if (this.game.tileStack.tilesLeft == 0) return true;
+        if (this.element.classList.contains("game-finished")) return true;
+        if (this.menu.isExpanded) return true;
+        this.menu.expand();
+        return false;
+    }
+
     destroy() {
         this.element.remove();
 

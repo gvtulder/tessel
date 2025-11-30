@@ -7,4 +7,8 @@ export abstract class ScreenDisplay extends EventTarget {
     abstract element: HTMLElement;
     abstract rescale(): void;
     abstract destroy(): void;
+
+    handleBackButton(): boolean {
+        return true;
+    }
 }

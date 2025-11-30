@@ -1,4 +1,4 @@
-Çeşitli değişiklikler ve iyileştirmeler.
+Divers changements et améliorations.
 
 • New translation: French (by J. Lavoie).
 • Improved handling of back button and swipe navigation. (#17 and #47)

@@ -41,8 +41,10 @@ export class DropoutMenu {
         this.backgroundEventHandler = (evt: PointerEvent) => {
             const target = evt.target as HTMLElement;
             if (!target.closest || !target.closest(".dropout-menu")) {
-                this.element.classList.remove("expanded");
-                this.updateWasExpandedTimeout();
+                if (this.element.classList.contains("expanded")) {
+                    this.element.classList.remove("expanded");
+                    this.updateWasExpandedTimeout();
+                }
             }
         };
         window.addEventListener("pointerdown", this.backgroundEventHandler);
@@ -67,7 +69,7 @@ export class DropoutMenu {
         }
         this.wasExpandedTimeout = window.setTimeout(() => {
             this.wasExpandedTimeout = undefined;
-        }, 1000);
+        }, 500);
     }
 
     addButton(button: Button) {

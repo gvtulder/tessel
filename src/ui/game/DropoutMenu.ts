@@ -17,6 +17,7 @@ export class DropoutMenu {
     buttons: Button[];
     toggles: (Toggle | ThreeWayToggle)[];
     backgroundEventHandler: (evt: PointerEvent) => void;
+    wasExpandedTimeout?: number;
 
     constructor() {
         this.buttons = [];
@@ -29,6 +30,7 @@ export class DropoutMenu {
             msg({ id: "ui.game.showMenuButton", message: "Show menu" }),
             (evt: PointerEvent) => {
                 this.element.classList.toggle("expanded");
+                this.updateWasExpandedTimeout();
             },
             "dropout",
         ));
@@ -40,6 +42,7 @@ export class DropoutMenu {
             const target = evt.target as HTMLElement;
             if (!target.closest || !target.closest(".dropout-menu")) {
                 this.element.classList.remove("expanded");
+                this.updateWasExpandedTimeout();
             }
         };
         window.addEventListener("pointerdown", this.backgroundEventHandler);
@@ -51,6 +54,20 @@ export class DropoutMenu {
 
     expand(): void {
         this.element.classList.add("expanded");
+        this.updateWasExpandedTimeout();
+    }
+
+    get recentlyExpanded(): boolean {
+        return this.isExpanded || this.wasExpandedTimeout !== undefined;
+    }
+
+    updateWasExpandedTimeout(): void {
+        if (this.wasExpandedTimeout) {
+            window.clearTimeout(this.wasExpandedTimeout);
+        }
+        this.wasExpandedTimeout = window.setTimeout(() => {
+            this.wasExpandedTimeout = undefined;
+        }, 1000);
     }
 
     addButton(button: Button) {

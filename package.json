@@ -22,7 +22,7 @@
   "browserslist": "defaults",
   "type": "module",
   "dependencies": {
-    "@lingui/core": "^5.6.0",
+    "@lingui/core": "^5.6.1",
     "@parcel/service-worker": "^2.16.1",
     "check2d": "^9.33.0",
     "polygon-clipping": "^0.15.7",

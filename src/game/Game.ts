@@ -17,7 +17,7 @@ import { rotateArray } from "../geom/arrays";
 import { RuleSetType } from "../grid/rules/RuleSet";
 import { ColorPatternPerShape } from "../grid/Shape";
 import { SetupCatalog } from "../saveGames";
-import { PRNG, shuffle } from "../geom/RandomSampler";
+import { PRNG, seedPRNG, shuffle } from "../geom/RandomSampler";
 import {
     DemoGameInitializer,
     DemoGameSettings,
@@ -36,6 +36,7 @@ export type GameSettings = {
     initialTile: TileColors;
     tileGenerator: TileGenerator[];
     gameInitializer?: GameInitializer;
+    seed?: number;
 };
 
 export type GameSettingsSerialized = {
@@ -46,6 +47,7 @@ export type GameSettingsSerialized = {
     rules: string;
     scorer: string;
     demoGame?: DemoGameSettings;
+    seed?: number;
 };
 
 export function serializedToJSON(settings: GameSettingsSerialized): string {
@@ -107,6 +109,8 @@ export class Game extends EventTarget {
 
     constructor(settings: GameSettings, prng?: PRNG, restoreState?: unknown) {
         super();
+
+        if (!prng && settings.seed) prng = seedPRNG(settings.seed);
 
         this.settings = settings;
 
@@ -309,6 +313,7 @@ export function gameFromSerializedSettings(
             TileGenerators.ensureNumber(60, 100),
         ],
         gameInitializer: gameInitializer,
+        seed: serialized.seed,
     };
     return settings;
 }

@@ -23,6 +23,8 @@ import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { StatisticsEvent } from "../../stats/Events";
 import { TileCounter } from "./TileCounter";
 import { AutoPlayer } from "../../game/autoplayer/AutoPlayer";
+import { AnimatedAutoPlayer } from "./AnimatedAutoPlayer";
+import { PRNG, seedPRNG } from "../../geom/RandomSampler";
 
 export class GameDisplay extends ScreenDisplay {
     game: Game;
@@ -396,5 +398,21 @@ export class GameDisplay extends ScreenDisplay {
     rescale() {
         this.gridDisplay.rescale();
         this.tileStackDisplay.rescale();
+    }
+
+    getAutoPlayer(): AutoPlayer {
+        return new AutoPlayer(this.game);
+    }
+
+    getAnimatedAutoPlayer(prngSeed?: number, prng?: PRNG): AnimatedAutoPlayer {
+        if (prngSeed) prng = seedPRNG(prngSeed);
+        return new AnimatedAutoPlayer(
+            this,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            prng,
+        );
     }
 }

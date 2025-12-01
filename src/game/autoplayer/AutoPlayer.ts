@@ -94,6 +94,21 @@ export class AutoPlayer {
      * @returns true if a tile was successfully placed, false otherwise
      */
     playOneTile(prng?: PRNG): boolean {
+        const option = this.suggestOneTile();
+        if (!option) return false;
+        return this.game.placeColors(
+            rotateArray(option.colors, option.rotation),
+            option.placeholder,
+            option.indexOnStack,
+        );
+    }
+
+    /**
+     * Suggest the next tile to place.
+     * @param prng the random number generator for the selection
+     * @returns the suggested tile placement, or null if no valid option is found
+     */
+    suggestOneTile(prng?: PRNG): PlayOption | null {
         if (!prng) prng = seedPRNG();
         const grid = this.game.grid;
         const tileStack = this.game.tileStack;
@@ -126,12 +141,7 @@ export class AutoPlayer {
 
         // pick a random option
         const option = this.tileSelector.selectNextOption(options, prng)!;
-        if (!option) return false;
-        return this.game.placeColors(
-            rotateArray(option.colors, option.rotation),
-            option.placeholder,
-            option.indexOnStack,
-        );
+        return option || null;
     }
 }
 

@@ -94,7 +94,7 @@ export class AutoPlayer {
      * @returns true if a tile was successfully placed, false otherwise
      */
     playOneTile(prng?: PRNG): boolean {
-        const option = this.suggestOneTile();
+        const option = this.suggestOneTile(prng);
         if (!option) return false;
         return this.game.placeColors(
             rotateArray(option.colors, option.rotation),

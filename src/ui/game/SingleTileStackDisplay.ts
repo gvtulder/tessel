@@ -227,7 +227,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         };
         /*
         TODO other events?
-        const draggable = this.getDraggable();
+        const draggable = this.draggable;
         draggable
             .on("tap", (evt: Event) => {})
             .on("doubletap", (evt: Event) => {
@@ -237,10 +237,6 @@ export class SingleTileOnStackDisplay implements TileDragSource {
                 evt.preventDefault();
             });
             */
-    }
-
-    getDraggable() {
-        return this.draggable;
     }
 
     startDrag() {

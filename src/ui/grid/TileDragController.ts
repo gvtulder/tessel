@@ -43,14 +43,13 @@ export class TileDragController extends EventTarget {
 
     dropTarget: TileDropTarget;
     sources: TileDragSource[];
-
-    currentTranslate?: string;
-    currentScale?: string;
+    contexts: TileDragSourceContext[];
 
     constructor(dropTarget: TileDropTarget) {
         super();
         this.dropTarget = dropTarget;
         this.sources = [];
+        this.contexts = [];
     }
 
     destroy() {
@@ -60,33 +59,16 @@ export class TileDragController extends EventTarget {
     addSource(source: TileDragSource) {
         this.sources.push(source);
 
-        const context: TileDragSourceContext = {
-            source: source,
-            autorotateCurrentTarget: null,
-            autorotateTimeout: null,
-            autorotateCache: new Map<Tile, TileRotationSet>(),
-            draggable: source.getDraggable(),
-            position: { x: 0, y: 0, dx: 0, dy: 0 },
-            dragCenterOffset: { x: 0, y: 0 },
-        };
+        const context = new TileDragSourceContext(source);
+        this.contexts.push(context);
 
-        const dragHandler = source.getDraggable();
+        const dragHandler = source.draggable;
         dragHandler.onDragStart = (evt: DragHandlerEvent) =>
             this.onDragStart(context, evt);
         dragHandler.onDragMove = (evt: DragHandlerEvent) =>
             this.onDragMove(context, evt);
         dragHandler.onDragEnd = (evt: DragHandlerEvent) =>
             this.onDragEnd(context, evt);
-
-        /*
-        context.draggable.draggable({
-            listeners: {
-                start: (evt: DragEvent) => this.onDragStart(context, evt),
-                move: (evt: DragEvent) => this.onDragMove(context, evt),
-                end: (evt: DragEvent) => this.onDragEnd(context, evt),
-            },
-        });
-        */
 
         if (DEBUG.LOG_MOUSE_POSITION) {
             this.dropTarget.element.addEventListener(
@@ -105,19 +87,13 @@ export class TileDragController extends EventTarget {
     }
 
     onDragStart(context: TileDragSourceContext, evt: DragHandlerEvent) {
-        for (const s of this.sources) {
-            if (s !== context.source) s.resetDragStatus();
+        for (const c of this.contexts) {
+            c.resetPositionSnapAndScale();
         }
         if (!context.source.tile) return;
         context.source.startDrag();
-        evt.target.style.willChange = "rotate scale translate";
-        evt.target.style.translate = this.currentTranslate = `0px 0px`;
-        evt.target.style.scale =
-            this.currentScale = `${this.dropTarget.scale / context.source.gridDisplay.scale}`;
-        context.source.dragTransform.dx = 0;
-        context.source.dragTransform.dy = 0;
-        context.source.dragTransform.scale =
-            this.dropTarget.scale / context.source.gridDisplay.scale;
+        context.resetPositionSnapAndScale();
+        context.draggable.element.style.willChange = "rotate scale translate";
         context.dragCenterOffset.x =
             evt.handler.clientXstart -
             (context.source.baseTransform.dx || 0) -
@@ -126,10 +102,6 @@ export class TileDragController extends EventTarget {
             evt.handler.clientYstart -
             (context.source.baseTransform.dy || 0) -
             (context.source.dragTransform.originY || 0);
-        context.position.x = 0;
-        context.position.y = 0;
-        context.position.dx = 0;
-        context.position.dy = 0;
         this.dispatchEvent(
             new TileDragEvent(
                 TileDragController.events.StartDrag,
@@ -142,8 +114,8 @@ export class TileDragController extends EventTarget {
         context: TileDragSourceContext,
         evt: DragHandlerEvent,
         updateTransform: boolean = true,
-    ): { newTranslate: string; newScale: string } | null {
-        if (!context.source.tile) return null;
+    ): boolean {
+        if (!context.source.tile) return false;
         context.position.dx += evt.dx;
         context.position.dy += evt.dy;
 
@@ -151,30 +123,22 @@ export class TileDragController extends EventTarget {
         const distance = Math.hypot(context.position.dx, context.position.dy);
         const factor = Math.min(1, distance / 100);
 
-        context.position.x =
-            context.position.dx + factor * context.dragCenterOffset.x;
-        context.position.y =
+        context.updatePosition(
+            context.position.dx + factor * context.dragCenterOffset.x,
             context.position.dy +
-            factor * context.dragCenterOffset.y -
-            (evt.event.pointerType == "touch" ? 30 : 0);
-        const newTranslate = `${Math.round(context.position.x)}px ${Math.round(context.position.y)}px`;
-        if (updateTransform && this.currentTranslate != newTranslate) {
-            evt.target.style.translate = this.currentTranslate = newTranslate;
-        }
-        const scale =
+                factor * context.dragCenterOffset.y -
+                (evt.event.pointerType == "touch" ? 30 : 0),
+            updateTransform,
+        );
+        context.updateScale(
             1 +
-            factor *
-                (this.dropTarget.scale / context.source.gridDisplay.scale - 1);
-        const newScale = `${scale.toFixed(4)}`;
-        if (updateTransform && this.currentScale != newScale) {
-            evt.target.style.scale = this.currentScale = newScale;
-        }
-        context.source.dragTransform.dx = context.position.x;
-        context.source.dragTransform.dy = context.position.y;
-        context.source.dragTransform.scale =
-            this.dropTarget.scale / context.source.gridDisplay.scale;
+                factor *
+                    (this.dropTarget.scale / context.source.gridDisplay.scale -
+                        1),
+            updateTransform,
+        );
 
-        return { newTranslate, newScale };
+        return true;
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragHandlerEvent): boolean {
@@ -198,28 +162,14 @@ export class TileDragController extends EventTarget {
 
         // reset
         context.source.endDrag(successful);
-        context.position.dx = 0;
-        context.position.dy = 0;
-        context.position.x = 0;
-        context.position.y = 0;
-        evt.target.style.willChange = "";
-        evt.target.style.translate =
-            this.currentTranslate = `${context.position.x}px ${context.position.y}px`;
-        evt.target.style.scale = this.currentScale = "";
-        context.source.dragTransform.dx = 0;
-        context.source.dragTransform.dy = 0;
-        context.source.dragTransform.scale = 0;
+        context.resetPositionSnapAndScale();
+        context.draggable.element.style.willChange = "";
         this.dispatchEvent(
             new TileDragEvent(
                 TileDragController.events.EndDrag,
                 context.source,
             ),
         );
-
-        /*
-        evt.target.style.transformOrigin = 'center';
-        evt.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
-        */
 
         return successful;
     }
@@ -246,15 +196,101 @@ export class TileDragController extends EventTarget {
     }
 }
 
-export type TileDragSourceContext = {
+export class TileDragSourceContext {
     source: TileDragSource;
     autorotateCurrentTarget: Tile | null;
     autorotateTimeout: number | null;
     autorotateCache: Map<Tile, TileRotationSet>;
-    draggable: DragHandler;
     position: { x: number; y: number; dx: number; dy: number };
+    snapPosition?: { x: number; y: number };
+    scale: number;
     dragCenterOffset: { x: number; y: number };
-};
+    currentTranslate: string;
+    currentScale: string;
+
+    constructor(source: TileDragSource) {
+        this.source = source;
+        this.autorotateCurrentTarget = null;
+        this.autorotateTimeout = null;
+        this.autorotateCache = new Map<Tile, TileRotationSet>();
+        this.position = { x: 0, y: 0, dx: 0, dy: 0 };
+        this.scale = 1;
+        this.dragCenterOffset = { x: 0, y: 0 };
+        this.currentTranslate = "";
+        this.currentScale = "";
+    }
+
+    get draggable(): DragHandler {
+        return this.source.draggable;
+    }
+
+    resetDragStatus(): void {
+        this.source.resetDragStatus();
+        this.resetPositionSnapAndScale();
+    }
+
+    resetPositionSnapAndScale(updateTransform: boolean = true): void {
+        this.resetPosition(false);
+        this.resetSnapPosition(false);
+        this.resetScale(false);
+        if (updateTransform) {
+            this.applyTransformUpdate();
+        }
+    }
+
+    resetPosition(updateTransform: boolean = true): void {
+        this.position.dx = 0;
+        this.position.dy = 0;
+        this.updatePosition(0, 0, updateTransform);
+    }
+
+    resetSnapPosition(updateTransform: boolean = true): void {
+        this.snapPosition = undefined;
+        if (updateTransform) this.applyTransformUpdate();
+    }
+
+    resetScale(updateTransform: boolean = true): void {
+        this.updateScale(1, updateTransform);
+    }
+
+    updatePosition(
+        x: number,
+        y: number,
+        updateTransform: boolean = true,
+    ): void {
+        this.position.x = x;
+        this.position.y = y;
+        this.source.dragTransform.dx = x;
+        this.source.dragTransform.dy = y;
+        if (updateTransform) this.applyTransformUpdate();
+    }
+
+    updateSnapPosition(x: number, y: number, updateTransform: boolean = true) {
+        this.snapPosition = { x: x, y: y };
+        if (updateTransform) this.applyTransformUpdate();
+    }
+
+    updateScale(scale: number, updateTransform: boolean = true): void {
+        this.scale = scale;
+        this.source.dragTransform.scale = scale;
+        if (updateTransform) this.applyTransformUpdate();
+    }
+
+    applyTransformUpdate(): void {
+        const x = this.snapPosition ? this.snapPosition.x : this.position.x;
+        const y = this.snapPosition ? this.snapPosition.y : this.position.y;
+        const newTranslate = `${Math.round(x)}px ${Math.round(y)}px`;
+        if (newTranslate != this.currentTranslate) {
+            this.draggable.element.style.translate = newTranslate;
+            this.currentTranslate = newTranslate;
+        }
+        const newScale = this.scale.toFixed(4);
+        if (newScale != this.currentScale) {
+            this.draggable.element.style.scale = newScale;
+            this.currentScale = newScale;
+        }
+    }
+}
 
 export interface TileDragSource {
     gridDisplay: GridDisplay;
@@ -262,7 +298,7 @@ export interface TileDragSource {
     dragTransform: TransformComponent;
     tile: Tile | null;
     indexOnStack?: number;
-    getDraggable(): DragHandler;
+    get draggable(): DragHandler;
     startDrag(): void;
     endDrag(successful: boolean): void;
     resetDragStatus(): void;

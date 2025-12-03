@@ -117,37 +117,21 @@ export class MainGridTileDragController extends TileDragController {
         context: TileDragSourceContext,
         evt: DragHandlerEvent,
         updateTransform: boolean = true,
-    ): { newTranslate: string; newScale: string } | null {
-        let res = super.onDragMove(context, evt, false);
-        if (!res) return null;
+    ): boolean {
+        if (!super.onDragMove(context, evt, false)) return false;
 
         const moved =
             evt.dx > -10 && evt.dx < 10 && evt.dy > -10 && evt.dy < 10;
         if (moved || this.currentlySnapped) {
-            res = this.computeDragMove(
-                res.newTranslate,
-                res.newScale,
-                context,
-                evt,
-            );
+            this.computeDragMove(context);
         }
 
-        if (updateTransform && this.currentTranslate != res.newTranslate) {
-            evt.target.style.translate = this.currentScale = res.newTranslate;
-        }
-        if (updateTransform && this.currentScale != res.newScale) {
-            evt.target.style.scale = this.currentScale = res.newScale;
-        }
+        context.applyTransformUpdate();
 
-        return res;
+        return true;
     }
 
-    private computeDragMove(
-        newTranslate: string,
-        newScale: string,
-        context: TileDragSourceContext,
-        evt: DragHandlerEvent,
-    ): { newTranslate: string; newScale: string } {
+    private computeDragMove(context: TileDragSourceContext): void {
         if (DEBUG.SHOW_DEBUG_POINTS_WHILE_DRAGGING) {
             // figure out where we are
             const movingTile = context.source.tile!;
@@ -245,24 +229,19 @@ export class MainGridTileDragController extends TileDragController {
                         context.source.gridDisplay.gridToScreenPosition(
                             context.source.tile!.centroid,
                         );
-                    const snap = {
-                        x:
-                            context.position.x +
-                            centerSnapTo.x -
-                            centerSnapFrom.x,
-                        y:
-                            context.position.y +
-                            centerSnapTo.y -
-                            centerSnapFrom.y,
-                    };
-                    newTranslate = `${Math.round(snap.x)}px ${Math.round(snap.y)}px`;
+                    context.updateSnapPosition(
+                        context.position.x + centerSnapTo.x - centerSnapFrom.x,
+                        context.position.y + centerSnapTo.y - centerSnapFrom.y,
+                        false,
+                    );
                     snapping = true;
                 }
             }
             this.currentlySnapped = snapping;
+            if (!snapping) {
+                context.resetSnapPosition(false);
+            }
         }
-
-        return { newTranslate: newTranslate, newScale: newScale };
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragHandlerEvent): boolean {

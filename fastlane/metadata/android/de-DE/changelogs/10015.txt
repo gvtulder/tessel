@@ -1,4 +1,4 @@
-Divers changements et améliorations.
+Verschiedene Änderungen und Verbesserungen.
 
 • New translation: German (by an anonymous Weblate contributor).
 • Bugfix: prevent accidental dragging of multiple tiles on touch devices.

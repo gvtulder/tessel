@@ -86,6 +86,7 @@ export class DragHandler {
     }
 
     handlePointerDown(evt: PointerEvent) {
+        if (!evt.isPrimary) return;
         this.pointerDown = true;
         this.clientXstart = this.clientX = evt.clientX;
         this.clientYstart = this.clientY = evt.clientY;
@@ -94,6 +95,7 @@ export class DragHandler {
     }
 
     handlePointerMove(evt: PointerEvent) {
+        if (!evt.isPrimary) return;
         if (!this.pointerDown && !this.dragging) return;
         const dtime = evt.timeStamp - this.previousTimestamp;
         this.previousTimestamp = evt.timeStamp;
@@ -151,6 +153,7 @@ export class DragHandler {
     }
 
     handlePointerUp(evt: PointerEvent) {
+        if (!evt.isPrimary) return;
         const dx = evt.clientX - this.clientX!;
         const dy = evt.clientY - this.clientY!;
         const dxTotal = evt.clientX - this.clientXstart;
@@ -183,6 +186,7 @@ export class DragHandler {
     }
 
     handlePointerCancel(evt: PointerEvent) {
+        if (!evt.isPrimary) return;
         this.pointerDown = false;
         if (this.dragging) {
             this.dragging = false;

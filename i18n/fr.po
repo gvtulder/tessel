@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-11-29 00:08+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: French <https://hosted.weblate.org/projects/tessel/game/fr/>\nLanguage: fr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n > 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-11-30 01:00+0000\nLast-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\nLanguage-Team: French <https://hosted.weblate.org/projects/tessel/game/fr/>\nLanguage: fr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n > 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -303,7 +303,7 @@ msgstr "Paramètres du jeu"
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:193
 msgid "ui.settings.opensource.source"
-msgstr "Le <a href=\"{source}\">code source</a> de ce jeu est disponible sous licence GPL 3.0. Allez sur <a href=\"{github}\">GitHub</a> pour les signaler des erreurs et contribuer au code."
+msgstr "Le <a href=\"{source}\">code source</a> de ce jeu est disponible sous licence GPL 3.0. Allez sur <a href=\"{github}\">GitHub</a> pour signaler des erreurs et contribuer au code."
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:186

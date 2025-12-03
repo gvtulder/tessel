@@ -6,6 +6,7 @@
 	<string>en</string>
 	<key>CFBundleLocalizations</key>
 	<array>
+		<string>de</string>
 		<string>en</string>
 		<string>es</string>
 		<string>nl</string>

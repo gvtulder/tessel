@@ -1,2 +1,487 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-11-18 17:43+0000\nLast-Translator: Anonymous <noreply@weblate.org>\nLanguage-Team: German <https://hosted.weblate.org/projects/tessel/game/de/>\nLanguage: de\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-11-30 01:00+0000\nLast-Translator: Hidden Name <hidden.e-mail@posteo.me>\nLanguage-Team: German <https://hosted.weblate.org/projects/tessel/game/de/>\nLanguage: de\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:11
+msgid "atlas.AmmannBeenkerAtlas.friendlyName"
+msgstr "Ammann-Beenker"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:15
+msgid "atlas.AmmannBeenkerAtlas.tilingName"
+msgstr "Ammann-Beenker-Kachelung"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:11
+msgid "atlas.CairoAtlas.friendlyName"
+msgstr "Fünfeck"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:15
+msgid "atlas.CairoAtlas.tilingName"
+msgstr "Kairo-Parkettierung (Fünfeck)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:11
+msgid "atlas.DeltoTrihexAtlas.friendlyName"
+msgstr "Deltoid (Drachenviereck)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:15
+msgid "atlas.DeltoTrihexAtlas.tilingName"
+msgstr "Deltoid-Kachelung (Drachenviereck)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:11
+msgid "atlas.HexagonsAtlas.friendlyName"
+msgstr "Sechseck"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:12
+msgid "atlas.HexagonsAtlas.tilingName"
+msgstr "Sechseckskachelung"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:11
+msgid "atlas.Penrose0Atlas.friendlyName"
+msgstr "Penrose-P3"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:12
+msgid "atlas.Penrose0Atlas.tilingName"
+msgstr "Penrose-P3-Kachelung"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:12
+msgid "atlas.Penrose3Grid.friendlyName"
+msgstr "Penrose-P3-Raster"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:13
+msgid "atlas.Penrose3Grid.tilingName"
+msgstr "Penrose-P3-Kachelung"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:11
+msgid "atlas.PenroseFreeAtlas.friendlyName"
+msgstr "Penrose-P3 (frei)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:15
+msgid "atlas.PenroseFreeAtlas.tilingName"
+msgstr "Penrose-P3-Kachelung"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:11
+msgid "atlas.RhombusAtlas.friendlyName"
+msgstr "Raute (60°/120°)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:15
+msgid "atlas.RhombusAtlas.tilingName"
+msgstr "Rautenkachelung"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:11
+msgid "atlas.SnubSquareAtlas.friendlyName"
+msgstr "Drei- & Vierecksmuster (Snub-Square)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:15
+msgid "atlas.SnubSquareAtlas.tilingName"
+msgstr "Drei- & Viereckskachelung (Snub-Square)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:11
+msgid "atlas.SnubSquareFreeAtlas.friendlyName"
+msgstr "freies Drei- & Vierecksmuster (Snub-Square)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:15
+msgid "atlas.SnubSquareFreeAtlas.tilingName"
+msgstr "Drei- & Viereckskachelung (Snub-Square)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:12
+msgid "atlas.SnubSquareGridAtlas.friendlyName"
+msgstr "Drei- & Vierecksraster (Snub-Square)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:16
+msgid "atlas.SnubSquareGridAtlas.tilingName"
+msgstr "Drei- & Viereckskachelung (Snub-Square)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:11
+msgid "atlas.SquaresAtlas.friendlyName"
+msgstr "Viereck"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:12
+msgid "atlas.SquaresAtlas.tilingName"
+msgstr "Viereckskachelung"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:11
+msgid "atlas.TrianglesAtlas.friendlyName"
+msgstr "Dreieck"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:12
+msgid "atlas.TrianglesAtlas.tilingName"
+msgstr "Dreieckskachelung"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
+msgid "rules.DifferentEdgeColorsRuleSet.friendlyName"
+msgstr "Benachbarte Kacheln müssen verschiedene Farben haben"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/MatchEdgeColorsRuleSet.ts:18
+msgid "rules.MatchEdgeColorsRuleSet.friendlyName"
+msgstr "Benachbarte Kacheln müssen die gleiche Farben haben"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConnectedSegmentScorer.ts:15
+msgid "scorer.ConnectedSegmentScorer.friendlyName"
+msgstr "Zählt verbundene Segmente"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConvexShapeScorer.ts:16
+msgid "scorer.ConvexShapeScorer.friendlyName"
+msgstr "Zählt vollständige Formen aus Kacheln"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullTileScorer.ts:14
+msgid "scorer.FullTileScorer.friendlyName"
+msgstr "Zählt Kacheln"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullVertexScorer.ts:15
+msgid "scorer.FullVertexScorer.friendlyName"
+msgstr "Zählt vollständige Formen aus Segmenten"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/HoleScorer.ts:15
+msgid "scorer.HoleScorer.friendlyName"
+msgstr "Zählt die Löcher"
+
+#. js-lingui-explicit-id
+#: src/ui/game/DropoutMenu.ts:29
+msgid "ui.game.showMenuButton"
+msgstr "Menü anzeigen"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:46
+msgid "ui.menu.AllGamesButton"
+msgstr "Alle Spielvarianten"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:47
+msgid "ui.menu.HowToPlayButton"
+msgstr "Spielregeln"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:33
+msgid "ui.menu.MainMenuButton"
+msgstr "Startseite"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:59
+msgid "ui.menu.PaintButton"
+msgstr "Gestalten"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:32
+#: src/ui/shared/MainNavBar.ts:72
+msgid "ui.menu.SettingsButton"
+msgstr "Einstellungen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:62
+msgid "ui.menu.StatisticsButton"
+msgstr "Statistiken"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:222
+msgid "ui.menu.addMoreTilesButton"
+msgstr "Neue Kacheln hinzufügen"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:198
+#: src/ui/paint/PaintDisplay.ts:66
+#: src/ui/setup/GameSetupDisplay.ts:146
+msgid "ui.menu.backToMenuButton"
+msgstr "Zurück zur Startseite"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:21
+msgid "ui.menu.footer"
+msgstr "Ein Spiel von <a href=\"{url}\">Gijs van Tulder</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:214
+msgid "ui.menu.refreshTilesButton"
+msgstr "Kacheln mischen"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:206
+msgid "ui.menu.restartGameButton"
+msgstr "Spiel neustarten"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/AllGamesDisplay.ts:31
+msgid "ui.menu.setupButton"
+msgstr "Gestalte ein Spiel"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colors.length
+#: src/ui/setup/ColorsOption.ts:18
+msgid "ui.settings.ColorsOption.title"
+msgstr "{0, plural, =1 {Eine Farbe} =2 {Zwei Farben} =3 {Drei Farben} =4 {Vier Farben} =5 {Fünf Farben} =6 {Sechs Farben} other {# Farben}}"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:143
+msgid "ui.settings.about.credits"
+msgstr "Tessel ist ein Spiel <a href=\"{url}\">Gijs van Tulder</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:177
+msgid "ui.settings.about.feedbackPrompt"
+msgstr "Vorschläge, Kommentare oder Fehler? <a href=\"{email}\">Sende mir eine E-Mail</a> oder <a href=\"{github}\">schreibe mir auf GitHub</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:165
+msgid "ui.settings.about.reviewPromptApple"
+msgstr "Gefällt dir das Spiel? <a href=\"{url}\">Schreibe eine Bewertung</a> im App Store oder <a href=\"{share}\">teile das Spiel mit anderen</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:155
+msgid "ui.settings.about.reviewPromptGoogle"
+msgstr "Gefällt dir das Spiel? <a href=\"{url}\">Schreibe eine Bewertung</a> im Google Play Store oder <a href=\"{share}\">teile das Spiel mit anderen</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:137
+msgid "ui.settings.about.title"
+msgstr "Über das Spiel"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:121
+msgid "ui.settings.description.autorotate"
+msgstr "Automatisches Drehen der Kacheln"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:93
+msgid "ui.settings.description.colorScheme"
+msgstr "Hell, dunkel oder automatisch"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:128
+msgid "ui.settings.description.highscore"
+msgstr "Rekord anzeigen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:114
+msgid "ui.settings.description.hints"
+msgstr "Tipps anzeigen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:86
+msgid "ui.settings.description.language"
+msgstr "Sprache"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:107
+msgid "ui.settings.description.placeholders"
+msgstr "Verfügbare Kachelpositionen anzeigen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:100
+msgid "ui.settings.group.gameSettings"
+msgstr "Spieleinstellungen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:193
+msgid "ui.settings.opensource.source"
+msgstr "Der <a href=\"{source}\">Quellcode</a> dieses Spiels ist unter der GPL 3.0-Lizenz verfügbar. Gehe auf <a href=\"{github}\">GitHub</a> für Probleme und Pull Requests."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:186
+msgid "ui.settings.opensource.title"
+msgstr "Open Source"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:199
+msgid "ui.settings.opensource.weblate"
+msgstr "Besuche <a href=\"{weblate}\">Weblate</a>, um bei der Übersetzung zu helfen."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:49
+msgid "ui.settings.title"
+msgstr "Einstellungen"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:207
+msgid "ui.settings.version"
+msgstr "Version {version}."
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:56
+msgid "ui.setup.SegmentsOption.allCombinations"
+msgstr "Alle Farbkombinationen"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colorPattern.numColors
+#: src/ui/setup/SegmentsOption.ts:66
+msgid "ui.setup.SegmentsOption.number"
+msgstr "{0, plural, =1 {Eine Farbe pro Kachel} =2 {Zwei Farben pro Kachel} =3 {Drei Farben pro Kachel} =4 {Vier Farben pro Kachel} =5 {Fünf Farben pro Kachel} =6 {Sechs Farben pro Kachel} other {# Farben pro Kachel}}"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:61
+msgid "ui.setup.SegmentsOption.unique"
+msgstr "Nur unterschiedliche Farben"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:71
+msgid "ui.setup.optionTitle.atlas"
+msgstr "Kachelmuster"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:87
+msgid "ui.setup.optionTitle.colors"
+msgstr "Farbanzahl"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/RulesSettingRow.ts:16
+msgid "ui.setup.optionTitle.rules"
+msgstr "Berührungsregel"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/ScorerSettingRow.ts:15
+msgid "ui.setup.optionTitle.scorer"
+msgstr "Punktevergabe"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsSettingRow.ts:18
+msgid "ui.setup.optionTitle.segments"
+msgstr "Farben pro Kachel"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:126
+msgid "ui.setup.playButton"
+msgstr "Spiel starten"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:157
+msgid "ui.setup.regenerateExampleButton"
+msgstr "Neu berechnen"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:59
+msgid "ui.setup.title"
+msgstr "Benutzerdefiniertes Spiel"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:229
+msgid "ui.statistics.columns.GameCompleted"
+msgstr "Beendete Spiele"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:221
+msgid "ui.statistics.columns.HighScore"
+msgstr "Rekord"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:225
+msgid "ui.statistics.columns.ShapeCompleted"
+msgstr "Gebildete Formen"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:257
+msgid "ui.statistics.columns.TilePlaced"
+msgstr "Gelegte Kacheln"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:292
+msgid "ui.statistics.counter.TilePlaced.hexagon"
+msgstr "Sechsecke"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:299
+msgid "ui.statistics.counter.TilePlaced.kite"
+msgstr "Drachenviereck"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:285
+msgid "ui.statistics.counter.TilePlaced.pentagon"
+msgstr "Fünfecke"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:278
+msgid "ui.statistics.counter.TilePlaced.rhombus"
+msgstr "Rauten"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:264
+msgid "ui.statistics.counter.TilePlaced.square"
+msgstr "Vierecke"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:271
+msgid "ui.statistics.counter.TilePlaced.triangle"
+msgstr "Dreiecke"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:212
+msgid "ui.statistics.headings.ShapeCompleted"
+msgstr "{value, plural, one {Du hast eine Form gebildet.} other {Du hast # Formen gebildet.}}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:248
+msgid "ui.statistics.headings.TilePlaced"
+msgstr "{value, plural, one {Du hast eine Kachel gelegt.} other {Du hast # Kacheln gelegt.}}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:68
+msgid "ui.statistics.notPlayed"
+msgstr "Du hast noch nicht gespielt!"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:60
+msgid "ui.statistics.title"
+msgstr "Statistiken"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:46
+msgid "ui.toggles.autorotate"
+msgstr "Automatisch drehen"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:76
+msgid "ui.toggles.colorScheme.dark"
+msgstr "Dunkel"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:75
+msgid "ui.toggles.colorScheme.light"
+msgstr "Hell"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:67
+msgid "ui.toggles.highscore"
+msgstr "Rekord anzeigen"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:53
+msgid "ui.toggles.hints"
+msgstr "Tipps anzeigen"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:36
+msgid "ui.toggles.placeholders"
+msgstr "Verfügbare Kachelpositionen anzeigen"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:60
+msgid "ui.toggles.snap"
+msgstr "Einrasten"

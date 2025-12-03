@@ -5,6 +5,7 @@
 
 import fs from "fs";
 import { i18n, Messages } from "@lingui/core";
+import { messages as messages_de } from "../i18n/de";
 import { messages as messages_en } from "../i18n/en";
 import { messages as messages_es } from "../i18n/es";
 import { messages as messages_fr } from "../i18n/fr";
@@ -19,6 +20,14 @@ export const languages = {
         messages: messages_en,
         aboutHTML: fs.readFileSync(
             __dirname + "/../i18n/en/about.html",
+            "utf-8",
+        ),
+    },
+    de: {
+        title: "Deutsch",
+        messages: messages_de,
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/de/about.html",
             "utf-8",
         ),
     },

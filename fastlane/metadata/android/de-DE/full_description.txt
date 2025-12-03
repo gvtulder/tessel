@@ -1,0 +1,17 @@
+Tessel ist ein farbenfrohes Kachellegespiel. Lege verschiedene Kacheln, um mit passenden Farben Farbflächen zu bilden und das Spielbrett zu füllen. Je größer die Fläche einer Farbe, desto mehr Punkte gibt es.
+
+Features:
+• Spiele mit einfachen quadratischen Kacheln oder wähle ein komplexeres Muster, um die Schwierigkeit zu erhöhen.
+• Passe die Regeln des Spiels beliebig an.
+• Erstelle eigene Muster mithilfe des Pinsel-Werkzeugs.
+
+Wähle Kacheln aus den verschiedenen Formen und Mustern für unbegrenzte Spielvarianten:
+• Dreieck
+• Viereck
+• Raute
+• Kairo-Parkettierung (Fünfeck)
+• Sechseck
+• Deltoid (Drachenviereck)
+• Penrose P3
+• Drei- & Vierecksmuster (Snub-Square)
+• Ammann-Beenker

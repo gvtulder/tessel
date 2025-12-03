@@ -1,0 +1,1 @@
+../../android/de-DE/generic_release_notes.txt

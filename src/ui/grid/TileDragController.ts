@@ -44,6 +44,7 @@ export class TileDragController extends EventTarget {
     dropTarget: TileDropTarget;
     sources: TileDragSource[];
     contexts: TileDragSourceContext[];
+    currentContext?: TileDragSourceContext | null;
 
     constructor(dropTarget: TileDropTarget) {
         super();
@@ -91,6 +92,7 @@ export class TileDragController extends EventTarget {
             c.resetPositionSnapAndScale();
         }
         if (!context.source.tile) return;
+        this.currentContext = context;
         context.source.startDrag();
         context.resetPositionSnapAndScale();
         context.draggable.element.style.willChange = "rotate scale translate";
@@ -115,6 +117,7 @@ export class TileDragController extends EventTarget {
         evt: DragHandlerEvent,
         updateTransform: boolean = true,
     ): boolean {
+        if (this.currentContext !== context) return false;
         if (!context.source.tile) return false;
         context.position.dx += evt.dx;
         context.position.dy += evt.dy;
@@ -142,6 +145,7 @@ export class TileDragController extends EventTarget {
     }
 
     onDragEnd(context: TileDragSourceContext, evt: DragHandlerEvent): boolean {
+        if (this.currentContext !== context) return false;
         if (!context.source.tile) return false;
         const match = this.mapToFixedTile(context);
 
@@ -170,6 +174,8 @@ export class TileDragController extends EventTarget {
                 context.source,
             ),
         );
+
+        this.currentContext = null;
 
         return successful;
     }

@@ -37,7 +37,7 @@ export class TileDisplay {
     segmentElements?: SVGPathElement[];
 
     element: SVGElement;
-    clipPath: SVGElement;
+    // clipPath: SVGElement;
     clipPathId: string;
 
     constructor(gridDisplay: GridDisplay, tile: Tile) {
@@ -51,9 +51,11 @@ export class TileDisplay {
                 : "svg-tile",
         );
         this.clipPathId = uniqueIdSource.getUniqueIdPrefix();
+        /*
         const clipPath = SVG("clipPath", null, this.element);
         clipPath.setAttribute("id", this.clipPathId);
         this.clipPath = SVG("path", null, clipPath);
+        */
 
         this.redraw();
     }
@@ -131,8 +133,8 @@ export class TileDisplay {
             //     "clip-path",
             //     `path('${roundPath}') view-box`,
             // );
-            this.clipPath.setAttribute("d", roundPath);
-            this.element.setAttribute("clip-path", `url(#${this.clipPathId})`);
+            // this.clipPath.setAttribute("d", roundPath);
+            // this.element.setAttribute("clip-path", `url(#${this.clipPathId})`);
         }
     }
 

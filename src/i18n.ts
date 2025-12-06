@@ -65,7 +65,7 @@ export const languages = {
         ),
     },
     "zh-Hans": {
-        title: "首页",
+        title: "简体中文",
         messages: messages_zhhans,
         aboutHTML: fs.readFileSync(
             __dirname + "/../i18n/zh-Hans/about.html",

@@ -86,6 +86,7 @@ export class AnimatedAutoPlayer {
                 clientX: fromCoord.x,
                 clientY: fromCoord.y,
                 pointerId: 1,
+                isPrimary: true,
             }),
         );
 
@@ -107,6 +108,7 @@ export class AnimatedAutoPlayer {
                         Math.min(1, progress) * toCoord.y +
                         5 * Math.random(),
                     pointerId: 1,
+                    isPrimary: true,
                 }),
             );
             progress += progressPerStep;
@@ -122,6 +124,7 @@ export class AnimatedAutoPlayer {
                     Math.max(0, 1 - progress) * fromCoord.y +
                     Math.min(1, progress) * toCoord.y,
                 pointerId: 1,
+                isPrimary: true,
             }),
         );
 

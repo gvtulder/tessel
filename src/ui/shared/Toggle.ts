@@ -15,6 +15,7 @@ export class Toggle {
     element: HTMLElement;
     private boxElement: HTMLElement;
     private _checked!: boolean;
+    private firstUpdate: boolean;
 
     private onchange?: (source: Toggle) => void;
     private tapHandler: TapHandler;
@@ -36,6 +37,7 @@ export class Toggle {
         iconEl.innerHTML = icon;
         iconEl.title = t(title);
 
+        this.firstUpdate = true;
         this.onchange = onchange;
         if (checked) {
             checked.then((value: boolean) => (this.checked = value));
@@ -58,6 +60,10 @@ export class Toggle {
     }
 
     set checked(state: boolean) {
+        if (!this.firstUpdate) {
+            this.element.classList.add("animated");
+        }
+        this.firstUpdate = false;
         this.element.classList.toggle("enabled", state);
         if (this._checked != state) {
             this._checked = state;

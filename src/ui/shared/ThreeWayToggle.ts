@@ -22,6 +22,7 @@ export class ThreeWayToggle {
     valueA: string;
     valueB: string;
     private _value!: ThreeWayValue;
+    private firstUpdate: boolean;
 
     private onchange?: (source: ThreeWayToggle) => void;
     private tapHandler: TapHandler;
@@ -40,6 +41,7 @@ export class ThreeWayToggle {
     ) {
         this.valueA = valueA;
         this.valueB = valueB;
+        this.firstUpdate = true;
 
         const toggle = createElement("div", "game-toggle threeway");
         this.element = toggle;
@@ -92,6 +94,10 @@ export class ThreeWayToggle {
     }
 
     set value(v: ThreeWayValue | string) {
+        if (!this.firstUpdate) {
+            this.element.classList.add("animated");
+        }
+        this.firstUpdate = false;
         let state = null;
         if (v == ThreeWayOption.OptionA || v == this.valueA)
             state = ThreeWayOption.OptionA;

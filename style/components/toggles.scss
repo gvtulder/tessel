@@ -54,9 +54,6 @@
     .toggle-box {
       background: transparent;
       height: calc($ball-width + max(0.3vw, 4px));
-      transition:
-        flex-shrink 100ms,
-        flex-grow 100ms;
     }
   }
   &.threeway .toggle-box.a {
@@ -67,6 +64,11 @@
     justify-content: flex-end;
     background: transparent;
   }
+  &.animated.threeway .wrap .toggle-box {
+    transition:
+      flex-shrink 100ms,
+      flex-grow 100ms;
+  }
 
   .toggle-ball {
     border-radius: 100%;
@@ -76,6 +78,8 @@
     box-shadow: var(--button-box-shadow);
     position: absolute;
     right: calc(100% - $ball-width - $toggle-box-padding);
+  }
+  &.animated .toggle-ball {
     transition: 100ms right;
   }
 

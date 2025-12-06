@@ -92,24 +92,29 @@ for (const [language, data] of Object.entries(languages)) {
     i18n.load(language, data.messages);
 }
 
+export async function selectLanguage(
+    options: (string | null)[],
+): Promise<string> {
+    for (const language of options) {
+        if (!language) continue;
+        if (languages[language]) {
+            return language;
+        }
+        const firstPart = language.split("-")[0];
+        if (languages[firstPart]) {
+            return firstPart;
+        }
+    }
+    return "en";
+}
+
 export async function prepareI18n(navigatorLanguage: string) {
     const options = [
         await getStorageBackend().getItem("language"),
         navigatorLanguage,
         "en",
     ];
-    for (const language of options) {
-        if (!language) continue;
-        if (languages[language]) {
-            i18n.activate(language);
-            return;
-        }
-        const firstPart = language.split("-")[0];
-        if (languages[firstPart]) {
-            i18n.activate(firstPart);
-            return;
-        }
-    }
+    i18n.activate(await selectLanguage(options));
 }
 
 export function updateI18n(locale: string) {

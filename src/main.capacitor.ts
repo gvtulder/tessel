@@ -68,7 +68,7 @@ App.addListener("backButton", () => {
     }
 });
 
-Device.getLanguageCode().then((result) => {
+Device.getLanguageTag().then((result) => {
     removeSplash();
     startMainMenu({
         language: result.value,

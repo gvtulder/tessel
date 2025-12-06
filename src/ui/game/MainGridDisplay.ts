@@ -12,9 +12,11 @@ import { ScoreOverlayDisplay_Cutout } from "../score/ScoreOverlayDisplay_Cutout"
 import { TileDragSource, TileDropTarget } from "../grid/TileDragController";
 import { TileType } from "../../grid/Tile";
 import { TileOnScreenMatch } from "../grid/TileDisplay";
+import { PinchZoomHandler } from "../shared/PinchZoomHandler";
 
 export class MainGridDisplay extends GridDisplay implements TileDropTarget {
     gameDisplay: GameDisplay;
+    pinchZoomHandler: PinchZoomHandler;
     scoreOverlayDisplay: ScoreOverlayDisplay;
     ignorePlaceholders: boolean;
 
@@ -23,6 +25,8 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
     constructor(grid: Grid, container: HTMLElement, gameDisplay: GameDisplay) {
         super(grid, container);
         this.gameDisplay = gameDisplay;
+
+        this.pinchZoomHandler = new PinchZoomHandler(this.element, this);
 
         this.scoreOverlayDisplay = new ScoreOverlayDisplay_Cutout();
         this.svgGrid.appendChild(this.scoreOverlayDisplay.element);
@@ -65,6 +69,7 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
     }
 
     gameFinished(immediate?: boolean) {
+        this.resetDragAndZoom();
         const placeholders = [...this.tileDisplays.values()].filter(
             (d) => d.tile.tileType === TileType.Placeholder,
         );
@@ -97,7 +102,8 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
         if (this.cleanUpTimeout) {
             window.clearTimeout(this.cleanUpTimeout);
         }
-        super.destroy();
+        this.pinchZoomHandler.destroy();
         this.scoreOverlayDisplay.destroy();
+        super.destroy();
     }
 }

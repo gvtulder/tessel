@@ -12,6 +12,7 @@ import { BBox, Point } from "../../geom/math";
 import { TransformComponent, TransformList } from "../../geom/Transform";
 import { S, SVG } from "../shared/svg";
 import { createElement } from "../shared/html";
+import { ScalableDisplay } from "../shared/PinchZoomHandler";
 
 export const enum GridDisplayScalingType {
     EqualMargins,
@@ -19,7 +20,7 @@ export const enum GridDisplayScalingType {
     CenterOrigin,
 }
 
-export class GridDisplay extends EventTarget {
+export class GridDisplay extends EventTarget implements ScalableDisplay {
     grid: Grid;
     container: HTMLElement;
     element: HTMLDivElement;
@@ -41,18 +42,14 @@ export class GridDisplay extends EventTarget {
     onRemoveTile: EventListener;
 
     rescaleTimeout?: number;
+    restoreAnimatedClassTimeout?: number;
 
-    viewBoxMinX?: number;
-    viewBoxMinY?: number;
-    viewBoxWidth?: number;
-    viewBoxHeight?: number;
-
-    visibleLeft?: number;
-    visibleRight?: number;
-    visibleTop?: number;
-    visibleBottom?: number;
+    zoomFactor: number = 1;
+    dragOffset: Point = { x: 0, y: 0 };
+    oldZoomCenterInGrid?: Point;
 
     scale: number = 1;
+    naturalScale: number = 1;
     containerLeft: number = 0;
     containerTop: number = 0;
     // margins in pixels
@@ -225,6 +222,88 @@ export class GridDisplay extends EventTarget {
         return;
     }
 
+    handleDoubleTap(zoomCenter: Point): void {
+        if (this.zoomFactor < 1.1) {
+            this.oldZoomCenterInGrid = this.screenToGridPosition(zoomCenter);
+            this.updateZoomFactor(2.5, zoomCenter);
+        } else {
+            this.resetDragAndZoom();
+        }
+        if (this.animated) {
+            this.element.classList.add("grid-display-animated");
+        }
+    }
+
+    handleZoomStart(zoomCenter: Point): void {
+        this.oldZoomCenterInGrid = this.screenToGridPosition(zoomCenter);
+    }
+
+    scaleZoomFactor(scale: number, newZoomCenter?: Point) {
+        this.updateZoomFactor(this.zoomFactor * scale, newZoomCenter);
+    }
+
+    resetDragAndZoom(): void {
+        this.oldZoomCenterInGrid = undefined;
+        this.updateZoomFactor(1);
+        this.dragOffset = { x: 0, y: 0 };
+        this.rescale();
+    }
+
+    updateZoomFactor(newZoomFactor: number, newZoomCenter?: Point) {
+        this.zoomFactor = Math.max(Math.min(newZoomFactor, 4), 1);
+        this.rescale(false);
+        if (this.oldZoomCenterInGrid && newZoomCenter) {
+            const newPosition = this.gridToScreenPosition(
+                this.oldZoomCenterInGrid,
+            );
+            this.addDragOffset(
+                newZoomCenter.x - newPosition.x,
+                newZoomCenter.y - newPosition.y,
+                "zoom",
+            );
+        }
+    }
+
+    handleZoomEnd() {
+        // snap back to the default zoom factor if we are close enough
+        if (this.zoomFactor > 0.7 && this.zoomFactor < 1.3) {
+            this.zoomFactor = 1;
+            this.dragOffset = { x: 0, y: 0 };
+        }
+        if (this.animated) {
+            this.element.classList.add("grid-display-animated");
+        }
+        this.rescale();
+    }
+
+    addDragOffset(dx: number, dy: number, interaction?: "zoom" | "drag"): void {
+        if (isNaN(dx) || isNaN(dy)) return;
+        if (this.zoomFactor > 1 || interaction) {
+            this.dragOffset = {
+                x: this.dragOffset.x + dx,
+                y: this.dragOffset.y + dy,
+            };
+            this.rescale(false, interaction);
+        } else {
+            this.dragOffset = {
+                x: 0,
+                y: 0,
+            };
+            this.rescale();
+        }
+    }
+
+    handleDragEnd(): void {
+        // snap back to the default position if we are close enough
+        if (this.zoomFactor == 1) {
+            this.dragOffset = { x: 0, y: 0 };
+        }
+        if (this.animated) {
+            this.element.classList.add("grid-display-animated");
+        }
+        this.rescale();
+    }
+
     /**
      * Returns the dimensions of the content area (i.e., the display coordinates
      * of the triangles to be shown on screen.)
@@ -248,7 +327,7 @@ export class GridDisplay extends EventTarget {
     /**
      * Rescale the grid based on the container size.
      */
-    rescale() {
+    rescale(animate: boolean = true, interaction?: "zoom" | "drag") {
         const availWidth = (this.container || document.documentElement)
             .clientWidth;
         const availHeight = (this.container || document.documentElement)
@@ -265,34 +344,19 @@ export class GridDisplay extends EventTarget {
         const contentHeight = dim.maxY - dim.minY;
 
         // compute the scale that makes the content fit the container
-        const scale = Math.min(
+        let scale = Math.min(
             (availWidth - this.margins.left - this.margins.right) /
                 contentWidth,
             (availHeight - this.margins.top - this.margins.bottom) /
                 contentHeight,
         );
+        this.naturalScale = scale;
+
+        // apply the zoom factor for pinch-and-zoom
+        scale *= this.zoomFactor;
+
         const finalWidth = contentWidth * scale;
         const finalHeight = contentHeight * scale;
-
-        // make sure we can fill the container
-        let viewBoxMinX = gridBBox.minX * S;
-        let viewBoxMinY = gridBBox.minY * S;
-        let viewBoxWidth = (gridBBox.maxX - gridBBox.minX) * S;
-        let viewBoxHeight = (gridBBox.maxY - gridBBox.minY) * S;
-        if (viewBoxWidth * scale < availWidth) {
-            const adjustX = availWidth / scale - viewBoxWidth;
-            viewBoxMinX -= adjustX / 2;
-            viewBoxWidth += adjustX;
-        }
-        if (viewBoxHeight * scale < availHeight) {
-            const adjustY = availHeight / scale - viewBoxHeight;
-            viewBoxMinY -= adjustY / 2;
-            viewBoxHeight += adjustY;
-        }
-        this.viewBoxMinX = viewBoxMinX;
-        this.viewBoxMinY = viewBoxMinY;
-        this.viewBoxWidth = viewBoxWidth;
-        this.viewBoxHeight = viewBoxHeight;
 
         // shift the origin to center the content in the container
         let containerLeft: number;
@@ -314,11 +378,63 @@ export class GridDisplay extends EventTarget {
                     (availHeight - finalHeight) / 2 - dim.minY * scale;
         }
 
-        // compute the area that is visible on screen
-        this.visibleLeft = -containerLeft / scale;
-        this.visibleRight = (availWidth + containerLeft) / scale;
-        this.visibleTop = -containerTop / scale;
-        this.visibleBottom = (availHeight + containerTop) / scale;
+        // adjust drag offset to the grid limits
+        const constrainedDragOffset = {
+            x:
+                finalWidth <= availWidth
+                    ? 0
+                    : Math.max(
+                          Math.min(
+                              this.dragOffset.x,
+                              -containerLeft -
+                                  dim.minX * scale +
+                                  this.margins.left,
+                          ),
+                          -containerLeft -
+                              dim.maxX * scale +
+                              availWidth -
+                              this.margins.right,
+                      ),
+            y:
+                finalHeight <= availHeight
+                    ? 0
+                    : Math.max(
+                          Math.min(
+                              this.dragOffset.y,
+                              -containerTop -
+                                  dim.minY * scale +
+                                  this.margins.top,
+                          ),
+                          -containerTop -
+                              dim.maxY * scale +
+                              availHeight -
+                              this.margins.bottom,
+                      ),
+        };
+
+        // apply drag offset
+        if (
+            interaction == "zoom" ||
+            (interaction == "drag" && this.zoomFactor > 1)
+        ) {
+            // compute movement outside constraint
+            const extraX = this.dragOffset.x - constrainedDragOffset.x;
+            const extraY = this.dragOffset.y - constrainedDragOffset.y;
+            // slow down dragging behaviour
+            // extraX = Math.min(Math.max(0.1 * extraX, -this.margins.left), this.margins.right);
+            // extraY = Math.min(Math.max(0.1 * extraY, -this.margins.top), this.margins.bottom);
+            containerLeft += constrainedDragOffset.x + extraX;
+            containerTop += constrainedDragOffset.y + extraY;
+
+            if (!animate) {
+                // skip animation (e.g., for pinch-and-zoom)
+                this.element.classList.remove("grid-display-animated");
+            }
+        } else {
+            this.dragOffset = constrainedDragOffset;
+            containerLeft += this.dragOffset.x;
+            containerTop += this.dragOffset.y;
+        }
 
         // Firefox doesn't like large scale with animations
         this.svgGrid.style.transform = `translate(${containerLeft}px, ${containerTop}px) scale(${scale / S})`;
@@ -347,7 +463,10 @@ export class GridDisplay extends EventTarget {
             this.animated &&
             !this.element.classList.contains("grid-display-animated")
         ) {
-            window.setTimeout(() => {
+            if (this.restoreAnimatedClassTimeout) {
+                window.clearTimeout(this.restoreAnimatedClassTimeout);
+            }
+            this.restoreAnimatedClassTimeout = window.setTimeout(() => {
                 this.element.classList.add("grid-display-animated");
             }, 1000);
         }

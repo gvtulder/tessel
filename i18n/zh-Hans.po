@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-12-06 13:23+0000\nLast-Translator: Monstorix <monstorix@outlook.com>\nLanguage-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/projects/tessel/game/zh_Hans/>\nLanguage: zh_Hans\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-12-06 17:35+0000\nLast-Translator: Monstorix <monstorix@outlook.com>\nLanguage-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/projects/tessel/game/zh_Hans/>\nLanguage: zh-Hans\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -84,42 +84,42 @@ msgstr "菱形镶嵌"
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareAtlas.ts:11
 msgid "atlas.SnubSquareAtlas.friendlyName"
-msgstr "斜方形"
+msgstr "扭棱正方形"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareAtlas.ts:15
 msgid "atlas.SnubSquareAtlas.tilingName"
-msgstr "斜方形镶嵌"
+msgstr "扭棱正方形镶嵌"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareFreeAtlas.ts:11
 msgid "atlas.SnubSquareFreeAtlas.friendlyName"
-msgstr "斜方形自由式"
+msgstr "扭棱正方形自由式"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareFreeAtlas.ts:15
 msgid "atlas.SnubSquareFreeAtlas.tilingName"
-msgstr "斜方形自由式镶嵌"
+msgstr "扭棱正方形自由式镶嵌"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareGridAtlas.ts:12
 msgid "atlas.SnubSquareGridAtlas.friendlyName"
-msgstr "斜方形网格"
+msgstr "扭棱正方形网格"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareGridAtlas.ts:16
 msgid "atlas.SnubSquareGridAtlas.tilingName"
-msgstr "斜方形网格镶嵌"
+msgstr "扭棱正方形网格镶嵌"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SquaresAtlas.ts:11
 msgid "atlas.SquaresAtlas.friendlyName"
-msgstr "矩形"
+msgstr "正方形"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SquaresAtlas.ts:12
 msgid "atlas.SquaresAtlas.tilingName"
-msgstr "矩形镶嵌"
+msgstr "正方形镶嵌"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/TrianglesAtlas.ts:11
@@ -424,7 +424,7 @@ msgstr "菱形"
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:264
 msgid "ui.statistics.counter.TilePlaced.square"
-msgstr "矩形"
+msgstr "正方形"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:271

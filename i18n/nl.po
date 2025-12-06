@@ -1,5 +1,5 @@
 msgid ""
-msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-11-22 22:58+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Dutch <https://hosted.weblate.org/projects/tessel/game/nl/>\nLanguage: nl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-11-24 23:23+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Dutch <https://hosted.weblate.org/projects/tessel/game/nl/>\nLanguage: nl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11

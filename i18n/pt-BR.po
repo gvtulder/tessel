@@ -1,0 +1,22 @@
+msgid ""
+msgstr "PO-Revision-Date: 2025-12-06 00:53+0000\nLast-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\nLanguage-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/tessel/game/pt_BR/>\nLanguage: pt_BR\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n > 1;\nX-Generator: Weblate 5.15-dev\n"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:11
+msgid "atlas.AmmannBeenkerAtlas.friendlyName"
+msgstr "Ammann-Beenker"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:15
+msgid "atlas.AmmannBeenkerAtlas.tilingName"
+msgstr "Ladrilhamento Ammann-Beenker"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:11
+msgid "atlas.CairoAtlas.friendlyName"
+msgstr "Pentagonal do Cairo"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:177
+msgid "ui.settings.about.feedbackPrompt"
+msgstr "Sugestões, comentários ou erros? <a href=\"{email}\"> Envie-me um correio eletrônico</a> ou <a href=\"{github}\"> me diga no GitHub</a>."

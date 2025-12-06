@@ -1,0 +1,19 @@
+Tessel é um jogo de encaixe de peças coloridas. Coloque peças com cores correspondentes para formar figuras e preencher o tabuleiro. Quanto maior a figura, maior a pontuação.
+
+Recursos:
+• Jogue uma partida simples com quadrados ou escolha um padrão mais desafiador.
+
+• Personalize as configurações do jogo para alterar as regras.
+
+• Crie seus próprios padrões de encaixe na ferramenta de desenho.
+
+Escolha entre uma ampla variedade de padrões de encaixe para formar mosaicos infinitamente variados:
+• Quadrado
+• Triangular
+• Losango
+• Pentagonal Cairo
+• Hexagonal
+• Deltoidal-trihexagonal
+• Penrose P3
+• Quadrado truncado
+• Ammann-Beenker

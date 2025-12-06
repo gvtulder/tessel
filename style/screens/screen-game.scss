@@ -17,6 +17,7 @@ $score-font-size: min(4vw, 5vh);
 
   .main-grid {
     grid-area: main-grid;
+    overflow: hidden;
   }
 
   .fill {

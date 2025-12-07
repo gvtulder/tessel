@@ -1,4 +1,4 @@
-Divers changements et améliorations.
+本版本包含多项变更与改进。
 
 • New drag/zoom option: Pinch or double-tap to zoom in if the tiles are getting small.
 • New translation: Chinese (Simplified Han script) by Monstorix and LaoshuBaby (快乐的老鼠宝宝).

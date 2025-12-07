@@ -3,18 +3,12 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import icons from "../shared/icons";
-import { NavigateEvent } from "../shared/UserEvent";
-import { Pages } from "../shared/UserEvent";
-import { UserEventType } from "../shared/UserEvent";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
-import { Button } from "../shared/Button";
 import { msg, t } from "@lingui/core/macro";
 import { i18n, MessageDescriptor } from "@lingui/core";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { SetupCatalog } from "../../saveGames";
-import { SmallNavBar, SmallNavBarItems } from "../settings/SmallNavBar";
 import { formatNumber } from "../../i18n";
 
 export type StatisticsSection = {
@@ -37,8 +31,6 @@ export type StatisticsSection = {
 export class StatisticsDisplay extends ScreenDisplay {
     element: HTMLDivElement;
 
-    navBar: SmallNavBar;
-
     constructor(stats: StatisticsMonitor) {
         super();
 
@@ -47,13 +39,6 @@ export class StatisticsDisplay extends ScreenDisplay {
             "div",
             "screen with-navbar statistics-display",
         ));
-
-        // navbar
-        const navBar = (this.navBar = new SmallNavBar((page: Pages) => {
-            this.dispatchEvent(new NavigateEvent(page));
-        }));
-        navBar.activeTab = SmallNavBarItems.Statistics;
-        element.appendChild(navBar.element);
 
         // main page text
         const article = createElement("article", null, element);
@@ -92,7 +77,6 @@ export class StatisticsDisplay extends ScreenDisplay {
     }
 
     destroy() {
-        this.navBar.destroy();
         this.element.remove();
     }
 

@@ -405,3 +405,14 @@ export function roundPoints(
         y: Math.round(p.y * precision) / precision,
     }));
 }
+
+/**
+ * Returns x clipped to the range [min, max].
+ * @param x value
+ * @param min the lower limit
+ * @param max the upper limit
+ * @returns Math.min(Math.max(x, min), max)
+ */
+export function clip(x: number, min: number, max: number): number {
+    return x < min ? min : x > max ? max : x;
+}

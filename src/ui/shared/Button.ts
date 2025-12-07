@@ -15,7 +15,7 @@ export class Button {
     constructor(
         icon: string,
         title: MessageDescriptor | string,
-        ontap: (evt: PointerEvent) => void,
+        ontap: (evt?: PointerEvent) => void,
         className?: string | null,
         showLabel?: boolean,
     ) {
@@ -33,9 +33,9 @@ export class Button {
         this.element = wrapper;
 
         const tapHandler = (this.tapHandler = new TapHandler(wrapper));
-        tapHandler.onTap = (evt: TapHandlerEvent) => {
+        tapHandler.onTap = (evt?: TapHandlerEvent) => {
             button.classList.remove("game-button-pressed");
-            ontap(evt.event);
+            ontap(evt?.event);
         };
         tapHandler.onStartPress = (evt: TapHandlerEvent) => {
             wrapper.classList.add("game-button-pressed");

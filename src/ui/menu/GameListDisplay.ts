@@ -10,10 +10,10 @@ import { lookup as SaveGamesLookup } from "../../saveGames";
 import { UserEvent } from "../shared/UserEvent";
 import { UserEventType } from "../shared/UserEvent";
 import { createElement } from "../shared/html";
-import { TapHandler } from "../shared/TapHandler";
 import { AngleUse } from "../../grid/Shape";
 import { rotateArray } from "../../geom/arrays";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
+import { TapHandler } from "../shared/TapHandler";
 
 export class GameListDisplay extends ScreenDisplay {
     element: HTMLDivElement;

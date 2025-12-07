@@ -17,13 +17,11 @@
     1fr;
   grid-template-rows:
     sizes.$button-top
-    min-content min-content 1.2em;
+    var(--small-navbar-height) min-content 1.2em;
   grid-template-areas: ". . ." ". navbar ." ". article ." ". . .";
   overflow-y: auto;
 
-  nav {
-    justify-self: center;
-  }
+  touch-action: pan-y;
 
   header {
     display: none;

@@ -4,14 +4,26 @@
  */
 
 import { Button } from "./Button";
+import { DragHandler, DragHandlerEvent } from "./DragHandler";
 import { createElement } from "./html";
+
+export enum NavBarItems {
+    MainMenu = 1,
+    AllGames,
+    Paint,
+    Settings,
+    About,
+    Statistics,
+}
 
 export class NavBar extends EventTarget {
     element: HTMLElement;
     _activeIndex: number;
     buttons: Button[];
+    buttonKeys: NavBarItems[];
     listElement: HTMLUListElement;
     listItemElements: HTMLLIElement[];
+    dragHandler: DragHandler;
     _animationendHandler: () => void;
     _visible?: boolean;
 
@@ -22,27 +34,58 @@ export class NavBar extends EventTarget {
             `navbar ${className}`,
         ));
         this.buttons = [];
+        this.buttonKeys = [];
         this.listElement = createElement("ul", null, div);
         this.listItemElements = [];
         this._activeIndex = -1;
 
         this._animationendHandler = () => {
-            if (!this._visible) {
-                this.element.style.display = "none";
-            }
+            this.element.classList.toggle("hidden", !this._visible);
             this.element.classList.remove("appear", "disappear");
         };
         this.element.addEventListener(
             "animationend",
             this._animationendHandler,
         );
+
+        this.dragHandler = new DragHandler(this.listElement, false, "touch");
+        this.dragHandler.onDragStart = (evt: DragHandlerEvent) => {
+            evt.event.stopPropagation();
+            evt.event.preventDefault();
+        };
+        this.dragHandler.onDragMove = (evt: DragHandlerEvent) => {
+            for (let i = 0; i < this.buttons.length; i++) {
+                const button = this.buttons[i];
+                const rect = this.buttons[i].element.getBoundingClientRect();
+                if (
+                    rect.left < evt.event.clientX &&
+                    evt.event.clientX < rect.right &&
+                    rect.top < evt.event.clientY &&
+                    evt.event.clientY < rect.bottom
+                ) {
+                    this.activeIndex = i;
+                    break;
+                }
+            }
+            evt.event.stopPropagation();
+            evt.event.preventDefault();
+        };
+        this.dragHandler.onDragEnd = (evt: DragHandlerEvent) => {
+            const button = this.buttons[this._activeIndex];
+            if (button && button.tapHandler.onTap) {
+                button.tapHandler.onTap();
+            }
+            evt.event.stopPropagation();
+            evt.event.preventDefault();
+        };
     }
 
-    addButton(button: Button) {
+    addButton(key: NavBarItems, button: Button) {
         const li = createElement("li", null, this.listElement);
         li.appendChild(button.element);
         this.listItemElements.push(li);
         this.buttons.push(button);
+        this.buttonKeys.push(key);
     }
 
     set activeIndex(index: number) {
@@ -50,6 +93,14 @@ export class NavBar extends EventTarget {
             for (let i = 0; i < this.buttons.length; i++) {
                 this.listItemElements[i].classList.toggle("active", index == i);
             }
+            this._activeIndex = index;
+        }
+    }
+
+    set activeKey(key: NavBarItems) {
+        const index = this.buttonKeys.indexOf(key);
+        if (index != -1) {
+            this.activeIndex = index;
         }
     }
 
@@ -61,13 +112,13 @@ export class NavBar extends EventTarget {
             "animationend",
             this._animationendHandler,
         );
+        this.dragHandler.destroy();
     }
 
     show() {
         if (!this._visible) {
             this._visible = true;
-            this.element.style.display = "";
-            this.element.classList.remove("disappear");
+            this.element.classList.remove("disappear", "hidden");
             this.element.classList.add("appear");
         }
     }
@@ -77,8 +128,6 @@ export class NavBar extends EventTarget {
             this._visible = false;
             this.element.classList.remove("appear");
             this.element.classList.add("disappear");
-        } else {
-            this.element.style.display = "none";
         }
     }
 }

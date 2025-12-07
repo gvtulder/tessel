@@ -6,7 +6,7 @@
 export class NavigationManager {
     useCustomHistory: boolean;
     history: string[];
-    onNavigate?: () => void;
+    onNavigate?: (reload?: boolean) => void;
 
     constructor(useCustomHistory: boolean) {
         this.useCustomHistory = useCustomHistory;
@@ -92,30 +92,35 @@ export class NavigationManager {
         if (this.onNavigate) this.onNavigate();
     }
 
-    navigate(hash: string) {
-        if (this.useCustomHistory) {
-            if (hash == "") {
-                // reset history when on main screen
-                this.history = [""];
+    navigate(hash: string, reload?: boolean) {
+        if (
+            this.history.length == 0 ||
+            this.history[this.history.length - 1] != hash
+        ) {
+            if (this.useCustomHistory) {
+                if (hash == "") {
+                    // reset history when on main screen
+                    this.history = [""];
+                } else {
+                    // deduplicate
+                    this.history = this.history.filter((h) => h != hash);
+                    this.history.push(hash);
+                }
+                window.history.pushState(
+                    {},
+                    "",
+                    `${window.location.pathname}${hash}`,
+                );
             } else {
-                // deduplicate
-                this.history = this.history.filter((h) => h != hash);
+                // add to browser history
                 this.history.push(hash);
+                window.history.pushState(
+                    {},
+                    "",
+                    `${window.location.pathname}${hash}`,
+                );
             }
-            window.history.pushState(
-                {},
-                "",
-                `${window.location.pathname}${hash}`,
-            );
-        } else {
-            // add to browser history
-            this.history.push(hash);
-            window.history.pushState(
-                {},
-                "",
-                `${window.location.pathname}${hash}`,
-            );
         }
-        if (this.onNavigate) this.onNavigate();
+        if (this.onNavigate) this.onNavigate(reload);
     }
 }

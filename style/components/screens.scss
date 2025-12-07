@@ -32,6 +32,34 @@
   }
 }
 
+.carrousel {
+  .slider {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .settings-navbar-sticky {
+    position: absolute;
+    top: sizes.$button-top;
+
+    .small-navbar {
+      position: sticky;
+      width: 100vw;
+      top: 0;
+    }
+  }
+
+  .screen {
+    position: absolute;
+    box-shadow: none;
+    background: transparent;
+  }
+}
+
 .screen.with-navbar {
   display: flex;
   justify-content: center;

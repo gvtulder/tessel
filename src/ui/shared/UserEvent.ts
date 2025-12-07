@@ -32,25 +32,46 @@ export class UserEvent extends Event {
     gameSettings?: GameSettings;
     gameId?: string;
     gameSettingsSerialized?: GameSettingsSerialized;
+    page?: Pages | string;
+    reload?: boolean;
 
     constructor(
         type: UserEventType,
         gameSettings?: GameSettings,
         gameId?: string,
         gameSettingsSerialized?: GameSettingsSerialized,
+        page?: Pages | string,
+        reload?: boolean,
     ) {
         super(type);
         this.gameSettings = gameSettings;
         this.gameId = gameId;
         this.gameSettingsSerialized = gameSettingsSerialized;
+        this.page = page;
+        this.reload = reload;
     }
 }
 
-export class NavigateEvent extends Event {
-    page?: Pages | string;
+export function cloneUserEvent(evt: UserEvent): UserEvent {
+    return new UserEvent(
+        evt.type as UserEventType,
+        evt.gameSettings,
+        evt.gameId,
+        evt.gameSettingsSerialized,
+        evt.page,
+        evt.reload,
+    );
+}
 
-    constructor(page: Pages | string) {
-        super(UserEventType.Navigate);
-        this.page = page;
+export class NavigateEvent extends UserEvent {
+    constructor(page: Pages | string, reload?: boolean) {
+        super(
+            UserEventType.Navigate,
+            undefined,
+            undefined,
+            undefined,
+            page,
+            reload,
+        );
     }
 }

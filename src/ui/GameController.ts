@@ -26,25 +26,25 @@ import { PaintMenu } from "./paint/PaintMenu";
 import { SettingsDisplay } from "./settings/SettingsDisplay";
 import { StatisticsDisplay } from "./statistics/StatisticsDisplay";
 import { StatisticsMonitor } from "../stats/StatisticsMonitor";
-import { MainNavBar, NavBarItems } from "./shared/MainNavBar";
 import { AllGamesDisplay } from "./menu/AllGamesDisplay";
 import { AboutDisplay } from "./about/AboutDisplay";
 import { NavigationManager } from "./shared/NavigationManager";
-import {
-    NavigateEvent,
-    Pages,
-    UserEvent,
-    UserEventType,
-} from "./shared/UserEvent";
+import { Pages, UserEvent, UserEventType } from "./shared/UserEvent";
 import { getStorageBackend } from "../lib/storage-backend";
 import * as zod from "zod";
+import {
+    ScreenCarrousel,
+    ScreenCarrouselFactory,
+} from "./shared/ScreenCarrousel";
+import { msg } from "@lingui/core/macro";
+import icons from "./shared/icons";
+import { NavBarItems } from "./shared/NavBar";
 
 const ControllerState_S = zod.object({
     hash: zod.string(),
     gameState: zod.optional(GameState_S),
     gridState: zod.optional(TileSet_S),
     lastMainPage: zod.optional(zod.enum(Pages)),
-    lastSettingsTab: zod.optional(zod.enum(Pages)),
     history: zod.optional(zod.array(zod.string())),
 });
 type ControllerState_S = zod.infer<typeof ControllerState_S>;
@@ -64,19 +64,16 @@ export class GameController {
     stats: StatisticsMonitor;
     game?: Game;
     grid?: Grid;
-    currentScreen?: ScreenDisplay;
+    currentScreen?: ScreenDisplay | ScreenCarrousel;
     currentScreenDestroy?: null | (() => void);
     previousScreenDestroy?: null | (() => void);
     previousScreenDestroyTimeout?: number;
     restartNeeded?: boolean;
-    mainNavBar: MainNavBar;
 
     navigation: NavigationManager;
+    carrousel: ScreenCarrouselFactory;
 
-    lastNavBarItem?: NavBarItems | null;
     lastMainPage?: Pages;
-    lastSettingsTab?: Pages;
-    destroyMainNavBar: () => void;
 
     constructor(container: HTMLElement, config: GameControllerConfig) {
         this.container = container;
@@ -88,12 +85,9 @@ export class GameController {
         this.navigation = new NavigationManager(
             config.useCustomHistory || false,
         );
-        this.navigation.onNavigate = () => {
-            this.run();
+        this.navigation.onNavigate = (reload?: boolean) => {
+            this.run(undefined, reload);
         };
-
-        [this.mainNavBar, this.destroyMainNavBar] = this.buildMainNavBar();
-        this.container.appendChild(this.mainNavBar.element);
 
         const rescale = () => this.rescale();
         if (screen && screen.orientation) {
@@ -118,6 +112,77 @@ export class GameController {
                 wb.messageSkipWaiting();
             });
         }
+
+        this.carrousel = new ScreenCarrouselFactory([
+            {
+                tab: NavBarItems.MainMenu,
+                icon: icons.houseIcon,
+                title: msg({
+                    id: "ui.menu.MainMenuButton",
+                    message: "Home",
+                }),
+                page: Pages.MainMenu,
+                screen: () => new MainMenuDisplay(this.version),
+            },
+            {
+                tab: NavBarItems.AllGames,
+                icon: icons.gridIcon,
+                title: msg({
+                    id: "ui.menu.AllGamesButton",
+                    message: "All Games",
+                }),
+                page: Pages.AllGames,
+                screen: () => new AllGamesDisplay(),
+            },
+            {
+                tab: NavBarItems.Paint,
+                icon: icons.paintbrushIcon,
+                title: msg({ id: "ui.menu.PaintButton", message: "Paint" }),
+                page: Pages.PaintMenu,
+                screen: () => new PaintMenu(),
+            },
+            {
+                tab: NavBarItems.Settings,
+                icon: icons.gearsIcon,
+                title: msg({
+                    id: "ui.menu.SettingsButton",
+                    message: "Settings",
+                }),
+                items: [
+                    {
+                        tab: NavBarItems.Settings,
+                        icon: icons.gearsIcon,
+                        title: msg({
+                            id: "ui.menu.SettingsButton",
+                            message: "Settings",
+                        }),
+                        page: Pages.Settings,
+                        screen: () =>
+                            new SettingsDisplay(this.version, this.platform),
+                    },
+                    {
+                        tab: NavBarItems.About,
+                        icon: icons.bookIcon,
+                        title: msg({
+                            id: "ui.menu.HowToPlayButton",
+                            message: "How to play?",
+                        }),
+                        page: Pages.About,
+                        screen: () => new AboutDisplay(this.version),
+                    },
+                    {
+                        tab: NavBarItems.Statistics,
+                        icon: icons.chartIcon,
+                        title: msg({
+                            id: "ui.menu.StatisticsButton",
+                            message: "Statistics",
+                        }),
+                        page: Pages.Statistics,
+                        screen: () => new StatisticsDisplay(this.stats),
+                    },
+                ],
+            },
+        ]);
     }
 
     async start() {
@@ -134,7 +199,6 @@ export class GameController {
             // restore saved history
             this.navigation.restoreHistory(state.history);
             this.lastMainPage = state.lastMainPage;
-            this.lastSettingsTab = state.lastSettingsTab;
         } else {
             // ensure default history
             this.navigation.restoreHistory(
@@ -145,31 +209,9 @@ export class GameController {
         this.run(state);
     }
 
-    buildMainNavBar(): [MainNavBar, () => void] {
-        const navBar = new MainNavBar();
-
-        const handleNavigate = (evt: NavigateEvent) => {
-            let page = evt.page!;
-            if (page == Pages.Settings) {
-                // return to previous tab
-                page = this.lastSettingsTab || Pages.Settings;
-            }
-            this.navigateTo(page);
-        };
-
-        navBar.addEventListener(UserEventType.Navigate, handleNavigate);
-
-        const destroy = () => {
-            navBar.removeEventListener(UserEventType.Navigate, handleNavigate);
-            navBar.destroy();
-        };
-
-        return [navBar, destroy];
-    }
-
-    navigateTo(page: Pages | string) {
+    navigateTo(page: Pages | string, reload?: boolean) {
         const nextHash = page == Pages.MainMenu ? "" : `#${page}`;
-        this.navigation.navigate(nextHash);
+        this.navigation.navigate(nextHash, reload);
     }
 
     navigateBack(): boolean {
@@ -180,7 +222,7 @@ export class GameController {
         return this.navigation.back();
     }
 
-    run(resumeState?: ControllerState_S) {
+    run(resumeState?: ControllerState_S, reload?: boolean) {
         // make sure we only resume once after saving the state
         this.clearSaveControllerState();
 
@@ -192,18 +234,10 @@ export class GameController {
         const gameSettings = SaveGames.lookup.get(saveGameId);
         if (gameSettings) {
             this.startGame(gameSettings, resumeState?.gameState);
-        } else if (saveGameId == Pages.AllGames) {
-            this.showAllGames();
+        } else if (this.carrousel.pages.has(saveGameId)) {
+            this.showInCarrousel(saveGameId as Pages, reload);
         } else if (saveGameId == Pages.SetupMenu) {
             this.showGameSetupDisplay();
-        } else if (saveGameId == Pages.About) {
-            this.showAboutDisplay();
-        } else if (saveGameId == Pages.Settings) {
-            this.showSettingsDisplay();
-        } else if (saveGameId == Pages.Statistics) {
-            this.showStatisticsDisplay();
-        } else if (saveGameId == Pages.PaintMenu) {
-            this.showPaintMenuDisplay();
         } else if (saveGameId.match("^paint-")) {
             const key = saveGameId.split("-")[1];
             const atlas = SaveGames.SetupCatalog.atlas.get(key);
@@ -214,7 +248,7 @@ export class GameController {
                     resumeState?.gridState,
                 );
             } else {
-                this.showPaintMenuDisplay();
+                this.showInCarrousel(Pages.PaintMenu, reload);
             }
         } else {
             let gameSettings: GameSettings | null = null;
@@ -227,7 +261,7 @@ export class GameController {
             if (gameSettings) {
                 this.startGame(gameSettings, resumeState?.gameState);
             } else {
-                this.showMainMenu();
+                this.showInCarrousel(Pages.MainMenu, reload);
             }
         }
     }
@@ -250,39 +284,21 @@ export class GameController {
 
     showScreen(
         screen: ScreenDisplay,
-        mainNavBarTab?: NavBarItems,
         lastMainPage?: Pages,
-        lastSettingsTab?: Pages,
         handlers?: [UserEventType, () => void][],
     ) {
-        if (this.lastNavBarItem != mainNavBarTab) {
-            window.setTimeout(() => {
-                screen.element.classList.remove("appear", "appear-initial");
-            }, 1000);
-            screen.element.classList.add("appear");
-            if (!this.lastNavBarItem) {
-                screen.element.classList.add("appear-initial");
-            }
-        }
+        window.setTimeout(() => {
+            screen.element.classList.remove("appear", "appear-initial");
+        }, 1000);
+        screen.element.classList.add("appear", "appear-initial");
 
         this.resetState();
-        if (mainNavBarTab) {
-            this.mainNavBar.show();
-            this.mainNavBar.activeTab = mainNavBarTab;
-            this.lastNavBarItem = mainNavBarTab;
-        } else {
-            this.mainNavBar.hide();
-            this.lastNavBarItem = null;
-        }
         if (lastMainPage) {
             this.lastMainPage = lastMainPage;
         }
-        if (lastSettingsTab) {
-            this.lastSettingsTab = lastSettingsTab;
-        }
 
-        const handleNavigate = (evt: NavigateEvent) => {
-            this.navigateTo(evt.page!);
+        const handleNavigate = (evt: UserEvent) => {
+            this.navigateTo(evt.page!, evt.reload);
         };
 
         const handleBack = () => {
@@ -335,56 +351,20 @@ export class GameController {
         }
     }
 
-    showMainMenu() {
+    showInCarrousel(page: Pages, reload?: boolean) {
+        this.lastMainPage = page;
+        if (!reload && this.currentScreen instanceof ScreenCarrousel) {
+            this.currentScreen.showScreen(page);
+            return;
+        }
         if (this.checkForUpdate()) return;
-        this.showScreen(
-            new MainMenuDisplay(this.version),
-            NavBarItems.MainMenu,
-            Pages.MainMenu,
-        );
-    }
-
-    showAllGames() {
-        this.showScreen(
-            new AllGamesDisplay(),
-            NavBarItems.AllGames,
-            Pages.AllGames,
-        );
-    }
-
-    showAboutDisplay() {
-        this.showScreen(
-            new AboutDisplay(this.version),
-            NavBarItems.Settings,
-            Pages.About,
-            Pages.About,
-        );
-    }
-
-    showSettingsDisplay() {
-        this.showScreen(
-            new SettingsDisplay(this.version, this.platform),
-            NavBarItems.Settings,
-            Pages.Settings,
-            Pages.Settings,
-        );
-    }
-
-    showStatisticsDisplay() {
-        this.showScreen(
-            new StatisticsDisplay(this.stats),
-            NavBarItems.Settings,
-            Pages.Statistics,
-            Pages.Statistics,
-        );
+        const carrousel = this.carrousel.build();
+        carrousel.showScreen(page);
+        this.showScreen(carrousel, page);
     }
 
     showGameSetupDisplay() {
-        this.showScreen(new GameSetupDisplay(), undefined, Pages.SetupMenu);
-    }
-
-    showPaintMenuDisplay() {
-        this.showScreen(new PaintMenu(), NavBarItems.Paint, Pages.PaintMenu);
+        this.showScreen(new GameSetupDisplay(), Pages.SetupMenu);
     }
 
     showPaintDisplay(atlas: Atlas, page: string, tileSet?: TileSet_S) {
@@ -425,7 +405,6 @@ export class GameController {
             gameState: this.game?.saveState(),
             gridState: this.grid?.saveTilesAndPlaceholders(),
             lastMainPage: this.lastMainPage,
-            lastSettingsTab: this.lastSettingsTab,
             history: this.navigation.history,
         };
         getStorageBackend().setItem("resumeState", JSON.stringify(state));

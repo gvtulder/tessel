@@ -9,7 +9,11 @@ export class DragHandlerEvent {
     handler: DragHandler;
     dx: number;
     dy: number;
+    dxTotal: number;
+    dyTotal: number;
     dtime: number;
+    velocityX: number;
+    velocityY: number;
 
     constructor(
         type: string,
@@ -18,20 +22,30 @@ export class DragHandlerEvent {
         handler: DragHandler,
         dx: number = 0,
         dy: number = 0,
+        dxTotal: number = 0,
+        dyTotal: number = 0,
         dtime: number = 0,
+        velocityX: number = 0,
+        velocityY: number = 0,
     ) {
         this.event = event;
         this.target = target;
         this.handler = handler;
         this.dx = dx;
         this.dy = dy;
+        this.dxTotal = dxTotal;
+        this.dyTotal = dyTotal;
         this.dtime = dtime;
+        this.velocityX = velocityX;
+        this.velocityY = velocityY;
     }
 }
 
 const DRAG_START_THRESHOLD = 5;
 const DRAG_MOVE_THRESHOLD = 0.5;
-const MAX_TAP_THRESHOLD = 10;
+const MAX_TAP_THRESHOLD = 15;
+
+const VELOCITY_MOVING_AVERAGE_DECAY = 0.99;
 
 export class DragHandler {
     element: HTMLElement;
@@ -43,20 +57,30 @@ export class DragHandler {
     clientY: number = 0;
     previousTimestamp = 0;
     startTimestamp = 0;
+    velocityX = 0;
+    velocityY = 0;
 
     onDragStart?: (evt: DragHandlerEvent) => void;
     onDragMove?: (evt: DragHandlerEvent) => void;
     onDragEnd?: (evt: DragHandlerEvent) => void;
     onTap?: (evt: DragHandlerEvent) => void;
 
+    usePointerCapture?: boolean;
+    pointerType?: string;
     pointerDownEventListener: (evt: PointerEvent) => void;
     pointerMoveEventListener: (evt: PointerEvent) => void;
     pointerUpEventListener: (evt: PointerEvent) => void;
     pointerCancelEventListener: (evt: PointerEvent) => void;
     pointerLeaveEventListener: (evt: PointerEvent) => void;
 
-    constructor(element: HTMLElement) {
+    constructor(
+        element: HTMLElement,
+        usePointerCapture?: boolean,
+        pointerType?: string,
+    ) {
         this.element = element;
+        this.usePointerCapture = usePointerCapture;
+        this.pointerType = pointerType;
 
         element.addEventListener(
             "pointerdown",
@@ -87,22 +111,28 @@ export class DragHandler {
 
     handlePointerDown(evt: PointerEvent) {
         if (!evt.isPrimary) return;
+        if (this.pointerType && this.pointerType != evt.pointerType) return;
         this.pointerDown = true;
         this.clientXstart = this.clientX = evt.clientX;
         this.clientYstart = this.clientY = evt.clientY;
         this.startTimestamp = this.previousTimestamp = evt.timeStamp;
+        this.velocityX = 0;
+        this.velocityY = 0;
         evt.preventDefault();
     }
 
     handlePointerMove(evt: PointerEvent) {
         if (!evt.isPrimary) return;
+        if (this.pointerType && this.pointerType != evt.pointerType) return;
         if (!this.pointerDown && !this.dragging) return;
         const dtime = evt.timeStamp - this.previousTimestamp;
         this.previousTimestamp = evt.timeStamp;
+        const dxTotal = evt.clientX - this.clientXstart;
+        const dyTotal = evt.clientY - this.clientYstart;
         if (this.pointerDown && !this.dragging) {
-            this.element.setPointerCapture(evt.pointerId);
-            const dxTotal = evt.clientX - this.clientXstart;
-            const dyTotal = evt.clientY - this.clientYstart;
+            if (this.usePointerCapture) {
+                this.element.setPointerCapture(evt.pointerId);
+            }
             if (
                 (dxTotal !== 0 || dyTotal !== 0) &&
                 Math.hypot(dxTotal, dyTotal) > DRAG_START_THRESHOLD
@@ -117,6 +147,8 @@ export class DragHandler {
                             this,
                             0,
                             0,
+                            dxTotal,
+                            dyTotal,
                             dtime,
                         ),
                     );
@@ -128,6 +160,9 @@ export class DragHandler {
         }
         const dx = evt.clientX - this.clientX;
         const dy = evt.clientY - this.clientY;
+        const decay = Math.pow(VELOCITY_MOVING_AVERAGE_DECAY, dtime);
+        this.velocityX = (1 - decay) * dx + decay * this.velocityX;
+        this.velocityY = (1 - decay) * dy + decay * this.velocityY;
         if (
             this.dragging &&
             (dx !== 0 || dy !== 0) &&
@@ -142,7 +177,11 @@ export class DragHandler {
                         this,
                         dx,
                         dy,
+                        dxTotal,
+                        dyTotal,
                         dtime,
+                        this.velocityX,
+                        this.velocityY,
                     ),
                 );
             }
@@ -154,10 +193,15 @@ export class DragHandler {
 
     handlePointerUp(evt: PointerEvent) {
         if (!evt.isPrimary) return;
+        if (this.pointerType && this.pointerType != evt.pointerType) return;
+        const dtime = evt.timeStamp - this.previousTimestamp;
         const dx = evt.clientX - this.clientX!;
         const dy = evt.clientY - this.clientY!;
         const dxTotal = evt.clientX - this.clientXstart;
         const dyTotal = evt.clientY - this.clientYstart;
+        const decay = Math.pow(VELOCITY_MOVING_AVERAGE_DECAY, dtime);
+        this.velocityX = (1 - decay) * dx + decay * this.velocityX;
+        this.velocityY = (1 - decay) * dy + decay * this.velocityY;
         this.pointerDown = false;
         if (this.dragging) {
             this.dragging = false;
@@ -170,6 +214,11 @@ export class DragHandler {
                         this,
                         dx,
                         dy,
+                        dxTotal,
+                        dyTotal,
+                        dtime,
+                        this.velocityX,
+                        this.velocityY,
                     ),
                 );
             }
@@ -182,11 +231,14 @@ export class DragHandler {
             }
         }
         evt.preventDefault();
-        this.element.releasePointerCapture(evt.pointerId);
+        if (this.usePointerCapture) {
+            this.element.releasePointerCapture(evt.pointerId);
+        }
     }
 
     handlePointerCancel(evt: PointerEvent) {
         if (!evt.isPrimary) return;
+        if (this.pointerType && this.pointerType != evt.pointerType) return;
         this.pointerDown = false;
         if (this.dragging) {
             this.dragging = false;
@@ -197,36 +249,45 @@ export class DragHandler {
                         evt,
                         this.element,
                         this,
-                        evt.clientX - this.clientX,
-                        evt.clientY - this.clientY,
+                        0,
+                        0,
+                        this.clientX - this.clientXstart,
+                        this.clientY - this.clientYstart,
                     ),
                 );
             }
         }
         evt.preventDefault();
-        this.element.releasePointerCapture(evt.pointerId);
+        if (this.usePointerCapture) {
+            this.element.releasePointerCapture(evt.pointerId);
+        }
     }
 
     destroy() {
         this.element.removeEventListener(
             "pointerdown",
             this.pointerDownEventListener,
+            this.usePointerCapture,
         );
         this.element.removeEventListener(
             "pointermove",
             this.pointerMoveEventListener,
+            this.usePointerCapture,
         );
         this.element.removeEventListener(
             "pointerup",
             this.pointerUpEventListener,
+            this.usePointerCapture,
         );
         this.element.removeEventListener(
             "pointercancel",
             this.pointerCancelEventListener,
+            this.usePointerCapture,
         );
         this.element.removeEventListener(
             "pointerleave",
             this.pointerLeaveEventListener,
+            this.usePointerCapture,
         );
     }
 }

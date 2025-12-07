@@ -3,13 +3,10 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import icons from "../shared/icons";
 import { NavigateEvent } from "../shared/UserEvent";
 import { Pages } from "../shared/UserEvent";
-import { UserEventType } from "../shared/UserEvent";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
-import { Button } from "../shared/Button";
 import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggle } from "../shared/Toggle";
 import { Toggles } from "../shared/toggles";
@@ -17,13 +14,11 @@ import { t } from "@lingui/core/macro";
 import { updateI18n } from "../../i18n";
 import { LanguagePicker } from "./LanguagePicker";
 import { i18n } from "@lingui/core";
-import { SmallNavBar, SmallNavBarItems } from "./SmallNavBar";
 import { getShareBackend } from "../../lib/share-backend";
 
 export class SettingsDisplay extends ScreenDisplay {
     element: HTMLDivElement;
 
-    navBar: SmallNavBar;
     languagePicker: LanguagePicker;
     toggles: { [key: string]: Toggle | ThreeWayToggle | LanguagePicker };
 
@@ -35,13 +30,6 @@ export class SettingsDisplay extends ScreenDisplay {
             "div",
             "screen with-navbar settings-display",
         ));
-
-        // navbar
-        const navBar = (this.navBar = new SmallNavBar((page: Pages) => {
-            this.dispatchEvent(new NavigateEvent(page));
-        }));
-        navBar.activeTab = SmallNavBarItems.Settings;
-        element.appendChild(navBar.element);
 
         // main page text
         const article = createElement("article", null, element);
@@ -235,7 +223,7 @@ export class SettingsDisplay extends ScreenDisplay {
         this.languagePicker.onchange = () => {
             updateI18n(this.languagePicker.selected!.key);
             // reload
-            this.dispatchEvent(new NavigateEvent(Pages.Settings));
+            this.dispatchEvent(new NavigateEvent(Pages.Settings, true));
         };
         this.languagePicker.selectStoredOrDefault(i18n.locale);
     }
@@ -260,7 +248,6 @@ export class SettingsDisplay extends ScreenDisplay {
 
     destroy() {
         this.element.removeEventListener("click", this.handleClick);
-        this.navBar.destroy();
         for (const toggle of Object.values(this.toggles)) {
             toggle.destroy();
         }

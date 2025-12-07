@@ -81,7 +81,7 @@
     }
   }
 
-  &.appear-initial {
+  .appear-initial & {
     .atlas-picker-option {
       animation-duration: 300ms;
       animation-delay: 50ms;
@@ -125,7 +125,7 @@
 }
 
 .screen.all-games {
-  &.appear-initial {
+  .appear-initial & {
     .atlas-picker-option {
       animation-duration: 300ms;
       animation-delay: 50ms;

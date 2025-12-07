@@ -20,15 +20,21 @@ export class TapHandlerEvent {
     }
 }
 
+const MAX_TAP_THRESHOLD = 20;
+
 export class TapHandler {
     element: HTMLElement;
 
     pressed: boolean;
+    clientXstart: number = 0;
+    clientYstart: number = 0;
+
     onStartPress?: (evt: TapHandlerEvent) => void;
     onEndPress?: (evt: TapHandlerEvent) => void;
-    onTap?: (evt: TapHandlerEvent) => void;
+    onTap?: (evt?: TapHandlerEvent) => void;
 
     pointerDownEventListener: (evt: PointerEvent) => void;
+    pointerMoveEventListener: (evt: PointerEvent) => void;
     pointerUpEventListener: (evt: PointerEvent) => void;
     pointerOutEventListener: (evt: PointerEvent) => void;
 
@@ -40,6 +46,11 @@ export class TapHandler {
             "pointerdown",
             (this.pointerDownEventListener = (evt: PointerEvent) =>
                 this.handlePointerDown(evt)),
+        );
+        element.addEventListener(
+            "pointermove",
+            (this.pointerMoveEventListener = (evt: PointerEvent) =>
+                this.handlePointerMove(evt)),
         );
         element.addEventListener(
             "pointerup",
@@ -55,6 +66,8 @@ export class TapHandler {
 
     handlePointerDown(evt: PointerEvent) {
         this.pressed = true;
+        this.clientXstart = evt.clientX;
+        this.clientYstart = evt.clientY;
         if (this.onStartPress) {
             this.onStartPress(
                 new TapHandlerEvent("startpress", evt, this.element, this),
@@ -63,7 +76,26 @@ export class TapHandler {
         evt.preventDefault();
     }
 
+    handlePointerMove(evt: PointerEvent) {
+        if (
+            Math.hypot(
+                evt.clientX - this.clientXstart,
+                evt.clientY - this.clientYstart,
+            ) > MAX_TAP_THRESHOLD
+        ) {
+            this.pressed = false;
+        }
+    }
+
     handlePointerUp(evt: PointerEvent) {
+        if (
+            Math.hypot(
+                evt.clientX - this.clientXstart,
+                evt.clientY - this.clientYstart,
+            ) > MAX_TAP_THRESHOLD
+        ) {
+            this.pressed = false;
+        }
         if (this.pressed && this.onTap) {
             this.pressed = false;
             this.onTap(new TapHandlerEvent("tap", evt, this.element, this));
@@ -93,6 +125,10 @@ export class TapHandler {
         this.element.removeEventListener(
             "pointerdown",
             this.pointerDownEventListener,
+        );
+        this.element.removeEventListener(
+            "pointermove",
+            this.pointerMoveEventListener,
         );
         this.element.removeEventListener(
             "pointerup",

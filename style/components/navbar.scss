@@ -15,11 +15,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    max-width: 90%;
     min-height: calc(2.5 * var(--navbar-size));
     padding: 0 calc(0.125 * var(--navbar-size));
     border-radius: calc(1.25 * var(--navbar-size));
     background: var(--navbar-bg-color);
     box-shadow: var(--button-box-shadow);
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   .game-button {
@@ -62,11 +65,29 @@
   .active .game-button .bg {
     background: var(--navbar-bg-active-color);
   }
+
+  &.appear {
+    animation-name: navbar-animate-appear;
+    animation-duration: 200ms;
+    animation-fill-mode: both;
+  }
+
+  &.disappear {
+    animation-name: navbar-animate-appear;
+    animation-duration: 200ms;
+    animation-direction: reverse;
+    animation-fill-mode: both;
+  }
+
+  &.hidden {
+    top: -10000px;
+  }
 }
 
 .main-navbar {
-  position: fixed;
+  position: absolute;
   width: 100%;
+  left: 0;
   bottom: sizes.$main-navbar-bottom;
   display: flex;
   flex-direction: row;
@@ -78,25 +99,17 @@
   .game-button {
     padding: calc(0.25 * var(--navbar-size)) calc(0.125 * var(--navbar-size));
   }
-
-  &.appear {
-    animation-name: navbar-animate-appear;
-    animation-delay: 300ms;
-    animation-duration: 200ms;
-    animation-fill-mode: both;
-  }
-
-  &.disappear {
-    animation-name: navbar-animate-appear;
-    animation-duration: 200ms;
-    animation-direction: reverse;
-    animation-fill-mode: both;
-  }
 }
 
 .small-navbar {
-  grid-area: navbar;
-  max-width: max-content;
+  position: absolute;
+  width: 100%;
+  top: sizes.$button-top;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  z-index: 100;
   font-size: 0.9rem;
   --navbar-size: 0.9rem;
 

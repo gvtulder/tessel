@@ -84,7 +84,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         */
 
         // TODO disabled interact js
-        this.draggable = new DragHandler(this.rotatable);
+        this.draggable = new DragHandler(this.rotatable, true);
         this.initInteractable(makeRotatable);
 
         this.onDragTransitionEnd = () => {

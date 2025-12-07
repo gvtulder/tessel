@@ -15,6 +15,7 @@ import {
     area,
     bbox,
     centroid,
+    clip,
     comparePoint,
     deg2rad,
     dist,
@@ -389,4 +390,12 @@ describe("roundPoints", () => {
     ])("rounds to the given precision", (x, precision, expected) => {
         expect(roundPoints(x, precision)).toStrictEqual(expected);
     });
+});
+
+describe("clip", () => {
+    expect(clip(-2, 0, 5)).toBe(0);
+    expect(clip(0, 0, 5)).toBe(0);
+    expect(clip(2, 0, 5)).toBe(2);
+    expect(clip(5, 0, 5)).toBe(5);
+    expect(clip(7, 0, 5)).toBe(5);
 });

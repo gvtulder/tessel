@@ -28,7 +28,7 @@ export class DropoutMenu {
         const dropoutButton = (this.dropoutButton = new Button(
             icons.barsIcon,
             msg({ id: "ui.game.showMenuButton", message: "Show menu" }),
-            (evt: PointerEvent) => {
+            () => {
                 this.element.classList.toggle("expanded");
                 this.updateWasExpandedTimeout();
             },

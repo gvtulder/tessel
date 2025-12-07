@@ -3,18 +3,12 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { NavigateEvent } from "../shared/UserEvent";
-import { Pages } from "../shared/UserEvent";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { createElement } from "../shared/html";
-import { t } from "@lingui/core/macro";
 import { getLocalizedAboutHTML, updateI18n } from "../../i18n";
-import { SmallNavBar, SmallNavBarItems } from "../settings/SmallNavBar";
 
 export class AboutDisplay extends ScreenDisplay {
     element: HTMLDivElement;
-
-    navBar: SmallNavBar;
 
     constructor(version?: string) {
         super();
@@ -24,13 +18,6 @@ export class AboutDisplay extends ScreenDisplay {
             "div",
             "screen with-navbar about-display",
         ));
-
-        // navbar
-        const navBar = (this.navBar = new SmallNavBar((page: Pages) => {
-            this.dispatchEvent(new NavigateEvent(page));
-        }));
-        navBar.activeTab = SmallNavBarItems.About;
-        element.appendChild(navBar.element);
 
         // main page text
         const article = createElement("article", null, element);
@@ -53,7 +40,6 @@ export class AboutDisplay extends ScreenDisplay {
     }
 
     destroy() {
-        this.navBar.destroy();
         this.element.remove();
     }
 

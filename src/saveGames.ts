@@ -289,7 +289,7 @@ export const SetupCatalog = {
             scorer: HoleScorer,
         },
     ),
-    defaultScorer: HoleScorer.id,
+    defaultScorer: ConnectedSegmentScorer.id,
 };
 
 for (const atlas of SetupCatalog.atlas.keys()) {

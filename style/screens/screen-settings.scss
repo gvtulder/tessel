@@ -190,6 +190,7 @@
     table td {
       padding: 2px 2px;
       vertical-align: top;
+      font-variant: tabular-nums;
     }
     table th.label,
     table td.label {
@@ -200,11 +201,12 @@
     table td:first-child,
     table th.label:first-child,
     table td.label:first-child {
-      padding-left: 8px;
+      padding-left: 0.5em;
       border: none;
     }
     thead th {
-      text-align: center;
+      text-align: right;
+      padding-right: 0.5em;
       width: $stats-column-width;
       max-width: $stats-column-width;
       vertical-align: bottom;
@@ -221,7 +223,8 @@
     }
     tbody td,
     tfoot td {
-      text-align: center;
+      text-align: right;
+      padding-right: 1em;
       width: $stats-column-width;
       max-width: $stats-column-width;
     }

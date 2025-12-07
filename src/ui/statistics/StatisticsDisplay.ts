@@ -15,6 +15,7 @@ import { i18n, MessageDescriptor } from "@lingui/core";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { SetupCatalog } from "../../saveGames";
 import { SmallNavBar, SmallNavBarItems } from "../settings/SmallNavBar";
+import { formatNumber } from "../../i18n";
 
 export type StatisticsSection = {
     heading?: {
@@ -133,7 +134,9 @@ export class StatisticsDisplay extends ScreenDisplay {
             const h3 = createElement("h4", null, fragment);
             if (section.heading.key) {
                 h3.innerHTML = i18n.t(section.heading.title.id, {
-                    value: stats.counters.get(section.heading.key) || 0,
+                    value: formatNumber(
+                        stats.counters.get(section.heading.key) || 0,
+                    ),
                 });
             } else {
                 h3.innerHTML = t(section.heading.title as MessageDescriptor);
@@ -170,7 +173,7 @@ export class StatisticsDisplay extends ScreenDisplay {
                     for (const key of row.keys) {
                         const td = createElement("td", null, tr);
                         const n = stats.counters.get(key) || 0;
-                        td.innerHTML = `${n}`;
+                        td.innerHTML = formatNumber(n);
                     }
                 } else {
                     const th = createElement("th", "label", tr);
@@ -192,7 +195,7 @@ export class StatisticsDisplay extends ScreenDisplay {
                 for (const key of row.keys) {
                     const td = createElement("td", null, tr);
                     const n = stats.counters.get(key) || 0;
-                    td.innerHTML = `${n}`;
+                    td.innerHTML = formatNumber(n);
                 }
                 for (let i = 1; i < multiColumn; i++) {
                     const td = createElement("td", null, tr);

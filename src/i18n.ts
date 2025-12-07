@@ -23,6 +23,7 @@ export const languages = {
             __dirname + "/../i18n/en/about.html",
             "utf-8",
         ),
+        languageTag: "en-US",
     },
     de: {
         title: "Deutsch",
@@ -31,6 +32,7 @@ export const languages = {
             __dirname + "/../i18n/de/about.html",
             "utf-8",
         ),
+        languageTag: "de-DE",
     },
     es: {
         title: "Español",
@@ -39,6 +41,7 @@ export const languages = {
             __dirname + "/../i18n/es/about.html",
             "utf-8",
         ),
+        languageTag: "es-ES",
     },
     fr: {
         title: "Français",
@@ -47,6 +50,7 @@ export const languages = {
             __dirname + "/../i18n/fr/about.html",
             "utf-8",
         ),
+        languageTag: "fr-FR",
     },
     nl: {
         title: "Nederlands",
@@ -55,6 +59,7 @@ export const languages = {
             __dirname + "/../i18n/nl/about.html",
             "utf-8",
         ),
+        languageTag: "nl-NL",
     },
     tr: {
         title: "Türkçe",
@@ -63,6 +68,7 @@ export const languages = {
             __dirname + "/../i18n/tr/about.html",
             "utf-8",
         ),
+        languageTag: "tr-TR",
     },
     "zh-Hans": {
         title: "简体中文",
@@ -71,6 +77,7 @@ export const languages = {
             __dirname + "/../i18n/zh-Hans/about.html",
             "utf-8",
         ),
+        languageTag: "zh-Hans",
     },
     "zh-Hant": {
         title: "繁體中文",
@@ -79,18 +86,24 @@ export const languages = {
             __dirname + "/../i18n/zh-Hant/about.html",
             "utf-8",
         ),
+        languageTag: "zh-Hant",
     },
 } as {
     [key: string]: {
         title: string;
         messages: Messages;
         aboutHTML: string;
+        languageTag: string;
     };
 };
 
 for (const [language, data] of Object.entries(languages)) {
     i18n.load(language, data.messages);
 }
+
+let numberFormat: Intl.NumberFormat = new Intl.NumberFormat("en-US", {
+    style: "decimal",
+});
 
 export async function selectLanguage(
     options: (string | null)[],
@@ -114,13 +127,20 @@ export async function prepareI18n(navigatorLanguage: string) {
         navigatorLanguage,
         "en",
     ];
-    i18n.activate(await selectLanguage(options));
+    updateI18n(await selectLanguage(options));
 }
 
 export function updateI18n(locale: string) {
+    numberFormat = new Intl.NumberFormat(languages[locale].languageTag, {
+        style: "decimal",
+    });
     i18n.activate(locale);
 }
 
 export function getLocalizedAboutHTML(): string {
     return languages[i18n.locale]?.aboutHTML || languages["en"].aboutHTML;
+}
+
+export function formatNumber(n: number | bigint): string {
+    return numberFormat.format(n);
 }

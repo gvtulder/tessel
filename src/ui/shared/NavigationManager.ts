@@ -30,7 +30,7 @@ export class NavigationManager {
             }
         } else {
             // no specific handling for browser-based history
-            this.history.push(...hashes);
+            this.history.push(window.location.hash);
         }
     }
 
@@ -52,8 +52,15 @@ export class NavigationManager {
                 return false;
             }
         } else {
-            // rely on browser history
-            window.history.back();
+            // rely on browser history,
+            // but do not leave the game
+            if (this.history.length > 1) {
+                // go back in in-game history
+                window.history.back();
+            } else {
+                // go back to main page
+                this.navigate("");
+            }
             return true;
         }
     }

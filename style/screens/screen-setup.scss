@@ -59,12 +59,16 @@
   position: absolute;
   left: sizes.$button-left;
   top: sizes.$button-top;
+  margin: calc(-0.25 * sizes.$button-scale);
+  padding: calc(0.25 * sizes.$button-scale);
 }
 
 .screen.game-setup .game-button.regenerate {
   position: absolute;
   left: sizes.$button-left;
   bottom: sizes.$button-margin-height;
+  margin: calc(-0.25 * sizes.$button-scale);
+  padding: calc(0.25 * sizes.$button-scale);
 }
 
 .screen.game-setup .buttons {
@@ -72,7 +76,7 @@
   align-self: center;
   justify-self: center;
 }
-.screen.game-setup .game-button.play {
+.screen.game-setup .game-button.play .bg {
   width: min(12vh, max(10vw, 10vh));
   height: min(12vh, max(10vw, 10vh));
   padding: 10px;
@@ -82,13 +86,13 @@
   text-align: center;
   transition: transform 0.1s;
 }
-.screen.game-setup .game-button.play.disabled {
+.screen.game-setup .game-button.play.disabled .bg {
   background: var(--setup-play-button-bg-disabled-color);
   svg {
     fill: var(--setup-play-button-fg-disabled-color);
   }
 }
-.screen.game-setup .game-button.play svg {
+.screen.game-setup .game-button.play .bg svg {
   display: inline-block;
   fill: var(--setup-play-button-fg-color);
   margin: 16% 0 0 9%;
@@ -197,7 +201,7 @@
     );
   }
 
-  .screen.game-setup .game-button.play {
+  .screen.game-setup .game-button.play .bg {
     width: min(15vw, max(10vw, 10vh));
     height: min(15vw, max(10vw, 10vh));
   }

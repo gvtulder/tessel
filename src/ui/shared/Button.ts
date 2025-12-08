@@ -19,9 +19,9 @@ export class Button {
         className?: string | null,
         showLabel?: boolean,
     ) {
-        const button = document.createElement("div");
-        button.classList.add("game-button");
-        if (className) button.classList.add(className);
+        const wrapper = createElement("div", "game-button");
+        if (className) wrapper.classList.add(className);
+        const button = createElement("div", "bg", wrapper);
         button.title = (title as MessageDescriptor).id
             ? t(title as MessageDescriptor)
             : (title as string);
@@ -30,18 +30,18 @@ export class Button {
             const span = createElement("span", null, button);
             span.innerHTML = button.title;
         }
-        this.element = button;
+        this.element = wrapper;
 
-        const tapHandler = (this.tapHandler = new TapHandler(button));
+        const tapHandler = (this.tapHandler = new TapHandler(wrapper));
         tapHandler.onTap = (evt: TapHandlerEvent) => {
             button.classList.remove("game-button-pressed");
             ontap(evt.event);
         };
         tapHandler.onStartPress = (evt: TapHandlerEvent) => {
-            button.classList.add("game-button-pressed");
+            wrapper.classList.add("game-button-pressed");
         };
         tapHandler.onEndPress = (evt: TapHandlerEvent) => {
-            button.classList.remove("game-button-pressed");
+            wrapper.classList.remove("game-button-pressed");
         };
     }
 

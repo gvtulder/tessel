@@ -61,8 +61,15 @@ $score-font-size: min(4vw, 5vh);
   .tile-counter {
     grid-area: tile-counter;
     justify-self: center;
-    margin-left: 1vw;
-    margin-top: calc(0.25 * var(--refreshtiles-size));
+    justify-items: center;
+    align-content: center;
+    padding-left: 1vw;
+    padding-top: calc(0.25 * var(--refreshtiles-size));
+    width: 100%;
+    height: 100%;
+    min-width: min-content;
+    min-height: min-content;
+    box-sizing: border-box;
     opacity: 1;
     transition: opacity 300ms;
   }
@@ -71,10 +78,19 @@ $score-font-size: min(4vw, 5vh);
     grid-area: refresh-tiles;
     justify-self: center;
     align-self: center;
-    width: var(--refreshtiles-size);
-    height: var(--refreshtiles-size);
-    padding: calc(0.5 * var(--refreshtiles-size));
+    align-content: center;
+    justify-items: center;
+    width: 100%;
+    height: 100%;
+
+    .bg {
+      width: var(--refreshtiles-size);
+      height: var(--refreshtiles-size);
+      padding: calc(0.5 * var(--refreshtiles-size));
+    }
+
     margin-right: 1vw;
+
     opacity: 1;
     transition: opacity 300ms;
   }
@@ -146,12 +162,18 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
     box-shadow: var(--dropdown-box-shadow);
 
     .game-button.dropout {
-      margin: $dropout-outer-padding $dropout-outer-padding 0 0;
+      margin: 0;
+      padding: $dropout-outer-padding $dropout-outer-padding 0 0;
 
       svg {
         rotate: 90deg;
       }
     }
+  }
+
+  .game-button.dropout {
+    margin: calc(-0.25 * sizes.$button-scale);
+    padding: calc(0.25 * sizes.$button-scale);
   }
 
   .game-button.dropout svg {
@@ -187,7 +209,7 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
     padding-top: $dropout-inner-padding;
   }
 
-  .game-button.backtomenu {
+  .game-button.backtomenu .bg {
     background: var(--home-button-bg-color);
     fill: var(--home-button-fg-color);
   }
@@ -502,10 +524,6 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
     &.show-highscore {
       .score-display {
         align-self: flex-end;
-      }
-
-      .game-button.refreshtiles {
-        margin-bottom: 0.5em;
       }
 
       .score-display p {

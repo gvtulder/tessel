@@ -2,21 +2,23 @@
 
 .game-button {
   @include sizes.disable-select;
-
-  width: calc(0.5 * sizes.$button-scale);
-  height: calc(0.5 * sizes.$button-scale);
-  padding: calc(0.25 * sizes.$button-scale);
   cursor: pointer;
-  border-radius: 100%;
-  box-shadow: var(--button-box-shadow);
 
-  transform: scale(1);
-  transition-property: transform;
-  transition-duration: 100ms;
-  fill: var(--button-fg-color);
-  background: var(--button-bg-color);
+  .bg {
+    width: calc(0.5 * sizes.$button-scale);
+    height: calc(0.5 * sizes.$button-scale);
+    padding: calc(0.25 * sizes.$button-scale);
+    border-radius: 100%;
+    box-shadow: var(--button-box-shadow);
 
-  &.game-button-pressed {
+    transform: scale(1);
+    transition-property: transform;
+    transition-duration: 100ms;
+    fill: var(--button-fg-color);
+    background: var(--button-bg-color);
+  }
+
+  &.game-button-pressed .bg {
     background: var(--button-bg-pressed-color);
   }
 
@@ -26,12 +28,12 @@
   }
 
   @media (hover) {
-    &:hover {
+    &:hover .bg {
       background: var(--button-bg-hover-color);
     }
   }
 
-  &.addtiles {
+  &.addtiles .bg {
     width: calc(0.6 * sizes.$button-scale);
     padding-left: calc(0.2 * sizes.$button-scale);
     padding-right: calc(0.2 * sizes.$button-scale);
@@ -49,6 +51,11 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+
+  .game-button {
+    margin: calc(-0.25 * sizes.$button-scale);
+    padding: calc(0.25 * sizes.$button-scale);
+  }
 
   $button-margin: calc(0.25 * sizes.$button-scale);
   &.top {

@@ -46,7 +46,7 @@
     "@jest/globals": "^30.2.0",
     "@lingui/babel-plugin-lingui-macro": "^5.6.1",
     "@lingui/cli": "^5.6.1",
-    "@lingui/swc-plugin": "^5.9.0",
+    "@lingui/swc-plugin": "^5.6.1",
     "@parcel/packager-raw-url": "^2.16.3",
     "@parcel/reporter-bundle-analyzer": "^2.16.3",
     "@parcel/transformer-inline-string": "^2.16.3",

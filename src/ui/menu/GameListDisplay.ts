@@ -14,6 +14,8 @@ import { AngleUse } from "../../grid/Shape";
 import { rotateArray } from "../../geom/arrays";
 import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { TapHandler } from "../shared/TapHandler";
+import { TileColor } from "../../grid/Tile";
+import { GameSettings } from "../../game/Game";
 
 export class GameListDisplay extends ScreenDisplay {
     element: HTMLDivElement;
@@ -21,7 +23,7 @@ export class GameListDisplay extends ScreenDisplay {
     gridDisplays: GridDisplay[];
     tappables: TapHandler[];
 
-    constructor(gameList: string[]) {
+    constructor(gameList: string[], fixedColor?: TileColor) {
         super();
 
         const div = createElement("div", "screen with-navbar game-list");
@@ -54,7 +56,7 @@ export class GameListDisplay extends ScreenDisplay {
                 AngleUse.MainMenu,
             );
             const tile = grid.addTile(shape, poly, poly.segment());
-            tile.colors = gameSettings.initialTile;
+            tile.colors = fixedColor || gameSettings.initialTile;
 
             for (let i = 1; i < grid.atlas.shapes.length; i++) {
                 const otherShape = grid.atlas.shapes[i];
@@ -68,10 +70,12 @@ export class GameListDisplay extends ScreenDisplay {
                     otherPoly.segment(),
                 );
                 // rotate the colors until they match the first tile
-                otherTile.colors = rotateArray(
-                    gameSettings.initialTile,
-                    gameSettings.initialTile.indexOf(tile.colors[i]),
-                );
+                otherTile.colors =
+                    fixedColor ||
+                    rotateArray(
+                        gameSettings.initialTile,
+                        gameSettings.initialTile.indexOf(tile.colors![i]),
+                    );
             }
 
             this.grids.push(grid);
@@ -86,17 +90,17 @@ export class GameListDisplay extends ScreenDisplay {
                 this.element.classList.add("starting-game");
                 exampleTile.classList.add("selected-game");
 
-                // start the game
-                this.dispatchEvent(
-                    new UserEvent(
-                        UserEventType.StartGame,
-                        gameSettings,
-                        saveGameId,
-                    ),
-                );
+                this.handleTap(gameSettings, saveGameId);
             };
             this.tappables.push(tappable);
         }
+    }
+
+    handleTap(gameSettings: GameSettings, saveGameId: string) {
+        // start the game
+        this.dispatchEvent(
+            new UserEvent(UserEventType.StartGame, gameSettings, saveGameId),
+        );
     }
 
     destroy() {

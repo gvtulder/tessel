@@ -1,0 +1,487 @@
+msgid ""
+msgstr "PO-Revision-Date: 2025-12-12 20:00+0000\nLast-Translator: \"Miguel A. Bouzada\" <mbouzada@gmail.com>\nLanguage-Team: Galician <https://hosted.weblate.org/projects/tessel/game/gl/>\nLanguage: gl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:11
+msgid "atlas.CairoAtlas.friendlyName"
+msgstr "Pentagonal do Cairo"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:15
+msgid "atlas.CairoAtlas.tilingName"
+msgstr "Teselado pentagonal do Cairo"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:15
+msgid "atlas.AmmannBeenkerAtlas.tilingName"
+msgstr "Teselado de Ammann-Beenker"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:11
+msgid "atlas.AmmannBeenkerAtlas.friendlyName"
+msgstr "Ammann-Beenker"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:11
+msgid "atlas.DeltoTrihexAtlas.friendlyName"
+msgstr "Deltoidal-trihexagonal"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:15
+msgid "atlas.DeltoTrihexAtlas.tilingName"
+msgstr "Teselado Deltoidal-trihexagonal"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:11
+msgid "atlas.HexagonsAtlas.friendlyName"
+msgstr "Hexágono"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:12
+msgid "atlas.HexagonsAtlas.tilingName"
+msgstr "Teselado hexagonal"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:12
+msgid "atlas.Penrose0Atlas.tilingName"
+msgstr "Teselado Penrose-3"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:11
+msgid "atlas.Penrose0Atlas.friendlyName"
+msgstr "Rómbica de Penrose (P3)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:15
+msgid "atlas.PenroseFreeAtlas.tilingName"
+msgstr "Teselado Penrose-3"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:13
+msgid "atlas.Penrose3Grid.tilingName"
+msgstr "Teselado Penrose-3"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:11
+msgid "atlas.PenroseFreeAtlas.friendlyName"
+msgstr "Teselado rómbico (P3) libre"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:12
+msgid "atlas.Penrose3Grid.friendlyName"
+msgstr "Grella rómbica de Penrose (P3)"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:15
+msgid "atlas.SnubSquareAtlas.tilingName"
+msgstr "Teselado cadrado truncado"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:11
+msgid "atlas.SnubSquareFreeAtlas.friendlyName"
+msgstr "Cadrado truncado libre"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:15
+msgid "atlas.SnubSquareFreeAtlas.tilingName"
+msgstr "Teselado cadrado truncado"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:12
+msgid "atlas.SnubSquareGridAtlas.friendlyName"
+msgstr "Grella cadrada roma"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:16
+msgid "atlas.SnubSquareGridAtlas.tilingName"
+msgstr "Teselado cadrado truncado"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:11
+msgid "atlas.SquaresAtlas.friendlyName"
+msgstr "Cadrado"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:12
+msgid "atlas.SquaresAtlas.tilingName"
+msgstr "Teselado cadrado"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:11
+msgid "atlas.TrianglesAtlas.friendlyName"
+msgstr "Triángulo"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:12
+msgid "atlas.TrianglesAtlas.tilingName"
+msgstr "Teselado triangular"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:11
+msgid "atlas.SnubSquareAtlas.friendlyName"
+msgstr "Cadrado truncado"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:11
+msgid "atlas.RhombusAtlas.friendlyName"
+msgstr "Rombo-60-120"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:15
+msgid "atlas.RhombusAtlas.tilingName"
+msgstr "Teselado romboidal"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
+msgid "rules.DifferentEdgeColorsRuleSet.friendlyName"
+msgstr "As teselas que se tocan deben ter cores diferentes"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/MatchEdgeColorsRuleSet.ts:18
+msgid "rules.MatchEdgeColorsRuleSet.friendlyName"
+msgstr "As teselas que se tocan deben ter a mesma cor"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConnectedSegmentScorer.ts:15
+msgid "scorer.ConnectedSegmentScorer.friendlyName"
+msgstr "Contar segmentos conectados"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConvexShapeScorer.ts:16
+msgid "scorer.ConvexShapeScorer.friendlyName"
+msgstr "Contar formas convexas"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullTileScorer.ts:14
+msgid "scorer.FullTileScorer.friendlyName"
+msgstr "Contar teselas"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullVertexScorer.ts:15
+msgid "scorer.FullVertexScorer.friendlyName"
+msgstr "Contar vértices completos"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/HoleScorer.ts:15
+msgid "scorer.HoleScorer.friendlyName"
+msgstr "Contar ocos"
+
+#. js-lingui-explicit-id
+#: src/ui/game/DropoutMenu.ts:29
+msgid "ui.game.showMenuButton"
+msgstr "Amosar o menú"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:46
+msgid "ui.menu.AllGamesButton"
+msgstr "Todos os xogos"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:47
+msgid "ui.menu.HowToPlayButton"
+msgstr "Como xogar?"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:33
+msgid "ui.menu.MainMenuButton"
+msgstr "Inicio"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/MainNavBar.ts:59
+msgid "ui.menu.PaintButton"
+msgstr "Pintar"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:32
+#: src/ui/shared/MainNavBar.ts:72
+msgid "ui.menu.SettingsButton"
+msgstr "Axustes"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SmallNavBar.ts:62
+msgid "ui.menu.StatisticsButton"
+msgstr "Estatísticas"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:222
+msgid "ui.menu.addMoreTilesButton"
+msgstr "Mais teselas"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:198
+#: src/ui/paint/PaintDisplay.ts:66
+#: src/ui/setup/GameSetupDisplay.ts:146
+msgid "ui.menu.backToMenuButton"
+msgstr "Volver ao menú"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:21
+msgid "ui.menu.footer"
+msgstr "Un xogo creado por <a href=\"{url}\">Gijs van Tulder</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:214
+msgid "ui.menu.refreshTilesButton"
+msgstr "Barallar teselas"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:206
+msgid "ui.menu.restartGameButton"
+msgstr "Reiniciar o xogo"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/AllGamesDisplay.ts:31
+msgid "ui.menu.setupButton"
+msgstr "Deseña un xogo"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colors.length
+#: src/ui/setup/ColorsOption.ts:18
+msgid "ui.settings.ColorsOption.title"
+msgstr "{0, plural, =1 {Unha cor} =2 {Dúas cores} =3 {Tres cores} =4 {Catro cores} =5 {Cinco cores} =6 {Seis cores} other {# cores}}"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:143
+msgid "ui.settings.about.credits"
+msgstr "Tessel é un xogo creado por <a href=\"{url}\">Gijs van Tulder</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:177
+msgid "ui.settings.about.feedbackPrompt"
+msgstr "Tes algunha suxestión, comentario ou fallo que queiras compartir? <a href=\"{email}\">Envíame un correo-e</a> ou <a href=\"{github}\">dímo en GitHub</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:165
+msgid "ui.settings.about.reviewPromptApple"
+msgstr "Estás a gozar do xogo? <a href=\"{url}\">Deixa unha valoración</a> na App Store ou <a href=\"{share}\">comparte o xogo con outra xente</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:155
+msgid "ui.settings.about.reviewPromptGoogle"
+msgstr "Estás a gozar do xogo? <a href=\"{url}\">Deixa unha valoración</a> na Google Play Store ou <a href=\"{share}\">comparte o xogo con outra xente</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:137
+msgid "ui.settings.about.title"
+msgstr "Sobre o xogo"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:121
+msgid "ui.settings.description.autorotate"
+msgstr "Rotar as teselas automaticamente"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:93
+msgid "ui.settings.description.colorScheme"
+msgstr "Modo claro, modo escuro, ou seguir o sistema"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:128
+msgid "ui.settings.description.highscore"
+msgstr "Amosar a puntuación máis alta"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:114
+msgid "ui.settings.description.hints"
+msgstr "Resaltar as posicións válidas"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:86
+msgid "ui.settings.description.language"
+msgstr "Idioma"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:107
+msgid "ui.settings.description.placeholders"
+msgstr "Amosar as posíbeis posicións"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:100
+msgid "ui.settings.group.gameSettings"
+msgstr "Axustes do xogo"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:193
+msgid "ui.settings.opensource.source"
+msgstr "O <a href=\"{source}\">código fonte</a> deste xogo está dispoñíbel baixo a licenza GPL 3.0. Olla o <a href=\"{github}\">repositorio en GitHub</a> para informar de fallos ou achegar código."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:186
+msgid "ui.settings.opensource.title"
+msgstr "Código aberto"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:199
+msgid "ui.settings.opensource.weblate"
+msgstr "Visita <a href=\"{weblate}\">Weblate</a> para axudar coa tradución."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:49
+msgid "ui.settings.title"
+msgstr "Axustes"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:207
+msgid "ui.settings.version"
+msgstr "Versión {version}."
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:56
+msgid "ui.setup.SegmentsOption.allCombinations"
+msgstr "Todas as combinacións de cores"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colorPattern.numColors
+#: src/ui/setup/SegmentsOption.ts:66
+msgid "ui.setup.SegmentsOption.number"
+msgstr "{0, plural, =1 {Unha cor por tesela} =2 {Dúas cores por tesela} =3 {Tres cores por tesela} =4 {Catro cores por tesela} =5 {Cinco cores por tesela} =6 {Seis cores por tesela} other {# cores por tesela}}"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:61
+msgid "ui.setup.SegmentsOption.unique"
+msgstr "Todas as cores deben ser únicas"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:71
+msgid "ui.setup.optionTitle.atlas"
+msgstr "Patrón de teselado"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:87
+msgid "ui.setup.optionTitle.colors"
+msgstr "Número de cores"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/RulesSettingRow.ts:16
+msgid "ui.setup.optionTitle.rules"
+msgstr "Regra de emparellamento"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/ScorerSettingRow.ts:15
+msgid "ui.setup.optionTitle.scorer"
+msgstr "Regra de puntuación"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsSettingRow.ts:18
+msgid "ui.setup.optionTitle.segments"
+msgstr "Cores por tesela"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:126
+msgid "ui.setup.playButton"
+msgstr "Botar unha partida"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:157
+msgid "ui.setup.regenerateExampleButton"
+msgstr "Rexenerar"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:59
+msgid "ui.setup.title"
+msgstr "Xogo personalizado"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:229
+msgid "ui.statistics.columns.GameCompleted"
+msgstr "Xogos completados"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:221
+msgid "ui.statistics.columns.HighScore"
+msgstr "Puntuación máxima"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:225
+msgid "ui.statistics.columns.ShapeCompleted"
+msgstr "Formas creadas"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:257
+msgid "ui.statistics.columns.TilePlaced"
+msgstr "Teselas colocadas"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:292
+msgid "ui.statistics.counter.TilePlaced.hexagon"
+msgstr "Hexágonos"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:299
+msgid "ui.statistics.counter.TilePlaced.kite"
+msgstr "Papaventos"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:285
+msgid "ui.statistics.counter.TilePlaced.pentagon"
+msgstr "Pentágonos"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:278
+msgid "ui.statistics.counter.TilePlaced.rhombus"
+msgstr "Rombos"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:264
+msgid "ui.statistics.counter.TilePlaced.square"
+msgstr "Cadrados"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:271
+msgid "ui.statistics.counter.TilePlaced.triangle"
+msgstr "Triángulos"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:212
+msgid "ui.statistics.headings.ShapeCompleted"
+msgstr "{value, plural, one {Creaches unha forma.} other {Creaches # formas.}}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:248
+msgid "ui.statistics.headings.TilePlaced"
+msgstr "{value, plural, one {Colocaches unha peza.} other {Colocaches # pezas.}}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:68
+msgid "ui.statistics.notPlayed"
+msgstr "Aínda non xogaches nunca!"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:60
+msgid "ui.statistics.title"
+msgstr "Estatísticas"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:46
+msgid "ui.toggles.autorotate"
+msgstr "Rotar automaticamente"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:76
+msgid "ui.toggles.colorScheme.dark"
+msgstr "Modo escuro"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:75
+msgid "ui.toggles.colorScheme.light"
+msgstr "Modo claro"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:67
+msgid "ui.toggles.highscore"
+msgstr "Amosar a puntuación máis alta"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:53
+msgid "ui.toggles.hints"
+msgstr "Amosar pistas"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:36
+msgid "ui.toggles.placeholders"
+msgstr "Amosar as posicións posíbeis"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:60
+msgid "ui.toggles.snap"
+msgstr "Abrochar"

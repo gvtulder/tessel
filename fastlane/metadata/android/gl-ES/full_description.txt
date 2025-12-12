@@ -1,0 +1,17 @@
+Tessel é un colorido xogo de colocación de teselas. Coloca teselas coas mesmas cores para formar figuras e encher o taboleiro. Canto maior sexa a figura, máis puntos obterás.
+
+Características:
+• Bota unha partida sinxela con cadrados ou escolle un patrón máis desafiante.
+• Personaliza os axustes do xogo para cambiar as regras
+• Crea os teus propios patróns de teselado coa ferramenta de debuxo
+
+Escolle entre unha ampla gama de patróns de teselas para formar teselados infinitamente variados:
+• Cadrado
+• Triangular
+• Romboidal
+• Pentagonal do Cairo
+• Hexagonal
+• Deltoidal-trihexagonal
+• Penrose P3 
+• Cadrado truncado 
+• Ammann-Beenker

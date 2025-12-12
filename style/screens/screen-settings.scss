@@ -9,7 +9,7 @@
   display: grid;
   // compute left margin for stable centering with or without scrollbar
   --column-width: #{calc(
-      min(25rem, 100vw - sizes.$button-left - sizes.$button-right)
+      min(25rem, max(90vw, 100vw - sizes.$button-left - sizes.$button-right))
     )};
   grid-template-columns:
     calc((100vw - var(--column-width)) / 2)
@@ -205,7 +205,9 @@
     thead th {
       text-align: right;
       padding-right: 0.5em;
-      width: $stats-column-width;
+      @media screen and (min-width: 600px) {
+        width: $stats-column-width;
+      }
       max-width: $stats-column-width;
       vertical-align: bottom;
     }

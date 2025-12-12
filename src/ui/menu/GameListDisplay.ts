@@ -82,6 +82,11 @@ export class GameListDisplay extends ScreenDisplay {
 
             const tappable = new TapHandler(exampleTile);
             tappable.onTap = () => {
+                // animate zoom and translate
+                this.element.classList.add("starting-game");
+                exampleTile.classList.add("selected-game");
+
+                // start the game
                 this.dispatchEvent(
                     new UserEvent(
                         UserEventType.StartGame,

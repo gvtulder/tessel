@@ -15,9 +15,17 @@ $score-font-size: min(4vw, 5vh);
     "main-grid tile-stack fill-end"
     "main-grid counters fill-end";
 
+  &.appear {
+    animation-delay: 200ms;
+    animation-duration: 600ms;
+  }
+
   .main-grid {
     grid-area: main-grid;
     overflow: hidden;
+    animation-name: main-grid-appear;
+    animation-duration: 400ms;
+    animation-delay: 200ms;
   }
 
   .fill {
@@ -129,6 +137,17 @@ $score-font-size: min(4vw, 5vh);
     .game-button.game-button.refreshtiles {
       animation: none;
     }
+  }
+}
+
+@keyframes main-grid-appear {
+  0% {
+    opacity: 0;
+    scale: 0;
+  }
+  100% {
+    opacity: 100;
+    scale: 1;
   }
 }
 

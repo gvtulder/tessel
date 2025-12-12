@@ -37,10 +37,28 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  opacity: 1;
 
-  transition: scale 0.1s;
-  &:hover {
-    scale: 1.1;
+  transition:
+    scale 0.1s,
+    translate 0.1s opacity 0.5s;
+
+  @media (hover) {
+    &:hover {
+      scale: 1.1;
+    }
+  }
+
+  .starting-game & {
+    opacity: 0;
+  }
+  .starting-game &.selected-game {
+    opacity: 1;
+    transition:
+      scale 0.5s,
+      translate 0.5s,
+      opacity 0.5s;
+    scale: 0;
   }
 
   .wrap-grid {

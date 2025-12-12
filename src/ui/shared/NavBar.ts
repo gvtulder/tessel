@@ -46,15 +46,20 @@ export class NavBar extends EventTarget {
             this.element.classList.remove("appear", "disappear");
         });
 
+        let buttonRects: DOMRect[] = [];
+
         this.dragHandler = new DragHandler(this.listElement, false, "touch");
         this.dragHandler.onDragStart = (evt: DragHandlerEvent) => {
+            buttonRects = [];
+            for (const button of this.buttons) {
+                buttonRects.push(button.element.getBoundingClientRect());
+            }
             evt.event.stopPropagation();
             evt.event.preventDefault();
         };
         this.dragHandler.onDragMove = (evt: DragHandlerEvent) => {
             for (let i = 0; i < this.buttons.length; i++) {
-                const button = this.buttons[i];
-                const rect = this.buttons[i].element.getBoundingClientRect();
+                const rect = buttonRects[i];
                 if (
                     rect.left < evt.event.clientX &&
                     evt.event.clientX < rect.right &&

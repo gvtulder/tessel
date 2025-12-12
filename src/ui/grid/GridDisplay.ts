@@ -8,7 +8,7 @@ import { Grid } from "../../grid/Grid";
 import { GridEvent, GridEventType } from "../../grid/GridEvent";
 import { PlaceholderTile, Tile } from "../../grid/Tile";
 import { Shape } from "../../grid/Shape";
-import { BBox, Point } from "../../geom/math";
+import { BBox, clip, Point } from "../../geom/math";
 import { TransformComponent, TransformList } from "../../geom/Transform";
 import { S, SVG } from "../shared/svg";
 import { createElement } from "../shared/html";
@@ -242,7 +242,7 @@ export class GridDisplay extends EventTarget implements ScalableDisplay {
     }
 
     updateZoomFactor(newZoomFactor: number, newZoomCenter?: Point) {
-        this.zoomFactor = Math.max(Math.min(newZoomFactor, 4), 1);
+        this.zoomFactor = clip(newZoomFactor, 1, 4);
         this.rescale(false);
         if (this.oldZoomCenterInGrid && newZoomCenter) {
             const newPosition = this.gridToScreenPosition(

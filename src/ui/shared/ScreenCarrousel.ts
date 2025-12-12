@@ -260,10 +260,7 @@ export class ScreenCarrousel extends ScreenDisplay {
         this.cancelAnimation();
 
         let newScreenIndex = Math.round(-offsetX / this.element.offsetWidth);
-        newScreenIndex = Math.max(
-            0,
-            Math.min(this.screens.length - 1, newScreenIndex),
-        );
+        newScreenIndex = clip(newScreenIndex, 0, this.screens.length - 1);
         if (newScreenIndex != this.currentScreenIndex) {
             this.currentScreenIndex = newScreenIndex;
             this.dispatchEvent(new NavigateEvent(this.currentPage));
@@ -277,10 +274,7 @@ export class ScreenCarrousel extends ScreenDisplay {
             prevTime = curTime;
             const dist = Math.abs(desiredOffset - this.currentOffset);
             let step = this.element.offsetWidth * SNAP_SPEED * dtime;
-            step = Math.max(
-                0.1 * step,
-                Math.min((3 * dist) / (dtime || 1), step),
-            );
+            step = clip(step, 0.1 * step, (3 * dist) / (dtime || 1));
             const newOffset =
                 desiredOffset < this.currentOffset
                     ? Math.max(desiredOffset, this.currentOffset - step)

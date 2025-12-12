@@ -10,6 +10,7 @@ import { i18n, MessageDescriptor } from "@lingui/core";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { SetupCatalog } from "../../saveGames";
 import { formatNumber } from "../../i18n";
+import { clip } from "../../geom/math";
 
 export type StatisticsSection = {
     heading?: {
@@ -99,9 +100,10 @@ export class StatisticsDisplay extends ScreenDisplay {
         }
 
         // wrap table in two columns?
-        const multiColumn = Math.min(
+        const multiColumn = clip(
+            section.multiColumn || 1,
+            1,
             nonZeroRows.length,
-            Math.max(1, section.multiColumn || 1),
         );
 
         // split rows

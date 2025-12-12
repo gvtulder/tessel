@@ -266,7 +266,9 @@ export class ScreenCarrousel extends ScreenDisplay {
             this.dispatchEvent(new NavigateEvent(this.currentPage));
         }
 
-        const desiredOffset = -newScreenIndex * this.element.offsetWidth;
+        const desiredOffset = Math.round(
+            -newScreenIndex * this.element.offsetWidth,
+        );
         let prevTime = 0;
         const animateSnap = (curTime: number) => {
             this.element.classList.add("carrousel-moving");
@@ -274,12 +276,14 @@ export class ScreenCarrousel extends ScreenDisplay {
             prevTime = curTime;
             const dist = Math.abs(desiredOffset - this.currentOffset);
             let step = this.element.offsetWidth * SNAP_SPEED * dtime;
-            step = clip(step, 0.1 * step, (3 * dist) / (dtime || 1));
-            const newOffset =
+            step = Math.min(step, (3 * dist) / (dtime || 1));
+            step = Math.max(step, 1);
+            let newOffset =
                 desiredOffset < this.currentOffset
                     ? Math.max(desiredOffset, this.currentOffset - step)
                     : Math.min(desiredOffset, this.currentOffset + step);
-            if (newOffset != desiredOffset) {
+            newOffset = Math.round(newOffset);
+            if (Math.abs(newOffset - desiredOffset) > 0.5) {
                 this.snapAnimation = window.requestAnimationFrame(animateSnap);
             } else {
                 this.element.classList.remove("carrousel-moving");
@@ -298,7 +302,7 @@ export class ScreenCarrousel extends ScreenDisplay {
             }
         }
         if (index != this.currentScreenIndex) {
-            this.resetScreenPositions();
+            this.cancelAnimation();
             const prevScreen = this.screens[this.currentScreenIndex];
             const newScreen = this.screens[index];
             this.currentScreenIndex = index;

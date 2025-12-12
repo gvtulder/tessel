@@ -3,6 +3,8 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { DestroyableEventListenerSet } from "./DestroyableEventListenerSet";
+
 export class TapHandlerEvent {
     event: PointerEvent;
     target: HTMLElement;
@@ -33,35 +35,28 @@ export class TapHandler {
     onEndPress?: (evt: TapHandlerEvent) => void;
     onTap?: (evt?: TapHandlerEvent) => void;
 
-    pointerDownEventListener: (evt: PointerEvent) => void;
-    pointerMoveEventListener: (evt: PointerEvent) => void;
-    pointerUpEventListener: (evt: PointerEvent) => void;
-    pointerOutEventListener: (evt: PointerEvent) => void;
+    listeners: DestroyableEventListenerSet;
 
     constructor(element: HTMLElement) {
         this.element = element;
         this.pressed = false;
 
-        element.addEventListener(
-            "pointerdown",
-            (this.pointerDownEventListener = (evt: PointerEvent) =>
-                this.handlePointerDown(evt)),
-        );
-        element.addEventListener(
-            "pointermove",
-            (this.pointerMoveEventListener = (evt: PointerEvent) =>
-                this.handlePointerMove(evt)),
-        );
-        element.addEventListener(
-            "pointerup",
-            (this.pointerUpEventListener = (evt: PointerEvent) =>
-                this.handlePointerUp(evt)),
-        );
-        element.addEventListener(
-            "pointerout",
-            (this.pointerOutEventListener = (evt: PointerEvent) =>
-                this.handlePointerOut(evt)),
-        );
+        this.listeners = new DestroyableEventListenerSet();
+
+        this.listeners
+            .forTarget(element)
+            .addEventListener("pointerdown", (evt: PointerEvent) =>
+                this.handlePointerDown(evt),
+            )
+            .addEventListener("pointermove", (evt: PointerEvent) =>
+                this.handlePointerMove(evt),
+            )
+            .addEventListener("pointerup", (evt: PointerEvent) =>
+                this.handlePointerUp(evt),
+            )
+            .addEventListener("pointerout", (evt: PointerEvent) =>
+                this.handlePointerOut(evt),
+            );
     }
 
     handlePointerDown(evt: PointerEvent) {
@@ -122,21 +117,6 @@ export class TapHandler {
         this.onStartPress = undefined;
         this.onEndPress = undefined;
         this.onTap = undefined;
-        this.element.removeEventListener(
-            "pointerdown",
-            this.pointerDownEventListener,
-        );
-        this.element.removeEventListener(
-            "pointermove",
-            this.pointerMoveEventListener,
-        );
-        this.element.removeEventListener(
-            "pointerup",
-            this.pointerUpEventListener,
-        );
-        this.element.removeEventListener(
-            "pointercancel",
-            this.pointerOutEventListener,
-        );
+        this.listeners.removeAll();
     }
 }

@@ -10,6 +10,7 @@ import { ScoreOverlayDisplay } from "./ScoreOverlayDisplay";
 import { polylabel } from "../../lib/polylabel";
 import { S, SVG } from "../shared/svg";
 import { BBox, bbox, mergeBBox } from "../../geom/math";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     shadowMask: SVGElement;
@@ -22,7 +23,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
     points: SVGElement;
     pointsGroup: ReplacableGroup;
 
-    onTransitionEnd: EventListener;
+    listeners: DestroyableEventListenerSet;
 
     hideTimeout?: number;
 
@@ -31,10 +32,10 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
         this.element.classList.add("disabled");
 
-        this.onTransitionEnd = (evt) => {
-            this.element.classList.replace("hiding", "disabled");
-        };
-        this.element.addEventListener("transitionend", this.onTransitionEnd);
+        this.listeners = new DestroyableEventListenerSet();
+        this.listeners.addEventListener(this.element, "transitionend", (evt) =>
+            this.element.classList.replace("hiding", "disabled"),
+        );
 
         // drop shadow around the shape
         this.dropShadowBGRect = SVG("rect", null, this.element, {
@@ -197,7 +198,7 @@ export class ScoreOverlayDisplay_Cutout extends ScoreOverlayDisplay {
 
     destroy() {
         super.destroy();
-        this.element.removeEventListener("transitionend", this.onTransitionEnd);
+        this.listeners.removeAll();
     }
 }
 

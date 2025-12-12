@@ -4,6 +4,7 @@
  */
 
 import { Button } from "./Button";
+import { DestroyableEventListenerSet } from "./DestroyableEventListenerSet";
 import { DragHandler, DragHandlerEvent } from "./DragHandler";
 import { createElement } from "./html";
 
@@ -24,7 +25,7 @@ export class NavBar extends EventTarget {
     listElement: HTMLUListElement;
     listItemElements: HTMLLIElement[];
     dragHandler: DragHandler;
-    _animationendHandler: () => void;
+    listeners: DestroyableEventListenerSet;
     _visible?: boolean;
 
     constructor(className: string) {
@@ -39,14 +40,11 @@ export class NavBar extends EventTarget {
         this.listItemElements = [];
         this._activeIndex = -1;
 
-        this._animationendHandler = () => {
+        this.listeners = new DestroyableEventListenerSet();
+        this.listeners.addEventListener(this.element, "animationend", () => {
             this.element.classList.toggle("hidden", !this._visible);
             this.element.classList.remove("appear", "disappear");
-        };
-        this.element.addEventListener(
-            "animationend",
-            this._animationendHandler,
-        );
+        });
 
         this.dragHandler = new DragHandler(this.listElement, false, "touch");
         this.dragHandler.onDragStart = (evt: DragHandlerEvent) => {
@@ -108,10 +106,7 @@ export class NavBar extends EventTarget {
         for (const button of this.buttons) {
             button.destroy();
         }
-        this.element.removeEventListener(
-            "animationend",
-            this._animationendHandler,
-        );
+        this.listeners.removeAll();
         this.dragHandler.destroy();
     }
 

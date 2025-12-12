@@ -25,6 +25,7 @@ import { TileCounter } from "./TileCounter";
 import { AutoPlayer } from "../../game/autoplayer/AutoPlayer";
 import { AnimatedAutoPlayer } from "./AnimatedAutoPlayer";
 import { PRNG, seedPRNG } from "../../geom/RandomSampler";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 export class GameDisplay extends ScreenDisplay {
     game: Game;
@@ -47,16 +48,7 @@ export class GameDisplay extends ScreenDisplay {
     hints: Toggle;
     highscore: Toggle;
 
-    onTapTile: EventListener;
-    onStartDrag: EventListener;
-    onEndDrag: EventListener;
-    onGameScore: EventListener;
-    onGameEndGame: EventListener;
-    onGameContinueGame: EventListener;
-    onUpdateTileCount: () => void;
-    onGameScoreForStats?: EventListener;
-    onGamePlaceTileForStats?: EventListener;
-    onGameEndGameForStats?: EventListener;
+    listeners: DestroyableEventListenerSet;
 
     constructor(
         game: Game,
@@ -66,83 +58,57 @@ export class GameDisplay extends ScreenDisplay {
         super();
         this.game = game;
 
-        // event handlers
-        this.onTapTile = () => this.gridDisplay.scoreOverlayDisplay.hide();
-        this.onStartDrag = () => {
-            this.gridDisplay.scoreOverlayDisplay.hide();
-            this.element.classList.add("dragging-tile");
-        };
-        this.onEndDrag = () => {
-            this.element.classList.remove("dragging-tile");
-        };
-        this.onGameScore = (evt: GameEvent) => {
-            this.gridDisplay.scoreOverlayDisplay.showScores(evt.scoreShapes!);
-            this.scoreDisplay.points = this.game.points;
-        };
-        this.onGameEndGame = () => {
-            this.element.classList.add("game-finished");
-            this.gridDisplay.gameFinished();
-        };
-        this.onGameContinueGame = () => {
-            this.element.classList.remove("game-finished");
-            this.gridDisplay.gameContinue();
-        };
+        this.listeners = new DestroyableEventListenerSet();
 
         if (stats) {
             // track game events
             stats.countEvent(StatisticsEvent.GameStarted, game.grid.atlas.id);
-            this.onGameScoreForStats = (event: GameEvent) => {
-                if (!stats) return;
-                if (!game.continued) {
-                    stats.updateHighScore(
-                        StatisticsEvent.HighScore,
-                        game.points,
-                        game.settings.serializedJSON,
-                    );
-                }
-                for (const region of event.scoreShapes || []) {
-                    if (region.finished) {
-                        stats.countEvent(
-                            StatisticsEvent.ShapeCompleted,
+
+            this.listeners
+                .forTarget(game)
+                .addEventListener(GameEventType.Score, (event: GameEvent) => {
+                    if (!stats) return;
+                    if (!game.continued) {
+                        stats.updateHighScore(
+                            StatisticsEvent.HighScore,
+                            game.points,
                             game.settings.serializedJSON,
                         );
-                        if (region.tiles) {
-                            stats.updateHighScore(
-                                StatisticsEvent.ShapeTileCount,
-                                region.tiles.size,
+                    }
+                    for (const region of event.scoreShapes || []) {
+                        if (region.finished) {
+                            stats.countEvent(
+                                StatisticsEvent.ShapeCompleted,
                                 game.settings.serializedJSON,
                             );
+                            if (region.tiles) {
+                                stats.updateHighScore(
+                                    StatisticsEvent.ShapeTileCount,
+                                    region.tiles.size,
+                                    game.settings.serializedJSON,
+                                );
+                            }
                         }
                     }
-                }
-            };
-            this.onGamePlaceTileForStats = (event: GameEvent) => {
-                if (!stats) return;
-                stats.countEvent(
-                    StatisticsEvent.TilePlaced,
-                    event.tile?.shape?.name.split("-")[0],
-                );
-            };
-            this.onGameEndGameForStats = () => {
-                if (stats && !game.continued) {
-                    stats.countEvent(
-                        StatisticsEvent.GameCompleted,
-                        game.grid.atlas.id,
-                    );
-                }
-            };
-            game.addEventListener(
-                GameEventType.Score,
-                this.onGameScoreForStats,
-            );
-            game.addEventListener(
-                GameEventType.PlaceTile,
-                this.onGamePlaceTileForStats,
-            );
-            game.addEventListener(
-                GameEventType.EndGame,
-                this.onGameEndGameForStats,
-            );
+                })
+                .addEventListener(
+                    GameEventType.PlaceTile,
+                    (event: GameEvent) => {
+                        if (!stats) return;
+                        stats.countEvent(
+                            StatisticsEvent.TilePlaced,
+                            event.tile?.shape?.name.split("-")[0],
+                        );
+                    },
+                )
+                .addEventListener(GameEventType.EndGame, () => {
+                    if (stats && !game.continued) {
+                        stats.countEvent(
+                            StatisticsEvent.GameCompleted,
+                            game.grid.atlas.id,
+                        );
+                    }
+                });
         }
 
         // main element
@@ -274,30 +240,47 @@ export class GameDisplay extends ScreenDisplay {
         menu.addToggle(this.highscore);
 
         // register event handlers
-        tileStackDisplay.addEventListener(
-            TileStackDisplay.events.TapTile,
-            this.onTapTile,
-        );
-        tileDragController.addEventListener(
-            TileDragController.events.StartDrag,
-            this.onStartDrag,
-        );
-        tileDragController.addEventListener(
-            TileDragController.events.EndDrag,
-            this.onEndDrag,
-        );
-        game.addEventListener(GameEventType.Score, this.onGameScore);
-        game.addEventListener(GameEventType.EndGame, this.onGameEndGame);
-        game.addEventListener(
-            GameEventType.ContinueGame,
-            this.onGameContinueGame,
-        );
-        game.tileStack.addEventListener(
+        this.listeners
+            .forTarget(tileStackDisplay)
+            .addEventListener(TileStackDisplay.events.TapTile, () =>
+                this.gridDisplay.scoreOverlayDisplay.hide(),
+            );
+
+        this.listeners
+            .forTarget(tileDragController)
+            .addEventListener(TileDragController.events.StartDrag, () => {
+                this.gridDisplay.scoreOverlayDisplay.hide();
+                this.element.classList.add("dragging-tile");
+            })
+            .addEventListener(TileDragController.events.EndDrag, () =>
+                this.element.classList.remove("dragging-tile"),
+            );
+
+        this.listeners
+            .forTarget(game)
+            .addEventListener(GameEventType.Score, (evt: GameEvent) => {
+                this.gridDisplay.scoreOverlayDisplay.showScores(
+                    evt.scoreShapes!,
+                );
+                this.scoreDisplay.points = this.game.points;
+            })
+            .addEventListener(GameEventType.EndGame, () => {
+                this.element.classList.add("game-finished");
+                this.gridDisplay.gameFinished();
+            })
+            .addEventListener(GameEventType.ContinueGame, () => {
+                this.element.classList.remove("game-finished");
+                this.gridDisplay.gameContinue();
+            });
+
+        const updateTileCount = () => {
+            const n = game.tileStack.tilesLeft - game.tileStack.numberShown;
+            this.element.classList.toggle("no-more-tiles", !(n > 0));
+        };
+        this.listeners.addEventListener(
+            game.tileStack,
             GameEventType.UpdateTileCount,
-            (this.onUpdateTileCount = () => {
-                const n = game.tileStack.tilesLeft - game.tileStack.numberShown;
-                this.element.classList.toggle("no-more-tiles", !(n > 0));
-            }),
+            updateTileCount,
         );
 
         // set default settings
@@ -317,7 +300,7 @@ export class GameDisplay extends ScreenDisplay {
             this.element.classList.add("game-finished");
             this.gridDisplay.gameFinished(true);
         }
-        this.onUpdateTileCount();
+        updateTileCount();
 
         // initial scaling
         this.rescale();
@@ -333,50 +316,7 @@ export class GameDisplay extends ScreenDisplay {
 
     destroy() {
         this.element.remove();
-
-        this.tileStackDisplay.removeEventListener(
-            TileStackDisplay.events.TapTile,
-            this.onTapTile,
-        );
-        this.tileDragController.removeEventListener(
-            TileDragController.events.StartDrag,
-            this.onStartDrag,
-        );
-        this.tileDragController.addEventListener(
-            TileDragController.events.EndDrag,
-            this.onEndDrag,
-        );
-        this.game.removeEventListener(GameEventType.Score, this.onGameScore);
-        this.game.removeEventListener(
-            GameEventType.EndGame,
-            this.onGameEndGame,
-        );
-        this.game.removeEventListener(
-            GameEventType.ContinueGame,
-            this.onGameContinueGame,
-        );
-        this.game.tileStack.removeEventListener(
-            GameEventType.UpdateTileCount,
-            this.onUpdateTileCount,
-        );
-        if (this.onGameScoreForStats) {
-            this.game.removeEventListener(
-                GameEventType.Score,
-                this.onGameScoreForStats,
-            );
-        }
-        if (this.onGamePlaceTileForStats) {
-            this.game.removeEventListener(
-                GameEventType.PlaceTile,
-                this.onGamePlaceTileForStats,
-            );
-        }
-        if (this.onGameEndGameForStats) {
-            this.game.removeEventListener(
-                GameEventType.EndGame,
-                this.onGameEndGameForStats,
-            );
-        }
+        this.listeners.removeAll();
 
         this.menu.destroy();
         this.backtomenubutton.destroy();

@@ -8,6 +8,7 @@ import { SVG } from "../shared/svg";
 import { TapHandler } from "../shared/TapHandler";
 import { GameEventType } from "../../game/Game";
 import { TileStackWithSlots } from "../../game/TileStackWithSlots";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 const STROKE_WIDTH = 1;
 const RADIUS = 2;
@@ -23,7 +24,7 @@ export class TileCounter {
     svgGroup: SVGGElement;
 
     tapHandler: TapHandler;
-    updateTileCountHandler: () => void;
+    listeners: DestroyableEventListenerSet;
 
     tileStack: TileStackWithSlots;
     currentCount: number = -1;
@@ -43,12 +44,12 @@ export class TileCounter {
         this.tapHandler = new TapHandler(this.element);
 
         this.tileStack = tileStack;
-        this.updateTileCountHandler = () => {
-            this.update();
-        };
-        this.tileStack.addEventListener(
+
+        this.listeners = new DestroyableEventListenerSet();
+        this.listeners.addEventListener(
+            this.tileStack,
             GameEventType.UpdateTileCount,
-            this.updateTileCountHandler,
+            () => this.update(),
         );
 
         this.update();
@@ -94,10 +95,7 @@ export class TileCounter {
     }
 
     destroy() {
-        this.tileStack.removeEventListener(
-            GameEventType.UpdateTileCount,
-            this.updateTileCountHandler,
-        );
+        this.listeners.removeAll();
         this.tapHandler.destroy();
         this.element.remove();
     }

@@ -17,6 +17,7 @@ import { BaseTileStackDisplay, TileStackDisplay } from "./TileStackDisplay";
 import { DEG2RAD } from "../../geom/math";
 import { DragHandler, DragHandlerEvent } from "../shared/DragHandler";
 import { createElement } from "../shared/html";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 export class SingleTileOnStackDisplay implements TileDragSource {
     tileStackDisplay: BaseTileStackDisplay;
@@ -38,8 +39,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     dragTransform: TransformComponent;
     rotateTransform: TransformComponent;
 
-    onDragTransitionEnd: EventListener;
-    onAnimationEnd: EventListener;
+    listeners: DestroyableEventListenerSet;
 
     constructor(
         tileStackDisplay: BaseTileStackDisplay,
@@ -87,7 +87,9 @@ export class SingleTileOnStackDisplay implements TileDragSource {
         this.draggable = new DragHandler(this.rotatable, true);
         this.initInteractable(makeRotatable);
 
-        this.onDragTransitionEnd = () => {
+        this.listeners = new DestroyableEventListenerSet();
+
+        this.listeners.addEventListener(this.rotatable, "transitionend", () => {
             this.element.classList.remove(
                 "tile-drag-success",
                 "tile-drag-return",
@@ -96,16 +98,11 @@ export class SingleTileOnStackDisplay implements TileDragSource {
                 "rotatable-drag-success",
                 "rotatable-drag-return",
             );
-        };
-        this.rotatable.addEventListener(
-            "transitionend",
-            this.onDragTransitionEnd,
-        );
+        });
 
-        this.onAnimationEnd = () => {
-            this.element.classList.remove("appear");
-        };
-        this.element.addEventListener("animationend", this.onAnimationEnd);
+        this.listeners.addEventListener(this.element, "animationend", () =>
+            this.element.classList.remove("appear"),
+        );
     }
 
     rescale() {
@@ -333,11 +330,7 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     destroy() {
         this.gridDisplay.destroy();
         this.draggable.destroy();
-        this.rotatable.removeEventListener(
-            "transitionend",
-            this.onDragTransitionEnd,
-        );
-        this.element.removeEventListener("animationend", this.onAnimationEnd);
+        this.listeners.removeAll();
         if (this.normalizeRotationTimeout) {
             window.clearTimeout(this.normalizeRotationTimeout);
         }

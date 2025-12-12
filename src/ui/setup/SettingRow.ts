@@ -9,6 +9,7 @@ import { createElement } from "../shared/html";
 import { SettingRowOption } from "./SettingRowOption";
 import { t } from "@lingui/core/macro";
 import icons from "../shared/icons";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 export class SettingRow<T extends SettingRowOption> {
     element: HTMLDivElement;
@@ -21,7 +22,7 @@ export class SettingRow<T extends SettingRowOption> {
     onchange?: () => void;
     _selected?: number;
     localStorageKey: string;
-    backgroundEventHandler: (evt: PointerEvent) => void;
+    listeners: DestroyableEventListenerSet;
 
     constructor(
         className: string,
@@ -60,18 +61,22 @@ export class SettingRow<T extends SettingRowOption> {
         anglesIconContainer.innerHTML = icons.anglesUpDownIcon;
         this.anglesElement = anglesIconContainer;
 
-        this.backgroundEventHandler = (evt: PointerEvent) => {
-            const target = evt.target as HTMLElement;
-            if (
-                !target.closest ||
-                (target.closest(".setting-row-option") !==
-                    this.currentOption?.element &&
-                    target.closest(".dropdown") !== this.dropdownElement)
-            ) {
-                this.close();
-            }
-        };
-        window.addEventListener("pointerdown", this.backgroundEventHandler);
+        this.listeners = new DestroyableEventListenerSet();
+        this.listeners.addEventListener(
+            window,
+            "pointerdown",
+            (evt: PointerEvent) => {
+                const target = evt.target as HTMLElement;
+                if (
+                    !target.closest ||
+                    (target.closest(".setting-row-option") !==
+                        this.currentOption?.element &&
+                        target.closest(".dropdown") !== this.dropdownElement)
+                ) {
+                    this.close();
+                }
+            },
+        );
     }
 
     private updateOptionCount() {
@@ -204,8 +209,8 @@ export class SettingRow<T extends SettingRowOption> {
         if (this.currentOption) {
             this.currentOption.destroy();
         }
+        this.listeners.removeAll();
         this.element.remove();
-        window.removeEventListener("pointerdown", this.backgroundEventHandler);
     }
 
     private updateSelectedState() {

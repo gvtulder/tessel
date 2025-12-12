@@ -17,6 +17,7 @@ import {
 } from "./UserEvent";
 import { Button } from "./Button";
 import { clip } from "../../geom/math";
+import { DestroyableEventListenerSet } from "./DestroyableEventListenerSet";
 
 const MARGIN = 10;
 
@@ -88,6 +89,7 @@ export class ScreenCarrousel extends ScreenDisplay {
     element: HTMLElement;
     slidingElement: HTMLElement;
 
+    listeners: DestroyableEventListenerSet;
     dragHandler: DragHandler;
     screens: {
         page: Pages;
@@ -108,6 +110,8 @@ export class ScreenCarrousel extends ScreenDisplay {
         this.slidingElement = createElement("div", "slider", this.element);
         this._currentScreenIndex = 0;
         this.currentOffset = 0;
+
+        this.listeners = new DestroyableEventListenerSet();
 
         this.dragHandler = new DragHandler(this.element, false, "touch");
         this.dragHandler.onDragStart = (evt: DragHandlerEvent) => {
@@ -185,7 +189,11 @@ export class ScreenCarrousel extends ScreenDisplay {
                     ],
                 });
                 for (const eventType of Object.values(UserEventType)) {
-                    screen.addEventListener(eventType, this.forwardScreenEvent);
+                    this.listeners.addEventListener(
+                        screen,
+                        eventType,
+                        this.forwardScreenEvent,
+                    );
                 }
 
                 // add button to navbar
@@ -348,17 +356,12 @@ export class ScreenCarrousel extends ScreenDisplay {
 
     destroy(): void {
         this.cancelAnimation();
+        this.listeners.removeAll();
         this.dragHandler.destroy();
         for (const navBar of this.navBars) {
             navBar.destroy();
         }
         for (const screen of this.screens) {
-            for (const eventType of Object.keys(UserEventType)) {
-                screen.screen.removeEventListener(
-                    eventType,
-                    this.forwardScreenEvent,
-                );
-            }
             screen.screen.element.remove();
             screen.screen.destroy();
         }

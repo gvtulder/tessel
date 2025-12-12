@@ -15,12 +15,15 @@ import { updateI18n } from "../../i18n";
 import { LanguagePicker } from "./LanguagePicker";
 import { i18n } from "@lingui/core";
 import { getShareBackend } from "../../lib/share-backend";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 export class SettingsDisplay extends ScreenDisplay {
     element: HTMLDivElement;
 
     languagePicker: LanguagePicker;
     toggles: { [key: string]: Toggle | ThreeWayToggle | LanguagePicker };
+
+    listeners: DestroyableEventListenerSet;
 
     constructor(version?: string, platform?: string) {
         super();
@@ -215,7 +218,13 @@ export class SettingsDisplay extends ScreenDisplay {
                     });
             }
         }
-        this.element.addEventListener("click", this.handleClick);
+
+        this.listeners = new DestroyableEventListenerSet();
+        this.listeners.addEventListener(
+            this.element,
+            "click",
+            this.handleClick,
+        );
 
         // initial scaling
         this.rescale();
@@ -247,7 +256,7 @@ export class SettingsDisplay extends ScreenDisplay {
     }
 
     destroy() {
-        this.element.removeEventListener("click", this.handleClick);
+        this.listeners.removeAll();
         for (const toggle of Object.values(this.toggles)) {
             toggle.destroy();
         }

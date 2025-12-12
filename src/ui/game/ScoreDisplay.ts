@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 import { createElement } from "../shared/html";
 import icons from "../shared/icons";
 import { TapHandler } from "../shared/TapHandler";
@@ -19,13 +20,9 @@ export class ScoreDisplay {
     private _points: number;
     private _autoplayTapCount: number;
     private _autoplayTapTimeout?: number | null;
-    private onScoreAnimationEnd: EventListener;
+    private listeners: DestroyableEventListenerSet;
 
     constructor(highScore?: number) {
-        this.onScoreAnimationEnd = () => {
-            this.element.classList.remove("animate");
-        };
-
         this._points = 0;
         this._autoplayTapCount = 0;
 
@@ -70,15 +67,15 @@ export class ScoreDisplay {
             }
         };
 
-        element.addEventListener("animationend", this.onScoreAnimationEnd);
+        this.listeners = new DestroyableEventListenerSet();
+        this.listeners.addEventListener(element, "animationend", () =>
+            this.element.classList.remove("animate"),
+        );
     }
 
     destroy() {
         this.tapHandler.destroy();
-        this.element.removeEventListener(
-            "animationend",
-            this.onScoreAnimationEnd,
-        );
+        this.listeners.removeAll();
         this.element.remove();
     }
 

@@ -10,6 +10,7 @@
 //
 
 import { dist, midpoint, Point } from "../../geom/math";
+import { DestroyableEventListenerSet } from "./DestroyableEventListenerSet";
 
 export interface ScalableDisplay {
     scaleZoomFactor(scale: number, newZoomCenter?: Point): void;
@@ -33,13 +34,7 @@ export class PinchZoomHandler {
     element: HTMLElement;
     scalableDisplay: ScalableDisplay;
 
-    touchStartEventListener: (evt: TouchEvent) => void;
-    touchMoveEventListener: (evt: TouchEvent) => void;
-    touchEndEventListener: (evt: TouchEvent) => void;
-    wheelEventListener: (evt: WheelEvent) => void;
-    mouseDownEventListener: (evt: MouseEvent) => void;
-    mouseMoveEventListener: (evt: MouseEvent) => void;
-    mouseUpEventListener: (evt: MouseEvent) => void;
+    listeners: DestroyableEventListenerSet;
 
     nthZoom: number;
     lastScale: number;
@@ -49,6 +44,7 @@ export class PinchZoomHandler {
     constructor(element: HTMLElement, scalableDisplay: ScalableDisplay) {
         this.element = element;
         this.scalableDisplay = scalableDisplay;
+        this.listeners = new DestroyableEventListenerSet();
 
         this.nthZoom = 0;
         this.lastScale = 1;
@@ -121,110 +117,114 @@ export class PinchZoomHandler {
             }
         };
 
-        element.addEventListener(
-            "touchstart",
-            (this.touchStartEventListener = (evt: TouchEvent) => {
-                fingers = evt.touches.length;
-                firstMove = true;
-                detectDoubleTap(evt);
-            }),
-            { passive: false },
-        );
-        element.addEventListener(
-            "touchmove",
-            (this.touchMoveEventListener = (evt: TouchEvent) => {
-                if (!this.isDoubleTap) {
-                    if (firstMove) {
-                        updateInteraction(evt);
-                        startTouches = touchesToPoints(evt.touches);
-                        firstMove = false;
-                    } else {
-                        switch (interaction) {
-                            case "zoom":
-                                if (
-                                    startTouches?.length == 2 &&
-                                    evt.touches.length == 2
-                                ) {
-                                    this.handleZoom(
-                                        evt,
-                                        startTouches,
-                                        touchesToPoints(evt.touches),
-                                    );
-                                }
-                                break;
-                            case "drag":
+        this.listeners
+            .forTarget(element)
+            .addEventListener(
+                "touchstart",
+                (evt: TouchEvent) => {
+                    fingers = evt.touches.length;
+                    firstMove = true;
+                    detectDoubleTap(evt);
+                },
+                { passive: false },
+            )
+            .addEventListener(
+                "touchmove",
+                (evt: TouchEvent) => {
+                    if (!this.isDoubleTap) {
+                        if (firstMove) {
+                            updateInteraction(evt);
+                            startTouches = touchesToPoints(evt.touches);
+                            firstMove = false;
+                        } else {
+                            switch (interaction) {
+                                case "zoom":
+                                    if (
+                                        startTouches?.length == 2 &&
+                                        evt.touches.length == 2
+                                    ) {
+                                        this.handleZoom(
+                                            evt,
+                                            startTouches,
+                                            touchesToPoints(evt.touches),
+                                        );
+                                    }
+                                    break;
+                                case "drag":
+                                    this.handleDrag(evt);
+                                    break;
+                            }
+                            if (interaction) {
+                                evt.stopPropagation();
+                                evt.preventDefault();
+                            }
+                        }
+                    }
+                },
+                { passive: false },
+            )
+            .addEventListener(
+                "touchend",
+                (evt: TouchEvent) => {
+                    fingers = evt.touches.length;
+                    updateInteraction(evt);
+                },
+                { passive: false },
+            )
+            .addEventListener(
+                "wheel",
+                (evt: WheelEvent) => {
+                    const newScale =
+                        this.lastScale * (1 - Math.sign(evt.deltaY) * 0.5);
+                    const scale = newScale / this.lastScale;
+                    this.scalableDisplay.handleZoomStart(touchToPoint(evt));
+                    this.scalableDisplay.scaleZoomFactor(
+                        scale,
+                        touchToPoint(evt),
+                    );
+                    this.scalableDisplay.handleZoomEnd();
+                    this.lastScale = newScale;
+                },
+                { passive: false },
+            )
+            .addEventListener(
+                "mousedown",
+                (evt: MouseEvent) => {
+                    fingers = 1;
+                    firstMove = true;
+                },
+                { passive: true },
+            )
+            .addEventListener(
+                "mousemove",
+                (evt: MouseEvent) => {
+                    if (fingers === 0) return;
+                    if (!this.isDoubleTap) {
+                        if (firstMove) {
+                            updateInteraction(evt);
+                            startTouches = [touchToPoint(evt)];
+                            firstMove = false;
+                        } else {
+                            if (interaction == "drag") {
                                 this.handleDrag(evt);
-                                break;
-                        }
-                        if (interaction) {
-                            evt.stopPropagation();
-                            evt.preventDefault();
-                        }
-                    }
-                }
-            }),
-            { passive: false },
-        );
-        element.addEventListener(
-            "touchend",
-            (this.touchEndEventListener = (evt: TouchEvent) => {
-                fingers = evt.touches.length;
-                updateInteraction(evt);
-            }),
-            { passive: false },
-        );
-
-        element.addEventListener(
-            "wheel",
-            (this.wheelEventListener = (evt: WheelEvent) => {
-                const newScale =
-                    this.lastScale * (1 - Math.sign(evt.deltaY) * 0.5);
-                const scale = newScale / this.lastScale;
-                this.scalableDisplay.handleZoomStart(touchToPoint(evt));
-                this.scalableDisplay.scaleZoomFactor(scale, touchToPoint(evt));
-                this.scalableDisplay.handleZoomEnd();
-                this.lastScale = newScale;
-            }),
-            { passive: false },
-        );
-        element.addEventListener(
-            "mousedown",
-            (this.mouseDownEventListener = (evt: MouseEvent) => {
-                fingers = 1;
-                firstMove = true;
-            }),
-            { passive: true },
-        );
-        element.addEventListener(
-            "mousemove",
-            (this.mouseMoveEventListener = (evt: MouseEvent) => {
-                if (fingers === 0) return;
-                if (!this.isDoubleTap) {
-                    if (firstMove) {
-                        updateInteraction(evt);
-                        startTouches = [touchToPoint(evt)];
-                        firstMove = false;
-                    } else {
-                        if (interaction == "drag") {
-                            this.handleDrag(evt);
-                        }
-                        if (interaction) {
-                            evt.stopPropagation();
-                            evt.preventDefault();
+                            }
+                            if (interaction) {
+                                evt.stopPropagation();
+                                evt.preventDefault();
+                            }
                         }
                     }
-                }
-            }),
-            { passive: false },
-        );
-        element.addEventListener(
-            "mouseup",
-            (this.mouseUpEventListener = (evt: MouseEvent) => {
-                fingers = 0;
-                updateInteraction(evt);
-            }),
-            { passive: true },
-        );
+                },
+                { passive: false },
+            )
+            .addEventListener(
+                "mouseup",
+                (evt: MouseEvent) => {
+                    fingers = 0;
+                    updateInteraction(evt);
+                },
+                { passive: true },
+            );
     }
 
     handleDoubleTap(evt: TouchEvent) {
@@ -295,27 +295,6 @@ export class PinchZoomHandler {
     }
 
     destroy() {
-        this.element.removeEventListener(
-            "touchstart",
-            this.touchStartEventListener,
-        );
-        this.element.removeEventListener(
-            "touchmove",
-            this.touchMoveEventListener,
-        );
-        this.element.removeEventListener(
-            "touchend",
-            this.touchEndEventListener,
-        );
-        this.element.removeEventListener("wheel", this.wheelEventListener);
-        this.element.removeEventListener(
-            "mousedown",
-            this.mouseDownEventListener,
-        );
-        this.element.removeEventListener(
-            "mousemove",
-            this.mouseMoveEventListener,
-        );
-        this.element.removeEventListener("mouseup", this.mouseUpEventListener);
+        this.listeners.removeAll();
     }
 }

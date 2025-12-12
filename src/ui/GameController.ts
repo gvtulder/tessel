@@ -39,6 +39,7 @@ import {
 import { msg } from "@lingui/core/macro";
 import icons from "./shared/icons";
 import { NavBarItems } from "./shared/NavBar";
+import { DestroyableEventListenerSet } from "./shared/DestroyableEventListenerSet";
 
 const ControllerState_S = zod.object({
     hash: zod.string(),
@@ -297,28 +298,30 @@ export class GameController {
             this.lastMainPage = lastMainPage;
         }
 
-        const handleNavigate = (evt: UserEvent) => {
-            this.navigateTo(evt.page!, evt.reload);
-        };
+        const listeners = new DestroyableEventListenerSet();
+        listeners
+            .forTarget(screen)
+            .addEventListener(UserEventType.Navigate, (evt: UserEvent) =>
+                this.navigateTo(evt.page!, evt.reload),
+            )
+            .addEventListener(UserEventType.BackToMenu, () =>
+                this.navigateBack(),
+            )
+            .addEventListener(UserEventType.RestartGame, () => this.run())
+            .addEventListener(UserEventType.StartGame, (evt: UserEvent) => {
+                if (evt.gameSettingsSerialized) {
+                    const settings = evt.gameSettingsSerialized!;
+                    this.navigateTo(btoa(serializedToJSON(settings)));
+                } else if (evt.gameId) {
+                    this.navigateTo(evt.gameId);
+                } else {
+                    this.startGame(evt.gameSettings!);
+                }
+            });
 
-        const handleBack = () => {
-            this.navigateBack();
-        };
-
-        const handleRestart = () => {
-            this.run();
-        };
-
-        const handleStartGame = (evt: UserEvent) => {
-            if (evt.gameSettingsSerialized) {
-                const settings = evt.gameSettingsSerialized!;
-                this.navigateTo(btoa(serializedToJSON(settings)));
-            } else if (evt.gameId) {
-                this.navigateTo(evt.gameId);
-            } else {
-                this.startGame(evt.gameSettings!);
-            }
-        };
+        for (const [eventType, handler] of handlers || []) {
+            listeners.addEventListener(screen, eventType, handler);
+        }
 
         this.currentScreen = screen;
         this.container.appendChild(screen.element);
@@ -326,29 +329,9 @@ export class GameController {
 
         const destroy = () => {
             screen.element.remove();
-            screen.removeEventListener(UserEventType.Navigate, handleNavigate);
-            screen.removeEventListener(UserEventType.BackToMenu, handleBack);
-            screen.removeEventListener(
-                UserEventType.RestartGame,
-                handleRestart,
-            );
-            screen.removeEventListener(
-                UserEventType.StartGame,
-                handleStartGame,
-            );
-            for (const [eventType, handler] of handlers || []) {
-                screen.removeEventListener(eventType, handler);
-            }
+            listeners.removeAll();
         };
         this.currentScreenDestroy = destroy;
-
-        screen.addEventListener(UserEventType.Navigate, handleNavigate);
-        screen.addEventListener(UserEventType.BackToMenu, handleBack);
-        screen.addEventListener(UserEventType.RestartGame, handleRestart);
-        screen.addEventListener(UserEventType.StartGame, handleStartGame);
-        for (const [eventType, handler] of handlers || []) {
-            screen.addEventListener(eventType, handler);
-        }
     }
 
     showInCarrousel(page: Pages, reload?: boolean) {

@@ -9,6 +9,7 @@ import { createElement } from "../shared/html";
 import icons from "../shared/icons";
 import { ThreeWayToggle } from "../shared/ThreeWayToggle";
 import { Toggle } from "../shared/Toggle";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 export class DropoutMenu {
     element: HTMLDivElement;
@@ -16,7 +17,7 @@ export class DropoutMenu {
     dropoutButton: Button | Toggle | ThreeWayToggle;
     buttons: Button[];
     toggles: (Toggle | ThreeWayToggle)[];
-    backgroundEventHandler: (evt: PointerEvent) => void;
+    listeners: DestroyableEventListenerSet;
     wasExpandedTimeout?: number;
 
     constructor() {
@@ -38,16 +39,20 @@ export class DropoutMenu {
 
         this.container = createElement("div", "items", this.element);
 
-        this.backgroundEventHandler = (evt: PointerEvent) => {
-            const target = evt.target as HTMLElement;
-            if (!target.closest || !target.closest(".dropout-menu")) {
-                if (this.element.classList.contains("expanded")) {
-                    this.element.classList.remove("expanded");
-                    this.updateWasExpandedTimeout();
+        this.listeners = new DestroyableEventListenerSet();
+        this.listeners.addEventListener(
+            window,
+            "pointerdown",
+            (evt: PointerEvent) => {
+                const target = evt.target as HTMLElement;
+                if (!target.closest || !target.closest(".dropout-menu")) {
+                    if (this.element.classList.contains("expanded")) {
+                        this.element.classList.remove("expanded");
+                        this.updateWasExpandedTimeout();
+                    }
                 }
-            }
-        };
-        window.addEventListener("pointerdown", this.backgroundEventHandler);
+            },
+        );
     }
 
     get isExpanded(): boolean {
@@ -85,6 +90,6 @@ export class DropoutMenu {
     destroy() {
         this.element.remove();
         this.dropoutButton.destroy();
-        window.removeEventListener("pointerdown", this.backgroundEventHandler);
+        this.listeners.removeAll();
     }
 }

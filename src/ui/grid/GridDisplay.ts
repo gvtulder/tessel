@@ -13,6 +13,7 @@ import { TransformComponent, TransformList } from "../../geom/Transform";
 import { S, SVG } from "../shared/svg";
 import { createElement } from "../shared/html";
 import { ScalableDisplay } from "../shared/PinchZoomHandler";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 export const enum GridDisplayScalingType {
     EqualMargins,
@@ -37,9 +38,7 @@ export class GridDisplay extends EventTarget implements ScalableDisplay {
     // connectorDisplay: ConnectorDisplay;
     // backgroundGrid: BackgroundGrid;
 
-    onAddTile: EventListener;
-    onUpdateTileColors: EventListener;
-    onRemoveTile: EventListener;
+    listeners: DestroyableEventListenerSet;
 
     rescaleTimeout?: number;
     restoreAnimatedClassTimeout?: number;
@@ -83,21 +82,24 @@ export class GridDisplay extends EventTarget implements ScalableDisplay {
         this.svgPlaceholders = SVG("g", "svg-placeholders", svgGrid);
         this.svgTiles = SVG("g", "svg-tiles", svgGrid);
 
-        this.onAddTile = (evt: GridEvent) => this.addTile(evt.tile!);
-        this.onUpdateTileColors = (evt: GridEvent) => {
-            const tileDisplay = this.tileDisplays.get(evt.tile!);
-            if (tileDisplay) {
-                tileDisplay.updateColors();
-            }
-        };
-        this.onRemoveTile = (evt: GridEvent) => this.removeTile(evt.tile!);
-
-        this.grid.addEventListener(GridEventType.AddTile, this.onAddTile);
-        this.grid.addEventListener(
-            GridEventType.UpdateTileColors,
-            this.onUpdateTileColors,
-        );
-        this.grid.addEventListener(GridEventType.RemoveTile, this.onRemoveTile);
+        this.listeners = new DestroyableEventListenerSet();
+        this.listeners
+            .forTarget(this.grid)
+            .addEventListener(GridEventType.AddTile, (evt: GridEvent) =>
+                this.addTile(evt.tile!),
+            )
+            .addEventListener(
+                GridEventType.UpdateTileColors,
+                (evt: GridEvent) => {
+                    const tileDisplay = this.tileDisplays.get(evt.tile!);
+                    if (tileDisplay) {
+                        tileDisplay.updateColors();
+                    }
+                },
+            )
+            .addEventListener(GridEventType.RemoveTile, (evt: GridEvent) =>
+                this.removeTile(evt.tile!),
+            );
 
         for (const tile of this.grid.tiles) {
             this.addTile(tile);
@@ -114,17 +116,7 @@ export class GridDisplay extends EventTarget implements ScalableDisplay {
         for (const td of this.tileDisplays.values()) {
             td.destroy();
         }
-
-        this.grid.removeEventListener(GridEventType.AddTile, this.onAddTile);
-        this.grid.removeEventListener(
-            GridEventType.UpdateTileColors,
-            this.onUpdateTileColors,
-        );
-        this.grid.removeEventListener(
-            GridEventType.RemoveTile,
-            this.onRemoveTile,
-        );
-
+        this.listeners.removeAll();
         this.element.remove();
         this.gridElement.remove();
         this.svg.remove();

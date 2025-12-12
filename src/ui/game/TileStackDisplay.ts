@@ -10,6 +10,7 @@ import { TileDragController } from "../grid/TileDragController";
 import { Atlas } from "../../grid/Atlas";
 import { SingleTileOnStackDisplay } from "./SingleTileStackDisplay";
 import { createElement } from "../shared/html";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 const WIGGLE_TIMEOUT = 15000;
 
@@ -56,7 +57,7 @@ export abstract class BaseTileStackDisplay extends EventTarget {
 export class TileStackDisplay extends BaseTileStackDisplay {
     tileStack: TileStackWithSlots;
 
-    updateSlotsHandler: EventListener;
+    listeners: DestroyableEventListenerSet;
 
     constructor(
         atlas: Atlas,
@@ -68,29 +69,21 @@ export class TileStackDisplay extends BaseTileStackDisplay {
         this.tileStack = tileStack;
 
         this.updateTiles();
-        this.updateSlotsHandler = () => {
-            this.updateTiles();
-        };
-        this.tileStack.addEventListener(
-            GameEventType.UpdateSlots,
-            this.updateSlotsHandler,
-        );
-        this.tileStack.addEventListener(
-            GameEventType.UpdateTileCount,
-            this.updateSlotsHandler,
-        );
+
+        this.listeners = new DestroyableEventListenerSet();
+        this.listeners
+            .forTarget(this.tileStack)
+            .addEventListener(GameEventType.UpdateSlots, () =>
+                this.updateTiles(),
+            )
+            .addEventListener(GameEventType.UpdateTileCount, () =>
+                this.updateTiles(),
+            );
     }
 
     destroy() {
         super.destroy();
-        this.tileStack.removeEventListener(
-            GameEventType.UpdateSlots,
-            this.updateSlotsHandler,
-        );
-        this.tileStack.removeEventListener(
-            GameEventType.UpdateTileCount,
-            this.updateSlotsHandler,
-        );
+        this.listeners.removeAll();
     }
 
     updateTiles() {

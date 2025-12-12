@@ -161,8 +161,7 @@ export class SettingsDisplay extends ScreenDisplay {
 
         // email and issues
         {
-            const email =
-                "mailto:tessel-play@vantulder.eu?subject=Tessel%20feedback";
+            const email = "mailto:hello@tessel.at?subject=Tessel%20feedback";
             const github = "https://github.com/gvtulder/tessel/issues";
             const p = createElement("p", "review-prompt", article);
             p.innerHTML = t({
@@ -179,7 +178,7 @@ export class SettingsDisplay extends ScreenDisplay {
                 message: "Open source",
             });
 
-            const source = "https://tessel.vantulder.net/source/";
+            const source = "https://tessel.at/source/";
             const github = "https://github.com/gvtulder/tessel/";
             createElement("p", null, article).innerHTML = t({
                 id: "ui.settings.opensource.source",
@@ -247,7 +246,7 @@ export class SettingsDisplay extends ScreenDisplay {
             getShareBackend().share({
                 title: "Tessel – A tile game",
                 text: "Play Tessel – A tile game",
-                url: "https://tessel.vantulder.net/",
+                url: "https://play.tessel.at/",
                 dialogTitle: "Share Tessel",
             });
             evt.preventDefault();

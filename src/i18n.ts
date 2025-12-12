@@ -17,15 +17,6 @@ import { messages as messages_zhhant } from "../i18n/zh-Hant";
 import { getStorageBackend } from "./lib/storage-backend";
 
 export const languages = {
-    en: {
-        title: "English",
-        messages: messages_en,
-        aboutHTML: fs.readFileSync(
-            __dirname + "/../i18n/en/about.html",
-            "utf-8",
-        ),
-        languageTag: "en-US",
-    },
     de: {
         title: "Deutsch",
         messages: messages_de,
@@ -34,6 +25,15 @@ export const languages = {
             "utf-8",
         ),
         languageTag: "de-DE",
+    },
+    en: {
+        title: "English",
+        messages: messages_en,
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/en/about.html",
+            "utf-8",
+        ),
+        languageTag: "en-US",
     },
     es: {
         title: "Español",

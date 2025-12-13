@@ -123,6 +123,19 @@
   }
 }
 
+@media screen and (max-width: 450px) {
+  .small-navbar .game-button .bg {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    svg {
+      padding-bottom: 4px;
+    }
+  }
+}
+
 @keyframes navbar-animate-appear {
   0% {
     opacity: 0;

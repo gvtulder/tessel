@@ -90,17 +90,12 @@
     }
   }
 }
-.setting-row.language .dropdown {
-  display: block;
-  column-count: 2;
-}
 .setting-row.language .setting-row-option {
   grid-template-areas: "description";
   grid-template-columns: 1fr;
   grid-template-rows: 1fr;
   min-height: 1.2em;
   padding-left: calc(0.4 * sizes.$setting-row-option-scale);
-  margin-bottom: calc(0.1 * sizes.$setting-row-option-scale);
   p {
     margin: 0;
   }

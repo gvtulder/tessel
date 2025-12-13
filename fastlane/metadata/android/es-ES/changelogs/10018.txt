@@ -1,0 +1,5 @@
+Varios cambios y mejoras.
+
+• You can now swipe left and right to navigate through the menu screens.
+• The statistics tables get more space on small screens.
+• New translation: Galician/Galego by Miguel A. Bouzada (@mbouzada).

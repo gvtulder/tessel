@@ -12,10 +12,11 @@
 
 /* arrows icon */
 .setting-row .option-wrap .angles {
-  position: absolute;
+  grid-area: angles;
   right: 0.5rem;
   height: 100%;
   display: flex;
+  padding-top: 1px;
   align-items: center;
   fill: var(--button-fg-color);
 
@@ -68,11 +69,9 @@
 }
 .setting-row-option {
   display: grid;
-  grid-template-areas:
-    "example description"
-    "example description";
-  grid-template-columns: sizes.$setting-row-option-scale 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "example description angles";
+  grid-template-columns: sizes.$setting-row-option-scale 1fr min-content;
+  grid-template-rows: 1fr;
   column-gap: calc(0.2 * sizes.$setting-row-option-scale);
   align-items: center;
   padding-left: calc(0.1 * sizes.$setting-row-option-scale);
@@ -91,8 +90,8 @@
   }
 }
 .setting-row.language .setting-row-option {
-  grid-template-areas: "description";
-  grid-template-columns: 1fr;
+  grid-template-areas: "description angles";
+  grid-template-columns: 1fr min-content;
   grid-template-rows: 1fr;
   min-height: 1.2em;
   padding-left: calc(0.4 * sizes.$setting-row-option-scale);
@@ -102,7 +101,7 @@
 }
 .setting-row-option.current {
   box-shadow: var(--button-box-shadow);
-  padding-right: 2em;
+  padding-right: 0.4em;
   margin: 0;
   height: 100%;
 }

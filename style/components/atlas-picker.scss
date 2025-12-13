@@ -41,7 +41,8 @@
 
   transition:
     scale 0.1s,
-    translate 0.1s opacity 0.5s;
+    translate 0.1s,
+    opacity 0.5s;
 
   @media (hover) {
     &:hover {

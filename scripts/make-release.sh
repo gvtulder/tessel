@@ -23,13 +23,15 @@ for lang_dir in fastlane/metadata/android/* ; do
     [[ $langAndroid == zh-TW ]] && langIOS=zh-Hant
     [[ $langAndroid == zh-CN ]] && langIOS=zh-Hans
 
-    if [[ -f fastlane/metadata/ios/${langIOS}/generic_release_notes.txt ]] ; then
+    if [[ -f fastlane/metadata/android/${langAndroid}/generic_release_notes.txt ]] ; then
       echo "Copying release notes for $langAndroid"
       mkdir -p fastlane/metadata/android/${langAndroid}/changelogs/
-      cat fastlane/metadata/ios/${langIOS}/generic_release_notes.txt > fastlane/metadata/android/${langAndroid}/changelogs/$versionCode.txt
+      cat fastlane/metadata/android/${langAndroid}/generic_release_notes.txt > fastlane/metadata/android/${langAndroid}/changelogs/$versionCode.txt
       echo >> fastlane/metadata/android/${langAndroid}/changelogs/$versionCode.txt
       cat fastlane/metadata/android/en-US/changelogs/$versionCode.txt >> fastlane/metadata/android/${langAndroid}/changelogs/$versionCode.txt
-      cat fastlane/metadata/android/${langAndroid}/changelogs/$versionCode.txt > fastlane/metadata/ios/${langIOS}/release_notes.txt
+      if [[ -e "fastlane/metadata/ios/${langIOS}" ]] ; then
+        cat fastlane/metadata/android/${langAndroid}/changelogs/$versionCode.txt > fastlane/metadata/ios/${langIOS}/release_notes.txt
+      fi
     fi
   fi
 done

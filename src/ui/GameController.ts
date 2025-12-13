@@ -337,6 +337,7 @@ export class GameController {
     showInCarrousel(page: Pages, reload?: boolean) {
         this.lastMainPage = page;
         if (!reload && this.currentScreen instanceof ScreenCarrousel) {
+            if (page == Pages.MainMenu && this.checkForUpdate()) return;
             this.currentScreen.showScreen(page);
             return;
         }

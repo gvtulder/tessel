@@ -80,7 +80,7 @@ export class ScreenCarrouselFactory {
 
 const DRAG_MOVE_THRESHOLD = 50;
 const MIN_SWIPE_VELOCITY = 5;
-const SNAP_SPEED = 0.003;
+const SNAP_SPEED = 0.005;
 
 export class ScreenCarrousel extends ScreenDisplay {
     navBars: NavBar[];
@@ -275,9 +275,13 @@ export class ScreenCarrousel extends ScreenDisplay {
             const dtime = curTime - (prevTime || curTime);
             prevTime = curTime;
             const dist = Math.abs(desiredOffset - this.currentOffset);
-            let step = this.element.offsetWidth * SNAP_SPEED * dtime;
-            step = Math.min(step, (3 * dist) / (dtime || 1));
-            step = Math.max(step, 1);
+            const screenSize = Math.max(
+                this.element.offsetWidth,
+                this.element.offsetHeight,
+            );
+            let step = screenSize * SNAP_SPEED;
+            step *= clip((4 * dist) / screenSize, 0.01, 1.0);
+            step *= dtime;
             let newOffset =
                 desiredOffset < this.currentOffset
                     ? Math.max(desiredOffset, this.currentOffset - step)

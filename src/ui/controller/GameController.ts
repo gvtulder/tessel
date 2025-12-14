@@ -12,34 +12,34 @@ import {
     GameSettingsSerialized,
     GameState_S,
     serializedToJSON,
-} from "../game/Game";
-import { GameDisplay } from "./game/GameDisplay";
-import { MainMenuDisplay } from "./menu/MainMenuDisplay";
-import * as SaveGames from "../saveGames";
-import { GameSetupDisplay } from "./setup/GameSetupDisplay";
-import { ScreenDisplay } from "./shared/ScreenDisplay";
+} from "../../game/Game";
+import { GameDisplay } from "../game/GameDisplay";
+import { MainMenuDisplay } from "../menu/MainMenuDisplay";
+import * as SaveGames from "../../saveGames";
+import { GameSetupDisplay } from "../setup/GameSetupDisplay";
+import { ScreenDisplay } from "../shared/ScreenDisplay";
 import { Workbox } from "workbox-window";
-import { PaintDisplay } from "./paint/PaintDisplay";
-import { Grid, TileSet_S } from "../grid/Grid";
-import { Atlas } from "../grid/Atlas";
-import { PaintMenu } from "./paint/PaintMenu";
-import { SettingsDisplay } from "./settings/SettingsDisplay";
-import { StatisticsDisplay } from "./statistics/StatisticsDisplay";
-import { StatisticsMonitor } from "../stats/StatisticsMonitor";
-import { AllGamesDisplay } from "./menu/AllGamesDisplay";
-import { AboutDisplay } from "./about/AboutDisplay";
-import { NavigationManager } from "./shared/NavigationManager";
-import { Pages, UserEvent, UserEventType } from "./shared/UserEvent";
-import { getStorageBackend } from "../lib/storage-backend";
+import { PaintDisplay } from "../paint/PaintDisplay";
+import { Grid, TileSet_S } from "../../grid/Grid";
+import { Atlas } from "../../grid/Atlas";
+import { PaintMenu } from "../paint/PaintMenu";
+import { SettingsDisplay } from "../settings/SettingsDisplay";
+import { StatisticsDisplay } from "../statistics/StatisticsDisplay";
+import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
+import { AllGamesDisplay } from "../menu/AllGamesDisplay";
+import { AboutDisplay } from "../about/AboutDisplay";
+import { NavigationManager } from "./NavigationManager";
+import { Pages, UserEvent, UserEventType } from "../shared/UserEvent";
+import { getStorageBackend } from "../../lib/storage-backend";
 import * as zod from "zod";
 import {
     ScreenCarrousel,
     ScreenCarrouselFactory,
-} from "./shared/ScreenCarrousel";
+} from "../shared/ScreenCarrousel";
 import { msg } from "@lingui/core/macro";
-import icons from "./shared/icons";
-import { NavBarItems } from "./shared/NavBar";
-import { DestroyableEventListenerSet } from "./shared/DestroyableEventListenerSet";
+import icons from "../shared/icons";
+import { NavBarItems } from "../shared/NavBar";
+import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 
 const ControllerState_S = zod.object({
     hash: zod.string(),

@@ -6,7 +6,7 @@
 import { setColorScheme } from "./ui/shared/colorScheme";
 import { Workbox } from "workbox-window";
 import { VERSION } from "./constants";
-import { GameController } from "./ui/GameController";
+import { GameController } from "./ui/controller/GameController";
 import { prepareI18n } from "./i18n";
 import { getStorageBackend } from "./lib/storage-backend";
 import { StatisticsMonitor } from "./stats/StatisticsMonitor";

@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { GameController } from "./ui/GameController";
+import { GameController } from "./ui/controller/GameController";
 
 // @ts-expect-error: constant set by babel transform-define plugin
 export const VERSION = ENV_VERSION as string;

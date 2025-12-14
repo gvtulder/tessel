@@ -97,6 +97,14 @@ body.dark-mode {
   // warning symbol for invalid grid in setup menu
   --invalid-grid-warning-color: #e06300;
 
+  // STATISTICS :-moz-full-screen
+
+  --statistics-shape-color: #{color.mix(
+      $button-base-color,
+      $main-bg-color,
+      35%
+    )};
+
   // GAME SCREEN
 
   // background behind buttons on top of grid

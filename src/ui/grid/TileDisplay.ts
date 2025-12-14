@@ -13,7 +13,7 @@ import { addPointToPolygon } from "../../geom/polygon/addPointToPolygon";
 import { S, SVG } from "../shared/svg";
 import { UniqueIdSource } from "../shared/uniqueSvgId";
 
-function polygonToPath(vertices: readonly Point[]): string {
+export function polygonToPath(vertices: readonly Point[]): string {
     const points = new Array<string>(vertices.length);
     for (let i = 0; i < points.length; i++) {
         points[i] =

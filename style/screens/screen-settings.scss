@@ -171,7 +171,7 @@
   article {
     position: relative;
 
-    $stats-column-width: 6em;
+    $stats-column-width: 5em;
     table,
     th,
     td {
@@ -202,6 +202,25 @@
     table td.label:first-child {
       padding-left: 0.5em;
       border: none;
+    }
+    $icon-width: 1em;
+    $icon-padding: 0.4em;
+    table th.with-icon,
+    table td.with-icon,
+    table th.label.with-icon,
+    table td.label.with-icon {
+      padding-left: calc(0.5em + $icon-width + $icon-padding);
+      text-indent: calc(-1 * $icon-width - $icon-padding);
+      border: none;
+    }
+    .shapes-icon {
+      display: inline-block;
+      fill: var(--statistics-shape-color);
+      max-width: $icon-width;
+      max-height: $icon-width;
+      padding-right: $icon-padding;
+      aspect-ratio: 1;
+      vertical-align: -0.15em;
     }
     thead th {
       text-align: right;

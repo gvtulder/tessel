@@ -11,6 +11,8 @@ import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { SetupCatalog } from "../../saveGames";
 import { formatNumber } from "../../i18n";
 import { clip } from "../../geom/math";
+import { AtlasIcon } from "../grid/ShapesIcon";
+import { Shape } from "../../grid/Shape";
 
 export type StatisticsSection = {
     heading?: {
@@ -21,6 +23,7 @@ export type StatisticsSection = {
     columns: (MessageDescriptor | null)[];
     rows: {
         title: MessageDescriptor;
+        icon?: readonly Shape[];
         keys: string[];
     }[];
     footer?: {
@@ -155,7 +158,11 @@ export class StatisticsDisplay extends ScreenDisplay {
                 const row = column[i];
                 if (row) {
                     const th = createElement("th", "label", tr);
-                    th.innerHTML = t(row.title);
+                    if (row.icon) {
+                        th.appendChild(new AtlasIcon(row.icon).svg);
+                        th.classList.add("with-icon");
+                    }
+                    th.appendChild(document.createTextNode(t(row.title)));
                     for (const key of row.keys) {
                         const td = createElement("td", null, tr);
                         const n = stats.counters.get(key) || 0;
@@ -223,6 +230,7 @@ const StatisticsSections: StatisticsSection[] = [
         rows: [...SetupCatalog.atlas.values()].map((atlasDef) => {
             return {
                 title: atlasDef.atlas.tilingName as MessageDescriptor,
+                icon: atlasDef.atlas.shapes,
                 keys: [
                     `HighScore.{"atlas":"${atlasDef.atlas.id}","colors":"wong4","segments":0,"uniqueTileColors":false,"rules":"same","scorer":"shape"}`,
                     `ShapeCompleted.{"atlas":"${atlasDef.atlas.id}","colors":"wong4","segments":0,"uniqueTileColors":false,"rules":"same","scorer":"shape"}`,
@@ -254,6 +262,7 @@ const StatisticsSections: StatisticsSection[] = [
                     id: "ui.statistics.counter.TilePlaced.square",
                     message: "Squares",
                 }),
+                icon: SetupCatalog.atlas.get("square")!.atlas.shapes,
                 keys: [`TilePlaced.square`],
             },
             {
@@ -261,6 +270,7 @@ const StatisticsSections: StatisticsSection[] = [
                     id: "ui.statistics.counter.TilePlaced.triangle",
                     message: "Triangles",
                 }),
+                icon: SetupCatalog.atlas.get("triangle")!.atlas.shapes,
                 keys: [`TilePlaced.triangle`],
             },
             {
@@ -268,6 +278,7 @@ const StatisticsSections: StatisticsSection[] = [
                     id: "ui.statistics.counter.TilePlaced.rhombus",
                     message: "Rhombi",
                 }),
+                icon: [SetupCatalog.atlas.get("penrose")!.atlas.shapes[0]],
                 keys: [`TilePlaced.rhombus`],
             },
             {
@@ -275,6 +286,7 @@ const StatisticsSections: StatisticsSection[] = [
                     id: "ui.statistics.counter.TilePlaced.pentagon",
                     message: "Pentagons",
                 }),
+                icon: [SetupCatalog.atlas.get("pentagon")!.atlas.shapes[0]],
                 keys: [`TilePlaced.pentagon`],
             },
             {
@@ -282,6 +294,7 @@ const StatisticsSections: StatisticsSection[] = [
                     id: "ui.statistics.counter.TilePlaced.hexagon",
                     message: "Hexagons",
                 }),
+                icon: [SetupCatalog.atlas.get("hexagon")!.atlas.shapes[0]],
                 keys: [`TilePlaced.hexagon`],
             },
             {
@@ -289,6 +302,7 @@ const StatisticsSections: StatisticsSection[] = [
                     id: "ui.statistics.counter.TilePlaced.kite",
                     message: "Kites",
                 }),
+                icon: [SetupCatalog.atlas.get("deltotrihex")!.atlas.shapes[0]],
                 keys: [`TilePlaced.kite`],
             },
         ],

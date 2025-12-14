@@ -105,6 +105,14 @@ $blue: hsl(214deg, 64%, 50%);
   --invalid-grid-warning-color: #e06300;
   --undefined-tile-color: hsl(0deg, 0%, 50%);
 
+  // STATISTICS :-moz-full-screen
+
+  --statistics-shape-color: #{color.mix(
+      $button-base-color,
+      $main-bg-color,
+      70%
+    )};
+
   // GAME SCREEN
 
   // background behind buttons on top of grid

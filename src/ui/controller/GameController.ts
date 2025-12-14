@@ -28,7 +28,11 @@ import { StatisticsDisplay } from "../statistics/StatisticsDisplay";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { AllGamesDisplay } from "../menu/AllGamesDisplay";
 import { AboutDisplay } from "../about/AboutDisplay";
-import { NavigationManager } from "./NavigationManager";
+import {
+    BrowserNavigationManager,
+    CustomNavigationManager,
+    NavigationManager,
+} from "./NavigationManager";
 import { Pages, UserEvent, UserEventType } from "../shared/UserEvent";
 import { getStorageBackend } from "../../lib/storage-backend";
 import * as zod from "zod";
@@ -83,9 +87,9 @@ export class GameController {
         this.platform = config.platform;
         this.stats = StatisticsMonitor.instance;
 
-        this.navigation = new NavigationManager(
-            config.useCustomHistory || false,
-        );
+        this.navigation = config.useCustomHistory
+            ? new CustomNavigationManager()
+            : new BrowserNavigationManager();
         this.navigation.onNavigate = (reload?: boolean) => {
             this.run(undefined, reload);
         };

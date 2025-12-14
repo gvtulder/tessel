@@ -33,15 +33,13 @@ const uniqueIdSource = new UniqueIdSource("tile");
 export class TileDisplay {
     tile: Tile;
 
-    gridDisplay: GridDisplay;
     segmentElements?: SVGPathElement[];
 
     element: SVGElement;
     clipPath: SVGElement;
     clipPathId: string;
 
-    constructor(gridDisplay: GridDisplay, tile: Tile) {
-        this.gridDisplay = gridDisplay;
+    constructor(tile: Tile) {
         this.tile = tile;
 
         this.element = SVG(

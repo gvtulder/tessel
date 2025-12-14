@@ -127,7 +127,7 @@ export class GridDisplay extends EventTarget implements ScalableDisplay {
 
     addTile(tile: Tile) {
         if (!this.tileDisplays.has(tile)) {
-            const tileDisplay = new TileDisplay(this, tile);
+            const tileDisplay = new TileDisplay(tile);
             this.tileDisplays.set(tile, tileDisplay);
             if (tile instanceof PlaceholderTile) {
                 this.svgPlaceholders.appendChild(tileDisplay.element);

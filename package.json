@@ -22,9 +22,9 @@
   "browserslist": "defaults",
   "type": "module",
   "dependencies": {
-    "@lingui/core": "^5.6.1",
+    "@lingui/core": "^5.7.0",
     "@parcel/service-worker": "^2.16.3",
-    "check2d": "^9.33.0",
+    "check2d": "^9.35.2",
     "polygon-clipping": "^0.15.7",
     "workbox-core": "^7.4.0",
     "workbox-precaching": "^7.4.0",

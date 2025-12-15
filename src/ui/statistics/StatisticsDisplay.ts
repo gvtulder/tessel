@@ -9,7 +9,6 @@ import { msg, t } from "@lingui/core/macro";
 import { i18n, MessageDescriptor } from "@lingui/core";
 import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
 import { SetupCatalog } from "../../saveGames";
-import { formatNumber } from "../../i18n";
 import { clip } from "../../geom/math";
 import { AtlasIcon } from "../grid/ShapesIcon";
 import { Shape } from "../../grid/Shape";
@@ -123,9 +122,7 @@ export class StatisticsDisplay extends ScreenDisplay {
             const h3 = createElement("h4", null, fragment);
             if (section.heading.key) {
                 h3.innerHTML = i18n.t(section.heading.title.id, {
-                    value: formatNumber(
-                        stats.counters.get(section.heading.key) || 0,
-                    ),
+                    value: stats.counters.get(section.heading.key) || 0,
                 });
             } else {
                 h3.innerHTML = t(section.heading.title as MessageDescriptor);
@@ -166,7 +163,7 @@ export class StatisticsDisplay extends ScreenDisplay {
                     for (const key of row.keys) {
                         const td = createElement("td", null, tr);
                         const n = stats.counters.get(key) || 0;
-                        td.innerHTML = formatNumber(n);
+                        td.innerHTML = i18n.number(n);
                     }
                 } else {
                     const th = createElement("th", "label", tr);
@@ -188,7 +185,7 @@ export class StatisticsDisplay extends ScreenDisplay {
                 for (const key of row.keys) {
                     const td = createElement("td", null, tr);
                     const n = stats.counters.get(key) || 0;
-                    td.innerHTML = formatNumber(n);
+                    td.innerHTML = i18n.number(n);
                 }
                 for (let i = 1; i < multiColumn; i++) {
                     const td = createElement("td", null, tr);

@@ -111,10 +111,6 @@ for (const [language, data] of Object.entries(languages)) {
     i18n.load(language, data.messages);
 }
 
-let numberFormat: Intl.NumberFormat = new Intl.NumberFormat("en-US", {
-    style: "decimal",
-});
-
 export async function selectLanguage(
     options: (string | null)[],
 ): Promise<string> {
@@ -141,16 +137,9 @@ export async function prepareI18n(navigatorLanguage: string) {
 }
 
 export function updateI18n(locale: string) {
-    numberFormat = new Intl.NumberFormat(languages[locale].languageTag, {
-        style: "decimal",
-    });
     i18n.activate(locale);
 }
 
 export function getLocalizedAboutHTML(): string {
     return languages[i18n.locale]?.aboutHTML || languages["en"].aboutHTML;
-}
-
-export function formatNumber(n: number | bigint): string {
-    return numberFormat.format(n);
 }

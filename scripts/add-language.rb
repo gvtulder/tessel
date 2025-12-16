@@ -106,7 +106,6 @@ link_file_en "name.txt"
 link_file_en "marketing_url.txt"
 link_file_en "privacy_url.txt"
 link_file_en "support_url.txt"
-link_file_en "video.txt"
 
-FileUtils.ln_sf("../en-US/video.txt",
-                "fastlane/metadata/android/#{$lang_meta_android}/video.txt")
+FileUtils.cp("../en-US/video.txt",
+             "fastlane/metadata/android/#{$lang_meta_android}/video.txt")

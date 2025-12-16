@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "vitest";
 import { Atlas, AtlasDefinitionDoc } from "./Atlas";
 import { HexagonsAtlas } from "./atlas/HexagonsAtlas";
 import { Penrose0Atlas } from "./atlas/Penrose0Atlas";

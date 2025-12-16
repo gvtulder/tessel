@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { jest } from "@jest/globals";
+import { Mock, vi } from "vitest";
 
 export class MockHistory implements History {
     history: (string | URL | null | undefined)[];
@@ -15,24 +15,24 @@ export class MockHistory implements History {
     scrollRestoration: ScrollRestoration = "auto";
     state = null;
 
-    back: jest.Mock<() => void>;
-    pushState: jest.Mock<
-        (data: unknown, unused: string, url?: string | URL | null) => void
+    back: Mock<() => unknown>;
+    pushState: Mock<
+        (data: unknown, unused: string, url?: string | URL | null) => unknown
     >;
-    replaceState: jest.Mock<
-        (data: unknown, unused: string, url?: string | URL | null) => void
+    replaceState: Mock<
+        (data: unknown, unused: string, url?: string | URL | null) => unknown
     >;
 
     constructor() {
         this.history = [];
-        this.back = jest.fn(() =>
+        this.back = vi.fn(() =>
             window.dispatchEvent(new PopStateEvent("popstate")),
         );
-        this.pushState = jest.fn(
+        this.pushState = vi.fn(
             (data: unknown, unused: string, url?: string | URL | null) =>
                 this.history.push(url),
         );
-        this.replaceState = jest.fn(
+        this.replaceState = vi.fn(
             (data: unknown, unused: string, url?: string | URL | null) =>
                 (this.history[this.history.length - 1] = url),
         );

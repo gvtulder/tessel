@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "vitest";
 import { P, Point, TWOPI } from "../math";
 import { smallestCircle } from "./smallestCircle";
 

@@ -3,14 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import {
-    afterEach,
-    beforeEach,
-    describe,
-    expect,
-    jest,
-    test,
-} from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
     BrowserNavigationManager,
     CustomNavigationManager,
@@ -36,7 +29,7 @@ afterEach(() => {
 
 describe("BrowserNavigationManager", () => {
     test("can navigate", () => {
-        const onNavigate = jest.fn((reload?: boolean) => {});
+        const onNavigate = vi.fn((reload?: boolean) => {});
 
         const nav = new BrowserNavigationManager();
         nav.onNavigate = onNavigate;
@@ -76,7 +69,7 @@ describe("BrowserNavigationManager", () => {
     });
 
     test("can go back in history", () => {
-        const onNavigate = jest.fn((reload?: boolean) => {});
+        const onNavigate = vi.fn((reload?: boolean) => {});
 
         const nav = new BrowserNavigationManager();
         nav.onNavigate = onNavigate;
@@ -101,7 +94,7 @@ describe("BrowserNavigationManager", () => {
     });
 
     test("can handle popstate", () => {
-        const onNavigate = jest.fn((reload?: boolean) => {});
+        const onNavigate = vi.fn((reload?: boolean) => {});
 
         const nav = new BrowserNavigationManager();
         nav.onNavigate = onNavigate;
@@ -120,7 +113,7 @@ describe("BrowserNavigationManager", () => {
 
 describe("CustomNavigationManager", () => {
     test("can navigate", () => {
-        const onNavigate = jest.fn((reload?: boolean) => {});
+        const onNavigate = vi.fn((reload?: boolean) => {});
 
         const nav = new CustomNavigationManager();
         nav.onNavigate = onNavigate;
@@ -153,7 +146,7 @@ describe("CustomNavigationManager", () => {
     });
 
     test("can go back in history", () => {
-        const onNavigate = jest.fn((reload?: boolean) => {});
+        const onNavigate = vi.fn((reload?: boolean) => {});
 
         const nav = new CustomNavigationManager();
         nav.onNavigate = onNavigate;
@@ -179,7 +172,7 @@ describe("CustomNavigationManager", () => {
     });
 
     test("can handle popstate", () => {
-        const onNavigate = jest.fn((reload?: boolean) => {});
+        const onNavigate = vi.fn((reload?: boolean) => {});
 
         const nav = new CustomNavigationManager();
         nav.onNavigate = onNavigate;

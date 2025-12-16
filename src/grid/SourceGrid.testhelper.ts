@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { expect } from "@jest/globals";
+import { expect } from "vitest";
 import { SourceGrid, SourcePoint } from "./SourceGrid";
 import { Shape } from "./Shape";
 

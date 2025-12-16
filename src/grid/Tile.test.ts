@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, expect, jest, test } from "@jest/globals";
+import { describe, expect, test, vi } from "vitest";
 import { Shape } from "./Shape";
 import { PlaceholderTile, Tile, TileType } from "./Tile";
 import { P } from "../geom/math";
@@ -29,7 +29,7 @@ describe("Tile", () => {
     });
 
     test("has colors", () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
         const segments = polygon.segment();
         const tile = new Tile(TRIANGLE, polygon, segments);
         expect(tile.colors).toStrictEqual([undefined, undefined, undefined]);

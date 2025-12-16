@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "vitest";
 import { seedPRNG } from "../geom/RandomSampler";
 import { tileColorsEqualWithRotation, TileStack } from "./TileStack";
 import { SquaresAtlas } from "../grid/atlas/SquaresAtlas";

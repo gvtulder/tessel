@@ -3,21 +3,23 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "vitest";
 import { selectLanguage } from "./i18n";
 
 describe("i18n", () => {
-    test("selectLanguage", () => {
-        expect(selectLanguage(["en"])).resolves.toBe("en");
-        expect(selectLanguage(["nl"])).resolves.toBe("nl");
-        expect(selectLanguage(["unknown"])).resolves.toBe("en");
+    test("selectLanguage", async () => {
+        await expect(selectLanguage(["en"])).resolves.toBe("en");
+        await expect(selectLanguage(["nl"])).resolves.toBe("nl");
+        await expect(selectLanguage(["unknown"])).resolves.toBe("en");
 
-        expect(selectLanguage(["en-US"])).resolves.toBe("en");
-        expect(selectLanguage(["nl-NL"])).resolves.toBe("nl");
+        await expect(selectLanguage(["en-US"])).resolves.toBe("en");
+        await expect(selectLanguage(["nl-NL"])).resolves.toBe("nl");
 
-        expect(selectLanguage(["zh-Hans"])).resolves.toBe("zh-Hans");
-        expect(selectLanguage(["zh-Hant"])).resolves.toBe("zh-Hant");
+        await expect(selectLanguage(["zh-Hans"])).resolves.toBe("zh-Hans");
+        await expect(selectLanguage(["zh-Hant"])).resolves.toBe("zh-Hant");
 
-        expect(selectLanguage(["unknown", "nl", "fr"])).resolves.toBe("nl");
+        await expect(selectLanguage(["unknown", "nl", "fr"])).resolves.toBe(
+            "nl",
+        );
     });
 });

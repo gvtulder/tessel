@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe } from "@jest/globals";
+import { describe } from "vitest";
 import { FullVertexScorer } from "./FullVertexScorer";
 import { _, testScorer } from "./testScorer";
 

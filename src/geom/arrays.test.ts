@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, test, expect } from "@jest/globals";
+import { describe, test, expect } from "vitest";
 
 import { mapToIndex, rotateArray, UniqueNumberCycleSet } from "./arrays";
 

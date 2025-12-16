@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, jest, test, expect, beforeAll } from "@jest/globals";
+import { describe, test } from "vitest";
 import { MainMenuDisplay } from "./MainMenuDisplay";
 
 describe("MainMenuDisplay", () => {

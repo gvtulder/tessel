@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, expect, jest, test } from "@jest/globals";
+import { describe, expect, test, vi } from "vitest";
 import { Grid, GridEdge, GridVertex, SortedCorners } from "./Grid";
 import { PlaceholderTile, Tile, TileType } from "./Tile";
 import { Polygon } from "../geom/Polygon";
@@ -124,11 +124,11 @@ describe("GridVertex", () => {
         const point = P(0, 1);
         const vertex = new GridVertex(point);
         vertex.addTile(tile, 1);
-        expect(vertex.tiles).toStrictEqual([tile]);
+        expect(vertex.tiles).toEqual([tile]);
         expect(vertex.corners[0].tile).toBe(tile);
 
         vertex.removeTile(tile);
-        expect(vertex.tiles).toStrictEqual([]);
+        expect(vertex.tiles).toEqual([]);
     });
 
     test("can add and remove a placeholder", () => {
@@ -301,8 +301,8 @@ describe("Grid", () => {
     });
 
     test("dispatches events", () => {
-        const addHandler = jest.fn();
-        const removeHandler = jest.fn();
+        const addHandler = vi.fn();
+        const removeHandler = vi.fn();
 
         const grid = new Grid(atlas);
         grid.addEventListener(GridEventType.AddTile, addHandler);

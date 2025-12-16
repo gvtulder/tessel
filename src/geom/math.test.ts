@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, test, expect } from "@jest/globals";
+import { describe, test, expect } from "vitest";
 
 import {
     DEG2RAD,
@@ -393,9 +393,15 @@ describe("roundPoints", () => {
 });
 
 describe("clip", () => {
-    expect(clip(-2, 0, 5)).toBe(0);
-    expect(clip(0, 0, 5)).toBe(0);
-    expect(clip(2, 0, 5)).toBe(2);
-    expect(clip(5, 0, 5)).toBe(5);
-    expect(clip(7, 0, 5)).toBe(5);
+    test("clips to min/max", () => {
+        expect(clip(-2, 0, 5)).toBe(0);
+        expect(clip(0, 0, 5)).toBe(0);
+        expect(clip(2, 0, 5)).toBe(2);
+        expect(clip(5, 0, 5)).toBe(5);
+        expect(clip(7, 0, 5)).toBe(5);
+
+        // unpredictable behavior if min > max
+        expect(clip(7, 3, 1)).toBe(1);
+        expect(clip(0, 3, 1)).toBe(3);
+    });
 });

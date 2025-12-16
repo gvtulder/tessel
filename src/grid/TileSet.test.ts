@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { describe, expect, jest, test } from "@jest/globals";
+import { describe, expect, test } from "vitest";
 import { Shape } from "./Shape";
 import { Tile } from "./Tile";
 import { TileSet } from "./TileSet";

@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { expect, test } from "@jest/globals";
+import { expect, test } from "vitest";
 import { Scorer } from "./Scorer";
 import {
     _ as underscore,

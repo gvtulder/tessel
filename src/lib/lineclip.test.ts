@@ -9,7 +9,7 @@
 // ISC License
 // Copyright (c) 2015, Mapbox
 
-import { expect, test } from "@jest/globals";
+import { expect, test } from "vitest";
 import { lineclip, polygonclip } from "./lineclip";
 import { Point } from "../geom/math";
 

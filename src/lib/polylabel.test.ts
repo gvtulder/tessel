@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: ISC AND GPL-3.0-or-later
 // SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
 
-import { describe, expect, test } from "@jest/globals";
+import { describe, expect, test } from "vitest";
 import { polylabel } from "./polylabel";
 import { DEG2RAD, P, Point } from "../geom/math";
 

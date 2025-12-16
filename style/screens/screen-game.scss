@@ -15,6 +15,8 @@ $score-font-size: min(4vw, 5vh);
     "main-grid tile-stack fill-end"
     "main-grid counters fill-end";
 
+  box-shadow: none;
+
   &.appear {
     animation-delay: 200ms;
     animation-duration: 600ms;
@@ -23,6 +25,10 @@ $score-font-size: min(4vw, 5vh);
   .main-grid {
     grid-area: main-grid;
     overflow: hidden;
+    box-shadow: var(--screen-box-shadow);
+  }
+
+  .main-grid .grid-display {
     animation-name: main-grid-appear;
     animation-duration: 400ms;
     animation-delay: 200ms;

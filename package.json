@@ -22,14 +22,14 @@
   "browserslist": "defaults",
   "type": "module",
   "dependencies": {
-    "@lingui/core": "^5.6.1",
+    "@lingui/core": "^5.7.0",
     "@parcel/service-worker": "^2.16.3",
-    "check2d": "^9.33.0",
+    "check2d": "^9.35.2",
     "polygon-clipping": "^0.15.7",
     "workbox-core": "^7.4.0",
     "workbox-precaching": "^7.4.0",
     "workbox-window": "^7.4.0",
-    "zod": "^4.1.13"
+    "zod": "^4.2.0"
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.4",
@@ -43,8 +43,8 @@
     "@capacitor/share": "^7.0.2",
     "@capacitor/status-bar": "^7.0.3",
     "@capawesome/capacitor-android-edge-to-edge-support": "^7.2.3",
-    "@lingui/babel-plugin-lingui-macro": "^5.6.1",
-    "@lingui/cli": "^5.6.1",
+    "@lingui/babel-plugin-lingui-macro": "^5.7.0",
+    "@lingui/cli": "^5.7.0",
     "@lingui/swc-plugin": "^5.6.1",
     "@lingui/vite-plugin": "^5.7.0",
     "@parcel/packager-raw-url": "^2.16.3",
@@ -57,7 +57,7 @@
     "babel-plugin-transform-define": "^2.1.4",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "color": "^5.0.3",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-license-header": "^0.8.0",
     "eslint-plugin-lingui": "^0.11.0",
@@ -73,7 +73,7 @@
     "tslib": "^2.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.49.0",
+    "typescript-eslint": "^8.50.0",
     "vitest": "^4.0.15"
   },
   "parcel-namer-rewrite": {

@@ -4,7 +4,8 @@
  */
 
 import { Atlas } from "./Atlas";
-import { Grid, GridEdge } from "./Grid";
+import { Grid } from "./Grid";
+import { GridEdge } from "./GridEdge";
 import { dist, midpoint } from "../geom/math";
 import { PRNG, RandomSampler, selectRandom } from "../geom/RandomSampler";
 import { Tile } from "./Tile";

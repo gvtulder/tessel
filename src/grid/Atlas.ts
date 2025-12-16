@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { CornerType, SortedCorners } from "./Grid";
+import { CornerType, SortedCorners } from "./SortedCorners";
 import { deg2rad, RAD2DEG } from "../geom/math";
 import { AngleUse, ColorPattern, Shape } from "./Shape";
 import { UniqueNumberCycleSet } from "../geom/arrays";

@@ -8,7 +8,8 @@ import { Atlas, AtlasDefinitionDoc } from "./Atlas";
 import { HexagonsAtlas } from "./atlas/HexagonsAtlas";
 import { Penrose0Atlas } from "./atlas/Penrose0Atlas";
 import { rad2deg } from "../geom/math";
-import { Grid, SortedCorners } from "./Grid";
+import { Grid } from "./Grid";
+import { SortedCorners } from "./SortedCorners";
 import { SnubSquareSourceGrid } from "./source/SnubSquareSourceGrid";
 
 function toFixed(xs: readonly number[], fractionDigits: number) {

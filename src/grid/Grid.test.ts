@@ -4,8 +4,9 @@
  */
 
 import { describe, expect, test, vi } from "vitest";
-import { Grid, GridEdge, GridVertex, SortedCorners } from "./Grid";
-import { PlaceholderTile, Tile, TileType } from "./Tile";
+import { Grid } from "./Grid";
+import { GridEdge } from "./GridEdge";
+import { GridVertex } from "./GridVertex";
 import { Polygon } from "../geom/Polygon";
 import { GridEventType } from "./GridEvent";
 import { mergeBBox, P, weightedSumPoint } from "../geom/math";
@@ -16,135 +17,6 @@ import { Atlas } from "./Atlas";
 import { SnubSquareSourceGrid } from "./source/SnubSquareSourceGrid";
 
 const TRIANGLE = TrianglesAtlas.shapes[0];
-
-describe("SortedCorners", () => {
-    test("can be created", () => {
-        const sortedCorners = new SortedCorners();
-        expect(sortedCorners.length).toBe(0);
-    });
-
-    // define three triangles around (0, 0)
-    const tile1 = new Tile(
-        TRIANGLE,
-        TRIANGLE.constructPolygonAB(P(0, 0), P(0, 1), 0),
-    );
-    const tile2 = new Tile(
-        TRIANGLE,
-        TRIANGLE.constructPolygonEdge(tile1.polygon.outsideEdges[0], 0),
-    );
-    const tile3 = new Tile(
-        TRIANGLE,
-        TRIANGLE.constructPolygonEdge(tile2.polygon.outsideEdges[1], 0),
-    );
-    test.each([
-        [
-            [
-                [tile1, 0],
-                [tile2, 1],
-                [tile3, 1],
-            ],
-            [tile2, tile1, tile3],
-        ],
-        [
-            [
-                [tile2, 1],
-                [tile3, 1],
-                [tile1, 0],
-            ],
-            [tile2, tile1, tile3],
-        ],
-    ])("can add and remove tiles", (input, output) => {
-        const sortedCorners = new SortedCorners();
-        expect(sortedCorners.length).toBe(0);
-        sortedCorners.addTile(input[0][0] as Tile, input[0][1] as number);
-        expect(sortedCorners.length).toBe(1);
-        sortedCorners.addTile(input[1][0] as Tile, input[1][1] as number);
-        expect(sortedCorners.length).toBe(2);
-        sortedCorners.addTile(input[2][0] as Tile, input[2][1] as number);
-        expect(sortedCorners.length).toBe(3);
-        expect([...sortedCorners.map((c) => c.tile.centroid)]).toStrictEqual(
-            output.map((c) => c.centroid),
-        );
-        sortedCorners.removeTile(tile2);
-        expect(sortedCorners.length).toBe(2);
-        expect([...sortedCorners.map((c) => c.tile.centroid)]).toStrictEqual([
-            tile1.centroid,
-            tile3.centroid,
-        ]);
-    });
-
-    test("can get tiles", () => {
-        const sortedCorners = new SortedCorners();
-        sortedCorners.addTile(tile1, 0);
-        sortedCorners.addTile(tile2, 1);
-        sortedCorners.addTile(tile3, 1);
-        expect(sortedCorners.tiles).toContain(tile1);
-        expect(sortedCorners.tiles).toContain(tile2);
-        expect(sortedCorners.tiles).toContain(tile3);
-    });
-
-    test("can be cloned", () => {
-        const sortedCorners = new SortedCorners();
-        sortedCorners.addTile(tile1, 0);
-        const clone = sortedCorners.clone();
-        expect(sortedCorners[0] === clone[0]).toBe(true);
-    });
-
-    test("can compute the next corner", () => {
-        const sortedCorners = new SortedCorners();
-        expect(sortedCorners.findNextCorner(tile1)).toBeUndefined();
-        sortedCorners.addTile(tile1, 0);
-        expect(sortedCorners.findNextCorner(tile1)).toBeUndefined();
-        expect(sortedCorners.findNextCorner(tile2)).toBeUndefined();
-        sortedCorners.addTile(tile2, 1);
-        expect(sortedCorners.findNextCorner(tile1)!.tile).toBe(tile2);
-        expect(sortedCorners.findNextCorner(tile2)!.tile).toBe(tile1);
-        expect(sortedCorners.findNextCorner(tile3)).toBeUndefined();
-        sortedCorners.addTile(tile3, 1);
-        expect(sortedCorners.findNextCorner(tile1)!.tile).toBe(tile3);
-        expect(sortedCorners.findNextCorner(tile3)!.tile).toBe(tile2);
-        expect(sortedCorners.findNextCorner(tile2)!.tile).toBe(tile1);
-    });
-});
-
-describe("GridVertex", () => {
-    test("can be constructed", () => {
-        const point = P(0, 2);
-        const vertex = new GridVertex(point);
-        expect(vertex.point).toBe(point);
-        expect(vertex.corners.length).toBe(0);
-        expect(vertex.tiles.length).toBe(0);
-    });
-
-    test("can add and remove a tile", () => {
-        const tile = new Tile(
-            TRIANGLE,
-            TRIANGLE.constructPolygonAB(P(0, 0), P(0, 1), 0),
-        );
-        const point = P(0, 1);
-        const vertex = new GridVertex(point);
-        vertex.addTile(tile, 1);
-        expect(vertex.tiles).toEqual([tile]);
-        expect(vertex.corners[0].tile).toBe(tile);
-
-        vertex.removeTile(tile);
-        expect(vertex.tiles).toEqual([]);
-    });
-
-    test("can add and remove a placeholder", () => {
-        const placeholder = new PlaceholderTile(
-            TRIANGLE,
-            TRIANGLE.constructPolygonAB(P(0, 0), P(0, 1), 0),
-        );
-        const point = P(0, 1);
-        const vertex = new GridVertex(point);
-        vertex.addTile(placeholder, 1);
-        expect([...vertex.placeholders]).toStrictEqual([placeholder]);
-
-        vertex.removeTile(placeholder);
-        expect(vertex.placeholders.size).toBe(0);
-    });
-});
 
 describe("GridEdge", () => {
     const a = new GridVertex(P(0, 0));

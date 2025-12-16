@@ -17,15 +17,13 @@ import {
     centroid,
     comparePoint,
     dist,
-    edgeToAngle,
     mergeBBox,
     Point,
-    TWOPI,
     weightedSumPoint,
 } from "../geom/math";
 import { AngleUse, Shape } from "./Shape";
 import { PlaceholderTile, Tile, Tile_S, TileColors, TileType } from "./Tile";
-import { Polygon, Polygon_S } from "../geom/Polygon";
+import { Polygon } from "../geom/Polygon";
 import { matchPoints } from "../geom/polygon/matchPoints";
 import { GridEvent, GridEventType } from "./GridEvent";
 import { TileSet } from "./TileSet";
@@ -33,6 +31,9 @@ import { RuleSet as RuleSet } from "./rules/RuleSet";
 import { MatchEdgeColorsRuleSet } from "./rules/MatchEdgeColorsRuleSet";
 import { Rings } from "./Rings";
 import { SourceGrid, SourcePoint } from "./SourceGrid";
+import { SortedCorners } from "./SortedCorners";
+import { GridVertex } from "./GridVertex";
+import { GridEdge } from "./GridEdge";
 
 /**
  * The precision used for vertex and edge keys.
@@ -42,118 +43,6 @@ const KEY_PRECISION = 1000;
  * The proportion of overlap that counts as a collision.
  */
 const OVERLAP_EPS = 1e-5;
-
-/**
- * An identifier for the type of a corner in a shape.
- * Corners that can be matched after rotating the shape will
- * receive the same identifier.
- */
-export type CornerType = number;
-
-/**
- * A GridVertexCorner describes the corner connecting a
- * tile to a vertex.
- */
-type GridVertexCorner = {
-    /**
-     * The tile.
-     */
-    tile: Tile; // the tile
-    /**
-     * The vertex index of the tile at this corner.
-     */
-    vertexIdx: number;
-    /**
-     * The angle of the edge leaving the vertex.
-     * (Relative to grid coordinates.)
-     */
-    edgeAngle: number;
-    /**
-     * The interior angle of this corner.
-     */
-    cornerAngle: number; // the angle taken up by this corner
-    /**
-     * The shape of the tile.
-     */
-    shape: Shape;
-    /**
-     * The type of this corner.
-     * Corners that can be matched by rotating the shape will
-     * have the same corner type.
-     */
-    cornerType: CornerType;
-};
-
-/**
- * Maintains a list of corners around a vertex, sorted clockwise.
- */
-export class SortedCorners extends Array<GridVertexCorner> {
-    /**
-     * Adds the tile to the list of corners.
-     * @param tile the tile
-     * @param vertexIdx the vertex of the tile to connect to this vertex
-     */
-    addTile(tile: Tile, vertexIdx: number): void {
-        const startEdgeAngle = edgeToAngle(tile.polygon.edges[vertexIdx]);
-        let i = 0;
-        while (i < this.length && startEdgeAngle > this[i].edgeAngle) {
-            i++;
-        }
-        this.splice(i, 0, {
-            tile: tile,
-            vertexIdx: vertexIdx,
-            edgeAngle: startEdgeAngle,
-            cornerAngle: tile.shape.cornerAngles[vertexIdx],
-            shape: tile.shape,
-            cornerType: tile.shape.cornerTypes[vertexIdx],
-        });
-    }
-
-    /**
-     * Removes the tile from the list of corners.
-     * @param tile the tile to remove
-     */
-    removeTile(tile: Tile): void {
-        let index = 0;
-        while (index < this.length && this[index].tile !== tile) {
-            index++;
-        }
-        if (index < this.length) {
-            this.splice(index, 1);
-        }
-    }
-
-    /**
-     * Returns the corner that follows the given tile.
-     * @param tile a tile connected to this corner
-     * @returns the next corner in clockwise order
-     */
-    findNextCorner(tile: Tile): GridVertexCorner | undefined {
-        const n = this.length;
-        if (n < 2) return undefined;
-        let index = 0;
-        while (index < n && this[index].tile !== tile) {
-            index++;
-        }
-        return index < n ? this[(index + 1) % n] : undefined;
-    }
-
-    get tiles(): Tile[] {
-        return this.map((c) => c.tile);
-    }
-
-    get complete(): boolean {
-        let sum = 0;
-        for (const corner of this) {
-            sum += corner.cornerAngle;
-        }
-        return Math.abs(sum - TWOPI) < 1e-5;
-    }
-
-    clone(): SortedCorners {
-        return new SortedCorners(...this);
-    }
-}
 
 type VertexKey = string;
 export type EdgeKey = string;
@@ -190,122 +79,6 @@ export function edgeToKey(a: Point, b: Point): EdgeKey {
  */
 export function edgeToDirectedKey(a: Point, b: Point): EdgeKey {
     return `${pointToKey(a)} ${pointToKey(b)}`;
-}
-
-/**
- * A GridVertex represents a point on the grid,
- * connecting one or more tiles.
- */
-export class GridVertex {
-    /**
-     * The position of the vertex.
-     */
-    point: Point;
-    /**
-     * The corners/tiles connected to this vertex in clockwise order.
-     */
-    corners: SortedCorners;
-    /**
-     * The placeholders connected to this edge.
-     */
-    placeholders: Set<PlaceholderTile>;
-
-    /**
-     * Creates a new vertex at the given point.
-     */
-    constructor(point: Point) {
-        this.point = point;
-        this.corners = new SortedCorners();
-        this.placeholders = new Set<PlaceholderTile>();
-    }
-
-    /**
-     * Returns the tiles connected to this vertex.
-     */
-    get tiles() {
-        return this.corners.tiles;
-    }
-
-    /**
-     * Connects the tile to this vertex.
-     * @param tile the tile to connect
-     * @param vertexIdx the vertex of the tile to connect to this vertex
-     */
-    addTile(tile: Tile, vertexIdx: number) {
-        if (tile instanceof PlaceholderTile) {
-            this.placeholders.add(tile);
-        } else {
-            this.corners.addTile(tile, vertexIdx);
-        }
-    }
-
-    /**
-     * Removes the tile from this vertex.
-     * @param tile the tile to remove
-     */
-    removeTile(tile: Tile) {
-        if (tile instanceof PlaceholderTile) {
-            this.placeholders.delete(tile);
-        } else {
-            this.corners.removeTile(tile);
-        }
-    }
-}
-
-/**
- * An edge connecting two vertices on the grid.
- */
-export class GridEdge {
-    /**
-     * Vertex point A.
-     */
-    a: GridVertex;
-    /**
-     * Vertex point B.
-     */
-    b: GridVertex;
-    /**
-     * The tile with edge A-B.
-     */
-    tileA?: Tile | null;
-    /**
-     * The edge index for tile A.
-     */
-    edgeIdxA?: number | null;
-    /**
-     * The tile with edge B-A.
-     */
-    tileB?: Tile | null;
-    /**
-     * The edge index for tile B.
-     */
-    edgeIdxB?: number | null;
-    /**
-     * The placeholders using this edge.
-     */
-    placeholders: Set<PlaceholderTile>;
-
-    /**
-     * Creates a new edge connecting vertices A and B.
-     *
-     * The vertex is created as A-B or B-A, depending on which
-     * coordinates come first in an ordered sequence.
-     * If A < B, the vertex is A->B, if A > B, vertices A and B
-     * are swapped.
-     *
-     * @param a the first vertex
-     * @param b the second vertex
-     */
-    constructor(a: GridVertex, b: GridVertex) {
-        this.placeholders = new Set<PlaceholderTile>();
-        if (comparePoint(a.point, b.point) < 0) {
-            this.a = a;
-            this.b = b;
-        } else {
-            this.a = b;
-            this.b = a;
-        }
-    }
 }
 
 /**

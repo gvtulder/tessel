@@ -4,7 +4,7 @@
  */
 
 import { ArraySet } from "../geom/ArraySet";
-import { CornerType } from "./Grid";
+import { CornerType } from "./SortedCorners";
 import { DEG2RAD, Edge, Point, rad2deg } from "../geom/math";
 import { mapToIndex, rotateArray } from "../geom/arrays";
 import { Polygon } from "../geom/Polygon";

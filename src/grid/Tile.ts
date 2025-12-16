@@ -3,7 +3,8 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { GridEdge, GridVertex } from "./Grid";
+import { GridEdge } from "./GridEdge";
+import { GridVertex } from "./GridVertex";
 import { BBox, Point } from "../geom/math";
 import { Polygon } from "../geom/Polygon";
 import { Shape } from "./Shape";

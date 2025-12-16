@@ -15,6 +15,9 @@ import { SquaresAtlas } from "./atlas/SquaresAtlas";
 import { TrianglesAtlas } from "./atlas/TrianglesAtlas";
 import { Atlas } from "./Atlas";
 import { SnubSquareSourceGrid } from "./source/SnubSquareSourceGrid";
+import { Penrose3SourceGrid } from "./source/Penrose3SourceGrid";
+import { SetupCatalog } from "../saveGames";
+import { SnubSquareGridAtlas } from "./atlas/SnubSquareGridAtlas";
 
 const TRIANGLE = TrianglesAtlas.shapes[0];
 
@@ -467,13 +470,16 @@ describe("Grid", () => {
         expect(grid2.placeholders.size).toBe(1);
     });
 
-    test("can save and restore tiles with a source grid", () => {
-        const atlas = Atlas.fromSourceGrid("", "", "", SnubSquareSourceGrid);
-        const grid = new Grid(atlas);
+    const atlases = [...SetupCatalog.atlas.values()];
+    test.each(atlases)("can save and restore from $atlas.id", (atlasEntry) => {
+        const grid = new Grid(atlasEntry.atlas);
         const tile = grid.addInitialTile();
         const savedTiles = grid.saveTilesAndPlaceholders();
+        const savedSourceGrid = grid.sourceGrid?.save();
 
-        const grid2 = new Grid(atlas);
+        const sourceGrid2 =
+            atlasEntry.atlas.sourceGrid?.restore(savedSourceGrid);
+        const grid2 = new Grid(atlasEntry.atlas, undefined, sourceGrid2);
         grid2.restoreTiles(savedTiles);
         const restoredTile = [...grid2.tiles][0];
         expect(restoredTile.centroid).toEqual(tile.centroid);

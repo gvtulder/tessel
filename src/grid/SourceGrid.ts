@@ -12,6 +12,8 @@ export abstract class SourceGrid {
     static readonly shapes: readonly Shape[];
     static readonly shapeFrequencies: ReadonlyMap<Shape, number>;
 
+    static restore: (data: unknown) => SourceGrid;
+
     static create(prng?: PRNG): SourceGrid {
         throw new Error("Must be implemented in a subclass.");
     }

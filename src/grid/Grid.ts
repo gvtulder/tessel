@@ -9,7 +9,7 @@ import {
     Point as CollisionPoint,
     Body,
 } from "check2d";
-import * as zod from "zod";
+import * as zod from "zod/v4-mini";
 
 import { Atlas } from "./Atlas";
 import {

@@ -6,6 +6,7 @@
 import { describe, expect, test } from "vitest";
 import { area, bbox, centroid, P, Point, shiftPoints } from "./math";
 import { Polygon } from "./Polygon";
+import * as zod from "zod/v4-mini";
 
 describe("Polygon", () => {
     const triangle: readonly Point[] = P([0, 0], [1, -1], [2, 1]);
@@ -81,8 +82,8 @@ describe("Polygon", () => {
 
     test("can be saved", () => {
         const poly = new Polygon(triangle);
-        const saved = Polygon.codec.encode(poly);
-        const restored = Polygon.codec.decode(saved);
+        const saved = zod.encode(Polygon.codec, poly);
+        const restored = zod.decode(Polygon.codec, saved);
         expect(restored).toStrictEqual(poly);
     });
 });

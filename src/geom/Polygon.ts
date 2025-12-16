@@ -4,7 +4,7 @@
  */
 
 import { BBox, area, bbox, centroid, Edge, Point, shiftPoints } from "./math";
-import * as zod from "zod";
+import * as zod from "zod/v4-mini";
 
 /**
  * A polygon consists of a number vertices.
@@ -101,7 +101,7 @@ export class Polygon {
     }
 
     save() {
-        return Polygon.codec.encode(this);
+        return zod.encode(Polygon.codec, this);
     }
 
     static restore(data: unknown) {
@@ -109,14 +109,14 @@ export class Polygon {
     }
 
     static codec = zod.codec(
-        zod
-            .array(
+        zod.readonly(
+            zod.array(
                 zod.object({
-                    x: zod.number().readonly(),
-                    y: zod.number().readonly(),
+                    x: zod.readonly(zod.number()),
+                    y: zod.readonly(zod.number()),
                 }),
-            )
-            .readonly(),
+            ),
+        ),
         zod.instanceof(Polygon),
         {
             encode: (polygon) => polygon.vertices,

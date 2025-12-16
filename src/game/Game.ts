@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import * as zod from "zod";
+import * as zod from "zod/v4-mini";
 import { Grid, TileSet_S } from "../grid/Grid";
 import { ScoredRegion, Scorer, ScorerType } from "./scorers/Scorer";
 import { ConnectedSegmentScorer } from "./scorers/ConnectedSegmentScorer";

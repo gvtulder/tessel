@@ -7,7 +7,7 @@ import { PRNG } from "../../geom/RandomSampler";
 import { parseShapeDefinition } from "../Atlas";
 import { Shape } from "../Shape";
 import { SourceGrid, SourcePoint } from "../SourceGrid";
-import * as zod from "zod";
+import * as zod from "zod/v4-mini";
 
 const square = parseShapeDefinition({
     name: "square",

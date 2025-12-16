@@ -3,12 +3,14 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import * as zod from "zod";
+import * as zod from "zod/v4-mini";
 import { TileShapeColors_S, TileStack_S } from "./TileStack";
 
 export const TileStackWithSlots_S = zod.object({
     numberShown: zod.number(),
-    slots: zod.array(zod.optional(zod.nullable(TileShapeColors_S))).readonly(),
+    slots: zod.readonly(
+        zod.array(zod.optional(zod.nullable(TileShapeColors_S))),
+    ),
     originalTileStack: TileStack_S,
     tileStack: TileStack_S,
 });

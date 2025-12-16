@@ -8,7 +8,7 @@ import { BBox, Point } from "../geom/math";
 import { Polygon } from "../geom/Polygon";
 import { Shape } from "./Shape";
 import { SourceGrid, SourcePoint } from "./SourceGrid";
-import * as zod from "zod";
+import * as zod from "zod/v4-mini";
 
 export type TileColor = string;
 export type TileColors = readonly TileColor[];
@@ -26,12 +26,12 @@ export const enum TileType {
 }
 
 export const Tile_S = zod.object({
-    shape: zod.number().int().nonnegative(),
-    polygon: Polygon.codec.in,
-    segments: zod.optional(zod.array(Polygon.codec.in)),
+    shape: zod.int().check(zod.nonnegative()),
+    polygon: Polygon.codec.def.in,
+    segments: zod.optional(zod.array(Polygon.codec.def.in)),
     sourcePoint: zod.optional(zod.unknown()),
     placeholder: zod.boolean(),
-    colors: zod.optional(zod.array(zod.optional(zod.string())).readonly()),
+    colors: zod.optional(zod.readonly(zod.array(zod.optional(zod.string())))),
 });
 export type Tile_S = zod.infer<typeof Tile_S>;
 

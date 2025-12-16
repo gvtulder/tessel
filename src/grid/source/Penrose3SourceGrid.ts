@@ -8,7 +8,7 @@ import { parseShapeDefinition } from "../Atlas";
 import { Shape } from "../Shape";
 import { SourceGrid, SourcePoint } from "../SourceGrid";
 import { dist, Point } from "../../geom/math";
-import * as zod from "zod";
+import * as zod from "zod/v4-mini";
 
 const wide = parseShapeDefinition({
     name: "rhombus-wide",
@@ -69,7 +69,7 @@ export class Penrose3SourceGrid extends SourceGrid {
     }
 
     save() {
-        return Penrose3SourceGrid.codec.encode(this);
+        return Penrose3SourceGrid.codec.def.in.parse(this);
     }
 
     static restore(data: unknown): Penrose3SourceGrid {
@@ -78,7 +78,7 @@ export class Penrose3SourceGrid extends SourceGrid {
 
     static codec = zod.codec(
         zod.object({
-            sigma: zod.array(zod.number()).length(5).readonly(),
+            sigma: zod.readonly(zod.array(zod.number())).check(zod.length(5)),
         }),
         zod.instanceof(Penrose3SourceGrid),
         {

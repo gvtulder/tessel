@@ -35,7 +35,7 @@ import {
 } from "./NavigationManager";
 import { Pages, UserEvent, UserEventType } from "../shared/UserEvent";
 import { getStorageBackend } from "../../lib/storage-backend";
-import * as zod from "zod";
+import * as zod from "zod/v4-mini";
 import {
     ScreenCarrousel,
     ScreenCarrouselFactory,

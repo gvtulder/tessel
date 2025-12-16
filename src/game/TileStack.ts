@@ -6,7 +6,7 @@
 import { TileColors } from "../grid/Tile";
 import { Shape } from "../grid/Shape";
 import { PRNG, shuffle } from "../geom/RandomSampler";
-import * as zod from "zod";
+import * as zod from "zod/v4-mini";
 
 /**
  * A tile on the TileStack, defined by a shape and colors.
@@ -24,11 +24,11 @@ export type TileShapeColors = {
 
 export const TileShapeColors_S = zod.object({
     shape: zod.number(),
-    colors: zod.array(zod.string()).readonly(),
+    colors: zod.readonly(zod.array(zod.string())),
 });
 export type TileShapeColors_S = zod.infer<typeof TileShapeColors_S>;
 
-export const TileStack_S = zod.array(TileShapeColors_S).readonly();
+export const TileStack_S = zod.readonly(zod.array(TileShapeColors_S));
 export type TileStack_S = zod.infer<typeof TileStack_S>;
 
 /**

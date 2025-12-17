@@ -512,6 +512,7 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
     }
 
     .tile-counter {
+      display: block;
       align-self: flex-end;
       margin: 0;
       transition:

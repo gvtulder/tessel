@@ -4,11 +4,11 @@
  */
 
 import { describe, test } from "vitest";
-import { MainMenuDisplay } from "./MainMenuDisplay";
+import { SettingsDisplay } from "./SettingsDisplay";
 
-describe("MainMenuDisplay", () => {
+describe("SettingsDisplay", () => {
     test("can be shown", () => {
-        const screen = new MainMenuDisplay();
+        const screen = new SettingsDisplay("1.0.23", "android");
         screen.rescale();
         screen.destroy();
     });

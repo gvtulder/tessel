@@ -4,11 +4,11 @@
  */
 
 import { describe, test } from "vitest";
-import { MainMenuDisplay } from "./MainMenuDisplay";
+import { PaintMenu } from "./PaintMenu";
 
-describe("MainMenuDisplay", () => {
+describe("PaintMenu", () => {
     test("can be shown", () => {
-        const screen = new MainMenuDisplay();
+        const screen = new PaintMenu();
         screen.rescale();
         screen.destroy();
     });

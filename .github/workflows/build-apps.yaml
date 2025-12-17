@@ -120,8 +120,10 @@ jobs:
     runs-on: macos-15
     env:
       BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+      BUILD_DEV_CERTIFICATE_BASE64: ${{ secrets.BUILD_DEV_CERTIFICATE_BASE64 }}
       BUILD_CERTIFICATE_PASSWORD: ${{ secrets.BUILD_CERTIFICATE_PASSWORD }}
       BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+      BUILD_DEV_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_DEV_PROVISION_PROFILE_BASE64 }}
       KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
     steps:
       - name: Check out repository
@@ -158,12 +160,16 @@ jobs:
         run: |
           # create variables
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.cer
+          DEV_CERTIFICATE_PATH=$RUNNER_TEMP/dev_certificate.cer
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          PP_DEV_PATH=$RUNNER_TEMP/dev_pp.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           # import certificate and provisioning profile from secrets
           echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_DEV_CERTIFICATE_BASE64" | base64 --decode -o $DEV_CERTIFICATE_PATH
           echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+          echo -n "$BUILD_DEV_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_DEV_PATH
 
           # create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
@@ -172,14 +178,29 @@ jobs:
 
           # import certificate to keychain
           security import $CERTIFICATE_PATH -P "$BUILD_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security import $DEV_CERTIFICATE_PATH -P "$BUILD_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
           security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
           security list-keychain -d user -s $KEYCHAIN_PATH
 
           # apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_DEV_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: Build iOS app
+      - name: Build iOS app for debugging
+        if: ${{ env.KEYCHAIN_PASSWORD != '' }}
+        run: |
+          xcodebuild -workspace './ios/App/App.xcworkspace' \
+            -scheme Tessel -destination generic/platform=iOS \
+            -archivePath Tessel.xcarchive archive \
+            -configuration Debug
+          xcodebuild archive -archivePath Tessel.xcarchive \
+            -exportArchive -exportOptionsPlist ./ios/debug.plist \
+            -exportPath output-dev -allowProvisioningUpdates
+          sha_short=$(git rev-parse --short HEAD)
+          mv output-dev/Tessel.ipa tessel-${sha_short}.ipa
+
+      - name: Build iOS app for release
         if: ${{ env.KEYCHAIN_PASSWORD != '' }}
         run: |
           xcodebuild -workspace './ios/App/App.xcworkspace' \
@@ -207,6 +228,7 @@ jobs:
             --apiKey "$APP_STORE_CONNECT_API_KEY_ID" \
             --apiIssuer "$APP_STORE_CONNECT_API_ISSUER" \
             || true
+          mv output/Tessel.ipa Tessel.ipa
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v6
@@ -214,7 +236,8 @@ jobs:
         with:
           name: iOS package
           path: |
-            output/Tessel*.ipa
+            Tessel*.ipa
+            tessel*.ipa
 
   make-release:
     name: Make release

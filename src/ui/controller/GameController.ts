@@ -44,11 +44,17 @@ import { msg } from "@lingui/core/macro";
 import icons from "../shared/icons";
 import { NavBarItems } from "../shared/NavBar";
 import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
+import { SourceGrid } from "../../grid/SourceGrid";
 
 const ControllerState_S = zod.object({
     hash: zod.string(),
     gameState: zod.optional(GameState_S),
-    gridState: zod.optional(TileSet_S),
+    gridState: zod.optional(
+        zod.object({
+            tiles: TileSet_S,
+            sourceGrid: zod.optional(zod.unknown()),
+        }),
+    ),
     lastMainPage: zod.optional(zod.enum(Pages)),
     history: zod.optional(zod.array(zod.string())),
 });
@@ -355,10 +361,18 @@ export class GameController {
         this.showScreen(new GameSetupDisplay(), Pages.SetupMenu);
     }
 
-    showPaintDisplay(atlas: Atlas, page: string, tileSet?: TileSet_S) {
-        const grid = new Grid(atlas);
-        if (tileSet) {
-            grid.restoreTiles(tileSet);
+    showPaintDisplay(
+        atlas: Atlas,
+        page: string,
+        state?: { tiles: TileSet_S; sourceGrid?: unknown },
+    ) {
+        let sourceGrid: SourceGrid | undefined;
+        if (state?.sourceGrid && atlas.sourceGrid) {
+            sourceGrid = atlas.sourceGrid.restore(state.sourceGrid);
+        }
+        const grid = new Grid(atlas, undefined, sourceGrid);
+        if (state?.tiles) {
+            grid.restoreTiles(state?.tiles);
         }
         this.grid = grid;
         const paintDisplay = new PaintDisplay(grid);
@@ -391,7 +405,12 @@ export class GameController {
         const state: ControllerState_S = {
             hash: window.location.hash,
             gameState: this.game?.saveState(),
-            gridState: this.grid?.saveTilesAndPlaceholders(),
+            gridState: this.grid
+                ? {
+                      tiles: this.grid?.saveTilesAndPlaceholders(),
+                      sourceGrid: this.grid.sourceGrid?.save(),
+                  }
+                : undefined,
             lastMainPage: this.lastMainPage,
             history: this.navigation.history,
         };

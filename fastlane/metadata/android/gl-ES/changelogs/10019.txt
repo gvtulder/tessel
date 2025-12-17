@@ -1,4 +1,4 @@
-本版本包含多项变更与改进。
+Varios cambios e melloras.
 
 • Which pattern is this? The statistics table now shows shape icons next to the tiling names.
 • Fixed a bug in the statistics table when you reach more than 1,000 points.

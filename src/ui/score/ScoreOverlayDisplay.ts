@@ -4,7 +4,6 @@
  */
 
 import { ScoredRegion } from "../../game/scorers/Scorer";
-import { computeOutline, Vertex, Edge } from "../../lib/compute-outline";
 import { SVG } from "../shared/svg";
 
 export abstract class ScoreOverlayDisplay {
@@ -22,12 +21,5 @@ export abstract class ScoreOverlayDisplay {
 
     destroy() {
         this.element.remove();
-    }
-
-    protected computeOutline(shape: ScoredRegion): {
-        boundary: Vertex[];
-        edgesPerVertex: Map<string, Edge[]>;
-    } {
-        return computeOutline(shape.segments!);
     }
 }

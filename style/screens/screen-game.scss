@@ -74,6 +74,7 @@ $score-font-size: min(4vw, 5vh);
 
   .tile-counter {
     grid-area: tile-counter;
+    display: grid;
     justify-self: center;
     justify-items: center;
     align-content: center;
@@ -90,6 +91,7 @@ $score-font-size: min(4vw, 5vh);
 
   .game-button.refreshtiles {
     grid-area: refresh-tiles;
+    display: grid;
     justify-self: center;
     align-self: center;
     align-content: center;

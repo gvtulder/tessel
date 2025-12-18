@@ -182,7 +182,7 @@
     table {
       max-width: 100%;
       width: 100%;
-      table-layout: fixed;
+      table-layout: auto;
       margin-bottom: 1.2em;
     }
     table th,
@@ -208,18 +208,19 @@
     table td.with-icon,
     table th.label.with-icon,
     table td.label.with-icon {
+      position: relative;
       padding-left: calc(0.5em + $icon-width + $icon-padding);
-      text-indent: calc(-1 * $icon-width - $icon-padding);
       border: none;
     }
     .shapes-icon {
-      display: inline-block;
+      position: absolute;
+      display: block;
       fill: var(--statistics-shape-color);
       max-width: $icon-width;
       max-height: $icon-width;
-      padding-right: $icon-padding;
+      margin-left: calc(-1 * $icon-padding - $icon-width);
       aspect-ratio: 1;
-      vertical-align: -0.15em;
+      top: 0.4em;
     }
     thead th {
       text-align: right;
@@ -254,6 +255,9 @@
     tfoot tr:first-child th,
     tfoot tr:first-child td {
       border-top: 1px solid var(--button-fg-color);
+    }
+    table.multicolumn-2.columns-1 thead th {
+      width: 50%;
     }
   }
 }

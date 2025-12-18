@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { mergeBBoxItems } from "../../geom/math";
+import { BBox, mergeBBoxItems } from "../../geom/math";
 import { Polygon } from "../../geom/Polygon";
 import { AngleUse, Shape } from "../../grid/Shape";
 import offsetPolygon from "../../lib/offset-polygon";
@@ -42,13 +42,14 @@ export class AtlasIcon {
             svg.appendChild(this.drawPolygon(poly));
         }
 
-        const bbox = mergeBBoxItems(polygons)!;
+        const bbox = this.computeScaledBBox(polygons);
         const viewBox = [
             bbox.minX,
             bbox.minY,
             bbox.maxX - bbox.minX,
             bbox.maxY - bbox.minY,
         ];
+
         // center in a square viewbox
         if (viewBox[2] < viewBox[3]) {
             viewBox[0] -= (viewBox[3] - viewBox[2]) / 2;
@@ -76,5 +77,32 @@ export class AtlasIcon {
         return SVG("path", null, undefined, {
             d: roundPath,
         });
+    }
+
+    computeScaledBBox(polygons: Polygon[]): BBox {
+        // compute a visually similar scaling for all shapes
+        // diameter of a circle around the shape points,
+        // with the mean as the center
+        const bbox = mergeBBoxItems(polygons)!;
+        const viewBox = [
+            bbox.minX,
+            bbox.minY,
+            bbox.maxX - bbox.minX,
+            bbox.maxY - bbox.minY,
+        ];
+        let area = 0;
+        for (const poly of polygons) {
+            area += poly.area;
+        }
+        const width = bbox.maxX - bbox.minX;
+        const height = bbox.maxY - bbox.minY;
+        const maxD = Math.max(width, height);
+        const correction = Math.max(0, (0.5 * area) / (maxD * maxD) - 0.4);
+        return {
+            minX: bbox.minX - maxD * correction,
+            minY: bbox.minY - maxD * correction,
+            maxX: bbox.maxX + maxD * correction,
+            maxY: bbox.maxY + maxD * correction,
+        };
     }
 }

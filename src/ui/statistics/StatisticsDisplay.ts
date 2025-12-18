@@ -131,6 +131,10 @@ export class StatisticsDisplay extends ScreenDisplay {
 
         // table with statistics
         const table = createElement("table", "statistics", fragment);
+        table.classList.add(`columns-${section.columns.length}`);
+        if (multiColumn > 1) {
+            table.classList.add(`multicolumn-$multicolumn}`);
+        }
 
         // head
         const thead = createElement("thead", null, table);
@@ -140,8 +144,12 @@ export class StatisticsDisplay extends ScreenDisplay {
                 const column = section.columns[c];
                 if (column) {
                     const th = createElement("th", c == 0 ? "label" : "", tr);
+                    if (section.columns[c - 1] === null) {
+                        th.colSpan = 2;
+                    }
                     th.innerHTML = t(column);
-                } else {
+                } else if (c != 0) {
+                    // only added if the column is not included in a colspan
                     createElement("td", null, tr);
                 }
             }

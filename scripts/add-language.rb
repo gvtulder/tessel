@@ -27,6 +27,7 @@ end
 
 
 system("vim src/i18n.ts")
+system("vim scripts/make-screenshots.ts")
 
 
 ####

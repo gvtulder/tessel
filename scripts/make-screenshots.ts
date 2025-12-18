@@ -33,40 +33,74 @@ const sizes = [
     prefix?: string;
     viewport: ViewportDef;
     dirname?: string;
+    lang?: string;
 }[];
 
-for (const [name, width, height] of [
-    ["IPHONE_67", 1290, 2796],
-    ["IPHONE_65", 1284, 2778],
-    // ["IPHONE_63", 1206, 2622],
-    ["IPHONE_58", 1170, 2532],
-    ["IPHONE_55", 1242, 2208],
-    ["IPHONE_47", 750, 1334],
-    ["IPHONE_40", 640, 1136],
-    ["IPAD", 2048, 1536],
-    ["IPAD_10_5", 2224, 1668],
-    ["IPAD_11", 2388, 1668],
-    ["IPAD_PRO", 2732, 2048],
-    ["IPAD_PRO_3GEN_129", 2732, 2048],
-] as [string, number, number][]) {
-    sizes.push({
-        name: name,
-        prefix: `${name}-`,
-        viewport: { width: width, height: height, deviceScaleFactor: 1 },
-        dirname: `${__dirname}/../fastlane/ios/screenshots/en-US/`,
-    });
+for (const [langCode, langDir] of [
+    ["de", "de-DE"],
+    ["en", "en-US"],
+    ["es", "es-ES"],
+    ["fr", "fr-FR"],
+    ["nl", "nl-NL"],
+    ["tr", "tr-TR"],
+    ["zh-Hans", "zh-Hans"],
+    ["zh-Hant", "zh-Hant"],
+]) {
+    for (const [name, width, height, scaleFactor] of [
+        ["IPHONE_67", 1290, 2796, 2],
+        ["IPHONE_65", 1284, 2778, 2],
+        // ["IPHONE_63", 1206, 2622, 2],
+        ["IPHONE_58", 1170, 2532, 2],
+        ["IPHONE_55", 1242, 2208, 2],
+        ["IPHONE_47", 750, 1334, 1],
+        ["IPHONE_40", 640, 1136, 1],
+        ["IPAD", 2048, 1536, 2],
+        ["IPAD_10_5", 2224, 1668, 2],
+        ["IPAD_11", 2388, 1668, 2],
+        ["IPAD_PRO", 2732, 2048, 2],
+        ["IPAD_PRO_3GEN_129", 2732, 2048, 2],
+    ] as [string, number, number, number][]) {
+        sizes.push({
+            name: name,
+            prefix: `${name}-`,
+            viewport: {
+                width: width / scaleFactor,
+                height: height / scaleFactor,
+                deviceScaleFactor: scaleFactor,
+            },
+            dirname: `${__dirname}/../fastlane/ios/screenshots/${langDir}/`,
+            lang: langCode,
+        });
+    }
 }
 
-for (const [name, width, height] of [
-    ["phoneScreenshots", 1080, 1920],
-    ["sevenInchScreenshots", 1920, 1080],
-    ["tenInchScreenshots", 1920, 1080],
-] as [string, number, number][]) {
-    sizes.push({
-        name: name,
-        viewport: { width: width, height: height, deviceScaleFactor: 1 },
-        dirname: `${__dirname}/../fastlane/metadata/android/en-US/images/${name}/`,
-    });
+for (const [langCode, langDir] of [
+    ["de", "de-DE"],
+    ["en", "en-US"],
+    ["es", "es-ES"],
+    ["fr", "fr-FR"],
+    ["gl", "gl-ES"],
+    ["nl", "nl-NL"],
+    ["tr", "tr-TR"],
+    ["zh-Hans", "zh-CN"],
+    ["zh-Hant", "zh-TW"],
+]) {
+    for (const [name, width, height, scaleFactor] of [
+        ["phoneScreenshots", 1080, 1920, 2],
+        ["sevenInchScreenshots", 1920, 1080, 2],
+        ["tenInchScreenshots", 1920, 1080, 2],
+    ] as [string, number, number, number][]) {
+        sizes.push({
+            name: name,
+            viewport: {
+                width: width / scaleFactor,
+                height: height / scaleFactor,
+                deviceScaleFactor: scaleFactor,
+            },
+            dirname: `${__dirname}/../fastlane/metadata/android/${langDir}/images/${name}/`,
+            lang: langCode,
+        });
+    }
 }
 
 type ScreenshotTask = {
@@ -374,6 +408,14 @@ async function captureScreenshot() {
                 if (screenshot.demoGame) {
                     screenshotPath =
                         "#" + btoa(JSON.stringify(screenshot.demoGame));
+                }
+
+                if (size.lang) {
+                    // Navigate to the target URL to set language
+                    await page.goto(targetUrl + screenshotPath);
+                    await page.evaluate(
+                        `localStorage.setItem("language", "${size.lang}");`,
+                    );
                 }
 
                 // Navigate to the target URL

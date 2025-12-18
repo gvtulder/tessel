@@ -1,5 +1,5 @@
-sevenInchScreenshots
-tenInchScreenshots
+metadata/android/*/images/*/*
+!metadata/android/en-US/images/phoneScreenshots/*
 ios/screenshots
 README.md
 report.xml

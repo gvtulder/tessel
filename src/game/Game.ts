@@ -217,6 +217,10 @@ export class Game extends EventTarget {
         this.dispatchEvent(new GameEvent(GameEventType.ContinueGame, this));
     }
 
+    reshuffleTileStack() {
+        this.tileStack.reshuffle();
+    }
+
     placeTile(
         movingTile: Tile,
         fixedTile: Tile,

@@ -387,10 +387,10 @@ export class GameController {
 
     async startGame(gameSettings: GameSettings, resumeState?: GameState_S) {
         const game = new Game(gameSettings, undefined, resumeState);
+        game.stats = StatisticsMonitor.instance;
         this.game = game;
         const gameDisplay = new GameDisplay(
             game,
-            this.stats,
             this.lastMainPage == Pages.SetupMenu,
         );
         this.showScreen(gameDisplay);

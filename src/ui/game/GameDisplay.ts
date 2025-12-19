@@ -19,8 +19,6 @@ import { DropoutMenu } from "./DropoutMenu";
 import { Toggle } from "../shared/Toggle";
 import { Toggles } from "../shared/toggles";
 import { msg } from "@lingui/core/macro";
-import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
-import { StatisticsEvent } from "../../stats/Events";
 import { TileCounter } from "./TileCounter";
 import { AutoPlayer } from "../../game/autoplayer/AutoPlayer";
 import { AnimatedAutoPlayer } from "./AnimatedAutoPlayer";
@@ -50,66 +48,11 @@ export class GameDisplay extends ScreenDisplay {
 
     listeners: DestroyableEventListenerSet;
 
-    constructor(
-        game: Game,
-        stats?: StatisticsMonitor,
-        returnToSetup?: boolean,
-    ) {
+    constructor(game: Game, returnToSetup?: boolean) {
         super();
         this.game = game;
 
         this.listeners = new DestroyableEventListenerSet();
-
-        if (stats) {
-            // track game events
-            stats.countEvent(StatisticsEvent.GameStarted, game.grid.atlas.id);
-
-            this.listeners
-                .forTarget(game)
-                .addEventListener(GameEventType.Score, (event: GameEvent) => {
-                    if (!stats) return;
-                    if (!game.continued) {
-                        stats.updateHighScore(
-                            StatisticsEvent.HighScore,
-                            game.points,
-                            game.settings.serializedJSON,
-                        );
-                    }
-                    for (const region of event.scoreShapes || []) {
-                        if (region.finished) {
-                            stats.countEvent(
-                                StatisticsEvent.ShapeCompleted,
-                                game.settings.serializedJSON,
-                            );
-                            if (region.tiles) {
-                                stats.updateHighScore(
-                                    StatisticsEvent.ShapeTileCount,
-                                    region.tiles.size,
-                                    game.settings.serializedJSON,
-                                );
-                            }
-                        }
-                    }
-                })
-                .addEventListener(
-                    GameEventType.PlaceTile,
-                    (event: GameEvent) => {
-                        if (!stats) return;
-                        stats.countEvent(
-                            StatisticsEvent.TilePlaced,
-                            event.tile?.shape?.name.split("-")[0],
-                        );
-                    },
-                )
-                .addEventListener(GameEventType.EndGame, () => {
-                    if (stats && !game.continued) {
-                        stats.countEvent(
-                            StatisticsEvent.GameCompleted,
-                            game.grid.atlas.id,
-                        );
-                    }
-                });
-        }
 
         // main element
         const element = (this.element = createElement(
@@ -163,7 +106,9 @@ export class GameDisplay extends ScreenDisplay {
             tileCounterAndScore,
         );
         this.scoreDisplay = new ScoreDisplay(
-            stats?.counters.get(`HighScore.${game.settings.serializedJSON}`),
+            this.game.stats?.counters.get(
+                `HighScore.${game.settings.serializedJSON}`,
+            ),
         );
         scoreDisplayContainer.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
@@ -171,7 +116,7 @@ export class GameDisplay extends ScreenDisplay {
         // the autoplay button
         this.scoreDisplay.onTapAutoPlay = () => {
             // disable highscores and other statistics
-            stats = undefined;
+            this.game.stats = undefined;
             new AutoPlayer(this.game).playAllTiles(100);
         };
 

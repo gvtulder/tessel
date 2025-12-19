@@ -24,6 +24,8 @@ import {
     GameInitializer,
 } from "./GameInitializer";
 import { SourceGrid } from "../grid/SourceGrid";
+import { StatisticsMonitor } from "../stats/StatisticsMonitor";
+import { StatisticsEvent } from "../stats/Events";
 
 export type GameSettings = {
     serializedJSON?: string;
@@ -101,6 +103,8 @@ export class GameEvent extends Event {
 
 export class Game extends EventTarget {
     settings: GameSettings;
+
+    stats?: StatisticsMonitor;
 
     grid: Grid;
     scorer: Scorer;
@@ -198,6 +202,12 @@ export class Game extends EventTarget {
     }
 
     finish() {
+        if (this.stats && !this.continued) {
+            this.stats.countEvent(
+                StatisticsEvent.GameCompleted,
+                this.grid.atlas.id,
+            );
+        }
         this.dispatchEvent(new GameEvent(GameEventType.EndGame, this));
     }
 
@@ -240,6 +250,12 @@ export class Game extends EventTarget {
 
             // compute scores and update listeners
             this.computeScores(tile);
+            if (this.stats) {
+                this.stats.countEvent(
+                    StatisticsEvent.TilePlaced,
+                    tile.shape.name.split("-")[0],
+                );
+            }
             this.dispatchEvent(
                 new GameEvent(GameEventType.PlaceTile, this, null, tile),
             );
@@ -261,6 +277,31 @@ export class Game extends EventTarget {
         if (shapes.length > 0) {
             const points = shapes.map((s) => s.points).reduce((a, b) => a + b);
             this.points += points;
+
+            if (this.stats) {
+                if (!this.continued) {
+                    this.stats.updateHighScore(
+                        StatisticsEvent.HighScore,
+                        this.points,
+                        this.settings.serializedJSON,
+                    );
+                }
+                for (const region of shapes || []) {
+                    if (region.finished) {
+                        this.stats.countEvent(
+                            StatisticsEvent.ShapeCompleted,
+                            this.settings.serializedJSON,
+                        );
+                        if (region.tiles) {
+                            this.stats.updateHighScore(
+                                StatisticsEvent.ShapeTileCount,
+                                region.tiles.size,
+                                this.settings.serializedJSON,
+                            );
+                        }
+                    }
+                }
+            }
 
             this.dispatchEvent(
                 new GameEvent(GameEventType.Score, this, shapes),

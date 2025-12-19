@@ -18,7 +18,7 @@ export class StatisticsMonitor {
     counters: StatisticsEventCounter;
     #storageUpdateTimeout?: number;
 
-    private constructor() {
+    constructor() {
         this.counters = new Map<StatisticsEvent, number>();
     }
 

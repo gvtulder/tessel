@@ -11,6 +11,8 @@ import { ConnectedSegmentScorer } from "../../game/scorers/ConnectedSegmentScore
 import { seedPRNG } from "../../geom/RandomSampler";
 import { Game } from "../../game/Game";
 import { AutoPlayer } from "../../game/autoplayer/AutoPlayer";
+import { StatisticsMonitor } from "../../stats/StatisticsMonitor";
+import { StatisticsEvent } from "../../stats/Events";
 
 describe("GameDisplay", () => {
     test("can be created", () => {
@@ -36,11 +38,23 @@ describe("GameDisplay", () => {
             tileGenerator: [TileGenerators.permutations(colors)],
         };
         const prng = seedPRNG(1234);
+        const stats = new StatisticsMonitor();
+
         const game = new Game(settings, prng);
+        game.stats = stats;
+
+        // simulate playing a game
         const display = new GameDisplay(game);
         const player = new AutoPlayer(game);
         player.playAllTiles(undefined, prng);
         expect(display.scoreDisplay.scoreField.innerHTML).toBe("224");
         expect(display.element.classList.contains("game-finished")).toBe(true);
+
+        // check for highscores
+        expect(stats.counters.get(StatisticsEvent.GameCompleted)).toBe(1);
+        expect(stats.counters.get(StatisticsEvent.TilePlaced)).toBe(69);
+        expect(stats.counters.get(StatisticsEvent.ShapeCompleted)).toBe(61);
+        expect(stats.counters.get(StatisticsEvent.ShapeTileCount)).toBe(10);
+        expect(stats.counters.get(StatisticsEvent.HighScore)).toBe(224);
     });
 });

@@ -1,6 +1,7 @@
 metadata/android/*/images/*/*
 !metadata/android/en-US/images/phoneScreenshots/*
 ios/screenshots
+screencasts
 README.md
 report.xml
 Preview.html

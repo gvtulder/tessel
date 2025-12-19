@@ -132,7 +132,7 @@ async function captureScreenshot() {
 
         for (const script of videoScripts) {
             for (const size of script.sizes) {
-                let out = `${__dirname}/../screencasts/screencast-${size.name}${script.suffix}.webm`;
+                let out = `${__dirname}/../fastlane/screencasts/screencast-${size.name}${script.suffix}.webm`;
 
                 if (fs.existsSync(`${out}`)) {
                     // TODO

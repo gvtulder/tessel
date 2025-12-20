@@ -201,24 +201,14 @@ export class Game extends EventTarget {
         };
     }
 
-    finish() {
-        if (this.stats && !this.continued) {
-            this.stats.countEvent(
-                StatisticsEvent.GameCompleted,
-                this.grid.atlas.id,
-            );
-        }
-        this.dispatchEvent(new GameEvent(GameEventType.EndGame, this));
-    }
-
     continue() {
         this.continued = true;
         this.tileStack.restart();
         this.dispatchEvent(new GameEvent(GameEventType.ContinueGame, this));
     }
 
-    reshuffleTileStack() {
-        this.tileStack.reshuffle();
+    rotateTileStack(reverse?: boolean) {
+        this.tileStack.rotate(reverse);
     }
 
     placeTile(
@@ -266,7 +256,13 @@ export class Game extends EventTarget {
 
             // end of game?
             if (this.tileStack.isEmpty()) {
-                this.finish();
+                if (this.stats && !this.continued) {
+                    this.stats.countEvent(
+                        StatisticsEvent.GameCompleted,
+                        this.grid.atlas.id,
+                    );
+                }
+                this.dispatchEvent(new GameEvent(GameEventType.EndGame, this));
             }
 
             return true;

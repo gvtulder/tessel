@@ -23,14 +23,15 @@ describe("TileStack", () => {
         expect(stack.tilesLeft).toBe(list.length);
         const shuffled = [...stack.tiles];
         expect(stack.peek(2)).toEqual([shuffled[0], shuffled[1]]);
-        expect(stack.pop()).toEqual(shuffled[0]);
+        expect(stack.shift()).toEqual(shuffled[0]);
         expect(stack.tilesLeft).toBe(3);
         expect(stack.isEmpty()).toBe(false);
-        expect(stack.pop()).toEqual(shuffled[1]);
-        expect(stack.pop()).toEqual(shuffled[2]);
         expect(stack.pop()).toEqual(shuffled[3]);
+        expect(stack.shift()).toEqual(shuffled[1]);
+        expect(stack.shift()).toEqual(shuffled[2]);
         expect(stack.tilesLeft).toBe(0);
         expect(stack.isEmpty()).toBe(true);
+        expect(stack.shift()).toBeUndefined();
         expect(stack.pop()).toBeUndefined();
     });
 
@@ -40,6 +41,9 @@ describe("TileStack", () => {
         stack.push(list[0]);
         expect(stack.tilesLeft).toBe(5);
         expect(stack.tiles[4]).toBe(list[0]);
+        stack.unshift(list[1]);
+        expect(stack.tilesLeft).toBe(6);
+        expect(stack.tiles[0]).toBe(list[1]);
     });
 
     test("can be shuffled", () => {
@@ -74,10 +78,10 @@ describe("TileStack", () => {
     test("clone", () => {
         const stack = new TileStack(list);
         const stack2 = stack.clone();
-        stack.pop();
+        stack.shift();
         expect(stack.tilesLeft).toBe(3);
         expect(stack2.tilesLeft).toBe(4);
-        stack2.pop();
+        stack2.shift();
         expect(stack.tilesLeft).toBe(3);
         expect(stack2.tilesLeft).toBe(3);
     });

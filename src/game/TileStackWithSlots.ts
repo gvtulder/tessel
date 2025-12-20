@@ -117,7 +117,7 @@ export class TileStackWithSlots extends EventTarget {
         let updated = false;
         for (let i = 0; i < this.numberShown; i++) {
             if (!this.slots[i]) {
-                this.slots[i] = this.tileStack.pop();
+                this.slots[i] = this.tileStack.shift();
                 updated = true;
             }
         }
@@ -135,6 +135,33 @@ export class TileStackWithSlots extends EventTarget {
     take(index: number) {
         this.slots[index] = null;
         this.updateSlots();
+    }
+
+    /**
+     * Adds the current tiles to the end of the stack and display new tiles.
+     * @param reverse rotate in reverse direction
+     */
+    rotate(reverse?: boolean) {
+        if (this.tileStack.tilesLeft > 0) {
+            if (reverse) {
+                for (let i = this.numberShown - 1; i >= 0; i--) {
+                    const slot = this.slots[i];
+                    if (slot) {
+                        this.tileStack.unshift(slot);
+                        this.slots[i] = this.tileStack.pop();
+                    }
+                }
+            } else {
+                for (let i = 0; i < this.numberShown; i++) {
+                    const slot = this.slots[i];
+                    if (slot) {
+                        this.tileStack.push(slot);
+                        this.slots[i] = this.tileStack.shift();
+                    }
+                }
+            }
+            this.dispatchEvent(new GameEvent(GameEventType.UpdateSlots));
+        }
     }
 
     /**

@@ -96,7 +96,7 @@ export class GameDisplay extends ScreenDisplay {
         // tile counter
         this.tileCounterDisplay = new TileCounter(this.game.tileStack);
         this.tileCounterDisplay.tapHandler.onTap = () =>
-            this.game.reshuffleTileStack();
+            this.game.rotateTileStack();
         tileCounterAndScore.appendChild(this.tileCounterDisplay.element);
 
         // the score display
@@ -144,7 +144,7 @@ export class GameDisplay extends ScreenDisplay {
         this.refreshTilesButton = new Button(
             icons.arrowsRotateIcon,
             msg({ id: "ui.menu.refreshTilesButton", message: "Shuffle tiles" }),
-            () => this.game.reshuffleTileStack(),
+            () => this.game.rotateTileStack(),
             "refreshtiles",
         );
         tileCounterAndScore.appendChild(this.refreshTilesButton.element);

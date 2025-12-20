@@ -96,14 +96,19 @@ export class TileStack {
     }
 
     /**
-     * Removes the next tile from the stack.
+     * Removes the next tile from the end of stack.
      * @returns the tile, or undefined if the stack was empty
      */
     pop(): TileShapeColors | undefined {
-        if (this.tiles.length == 0) {
-            return undefined;
-        }
-        return this.tiles.shift();
+        return this.tiles.length == 0 ? undefined : this.tiles.pop();
+    }
+
+    /**
+     * Removes the next tile from the front of the stack.
+     * @returns the tile, or undefined if the stack was empty
+     */
+    shift(): TileShapeColors | undefined {
+        return this.tiles.length == 0 ? undefined : this.tiles.shift();
     }
 
     /**
@@ -112,6 +117,14 @@ export class TileStack {
      */
     push(tile: TileShapeColors) {
         this.tiles.push(tile);
+    }
+
+    /**
+     * Adds a new tile to the front of the stack.
+     * @param tile the new tile to add
+     */
+    unshift(tile: TileShapeColors) {
+        this.tiles.unshift(tile);
     }
 
     /**

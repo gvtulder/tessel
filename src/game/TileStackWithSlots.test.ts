@@ -70,6 +70,28 @@ describe("TileStackWithSlots", () => {
         expect(stack.slots[0]).not.toEqual(slot0);
     });
 
+    test("rotate", () => {
+        const prng = seedPRNG(1234);
+        const source = new TileStack(list, prng);
+        const stack = new TileStackWithSlots(source, 3, prng);
+        const slot0 = stack.slots[0];
+        const slot1 = stack.slots[1];
+        const slot2 = stack.slots[2];
+        const peek = stack.tileStack.peek(2);
+        stack.rotate();
+        expect(stack.tilesLeft).toBe(5);
+        expect(stack.slots[0]).toEqual(peek[0]);
+        expect(stack.slots[1]).toEqual(peek[1]);
+        expect(stack.slots[2]).toEqual(slot0);
+        expect(stack.tileStack.peek(2)).toEqual([slot1, slot2]);
+        stack.rotate(true);
+        expect(stack.tilesLeft).toBe(5);
+        expect(stack.slots[0]).toEqual(slot0);
+        expect(stack.slots[1]).toEqual(slot1);
+        expect(stack.slots[2]).toEqual(slot2);
+        expect(stack.tileStack.peek(2)).toEqual(peek);
+    });
+
     test("restart", () => {
         const source = new TileStack(list);
         const stack = new TileStackWithSlots(source, 3);

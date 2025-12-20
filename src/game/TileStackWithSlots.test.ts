@@ -52,8 +52,10 @@ describe("TileStackWithSlots", () => {
         expect(stack.tilesLeft).toBe(2);
         expect(stack.tilesVisible).toBe(2);
         expect(stack.tilesOnStack).toBe(0);
-        stack.take(1);
+        const tile = stack.take(1);
+        stack.putBack(1, tile);
         stack.take(2);
+        stack.take(1);
         expect(stack.tilesLeft).toBe(0);
         expect(stack.tilesVisible).toBe(0);
         expect(stack.tilesOnStack).toBe(0);

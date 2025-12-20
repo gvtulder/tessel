@@ -75,6 +75,8 @@ $blue: hsl(214deg, 64%, 50%);
   --dropdown-box-shadow:
     0 10px 20px rgba(0, 0, 0, 0.08), 0 10px 20px rgba(0, 0, 0, 0.12);
   --screen-box-shadow: inset 0 0 40px rgb(0 0 0 / 20%);
+  --score-box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.08), inset 0 3px 6px rgba(0, 0, 0, 0.12);
 
   // text-color
   --text-color: hsl(0, 0%, 0%);

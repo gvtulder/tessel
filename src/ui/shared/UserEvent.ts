@@ -16,6 +16,8 @@ export const UserEventType = {
     Settings: "settings",
     Statistics: "statistics",
     Navigate: "navigate",
+    Undo: "undo",
+    Redo: "redo",
 } as const;
 export type UserEventType = (typeof UserEventType)[keyof typeof UserEventType];
 export const Pages = {

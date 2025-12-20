@@ -12,6 +12,7 @@ import {
 } from "./TileStack";
 import { Shape } from "../grid/Shape";
 import { TileStackWithSlots_S } from "./TileStackWithSlots_S";
+import { Command } from "../commands/Command";
 
 /**
  * A tile stack with a number of tiles shown to the player.
@@ -131,10 +132,28 @@ export class TileStackWithSlots extends EventTarget {
      * Remove the tile from the given slot and refill the slot if possible.
      *
      * @param index the index of the slot
+     * @returns the removed tile
      */
-    take(index: number) {
+    take(index: number): TileShapeColors | null {
+        const slot = this.slots[index];
         this.slots[index] = null;
         this.updateSlots();
+        return slot || null;
+    }
+
+    /**
+     * Reinsert the tile in the given slot and return the current tile to the stack.
+     *
+     * @param index the index of the slot
+     * @param tile the tile to be reset in the slot
+     */
+    putBack(index: number, tile: TileShapeColors | null): void {
+        if (this.slots[index]) {
+            this.tileStack.unshift(this.slots[index]);
+        }
+        this.slots[index] = tile;
+        this.dispatchEvent(new GameEvent(GameEventType.UpdateTileCount));
+        this.dispatchEvent(new GameEvent(GameEventType.UpdateSlots));
     }
 
     /**
@@ -179,16 +198,63 @@ export class TileStackWithSlots extends EventTarget {
         this.updateSlots();
     }
 
+    static Restart = class extends Command {
+        tileStackWithSlots: TileStackWithSlots;
+        newTiles: TileStack;
+
+        memo?: {
+            tileStack: TileStack;
+            slots: (TileShapeColors | null | undefined)[];
+        };
+
+        constructor(
+            tileStackWithSlots: TileStackWithSlots,
+            newTiles: TileStack,
+        ) {
+            super();
+            this.tileStackWithSlots = tileStackWithSlots;
+            this.newTiles = newTiles;
+        }
+
+        execute() {
+            const stack = this.tileStackWithSlots;
+            this.memo = { tileStack: stack.tileStack, slots: [] };
+            for (let i = 0; i < stack.numberShown; i++) {
+                this.memo.slots[i] = stack.slots[i];
+                stack.slots[i] = null;
+            }
+            stack.tileStack = this.newTiles;
+            stack.updateSlots();
+        }
+
+        undo() {
+            if (!this.memo) return;
+            const stack = this.tileStackWithSlots;
+            for (let i = stack.numberShown - 1; i >= 0; i--) {
+                const slot = this.memo.slots[i];
+                if (slot) {
+                    stack.tileStack.unshift(slot);
+                }
+                stack.slots[i] = this.memo.slots[i];
+            }
+            stack.tileStack = this.memo.tileStack;
+            this.memo = undefined;
+            stack.dispatchEvent(new GameEvent(GameEventType.UpdateTileCount));
+            stack.dispatchEvent(new GameEvent(GameEventType.UpdateSlots));
+        }
+    };
+
     /**
      * Restarts the game by adding the original list of tiles again.
      * @param prng random number generator
      */
     restart(prng?: PRNG) {
-        for (let i = 0; i < this.numberShown; i++) {
-            this.slots[i] = null;
-        }
-        this.tileStack = this.originalTileStack.clone(prng);
-        this.updateSlots();
+        const command = new TileStackWithSlots.Restart(
+            this,
+            this.originalTileStack.clone(prng),
+        );
+        command.execute();
+        return command;
     }
 
     /**

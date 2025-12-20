@@ -41,6 +41,8 @@ export class GameDisplay extends ScreenDisplay {
     restartgamebutton: Button;
     refreshTilesButton: Button;
     addTilesButton: Button;
+    undoButton: Button;
+    redoButton: Button;
     autorotate: Toggle;
     placeholders: Toggle;
     hints: Toggle;
@@ -73,10 +75,8 @@ export class GameDisplay extends ScreenDisplay {
         const tileDragController = (this.tileDragController =
             new MainGridTileDragController(this.gridDisplay));
 
-        // filler element for the tile stack and score column
-        createElement("div", "fill", element);
-        // filler element to add to the bottom/side of the tile stack
-        createElement("div", "fill-end", element);
+        // tile stack column/row
+        const sideContainer = createElement("div", "side-panel", element);
 
         // tile stack
         const tileStackDisplay = (this.tileStackDisplay = new TileStackDisplay(
@@ -84,26 +84,19 @@ export class GameDisplay extends ScreenDisplay {
             this.game.tileStack,
             tileDragController,
         ));
-        element.appendChild(tileStackDisplay.element);
-
-        // tile counter and score segment
-        const tileCounterAndScore = createElement(
-            "div",
-            "tile-counter-and-score",
-            element,
-        );
+        sideContainer.appendChild(tileStackDisplay.element);
 
         // tile counter
         this.tileCounterDisplay = new TileCounter(this.game.tileStack);
         this.tileCounterDisplay.tapHandler.onTap = () =>
             this.game.rotateTileStack();
-        tileCounterAndScore.appendChild(this.tileCounterDisplay.element);
+        sideContainer.appendChild(this.tileCounterDisplay.element);
 
         // the score display
         const scoreDisplayContainer = createElement(
             "div",
             "score-display",
-            tileCounterAndScore,
+            sideContainer,
         );
         this.scoreDisplay = new ScoreDisplay(
             this.game.stats?.counters.get(
@@ -142,12 +135,12 @@ export class GameDisplay extends ScreenDisplay {
         menu.addButton(this.restartgamebutton);
 
         this.refreshTilesButton = new Button(
-            icons.arrowsRotateIcon,
+            icons.upDownArrowsIcon,
             msg({ id: "ui.menu.refreshTilesButton", message: "Shuffle tiles" }),
             () => this.game.rotateTileStack(),
             "refreshtiles",
         );
-        tileCounterAndScore.appendChild(this.refreshTilesButton.element);
+        sideContainer.appendChild(this.refreshTilesButton.element);
 
         this.addTilesButton = new Button(
             icons.addTilesIcon,
@@ -156,6 +149,22 @@ export class GameDisplay extends ScreenDisplay {
             "addtiles",
         );
         this.tileStackDisplay.element.appendChild(this.addTilesButton.element);
+
+        this.undoButton = new Button(
+            icons.undoIcon,
+            msg({ id: "ui.menu.undoButton", message: "Undo" }),
+            () => this.game.history.undo(),
+            "undo",
+        );
+        sideContainer.appendChild(this.undoButton.element);
+
+        this.redoButton = new Button(
+            icons.redoIcon,
+            msg({ id: "ui.menu.redoButton", message: "Redo" }),
+            () => this.game.history.redo(),
+            "redo",
+        );
+        sideContainer.appendChild(this.redoButton.element);
 
         // toggles
         this.placeholders = Toggles.Placeholders(() =>
@@ -207,6 +216,8 @@ export class GameDisplay extends ScreenDisplay {
                 this.gridDisplay.scoreOverlayDisplay.showScores(
                     evt.scoreShapes!,
                 );
+            })
+            .addEventListener(GameEventType.Points, (evt: GameEvent) => {
                 this.scoreDisplay.points = this.game.points;
             })
             .addEventListener(GameEventType.EndGame, () => {
@@ -268,6 +279,8 @@ export class GameDisplay extends ScreenDisplay {
         this.restartgamebutton.destroy();
         this.refreshTilesButton.destroy();
         this.addTilesButton.destroy();
+        this.undoButton.destroy();
+        this.redoButton.destroy();
         this.autorotate.destroy();
         this.hints.destroy();
         this.placeholders.destroy();

@@ -26,6 +26,8 @@ import {
 import { SourceGrid } from "../grid/SourceGrid";
 import { StatisticsMonitor } from "../stats/StatisticsMonitor";
 import { StatisticsEvent } from "../stats/Events";
+import { Command } from "../commands/Command";
+import { CommandHistory } from "../commands/CommandHistory";
 
 export type GameSettings = {
     serializedJSON?: string;
@@ -78,9 +80,11 @@ export const enum GameEventType {
     EndGame = "endgame",
     ContinueGame = "continuegame",
     Score = "score",
+    Points = "points",
     UpdateTileCount = "updatetilecount",
     UpdateSlots = "updateslots",
     PlaceTile = "placetile",
+    UpdateCommandHistory = "updatecommandhistory",
 }
 
 export class GameEvent extends Event {
@@ -113,12 +117,19 @@ export class Game extends EventTarget {
     points: number;
     continued: boolean;
 
+    history: CommandHistory;
+
     constructor(settings: GameSettings, prng?: PRNG, restoreState?: unknown) {
         super();
 
         if (!prng && settings.seed) prng = seedPRNG(settings.seed);
 
         this.settings = settings;
+        this.history = new CommandHistory(() =>
+            this.dispatchEvent(
+                new GameEvent(GameEventType.UpdateCommandHistory, this),
+            ),
+        );
 
         let state = null;
         let sourceGrid = undefined;
@@ -201,14 +212,76 @@ export class Game extends EventTarget {
         };
     }
 
-    continue() {
-        this.continued = true;
-        this.tileStack.restart();
-        this.dispatchEvent(new GameEvent(GameEventType.ContinueGame, this));
+    undo(): boolean {
+        return this.history.undo();
     }
 
+    redo(): boolean {
+        return this.history.redo();
+    }
+
+    static Continue = class extends Command {
+        game: Game;
+
+        memo?: { continued: boolean; commands: Command[] };
+
+        constructor(game: Game) {
+            super();
+            this.game = game;
+        }
+
+        execute(): void {
+            const game = this.game;
+            this.memo = { continued: game.continued, commands: [] };
+            game.continued = true;
+            this.memo.commands.push(game.tileStack.restart());
+            game.dispatchEvent(new GameEvent(GameEventType.ContinueGame, game));
+        }
+
+        undo(): void {
+            if (!this.memo) return;
+            this.game.continued = this.memo.continued;
+            for (const command of this.memo.commands) {
+                command.undo();
+            }
+            if (this.game.tileStack.isEmpty()) {
+                this.game.dispatchEvent(
+                    new GameEvent(GameEventType.EndGame, this.game),
+                );
+            }
+            this.memo = undefined;
+        }
+    };
+
+    continue() {
+        const command = new Game.Continue(this);
+        command.execute();
+        this.history.push(command);
+    }
+
+    static RotateTileStack = class extends Command {
+        tileStack: TileStackWithSlots;
+        reverse: boolean;
+
+        constructor(tileStack: TileStackWithSlots, reverse?: boolean) {
+            super();
+            this.tileStack = tileStack;
+            this.reverse = !!reverse;
+        }
+
+        execute() {
+            this.tileStack.rotate(this.reverse);
+        }
+
+        undo() {
+            this.tileStack.rotate(!this.reverse);
+        }
+    };
+
     rotateTileStack(reverse?: boolean) {
-        this.tileStack.rotate(reverse);
+        const command = new Game.RotateTileStack(this.tileStack, reverse);
+        command.execute();
+        this.history.push(command);
     }
 
     placeTile(
@@ -220,51 +293,129 @@ export class Game extends EventTarget {
         if (!movingTile.colors) {
             throw new Error("no colors defined on moving tile");
         }
-        const colors = rotateArray(movingTile.colors, offset);
-        return this.placeColors(colors, fixedTile, indexOnStack);
+        return this.placeColors(
+            rotateArray(movingTile.colors, offset),
+            fixedTile,
+            indexOnStack,
+        );
     }
 
-    placeColors(colors: TileColors, fixedTile: Tile, indexOnStack?: number) {
-        const matchColors = this.grid.checkColors(fixedTile, colors);
-        if (matchColors) {
-            const tile = this.grid.addTile(
+    static PlaceColors = class extends Command {
+        game: Game;
+        colors: TileColors;
+        fixedTile: Tile;
+        indexOnStack: number | undefined;
+
+        memo?: {
+            tile: Tile;
+            removedSlot?: TileShapeColors | null;
+            endedGame?: boolean;
+            commands: Command[];
+        };
+
+        constructor(
+            game: Game,
+            colors: TileColors,
+            fixedTile: Tile,
+            indexOnStack?: number,
+        ) {
+            super();
+            this.game = game;
+            this.colors = colors;
+            this.fixedTile = fixedTile;
+            this.indexOnStack = indexOnStack;
+        }
+
+        execute(): void {
+            const game = this.game;
+            const fixedTile = this.fixedTile;
+
+            const tile = game.grid.addTile(
                 fixedTile.shape,
                 fixedTile.polygon,
                 fixedTile.polygon.segment(),
                 fixedTile.sourcePoint,
             );
-            tile.colors = colors;
+            tile.colors = this.colors;
 
-            this.grid.generatePlaceholders();
+            this.memo = { tile: tile, commands: [] };
 
-            if (indexOnStack !== undefined) {
+            game.grid.generatePlaceholders();
+
+            if (this.indexOnStack !== undefined) {
                 // remove from stack
-                this.tileStack.take(indexOnStack);
+                this.memo.removedSlot = game.tileStack.take(this.indexOnStack);
             }
 
             // compute scores and update listeners
-            this.computeScores(tile);
-            if (this.stats) {
-                this.stats.countEvent(
-                    StatisticsEvent.TilePlaced,
-                    tile.shape.name.split("-")[0],
+            this.memo.commands.push(...game.computeScores(tile));
+            if (game.stats) {
+                this.memo.commands.push(
+                    game.stats.countEvent(
+                        StatisticsEvent.TilePlaced,
+                        tile.shape.name.split("-")[0],
+                    ),
                 );
             }
-            this.dispatchEvent(
-                new GameEvent(GameEventType.PlaceTile, this, null, tile),
+            game.dispatchEvent(
+                new GameEvent(GameEventType.PlaceTile, game, null, tile),
             );
 
             // end of game?
-            if (this.tileStack.isEmpty()) {
-                if (this.stats && !this.continued) {
-                    this.stats.countEvent(
-                        StatisticsEvent.GameCompleted,
-                        this.grid.atlas.id,
+            if (game.tileStack.isEmpty()) {
+                if (game.stats && !game.continued) {
+                    this.memo.commands.push(
+                        game.stats.countEvent(
+                            StatisticsEvent.GameCompleted,
+                            game.grid.atlas.id,
+                        ),
                     );
                 }
-                this.dispatchEvent(new GameEvent(GameEventType.EndGame, this));
+                game.dispatchEvent(new GameEvent(GameEventType.EndGame, game));
+                this.memo.endedGame = true;
+            }
+        }
+
+        undo(): void {
+            if (!this.memo) return;
+
+            const game = this.game;
+
+            game.grid.removeTile(this.memo.tile);
+            game.grid.generatePlaceholders();
+
+            if (this.indexOnStack !== undefined && this.memo.removedSlot) {
+                game.tileStack.putBack(
+                    this.indexOnStack,
+                    this.memo.removedSlot,
+                );
             }
 
+            for (const command of this.memo.commands) {
+                command.undo();
+            }
+
+            if (this.memo.endedGame) {
+                game.dispatchEvent(
+                    new GameEvent(GameEventType.ContinueGame, game),
+                );
+            }
+
+            this.memo = undefined;
+        }
+    };
+
+    placeColors(colors: TileColors, fixedTile: Tile, indexOnStack?: number) {
+        const matchColors = this.grid.checkColors(fixedTile, colors);
+        if (matchColors) {
+            const command = new Game.PlaceColors(
+                this,
+                colors,
+                fixedTile,
+                indexOnStack,
+            );
+            command.execute();
+            this.history.push(command);
             return true;
         } else {
             // does not fit
@@ -272,31 +423,41 @@ export class Game extends EventTarget {
         }
     }
 
-    computeScores(target: Tile) {
+    computeScores(target: Tile): Command[] {
+        const commands = [];
         const shapes = this.scorer.computeScores(this.grid, target);
         if (shapes.length > 0) {
             const points = shapes.map((s) => s.points).reduce((a, b) => a + b);
-            this.points += points;
+
+            const command = new Game.UpdatePoints(this, points);
+            command.execute();
+            commands.push(command);
 
             if (this.stats) {
                 if (!this.continued) {
-                    this.stats.updateHighScore(
-                        StatisticsEvent.HighScore,
-                        this.points,
-                        this.settings.serializedJSON,
+                    commands.push(
+                        this.stats.updateHighScore(
+                            StatisticsEvent.HighScore,
+                            this.points,
+                            this.settings.serializedJSON,
+                        ),
                     );
                 }
                 for (const region of shapes || []) {
                     if (region.finished) {
-                        this.stats.countEvent(
-                            StatisticsEvent.ShapeCompleted,
-                            this.settings.serializedJSON,
+                        commands.push(
+                            this.stats.countEvent(
+                                StatisticsEvent.ShapeCompleted,
+                                this.settings.serializedJSON,
+                            ),
                         );
                         if (region.tiles) {
-                            this.stats.updateHighScore(
-                                StatisticsEvent.ShapeTileCount,
-                                region.tiles.size,
-                                this.settings.serializedJSON,
+                            commands.push(
+                                this.stats.updateHighScore(
+                                    StatisticsEvent.ShapeTileCount,
+                                    region.tiles.size,
+                                    this.settings.serializedJSON,
+                                ),
                             );
                         }
                     }
@@ -306,8 +467,35 @@ export class Game extends EventTarget {
             this.dispatchEvent(
                 new GameEvent(GameEventType.Score, this, shapes),
             );
+            this.dispatchEvent(new GameEvent(GameEventType.Points, this));
         }
+        return commands;
     }
+
+    static UpdatePoints = class extends Command {
+        game: Game;
+        points: number;
+
+        constructor(game: Game, points: number) {
+            super();
+            this.game = game;
+            this.points = points;
+        }
+
+        execute(): void {
+            this.game.points += this.points;
+            this.game.dispatchEvent(
+                new GameEvent(GameEventType.Points, this.game),
+            );
+        }
+
+        undo(): void {
+            this.game.points -= this.points;
+            this.game.dispatchEvent(
+                new GameEvent(GameEventType.Points, this.game),
+            );
+        }
+    };
 }
 
 export function gameFromSerializedSettings(

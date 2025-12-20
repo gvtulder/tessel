@@ -45,6 +45,10 @@ $main-navbar-height: calc(1.25 * $button-scale);
 $main-navbar-bottom: $button-bottom;
 $main-navbar-top: calc($button-bottom + $main-navbar-height);
 
+:root {
+  --button-scale: #{$button-scale};
+}
+
 // safe areas
 :root {
   --safe-area-max-inset-top: env(

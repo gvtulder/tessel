@@ -1,13 +1,17 @@
 @use "../sizes.scss";
 
+.small-buttons {
+  --button-scale: calc(0.5 * #{sizes.$button-scale});
+}
+
 .game-button {
   @include sizes.disable-select;
   cursor: pointer;
 
   .bg {
-    width: calc(0.5 * sizes.$button-scale);
-    height: calc(0.5 * sizes.$button-scale);
-    padding: calc(0.25 * sizes.$button-scale);
+    width: calc(0.5 * var(--button-scale));
+    height: calc(0.5 * var(--button-scale));
+    padding: calc(0.25 * var(--button-scale));
     border-radius: 100%;
     box-shadow: var(--button-box-shadow);
 
@@ -34,9 +38,9 @@
   }
 
   &.addtiles .bg {
-    width: calc(0.6 * sizes.$button-scale);
-    padding-left: calc(0.2 * sizes.$button-scale);
-    padding-right: calc(0.2 * sizes.$button-scale);
+    width: calc(0.6 * var(--button-scale));
+    padding-left: calc(0.2 * var(--button-scale));
+    padding-right: calc(0.2 * var(--button-scale));
 
     svg {
       aspect-ratio: auto;
@@ -52,34 +56,21 @@
   flex-direction: row;
   flex-wrap: wrap;
 
+  $clickable-margin: calc(0.25 * var(--button-scale));
   .game-button {
-    margin: calc(-0.25 * sizes.$button-scale);
-    padding: calc(0.25 * sizes.$button-scale);
+    padding: $clickable-margin;
   }
 
-  $button-margin: calc(0.25 * sizes.$button-scale);
   &.top {
-    top: sizes.$button-top;
-    .game-button {
-      margin-bottom: $button-margin;
-    }
+    top: calc(sizes.$button-top - $clickable-margin);
   }
   &.right {
-    right: sizes.$button-right;
-    .game-button {
-      margin-left: $button-margin;
-    }
+    right: calc(sizes.$button-right - $clickable-margin);
   }
   &.bottom {
-    bottom: sizes.$button-bottom;
-    .game-button {
-      margin-top: $button-margin;
-    }
+    bottom: calc(sizes.$button-bottom - $clickable-margin);
   }
   &.left {
-    left: sizes.$button-left;
-    .game-button {
-      margin-right: $button-margin;
-    }
+    left: calc(sizes.$button-left - $clickable-margin);
   }
 }

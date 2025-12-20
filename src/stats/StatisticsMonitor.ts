@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { Command } from "../commands/Command";
 import { StorageI } from "../lib/storage-backend";
 import { StatisticsEvent } from "./Events";
 
@@ -72,31 +73,138 @@ export class StatisticsMonitor {
         return StatisticsMonitor.#instance;
     }
 
-    private increment(key: string) {
-        this.counters.set(key, (this.counters.get(key) || 0) + 1);
-        this.writeToStorage();
-    }
+    static CountEvent = class extends Command {
+        stats: StatisticsMonitor;
+        eventType: StatisticsEvent;
+        subtype?: string;
 
-    private updateMax(key: string, value: number) {
-        this.counters.set(key, Math.max(value, this.counters.get(key) || 0));
-        this.writeToStorage();
-    }
-
-    countEvent(eventType: StatisticsEvent, subtype?: string) {
-        this.increment(eventType);
-        if (subtype) {
-            this.increment(`${eventType}.${subtype}`);
+        constructor(
+            stats: StatisticsMonitor,
+            eventType: StatisticsEvent,
+            subtype?: string,
+        ) {
+            super();
+            this.stats = stats;
+            this.eventType = eventType;
+            this.subtype = subtype;
         }
+
+        execute(): void {
+            this.update(this.eventType);
+            if (this.subtype) {
+                this.update(`${this.eventType}.${this.subtype}`);
+            }
+        }
+
+        undo(): void {
+            this.update(this.eventType, -1);
+            if (this.subtype) {
+                this.update(`${this.eventType}.${this.subtype}`, -1);
+            }
+        }
+
+        private update(key: string, delta: number = 1) {
+            this.stats.counters.set(
+                key,
+                (this.stats.counters.get(key) || 0) + delta,
+            );
+            this.stats.writeToStorage();
+        }
+    };
+
+    countEvent(eventType: StatisticsEvent, subtype?: string): Command {
+        const command = new StatisticsMonitor.CountEvent(
+            this,
+            eventType,
+            subtype,
+        );
+        command.execute();
+        return command;
     }
+
+    static UpdateHighScore = class extends Command {
+        stats: StatisticsMonitor;
+        eventType: StatisticsEvent;
+        value: number;
+        subtype: string | undefined;
+
+        memo?: {
+            mainValue?: number;
+            subtypeValue?: number;
+        };
+
+        constructor(
+            stats: StatisticsMonitor,
+            eventType: StatisticsEvent,
+            value: number,
+            subtype?: string | undefined,
+        ) {
+            super();
+            this.stats = stats;
+            this.eventType = eventType;
+            this.value = value;
+            this.subtype = subtype;
+        }
+
+        execute(): void {
+            const counters = this.stats.counters;
+            const currentMain = counters.get(this.eventType);
+            counters.set(
+                this.eventType,
+                Math.max(this.value, currentMain || 0),
+            );
+            this.memo = { mainValue: currentMain };
+
+            if (this.subtype) {
+                const currentSubtype = counters.get(this.eventType);
+                counters.set(
+                    `${this.eventType}.${this.subtype}`,
+                    Math.max(this.value, currentSubtype || 0),
+                );
+                this.memo = { subtypeValue: currentSubtype };
+            }
+
+            this.stats.writeToStorage();
+        }
+
+        undo(): void {
+            if (!this.memo) return;
+
+            const counters = this.stats.counters;
+            if (this.memo.mainValue === undefined) {
+                counters.delete(this.eventType);
+            } else {
+                counters.set(this.eventType, this.memo.mainValue);
+            }
+
+            if (this.subtype) {
+                if (this.memo.subtypeValue === undefined) {
+                    counters.delete(`${this.eventType}.${this.subtype}`);
+                } else {
+                    counters.set(
+                        `${this.eventType}.${this.subtype}`,
+                        this.memo.subtypeValue,
+                    );
+                }
+            }
+
+            this.stats.writeToStorage();
+            this.memo = undefined;
+        }
+    };
 
     updateHighScore(
         eventType: StatisticsEvent,
         value: number,
         subtype?: string,
-    ) {
-        this.updateMax(eventType, value);
-        if (subtype) {
-            this.updateMax(`${eventType}.${subtype}`, value);
-        }
+    ): Command {
+        const command = new StatisticsMonitor.UpdateHighScore(
+            this,
+            eventType,
+            value,
+            subtype,
+        );
+        command.execute();
+        return command;
     }
 }

@@ -20,8 +20,6 @@ const SPREAD_HEIGHT = 5;
 export class TileCounter {
     element: HTMLDivElement;
     span: HTMLSpanElement;
-    svg: SVGSVGElement;
-    svgGroup: SVGGElement;
 
     tapHandler: TapHandler;
     listeners: DestroyableEventListenerSet;
@@ -34,12 +32,6 @@ export class TileCounter {
 
         const span = createElement("span", "number", this.element);
         this.span = span;
-
-        const svg = SVG("svg", null, this.element, {
-            viewBox: `${-STROKE_WIDTH} ${-STROKE_WIDTH} ${TILE_WIDTH + SPREAD_WIDTH + 2 * STROKE_WIDTH} ${TILE_HEIGHT + SPREAD_HEIGHT + 2 * STROKE_WIDTH}`,
-        });
-        this.svg = svg;
-        this.svgGroup = SVG("g", null, svg);
 
         this.tapHandler = new TapHandler(this.element);
 
@@ -75,23 +67,6 @@ export class TileCounter {
             return;
         }
         this.currentCount = numTiles;
-
-        const stepX = SPREAD_WIDTH / numTiles;
-        const stepY = SPREAD_HEIGHT / numTiles;
-
-        const g = SVG("g");
-        for (let i = numTiles - 1; i >= 0; i--) {
-            const rect = SVG("rect", null, g, {
-                x: `${i * stepX + (numTiles == 1 ? 0.3 : 0) * SPREAD_WIDTH}`,
-                y: `${i * stepY + (numTiles == 1 ? 0.3 : 0) * SPREAD_HEIGHT}`,
-                width: `${TILE_WIDTH}`,
-                height: `${TILE_HEIGHT}`,
-                rx: `${RADIUS}`,
-                ry: `${RADIUS}`,
-            });
-        }
-        this.svgGroup.replaceWith(g);
-        this.svgGroup = g;
     }
 
     destroy() {

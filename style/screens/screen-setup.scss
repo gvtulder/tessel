@@ -13,7 +13,7 @@
   grid-template-areas: "example heading" "example settings";
   grid-template-columns: 1fr 1fr;
   grid-template-rows:
-    calc(sizes.$button-top + sizes.$button-scale + 1.2rem)
+    calc(var(--button-top) + sizes.$button-scale + 1.2rem)
     1fr;
 }
 
@@ -57,16 +57,16 @@
 
 .screen.game-setup .game-button.exit {
   position: absolute;
-  left: sizes.$button-left;
-  top: sizes.$button-top;
+  left: var(--button-left);
+  top: var(--button-top);
   margin: calc(-0.25 * sizes.$button-scale);
   padding: calc(0.25 * sizes.$button-scale);
 }
 
 .screen.game-setup .game-button.regenerate {
   position: absolute;
-  left: sizes.$button-left;
-  bottom: sizes.$button-margin-height;
+  left: var(--button-left);
+  bottom: var(--button-margin-height);
   margin: calc(-0.25 * sizes.$button-scale);
   padding: calc(0.25 * sizes.$button-scale);
 }
@@ -113,9 +113,9 @@
     position: relative;
     grid-area: settings;
     padding-right: calc(
-      2 * min(3vw, 2vh) + sizes.$stack-margin-right + sizes.$inset-right
+      2 * min(3vw, 2vh) + var(--stack-margin-right) + var(--inset-right)
     );
-    padding-bottom: calc(sizes.$stack-margin-bottom + sizes.$inset-bottom);
+    padding-bottom: calc(var(--stack-margin-bottom) + var(--inset-bottom));
     padding-left: min(3vw, 2vh);
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -194,10 +194,10 @@
   .screen.game-setup .settings {
     min-height: max(40vh, calc(8 * sizes.$setting-row-option-height));
     padding-left: calc(
-      min(3vw, 3vh) + sizes.$stack-margin-left + sizes.$inset-left
+      min(3vw, 3vh) + var(--stack-margin-left) + var(--inset-left)
     );
     padding-right: calc(
-      min(3vw, 3vh) + sizes.$stack-margin-right + sizes.$inset-right
+      min(3vw, 3vh) + var(--stack-margin-right) + var(--inset-right)
     );
   }
 

@@ -88,13 +88,13 @@
   position: absolute;
   width: 100%;
   left: 0;
-  bottom: sizes.$main-navbar-bottom;
+  bottom: var(--main-navbar-bottom);
   display: flex;
   flex-direction: row;
   justify-content: center;
   z-index: 100;
 
-  --navbar-size: calc(#{sizes.$main-navbar-height} / 2.5);
+  --navbar-size: calc(var(--main-navbar-height) / 2.5);
 
   .game-button {
     padding: calc(0.25 * var(--navbar-size)) calc(0.125 * var(--navbar-size));
@@ -104,7 +104,7 @@
 .small-navbar {
   position: absolute;
   width: 100%;
-  top: sizes.$button-top;
+  top: var(--button-top);
   left: 0;
   display: flex;
   flex-direction: row;

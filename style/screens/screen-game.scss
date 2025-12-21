@@ -42,8 +42,8 @@ $score-font-size: min(4vw, 5vh);
   /* floating controls */
   .floating-controls {
     position: absolute;
-    top: calc(sizes.$button-top + 0.25 * sizes.$button-scale);
-    left: sizes.$button-left;
+    top: calc(var(--button-top) + 0.25 * sizes.$button-scale);
+    left: var(--button-left);
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
@@ -91,9 +91,9 @@ $score-font-size: min(4vw, 5vh);
 
   /* sidebar container with tile stack */
   .side-panel {
-    width: sizes.$stack-width;
+    width: var(--stack-width);
     box-sizing: content-box;
-    padding-right: calc(sizes.$stack-margin-right + sizes.$inset-right);
+    padding-right: calc(var(--stack-margin-right) + var(--inset-right));
     flex-grow: 0;
     flex-shrink: 0;
     background: var(--panel-bg-color);
@@ -109,11 +109,11 @@ $score-font-size: min(4vw, 5vh);
       ". score-display score-display ."
       ". . . .";
     grid-template-rows:
-      calc(sizes.$button-top + 1.25 * sizes.$button-scale)
+      calc(var(--button-top) + 1.25 * sizes.$button-scale)
       5fr min-content 1fr min-content
-      calc(0.1 * sizes.$stack-width + sizes.$inset-bottom);
-    grid-template-columns: calc(0.1 * sizes.$stack-width) 1fr 1fr calc(
-        0.1 * sizes.$stack-width
+      calc(0.1 * var(--stack-width) + var(--inset-bottom));
+    grid-template-columns: calc(0.1 * var(--stack-width)) 1fr 1fr calc(
+        0.1 * var(--stack-width)
       );
 
     .tile-stack {
@@ -212,8 +212,8 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
 
 .dropout-menu {
   position: absolute;
-  right: sizes.$button-right;
-  top: sizes.$button-top;
+  right: var(--button-right);
+  top: var(--button-top);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -499,19 +499,21 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
     .side-panel {
       width: 100%;
       padding-right: 0;
-      padding-bottom: calc(sizes.$stack-margin-bottom + sizes.$inset-bottom);
+      padding-bottom: calc(var(--stack-margin-bottom) + var(--inset-bottom));
 
       grid-template-areas:
         ". tile-stack . . . ."
         ". tile-stack tile-counter refreshtiles score-display ."
         ". tile-stack undo redo score-display ."
         ". tile-stack . . . .";
-      grid-template-columns: sizes.$inset-left 5fr min-content min-content min-content calc(
-          sizes.$inset-right + 0.15 * var(--button-scale)
+      grid-template-columns:
+        var(--inset-left)
+        5fr min-content min-content min-content calc(
+          var(--inset-right) + 0.15 * var(--button-scale)
         );
       grid-template-rows:
-        calc(0.05 * sizes.$stack-width) 1fr 1fr
-        calc(0.15 * sizes.$stack-width);
+        calc(0.05 * var(--stack-width)) 1fr 1fr
+        calc(0.15 * var(--stack-width));
 
       .tile-stack {
         flex-direction: row;
@@ -539,7 +541,7 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
     }
 
     .floating-controls {
-      top: sizes.$button-top;
+      top: var(--button-top);
       height: sizes.$button-scale;
       flex-direction: row;
 
@@ -601,8 +603,8 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
         ". tile-stack tile-counter ."
         ". tile-stack refreshtiles ."
         ". tile-stack . .";
-      grid-template-columns: sizes.$inset-left 1fr min-content calc(
-          sizes.$inset-right + 0.3 * var(--button-scale)
+      grid-template-columns: var(--inset-left) 1fr min-content calc(
+          var(--inset-right) + 0.3 * var(--button-scale)
         );
 
       .game-button.undo,
@@ -643,7 +645,7 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
         ". tile-counter refreshtiles ."
         ". . . .";
       grid-template-rows:
-        calc(sizes.$button-top + 1.25 * sizes.$button-scale)
+        calc(var(--button-top) + 1.25 * sizes.$button-scale)
         7fr min-content
         1fr;
 

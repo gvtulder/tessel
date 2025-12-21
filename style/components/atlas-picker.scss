@@ -11,12 +11,12 @@
   --grid-margin-width: 2vh;
   --grid-margin-height: 8vh;
   --grid-available-width: calc(
-    100vw - var(--grid-margin-width) - #{sizes.$button-left} -
-      #{sizes.$button-right}
+    100vw - var(--grid-margin-width) - var(--button-left) - var(--button-right)
   );
   --grid-available-height: calc(
-    100vh - var(--grid-margin-height) - #{sizes.$button-top} -
-      #{sizes.$main-navbar-top}
+    100vh - var(--grid-margin-height) - var(--button-top) - var(
+        --main-navbar-top
+      )
   );
   grid-template-columns: repeat(var(--grid-columns), min-content);
 }

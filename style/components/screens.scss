@@ -44,7 +44,7 @@
 
   .settings-navbar-sticky {
     position: absolute;
-    top: sizes.$button-top;
+    top: var(--button-top);
 
     .small-navbar {
       position: sticky;
@@ -64,7 +64,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: sizes.$main-navbar-top;
+  padding-bottom: var(--main-navbar-top);
 }
 
 @keyframes screen-animate-appear {

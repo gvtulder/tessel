@@ -5,8 +5,8 @@
   @include sizes.disable-select;
 
   display: grid;
-  grid-template-columns: 1fr sizes.$stack-width calc(
-      sizes.$stack-margin-right + sizes.$inset-right
+  grid-template-columns: 1fr var(--stack-width) calc(
+      var(--stack-margin-right) + var(--inset-right)
     );
   grid-template-rows: 1fr;
   grid-template-areas: "paint-grid color-stack fill-end";
@@ -30,12 +30,12 @@
   @include sizes.disable-select;
 
   position: absolute;
-  top: sizes.$button-top;
-  right: sizes.$button-right;
+  top: var(--button-top);
+  right: var(--button-right);
 }
 
 $swatch-scale: min(
-  calc((100vh - sizes.$button-top - sizes.$button-bottom) / 11),
+  calc((100vh - var(--button-top) - var(--button-bottom)) / 11),
   calc(sizes.$button-scale)
 );
 
@@ -46,7 +46,7 @@ $swatch-scale: min(
   width: 100%;
   box-sizing: border-box;
   justify-content: flex-end;
-  padding-bottom: sizes.$button-bottom;
+  padding-bottom: var(--button-bottom);
   align-items: center;
 }
 
@@ -91,13 +91,13 @@ $swatch-scale: min(
 }
 
 @media screen and (orientation: portrait) {
-  $swatch-scale: calc((100vw - sizes.$inset-left - sizes.$inset-right) / 10);
+  $swatch-scale: calc((100vw - var(--inset-left) - var(--inset-right)) / 10);
 
   .screen.paint-display {
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: 1fr max(20vw, 40px) calc(
-        sizes.$stack-margin-bottom + sizes.$inset-bottom
+        var(--stack-margin-bottom) + var(--inset-bottom)
       );
     grid-template-areas:
       "paint-grid"

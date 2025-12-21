@@ -73,15 +73,15 @@
   }
 
   &.top {
-    top: calc(sizes.$button-top - $clickable-margin);
+    top: calc(var(--button-top) - $clickable-margin);
   }
   &.right {
-    right: calc(sizes.$button-right - $clickable-margin);
+    right: calc(var(--button-right) - $clickable-margin);
   }
   &.bottom {
-    bottom: calc(sizes.$button-bottom - $clickable-margin);
+    bottom: calc(var(--button-bottom) - $clickable-margin);
   }
   &.left {
-    left: calc(sizes.$button-left - $clickable-margin);
+    left: calc(var(--button-left) - $clickable-margin);
   }
 }

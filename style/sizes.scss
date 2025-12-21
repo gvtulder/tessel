@@ -7,50 +7,73 @@ $font-size: clamp(16px, min(2.5vw, 2.5vh), 24px);
 // size of the buttons (height and width including padding)
 $button-scale: min(16vw, 15vh, max(5vw, 7vh, 40px));
 
-// space around the button
-$button-margin-width: calc(0.6 * $button-scale);
-$button-margin-height: calc(0.6 * $button-scale);
-
-// safe area inset margins
-$inset-top: var(--safe-area-max-inset-top);
-$inset-right: var(--safe-area-max-inset-right);
-// at the bottom we'll make some extra space to safely drag the tiles
-$inset-bottom: calc(1.5 * var(--safe-area-max-inset-bottom));
-$inset-left: var(--safe-area-max-inset-left);
-
-// margin to keep the stack away from the edge
-$stack-margin-top: 0px;
-$stack-margin-right: 0px; // calc(max(15vw - 20vh, 0px));
-$stack-margin-bottom: 0px; // calc(max(4vh - 4vw, 0px));
-$stack-margin-left: 0px;
-
-// width/height of the tile stack
-$stack-width: calc($button-scale + 2 * $button-margin-width);
-$stack-height: max(20vw, 40px);
-
-// button position relative to the page
-$button-top: max(calc($button-margin-height + $stack-margin-top), $inset-top);
-$button-right: max(
-  calc($button-margin-width + $stack-margin-right),
-  $inset-right
-);
-$button-bottom: max(
-  calc($button-margin-height + $stack-margin-bottom),
-  $inset-bottom
-);
-$button-left: max(calc($button-margin-width + $stack-margin-left), $inset-left);
-
-// size of the main navbar
-$main-navbar-height: calc(1.25 * $button-scale);
-$main-navbar-bottom: $button-bottom;
-$main-navbar-top: calc($button-bottom + $main-navbar-height);
-
 :root {
+  // space around the button
+  --button-margin-width: #{calc(0.6 * $button-scale)};
+  --button-margin-height: #{calc(0.6 * $button-scale)};
+
+  // safe area inset margins
+  --inset-top: var(--safe-area-max-inset-top);
+  --inset-right: var(--safe-area-max-inset-right);
+  // at the bottom we'll make some extra space to safely drag the tiles
+  --inset-bottom: calc(1.5 * var(--safe-area-max-inset-bottom));
+  --inset-left: var(--safe-area-max-inset-left);
+
+  // standard button size
   --button-scale: #{$button-scale};
-}
 
-// safe areas
-:root {
+  // margin to keep the stack away from the edge
+  --stack-margin-top: 0px;
+  --stack-margin-right: 0px;
+  --stack-margin-bottom: 0px;
+  --stack-margin-left: 0px;
+
+  // reduce margin
+  --small-screen-top: 0px;
+  --small-screen-right: 0px;
+  --small-screen-bottom: 0px;
+  --small-screen-left: 0px;
+
+  // width/height of the tile stack
+  --stack-width: #{calc($button-scale + 2 * var(--button-margin-width))};
+  --stack-height: max(20vw, 40px);
+
+  // button position relative to the page
+  --button-top: max(
+    calc(
+      var(--button-margin-height) +
+        var(--stack-margin-top) - var(--small-screen-top)
+    ),
+    var(--inset-top)
+  );
+  --button-right: max(
+    calc(
+      var(--button-margin-width) +
+        var(--stack-margin-right) - var(--small-screen-right)
+    ),
+    var(--inset-right)
+  );
+  --button-bottom: max(
+    calc(
+      var(--button-margin-height) +
+        var(--stack-margin-bottom) - var(--small-screen-bottom)
+    ),
+    var(--inset-bottom)
+  );
+  --button-left: max(
+    calc(
+      var(--button-margin-width) +
+        var(--stack-margin-left) - var(--small-screen-left)
+    ),
+    var(--inset-left)
+  );
+
+  // size of the main navbar
+  --main-navbar-height: calc(1.25 * var(--button-scale));
+  --main-navbar-bottom: var(--button-bottom);
+  --main-navbar-top: calc(var(--button-bottom) + var(--main-navbar-height));
+
+  // safe areas
   --safe-area-max-inset-top: env(
     safe-area-max-inset-top,
     env(safe-area-inset-top, 36px)
@@ -69,30 +92,39 @@ $main-navbar-top: calc($button-bottom + $main-navbar-height);
   );
 }
 
+@media screen and (max-aspect-ratio: 3 / 5) {
+  :root {
+    --small-screen-top: #{calc(0.25 * $button-scale)};
+    --small-screen-right: #{calc(0.25 * $button-scale)};
+    --small-screen-bottom: #{calc(0.25 * $button-scale)};
+    --small-screen-left: #{calc(0.25 * $button-scale)};
+  }
+}
+
 // debugging CSS: add div elements to show safe area
 .safe-inset-top,
 .safe-inset-bottom {
   background: #f00a;
   z-index: 1000;
   position: absolute;
-  left: $inset-left;
-  width: calc(100vw - $inset-left - $inset-right);
+  left: var(--inset-left);
+  width: calc(100vw - var(--inset-left) - var(--inset-right));
   box-sizing: border-box;
 }
 .safe-inset-top {
   top: 0;
-  height: $inset-top;
+  height: var(--inset-top);
 }
 .safe-inset-bottom {
   bottom: 0;
-  height: $inset-bottom;
+  height: var(--inset-bottom);
 }
 
 /* settings in the setup menu */
 $setting-row-option-scale: max(
   min(
-    calc(min(48vw - $button-right) / 10),
-    calc(min(80vh - $inset-top - $inset-bottom) / 11)
+    calc(min(48vw - var(--button-right)) / 10),
+    calc(min(80vh - var(--inset-top) - var(--inset-bottom)) / 11)
   ),
   2rem
 );

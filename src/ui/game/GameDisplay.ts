@@ -318,6 +318,7 @@ export class GameDisplay extends ScreenDisplay {
             this.gridDisplay.gameFinished(true);
         }
         updateTileCount();
+        updateUndoState();
 
         // initial scaling
         this.rescale();

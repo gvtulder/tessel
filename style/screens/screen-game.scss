@@ -83,6 +83,10 @@ $score-font-size: min(4vw, 5vh);
       --button-bg-pressed-color: var(--button-bg-pressed-color-on-main-bg);
       --button-bg-hover-color: var(--button-bg-hover-color-on-main-bg);
     }
+
+    .game-button.disabled {
+      display: none;
+    }
   }
 
   &.dragging-tile .floating-controls {

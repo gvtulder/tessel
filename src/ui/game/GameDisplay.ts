@@ -358,26 +358,29 @@ export class GameDisplay extends ScreenDisplay {
     }
 
     rescale() {
-        const topFloatingControls = window.matchMedia(
-            "(max-aspect-ratio: 3 / 5)",
-        );
-        if (topFloatingControls.matches) {
-            this.gridDisplay.margins.top =
-                30 +
-                this.floatingScoreDisplay.element.getBoundingClientRect()
-                    .height;
-        } else {
-            this.gridDisplay.margins.top = 30;
-        }
-        const leftFloatingControls = window.matchMedia(
-            "(min-aspect-ratio: 5 / 3)",
-        );
-        if (leftFloatingControls.matches) {
-            this.gridDisplay.margins.left =
-                30 +
-                this.floatingScoreDisplay.element.getBoundingClientRect().width;
-        } else {
-            this.gridDisplay.margins.left = 30;
+        if (window.matchMedia) {
+            const topFloatingControls = window.matchMedia(
+                "(max-aspect-ratio: 3 / 5)",
+            );
+            if (topFloatingControls.matches) {
+                this.gridDisplay.margins.top =
+                    30 +
+                    this.floatingScoreDisplay.element.getBoundingClientRect()
+                        .height;
+            } else {
+                this.gridDisplay.margins.top = 30;
+            }
+            const leftFloatingControls = window.matchMedia(
+                "(min-aspect-ratio: 5 / 3)",
+            );
+            if (leftFloatingControls.matches) {
+                this.gridDisplay.margins.left =
+                    30 +
+                    this.floatingScoreDisplay.element.getBoundingClientRect()
+                        .width;
+            } else {
+                this.gridDisplay.margins.left = 30;
+            }
         }
         this.gridDisplay.rescale();
         this.tileStackDisplay.rescale();

@@ -1,5 +1,5 @@
 msgid ""
-msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-12-13 11:17+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Dutch <https://hosted.weblate.org/projects/tessel/game/nl/>\nLanguage: nl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: \nPOT-Creation-Date: 2025-10-27 12:12+0100\nPO-Revision-Date: 2025-12-21 22:10+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Dutch <https://hosted.weblate.org/projects/tessel/game/nl/>\nLanguage: nl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=utf-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15.1\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -488,3 +488,15 @@ msgstr "Kijk op <a href=\"{weblate}\">Weblate</a> om te helpen bij de vertaling.
 #: src/ui/settings/SettingsDisplay.ts:207
 msgid "ui.settings.version"
 msgstr "Versie {version}."
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:192
+#: src/ui/game/GameDisplay.ts:199
+msgid "ui.menu.redoButton"
+msgstr "Ongedaan maken"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:173
+#: src/ui/game/GameDisplay.ts:180
+msgid "ui.menu.undoButton"
+msgstr "Opnieuw uitvoeren"

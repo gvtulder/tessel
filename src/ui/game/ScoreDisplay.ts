@@ -14,6 +14,7 @@ const AUTOPLAY_ACTIVE_TIME_LIMIT = 5000;
 
 export class ScoreDisplay {
     element: HTMLDivElement;
+    box: HTMLDivElement;
     scoreField: HTMLSpanElement;
     tapHandler: TapHandler;
     onTapAutoPlay?: () => void;
@@ -26,16 +27,20 @@ export class ScoreDisplay {
         this._points = 0;
         this._autoplayTapCount = 0;
 
-        const element = (this.element = document.createElement("div"));
-        element.className = "score";
+        const container = (this.element = createElement(
+            "div",
+            "score-display",
+        ));
 
-        const p = createElement("p", "score-points", element);
-
+        // main game score
+        const box = (this.box = createElement("div", "score-box", container));
+        const p = createElement("p", "score-points", box);
         const scoreField = (this.scoreField = createElement("span", null, p));
         scoreField.innerHTML = "0";
 
+        // high score
         if (highScore) {
-            const pHigh = createElement("p", "high-score", element);
+            const pHigh = createElement("p", "high-score", container);
             pHigh.innerHTML = icons.starIcon;
             const highScoreField = createElement("span", null, pHigh);
             highScoreField.innerHTML = `${highScore}`;
@@ -43,7 +48,8 @@ export class ScoreDisplay {
 
         const robot = icons.robotIcon;
 
-        this.tapHandler = new TapHandler(element);
+        // handle auto-play button
+        this.tapHandler = new TapHandler(box);
         this.tapHandler.onTap = () => {
             if (this._autoplayTapTimeout)
                 window.clearTimeout(this._autoplayTapTimeout);
@@ -68,8 +74,8 @@ export class ScoreDisplay {
         };
 
         this.listeners = new DestroyableEventListenerSet();
-        this.listeners.addEventListener(element, "animationend", () =>
-            this.element.classList.remove("animate"),
+        this.listeners.addEventListener(box, "animationend", () =>
+            box.classList.remove("animate"),
         );
     }
 
@@ -83,7 +89,7 @@ export class ScoreDisplay {
         if (this._points != points) {
             this.scoreField.innerHTML = `${points}`;
             this._points = points;
-            this.element.classList.add("animate");
+            this.box.classList.add("animate");
         }
     }
 }

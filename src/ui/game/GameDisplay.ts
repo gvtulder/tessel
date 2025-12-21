@@ -32,6 +32,7 @@ export class GameDisplay extends ScreenDisplay {
     tileStackDisplay: TileStackDisplay;
     tileCounterDisplay: TileCounter;
     scoreDisplay: ScoreDisplay;
+    floatingScoreDisplay: ScoreDisplay;
     tileDragController: MainGridTileDragController;
 
     element: HTMLDivElement;
@@ -43,6 +44,8 @@ export class GameDisplay extends ScreenDisplay {
     addTilesButton: Button;
     undoButton: Button;
     redoButton: Button;
+    floatingUndoButton: Button;
+    floatingRedoButton: Button;
     autorotate: Toggle;
     placeholders: Toggle;
     hints: Toggle;
@@ -75,6 +78,13 @@ export class GameDisplay extends ScreenDisplay {
         const tileDragController = (this.tileDragController =
             new MainGridTileDragController(this.gridDisplay));
 
+        // top control bare
+        const floatingControls = createElement(
+            "div",
+            "floating-controls",
+            element,
+        );
+
         // tile stack column/row
         const sideContainer = createElement("div", "side-panel", element);
 
@@ -92,26 +102,30 @@ export class GameDisplay extends ScreenDisplay {
             this.game.rotateTileStack();
         sideContainer.appendChild(this.tileCounterDisplay.element);
 
-        // the score display
-        const scoreDisplayContainer = createElement(
-            "div",
-            "score-display",
-            sideContainer,
+        this.floatingScoreDisplay = new ScoreDisplay(
+            this.game.stats?.counters.get(
+                `HighScore.${game.settings.serializedJSON}`,
+            ),
         );
+        floatingControls.appendChild(this.floatingScoreDisplay.element);
+        this.floatingScoreDisplay.points = this.game.points;
+
+        // the score display
         this.scoreDisplay = new ScoreDisplay(
             this.game.stats?.counters.get(
                 `HighScore.${game.settings.serializedJSON}`,
             ),
         );
-        scoreDisplayContainer.appendChild(this.scoreDisplay.element);
+        sideContainer.appendChild(this.scoreDisplay.element);
         this.scoreDisplay.points = this.game.points;
 
         // the autoplay button
-        this.scoreDisplay.onTapAutoPlay = () => {
-            // disable highscores and other statistics
-            this.game.stats = undefined;
-            new AutoPlayer(this.game).playAllTiles(100);
-        };
+        this.floatingScoreDisplay.onTapAutoPlay =
+            this.scoreDisplay.onTapAutoPlay = () => {
+                // disable highscores and other statistics
+                this.game.stats = undefined;
+                new AutoPlayer(this.game).playAllTiles(100);
+            };
 
         // the controls menu
         const menu = (this.menu = new DropoutMenu());
@@ -150,21 +164,43 @@ export class GameDisplay extends ScreenDisplay {
         );
         this.tileStackDisplay.element.appendChild(this.addTilesButton.element);
 
+        const undo = () => {
+            this.gridDisplay.scoreOverlayDisplay.hide();
+            this.game.history.undo();
+        };
         this.undoButton = new Button(
             icons.undoIcon,
             msg({ id: "ui.menu.undoButton", message: "Undo" }),
-            () => this.game.history.undo(),
+            undo,
             "undo",
         );
         sideContainer.appendChild(this.undoButton.element);
+        this.floatingUndoButton = new Button(
+            icons.undoIcon,
+            msg({ id: "ui.menu.undoButton", message: "Undo" }),
+            undo,
+            "undo",
+        );
+        floatingControls.appendChild(this.floatingUndoButton.element);
 
+        const redo = () => {
+            this.gridDisplay.scoreOverlayDisplay.hide();
+            this.game.history.redo();
+        };
         this.redoButton = new Button(
             icons.redoIcon,
             msg({ id: "ui.menu.redoButton", message: "Redo" }),
-            () => this.game.history.redo(),
+            redo,
             "redo",
         );
         sideContainer.appendChild(this.redoButton.element);
+        this.floatingRedoButton = new Button(
+            icons.redoIcon,
+            msg({ id: "ui.menu.redoButton", message: "Redo" }),
+            redo,
+            "redo",
+        );
+        floatingControls.appendChild(this.floatingRedoButton.element);
 
         // toggles
         this.placeholders = Toggles.Placeholders(() =>
@@ -219,6 +255,7 @@ export class GameDisplay extends ScreenDisplay {
             })
             .addEventListener(GameEventType.Points, (evt: GameEvent) => {
                 this.scoreDisplay.points = this.game.points;
+                this.floatingScoreDisplay.points = this.game.points;
             })
             .addEventListener(GameEventType.EndGame, () => {
                 this.element.classList.add("game-finished");
@@ -237,6 +274,30 @@ export class GameDisplay extends ScreenDisplay {
             game.tileStack,
             GameEventType.UpdateTileCount,
             updateTileCount,
+        );
+
+        const updateUndoState = () => {
+            this.undoButton.element.classList.toggle(
+                "disabled",
+                !game.history.canUndo,
+            );
+            this.floatingUndoButton.element.classList.toggle(
+                "disabled",
+                !game.history.canUndo,
+            );
+            this.redoButton.element.classList.toggle(
+                "disabled",
+                !game.history.canRedo,
+            );
+            this.floatingRedoButton.element.classList.toggle(
+                "disabled",
+                !game.history.canRedo,
+            );
+        };
+        this.listeners.addEventListener(
+            game,
+            GameEventType.UpdateCommandHistory,
+            updateUndoState,
         );
 
         // set default settings
@@ -281,6 +342,8 @@ export class GameDisplay extends ScreenDisplay {
         this.addTilesButton.destroy();
         this.undoButton.destroy();
         this.redoButton.destroy();
+        this.floatingUndoButton.destroy();
+        this.floatingRedoButton.destroy();
         this.autorotate.destroy();
         this.hints.destroy();
         this.placeholders.destroy();
@@ -290,10 +353,32 @@ export class GameDisplay extends ScreenDisplay {
         this.tileDragController.destroy();
         this.tileStackDisplay.destroy();
         this.scoreDisplay.destroy();
+        this.floatingScoreDisplay.destroy();
         this.gridDisplay.destroy();
     }
 
     rescale() {
+        const topFloatingControls = window.matchMedia(
+            "(max-aspect-ratio: 3 / 5)",
+        );
+        if (topFloatingControls.matches) {
+            this.gridDisplay.margins.top =
+                30 +
+                this.floatingScoreDisplay.element.getBoundingClientRect()
+                    .height;
+        } else {
+            this.gridDisplay.margins.top = 30;
+        }
+        const leftFloatingControls = window.matchMedia(
+            "(min-aspect-ratio: 5 / 3)",
+        );
+        if (leftFloatingControls.matches) {
+            this.gridDisplay.margins.left =
+                30 +
+                this.floatingScoreDisplay.element.getBoundingClientRect().width;
+        } else {
+            this.gridDisplay.margins.left = 30;
+        }
         this.gridDisplay.rescale();
         this.tileStackDisplay.rescale();
     }

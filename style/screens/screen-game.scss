@@ -14,6 +14,17 @@ $score-font-size: min(4vw, 5vh);
     animation-duration: 600ms;
   }
 
+  /* general components */
+  .game-button {
+    margin: calc(0.25 * var(--button-scale));
+  }
+
+  .tile-counter,
+  .game-button {
+    opacity: 1;
+    transition: opacity 300ms;
+  }
+
   /* main container: grid */
   .main-grid {
     flex-grow: 1;
@@ -28,68 +39,127 @@ $score-font-size: min(4vw, 5vh);
     animation-delay: 200ms;
   }
 
-  /* sidebar container: tile stack */
+  /* floating controls */
+  .floating-controls {
+    position: absolute;
+    top: calc(sizes.$button-top + 0.25 * sizes.$button-scale);
+    left: sizes.$button-left;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    opacity: 1;
+    transition: 100ms opacity;
+
+    // changed to flex when the controls are shown
+    display: none;
+
+    --button-scale: #{calc(0.5 * sizes.$button-scale)};
+
+    .score-display {
+      min-width: 3em;
+      margin-bottom: calc(0.25 * sizes.$button-scale);
+      font-size: calc(0.3 * sizes.$button-scale);
+
+      // make opaque
+      background: var(--main-bg-color);
+      border-radius: 1vw;
+
+      .score-box {
+        width: 100%;
+        height: calc(0.6 * sizes.$button-scale);
+        box-shadow: var(--score-box-shadow), var(--button-box-shadow);
+        opacity: 75%;
+      }
+
+      .high-score {
+        font-size: 0.8em;
+        background: var(--main-bg-color);
+        border-radius: 1vw;
+      }
+    }
+
+    .game-button {
+      --button-bg-color: var(--button-bg-color-on-main-bg);
+      --button-bg-pressed-color: var(--button-bg-pressed-color-on-main-bg);
+      --button-bg-hover-color: var(--button-bg-hover-color-on-main-bg);
+    }
+  }
+
+  &.dragging-tile .floating-controls {
+    opacity: 0;
+  }
+
+  /* sidebar container with tile stack */
   .side-panel {
     width: sizes.$stack-width;
+    box-sizing: content-box;
     padding-right: calc(sizes.$stack-margin-right + sizes.$inset-right);
     flex-grow: 0;
     flex-shrink: 0;
     background: var(--panel-bg-color);
 
+    --button-scale: #{calc(0.5 * sizes.$button-scale)};
+
     display: grid;
     grid-template-areas:
       "button button button button"
       "tile-stack tile-stack tile-stack tile-stack"
-      ". tile-counter refresh-tiles ."
+      ". tile-counter refreshtiles ."
       ". undo redo ."
-      ". score-display score-display .";
+      ". score-display score-display ."
+      ". . . .";
     grid-template-rows:
       calc(sizes.$button-top + 1.25 * sizes.$button-scale)
-      5fr min-content 1fr min-content;
+      5fr min-content 1fr min-content
+      calc(0.1 * sizes.$stack-width + sizes.$inset-bottom);
     grid-template-columns: calc(0.1 * sizes.$stack-width) 1fr 1fr calc(
         0.1 * sizes.$stack-width
       );
-  }
 
-  .tile-stack {
-    grid-area: tile-stack;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
+    .tile-stack {
+      grid-area: tile-stack;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
 
-  --refreshtiles-size: calc(#{sizes.$button-scale} / 4);
+    .tile-counter {
+      grid-area: tile-counter;
+      margin: calc(0.25 * var(--button-scale));
+      align-self: center;
+      justify-self: flex-end;
 
-  .tile-counter,
-  .game-button.refreshtiles,
-  .game-button.undo,
-  .game-button.redo {
-    --button-scale: calc(0.5 * #{sizes.$button-scale});
-    justify-self: flex-start;
-    margin: calc(0.25 * var(--button-scale)) 0 calc(0.25 * var(--button-scale))
-      calc(0.25 * var(--button-scale));
-  }
+      span {
+        min-width: var(--button-scale);
+      }
+    }
 
-  .tile-counter,
-  .game-button.undo {
-    justify-self: flex-end;
-    margin: calc(0.25 * var(--button-scale)) calc(0.25 * var(--button-scale))
-      calc(0.25 * var(--button-scale)) 0;
-  }
+    .game-button.refreshtiles {
+      grid-area: refreshtiles;
+    }
 
-  .tile-counter {
-    grid-area: tile-counter;
-    text-align: center;
-    min-width: var(--button-scale);
-    opacity: 1;
-    transition: opacity 300ms;
-  }
+    .game-button.undo {
+      grid-area: undo;
+      justify-self: flex-end;
+    }
 
-  .game-button.refreshtiles {
-    grid-area: refresh-tiles;
-    opacity: 1;
-    transition: opacity 300ms;
+    .game-button.redo {
+      grid-area: redo;
+    }
+
+    .score-display {
+      grid-area: score-display;
+      margin-top: #{calc(0.25 * sizes.$button-scale)};
+      .score-box {
+        padding: #{calc(0.25 * sizes.$button-scale)};
+      }
+    }
+
+    .game-button.addtiles {
+      position: absolute;
+      top: calc(50% - 0.75 * sizes.$button-scale);
+      left: calc(50% - 0.75 * sizes.$button-scale);
+      --button-scale: #{sizes.$button-scale};
+    }
   }
 
   &.no-more-tiles {
@@ -100,35 +170,10 @@ $score-font-size: min(4vw, 5vh);
     }
   }
 
-  .game-button.undo {
-    grid-area: undo;
-  }
-
-  .game-button.redo {
-    grid-area: redo;
-  }
-
-  .score-display {
-    grid-area: score-display;
-    align-self: flex-end;
-  }
-
   .game-button.addtiles {
-    position: absolute;
-    top: calc(50% - 0.5 * sizes.$button-scale);
-    left: calc(50% - 0.5 * sizes.$button-scale);
     display: none;
   }
   &.game-finished {
-    @media screen and (orientation: landscape) {
-      .side-panel {
-        // set more-tiles-button height to 0
-        grid-template-rows:
-          calc(sizes.$button-top + 1.25 * sizes.$button-scale)
-          5fr 0 min-content min-content;
-      }
-    }
-
     .tile-on-stack {
       pointer-events: none;
     }
@@ -136,57 +181,6 @@ $score-font-size: min(4vw, 5vh);
     .game-button.addtiles {
       display: block;
       animation: game-button-appear 500ms;
-    }
-  }
-
-  @media screen and (min-aspect-ratio: 5 / 3) {
-    .side-panel {
-      width: auto;
-      grid-template-areas:
-        ". tile-stack button button"
-        ". tile-stack . ."
-        ". tile-stack tile-counter ."
-        ". tile-stack refresh-tiles ."
-        ". tile-stack undo ."
-        ". tile-stack redo ."
-        ". tile-stack score-display .";
-      grid-template-rows:
-        calc(sizes.$button-top + 1.25 * sizes.$button-scale)
-        5fr min-content 1fr min-content;
-      grid-template-columns:
-        calc(0.1 * sizes.$stack-width)
-        1fr
-        sizes.$button-scale
-        calc(sizes.$button-right);
-    }
-
-    .tile-stack {
-      align-self: center;
-      margin-right: calc(0.15 * sizes.$button-scale);
-    }
-
-    .tile-on-stack {
-      max-height: 25vh;
-    }
-
-    .tile-counter,
-    .game-button.refreshtiles,
-    .game-button.undo,
-    .game-button.redo {
-      --button-scale: calc(0.65 * #{sizes.$button-scale});
-      justify-self: center;
-      align-self: center;
-      margin: calc(0.25 * var(--button-scale));
-    }
-
-    .tile-counter,
-    .score-display .score p,
-    .score-display .score p.high-score {
-      font-size: calc(0.3 * sizes.$button-scale);
-    }
-
-    .score-display .score p:first-child {
-      padding: 0.5em 0;
     }
   }
 }
@@ -211,6 +205,7 @@ $score-font-size: min(4vw, 5vh);
   }
 }
 
+/* dropout menu */
 $dropout-outer-padding: calc(0.25 * sizes.$button-scale);
 $dropout-inner-padding: calc(0.2 * sizes.$button-scale);
 $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
@@ -321,15 +316,14 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
     .game-button + .game-button {
       margin-left: 0;
     }
-
-    .game-button.undo,
-    .game-button.redo {
-      display: none;
-    }
   }
 }
 
+/* tile stack */
 .tile-stack {
+  position: relative;
+  display: flex;
+
   .grid-display {
     z-index: 1000;
   }
@@ -400,92 +394,86 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
   transition-property: none;
 }
 
+/* tile counter */
 .tile-counter {
   cursor: pointer;
   color: var(--tile-counter-text-color);
+  text-align: center;
+  font-size: calc(0.75 * var(--button-scale));
 
   span {
     display: block;
   }
-
-  svg {
-    display: block;
-    margin-left: 0.5em;
-    width: 1.5em;
-    height: 1.5em;
-    stroke: var(--tile-counter-text-color);
-    stroke-width: 0.03em;
-    vector-effect: non-scaling-stroke;
-    fill: var(--panel-bg-color);
-  }
 }
 
-.score-display .score {
-  flex-grow: 1;
-  margin: calc(0.25 * var(--button-scale)) 0;
-  box-sizing: border-box;
+/* score display with optional highscore */
+.score-display {
   font-size: $score-font-size;
 
-  p:first-child {
-    padding: 4% 0 7% 0;
+  p {
+    font-size: 1em;
+    margin: 0;
+    padding: 0;
+    line-height: 1em;
+  }
+
+  .score-box {
     border-radius: 1vw;
+    box-sizing: border-box;
     border: 2px solid var(--score-display-fg-color);
     background: var(--score-display-bg-color);
     color: var(--score-display-fg-color);
     fill: var(--score-display-fg-color);
-    font-size: 1em;
     opacity: 0.5;
-    text-align: center;
     box-shadow: var(--score-box-shadow);
-  }
+    text-align: center;
 
-  &.animate {
-    p:first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      /* visually center text */
+      margin-top: -0.15em;
+    }
+
+    svg {
+      display: inline-block;
+      height: 0.8em;
+    }
+
+    &.animate {
       animation-name: score-display-anim;
       animation-duration: 1000ms;
     }
   }
 
-  p {
-    margin: 0;
-    padding: 0;
-    line-height: 1.2em;
-    transition:
-      line-height 300ms,
-      width 300ms;
-  }
-
-  p.high-score {
-    font-size: calc(0.25 * var(--button-scale));
+  .high-score {
+    font-size: 0.5em;
     color: var(--tile-counter-text-color);
     fill: var(--tile-counter-text-color);
     transition:
       opacity 300ms,
       height 300ms;
     padding-top: 0;
+    line-height: 1.5em;
     height: 0px;
     opacity: 0;
     text-align: center;
-  }
 
-  .show-highscore & {
-    p.high-score {
-      padding-top: 0.1em;
-      height: 1.2em;
-      opacity: 1;
+    svg {
+      display: inline-block;
+      vertical-align: -0.1em;
+      height: 0.8em;
+      padding-right: 0.2em;
     }
   }
 
-  .score-points svg {
-    display: inline-block;
-    height: 0.8em;
-  }
-
-  p.high-score svg {
-    display: inline-block;
-    vertical-align: -0.1em;
-    height: 0.8em;
-    padding-right: 0.2em;
+  .show-highscore & {
+    .high-score {
+      height: 1.5em;
+      opacity: 1;
+    }
   }
 }
 @keyframes score-display-anim {
@@ -503,12 +491,66 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
   }
 }
 
+/* portrait layout */
 @media screen and (orientation: portrait) {
   .screen.game-display {
     flex-direction: column;
 
+    .side-panel {
+      width: 100%;
+      padding-right: 0;
+      padding-bottom: calc(sizes.$stack-margin-bottom + sizes.$inset-bottom);
+
+      grid-template-areas:
+        ". tile-stack . . . ."
+        ". tile-stack tile-counter refreshtiles score-display ."
+        ". tile-stack undo redo score-display ."
+        ". tile-stack . . . .";
+      grid-template-columns: sizes.$inset-left 5fr min-content min-content min-content calc(
+          sizes.$inset-right + 0.15 * var(--button-scale)
+        );
+      grid-template-rows:
+        calc(0.05 * sizes.$stack-width) 1fr 1fr
+        calc(0.15 * sizes.$stack-width);
+
+      .tile-stack {
+        flex-direction: row;
+      }
+
+      .tile-on-stack {
+        max-height: calc(2 * sizes.$button-scale);
+      }
+
+      .tile-counter,
+      .game-button.undo {
+        justify-self: flex-end;
+      }
+
+      .tile-counter,
+      .game-button.refreshtiles {
+        align-self: flex-end;
+      }
+
+      .score-display {
+        align-self: center;
+        margin: 0 calc(0.25 * var(--button-scale));
+        min-width: 3em;
+      }
+    }
+
+    .floating-controls {
+      top: sizes.$button-top;
+      height: sizes.$button-scale;
+      flex-direction: row;
+
+      .score-display {
+        height: calc(0.6 * sizes.$button-scale);
+        margin-right: calc(0.25 * sizes.$button-scale);
+        margin-bottom: 0;
+      }
+    }
+
     .dropout-menu {
-      // make buttons opaque
       --button-bg-color: var(--button-bg-color-on-main-bg);
       --button-bg-pressed-color: var(--button-bg-pressed-color-on-main-bg);
       --button-bg-hover-color: var(--button-bg-hover-color-on-main-bg);
@@ -539,207 +581,81 @@ $dropout-outer-border-radius: calc(0.5 * sizes.$button-scale);
       }
     }
 
+    .tile-on-stack {
+      max-height: 100%;
+      height: 100%;
+      max-width: 25vw;
+    }
+  }
+}
+
+@media screen and (max-aspect-ratio: 3 / 5) {
+  .screen.game-display {
+    .floating-controls {
+      display: flex;
+    }
+
     .side-panel {
-      width: 100%;
       grid-template-areas:
-        ". tile-stack . . . ."
-        ". tile-stack tile-counter  undo score-display ."
-        ". tile-stack refresh-tiles redo score-display ."
-        ". tile-stack . . . ."
-        ". . . . . .";
-      grid-template-columns: sizes.$inset-left 5fr 1fr min-content min-content calc(
-          sizes.$inset-right + 0.15 * var(--button-scale)
+        ". tile-stack . ."
+        ". tile-stack tile-counter ."
+        ". tile-stack refreshtiles ."
+        ". tile-stack . .";
+      grid-template-columns: sizes.$inset-left 1fr min-content calc(
+          sizes.$inset-right + 0.3 * var(--button-scale)
         );
-      grid-template-rows:
-        calc(0.05 * sizes.$stack-width) 1fr 1fr
-        calc(0.15 * sizes.$stack-width)
-        calc(sizes.$stack-margin-bottom + sizes.$inset-bottom);
-    }
 
-    &.game-finished {
-      .side-panel {
-        grid-template-columns: sizes.$inset-left 5fr min-content min-content min-content;
-      }
-    }
-
-    .tile-stack {
-      flex-direction: row;
-    }
-
-    .tile-counter,
-    .game-button.refreshtiles,
-    .game-button.undo,
-    .game-button.redo {
-      margin: calc(0.15 * var(--button-scale)) calc(0.25 * var(--button-scale))
-        0 calc(0.25 * var(--button-scale));
-      align-self: flex-start;
-      justify-self: flex-end;
-    }
-
-    .tile-counter,
-    .game-button.undo {
-      margin: 0 calc(0.25 * var(--button-scale))
-        calc(0.15 * var(--button-scale)) calc(0.25 * var(--button-scale));
-      align-self: flex-end;
-    }
-
-    &.no-more-tiles {
       .game-button.undo,
-      .game-button.redo {
-        justify-self: flex-end;
-      }
-    }
-
-    .tile-counter {
-      display: block;
-      padding: 0 0 0.4em 0;
-      transition:
-        margin 300ms,
-        opacity 300ms;
-
-      span {
-        display: inline-block;
-      }
-    }
-
-    .game-button.refreshtiles {
-      transition:
-        margin 300ms,
-        opacity 300ms;
-    }
-
-    .score-display {
-      align-self: center;
-      margin: 0 calc(0.15 * var(--button-scale));
-    }
-
-    .score-display .score {
-      margin: 0;
-      border-radius: 2vw;
-      font-size: 7vw;
-      width: 15vw;
-    }
-
-    &.show-highscore {
-      .score-display p {
-        line-height: 1em;
-      }
-    }
-
-    .game-button.addtiles {
-      top: calc(50% - 0.5 * sizes.$button-scale);
-      left: calc(45vw - 0.5 * sizes.$button-scale);
-    }
-
-    @media screen and (max-aspect-ratio: 3 / 5) {
-      .side-panel {
-        position: relative;
-        grid-template-areas:
-          ". tile-stack tile-stack   tile-stack    tile-stack tile-stack tile-stack tile-stack ."
-          ". .          tile-counter refresh-tiles undo redo score-display . ."
-          ". .          .            .             .    .    .             . .";
-        grid-template-columns: sizes.$inset-left 1fr min-content min-content min-content min-content min-content 1fr sizes.$inset-right;
-        grid-template-rows:
-          1fr
-          min-content
-          calc(
-            0.15 * sizes.$stack-width + sizes.$stack-margin-bottom +
-              sizes.$inset-bottom
-          );
-        max-height: none;
-      }
-
-      &.game-finished .side-panel {
-        position: relative;
-        grid-template-areas:
-          ". tile-stack tile-stack   tile-stack    tile-stack tile-stack tile-stack tile-stack ."
-          ". .          tile-counter refresh-tiles undo redo score-display . ."
-          ". .          .            .             .    .    .             . .";
-        grid-template-columns: 0 1fr 0 0 min-content min-content min-content 1fr 0;
-        grid-template-rows:
-          1fr
-          min-content
-          calc(
-            0.15 * sizes.$stack-width + sizes.$stack-margin-bottom +
-              sizes.$inset-bottom
-          );
-        max-height: none;
-      }
-
-      .tile-counter,
-      .game-button.refreshtiles,
-      .game-button.undo,
-      .game-button.redo {
-        --button-scale: calc(0.65 * #{sizes.$button-scale});
-      }
-
-      .tile-stack {
-        justify-self: center;
+      .game-button.redo,
+      .score-display {
+        display: none;
       }
 
       .tile-on-stack {
-        max-width: 28vw;
+        max-width: calc((100vw - 5em) / 3);
       }
 
-      &.game-finished .tile-stack {
-        width: 100%;
+      .tile-counter {
+        justify-self: center;
+      }
+
+      .game-button {
+        justify-self: center;
       }
 
       .game-button.addtiles {
-        left: calc(50vw - 0.5 * sizes.$button-scale);
-      }
-
-      .tile-counter,
-      .game-button.refreshtiles,
-      .game-button.undo,
-      .game-button.redo {
-        top: calc(-2 * var(--button-scale));
-        margin: calc(0.15 * var(--button-scale))
-          calc(0.25 * var(--button-scale)) 0 calc(0.25 * var(--button-scale));
-        align-self: flex-end;
-      }
-
-      .tile-counter,
-      .score-display .score,
-      .score-display .score p.high-score {
-        font-size: calc(0.3 * sizes.$button-scale);
-      }
-
-      .score-display {
-        justify-self: center;
-        align-self: flex-end;
-      }
-      .score-display .score {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        width: auto;
-      }
-      .score-display p {
-        width: calc(1 * var(--button-scale));
-        flex-grow: 1;
-        line-height: 1.2em;
-      }
-      .score-display p.high-score {
-        width: 0;
-      }
-      &.show-highscore {
-        .score-display p {
-          line-height: 1.2em;
-        }
-        .score-display p.high-score {
-          padding: 0;
-          height: auto;
-          width: calc(0.75 * var(--button-scale));
-          padding-bottom: 0.2em;
-        }
+        left: calc(50vw - 0.75 * sizes.$button-scale);
       }
     }
   }
+}
 
-  .tile-on-stack {
-    max-height: 100%;
-    height: 100%;
-    max-width: 25vw;
+@media screen and (min-aspect-ratio: 5 / 3) {
+  .screen.game-display {
+    .floating-controls {
+      display: flex;
+    }
+
+    .side-panel {
+      grid-template-areas:
+        "button button button button"
+        "tile-stack tile-stack tile-stack tile-stack"
+        ". tile-counter refreshtiles ."
+        ". . . .";
+      grid-template-rows:
+        calc(sizes.$button-top + 1.25 * sizes.$button-scale)
+        7fr min-content
+        1fr;
+
+      .game-button.undo,
+      .game-button.redo,
+      .score-display {
+        display: none;
+      }
+
+      .tile-on-stack {
+        max-height: 20vh;
+      }
+    }
   }
 }

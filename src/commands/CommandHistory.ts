@@ -46,4 +46,12 @@ export class CommandHistory extends EventTarget {
         this.future = [];
         if (this.callback) this.callback();
     }
+
+    get canUndo(): boolean {
+        return this.history.length > 0;
+    }
+
+    get canRedo(): boolean {
+        return this.future.length > 0;
+    }
 }

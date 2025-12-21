@@ -365,9 +365,15 @@ export class GridDisplay extends EventTarget implements ScalableDisplay {
             case GridDisplayScalingType.EqualMargins:
             default:
                 containerLeft =
-                    (availWidth - finalWidth) / 2 - dim.minX * scale;
+                    (availWidth - finalWidth) / 2 -
+                    dim.minX * scale +
+                    this.margins.left -
+                    this.margins.right;
                 containerTop =
-                    (availHeight - finalHeight) / 2 - dim.minY * scale;
+                    (availHeight - finalHeight) / 2 -
+                    dim.minY * scale +
+                    this.margins.top -
+                    this.margins.bottom;
         }
 
         // adjust drag offset to the grid limits

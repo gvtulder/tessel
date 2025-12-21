@@ -177,49 +177,49 @@ msgid "scorer.HoleScorer.friendlyName"
 msgstr "Count holes"
 
 #. js-lingui-explicit-id
-#: src/ui/game/DropoutMenu.ts:29
+#: src/ui/game/DropoutMenu.ts:31
 msgid "ui.game.showMenuButton"
 msgstr "Show menu"
 
 #. js-lingui-explicit-id
-#: src/ui/shared/MainNavBar.ts:46
+#: src/ui/controller/GameController.ts:141
 msgid "ui.menu.AllGamesButton"
 msgstr "All Games"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SmallNavBar.ts:47
+#: src/ui/controller/GameController.ts:177
 msgid "ui.menu.HowToPlayButton"
 msgstr "How to play?"
 
 #. js-lingui-explicit-id
-#: src/ui/shared/MainNavBar.ts:33
+#: src/ui/controller/GameController.ts:131
 msgid "ui.menu.MainMenuButton"
 msgstr "Home"
 
 #. js-lingui-explicit-id
-#: src/ui/shared/MainNavBar.ts:59
+#: src/ui/controller/GameController.ts:151
 msgid "ui.menu.PaintButton"
 msgstr "Paint"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SmallNavBar.ts:32
-#: src/ui/shared/MainNavBar.ts:72
+#: src/ui/controller/GameController.ts:158
+#: src/ui/controller/GameController.ts:166
 msgid "ui.menu.SettingsButton"
 msgstr "Settings"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SmallNavBar.ts:62
+#: src/ui/controller/GameController.ts:187
 msgid "ui.menu.StatisticsButton"
 msgstr "Statistics"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:222
+#: src/ui/game/GameDisplay.ts:161
 msgid "ui.menu.addMoreTilesButton"
 msgstr "More tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:198
-#: src/ui/paint/PaintDisplay.ts:66
+#: src/ui/game/GameDisplay.ts:137
+#: src/ui/paint/PaintDisplay.ts:73
 #: src/ui/setup/GameSetupDisplay.ts:146
 msgid "ui.menu.backToMenuButton"
 msgstr "Back to menu"
@@ -230,12 +230,18 @@ msgid "ui.menu.footer"
 msgstr "A game by <a href=\"{url}\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:214
+#: src/ui/game/GameDisplay.ts:192
+#: src/ui/game/GameDisplay.ts:199
+msgid "ui.menu.redoButton"
+msgstr "Redo"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:153
 msgid "ui.menu.refreshTilesButton"
 msgstr "Shuffle tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/game/GameDisplay.ts:206
+#: src/ui/game/GameDisplay.ts:145
 msgid "ui.menu.restartGameButton"
 msgstr "Restart game"
 
@@ -245,93 +251,99 @@ msgid "ui.menu.setupButton"
 msgstr "Design a game"
 
 #. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:173
+#: src/ui/game/GameDisplay.ts:180
+msgid "ui.menu.undoButton"
+msgstr "Undo"
+
+#. js-lingui-explicit-id
 #. placeholder {0}: colors.length
 #: src/ui/setup/ColorsOption.ts:18
 msgid "ui.settings.ColorsOption.title"
 msgstr "{0, plural, =1 {One color} =2 {Two colors} =3 {Three colors} =4 {Four colors} =5 {Five colors} =6 {Six colors} other {# colors}}"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:143
+#: src/ui/settings/SettingsDisplay.ts:134
 msgid "ui.settings.about.credits"
 msgstr "Tessel is a game by <a href=\"{url}\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:177
+#: src/ui/settings/SettingsDisplay.ts:167
 msgid "ui.settings.about.feedbackPrompt"
 msgstr "Suggestions, comments, or bugs? <a href=\"{email}\">Send me an email</a> or <a href=\"{github}\">tell me on GitHub</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:165
+#: src/ui/settings/SettingsDisplay.ts:156
 msgid "ui.settings.about.reviewPromptApple"
 msgstr "Enjoying the game? <a href=\"{url}\">Leave a review</a> in the App Store or <a href=\"{share}\">share the game with others</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:155
+#: src/ui/settings/SettingsDisplay.ts:146
 msgid "ui.settings.about.reviewPromptGoogle"
 msgstr "Enjoying the game? <a href=\"{url}\">Leave a review</a> in the Google Play Store or <a href=\"{share}\">share the game with others</a>."
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:137
+#: src/ui/settings/SettingsDisplay.ts:128
 msgid "ui.settings.about.title"
 msgstr "About the game"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:121
+#: src/ui/settings/SettingsDisplay.ts:112
 msgid "ui.settings.description.autorotate"
 msgstr "Auto-rotate tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:93
+#: src/ui/settings/SettingsDisplay.ts:84
 msgid "ui.settings.description.colorScheme"
 msgstr "Light mode, dark mode, or follow your device"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:128
+#: src/ui/settings/SettingsDisplay.ts:119
 msgid "ui.settings.description.highscore"
 msgstr "Show highscore"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:114
+#: src/ui/settings/SettingsDisplay.ts:105
 msgid "ui.settings.description.hints"
 msgstr "Highlight valid positions"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:86
+#: src/ui/settings/SettingsDisplay.ts:77
 msgid "ui.settings.description.language"
 msgstr "Language"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:107
+#: src/ui/settings/SettingsDisplay.ts:98
 msgid "ui.settings.description.placeholders"
 msgstr "Show placeholder tiles"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:100
+#: src/ui/settings/SettingsDisplay.ts:91
 msgid "ui.settings.group.gameSettings"
 msgstr "Game settings"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:193
+#: src/ui/settings/SettingsDisplay.ts:183
 msgid "ui.settings.opensource.source"
 msgstr "The <a href=\"{source}\">source code</a> for this game is available under the GPL 3.0 license. See <a href=\"{github}\">GitHub</a> for issues and pull requests."
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:186
+#: src/ui/settings/SettingsDisplay.ts:176
 msgid "ui.settings.opensource.title"
 msgstr "Open source"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:199
+#: src/ui/settings/SettingsDisplay.ts:189
 msgid "ui.settings.opensource.weblate"
 msgstr "Visit <a href=\"{weblate}\">Weblate</a> to help with the translation."
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:49
+#: src/ui/settings/SettingsDisplay.ts:40
 msgid "ui.settings.title"
 msgstr "Settings"
 
 #. js-lingui-explicit-id
-#: src/ui/settings/SettingsDisplay.ts:207
+#: src/ui/settings/SettingsDisplay.ts:197
 msgid "ui.settings.version"
 msgstr "Version {version}."
 
@@ -392,72 +404,72 @@ msgid "ui.setup.title"
 msgstr "Custom game"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:229
+#: src/ui/statistics/StatisticsDisplay.ts:230
 msgid "ui.statistics.columns.GameCompleted"
 msgstr "Games completed"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:221
+#: src/ui/statistics/StatisticsDisplay.ts:222
 msgid "ui.statistics.columns.HighScore"
 msgstr "High score"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:225
+#: src/ui/statistics/StatisticsDisplay.ts:226
 msgid "ui.statistics.columns.ShapeCompleted"
 msgstr "Shapes formed"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:257
+#: src/ui/statistics/StatisticsDisplay.ts:259
 msgid "ui.statistics.columns.TilePlaced"
 msgstr "Tiles placed"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:292
+#: src/ui/statistics/StatisticsDisplay.ts:298
 msgid "ui.statistics.counter.TilePlaced.hexagon"
 msgstr "Hexagons"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:299
+#: src/ui/statistics/StatisticsDisplay.ts:306
 msgid "ui.statistics.counter.TilePlaced.kite"
 msgstr "Kites"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:285
+#: src/ui/statistics/StatisticsDisplay.ts:290
 msgid "ui.statistics.counter.TilePlaced.pentagon"
 msgstr "Pentagons"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:278
+#: src/ui/statistics/StatisticsDisplay.ts:282
 msgid "ui.statistics.counter.TilePlaced.rhombus"
 msgstr "Rhombi"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:264
+#: src/ui/statistics/StatisticsDisplay.ts:266
 msgid "ui.statistics.counter.TilePlaced.square"
 msgstr "Squares"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:271
+#: src/ui/statistics/StatisticsDisplay.ts:274
 msgid "ui.statistics.counter.TilePlaced.triangle"
 msgstr "Triangles"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:212
+#: src/ui/statistics/StatisticsDisplay.ts:213
 msgid "ui.statistics.headings.ShapeCompleted"
 msgstr "{value, plural, one {You have formed one shape.} other {You have formed # shapes.}}"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:248
+#: src/ui/statistics/StatisticsDisplay.ts:250
 msgid "ui.statistics.headings.TilePlaced"
 msgstr "{value, plural, one {You have placed one tile.} other {You have placed # tiles.}}"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:68
+#: src/ui/statistics/StatisticsDisplay.ts:57
 msgid "ui.statistics.notPlayed"
 msgstr "You haven’t played yet!"
 
 #. js-lingui-explicit-id
-#: src/ui/statistics/StatisticsDisplay.ts:60
+#: src/ui/statistics/StatisticsDisplay.ts:49
 msgid "ui.statistics.title"
 msgstr "Statistics"
 

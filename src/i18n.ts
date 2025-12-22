@@ -5,6 +5,7 @@
 
 import fs from "fs";
 import { i18n, Messages } from "@lingui/core";
+import { messages as messages_ca } from "../i18n/ca";
 import { messages as messages_de } from "../i18n/de";
 import { messages as messages_en } from "../i18n/en";
 import { messages as messages_es } from "../i18n/es";
@@ -17,6 +18,15 @@ import { messages as messages_zhhant } from "../i18n/zh-Hant";
 import { getStorageBackend } from "./lib/storage-backend";
 
 export const languages = {
+    ca: {
+        title: "Català",
+        messages: messages_ca,
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/ca/about.html",
+            "utf-8",
+        ),
+        languageTag: "ca-ES",
+    },
     de: {
         title: "Deutsch",
         messages: messages_de,

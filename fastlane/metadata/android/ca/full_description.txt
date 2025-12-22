@@ -1,0 +1,17 @@
+Tessel és un joc acolorit de col·locació de rajoles. Col·loqueu rajoles amb colors coincidents per a crear formes i omplir el tauler. Com més grossa sigui la forma, més punts rebreu.
+
+Característiques:
+• Jugueu una partida fàcil amb quadrats o trieu un patró més complicat.
+• Personalitzeu la configuració de la partida per a canviar-ne les normes.
+• Creeu els vostres propis patrons d’enrajolat a l’eina de dibuix.
+
+Trieu entre un ampli rang de patrons d’enrajolat i formeu infinites tessel·lacions variades:
+• Quadrat
+• Triangular
+• Ròmbic
+• Pentagonal del Caire
+• Hexagonal
+• Deltoidal trihexagonal
+• Penrose P3
+• Quadrada xata
+• Ammann-Beenker

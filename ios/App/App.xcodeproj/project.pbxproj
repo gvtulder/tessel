@@ -18,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A1F2A56FB562E33E170CC671 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E6E5715A48E83943B4D31CA1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		2A6BB4552ECD2C2200FB2810 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		5F9B5378A61686871BC05114 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -150,6 +151,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
+				ca,
 				de,
 				en,
 				es,
@@ -246,6 +248,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				504EC3111FED79650016851F /* Base */,
+				A1F2A56FB562E33E170CC671 /* ca */,
 				E6E5715A48E83943B4D31CA1 /* de */,
 				2A6BB4552ECD2C2200FB2810 /* es */,
 				5F9B5378A61686871BC05114 /* fr */,

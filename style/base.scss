@@ -19,8 +19,23 @@
   src: url(../assets/fonts/Barlow-Regular.woff2) format("woff2");
 }
 
+/*
+ Override the middot character to fix Catalan punt volat rendering in Barlow 1.4.
+ https://github.com/gvtulder/tessel/issues/67
+ https://github.com/jpt/barlow/issues/46
+ https://github.com/jpt/barlow/issues/64
+*/
+@font-face {
+  font-family: "BarlowMiddot";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../assets/fonts/Barlow-Regular.woff2) format("woff2");
+  unicode-range: U+00B7;
+}
+
 :root {
-  font-family: "Barlow", sans-serif;
+  font-family: "BarlowMiddot", "Barlow", sans-serif;
   font-size: sizes.$font-size;
 }
 

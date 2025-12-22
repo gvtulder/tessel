@@ -148,6 +148,9 @@ export async function prepareI18n(navigatorLanguage: string) {
 
 export function updateI18n(locale: string) {
     i18n.activate(locale);
+    if (languages[locale] && document && document.documentElement) {
+        document.documentElement.lang = languages[locale].languageTag;
+    }
 }
 
 export function getLocalizedAboutHTML(): string {

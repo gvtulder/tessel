@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-12-12 20:00+0000\nLast-Translator: \"Miguel A. Bouzada\" <mbouzada@gmail.com>\nLanguage-Team: Galician <https://hosted.weblate.org/projects/tessel/game/gl/>\nLanguage: gl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-12-22 13:50+0000\nLast-Translator: \"Miguel A. Bouzada\" <mbouzada@gmail.com>\nLanguage-Team: Galician <https://hosted.weblate.org/projects/tessel/game/gl/>\nLanguage: gl\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15.1\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/CairoAtlas.ts:11
@@ -485,3 +485,15 @@ msgstr "Amosar as posicións posíbeis"
 #: src/ui/shared/toggles.ts:60
 msgid "ui.toggles.snap"
 msgstr "Abrochar"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:173
+#: src/ui/game/GameDisplay.ts:180
+msgid "ui.menu.undoButton"
+msgstr "Desfacer"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:192
+#: src/ui/game/GameDisplay.ts:199
+msgid "ui.menu.redoButton"
+msgstr "Refacer"

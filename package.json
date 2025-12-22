@@ -24,12 +24,12 @@
   "dependencies": {
     "@lingui/core": "^5.7.0",
     "@parcel/service-worker": "^2.16.3",
-    "check2d": "^9.35.2",
+    "check2d": "^9.36.4",
     "polygon-clipping": "^0.15.7",
     "workbox-core": "^7.4.0",
     "workbox-precaching": "^7.4.0",
     "workbox-window": "^7.4.0",
-    "zod": "^4.2.0"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.4",

@@ -3,7 +3,11 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import { PRNG } from "../geom/RandomSampler";
+import { Shape } from "../grid/Shape";
+
 export abstract class Command {
-    abstract execute(): void;
+    abstract execute(prng?: PRNG): void;
     abstract undo(): void;
+    abstract save(shapeMap: readonly Shape[]): unknown;
 }

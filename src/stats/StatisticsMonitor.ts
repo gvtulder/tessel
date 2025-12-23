@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import * as zod from "zod/v4-mini";
 import { Command } from "../commands/Command";
 import { StorageI } from "../lib/storage-backend";
 import { StatisticsEvent } from "./Events";
@@ -73,6 +74,12 @@ export class StatisticsMonitor {
         return StatisticsMonitor.#instance;
     }
 
+    static CountEvent_S = zod.object({
+        command: zod.literal("StatisticsMonitor.CountEvent"),
+        eventType: zod.enum(StatisticsEvent),
+        subtype: zod.optional(zod.string()),
+    });
+
     static CountEvent = class extends Command {
         stats: StatisticsMonitor;
         eventType: StatisticsEvent;
@@ -110,7 +117,21 @@ export class StatisticsMonitor {
             );
             this.stats.writeToStorage();
         }
+
+        save(): zod.infer<typeof StatisticsMonitor.CountEvent_S> {
+            return {
+                command: "StatisticsMonitor.CountEvent",
+                eventType: this.eventType,
+                subtype: this.subtype,
+            };
+        }
     };
+
+    restoreCountEventCommand(
+        d: zod.infer<typeof StatisticsMonitor.CountEvent_S>,
+    ): Command {
+        return new StatisticsMonitor.CountEvent(this, d.eventType, d.subtype);
+    }
 
     countEvent(eventType: StatisticsEvent, subtype?: string): Command {
         const command = new StatisticsMonitor.CountEvent(
@@ -121,6 +142,13 @@ export class StatisticsMonitor {
         command.execute();
         return command;
     }
+
+    static UpdateHighScore_S = zod.object({
+        command: zod.literal("StatisticsMonitor.UpdateHighScore"),
+        eventType: zod.enum(StatisticsEvent),
+        value: zod.int(),
+        subtype: zod.optional(zod.string()),
+    });
 
     static UpdateHighScore = class extends Command {
         stats: StatisticsMonitor;
@@ -191,7 +219,27 @@ export class StatisticsMonitor {
             this.stats.writeToStorage();
             this.memo = undefined;
         }
+
+        save(): zod.infer<typeof StatisticsMonitor.UpdateHighScore_S> {
+            return {
+                command: "StatisticsMonitor.UpdateHighScore",
+                eventType: this.eventType,
+                value: this.value,
+                subtype: this.subtype,
+            };
+        }
     };
+
+    restoreUpdateHighScoreCommand(
+        d: zod.infer<typeof StatisticsMonitor.UpdateHighScore_S>,
+    ): Command {
+        return new StatisticsMonitor.UpdateHighScore(
+            this,
+            d.eventType,
+            d.value,
+            d.subtype,
+        );
+    }
 
     updateHighScore(
         eventType: StatisticsEvent,

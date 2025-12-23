@@ -3,11 +3,14 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
+import * as zod from "zod/v4-mini";
 import { PRNG } from "../geom/RandomSampler";
 import { GameEvent, GameEventType } from "./Game";
 import {
     TileShapeColors,
+    TileShapeColors_S,
     TileStack,
+    TileStack_S,
     tileColorsEqualWithRotation,
 } from "./TileStack";
 import { Shape } from "../grid/Shape";
@@ -67,14 +70,7 @@ export class TileStackWithSlots extends EventTarget {
     save(shapeMap: readonly Shape[]): TileStackWithSlots_S {
         return {
             numberShown: this.numberShown,
-            slots: this.slots.map((slot) =>
-                slot
-                    ? {
-                          shape: shapeMap.indexOf(slot.shape),
-                          colors: slot?.colors,
-                      }
-                    : undefined,
-            ),
+            slots: saveSlots(this.slots, shapeMap),
             originalTileStack: this.originalTileStack.save(shapeMap),
             tileStack: this.tileStack.save(shapeMap),
         };
@@ -97,14 +93,7 @@ export class TileStackWithSlots extends EventTarget {
         );
         // restore state
         stack.tileStack = TileStack.restore(d.tileStack, shapeMap);
-        stack.slots = d.slots.map((slot) =>
-            slot
-                ? {
-                      shape: shapeMap[slot.shape],
-                      colors: slot.colors,
-                  }
-                : undefined,
-        );
+        stack.slots = restoreSlots(d.slots, shapeMap);
         return stack;
     }
 
@@ -198,32 +187,39 @@ export class TileStackWithSlots extends EventTarget {
         this.updateSlots();
     }
 
+    static Restart_S = zod.object({
+        command: zod.literal("TileStackWithSlots.Restart"),
+        memo: zod.optional(
+            zod.object({
+                tileStack: TileStack_S,
+                slots: zod.readonly(
+                    zod.array(zod.optional(zod.nullable(TileShapeColors_S))),
+                ),
+            }),
+        ),
+    });
+
     static Restart = class extends Command {
         tileStackWithSlots: TileStackWithSlots;
-        newTiles: TileStack;
 
         memo?: {
             tileStack: TileStack;
             slots: (TileShapeColors | null | undefined)[];
         };
 
-        constructor(
-            tileStackWithSlots: TileStackWithSlots,
-            newTiles: TileStack,
-        ) {
+        constructor(tileStackWithSlots: TileStackWithSlots) {
             super();
             this.tileStackWithSlots = tileStackWithSlots;
-            this.newTiles = newTiles;
         }
 
-        execute() {
+        execute(prng?: PRNG) {
             const stack = this.tileStackWithSlots;
             this.memo = { tileStack: stack.tileStack, slots: [] };
             for (let i = 0; i < stack.numberShown; i++) {
                 this.memo.slots[i] = stack.slots[i];
                 stack.slots[i] = null;
             }
-            stack.tileStack = this.newTiles;
+            stack.tileStack = stack.originalTileStack.clone(prng);
             stack.updateSlots();
         }
 
@@ -242,18 +238,43 @@ export class TileStackWithSlots extends EventTarget {
             stack.dispatchEvent(new GameEvent(GameEventType.UpdateTileCount));
             stack.dispatchEvent(new GameEvent(GameEventType.UpdateSlots));
         }
+
+        save(
+            shapeMap: readonly Shape[],
+        ): zod.infer<typeof TileStackWithSlots.Restart_S> {
+            return {
+                command: "TileStackWithSlots.Restart",
+                memo: this.memo
+                    ? {
+                          tileStack: this.memo.tileStack.save(shapeMap),
+                          slots: saveSlots(this.memo.slots, shapeMap),
+                      }
+                    : undefined,
+            };
+        }
     };
+
+    restoreRestartCommand(
+        data: zod.infer<typeof TileStackWithSlots.Restart_S>,
+        shapeMap: readonly Shape[],
+    ): Command {
+        const command = new TileStackWithSlots.Restart(this);
+        if (data.memo) {
+            command.memo = {
+                tileStack: TileStack.restore(data.memo.tileStack, shapeMap),
+                slots: restoreSlots(data.memo.slots, shapeMap),
+            };
+        }
+        return command;
+    }
 
     /**
      * Restarts the game by adding the original list of tiles again.
      * @param prng random number generator
      */
-    restart(prng?: PRNG) {
-        const command = new TileStackWithSlots.Restart(
-            this,
-            this.originalTileStack.clone(prng),
-        );
-        command.execute();
+    restart(prng?: PRNG): Command {
+        const command = new TileStackWithSlots.Restart(this);
+        command.execute(prng);
         return command;
     }
 
@@ -312,4 +333,32 @@ export class TileStackWithSlots extends EventTarget {
         }
         return this.tileStack.isEmpty();
     }
+}
+
+function saveSlots(
+    slots: TileStackWithSlots["slots"],
+    shapeMap: readonly Shape[],
+): TileStackWithSlots_S["slots"] {
+    return slots.map((slot) =>
+        slot
+            ? {
+                  shape: shapeMap.indexOf(slot.shape),
+                  colors: slot?.colors,
+              }
+            : undefined,
+    );
+}
+
+function restoreSlots(
+    slots: TileStackWithSlots_S["slots"],
+    shapeMap: readonly Shape[],
+): TileStackWithSlots["slots"] {
+    return slots.map((slot) =>
+        slot
+            ? {
+                  shape: shapeMap[slot.shape],
+                  colors: slot.colors,
+              }
+            : undefined,
+    );
 }

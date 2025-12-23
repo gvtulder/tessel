@@ -7,15 +7,21 @@ import * as zod from "zod/v4-mini";
 import { Grid, TileSet_S } from "../grid/Grid";
 import { ScoredRegion, Scorer, ScorerType } from "./scorers/Scorer";
 import { ConnectedSegmentScorer } from "./scorers/ConnectedSegmentScorer";
-import { Tile, TileColors } from "../grid/Tile";
+import { Tile, Tile_S, TileColors } from "../grid/Tile";
 import { TileGenerator, TileGenerators } from "./TileGenerator";
-import { TileShapeColors, TileStack } from "./TileStack";
+import {
+    restoreTileShapeColors,
+    saveTileShapeColors,
+    TileShapeColors,
+    TileShapeColors_S,
+    TileStack,
+} from "./TileStack";
 import { TileStackWithSlots } from "./TileStackWithSlots";
 import { TileStackWithSlots_S } from "./TileStackWithSlots_S";
 import { Atlas } from "../grid/Atlas";
 import { rotateArray } from "../geom/arrays";
 import { RuleSetType } from "../grid/rules/RuleSet";
-import { ColorPatternPerShape } from "../grid/Shape";
+import { ColorPatternPerShape, Shape } from "../grid/Shape";
 import { SetupCatalog } from "../saveGames";
 import { PRNG, seedPRNG, shuffle } from "../geom/RandomSampler";
 import {
@@ -28,6 +34,7 @@ import { StatisticsMonitor } from "../stats/StatisticsMonitor";
 import { StatisticsEvent } from "../stats/Events";
 import { Command } from "../commands/Command";
 import { CommandHistory } from "../commands/CommandHistory";
+import { Point } from "../geom/math";
 
 export type GameSettings = {
     serializedJSON?: string;
@@ -73,6 +80,8 @@ export const GameState_S = zod.object({
     tileStack: TileStackWithSlots_S,
     tiles: TileSet_S,
     sourceGrid: zod.optional(zod.unknown()),
+    undoHistory: zod.array(zod.unknown()),
+    redoFuture: zod.array(zod.unknown()),
 });
 export type GameState_S = zod.infer<typeof GameState_S>;
 
@@ -104,6 +113,12 @@ export class GameEvent extends Event {
         this.tile = tile || undefined;
     }
 }
+
+const RelatedCommand_S = zod.discriminatedUnion("command", [
+    StatisticsMonitor.CountEvent_S,
+    StatisticsMonitor.UpdateHighScore_S,
+    TileStackWithSlots.Restart_S,
+]);
 
 export class Game extends EventTarget {
     settings: GameSettings;
@@ -159,6 +174,14 @@ export class Game extends EventTarget {
                 this.grid.atlas.shapes,
             );
             this.grid.restoreTiles(state.tiles);
+            this.history.history = this.restoreCommands(
+                state.undoHistory,
+                this.grid.atlas.shapes,
+            );
+            this.history.future = this.restoreCommands(
+                state.redoFuture,
+                this.grid.atlas.shapes,
+            );
             return;
         }
 
@@ -209,6 +232,12 @@ export class Game extends EventTarget {
             tileStack: this.tileStack.save(this.grid.atlas.shapes),
             tiles: this.grid.saveTilesAndPlaceholders(),
             sourceGrid: this.grid.sourceGrid?.save(),
+            undoHistory: this.history.history.map((c) =>
+                c.save(this.grid.atlas.shapes),
+            ),
+            redoFuture: this.history.future.map((c) =>
+                c.save(this.grid.atlas.shapes),
+            ),
         };
     }
 
@@ -219,6 +248,16 @@ export class Game extends EventTarget {
     redo(): boolean {
         return this.history.redo();
     }
+
+    static Continue_S = zod.object({
+        command: zod.literal("Game.Continue"),
+        memo: zod.optional(
+            zod.object({
+                continued: zod.boolean(),
+                commands: zod.array(RelatedCommand_S),
+            }),
+        ),
+    });
 
     static Continue = class extends Command {
         game: Game;
@@ -232,9 +271,12 @@ export class Game extends EventTarget {
 
         execute(): void {
             const game = this.game;
-            this.memo = { continued: game.continued, commands: [] };
             game.continued = true;
-            this.memo.commands.push(game.tileStack.restart());
+            const restartCommand = game.tileStack.restart();
+            this.memo = {
+                continued: game.continued,
+                commands: [restartCommand],
+            };
             game.dispatchEvent(new GameEvent(GameEventType.ContinueGame, game));
         }
 
@@ -251,7 +293,38 @@ export class Game extends EventTarget {
             }
             this.memo = undefined;
         }
+
+        save(shapeMap: Shape[]): zod.infer<typeof Game.Continue_S> {
+            return {
+                command: "Game.Continue",
+                memo: this.memo
+                    ? {
+                          continued: this.memo.continued,
+                          commands: this.memo.commands.map(
+                              (c) =>
+                                  c.save(shapeMap) as zod.infer<
+                                      typeof TileStackWithSlots.Restart_S
+                                  >,
+                          ),
+                      }
+                    : undefined,
+            };
+        }
     };
+
+    restoreContinueCommand(
+        data: zod.infer<typeof Game.Continue_S>,
+        shapeMap: readonly Shape[],
+    ): Command {
+        const command = new Game.Continue(this);
+        if (data.memo) {
+            command.memo = {
+                continued: data.memo.continued,
+                commands: this.restoreCommands(data.memo.commands, shapeMap),
+            };
+        }
+        return command;
+    }
 
     continue() {
         const command = new Game.Continue(this);
@@ -259,27 +332,46 @@ export class Game extends EventTarget {
         this.history.push(command);
     }
 
+    static RotateTileStack_S = zod.object({
+        command: zod.literal("Game.RotateTileStack"),
+        reverse: zod.optional(zod.boolean()),
+    });
+
     static RotateTileStack = class extends Command {
-        tileStack: TileStackWithSlots;
+        game: Game;
         reverse: boolean;
 
-        constructor(tileStack: TileStackWithSlots, reverse?: boolean) {
+        constructor(game: Game, reverse?: boolean) {
             super();
-            this.tileStack = tileStack;
+            this.game = game;
             this.reverse = !!reverse;
         }
 
         execute() {
-            this.tileStack.rotate(this.reverse);
+            this.game.tileStack.rotate(this.reverse);
         }
 
         undo() {
-            this.tileStack.rotate(!this.reverse);
+            this.game.tileStack.rotate(!this.reverse);
+        }
+
+        save(shapeMap: Shape[]): zod.infer<typeof Game.RotateTileStack_S> {
+            return {
+                command: "Game.RotateTileStack",
+                reverse: this.reverse,
+            };
         }
     };
 
+    restoreRotateTileStackCommand(
+        data: zod.infer<typeof Game.RotateTileStack_S>,
+        shapeMap: readonly Shape[],
+    ): Command {
+        return new Game.RotateTileStack(this, data.reverse);
+    }
+
     rotateTileStack(reverse?: boolean) {
-        const command = new Game.RotateTileStack(this.tileStack, reverse);
+        const command = new Game.RotateTileStack(this, reverse);
         command.execute();
         this.history.push(command);
     }
@@ -300,6 +392,21 @@ export class Game extends EventTarget {
         );
     }
 
+    static PlaceColors_S = zod.object({
+        command: zod.literal("Game.PlaceColors"),
+        colors: zod.readonly(zod.array(zod.string())),
+        fixedTile: Tile_S,
+        indexOnStack: zod.optional(zod.int()),
+        memo: zod.optional(
+            zod.object({
+                centroid: zod.object({ x: zod.number(), y: zod.number() }),
+                removedSlot: zod.optional(zod.nullable(TileShapeColors_S)),
+                endedGame: zod.optional(zod.boolean()),
+                commands: zod.array(zod.looseObject({ command: zod.string() })),
+            }),
+        ),
+    });
+
     static PlaceColors = class extends Command {
         game: Game;
         colors: TileColors;
@@ -307,7 +414,8 @@ export class Game extends EventTarget {
         indexOnStack: number | undefined;
 
         memo?: {
-            tile: Tile;
+            tile?: Tile;
+            centroid: Point;
             removedSlot?: TileShapeColors | null;
             endedGame?: boolean;
             commands: Command[];
@@ -338,7 +446,7 @@ export class Game extends EventTarget {
             );
             tile.colors = this.colors;
 
-            this.memo = { tile: tile, commands: [] };
+            this.memo = { tile: tile, centroid: tile.centroid, commands: [] };
 
             game.grid.generatePlaceholders();
 
@@ -381,7 +489,13 @@ export class Game extends EventTarget {
 
             const game = this.game;
 
-            game.grid.removeTile(this.memo.tile);
+            // if this is a restored command, we do not have the tile
+            // object but only the centroid
+            const tile =
+                this.memo.tile || game.grid.findTileAtPoint(this.memo.centroid);
+            if (!tile) return;
+
+            game.grid.removeTile(tile);
             game.grid.generatePlaceholders();
 
             if (this.indexOnStack !== undefined && this.memo.removedSlot) {
@@ -403,7 +517,59 @@ export class Game extends EventTarget {
 
             this.memo = undefined;
         }
+
+        save(shapeMap: readonly Shape[]): zod.infer<typeof Game.PlaceColors_S> {
+            return {
+                command: "Game.PlaceColors",
+                colors: this.colors,
+                fixedTile: this.fixedTile.save(shapeMap),
+                indexOnStack: this.indexOnStack,
+                memo: this.memo
+                    ? {
+                          centroid: this.memo.centroid,
+                          removedSlot: this.memo.removedSlot
+                              ? saveTileShapeColors(
+                                    this.memo.removedSlot,
+                                    shapeMap,
+                                )
+                              : undefined,
+                          endedGame: this.memo.endedGame,
+                          commands: this.memo.commands.map(
+                              (c) =>
+                                  c.save(shapeMap) as zod.infer<
+                                      typeof RelatedCommand_S
+                                  >,
+                          ),
+                      }
+                    : undefined,
+            };
+        }
     };
+
+    restorePlaceColorsCommand(
+        data: zod.infer<typeof Game.PlaceColors_S>,
+        shapeMap: readonly Shape[],
+    ): Command {
+        const command = new Game.PlaceColors(
+            this,
+            data.colors,
+            // this creates a new tile, but we only use this for the
+            // coordinates and shape
+            Tile.restore(data.fixedTile, shapeMap, this.grid.sourceGrid),
+            data.indexOnStack,
+        );
+        if (data.memo) {
+            command.memo = {
+                centroid: data.memo.centroid,
+                removedSlot: data.memo.removedSlot
+                    ? restoreTileShapeColors(data.memo.removedSlot, shapeMap)
+                    : data.memo.removedSlot,
+                endedGame: data.memo.endedGame,
+                commands: this.restoreCommands(data.memo.commands, shapeMap),
+            };
+        }
+        return command;
+    }
 
     placeColors(colors: TileColors, fixedTile: Tile, indexOnStack?: number) {
         const matchColors = this.grid.checkColors(fixedTile, colors);
@@ -472,6 +638,11 @@ export class Game extends EventTarget {
         return commands;
     }
 
+    static UpdatePoints_S = zod.object({
+        command: zod.literal("Game.UpdatePoints"),
+        points: zod.int(),
+    });
+
     static UpdatePoints = class extends Command {
         game: Game;
         points: number;
@@ -495,8 +666,65 @@ export class Game extends EventTarget {
                 new GameEvent(GameEventType.Points, this.game),
             );
         }
+
+        save(): zod.infer<typeof Game.UpdatePoints_S> {
+            return {
+                command: "Game.UpdatePoints",
+                points: this.points,
+            };
+        }
     };
+
+    restoreUpdatePointsCommand(data: zod.infer<typeof Game.UpdatePoints_S>) {
+        return new Game.UpdatePoints(this, data.points);
+    }
+
+    restoreCommand(
+        data: unknown,
+        shapeMap: readonly Shape[],
+    ): Command | undefined {
+        const d = RestorableCommand_S.parse(data);
+        switch (d.command) {
+            case "Game.Continue":
+                return this.restoreContinueCommand(d, shapeMap);
+            case "Game.RotateTileStack":
+                return this.restoreRotateTileStackCommand(d, shapeMap);
+            case "Game.PlaceColors":
+                return this.restorePlaceColorsCommand(d, shapeMap);
+            case "Game.UpdatePoints":
+                return this.restoreUpdatePointsCommand(d);
+            case "TileStackWithSlots.Restart":
+                return this.tileStack.restoreRestartCommand(d, shapeMap);
+            case "StatisticsMonitor.CountEvent":
+                return this.stats?.restoreCountEventCommand(d);
+            case "StatisticsMonitor.UpdateHighScore":
+                return this.stats?.restoreUpdateHighScoreCommand(d);
+        }
+    }
+
+    restoreCommands(data: unknown, shapeMap: readonly Shape[]): Command[] {
+        const d = zod.array(RestorableCommand_S).safeParse(data);
+        if (d.error) {
+            console.log(data);
+            console.log(d.error);
+            return [];
+        }
+        const commands = [];
+        for (const c of d.data) {
+            const command = this.restoreCommand(c, shapeMap);
+            if (command) commands.push(command);
+        }
+        return commands;
+    }
 }
+
+const RestorableCommand_S = zod.discriminatedUnion("command", [
+    Game.Continue_S,
+    Game.RotateTileStack_S,
+    Game.PlaceColors_S,
+    Game.UpdatePoints_S,
+    RelatedCommand_S,
+]);
 
 export function gameFromSerializedSettings(
     catalog: typeof SetupCatalog,

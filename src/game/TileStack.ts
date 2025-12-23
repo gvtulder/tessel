@@ -23,7 +23,7 @@ export type TileShapeColors = {
 };
 
 export const TileShapeColors_S = zod.object({
-    shape: zod.number(),
+    shape: zod.int(),
     colors: zod.readonly(zod.array(zod.string())),
 });
 export type TileShapeColors_S = zod.infer<typeof TileShapeColors_S>;
@@ -64,10 +64,7 @@ export class TileStack {
      * @returns the serialized tiles
      */
     save(shapeMap: readonly Shape[]): TileStack_S {
-        return this.tiles.map((t) => ({
-            shape: shapeMap.indexOf(t.shape),
-            colors: t.colors,
-        }));
+        return this.tiles.map((t) => saveTileShapeColors(t, shapeMap));
     }
 
     /**
@@ -78,10 +75,9 @@ export class TileStack {
      */
     static restore(data: unknown, shapeMap: readonly Shape[]): TileStack {
         return new TileStack(
-            TileStack_S.parse(data).map((d) => ({
-                shape: shapeMap[d.shape],
-                colors: d.colors,
-            })),
+            TileStack_S.parse(data).map((d) =>
+                restoreTileShapeColors(d, shapeMap),
+            ),
             false,
         );
     }
@@ -212,4 +208,24 @@ export function tileColorsEqualWithRotation(
         if (ok) return true;
     }
     return false;
+}
+
+export function saveTileShapeColors(
+    tile: TileShapeColors,
+    shapeMap: readonly Shape[],
+): TileShapeColors_S {
+    return {
+        shape: shapeMap.indexOf(tile.shape),
+        colors: tile.colors,
+    };
+}
+
+export function restoreTileShapeColors(
+    tile: TileShapeColors_S,
+    shapeMap: readonly Shape[],
+): TileShapeColors {
+    return {
+        shape: shapeMap[tile.shape],
+        colors: tile.colors,
+    };
 }

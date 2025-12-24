@@ -5,7 +5,7 @@
 
 import * as zod from "zod/v4-mini";
 import { Grid, TileSet_S } from "../grid/Grid";
-import { ScoredRegion, Scorer, ScorerType } from "./scorers/Scorer";
+import { Scorer, ScorerType } from "./scorers/Scorer";
 import { ConnectedSegmentScorer } from "./scorers/ConnectedSegmentScorer";
 import { Tile, Tile_S, TileColors } from "../grid/Tile";
 import { TileGenerator, TileGenerators } from "./TileGenerator";
@@ -35,6 +35,7 @@ import { StatisticsEvent } from "../stats/Events";
 import { Command } from "../commands/Command";
 import { CommandHistory } from "../commands/CommandHistory";
 import { Point } from "../geom/math";
+import { GameEvent, GameEventType } from "./GameEvent";
 
 export type GameSettings = {
     serializedJSON?: string;
@@ -84,35 +85,6 @@ export const GameState_S = zod.object({
     redoFuture: zod.array(zod.unknown()),
 });
 export type GameState_S = zod.infer<typeof GameState_S>;
-
-export const enum GameEventType {
-    EndGame = "endgame",
-    ContinueGame = "continuegame",
-    Score = "score",
-    Points = "points",
-    UpdateTileCount = "updatetilecount",
-    UpdateSlots = "updateslots",
-    PlaceTile = "placetile",
-    UpdateCommandHistory = "updatecommandhistory",
-}
-
-export class GameEvent extends Event {
-    game?: Game;
-    scoreShapes?: ScoredRegion[];
-    tile?: Tile;
-
-    constructor(
-        type: GameEventType,
-        game?: Game | null,
-        scoreShapes?: ScoredRegion[] | null,
-        tile?: Tile | null,
-    ) {
-        super(type);
-        this.game = game || undefined;
-        this.scoreShapes = scoreShapes || undefined;
-        this.tile = tile || undefined;
-    }
-}
 
 const RelatedCommand_S = zod.discriminatedUnion("command", [
     StatisticsMonitor.CountEvent_S,

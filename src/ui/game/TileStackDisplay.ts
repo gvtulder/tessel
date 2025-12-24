@@ -4,7 +4,7 @@
  */
 
 import { TileStackWithSlots } from "../../game/TileStackWithSlots";
-import { GameEventType } from "../../game/Game";
+import { GameEventType } from "../../game/GameEvent";
 import { Tile } from "../../grid/Tile";
 import { TileDragController } from "../grid/TileDragController";
 import { Atlas } from "../../grid/Atlas";

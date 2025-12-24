@@ -5,8 +5,6 @@
 
 import {
     Game,
-    GameEvent,
-    GameEventType,
     gameFromSerializedSettings,
     GameSettings,
     GameSettingsSerialized,

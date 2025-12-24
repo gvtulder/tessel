@@ -5,7 +5,7 @@
 
 import * as zod from "zod/v4-mini";
 import { PRNG } from "../geom/RandomSampler";
-import { GameEvent, GameEventType } from "./Game";
+import { GameEvent, GameEventType } from "./GameEvent";
 import {
     TileShapeColors,
     TileShapeColors_S,

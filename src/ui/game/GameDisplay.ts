@@ -3,7 +3,8 @@
  * SPDX-FileCopyrightText: Copyright (C) 2025 Gijs van Tulder
  */
 
-import { Game, GameEvent, GameEventType } from "../../game/Game";
+import { Game } from "../../game/Game";
+import { GameEvent, GameEventType } from "../../game/GameEvent";
 import { getStorageBackend } from "../../lib/storage-backend";
 import { MainGridDisplay } from "./MainGridDisplay";
 import { TileStackDisplay } from "./TileStackDisplay";

@@ -6,7 +6,7 @@
 import { createElement } from "../shared/html";
 import { SVG } from "../shared/svg";
 import { TapHandler } from "../shared/TapHandler";
-import { GameEventType } from "../../game/Game";
+import { GameEventType } from "../../game/GameEvent";
 import { TileStackWithSlots } from "../../game/TileStackWithSlots";
 import { DestroyableEventListenerSet } from "../shared/DestroyableEventListenerSet";
 

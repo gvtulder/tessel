@@ -84,5 +84,14 @@ describe("Game", () => {
         expect(game2.grid.sourceGrid).toEqual(game.grid.sourceGrid);
         game2.grid.generatePlaceholders();
         expect(game2.grid.tiles.size).toBe(game.grid.tiles.size);
+
+        expect(game2.history.history.length).toBe(3);
+        game2.history.undo();
+        game2.history.undo();
+        game2.history.undo();
+        game2.history.redo();
+        game2.history.redo();
+        game2.history.redo();
+        expect(game2.points).toBe(game.points);
     });
 });

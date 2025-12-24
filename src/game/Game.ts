@@ -134,7 +134,7 @@ export class Game extends EventTarget {
             }
         }
 
-        this.grid = new Grid(this.settings.atlas, undefined, sourceGrid);
+        this.grid = new Grid(this.settings.atlas, undefined, sourceGrid, prng);
         if (settings.rules) this.grid.rules = settings.rules.create();
         this.scorer = (settings.scorer || ConnectedSegmentScorer).create();
 

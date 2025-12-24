@@ -18,7 +18,7 @@ export abstract class SourceGrid {
         throw new Error("Must be implemented in a subclass.");
     }
 
-    protected readonly prng: PRNG;
+    prng: PRNG;
     protected readonly points: Map<string, SourcePoint>;
 
     constructor(prng: PRNG = Math.random) {

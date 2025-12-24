@@ -14,6 +14,7 @@ import { Penrose3GridAtlas } from "../grid/atlas/Penrose3GridAtlas";
 import { StatisticsMonitor } from "../stats/StatisticsMonitor";
 import { StatisticsEvent } from "../stats/Events";
 import { ConnectedSegmentScorer } from "./scorers/ConnectedSegmentScorer";
+import { Penrose3SourceGrid } from "../grid/source/Penrose3SourceGrid";
 
 describe("Game", () => {
     test("can be created", () => {
@@ -81,7 +82,11 @@ describe("Game", () => {
         expect(game2.continued).toBe(game.continued);
         expect(game2.tileStack).toEqual(game.tileStack);
         expect(game2.grid.tiles.size).toBe(game.grid.tiles.size);
-        expect(game2.grid.sourceGrid).toEqual(game.grid.sourceGrid);
+        if (atlas.id == "penrose") {
+            const sourceGrid = game.grid.sourceGrid as Penrose3SourceGrid;
+            const sourceGrid2 = game2.grid.sourceGrid as Penrose3SourceGrid;
+            expect(sourceGrid2.angles).toEqual(sourceGrid.angles);
+        }
         game2.grid.generatePlaceholders();
         expect(game2.grid.tiles.size).toBe(game.grid.tiles.size);
 

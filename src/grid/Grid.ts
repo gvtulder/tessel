@@ -34,6 +34,7 @@ import { SourceGrid, SourcePoint } from "./SourceGrid";
 import { SortedCorners } from "./SortedCorners";
 import { GridVertex } from "./GridVertex";
 import { GridEdge } from "./GridEdge";
+import { PRNG } from "../geom/RandomSampler";
 
 /**
  * The precision used for vertex and edge keys.
@@ -135,10 +136,16 @@ export class Grid extends EventTarget {
      * @param atlas an atlas for checking tile patterns (optional)
      * @param rules rules for matching colors (default: MatchEdgeColorsRuleSet)
      * @param sourceGrid a SourceGrid instance to guide tile placement
+     * @param prng an optional random number source for the SourceGrid initialization
      */
-    constructor(atlas: Atlas, rules?: RuleSet, sourceGrid?: SourceGrid) {
+    constructor(
+        atlas: Atlas,
+        rules?: RuleSet,
+        sourceGrid?: SourceGrid,
+        prng?: PRNG,
+    ) {
         if (!sourceGrid && atlas.sourceGrid) {
-            sourceGrid = atlas.sourceGrid.create();
+            sourceGrid = atlas.sourceGrid.create(prng);
         }
 
         super();

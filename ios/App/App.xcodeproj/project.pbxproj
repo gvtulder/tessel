@@ -39,6 +39,7 @@
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		A11D84B88B56798EDA8EA58E /* Pods-Tessel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tessel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tessel/Pods-Tessel.debug.xcconfig"; sourceTree = "<group>"; };
 		AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.release.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.release.xcconfig"; sourceTree = "<group>"; };
+		B4BFAD6F0CC2E9E5E3FA14FF /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		D0E4FE1A40BF5A0B2179C240 /* Pods-Tessel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tessel.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tessel/Pods-Tessel.release.xcconfig"; sourceTree = "<group>"; };
 		FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -158,6 +159,7 @@
 				fr,
 				gl,
 				nl,
+				"pt-BR",
 				tr,
 				"zh-Hans",
 				"zh-Hant",
@@ -254,6 +256,7 @@
 				5F9B5378A61686871BC05114 /* fr */,
 				E7FA4BBA854E8E2071CE44B4 /* gl */,
 				2A6BB4562ECD2C3C00FB2810 /* nl */,
+				B4BFAD6F0CC2E9E5E3FA14FF /* pt-BR */,
 				2A6BB4572ECD2C3E00FB2810 /* tr */,
 				18BE7E5C7717560BF3E37B77 /* zh-Hans */,
 				2A6BB4582ECD2C4300FB2810 /* zh-Hant */,

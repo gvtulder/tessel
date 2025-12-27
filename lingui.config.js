@@ -10,6 +10,7 @@ export default defineConfig({
     "fr",
     "gl",
     "nl",
+    "pt-BR",
     "tr",
     "zh-Hans",
     "zh-Hant",

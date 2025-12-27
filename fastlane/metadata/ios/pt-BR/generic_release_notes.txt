@@ -1,0 +1,1 @@
+../../android/pt-BR/generic_release_notes.txt

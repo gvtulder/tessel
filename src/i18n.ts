@@ -12,6 +12,7 @@ import { messages as messages_es } from "../i18n/es";
 import { messages as messages_fr } from "../i18n/fr";
 import { messages as messages_gl } from "../i18n/gl";
 import { messages as messages_nl } from "../i18n/nl";
+import { messages as messages_ptbr } from "../i18n/pt-BR";
 import { messages as messages_tr } from "../i18n/tr";
 import { messages as messages_zhhans } from "../i18n/zh-Hans";
 import { messages as messages_zhhant } from "../i18n/zh-Hant";
@@ -80,6 +81,15 @@ export const languages = {
             "utf-8",
         ),
         languageTag: "nl-NL",
+    },
+    "pt-BR": {
+        title: "Português (brasileiro)",
+        messages: messages_ptbr,
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/pt-BR/about.html",
+            "utf-8",
+        ),
+        languageTag: "pt-BR",
     },
     tr: {
         title: "Türkçe",

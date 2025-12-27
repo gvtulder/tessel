@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-12-06 17:35+0000\nLast-Translator: Monstorix <monstorix@outlook.com>\nLanguage-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/projects/tessel/game/zh_Hans/>\nLanguage: zh-Hans\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-12-24 23:09+0000\nLast-Translator: Monstorix <monstorix@outlook.com>\nLanguage-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/projects/tessel/game/zh_Hans/>\nLanguage: zh-Hans\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=1; plural=0;\nX-Generator: Weblate 5.15.1\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -485,3 +485,15 @@ msgstr "显示占位符"
 #: src/ui/shared/toggles.ts:60
 msgid "ui.toggles.snap"
 msgstr "吸附"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:192
+#: src/ui/game/GameDisplay.ts:199
+msgid "ui.menu.redoButton"
+msgstr "重做"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:173
+#: src/ui/game/GameDisplay.ts:180
+msgid "ui.menu.undoButton"
+msgstr "撤销"

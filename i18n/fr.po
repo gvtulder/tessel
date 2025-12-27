@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-11-30 01:00+0000\nLast-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\nLanguage-Team: French <https://hosted.weblate.org/projects/tessel/game/fr/>\nLanguage: fr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n > 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-12-24 23:09+0000\nLast-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\nLanguage-Team: French <https://hosted.weblate.org/projects/tessel/game/fr/>\nLanguage: fr\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n > 1;\nX-Generator: Weblate 5.15.1\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -485,3 +485,15 @@ msgstr "Afficher les positions possibles"
 #: src/ui/shared/toggles.ts:60
 msgid "ui.toggles.snap"
 msgstr "Aligner"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:192
+#: src/ui/game/GameDisplay.ts:199
+msgid "ui.menu.redoButton"
+msgstr "Refaire"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:173
+#: src/ui/game/GameDisplay.ts:180
+msgid "ui.menu.undoButton"
+msgstr "Annuler"

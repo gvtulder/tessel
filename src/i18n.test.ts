@@ -18,6 +18,10 @@ describe("i18n", () => {
         await expect(selectLanguage(["zh-Hans"])).resolves.toBe("zh-Hans");
         await expect(selectLanguage(["zh-Hant"])).resolves.toBe("zh-Hant");
 
+        await expect(selectLanguage(["pt-BR"])).resolves.toBe("pt-BR");
+        await expect(selectLanguage(["pt-PT"])).resolves.toBe("pt-BR");
+        await expect(selectLanguage(["pt"])).resolves.toBe("pt-BR");
+
         await expect(selectLanguage(["unknown", "nl", "fr"])).resolves.toBe(
             "nl",
         );

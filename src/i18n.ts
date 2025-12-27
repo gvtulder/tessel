@@ -143,6 +143,11 @@ export async function selectLanguage(
         if (languages[firstPart]) {
             return firstPart;
         }
+        for (const locale of Object.keys(languages)) {
+            if (firstPart == locale.split("-")[0]) {
+                return locale;
+            }
+        }
     }
     return "en";
 }

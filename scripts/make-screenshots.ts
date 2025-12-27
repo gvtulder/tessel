@@ -156,6 +156,73 @@ const screenshots: ScreenshotTask[] = [
             },
         },
     },
+    {
+        filename: "06-statistics",
+        path: "#statistics",
+        js: `
+        localStorage.setItem("statistics", atob("eyJHYW1lU3RhcnRlZCI6OTIsIkdhbWVTdGFydGVkLnNxdWFyZSI6NTYsIkdhbW"+
+            "VTdGFydGVkLnJob21idXMiOjExLCJIaWdoU2NvcmUue1wiYXRsYXNcIjpcInJob21idXNcIixcImNvbG9yc1wiOlwid29uZzRc"+
+            "IixcInNlZ21lbnRzXCI6MCxcInVuaXF1ZVRpbGVDb2xvcnNcIjpmYWxzZSxcInJ1bGVzXCI6XCJzYW1lXCIsXCJzY29yZXJcIj"+
+            "pcInNoYXBlXCJ9IjoyNDcsIlNoYXBlQ29tcGxldGVkIjoxMTc4LCJTaGFwZUNvbXBsZXRlZC57XCJhdGxhc1wiOlwicmhvbWJ1"+
+            "c1wiLFwiY29sb3JzXCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wiOmZhbHNlLFwicnVsZX"+
+            "NcIjpcInNhbWVcIixcInNjb3JlclwiOlwic2hhcGVcIn0iOjIwMywiU2hhcGVUaWxlQ291bnQue1wiYXRsYXNcIjpcInJob21i"+
+            "dXNcIixcImNvbG9yc1wiOlwid29uZzRcIixcInNlZ21lbnRzXCI6MCxcInVuaXF1ZVRpbGVDb2xvcnNcIjpmYWxzZSxcInJ1bG"+
+            "VzXCI6XCJzYW1lXCIsXCJzY29yZXJcIjpcInNoYXBlXCJ9Ijo5LCJUaWxlUGxhY2VkIjoxNzM0LCJUaWxlUGxhY2VkLnJob21i"+
+            "dXMiOjQzMiwiR2FtZVN0YXJ0ZWQuYW1tYW5uYmVlbmtlciI6NiwiSGlnaFNjb3JlLntcImF0bGFzXCI6XCJzcXVhcmVcIixcIm"+
+            "NvbG9yc1wiOlwid29uZzRcIixcInNlZ21lbnRzXCI6MCxcInVuaXF1ZVRpbGVDb2xvcnNcIjpmYWxzZSxcInJ1bGVzXCI6XCJz"+
+            "YW1lXCIsXCJzY29yZXJcIjpcInNoYXBlXCJ9IjoxMCwiU2hhcGVDb21wbGV0ZWQue1wiYXRsYXNcIjpcInNxdWFyZVwiLFwiY2"+
+            "9sb3JzXCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wiOmZhbHNlLFwicnVsZXNcIjpcInNh"+
+            "bWVcIixcInNjb3JlclwiOlwic2hhcGVcIn0iOjU5MiwiU2hhcGVUaWxlQ291bnQue1wiYXRsYXNcIjpcInNxdWFyZVwiLFwiY2"+
+            "9sb3JzXCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wiOmZhbHNlLFwicnVsZXNcIjpcInNh"+
+            "bWVcIixcInNjb3JlclwiOlwic2hhcGVcIn0iOjIsIlRpbGVQbGFjZWQuc3F1YXJlIjo5NjEsIkdhbWVDb21wbGV0ZWQiOjIwLC"+
+            "JHYW1lQ29tcGxldGVkLnNxdWFyZSI6MTAsIkdhbWVTdGFydGVkLnNudWJzcXVhcmUiOjUsIkhpZ2hTY29yZS57XCJhdGxhc1wi"+
+            "OlwiYW1tYW5uYmVlbmtlclwiLFwiY29sb3JzXCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1"+
+            "wiOmZhbHNlLFwicnVsZXNcIjpcInNhbWVcIixcInNjb3JlclwiOlwic2hhcGVcIn0iOjIyMSwiU2hhcGVDb21wbGV0ZWQue1wi"+
+            "YXRsYXNcIjpcImFtbWFubmJlZW5rZXJcIixcImNvbG9yc1wiOlwid29uZzRcIixcInNlZ21lbnRzXCI6MCxcInVuaXF1ZVRpbG"+
+            "VDb2xvcnNcIjpmYWxzZSxcInJ1bGVzXCI6XCJzYW1lXCIsXCJzY29yZXJcIjpcInNoYXBlXCJ9Ijo5MywiU2hhcGVUaWxlQ291"+
+            "bnQue1wiYXRsYXNcIjpcImFtbWFubmJlZW5rZXJcIixcImNvbG9yc1wiOlwid29uZzRcIixcInNlZ21lbnRzXCI6MCxcInVuaX"+
+            "F1ZVRpbGVDb2xvcnNcIjpmYWxzZSxcInJ1bGVzXCI6XCJzYW1lXCIsXCJzY29yZXJcIjpcInNoYXBlXCJ9Ijo3LCJHYW1lU3Rh"+
+            "cnRlZC5oZXhhZ29uIjoxLCJIaWdoU2NvcmUue1wiYXRsYXNcIjpcImhleGFnb25cIixcImNvbG9yc1wiOlwid29uZzRcIixcIn"+
+            "NlZ21lbnRzXCI6MCxcInVuaXF1ZVRpbGVDb2xvcnNcIjpmYWxzZSxcInJ1bGVzXCI6XCJzYW1lXCIsXCJzY29yZXJcIjpcInNo"+
+            "YXBlXCJ9Ijo0LCJTaGFwZUNvbXBsZXRlZC57XCJhdGxhc1wiOlwiaGV4YWdvblwiLFwiY29sb3JzXCI6XCJ3b25nNFwiLFwic2"+
+            "VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wiOmZhbHNlLFwicnVsZXNcIjpcInNhbWVcIixcInNjb3JlclwiOlwic2hh"+
+            "cGVcIn0iOjIsIlNoYXBlVGlsZUNvdW50LntcImF0bGFzXCI6XCJoZXhhZ29uXCIsXCJjb2xvcnNcIjpcIndvbmc0XCIsXCJzZW"+
+            "dtZW50c1wiOjAsXCJ1bmlxdWVUaWxlQ29sb3JzXCI6ZmFsc2UsXCJydWxlc1wiOlwic2FtZVwiLFwic2NvcmVyXCI6XCJzaGFw"+
+            "ZVwifSI6MiwiVGlsZVBsYWNlZC5oZXhhZ29uIjozLCJHYW1lU3RhcnRlZC50cmlhbmdsZSI6NSwiSGlnaFNjb3JlLntcImF0bG"+
+            "FzXCI6XCJ0cmlhbmdsZVwiLFwiY29sb3JzXCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wi"+
+            "OmZhbHNlLFwicnVsZXNcIjpcInNhbWVcIixcInNjb3JlclwiOlwic2hhcGVcIn0iOjE4MiwiU2hhcGVDb21wbGV0ZWQue1wiYX"+
+            "RsYXNcIjpcInRyaWFuZ2xlXCIsXCJjb2xvcnNcIjpcIndvbmc0XCIsXCJzZWdtZW50c1wiOjAsXCJ1bmlxdWVUaWxlQ29sb3Jz"+
+            "XCI6ZmFsc2UsXCJydWxlc1wiOlwic2FtZVwiLFwic2NvcmVyXCI6XCJzaGFwZVwifSI6NDgsIlNoYXBlVGlsZUNvdW50LntcIm"+
+            "F0bGFzXCI6XCJ0cmlhbmdsZVwiLFwiY29sb3JzXCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9y"+
+            "c1wiOmZhbHNlLFwicnVsZXNcIjpcInNhbWVcIixcInNjb3JlclwiOlwic2hhcGVcIn0iOjcsIlRpbGVQbGFjZWQudHJpYW5nbG"+
+            "UiOjI1NywiR2FtZUNvbXBsZXRlZC50cmlhbmdsZSI6MSwiSGlnaFNjb3JlLntcImF0bGFzXCI6XCJzbnVic3F1YXJlXCIsXCJj"+
+            "b2xvcnNcIjpcIndvbmc0XCIsXCJzZWdtZW50c1wiOjAsXCJ1bmlxdWVUaWxlQ29sb3JzXCI6ZmFsc2UsXCJydWxlc1wiOlwic2"+
+            "FtZVwiLFwic2NvcmVyXCI6XCJzaGFwZVwifSI6MTk2LCJTaGFwZUNvbXBsZXRlZC57XCJhdGxhc1wiOlwic251YnNxdWFyZVwi"+
+            "LFwiY29sb3JzXCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wiOmZhbHNlLFwicnVsZXNcIj"+
+            "pcInNhbWVcIixcInNjb3JlclwiOlwic2hhcGVcIn0iOjEyNSwiU2hhcGVUaWxlQ291bnQue1wiYXRsYXNcIjpcInNudWJzcXVh"+
+            "cmVcIixcImNvbG9yc1wiOlwid29uZzRcIixcInNlZ21lbnRzXCI6MCxcInVuaXF1ZVRpbGVDb2xvcnNcIjpmYWxzZSxcInJ1bG"+
+            "VzXCI6XCJzYW1lXCIsXCJzY29yZXJcIjpcInNoYXBlXCJ9Ijo5LCJHYW1lQ29tcGxldGVkLnNudWJzcXVhcmUiOjMsIkdhbWVT"+
+            "dGFydGVkLmRlbHRvdHJpaGV4IjoyLCJHYW1lQ29tcGxldGVkLnJob21idXMiOjMsIkdhbWVDb21wbGV0ZWQuYW1tYW5uYmVlbm"+
+            "tlciI6MSwiR2FtZVN0YXJ0ZWQucGVucm9zZSI6NSwiSGlnaFNjb3JlLntcImF0bGFzXCI6XCJwZW5yb3NlXCIsXCJjb2xvcnNc"+
+            "IjpcIndvbmc0XCIsXCJzZWdtZW50c1wiOjAsXCJ1bmlxdWVUaWxlQ29sb3JzXCI6ZmFsc2UsXCJydWxlc1wiOlwic2FtZVwiLF"+
+            "wic2NvcmVyXCI6XCJzaGFwZVwifSI6MTM0LCJTaGFwZUNvbXBsZXRlZC57XCJhdGxhc1wiOlwicGVucm9zZVwiLFwiY29sb3Jz"+
+            "XCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wiOmZhbHNlLFwicnVsZXNcIjpcInNhbWVcIi"+
+            "xcInNjb3JlclwiOlwic2hhcGVcIn0iOjU1LCJTaGFwZVRpbGVDb3VudC57XCJhdGxhc1wiOlwicGVucm9zZVwiLFwiY29sb3Jz"+
+            "XCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wiOmZhbHNlLFwicnVsZXNcIjpcInNhbWVcIi"+
+            "xcInNjb3JlclwiOlwic2hhcGVcIn0iOjEwLCJHYW1lU3RhcnRlZC5wZW50YWdvbiI6MSwiSGlnaFNjb3JlLntcImF0bGFzXCI6"+
+            "XCJwZW50YWdvblwiLFwiY29sb3JzXCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wiOmZhbH"+
+            "NlLFwicnVsZXNcIjpcInNhbWVcIixcInNjb3JlclwiOlwic2hhcGVcIn0iOjE0OCwiU2hhcGVDb21wbGV0ZWQue1wiYXRsYXNc"+
+            "IjpcInBlbnRhZ29uXCIsXCJjb2xvcnNcIjpcIndvbmc0XCIsXCJzZWdtZW50c1wiOjAsXCJ1bmlxdWVUaWxlQ29sb3JzXCI6Zm"+
+            "Fsc2UsXCJydWxlc1wiOlwic2FtZVwiLFwic2NvcmVyXCI6XCJzaGFwZVwifSI6NjAsIlNoYXBlVGlsZUNvdW50LntcImF0bGFz"+
+            "XCI6XCJwZW50YWdvblwiLFwiY29sb3JzXCI6XCJ3b25nNFwiLFwic2VnbWVudHNcIjowLFwidW5pcXVlVGlsZUNvbG9yc1wiOm"+
+            "ZhbHNlLFwicnVsZXNcIjpcInNhbWVcIixcInNjb3JlclwiOlwic2hhcGVcIn0iOjYsIlRpbGVQbGFjZWQucGVudGFnb24iOjgx"+
+            "LCJHYW1lQ29tcGxldGVkLnBlbnRhZ29uIjoxLCJHYW1lQ29tcGxldGVkLnBlbnJvc2UiOjEsIkhpZ2hTY29yZSI6MTAsIlNoYX"+
+            "BlVGlsZUNvdW50IjoyfQ"));
+        JSON.parse(localStorage.statistics);
+        gameController.stats.unserialize(localStorage.statistics);
+        gameController.run("statistics", true);
+        `,
+    },
 ];
 
 for (const atlas of [
@@ -346,7 +413,7 @@ screenshots.push(
             "XCI6XCJzaGFwZVwifSI6NH0="));
         JSON.parse(localStorage.statistics);
         gameController.stats.unserialize(localStorage.statistics);
-        gameController.showStatisticsDisplay();
+        gameController.run("statistics", true);
         `,
     },
 );
@@ -399,7 +466,9 @@ async function captureScreenshot() {
 
                 fs.mkdirSync(path.dirname(out), { recursive: true });
 
-                console.log(`${size.name} ${screenshot.filename}`);
+                console.log(
+                    `${size.lang || ""} ${size.name} ${screenshot.filename}`,
+                );
 
                 // Create a new page
                 const context = await browser.createBrowserContext();

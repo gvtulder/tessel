@@ -100,10 +100,18 @@ export class Polygon {
         return new Polygon(shiftPoints(this.vertices, dx, dy));
     }
 
+    /**
+     * Serializes a Polygon.
+     * @returns a serialized polygon
+     */
     save() {
         return zod.encode(Polygon.codec, this);
     }
 
+    /**
+     * Restores a serialized Polygon.
+     * @returns the restored Polygon object
+     */
     static restore(data: unknown) {
         return Polygon.codec.parse(data);
     }

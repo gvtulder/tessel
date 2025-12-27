@@ -82,8 +82,11 @@ describe("Polygon", () => {
 
     test("can be saved", () => {
         const poly = new Polygon(triangle);
-        const saved = zod.encode(Polygon.codec, poly);
-        const restored = zod.decode(Polygon.codec, saved);
+        let saved = zod.encode(Polygon.codec, poly);
+        let restored = zod.decode(Polygon.codec, saved);
+        expect(restored).toStrictEqual(poly);
+        saved = poly.save();
+        restored = Polygon.restore(saved);
         expect(restored).toStrictEqual(poly);
     });
 });

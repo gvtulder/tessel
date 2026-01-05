@@ -29,7 +29,7 @@
     "workbox-core": "^7.4.0",
     "workbox-precaching": "^7.4.0",
     "workbox-window": "^7.4.0",
-    "zod": "^4.2.1"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@capacitor/android": "^7.4.4",

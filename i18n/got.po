@@ -1,0 +1,137 @@
+msgid ""
+msgstr "PO-Revision-Date: 2026-01-07 19:01+0000\nLast-Translator: Roel v <roel11112@live.nl>\nLanguage-Team: Gothic <https://hosted.weblate.org/projects/tessel/game/got/>\nLanguage: got\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15.1\n"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:11
+msgid "atlas.AmmannBeenkerAtlas.friendlyName"
+msgstr "𐌰𐌼𐌼𐌰𐌽𐌽-𐌱𐌴𐌽𐌺𐌰𐌹𐍂"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:11
+msgid "atlas.SquaresAtlas.friendlyName"
+msgstr "𐍆𐌹𐌳𐌿𐍂𐍃𐌺𐌰𐌿𐍄𐍃"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:12
+msgid "atlas.SquaresAtlas.tilingName"
+msgstr "𐍃𐌺𐌰𐌻𐌾𐍉𐌽𐍃 𐍆𐌹𐌳𐌿𐍂𐍃𐌺𐌰𐌿𐍄𐌴"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:11
+msgid "atlas.TrianglesAtlas.friendlyName"
+msgstr "𐌸𐍂𐌴𐌹𐍃𐌺𐌰𐌿𐍄𐍃"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:12
+msgid "atlas.TrianglesAtlas.tilingName"
+msgstr "𐍃𐌺𐌰𐌻𐌾𐍉𐌽𐍃 𐌸𐍂𐌴𐌹𐍃𐌺𐌰𐌿𐍄𐌴"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
+msgid "rules.DifferentEdgeColorsRuleSet.friendlyName"
+msgstr "𐌰𐍄𐍄𐌴𐌺𐌰𐌽𐌳𐌴𐌹𐌽𐍃 𐍃𐌺𐌰𐌻𐌾𐍉𐌽𐍃 𐍃𐌺𐌿𐌻𐌿𐌽 𐌷𐌰𐌱𐌰𐌽 𐍆𐌰𐌹𐌷𐌴𐌹𐌽𐍃 𐍃𐌰𐌼𐍉𐌽𐍃"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:141
+msgid "ui.menu.AllGamesButton"
+msgstr "𐌰𐌻𐌻 𐍃𐍀𐌹𐌻𐌴"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:177
+msgid "ui.menu.HowToPlayButton"
+msgstr "𐍈𐌰𐌹𐍅𐌰 𐍃𐍀𐌹𐌻𐍉𐌽?"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:131
+msgid "ui.menu.MainMenuButton"
+msgstr "𐌲𐌰𐍂𐌳𐍃"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:151
+msgid "ui.menu.PaintButton"
+msgstr "𐍆𐌰𐌹𐌷𐌾𐌰𐌽"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:158
+#: src/ui/controller/GameController.ts:166
+msgid "ui.menu.SettingsButton"
+msgstr "𐍃𐌰𐍄𐌴𐌹𐌽𐍉𐍃"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:187
+msgid "ui.menu.StatisticsButton"
+msgstr "𐍂𐌰𐌸𐌾𐍉𐌽𐍃"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:161
+msgid "ui.menu.addMoreTilesButton"
+msgstr "𐌼𐌰𐌽𐌰𐌲𐌹𐌶𐌴𐌹𐌽𐍃 𐍃𐌺𐌰𐌻𐌾𐍉𐍃"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:137
+#: src/ui/paint/PaintDisplay.ts:73
+#: src/ui/setup/GameSetupDisplay.ts:146
+msgid "ui.menu.backToMenuButton"
+msgstr "𐌲𐌰𐍅𐌰𐌽𐌳𐌾𐌰𐌽 𐌳𐌿 𐌲𐌰𐍂𐌳𐌰"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:21
+msgid "ui.menu.footer"
+msgstr "𐍃𐍀𐌹𐌻 𐍆𐍂𐌰𐌼 <a href=\"{url}\">𐌲𐌰𐌹𐍃 𐌸𐌰𐌽 𐍄𐌰𐌹𐍅𐌻𐌳𐌰𐌹𐍂</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:192
+#: src/ui/game/GameDisplay.ts:199
+msgid "ui.menu.redoButton"
+msgstr "𐌰𐍆𐍄𐍂𐌰𐍄𐌰𐌿𐌾𐌰𐌽"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:145
+msgid "ui.menu.restartGameButton"
+msgstr "𐍃𐍀𐌹𐌻 𐌰𐍆𐍄𐍂𐌰𐌰𐌽𐌰𐍃𐍄𐍉𐌳𐌾𐌰𐌽"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:173
+#: src/ui/game/GameDisplay.ts:180
+msgid "ui.menu.undoButton"
+msgstr "𐌿𐌽𐌲𐌰𐍄𐌰𐌿𐌾𐌰𐌽"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:128
+msgid "ui.settings.about.title"
+msgstr "𐌱𐌹 𐍃𐍀𐌹𐌻"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:91
+msgid "ui.settings.group.gameSettings"
+msgstr "𐍃𐌰𐍄𐌴𐌹𐌽𐍉𐍃 𐍃𐍀𐌹𐌻𐌹𐍃"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:40
+msgid "ui.settings.title"
+msgstr "𐍃𐌰𐍄𐌴𐌹𐌽𐍉𐍃"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:197
+msgid "ui.settings.version"
+msgstr "𐌿𐍃𐌼𐌴𐍂𐌹 {version}."
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:230
+msgid "ui.statistics.columns.GameCompleted"
+msgstr "𐌿𐍃𐍄𐌰𐌿𐌷𐌰𐌽𐌰 𐍃𐍀𐌹𐌻𐌰"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:222
+msgid "ui.statistics.columns.HighScore"
+msgstr "𐌷𐌰𐌿𐌷𐌹𐍃𐍄𐌰 𐍂𐌰𐌸𐌾𐍉"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:75
+msgid "ui.toggles.colorScheme.light"
+msgstr "𐌼𐍉𐌳𐌿𐍃 𐌰𐌶𐌴𐍄𐍃"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:67
+msgid "ui.toggles.highscore"
+msgstr "𐌷𐌰𐌿𐌷𐌰𐍂𐌰𐌸𐌾𐍉𐌽 𐌱𐌰𐌽𐌳𐍅𐌾𐌰𐌽"

@@ -22,8 +22,8 @@
   "browserslist": "defaults",
   "type": "module",
   "dependencies": {
-    "@lingui/core": "^5.7.0",
-    "@parcel/service-worker": "^2.16.3",
+    "@lingui/core": "^5.9.0",
+    "@parcel/service-worker": "^2.16.4",
     "check2d": "^9.36.4",
     "polygon-clipping": "^0.15.7",
     "workbox-core": "^7.4.0",

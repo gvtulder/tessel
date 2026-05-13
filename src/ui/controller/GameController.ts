@@ -260,7 +260,7 @@ export class GameController {
                 this.showInCarrousel(Pages.PaintMenu, reload);
             }
         } else {
-            let gameSettings: GameSettings | null = null;
+            let gameSettings: GameSettings | null;
             try {
                 const serialized = JSON.parse(atob(saveGameId));
                 gameSettings = this.gameFromSerializedSettings(serialized);

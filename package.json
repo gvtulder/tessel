@@ -58,7 +58,6 @@
     "@vitest/coverage-v8": "^4.0.16",
     "babel-plugin-transform-define": "^2.1.4",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "baseline-browser-mapping": "^2.10.29",
     "color": "^5.0.3",
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",

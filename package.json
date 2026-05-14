@@ -22,7 +22,7 @@
   "browserslist": "defaults",
   "type": "module",
   "dependencies": {
-    "@lingui/core": "^5.7.0",
+    "@lingui/core": "^6.0.1",
     "@parcel/service-worker": "^2.16.4",
     "check2d": "^9.36.4",
     "polygon-clipping": "^0.15.7",
@@ -44,18 +44,18 @@
     "@capacitor/status-bar": "^7.0.3",
     "@capawesome/capacitor-android-edge-to-edge-support": "^7.2.3",
     "@eslint/js": "^10.0.1",
-    "@lingui/babel-plugin-lingui-macro": "^5.7.0",
-    "@lingui/cli": "^5.7.0",
-    "@lingui/swc-plugin": "^5.6.1",
-    "@lingui/vite-plugin": "^5.7.0",
+    "@lingui/babel-plugin-lingui-macro": "^6.0.1",
+    "@lingui/cli": "^6.0.1",
+    "@lingui/swc-plugin": "^6.0.0",
+    "@lingui/vite-plugin": "^6.0.1",
     "@parcel/packager-raw-url": "^2.16.4",
     "@parcel/reporter-bundle-analyzer": "^2.16.4",
     "@parcel/transformer-inline-string": "^2.16.4",
     "@parcel/transformer-sass": "^2.16.4",
     "@parcel/transformer-webmanifest": "^2.16.4",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "@vitejs/plugin-react-swc": "^3.11.0",
-    "@vitest/coverage-v8": "^4.0.16",
+    "@vitejs/plugin-react-swc": "^4.3.1",
+    "@vitest/coverage-v8": "^4.1.6",
     "babel-plugin-transform-define": "^2.1.4",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "color": "^5.0.3",
@@ -73,10 +73,10 @@
     "svgo": "^4.0.1",
     "ts-loader": "^9.5.7",
     "tslib": "^2.8.1",
-    "tsx": "^4.21.0",
+    "tsx": "^4.22.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.3",
-    "vitest": "^4.0.16"
+    "vitest": "^4.1.6"
   },
   "parcel-namer-rewrite": {
     "hashing": "always",
@@ -102,5 +102,9 @@
     {
       "staticPath": "assets/icons/apple-touch-icon.png"
     }
-  ]
+  ],
+  "alias": {
+    "@lingui/core": "@lingui/core/dist",
+    "@lingui/message-utils": "@lingui/message-utils/dist"
+  }
 }

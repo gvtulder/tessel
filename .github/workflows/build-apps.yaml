@@ -30,7 +30,7 @@ jobs:
           cache: gradle
 
       - name: Setup Android SDK 35.0.0
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
       - name: Install Android SDK build tools
         run: |

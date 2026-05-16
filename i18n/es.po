@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2025-11-30 01:00+0000\nLast-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\nLanguage-Team: Spanish <https://hosted.weblate.org/projects/tessel/game/es/>\nLanguage: es\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15-dev\n"
+msgstr "PO-Revision-Date: 2025-12-17 22:56+0000\nLast-Translator: \"J. Lavoie\" <j.lavoie@net-c.ca>\nLanguage-Team: Spanish <https://hosted.weblate.org/projects/tessel/game/es/>\nLanguage: es\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.15.1-dev\n"
 
 #. js-lingui-explicit-id
 #: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18

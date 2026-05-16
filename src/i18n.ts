@@ -11,6 +11,7 @@ import { messages as messages_en } from "../i18n/en";
 import { messages as messages_es } from "../i18n/es";
 import { messages as messages_fr } from "../i18n/fr";
 import { messages as messages_gl } from "../i18n/gl";
+import { messages as messages_it } from "../i18n/it";
 import { messages as messages_nl } from "../i18n/nl";
 import { messages as messages_ptbr } from "../i18n/pt-BR";
 import { messages as messages_tr } from "../i18n/tr";
@@ -72,6 +73,15 @@ export const languages = {
             "utf-8",
         ),
         languageTag: "gl-ES",
+    },
+    it: {
+        title: "Italiano",
+        messages: messages_it,
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/it/about.html",
+            "utf-8",
+        ),
+        languageTag: "it-IT",
     },
     nl: {
         title: "Nederlands",

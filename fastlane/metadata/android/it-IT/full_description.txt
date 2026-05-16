@@ -1,0 +1,17 @@
+Tessel è un coloratissimo gioco di abbinamento tessere. Posiziona tessere dello stesso colore per creare forme e riempire il tabellone. Più grande sarà la forma, più punti otterrai.
+
+Caratteristiche:
+• Gioca una partita semplice con tessere quadrate o scegli uno schema più impegnativo.
+• Personalizza le impostazioni di gioco per cambiare le regole.
+• Crea i tuoi schemi di abbinamenti con lo strumento di disegno.
+
+Scegli tra un'ampia gamma di motivi di tassellatura per creare infinite composizioni diverse:
+• Quadrato
+• Triangolare
+• Romboidale
+• Pentagonale del Cairo
+• Esagonale
+• Triesagonale deltoide
+• Penrose P3
+• Quadrati e triangoli
+• Ammann-Beenker

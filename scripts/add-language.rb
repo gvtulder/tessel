@@ -19,7 +19,7 @@ js.sub!(/(?<=locales: \[)([^\]]+)(?=\])/) do |m|
   languages = m.scan(/"[^"]+"/)
   languages << "\"#{lang_i18n}\""
   languages.sort!
-  languages.join(", ")
+  "\n    " + languages.join(",\n    ") + ",\n  "
 end
 File.open("lingui.config.js", "w") do |f|
   f << js

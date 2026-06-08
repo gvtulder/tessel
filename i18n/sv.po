@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2026-06-07 15:30+0000\nLast-Translator: Dmytro <charliejesus.paving795@passmail.com>\nLanguage-Team: Swedish <https://hosted.weblate.org/projects/tessel/game/sv/>\nLanguage: sv\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 2026.6\n"
+msgstr "PO-Revision-Date: 2026-06-08 22:35+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Swedish <https://hosted.weblate.org/projects/tessel/game/sv/>\nLanguage: sv\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 2026.6\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -84,7 +84,7 @@ msgstr "Rombformat mönster"
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareAtlas.ts:11
 msgid "atlas.SnubSquareAtlas.friendlyName"
-msgstr "«Snub» kradrat"
+msgstr "«Snub» kvadrat"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareAtlas.ts:15
@@ -109,7 +109,7 @@ msgstr "«Snub» kvadratiskt nät"
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareGridAtlas.ts:16
 msgid "atlas.SnubSquareGridAtlas.tilingName"
-msgstr "«Snub» kradratiskt mönster"
+msgstr "«Snub» kvadratiskt mönster"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SquaresAtlas.ts:11

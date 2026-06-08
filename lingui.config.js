@@ -15,6 +15,7 @@ export default defineConfig({
     "ro",
     "sv",
     "tr",
+    "uk",
     "zh-Hans",
     "zh-Hant",
   ],

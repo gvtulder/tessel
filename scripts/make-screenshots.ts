@@ -48,6 +48,7 @@ for (const [langCode, langDir] of [
     ["ro", "ro"],
     ["sv", "sv"],
     ["tr", "tr"],
+    ["uk", "uk"],
     ["zh-Hans", "zh-Hans"],
     ["zh-Hant", "zh-Hant"],
 ]) {
@@ -92,6 +93,7 @@ for (const [langCode, langDir] of [
     ["ro", "ro"],
     ["sv", "sv"],
     ["tr", "tr-TR"],
+    ["uk", "uk"],
     ["zh-Hans", "zh-CN"],
     ["zh-Hant", "zh-TW"],
 ]) {

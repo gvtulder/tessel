@@ -1,0 +1,17 @@
+Tessel este un joc de plasare a pieselor colorate. Așează piese cu culori asemănătoare pentru a face forme și a umple tabla. Cu cat este mai mare forma, cu atăt mai multe puncte
+
+Trăsături
+• Joacă un joc ușor cu pătrate sau alege un model mai provocator.
+• Personalizează setările jocului sau schimbă regulile.
+• Creați-vă propriile modele de aranjare în unealta de desenat.
+
+Alege dintr-o varietate made de modele de aranjare pentru a forma infinite teselații variate:
+• Pătrat
+• Triunghiular
+• Rombilică
+• Pentagonala Cairo
+• Hexagonal
+• Deltoidală trihexagonală
+• Penrose P3
+• Pătrată snub
+• Ammann-Beenker

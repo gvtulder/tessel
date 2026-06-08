@@ -15,6 +15,7 @@ import { messages as messages_it } from "../i18n/it";
 import { messages as messages_nl } from "../i18n/nl";
 import { messages as messages_ptbr } from "../i18n/pt-BR";
 import { messages as messages_ro } from "../i18n/ro";
+import { messages as messages_sv } from "../i18n/sv";
 import { messages as messages_tr } from "../i18n/tr";
 import { messages as messages_zhhans } from "../i18n/zh-Hans";
 import { messages as messages_zhhant } from "../i18n/zh-Hant";
@@ -110,6 +111,15 @@ export const languages = {
             "utf-8",
         ),
         languageTag: "ro",
+    },
+    sv: {
+        title: "Svenska",
+        messages: messages_sv,
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/sv/about.html",
+            "utf-8",
+        ),
+        languageTag: "sv",
     },
     tr: {
         title: "Türkçe",

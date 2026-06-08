@@ -1,0 +1,17 @@
+Tessel är ett färgrikt pusselspel. Lägga plattor som paras ihop med färg för att skapa former som fyller bordet. Du får mer poäng om formen är större.
+
+Funktioner:
+• Spela med kvadrater eller välja ett svårare mönster.
+• Anpassa inställningar på spelet.
+• Skapa egna mönster i teckningsläge.
+
+Välja mellan många mönster för att skapa ändlösa tesselationer:
+• Kvadratisk
+• Triangelformad
+• Rombformad
+• Kairo pentagonal
+• Hexagonisk
+• Deltoidal-trihexagonal
+• Penrose P3
+• «Snub» kvadratisk
+• Ammann-Beenker

@@ -91,7 +91,7 @@ for (const [langCode, langDir] of [
     ["nl", "nl-NL"],
     ["pt-BR", "pt-BR"],
     ["ro", "ro"],
-    ["sv", "sv"],
+    ["sv", "sv-SE"],
     ["tr", "tr-TR"],
     ["uk", "uk"],
     ["zh-Hans", "zh-CN"],
@@ -227,8 +227,9 @@ const screenshots: ScreenshotTask[] = [
             "LCJHYW1lQ29tcGxldGVkLnBlbnRhZ29uIjoxLCJHYW1lQ29tcGxldGVkLnBlbnJvc2UiOjEsIkhpZ2hTY29yZSI6MTAsIlNoYX"+
             "BlVGlsZUNvdW50IjoyfQ"));
         JSON.parse(localStorage.statistics);
-        gameController.stats.unserialize(localStorage.statistics);
-        gameController.run("statistics", true);
+        window.location.reload();
+        // gameController.stats.unserialize(localStorage.statistics);
+        // gameController.run("statistics", true);
         `,
     },
 ];

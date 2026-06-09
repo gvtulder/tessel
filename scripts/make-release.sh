@@ -20,6 +20,7 @@ for lang_dir in fastlane/metadata/android/* ; do
   if [[ $langAndroid != en-* ]] && [[ $langAndroid != *.txt ]] ; then
     langIOS=$langAndroid
     [[ $langAndroid == tr-TR ]] && langIOS=tr
+    [[ $langAndroid == sv-SE ]] && langIOS=sv
     [[ $langAndroid == zh-TW ]] && langIOS=zh-Hant
     [[ $langAndroid == zh-CN ]] && langIOS=zh-Hans
 

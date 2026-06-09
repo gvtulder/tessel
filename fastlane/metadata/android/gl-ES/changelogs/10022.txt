@@ -1,4 +1,4 @@
-Modifiche e miglioramenti varii.
+Varios cambios e melloras.
 
 • Technical updates to high score calculations.
 • New language: Ukrainian/Українська (by Dmytro Zakiltenskyi).

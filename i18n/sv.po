@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2026-06-08 22:35+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Swedish <https://hosted.weblate.org/projects/tessel/game/sv/>\nLanguage: sv\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 2026.6\n"
+msgstr "PO-Revision-Date: 2026-06-09 20:12+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Swedish <https://hosted.weblate.org/projects/tessel/game/sv/>\nLanguage: sv\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 2026.6\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -250,7 +250,7 @@ msgstr "Ångra"
 #. placeholder {0}: colors.length
 #: src/ui/setup/ColorsOption.ts:18
 msgid "ui.settings.ColorsOption.title"
-msgstr "{0, plural, =1 {En färg} =2 {Två färger} =3 {Tre färger} =4 {Fyra Färger} =5 {Fem färger} =6 {Sex färger} other {# färger}}"
+msgstr "{0, plural, =1 {En färg} =2 {Två färger} =3 {Tre färger} =4 {Fyra färger} =5 {Fem färger} =6 {Sex färger} other {# färger}}"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:134

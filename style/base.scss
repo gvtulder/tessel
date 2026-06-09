@@ -34,8 +34,16 @@
   unicode-range: U+00B7;
 }
 
+@font-face {
+  font-family: "InterLight";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../assets/fonts/Inter-Light.woff2) format("woff2");
+}
+
 :root {
-  font-family: "BarlowMiddot", "Barlow", sans-serif;
+  font-family: "BarlowMiddot", "Barlow", "InterLight", sans-serif;
   font-size: sizes.$font-size;
 }
 

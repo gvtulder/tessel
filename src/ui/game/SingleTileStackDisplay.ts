@@ -256,13 +256,15 @@ export class SingleTileOnStackDisplay implements TileDragSource {
     endDrag(successful: boolean) {
         this.element.classList.remove("tile-dragging");
         this.rotatable.classList.remove("rotatable-dragging");
-        this.element.classList.add("tile-drag-return");
-        this.rotatable.classList.add("rotatable-drag-return");
         if (successful) {
             this.element.classList.add("tile-drag-success");
             this.rotatable.classList.add("rotatable-drag-success");
+            this.element.classList.remove("tile-drag-return");
+            this.rotatable.classList.remove("rotatable-drag-return");
             this.resetAutorotate(true);
         } else {
+            this.element.classList.add("tile-drag-return");
+            this.rotatable.classList.add("rotatable-drag-return");
             this.resetAutorotate(false);
         }
     }

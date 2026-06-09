@@ -237,8 +237,8 @@ const StatisticsSections: StatisticsSection[] = [
                 title: atlasDef.atlas.tilingName as MessageDescriptor,
                 icon: atlasDef.atlas.shapes,
                 keys: [
-                    `HighScore.{"atlas":"${atlasDef.atlas.id}","colors":"wong4","segments":0,"uniqueTileColors":false,"rules":"same","scorer":"shape"}`,
-                    `ShapeCompleted.{"atlas":"${atlasDef.atlas.id}","colors":"wong4","segments":0,"uniqueTileColors":false,"rules":"same","scorer":"shape"}`,
+                    `HighScore.{"atlas":"${atlasDef.atlas.id}","colors":"wong4","rules":"same","scorer":"shape","segments":0,"uniqueTileColors":false}`,
+                    `ShapeCompleted.{"atlas":"${atlasDef.atlas.id}","colors":"wong4","rules":"same","scorer":"shape","segments":0,"uniqueTileColors":false}`,
                     `GameCompleted.${atlasDef.atlas.id}`,
                 ],
             };

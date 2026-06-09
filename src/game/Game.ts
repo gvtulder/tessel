@@ -4,6 +4,7 @@
  */
 
 import * as zod from "zod/v4-mini";
+import canonicalStringify from "canonical-json";
 import { Grid, TileSet_S } from "../grid/Grid";
 import { Scorer, ScorerType } from "./scorers/Scorer";
 import { ConnectedSegmentScorer } from "./scorers/ConnectedSegmentScorer";
@@ -64,15 +65,7 @@ export type GameSettingsSerialized = {
 };
 
 export function serializedToJSON(settings: GameSettingsSerialized): string {
-    return JSON.stringify(settings, [
-        "atlas",
-        "colors",
-        "segments",
-        "uniqueTileColors",
-        "rules",
-        "scorer",
-        "demoGame",
-    ]);
+    return canonicalStringify(settings) as string;
 }
 
 export const GameState_S = zod.object({

@@ -565,15 +565,13 @@ export class Game extends EventTarget {
             commands.push(command);
 
             if (this.stats) {
-                if (!this.continued) {
-                    commands.push(
-                        this.stats.updateHighScore(
-                            StatisticsEvent.HighScore,
-                            this.points,
-                            this.settings.serializedJSON,
-                        ),
-                    );
-                }
+                commands.push(
+                    this.stats.updateHighScore(
+                        StatisticsEvent.HighScore,
+                        this.points,
+                        this.settings.serializedJSON,
+                    ),
+                );
                 for (const region of shapes || []) {
                     if (region.finished) {
                         commands.push(

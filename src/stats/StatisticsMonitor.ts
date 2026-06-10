@@ -176,20 +176,18 @@ export class StatisticsMonitor {
 
         execute(): void {
             const counters = this.stats.counters;
-            const currentMain = counters.get(this.eventType);
-            counters.set(
-                this.eventType,
-                Math.max(this.value, currentMain || 0),
-            );
-            this.memo = { mainValue: currentMain };
+            const updateCounter = (eventKey: string) => {
+                const currentValue = counters.get(eventKey);
+                counters.set(eventKey, Math.max(this.value, currentValue || 0));
+                return currentValue;
+            };
 
+            this.memo = {};
+            this.memo.mainValue = updateCounter(this.eventType);
             if (this.subtype) {
-                const currentSubtype = counters.get(this.eventType);
-                counters.set(
+                this.memo.subtypeValue = updateCounter(
                     `${this.eventType}.${this.subtype}`,
-                    Math.max(this.value, currentSubtype || 0),
                 );
-                this.memo = { subtypeValue: currentSubtype };
             }
 
             this.stats.writeToStorage();
@@ -199,21 +197,20 @@ export class StatisticsMonitor {
             if (!this.memo) return;
 
             const counters = this.stats.counters;
-            if (this.memo.mainValue === undefined) {
-                counters.delete(this.eventType);
-            } else {
-                counters.set(this.eventType, this.memo.mainValue);
-            }
-
-            if (this.subtype) {
-                if (this.memo.subtypeValue === undefined) {
-                    counters.delete(`${this.eventType}.${this.subtype}`);
+            const restoreCounter = (eventKey: string, oldValue?: number) => {
+                if (oldValue === undefined) {
+                    counters.delete(eventKey);
                 } else {
-                    counters.set(
-                        `${this.eventType}.${this.subtype}`,
-                        this.memo.subtypeValue,
-                    );
+                    counters.set(eventKey, oldValue);
                 }
+            };
+
+            restoreCounter(this.eventType, this.memo.mainValue);
+            if (this.subtype) {
+                restoreCounter(
+                    `${this.eventType}.${this.subtype}`,
+                    this.memo.subtypeValue,
+                );
             }
 
             this.stats.writeToStorage();

@@ -41,6 +41,12 @@ describe("StatisticsMonitor", () => {
         expect(stats.counters.get(event)).toBe(123);
         expect(stats.counters.get(`${event}.squares`)).toBe(12);
         expect(stats.counters.get(`${event}.triangles`)).toBe(123);
+
+        stats.updateHighScore(event, 24, "hexagons");
+        expect(stats.counters.get(event)).toBe(123);
+        expect(stats.counters.get(`${event}.squares`)).toBe(12);
+        expect(stats.counters.get(`${event}.triangles`)).toBe(123);
+        expect(stats.counters.get(`${event}.hexagons`)).toBe(24);
     });
 
     test("serialize and unserialize", async () => {

@@ -42,7 +42,7 @@ for (const [langCode, langDir] of [
     ["en", "en-US"],
     ["es", "es-ES"],
     ["fr", "fr-FR"],
-    ["it", "it-IT"],
+    ["it", "it"],
     ["nl", "nl-NL"],
     ["pt-BR", "pt-BR"],
     ["ro", "ro"],

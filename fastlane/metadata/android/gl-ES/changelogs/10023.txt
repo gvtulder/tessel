@@ -1,4 +1,4 @@
-Variate schimbări și actualizări.
+Varios cambios e melloras.
 
 • Fixed a high score bug.
 • New language: Ukrainian/Українська (by Dmytro Zakiltenskyi).

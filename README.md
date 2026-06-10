@@ -142,6 +142,6 @@ npx cap build android --androidreleasetype APK --signing-type apksigner
 
 ## License
 
-Copyright © 2025 by [Gijs van Tulder](https://www.vantulder.net/).
+Copyright © 2025-2026 by [Gijs van Tulder](https://www.vantulder.net/).
 
 The source code of this game is licensed under the [GPL-3.0 license](LICENSE.md).

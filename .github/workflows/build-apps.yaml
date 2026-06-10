@@ -104,7 +104,7 @@ jobs:
           serviceAccountJson: service-account.json
           packageName: net.vantulder.tessel
           releaseFiles: android/app/build/outputs/bundle/release/app-release-signed.aab
-          track: internal
+          tracks: internal
           status: draft
 
       - name: Upload build artifacts

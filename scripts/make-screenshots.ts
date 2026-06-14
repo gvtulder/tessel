@@ -37,6 +37,7 @@ const sizes = [
 }[];
 
 for (const [langCode, langDir] of [
+    ["be", "be"],
     ["ca", "ca"],
     ["de", "de-DE"],
     ["en", "en-US"],
@@ -81,6 +82,7 @@ for (const [langCode, langDir] of [
 }
 
 for (const [langCode, langDir] of [
+    ["be", "be"],
     ["ca", "ca"],
     ["de", "de-DE"],
     ["en", "en-US"],

@@ -5,6 +5,7 @@
 
 import fs from "fs";
 import { i18n, Messages } from "@lingui/core";
+import { messages as messages_be } from "../i18n/be";
 import { messages as messages_ca } from "../i18n/ca";
 import { messages as messages_de } from "../i18n/de";
 import { messages as messages_en } from "../i18n/en";
@@ -130,6 +131,15 @@ export const languages = {
             "utf-8",
         ),
         languageTag: "tr-TR",
+    },
+    be: {
+        title: "Беларуская",
+        messages: messages_be,
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/be/about.html",
+            "utf-8",
+        ),
+        languageTag: "be",
     },
     uk: {
         title: "Українська",

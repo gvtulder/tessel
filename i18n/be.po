@@ -1,0 +1,499 @@
+msgid ""
+msgstr "PO-Revision-Date: 2026-06-13 17:09+0000\nLast-Translator: Dmytro <charliejesus.paving795@passmail.com>\nLanguage-Team: Belarusian <https://hosted.weblate.org/projects/tessel/game/be/>\nLanguage: be\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\nX-Generator: Weblate 2026.7.dev0\n"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:11
+msgid "atlas.AmmannBeenkerAtlas.friendlyName"
+msgstr "Амана - Бінкера"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/AmmannBeenkerAtlas.ts:15
+msgid "atlas.AmmannBeenkerAtlas.tilingName"
+msgstr "Мазаіка Амана - Бінкера"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:11
+msgid "atlas.CairoAtlas.friendlyName"
+msgstr "Каірская пяцікутная"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/CairoAtlas.ts:15
+msgid "atlas.CairoAtlas.tilingName"
+msgstr "Каірская пяцікутная мазаіка"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:11
+msgid "atlas.DeltoTrihexAtlas.friendlyName"
+msgstr "Ромб-трохкутная шасьцікутная"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/DeltoTrihexAtlas.ts:15
+msgid "atlas.DeltoTrihexAtlas.tilingName"
+msgstr "Ромб-трохкутная шасьцікутная мазаіка"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:11
+msgid "atlas.HexagonsAtlas.friendlyName"
+msgstr "Шасьцікутнік"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/HexagonsAtlas.ts:12
+msgid "atlas.HexagonsAtlas.tilingName"
+msgstr "Шасьцікутная мазаіка"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:11
+msgid "atlas.Penrose0Atlas.friendlyName"
+msgstr "Пенроуза‐3"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose0Atlas.ts:12
+msgid "atlas.Penrose0Atlas.tilingName"
+msgstr "Ромбападобная мазаіка Пенроуза"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:12
+msgid "atlas.Penrose3Grid.friendlyName"
+msgstr "Сетка ромбападобнай мазаікі Пенроуза"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/Penrose3GridAtlas.ts:13
+msgid "atlas.Penrose3Grid.tilingName"
+msgstr "Ромбападобная мазаіка Пенроуза"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:11
+msgid "atlas.PenroseFreeAtlas.friendlyName"
+msgstr "Вольная Пенроуза‐3"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/PenroseFreeAtlas.ts:15
+msgid "atlas.PenroseFreeAtlas.tilingName"
+msgstr "Ромбападобная мазаіка Пенроуза"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:11
+msgid "atlas.RhombusAtlas.friendlyName"
+msgstr "Ромб‐60‐120"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/RhombusAtlas.ts:15
+msgid "atlas.RhombusAtlas.tilingName"
+msgstr "Ромбападобная мазаіка"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:11
+msgid "atlas.SnubSquareAtlas.friendlyName"
+msgstr "«Snub» квадратная"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareAtlas.ts:15
+msgid "atlas.SnubSquareAtlas.tilingName"
+msgstr "«Snub» квадратная мазаіка"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:11
+msgid "atlas.SnubSquareFreeAtlas.friendlyName"
+msgstr "«Snub» квадратная вольная"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareFreeAtlas.ts:15
+msgid "atlas.SnubSquareFreeAtlas.tilingName"
+msgstr "«Snub» квадратная мазаіка"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:12
+msgid "atlas.SnubSquareGridAtlas.friendlyName"
+msgstr "Сетка «snub» квадратнай"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SnubSquareGridAtlas.ts:16
+msgid "atlas.SnubSquareGridAtlas.tilingName"
+msgstr "«Snub» квадратная мазаіка"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:11
+msgid "atlas.SquaresAtlas.friendlyName"
+msgstr "Квадрат"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/SquaresAtlas.ts:12
+msgid "atlas.SquaresAtlas.tilingName"
+msgstr "Квадратная мазаіка"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:11
+msgid "atlas.TrianglesAtlas.friendlyName"
+msgstr "Трохкутнік"
+
+#. js-lingui-explicit-id
+#: src/grid/atlas/TrianglesAtlas.ts:12
+msgid "atlas.TrianglesAtlas.tilingName"
+msgstr "Трохкутная мазаіка"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
+msgid "rules.DifferentEdgeColorsRuleSet.friendlyName"
+msgstr "Колер суседніх плітак павінен адрозьнівацца"
+
+#. js-lingui-explicit-id
+#: src/grid/rules/MatchEdgeColorsRuleSet.ts:18
+msgid "rules.MatchEdgeColorsRuleSet.friendlyName"
+msgstr "Колер суседніх плітак павінен супадаць"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConnectedSegmentScorer.ts:15
+msgid "scorer.ConnectedSegmentScorer.friendlyName"
+msgstr "Звязаныя сегменты"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/ConvexShapeScorer.ts:16
+msgid "scorer.ConvexShapeScorer.friendlyName"
+msgstr "Суцэльны фігури"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullTileScorer.ts:14
+msgid "scorer.FullTileScorer.friendlyName"
+msgstr "Пліткі"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/FullVertexScorer.ts:15
+msgid "scorer.FullVertexScorer.friendlyName"
+msgstr "Вяршыні поўных фігур"
+
+#. js-lingui-explicit-id
+#: src/game/scorers/HoleScorer.ts:15
+msgid "scorer.HoleScorer.friendlyName"
+msgstr "Прабелы"
+
+#. js-lingui-explicit-id
+#: src/ui/game/DropoutMenu.ts:31
+msgid "ui.game.showMenuButton"
+msgstr "Паказаць мэню"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:141
+msgid "ui.menu.AllGamesButton"
+msgstr "Усе рэжымы"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:177
+msgid "ui.menu.HowToPlayButton"
+msgstr "Правілы гульні"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:131
+msgid "ui.menu.MainMenuButton"
+msgstr "Галоўная"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:151
+msgid "ui.menu.PaintButton"
+msgstr "Маляваць мазаікі"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:158
+#: src/ui/controller/GameController.ts:166
+msgid "ui.menu.SettingsButton"
+msgstr "Налады"
+
+#. js-lingui-explicit-id
+#: src/ui/controller/GameController.ts:187
+msgid "ui.menu.StatisticsButton"
+msgstr "Статыстыка"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:161
+msgid "ui.menu.addMoreTilesButton"
+msgstr "Больш плітак"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:137
+#: src/ui/paint/PaintDisplay.ts:73
+#: src/ui/setup/GameSetupDisplay.ts:146
+msgid "ui.menu.backToMenuButton"
+msgstr "Назад да галоўнага мэню"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/MainMenuDisplay.ts:21
+msgid "ui.menu.footer"
+msgstr "Гульня ад <a href=\"{url}\">Gijs van Tulder</a>'а."
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:192
+#: src/ui/game/GameDisplay.ts:199
+msgid "ui.menu.redoButton"
+msgstr "Паўтарыць адмененае дзеяньне"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:153
+msgid "ui.menu.refreshTilesButton"
+msgstr "Перамяшаць пліткі"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:145
+msgid "ui.menu.restartGameButton"
+msgstr "Скінуць і пачаць новую гульню"
+
+#. js-lingui-explicit-id
+#: src/ui/menu/AllGamesDisplay.ts:31
+msgid "ui.menu.setupButton"
+msgstr "Спэцыяльная гульня"
+
+#. js-lingui-explicit-id
+#: src/ui/game/GameDisplay.ts:173
+#: src/ui/game/GameDisplay.ts:180
+msgid "ui.menu.undoButton"
+msgstr "Адмяніць апошняе дзеяньне"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colors.length
+#: src/ui/setup/ColorsOption.ts:18
+msgid "ui.settings.ColorsOption.title"
+msgstr "{0, plural, one {1 колер} few {# колеры} many {# колераў} other {# колераў}}"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:134
+msgid "ui.settings.about.credits"
+msgstr "Tessel - гульня ад <a href=\"{url}\">Gijs van Tulder</a>'а."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:167
+msgid "ui.settings.about.feedbackPrompt"
+msgstr "Ёсьць што сказаць? Маеце прапановы ці знайшлі памылкі? <a href=\"{email}\">Дашліце мне электронны ліст</a> або <a href=\"{github}\">паведаміце мне на Github</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:156
+msgid "ui.settings.about.reviewPromptApple"
+msgstr "Падабаецца гульня? <a href=\"{url}\">Пакіньце водгук</a> ў App Store або <a href=\"{share}\">раскажыце пра гульню сябрам</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:146
+msgid "ui.settings.about.reviewPromptGoogle"
+msgstr "Падабаецца гульня? <a href=\"{url}\">Пакіньце водгук</a> ў краме Google Play або <a href=\"{share}\">раскажыце пра гульню сябрам</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:128
+msgid "ui.settings.about.title"
+msgstr "Пра гульню"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:112
+msgid "ui.settings.description.autorotate"
+msgstr "Аўтаматычны паварот плітак"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:84
+msgid "ui.settings.description.colorScheme"
+msgstr "Сьветлая, аўтаматычная або цёмная тэма"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:119
+msgid "ui.settings.description.highscore"
+msgstr "Паказаць рэкорды"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:105
+msgid "ui.settings.description.hints"
+msgstr "Падсьвічаваць месцы для плітак"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:77
+msgid "ui.settings.description.language"
+msgstr "Мова"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:98
+msgid "ui.settings.description.placeholders"
+msgstr "Паказаць контуры пустых плітак"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:91
+msgid "ui.settings.group.gameSettings"
+msgstr "Налады гульні"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:183
+msgid "ui.settings.opensource.source"
+msgstr "<a href=\"{source}\">Крынічны код</a> гульні апублікаваны пад ліцэнзіяй GPL 3.0. Наведайце <a href=\"{github}\">старонку GitHub</a>, каб азнаёміцца са спісам праблем і стварыць pull request."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:176
+msgid "ui.settings.opensource.title"
+msgstr "Адкрыты код"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:189
+msgid "ui.settings.opensource.weblate"
+msgstr "Каб дапамагчы з перакладамі, наведайце <a href=\"{weblate}\">старонку Weblate</a>."
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:40
+msgid "ui.settings.title"
+msgstr "Налады"
+
+#. js-lingui-explicit-id
+#: src/ui/settings/SettingsDisplay.ts:197
+msgid "ui.settings.version"
+msgstr "Версія {version}."
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:56
+msgid "ui.setup.SegmentsOption.allCombinations"
+msgstr "Усе камбінацыі колераў"
+
+#. js-lingui-explicit-id
+#. placeholder {0}: colorPattern.numColors
+#: src/ui/setup/SegmentsOption.ts:66
+msgid "ui.setup.SegmentsOption.number"
+msgstr "{0, plural, one {1 колер на пліткy} few {# колеры на плітку} many {# колераў на плітку} other {# колераў на плітку}}"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsOption.ts:61
+msgid "ui.setup.SegmentsOption.unique"
+msgstr "Толькі ўнікальныя колеры на плітцы"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:71
+msgid "ui.setup.optionTitle.atlas"
+msgstr "Тып мазаікі"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:87
+msgid "ui.setup.optionTitle.colors"
+msgstr "Колькасьць колераў"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/RulesSettingRow.ts:16
+msgid "ui.setup.optionTitle.rules"
+msgstr "Злучэньне"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/ScorerSettingRow.ts:15
+msgid "ui.setup.optionTitle.scorer"
+msgstr "Крытэрый"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/SegmentsSettingRow.ts:18
+msgid "ui.setup.optionTitle.segments"
+msgstr "Колеры на плітцы"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:126
+msgid "ui.setup.playButton"
+msgstr "Гуляць"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:157
+msgid "ui.setup.regenerateExampleButton"
+msgstr "Зґенераваць зноў"
+
+#. js-lingui-explicit-id
+#: src/ui/setup/GameSetupDisplay.ts:59
+msgid "ui.setup.title"
+msgstr "Наладзіць гульню"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:230
+msgid "ui.statistics.columns.GameCompleted"
+msgstr "Гульняў"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:222
+msgid "ui.statistics.columns.HighScore"
+msgstr "Рэкорд"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:226
+msgid "ui.statistics.columns.ShapeCompleted"
+msgstr "Сфармавана фігур"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:259
+msgid "ui.statistics.columns.TilePlaced"
+msgstr "Колькасьць"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:298
+msgid "ui.statistics.counter.TilePlaced.hexagon"
+msgstr "Шасьцікутнікаў"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:306
+msgid "ui.statistics.counter.TilePlaced.kite"
+msgstr "Шасцігранных ромбаў"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:290
+msgid "ui.statistics.counter.TilePlaced.pentagon"
+msgstr "Пяцікутнікаў"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:282
+msgid "ui.statistics.counter.TilePlaced.rhombus"
+msgstr "Ромбаў"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:266
+msgid "ui.statistics.counter.TilePlaced.square"
+msgstr "Квадратаў"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:274
+msgid "ui.statistics.counter.TilePlaced.triangle"
+msgstr "Трыкутнікаў"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:213
+msgid "ui.statistics.headings.ShapeCompleted"
+msgstr "Сфармавана фігур: {value}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:250
+msgid "ui.statistics.headings.TilePlaced"
+msgstr "Размешчана плітак: {value}"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:57
+msgid "ui.statistics.notPlayed"
+msgstr "Вы яшчэ не пачалі ніводнай гульні!"
+
+#. js-lingui-explicit-id
+#: src/ui/statistics/StatisticsDisplay.ts:49
+msgid "ui.statistics.title"
+msgstr "Статыстыка"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:46
+msgid "ui.toggles.autorotate"
+msgstr "Аўтапаварот"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:76
+msgid "ui.toggles.colorScheme.dark"
+msgstr "Цёмная тэма"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:75
+msgid "ui.toggles.colorScheme.light"
+msgstr "Светлая тэма"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:67
+msgid "ui.toggles.highscore"
+msgstr "Пазаказваць рэкорди"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:53
+msgid "ui.toggles.hints"
+msgstr "Паказазваць падказкі"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:36
+msgid "ui.toggles.placeholders"
+msgstr "Паказазваць контуры"
+
+#. js-lingui-explicit-id
+#: src/ui/shared/toggles.ts:60
+msgid "ui.toggles.snap"
+msgstr "Замацаваць"

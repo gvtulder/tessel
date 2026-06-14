@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2026-06-07 14:46+0000\nLast-Translator: Dmytro <charliejesus.paving795@passmail.com>\nLanguage-Team: Ukrainian <https://hosted.weblate.org/projects/tessel/game/uk/>\nLanguage: uk\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\nX-Generator: Weblate 2026.6\n"
+msgstr "PO-Revision-Date: 2026-06-13 17:09+0000\nLast-Translator: Dmytro <charliejesus.paving795@passmail.com>\nLanguage-Team: Ukrainian <https://hosted.weblate.org/projects/tessel/game/uk/>\nLanguage: uk\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\nX-Generator: Weblate 2026.7.dev0\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -346,7 +346,7 @@ msgstr "Всі комбінації кольорів"
 #. placeholder {0}: colorPattern.numColors
 #: src/ui/setup/SegmentsOption.ts:66
 msgid "ui.setup.SegmentsOption.number"
-msgstr "{0, plural, one {Один колір на плитку} few {# кольори на плитку} many {# кольорів на плитку} other {# кольорів на плитку}}"
+msgstr "{0, plural, one {1 колір на плитку} few {# кольори на плитку} many {# кольорів на плитку} other {# кольорів на плитку}}"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/SegmentsOption.ts:61
@@ -376,7 +376,7 @@ msgstr "Критерій"
 #. js-lingui-explicit-id
 #: src/ui/setup/SegmentsSettingRow.ts:18
 msgid "ui.setup.optionTitle.segments"
-msgstr "Кольорів у плитці"
+msgstr "Кольорів на плитці"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/GameSetupDisplay.ts:126
@@ -396,7 +396,7 @@ msgstr "Налаштувати гру"
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:230
 msgid "ui.statistics.columns.GameCompleted"
-msgstr "Завершено Ігор"
+msgstr "Ігор"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:222
@@ -406,7 +406,7 @@ msgstr "Рекорд"
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:226
 msgid "ui.statistics.columns.ShapeCompleted"
-msgstr "Сформовано фігур"
+msgstr "Складено фігур"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:259

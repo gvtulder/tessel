@@ -22,7 +22,7 @@
   "browserslist": "defaults",
   "type": "module",
   "dependencies": {
-    "@lingui/core": "^6.2.0",
+    "@lingui/core": "^6.3.0",
     "@parcel/service-worker": "^2.16.4",
     "canonical-json": "^0.4.0",
     "check2d": "^9.36.4",

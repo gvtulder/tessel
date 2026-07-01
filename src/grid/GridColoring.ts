@@ -183,8 +183,8 @@ export class GridColoring {
 
         // apply colors to tiles
         for (const tile of this.grid.tiles) {
-            tile.colors = tile.segments!.map(
-                (s) => groupToColor.get(segmentToGroup.get(s)!)!,
+            tile.colors = tile.segments!.map((s) =>
+                groupToColor.get(segmentToGroup.get(s)!)!,
             );
         }
 

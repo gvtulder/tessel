@@ -1,499 +1,484 @@
 msgid ""
-msgstr "PO-Revision-Date: 2026-07-17 10:01+0000\nLast-Translator: Balázs Úr <balazs@urbalazs.hu>\nLanguage-Team: Hungarian <https://hosted.weblate.org/projects/tessel/game/hu/>\nLanguage: hu\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 2026.8.dev0\n"
-
-#. js-lingui-explicit-id
-#: src/grid/atlas/AmmannBeenkerAtlas.ts:11
-msgid "atlas.AmmannBeenkerAtlas.friendlyName"
-msgstr "Ammann–Beenker"
+msgstr "X-Generator: Weblate 2026.7.dev0\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPO-Revision-Date: 2026-06-30 19:01+0000\nLast-Translator: ssantos <ssantos@web.de>\nLanguage-Team: Portuguese <https://hosted.weblate.org/projects/tessel/game/pt/>\nLanguage: pt\nPlural-Forms: nplurals=2; plural=n > 1;\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:15
 msgid "atlas.AmmannBeenkerAtlas.tilingName"
-msgstr "Ammann–Beenker csempézés"
+msgstr "Ladrilhamento Ammann-Beenker"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/CairoAtlas.ts:11
 msgid "atlas.CairoAtlas.friendlyName"
-msgstr "Kairói ötszög"
+msgstr "Pentagonal do Cairo"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/CairoAtlas.ts:15
 msgid "atlas.CairoAtlas.tilingName"
-msgstr "Kairói ötszög csempézés"
-
-#. js-lingui-explicit-id
-#: src/grid/atlas/DeltoTrihexAtlas.ts:11
-msgid "atlas.DeltoTrihexAtlas.friendlyName"
-msgstr "Deltoid"
+msgstr "Ladrilhamento pentagonal do Cairo"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/DeltoTrihexAtlas.ts:15
 msgid "atlas.DeltoTrihexAtlas.tilingName"
-msgstr "Deltoid csempézés"
+msgstr "Ladrilhamento deltoidal-trihexagonal"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/HexagonsAtlas.ts:11
 msgid "atlas.HexagonsAtlas.friendlyName"
-msgstr "Hatszög"
+msgstr "Hexágono"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/HexagonsAtlas.ts:12
 msgid "atlas.HexagonsAtlas.tilingName"
-msgstr "Hatszög csempézés"
-
-#. js-lingui-explicit-id
-#: src/grid/atlas/Penrose0Atlas.ts:11
-msgid "atlas.Penrose0Atlas.friendlyName"
-msgstr "Rombuszpár"
+msgstr "Ladrilhamento hexagonal"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/Penrose0Atlas.ts:12
 msgid "atlas.Penrose0Atlas.tilingName"
-msgstr "Rombuszpár csempézés"
+msgstr "Ladrilhamento Penrose-3"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/Penrose3GridAtlas.ts:12
 msgid "atlas.Penrose3Grid.friendlyName"
-msgstr "Rombuszpár rács"
+msgstr "Grade Penrose-3"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/Penrose3GridAtlas.ts:13
 msgid "atlas.Penrose3Grid.tilingName"
-msgstr "Rombuszpár csempézés"
+msgstr "Ladrilhamento Penrose-3"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/PenroseFreeAtlas.ts:11
 msgid "atlas.PenroseFreeAtlas.friendlyName"
-msgstr "Rombuszpár szabad"
+msgstr "Penrose-3 livre"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/PenroseFreeAtlas.ts:15
 msgid "atlas.PenroseFreeAtlas.tilingName"
-msgstr "Rombuszpár csempézés"
+msgstr "Ladrilhamento Penrose-3"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/RhombusAtlas.ts:11
 msgid "atlas.RhombusAtlas.friendlyName"
-msgstr "Rombusz-60-120"
+msgstr "Losango-60-120"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/RhombusAtlas.ts:15
 msgid "atlas.RhombusAtlas.tilingName"
-msgstr "Rombusz csempézés"
+msgstr "Ladrilhamento losango 60–120"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareAtlas.ts:11
 msgid "atlas.SnubSquareAtlas.friendlyName"
-msgstr "Csúcsos négyzet"
+msgstr "Quadrado snub"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareAtlas.ts:15
 msgid "atlas.SnubSquareAtlas.tilingName"
-msgstr "Csúcsos négyzet csempézés"
+msgstr "Ladrilhamento quadrado snub"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareFreeAtlas.ts:11
 msgid "atlas.SnubSquareFreeAtlas.friendlyName"
-msgstr "Csúcsos négyzet szabad"
+msgstr "Quadrado snub livre"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareFreeAtlas.ts:15
 msgid "atlas.SnubSquareFreeAtlas.tilingName"
-msgstr "Csúcsos négyzet csempézés"
+msgstr "Ladrilhamento quadrado snub"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareGridAtlas.ts:12
 msgid "atlas.SnubSquareGridAtlas.friendlyName"
-msgstr "Csúcsos négyzet rács"
+msgstr "Grade quadrado snub"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SnubSquareGridAtlas.ts:16
 msgid "atlas.SnubSquareGridAtlas.tilingName"
-msgstr "Csúcsos négyzet csempézés"
+msgstr "Ladrilhamento quadrado snub"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SquaresAtlas.ts:11
 msgid "atlas.SquaresAtlas.friendlyName"
-msgstr "Négyzet"
+msgstr "Quadrado"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/SquaresAtlas.ts:12
 msgid "atlas.SquaresAtlas.tilingName"
-msgstr "Négyzet csempézés"
+msgstr "Ladrilhamento quadrado"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/TrianglesAtlas.ts:11
 msgid "atlas.TrianglesAtlas.friendlyName"
-msgstr "Háromszög"
+msgstr "Triângulo"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/TrianglesAtlas.ts:12
 msgid "atlas.TrianglesAtlas.tilingName"
-msgstr "Háromszög csempézés"
+msgstr "Ladrilhamento triangular"
 
 #. js-lingui-explicit-id
 #: src/grid/rules/DifferentEdgeColorsRuleSet.ts:18
 msgid "rules.DifferentEdgeColorsRuleSet.friendlyName"
-msgstr "Az érintkező csempéknek különböző színűeknek kell lenniük"
+msgstr "Peças em contacto devem ter cores diferentes"
 
 #. js-lingui-explicit-id
 #: src/grid/rules/MatchEdgeColorsRuleSet.ts:18
 msgid "rules.MatchEdgeColorsRuleSet.friendlyName"
-msgstr "Az érintkező csempéknek azonos színűeknek kell lenniük"
+msgstr "Peças em contacto devem ter a mesma cor"
 
 #. js-lingui-explicit-id
 #: src/game/scorers/ConnectedSegmentScorer.ts:15
 msgid "scorer.ConnectedSegmentScorer.friendlyName"
-msgstr "Kapcsolódó szakaszok számolása"
+msgstr "Contar segmentos conectados"
 
 #. js-lingui-explicit-id
 #: src/game/scorers/ConvexShapeScorer.ts:16
 msgid "scorer.ConvexShapeScorer.friendlyName"
-msgstr "Konvex alakzatok számolása"
+msgstr "Contar formas convexas"
 
 #. js-lingui-explicit-id
 #: src/game/scorers/FullTileScorer.ts:14
 msgid "scorer.FullTileScorer.friendlyName"
-msgstr "Csempék számolása"
+msgstr "Contar peças"
 
 #. js-lingui-explicit-id
 #: src/game/scorers/FullVertexScorer.ts:15
 msgid "scorer.FullVertexScorer.friendlyName"
-msgstr "Teljes csúcsok számolása"
+msgstr "Contar vértices completos"
 
 #. js-lingui-explicit-id
 #: src/game/scorers/HoleScorer.ts:15
 msgid "scorer.HoleScorer.friendlyName"
-msgstr "Lyukak számolása"
+msgstr "Contar lacunas"
 
 #. js-lingui-explicit-id
 #: src/ui/game/DropoutMenu.ts:31
 msgid "ui.game.showMenuButton"
-msgstr "Menü megjelenítése"
+msgstr "Mostrar menu"
 
 #. js-lingui-explicit-id
 #: src/ui/controller/GameController.ts:141
 msgid "ui.menu.AllGamesButton"
-msgstr "Összes játék"
+msgstr "Todos os jogos"
 
 #. js-lingui-explicit-id
 #: src/ui/controller/GameController.ts:177
 msgid "ui.menu.HowToPlayButton"
-msgstr "Hogyan kell játszani?"
+msgstr "Como jogar?"
 
 #. js-lingui-explicit-id
 #: src/ui/controller/GameController.ts:131
 msgid "ui.menu.MainMenuButton"
-msgstr "Kezdőoldal"
+msgstr "Menu Inicial"
 
 #. js-lingui-explicit-id
 #: src/ui/controller/GameController.ts:151
 msgid "ui.menu.PaintButton"
-msgstr "Kifestés"
+msgstr "Pintura"
 
 #. js-lingui-explicit-id
 #: src/ui/controller/GameController.ts:158
 #: src/ui/controller/GameController.ts:166
 msgid "ui.menu.SettingsButton"
-msgstr "Beállítások"
+msgstr "Configurações"
 
 #. js-lingui-explicit-id
 #: src/ui/controller/GameController.ts:187
 msgid "ui.menu.StatisticsButton"
-msgstr "Statisztikák"
+msgstr "Estatísticas"
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:161
 msgid "ui.menu.addMoreTilesButton"
-msgstr "Több csempe"
+msgstr "Mais peças"
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:137
 #: src/ui/paint/PaintDisplay.ts:73
 #: src/ui/setup/GameSetupDisplay.ts:146
 msgid "ui.menu.backToMenuButton"
-msgstr "Vissza a menübe"
+msgstr "Voltar ao menu"
 
 #. js-lingui-explicit-id
 #: src/ui/menu/MainMenuDisplay.ts:21
 msgid "ui.menu.footer"
-msgstr "<a href=\"{url}\">Gijs van Tulder</a> egyik játéka."
+msgstr "Um jogo de <a href=\"{url}\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:192
 #: src/ui/game/GameDisplay.ts:199
 msgid "ui.menu.redoButton"
-msgstr "Mégis"
+msgstr "Refazer"
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:153
 msgid "ui.menu.refreshTilesButton"
-msgstr "Csempék keverése"
+msgstr "Baralhar as peças"
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:145
 msgid "ui.menu.restartGameButton"
-msgstr "Játék újraindítása"
+msgstr "Reiniciar o jogo"
 
 #. js-lingui-explicit-id
 #: src/ui/menu/AllGamesDisplay.ts:31
 msgid "ui.menu.setupButton"
-msgstr "Játék tervezése"
+msgstr "Criar um jogo"
 
 #. js-lingui-explicit-id
 #: src/ui/game/GameDisplay.ts:173
 #: src/ui/game/GameDisplay.ts:180
 msgid "ui.menu.undoButton"
-msgstr "Visszavonás"
+msgstr "Desfazer"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: colors.length
 #: src/ui/setup/ColorsOption.ts:18
 msgid "ui.settings.ColorsOption.title"
-msgstr "{0, plural, =1 {Egy szín} =2 {Két szín} =3 {Három szín} =4 {Négy szín} =5 {Öt szín} =6 {Hat szín} other {# szín}}"
+msgstr "{0, plural, =1 {Uma cor} =2 {Duas cores} =3 {Três cores} =4 {Quatro cores} =5 {Cinco cores} =6 {Seis cores} other {# cores}}"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:134
 msgid "ui.settings.about.credits"
-msgstr "A Tessel <a href=\"{url}\">Gijs van Tulder</a> egyik játéka."
+msgstr "Tessel é um jogo de <a href=\"{url}\">Gijs van Tulder</a>."
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:167
 msgid "ui.settings.about.feedbackPrompt"
-msgstr "Javaslatok, megjegyzések vagy programhibák? <a href=\"{email}\">Küldjön nekem egy e-mailt</a> vagy <a href=\"{github}\">mondja el a GitHubon</a>."
+msgstr "Sugestões, comentários ou erros? <a href=\"{email}\">Envie-me um e-mail</a> ou <a href=\"{github}\">relate no GitHub</a>."
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:156
 msgid "ui.settings.about.reviewPromptApple"
-msgstr "Élvezte a játékot? <a href=\"{url}\">Írjon véleményt</a> az App Store-ban vagy <a href=\"{share}\">ossza meg a játékot másokkal</a>."
+msgstr "Gosta do jogo? <a href=\"{url}\">Deixe uma avaliação</a> na App Store ou <a href=\"{share}\">partilhe o jogo com outros</a>."
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:146
 msgid "ui.settings.about.reviewPromptGoogle"
-msgstr "Élvezte a játékot? <a href=\"{url}\">Írjon véleményt</a> a Google Play áruházban vagy <a href=\"{share}\">ossza meg a játékot másokkal</a>."
+msgstr "Gosta do jogo? <a href=\"{url}\">Deixe uma avaliação</a> na Google Play ou <a href=\"{share}\">partilhe o jogo com outros</a>."
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:128
 msgid "ui.settings.about.title"
-msgstr "A játékról"
+msgstr "Sobre o jogo"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:112
 msgid "ui.settings.description.autorotate"
-msgstr "Csempék automatikus forgatása"
+msgstr "Rotação automática de peças"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:84
 msgid "ui.settings.description.colorScheme"
-msgstr "Világos mód, sötét mód vagy az eszköz követése"
+msgstr "Modo claro, modo escuro ou seguir o dispositivo"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:119
 msgid "ui.settings.description.highscore"
-msgstr "Legmagasabb pontszám megjelenítése"
+msgstr "Mostrar recorde"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:105
 msgid "ui.settings.description.hints"
-msgstr "Érvényes pozíciók kiemelése"
+msgstr "Destacar posições válidas"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:77
 msgid "ui.settings.description.language"
-msgstr "Nyelv"
+msgstr "Idioma"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:98
 msgid "ui.settings.description.placeholders"
-msgstr "Helykitöltő csempék megjelenítése"
+msgstr "Exibir peças de preenchimento"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:91
 msgid "ui.settings.group.gameSettings"
-msgstr "Játék beállításai"
+msgstr "Configurações do jogo"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:183
 msgid "ui.settings.opensource.source"
-msgstr "A játék <a href=\"{source}\">forráskódja</a> GPL 3.0 licenc alatt érhető el. A problémákért és a beolvasztási kérésekért nézze meg <a href=\"{github}\">GitHub</a> forráskódtárolót."
+msgstr "O <a href=\"{source}\">código-fonte</a> deste jogo está disponível sob a licença GPL 3.0. Consulte o <a href=\"{github}\">GitHub</a> para relatar problemas e enviar pull requests."
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:176
 msgid "ui.settings.opensource.title"
-msgstr "Nyílt forráskódú"
+msgstr "Código aberto"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:189
 msgid "ui.settings.opensource.weblate"
-msgstr "Látogassa meg a <a href=\"{weblate}\">Weblate</a> fordítóoldalt a fordításban való segítségért."
+msgstr "Visite <a href=\"{weblate}\">Weblate</a> para ajudar com a tradução."
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:40
 msgid "ui.settings.title"
-msgstr "Beállítások"
+msgstr "Configurações"
 
 #. js-lingui-explicit-id
 #: src/ui/settings/SettingsDisplay.ts:197
 msgid "ui.settings.version"
-msgstr "Verzió: {version}."
+msgstr "Versão {version}."
 
 #. js-lingui-explicit-id
 #: src/ui/setup/SegmentsOption.ts:56
 msgid "ui.setup.SegmentsOption.allCombinations"
-msgstr "Összes színkombináció"
+msgstr "Todas as combinações de cores"
 
 #. js-lingui-explicit-id
 #. placeholder {0}: colorPattern.numColors
 #: src/ui/setup/SegmentsOption.ts:66
 msgid "ui.setup.SegmentsOption.number"
-msgstr "{0, plural, =1 {Csempénként egy szín} =2 {Csempénként két szín} =3 {Csempénként három szín} =4 {Csempénként négy szín} =5 {Csempénként öt szín} =6 {Csempénként hat szín} other {Csempénként # szín}}"
+msgstr "{0, plural, =1 {Uma cor por peça} =2 {Duas cores por peça} =3 {Três cores por peça} =4 {Quatro cores por peça} =5 {Cinco cores por peça} =6 {Seis cores por peça} other {# cores por peça}}"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/SegmentsOption.ts:61
 msgid "ui.setup.SegmentsOption.unique"
-msgstr "Az összes színnek egyedinek kell lennie"
+msgstr "Todas as cores devem ser únicas"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/GameSetupDisplay.ts:71
 msgid "ui.setup.optionTitle.atlas"
-msgstr "Csempézés mintája"
+msgstr "Padrão de ladrilhamento"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/GameSetupDisplay.ts:87
 msgid "ui.setup.optionTitle.colors"
-msgstr "Színek száma"
+msgstr "Número de cores"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/RulesSettingRow.ts:16
 msgid "ui.setup.optionTitle.rules"
-msgstr "Illeszkedési szabály"
+msgstr "Regra de correspondência"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/ScorerSettingRow.ts:15
 msgid "ui.setup.optionTitle.scorer"
-msgstr "Pontozási szabály"
+msgstr "Regra de pontuação"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/SegmentsSettingRow.ts:18
 msgid "ui.setup.optionTitle.segments"
-msgstr "Csempénkénti színek"
+msgstr "Cores por peça"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/GameSetupDisplay.ts:126
 msgid "ui.setup.playButton"
-msgstr "Játék indítása"
+msgstr "Jogar"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/GameSetupDisplay.ts:157
 msgid "ui.setup.regenerateExampleButton"
-msgstr "Újra előállítás"
+msgstr "Gerar novamente"
 
 #. js-lingui-explicit-id
 #: src/ui/setup/GameSetupDisplay.ts:59
 msgid "ui.setup.title"
-msgstr "Egyéni játék"
+msgstr "Jogo personalizado"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:230
 msgid "ui.statistics.columns.GameCompleted"
-msgstr "Befejezett játékok"
+msgstr "Jogos concluídos"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:222
 msgid "ui.statistics.columns.HighScore"
-msgstr "Legmagasabb pontszám"
+msgstr "Pontuação máxima"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:226
 msgid "ui.statistics.columns.ShapeCompleted"
-msgstr "Kialakított alakzatok"
+msgstr "Formas formadas"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:259
 msgid "ui.statistics.columns.TilePlaced"
-msgstr "Elhelyezett csempék"
+msgstr "Peças postas"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:298
 msgid "ui.statistics.counter.TilePlaced.hexagon"
-msgstr "Hatszögek"
+msgstr "Hexágonos"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:306
 msgid "ui.statistics.counter.TilePlaced.kite"
-msgstr "Deltoidok"
+msgstr "Pipas"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:290
 msgid "ui.statistics.counter.TilePlaced.pentagon"
-msgstr "Ötszögek"
+msgstr "Pentágonos"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:282
 msgid "ui.statistics.counter.TilePlaced.rhombus"
-msgstr "Rombuszok"
+msgstr "Losangos"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:266
 msgid "ui.statistics.counter.TilePlaced.square"
-msgstr "Négyzetek"
+msgstr "Quadrados"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:274
 msgid "ui.statistics.counter.TilePlaced.triangle"
-msgstr "Háromszögek"
+msgstr "Triângulos"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:213
 msgid "ui.statistics.headings.ShapeCompleted"
-msgstr "{value, plural, one {Egy alakzatot alakított ki.} other {# alakzatot alakított ki.}}"
+msgstr "{value, plural, one {Criou uma forma.} other {Criou # formas.}}"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:250
 msgid "ui.statistics.headings.TilePlaced"
-msgstr "{value, plural, one {Egy csempét helyezett el.} other {# csempét helyezett el.}}"
+msgstr "{value, plural, one {Pôs uma peça.} other {Pôs # peças.}}"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:57
 msgid "ui.statistics.notPlayed"
-msgstr "Még nem játszott!"
+msgstr "Ainda não jogou!"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:49
 msgid "ui.statistics.title"
-msgstr "Statisztikák"
+msgstr "Estatísticas"
 
 #. js-lingui-explicit-id
 #: src/ui/shared/toggles.ts:46
 msgid "ui.toggles.autorotate"
-msgstr "Automatikus forgatás"
+msgstr "Rotação automática"
 
 #. js-lingui-explicit-id
 #: src/ui/shared/toggles.ts:76
 msgid "ui.toggles.colorScheme.dark"
-msgstr "Sötét mód"
+msgstr "Modo escuro"
 
 #. js-lingui-explicit-id
 #: src/ui/shared/toggles.ts:75
 msgid "ui.toggles.colorScheme.light"
-msgstr "Világos mód"
+msgstr "Modo claro"
 
 #. js-lingui-explicit-id
 #: src/ui/shared/toggles.ts:67
 msgid "ui.toggles.highscore"
-msgstr "Legmagasabb pontszám megjelenítése"
+msgstr "Mostrar pontuação máxima"
 
 #. js-lingui-explicit-id
 #: src/ui/shared/toggles.ts:53
 msgid "ui.toggles.hints"
-msgstr "Tippek megjelenítése"
+msgstr "Mostrar dicas"
 
 #. js-lingui-explicit-id
 #: src/ui/shared/toggles.ts:36
 msgid "ui.toggles.placeholders"
-msgstr "Helykitöltők megjelenítése"
+msgstr "Mostrar espaços de preenchimento"
 
 #. js-lingui-explicit-id
 #: src/ui/shared/toggles.ts:60
 msgid "ui.toggles.snap"
-msgstr "Illesztés"
+msgstr "Encaixe"

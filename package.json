@@ -22,7 +22,7 @@
   "browserslist": "defaults",
   "type": "module",
   "dependencies": {
-    "@lingui/core": "^6.4.0",
+    "@lingui/core": "^6.6.0",
     "@parcel/service-worker": "^2.16.4",
     "canonical-json": "^0.4.0",
     "check2d": "^9.36.4",
@@ -30,7 +30,7 @@
     "workbox-core": "^7.4.1",
     "workbox-precaching": "^7.4.1",
     "workbox-window": "^7.4.1",
-    "zod": "^4.4.3"
+    "zod": "^4.5.4"
   },
   "devDependencies": {
     "@capacitor/android": "^8.4.1",

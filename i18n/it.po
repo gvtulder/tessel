@@ -1,5 +1,5 @@
 msgid ""
-msgstr "PO-Revision-Date: 2026-03-15 01:09+0000\nLast-Translator: Raffaele Pellegrino <Rapioaper@keemail.me>\nLanguage-Team: Italian <https://hosted.weblate.org/projects/tessel/game/it/>\nLanguage: it\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.17-dev\n"
+msgstr "PO-Revision-Date: 2026-06-09 21:46+0000\nLast-Translator: Gijs van Tulder <gijs@vantulder.net>\nLanguage-Team: Italian <https://hosted.weblate.org/projects/tessel/game/it/>\nLanguage: it\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 2026.6\n"
 
 #. js-lingui-explicit-id
 #: src/grid/atlas/AmmannBeenkerAtlas.ts:11
@@ -249,6 +249,7 @@ msgstr "Annulla"
 #. js-lingui-explicit-id
 #. placeholder {0}: colors.length
 #: src/ui/setup/ColorsOption.ts:18
+#, fuzzy
 msgid "ui.settings.ColorsOption.title"
 msgstr "{0, plural, =1 {One color} =2 {Two colors} =3 {Three colors} =4 {Four colors} =5 {Five colors} =6 {Six colors} other {# colors}}"
 
@@ -345,6 +346,7 @@ msgstr "Tutte le combinazioni di colore"
 #. js-lingui-explicit-id
 #. placeholder {0}: colorPattern.numColors
 #: src/ui/setup/SegmentsOption.ts:66
+#, fuzzy
 msgid "ui.setup.SegmentsOption.number"
 msgstr "{0, plural, =1 {One color per tile} =2 {Two colors per tile} =3 {Three colors per tile} =4 {Four colors per tile} =5 {Five colors per tile} =6 {Six colors per tile} other {# colors per tile}}"
 
@@ -445,11 +447,13 @@ msgstr "Triangoli"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:213
+#, fuzzy
 msgid "ui.statistics.headings.ShapeCompleted"
 msgstr "{value, plural, one {You have formed one shape.} other {You have formed # shapes.}}"
 
 #. js-lingui-explicit-id
 #: src/ui/statistics/StatisticsDisplay.ts:250
+#, fuzzy
 msgid "ui.statistics.headings.TilePlaced"
 msgstr "{value, plural, one {You have placed one tile.} other {You have placed # tiles.}}"
 
@@ -495,5 +499,6 @@ msgstr "Mostra segnaposto"
 
 #. js-lingui-explicit-id
 #: src/ui/shared/toggles.ts:60
+#, fuzzy
 msgid "ui.toggles.snap"
 msgstr "Snap"

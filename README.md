@@ -107,7 +107,7 @@ Contribute to the translation of this game via [Weblate](https://hosted.weblate.
 [![iOS Version](https://img.shields.io/itunes/v/6754282700?logo=Apple&label=iOS)](https://apps.apple.com/app/tessel/id6754282700)
 [![Web Version](https://play.tessel.at/badge.svg)](https://play.tessel.at/)
 
-Tessel is written in TypeScript and uses HTML, SVG and CSS. It can be built using a recent Node version (tested for 20+). It can be played directly in the browser or installed as a Progressive Web App.
+Tessel is written in TypeScript and uses HTML, SVG and CSS. It can be built using a recent Node version (tested for 24+). It can be played directly in the browser or installed as a Progressive Web App.
 
 ### Building for web / PWA
 

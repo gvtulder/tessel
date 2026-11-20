@@ -236,10 +236,11 @@ export class Game extends EventTarget {
 
         execute(): void {
             const game = this.game;
+            const previousContinued = game.continued;
             game.continued = true;
             const restartCommand = game.tileStack.restart();
             this.memo = {
-                continued: game.continued,
+                continued: previousContinued,
                 commands: [restartCommand],
             };
             game.dispatchEvent(new GameEvent(GameEventType.ContinueGame, game));

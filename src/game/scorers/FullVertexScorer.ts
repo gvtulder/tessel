@@ -49,7 +49,7 @@ export class FullVertexScorer extends Scorer {
                                 segments.length
                         ],
                     );
-                    tiles.add(tile);
+                    tiles.add(corner.tile);
                 }
 
                 const shape: ScoredRegion = {

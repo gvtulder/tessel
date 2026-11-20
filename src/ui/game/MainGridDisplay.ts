@@ -42,17 +42,13 @@ export class MainGridDisplay extends GridDisplay implements TileDropTarget {
     }
 
     dropTile(source: TileDragSource, pair: TileOnScreenMatch): boolean {
-        if (pair.fixed) {
-            // && pair.fixed.tile && pair.fixed.tile.type === TileType.Placeholder) {
-            //          const targetTile = pair.fixed.tile;
-            //          if (targetTile && targetTile.type === TileType.Placeholder) {
+        if (pair.fixed.tileType === TileType.Placeholder) {
             return this.gameDisplay.game.placeTile(
                 pair.moving,
                 pair.fixed,
                 pair.offset,
                 source.indexOnStack,
             );
-            //          }
         }
         return false;
     }

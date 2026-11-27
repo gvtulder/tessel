@@ -1,7 +1,5 @@
 各項變更與改進。
 
-• Fixed a high score bug.
-• New language: Ukrainian/Українська (by Dmytro Zakiltenskyi).
-• New language: Swedish/Svenska (by Dmytro Zakiltenskyi).
-• New language: Romanian/Română (by Dutu Dev).
-• New language: Italian/Italiano (by Raffaele Pellegrino).
+• Randomize tiles for the Add more tiles button.
+• New language: Hungarian/Magyar (by Balázs Úr).
+• New language: Belarusian/Беларуская (by Dmytro Zakiltenskyi).

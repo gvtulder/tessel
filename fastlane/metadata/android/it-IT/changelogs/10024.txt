@@ -1,0 +1,5 @@
+Modifiche e miglioramenti varii.
+
+• Randomize tiles for the Add more tiles button.
+• New language: Hungarian/Magyar (by Balázs Úr).
+• New language: Belarusian/Беларуская (by Dmytro Zakiltenskyi).

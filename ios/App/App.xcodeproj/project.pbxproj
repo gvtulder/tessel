@@ -14,8 +14,8 @@
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
-		FA3B074B243BBB421BEEAB5E /* Pods_Tessel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 379D4D1A98D385C46C718DC7 /* Pods_Tessel.framework */; };
 		866B6FD103E84865AAC89D5A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8054E0E6653943A0887CBD88 /* SceneDelegate.swift */; };
+		FA3B074B243BBB421BEEAB5E /* Pods_Tessel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 379D4D1A98D385C46C718DC7 /* Pods_Tessel.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +25,7 @@
 		2A6BB4552ECD2C2200FB2810 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		5F9B5378A61686871BC05114 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E7FA4BBA854E8E2071CE44B4 /* gl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = gl; path = gl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		C7C8A8DDBE66F71903AFCB5A /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		5CEB93DA36471400F5B2ECF8 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		2A6BB4562ECD2C3C00FB2810 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		0AF892F5F95017850D2DAAA4 /* ro */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -43,12 +44,12 @@
 		504EC3111FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		504EC3131FED79650016851F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
+		8054E0E6653943A0887CBD88 /* SceneDelegate.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = SceneDelegate.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A11D84B88B56798EDA8EA58E /* Pods-Tessel.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tessel.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tessel/Pods-Tessel.debug.xcconfig"; sourceTree = "<group>"; };
 		AF51FD2D460BCFE21FA515B2 /* Pods-App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.release.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.release.xcconfig"; sourceTree = "<group>"; };
 		B4BFAD6F0CC2E9E5E3FA14FF /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		D0E4FE1A40BF5A0B2179C240 /* Pods-Tessel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tessel.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tessel/Pods-Tessel.release.xcconfig"; sourceTree = "<group>"; };
 		FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.debug.xcconfig"; sourceTree = "<group>"; };
-		8054E0E6653943A0887CBD88 /* SceneDelegate.swift */ = {isa = PBXFileReference; name = "SceneDelegate.swift"; path = "SceneDelegate.swift"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.swift; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +168,7 @@
 				es,
 				fr,
 				gl,
+				hu,
 				it,
 				nl,
 				"pt-BR",
@@ -270,6 +272,7 @@
 				2A6BB4552ECD2C2200FB2810 /* es */,
 				5F9B5378A61686871BC05114 /* fr */,
 				E7FA4BBA854E8E2071CE44B4 /* gl */,
+				C7C8A8DDBE66F71903AFCB5A /* hu */,
 				5CEB93DA36471400F5B2ECF8 /* it */,
 				2A6BB4562ECD2C3C00FB2810 /* nl */,
 				B4BFAD6F0CC2E9E5E3FA14FF /* pt-BR */,

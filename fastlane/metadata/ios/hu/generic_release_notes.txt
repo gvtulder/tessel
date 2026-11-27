@@ -1,0 +1,1 @@
+../../android/hu-HU/generic_release_notes.txt

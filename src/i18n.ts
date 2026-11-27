@@ -12,6 +12,7 @@ import { messages as messages_en } from "../i18n/en";
 import { messages as messages_es } from "../i18n/es";
 import { messages as messages_fr } from "../i18n/fr";
 import { messages as messages_gl } from "../i18n/gl";
+import { messages as messages_hu } from "../i18n/hu";
 import { messages as messages_it } from "../i18n/it";
 import { messages as messages_nl } from "../i18n/nl";
 import { messages as messages_ptbr } from "../i18n/pt-BR";
@@ -77,6 +78,15 @@ export const languages = {
             "utf-8",
         ),
         languageTag: "gl-ES",
+    },
+    hu: {
+        title: "Magyar",
+        messages: messages_hu,
+        aboutHTML: fs.readFileSync(
+            __dirname + "/../i18n/hu/about.html",
+            "utf-8",
+        ),
+        languageTag: "hu-HU",
     },
     it: {
         title: "Italiano",

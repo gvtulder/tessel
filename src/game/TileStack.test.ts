@@ -44,6 +44,8 @@ describe("TileStack", () => {
         stack.unshift(list[1]);
         expect(stack.tilesLeft).toBe(6);
         expect(stack.tiles[0]).toBe(list[1]);
+        stack.push(list[0], list[1]);
+        expect(stack.tilesLeft).toBe(8);
     });
 
     test("can be shuffled", () => {

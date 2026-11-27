@@ -146,6 +146,42 @@ export class TileStackWithSlots extends EventTarget {
     }
 
     /**
+     * Appends tiles to the end of the tile stack. Refills any empty slots.
+     *
+     * @param tiles the tiles to add
+     */
+    push(tiles: TileShapeColors[]): void {
+        this.tileStack.push(...tiles);
+        this.updateSlots();
+    }
+
+    /**
+     * Removes the last tile from the end of the stack.
+     * @returns the tile, or undefined if the stack was empty
+     */
+    pop(): TileShapeColors | undefined {
+        // take from the stack if possible
+        const tile = this.tileStack.pop();
+        if (tile) {
+            this.dispatchEvent(new GameEvent(GameEventType.UpdateTileCount));
+            return tile;
+        }
+        // otherwise take from the slots
+        for (let i = this.slots.length - 1; i >= 0; i--) {
+            const tile = this.slots[i];
+            if (tile) {
+                this.slots[i] = null;
+                this.dispatchEvent(
+                    new GameEvent(GameEventType.UpdateTileCount),
+                );
+                this.dispatchEvent(new GameEvent(GameEventType.UpdateSlots));
+                return tile;
+            }
+        }
+        return undefined;
+    }
+
+    /**
      * Adds the current tiles to the end of the stack and display new tiles.
      * @param reverse rotate in reverse direction
      */

@@ -62,6 +62,24 @@ describe("TileStackWithSlots", () => {
         expect(stack.isEmpty()).toBe(true);
     });
 
+    test("push and pop", () => {
+        const source = new TileStack([]);
+        const stack = new TileStackWithSlots(source, 3);
+        expect(stack.tilesLeft).toBe(0);
+        stack.push(list);
+        const t0 = stack.take(0)!;
+        const t1 = stack.take(0)!;
+        const t2 = stack.take(0)!;
+        expect(stack.tilesLeft).toBe(2);
+        stack.push([t0, t1, t2]);
+        expect(stack.tilesLeft).toBe(5);
+        expect(stack.pop()).toEqual(list[4]);
+        expect(stack.pop()).toEqual(list[3]);
+        expect(stack.pop()).toEqual(list[2]);
+        expect(stack.pop()).toEqual(list[1]);
+        expect(stack.pop()).toEqual(list[0]);
+    });
+
     test("reshuffle", () => {
         const prng = seedPRNG(1234);
         const source = new TileStack(list);

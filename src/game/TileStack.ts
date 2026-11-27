@@ -111,8 +111,8 @@ export class TileStack {
      * Adds a new tile to the end of the stack.
      * @param tile the new tile to add
      */
-    push(tile: TileShapeColors) {
-        this.tiles.push(tile);
+    push(...tiles: TileShapeColors[]) {
+        this.tiles.push(...tiles);
     }
 
     /**

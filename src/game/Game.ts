@@ -153,17 +153,7 @@ export class Game extends EventTarget {
         this.points = 0;
         this.continued = false;
 
-        // generate tiles
-        let tiles: TileShapeColors[] = [];
-        for (const tileGenerator of this.settings.tileGenerator) {
-            tiles = tileGenerator(
-                tiles,
-                this.settings.atlas.shapes[0],
-                undefined,
-                prng,
-            );
-        }
-        shuffle(tiles, prng);
+        const tiles = this.generateTiles(prng);
 
         // construct the tile stack
         const tileStack = new TileStack(tiles, prng);
@@ -188,6 +178,21 @@ export class Game extends EventTarget {
         }
 
         this.grid.generatePlaceholders();
+    }
+
+    generateTiles(prng: PRNG | undefined): TileShapeColors[] {
+        // generate tiles
+        let tiles: TileShapeColors[] = [];
+        for (const tileGenerator of this.settings.tileGenerator) {
+            tiles = tileGenerator(
+                tiles,
+                this.settings.atlas.shapes[0],
+                undefined,
+                prng,
+            );
+        }
+        shuffle(tiles, prng);
+        return tiles;
     }
 
     saveState(): GameState_S {
@@ -216,31 +221,33 @@ export class Game extends EventTarget {
 
     static Continue_S = zod.object({
         command: zod.literal("Game.Continue"),
+        newTiles: zod.array(TileShapeColors_S),
         memo: zod.optional(
             zod.object({
                 continued: zod.boolean(),
-                commands: zod.array(RelatedCommand_S),
             }),
         ),
     });
 
     static Continue = class extends Command {
         game: Game;
+        newTiles: TileShapeColors[];
 
-        memo?: { continued: boolean; commands: Command[] };
+        memo?: { continued: boolean };
 
-        constructor(game: Game) {
+        constructor(game: Game, newTiles: TileShapeColors[]) {
             super();
             this.game = game;
+            this.newTiles = newTiles;
         }
 
         execute(): void {
             const game = this.game;
+            const oldContinued = game.continued;
             game.continued = true;
-            const restartCommand = game.tileStack.restart();
+            game.tileStack.push(this.newTiles);
             this.memo = {
-                continued: game.continued,
-                commands: [restartCommand],
+                continued: oldContinued,
             };
             game.dispatchEvent(new GameEvent(GameEventType.ContinueGame, game));
         }
@@ -248,8 +255,8 @@ export class Game extends EventTarget {
         undo(): void {
             if (!this.memo) return;
             this.game.continued = this.memo.continued;
-            for (const command of this.memo.commands) {
-                command.undo();
+            for (let i = 0; i < this.newTiles.length; i++) {
+                this.game.tileStack.pop();
             }
             if (this.game.tileStack.isEmpty()) {
                 this.game.dispatchEvent(
@@ -262,15 +269,12 @@ export class Game extends EventTarget {
         save(shapeMap: Shape[]): zod.infer<typeof Game.Continue_S> {
             return {
                 command: "Game.Continue",
+                newTiles: this.newTiles.map((t) =>
+                    saveTileShapeColors(t, shapeMap),
+                ),
                 memo: this.memo
                     ? {
                           continued: this.memo.continued,
-                          commands: this.memo.commands.map(
-                              (c) =>
-                                  c.save(shapeMap) as zod.infer<
-                                      typeof TileStackWithSlots.Restart_S
-                                  >,
-                          ),
                       }
                     : undefined,
             };
@@ -281,18 +285,21 @@ export class Game extends EventTarget {
         data: zod.infer<typeof Game.Continue_S>,
         shapeMap: readonly Shape[],
     ): Command {
-        const command = new Game.Continue(this);
+        const command = new Game.Continue(
+            this,
+            data.newTiles.map((d) => restoreTileShapeColors(d, shapeMap)),
+        );
         if (data.memo) {
             command.memo = {
                 continued: data.memo.continued,
-                commands: this.restoreCommands(data.memo.commands, shapeMap),
             };
         }
         return command;
     }
 
-    continue() {
-        const command = new Game.Continue(this);
+    continue(prng?: PRNG) {
+        const newTiles = this.generateTiles(prng);
+        const command = new Game.Continue(this, newTiles);
         command.execute();
         this.history.push(command);
     }
